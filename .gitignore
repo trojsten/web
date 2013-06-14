@@ -2,6 +2,7 @@
 *.pot
 *.py[co]
 local_settings.py
+database.sqlite3
 
 # Vim-specific
 .*.swp
