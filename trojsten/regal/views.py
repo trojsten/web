@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -30,16 +31,47 @@ def generate_table(request, caption, data_list, columns_func):
 # shows table of adresses
 # filter does nothing  currently
 
-def show_address(request, filter):
+def show_addresses(request, filter):
     address_list = Address.objects.filter()
     columns = [ 
-        ('Street', lambda addr: addr.street),
-        ('Number', lambda addr: addr.number),
-        ('Town', lambda addr: addr.town),
-        ('Country', lambda addr: addr.country),
+        (u'Ulica', lambda addr: addr.street),
+        (u'Číslo', lambda addr: addr.number),
+        (u'Mesto', lambda addr: addr.town),
+        (u'Štát', lambda addr: addr.country),
     ]
-    return generate_table(request, 'Address', address_list, columns)
+    return generate_table(request, u'Adresy', address_list, columns)
     
     
+# filter does nothing  currently
 
+def show_persons(request, filter):
+    person_list = Person.objects.filter()
+    columns = [ 
+        (u'Id', lambda p: p.id),
+        (u'Meno', lambda p: p.name),
+        (u'Priezvisko', lambda p: p.surname),
+    ]
+    return generate_table(request, u'Osoby', person_list, columns)
 
+# filter does nothing currently
+
+def show_schools(request, filter):
+    school_list = School.objects.filter()
+    columns = [ 
+        (u'Skatka', lambda s: s.abbr),
+        (u'Celé meno', lambda s: s.name),
+    ]
+    return generate_table(request, u'Školy', school_list, columns)
+
+def show_home(request):
+    tables = [
+        (u'Adresy','addresses',u'Zoznam adries'),
+        (u'Osoby','persons',u'Všetci ľudia'),
+        (u'Školy','schools',u'Zoznam škôl'),
+    ]
+
+    caption = 'Rhaegal'
+    return render_to_response('regal/home.html',
+                              {'caption':caption, 'tables':tables},
+                              context_instance=RequestContext(request))
+    

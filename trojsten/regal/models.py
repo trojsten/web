@@ -19,6 +19,7 @@ class Address(models.Model):
 
 
 class Person(models.Model):
+    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=128)
     surname = models.CharField(max_length=128)
     birth_date = models.DateField()
@@ -49,7 +50,6 @@ class School(models.Model):
 
 class Student(models.Model):
     """ A relationship between School and Person.
-        
     """
     school = models.ForeignKey(School, related_name='students')
     person = models.ForeignKey(Person, related_name='studies_as')

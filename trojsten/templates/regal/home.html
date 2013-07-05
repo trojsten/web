@@ -8,15 +8,15 @@
 
 <table border="1">
 <tr>
-    {% for column in columns %}
-        <th>{{ column }}</th>
-    {% endfor %}
+    <th>Názov</th>
+    <th>Popis</th>
 </tr>
-{% for row in data %}
+{% for row in tables %}
     <tr>
-        {% for item in row %}
-            <td>{{ item }}</td>
-        {% endfor %}
+        <td>
+            <a href="{% url row.1 all %}">{{ row.0 }}</a>
+        </td>
+        <td>{{ row.2 }}</td>
     </tr>
 {% endfor %}
 </table> 
