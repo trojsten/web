@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{ caption }}{% endblock title %}
+
+{% block content %}
+
+<h2> {{ caption }} </h2>
+
+<table border="1">
+<tr>
+    {% for column in columns %}
+        <th>{{ column }}</th>
+    {% endfor %}
+</tr>
+{% for row in data %}
+    <tr>
+        {% for item in row %}
+            <td>{{ item }}</td>
+        {% endfor %}
+    </tr>
+{% endfor %}
+</table> 
+
+{% endblock content %}

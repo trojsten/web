@@ -8,6 +8,7 @@ from datetime import date
 
 
 class Address(models.Model):
+    id = models.IntegerField(primary_key=True)
     street = models.CharField(max_length=64)
     number = models.CharField(max_length=16)
     town = models.CharField(max_length=64)
@@ -28,6 +29,7 @@ class Person(models.Model):
     """ Holds, provide access to or manages all informations
         related to a person.
     """
+    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=128)
     surname = models.CharField(max_length=128)
     birth_date = models.DateField()
