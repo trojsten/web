@@ -31,7 +31,13 @@ def generate_table(request, caption, data_list, columns_func):
 # filter does nothing  currently
 
 def show_address(request, filter):
-    address_list = Address.objects.filter()
+    filter_arguments = filter.split(",")
+    filterBy = {}
+    for x in filter_arguments:
+        if not "=" in x: continue
+        help = x.split("=")
+        filterBy[help[0]] = help[1]
+    address_list = Address.objects.filter(**filterBy)
     columns = [ 
         ('Street', lambda addr: addr.street),
         ('Number', lambda addr: addr.number),

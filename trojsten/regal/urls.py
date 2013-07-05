@@ -6,7 +6,7 @@ urlpatterns = patterns('trojsten.regal.views',
     # url(r'^trojsten/', include('trojsten.foo.urls')),
 
     # table lists
-    url(r'^address/(?P<filter>\w*)/?','show_address'),
+    url(r'^address/(?P<filter>.*)/?','show_address'),
     #url(r'^person/(?P<filter>\w*)/?','show_person'),
     #url(r'^school/(?P<filter>\w*)/?','show_school'),
 
