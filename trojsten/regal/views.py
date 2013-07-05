@@ -29,10 +29,15 @@ def generate_table(request, caption, data_list, columns_func):
                               context_instance=RequestContext(request))    
 
 # shows table of adresses
-# filter does nothing  currently
 
 def show_addresses(request, filter):
-    address_list = Address.objects.filter()
+    filter_arguments = filter.split(",")
+    filterBy = {}
+    for x in filter_arguments:
+        if not "=" in x: continue
+        help = x.split("=")
+        filterBy[help[0]] = help[1]
+    address_list = Address.objects.filter(**filterBy)
     columns = [ 
         (u'Ulica', lambda addr: addr.street),
         (u'Číslo', lambda addr: addr.number),
