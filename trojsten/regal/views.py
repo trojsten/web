@@ -65,6 +65,7 @@ def show_schools(request, filter):
     columns = [ 
         (u'Skatka', lambda s: s.abbr),
         (u'Celé meno', lambda s: s.name),
+        (u'Adresa', lambda s: s.address.__unicode__()),
     ]
     return generate_table(request, u'Školy', school_list, columns)
 
