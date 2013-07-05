@@ -13,7 +13,12 @@ def print_word(request, word):
                               {'word':word},
                               context_instance=RequestContext(request))
 
-def show_table(request, caption, data_list, columns_func):
+# creates and shows a table
+#   caption - name of table
+#   columns_func - list of pair (<column name>, lambda <data row>: value)
+#   data_list - list od <data row>
+
+def generate_table(request, caption, data_list, columns_func):
     columns = [x[0] for x in columns_func]
     data = []
     for item in data_list:
@@ -23,7 +28,8 @@ def show_table(request, caption, data_list, columns_func):
                               context_instance=RequestContext(request))    
 
 # shows table of adresses
-# currently filter does nothing
+# filter does nothing  currently
+
 def show_address(request, filter):
     address_list = Address.objects.filter()
     columns = [ 
@@ -32,7 +38,7 @@ def show_address(request, filter):
         ('Town', lambda addr: addr.town),
         ('Country', lambda addr: addr.country),
     ]
-    return show_table(request, 'Address', address_list, columns)
+    return generate_table(request, 'Address', address_list, columns)
     
     
 
