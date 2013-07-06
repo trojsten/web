@@ -28,16 +28,33 @@ def generate_table(request, caption, data_list, columns_func):
                               {'caption':caption, 'data':data, 'columns':columns},
                               context_instance=RequestContext(request))    
 
-# shows table of adresses
+def generate_persons_table(request, caption, data_list, columns_func):
+    columns = [x[0] for x in columns_func]
+    data = []
+    for item in data_list:
+        data.append([x[1](item) for x in columns_func])
+    letters = []
+    for x in range(65, 91):
+        letters.append(str(unichr(x)))
+    return render_to_response('regal/show_persons.html',
+                              {'caption':caption, 'data':data, 'columns':columns, 'letters':letters},
+                              context_instance=RequestContext(request))    
 
-def show_addresses(request, filter):
+# create filter
+def create_filter(filter):
     filter_arguments = filter.split(",")
     filterBy = {}
     for x in filter_arguments:
         if not "=" in x: continue
         help = x.split("=")
         filterBy[help[0]] = help[1]
-    address_list = Address.objects.filter(**filterBy)
+    for x in filterBy: print x + " : " + filterBy[x]
+    return filterBy
+
+# shows table of adresses
+
+def show_addresses(request, filter):
+    address_list = Address.objects.filter(**create_filter(filter))
     columns = [ 
         (u'Ulica', lambda addr: addr.street),
         (u'Číslo', lambda addr: addr.number),
@@ -50,18 +67,18 @@ def show_addresses(request, filter):
 # filter does nothing  currently
 
 def show_persons(request, filter):
-    person_list = Person.objects.filter()
+    person_list = Person.objects.filter(**create_filter(filter))
     columns = [ 
         (u'Id', lambda p: p.id),
         (u'Meno', lambda p: p.name),
         (u'Priezvisko', lambda p: p.surname),
     ]
-    return generate_table(request, u'Osoby', person_list, columns)
+    return generate_persons_table(request, u'Osoby', person_list, columns)
 
 # filter does nothing currently
 
 def show_schools(request, filter):
-    school_list = School.objects.filter()
+    school_list = School.objects.filter(**create_filter(filter))
     columns = [ 
         (u'Skatka', lambda s: s.abbr),
         (u'Celé meno', lambda s: s.name),
