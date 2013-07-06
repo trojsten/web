@@ -1,77 +1,12 @@
 # -*- coding: utf-8 -*- 
-
 from django.db import models
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
-
-class Address(models.Model):
-    street = models.CharField(max_length=64)
-    number = models.CharField(max_length=16)
-    town = models.CharField(max_length=64)
-    postal_code = models.CharField(max_length=16)
-    country = models.CharField(max_length=32)
-    
-    def __unicode__(self):
-        return (
-            self.street + " " + self.number + ", " +
-            self.town + ", " + self.postal_code + ", " +
-            self.country)
-
-
-class Person(models.Model):
-    name = models.CharField(max_length=128)
-    surname = models.CharField(max_length=128)
-    birth_date = models.DateField()
-    
-    def __unicode__(self):
-        return self.name + " " + self.surname
-
-        
-class School(models.Model):
-    name = models.CharField(max_length=128)
-    abbr = models.CharField(max_length=16, primary_key=True)
-        # used instead of id
-        # used when full name is too long (e.g. results, list of participants)
-        # note: primary_key=True implies null=False and unique=True
-    address = models.ForeignKey(Address, related_name='schools_here')
-    studying_persons = models.ManyToManyField(
-        Person,
-        through='Student',
-        related_name='studies_in')
-    teaching_persons = models.ManyToManyField(
-        Person,
-        through='Teacher',
-        related_name='teaches_in')
-    
-    def __unicode__(self):
-        return self.name
-    
-
-class Student(models.Model):
-    """ A relationship between School and Person.
-        
-    """
-    school = models.ForeignKey(School, related_name='students')
-    person = models.ForeignKey(Person, related_name='studies_as')
-    
-    
-
-class Teacher(models.Model):
-    """ A relationship between School and Person.
-    """
-    school = models.ForeignKey(School, related_name='teachers')
-    person = models.ForeignKey(Person, related_name='teaches_as')
-
-        
-
-
-''' NIECO MU VADI, FAKT NEVIEM CO:
 
 ##############################
 #    PERSONAL INFORMATIONS   #
 ##############################
 # TODO(sysel) person propesties
-
 
 class Address(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -155,6 +90,38 @@ class School(models.Model):
         return self.name
     
 
+class StudyType(object):
+    """ Set of informations about study type.
+        Also defines all study types.
+    """        
+        
+    def __init__(self, name, abbr, grade_to_absolute):
+        self.name = name
+        self.abbr = abbr
+        self.grade_to_absolute = grade_to_absolute
+        self.max_grade = len(grade_to_absolute)-1
+
+# Didn't work inside StudyType
+StudyType.ZS = StudyType('Základná škola', 'ZS', [None] + range(1,10))
+StudyType.SS = StudyType('Stredná škola', 'SS', [None] + range(10,14))
+StudyType.VS = StudyType('Vysoká škola', 'SS', [None] + range(14,19))
+StudyType.G8 = StudyType('8-ročné gymnázium', 'G8', [None] + range(6,14))
+StudyType.BL = StudyType('Bilingválne gymnázium', 'BL', [None, 10] + range(10,14))
+
+
+class StudyTypeField(models.CharField):
+    """ Converts StudyType-s between python and database."""
+    
+    def __init__(self, *args, **kwargs):
+        kwargs['max_length'] = 2
+        super(StudyTypeField, self).__init__(*args, **kwargs)
+        
+    def to_python(self, value):
+        return getattr(StudyType, value)
+        
+    def get_prep_value(self, value):
+        return value.abbr
+
 
 class Student(models.Model):
     """ A relationship between School and Person studying there.
@@ -217,41 +184,9 @@ class Teacher(models.Model):
     """
     school = models.ForeignKey(School, related_name='teachers')
     person = models.ForeignKey(Person, related_name='teaches_as')
-    teaches_math = BooleanField()
-    teaches_physics = BooleanField()
-    teaches_informatics = BooleanField()
+    teaches_math = models.BooleanField()
+    teaches_physics = models.BooleanField()
+    teaches_informatics = models.BooleanField()
     
 
 
-class StudyType(object):
-    """ Set of informations about study type.
-        Also defines all study types.
-    """        
-    ZS = StudyType('Základná škola', 'ZS', [None] + seq(1,10))
-    SS = StudyType('Stredná škola', 'SS', [None] + seq(10,14))
-    VS = StudyType('Vysoká škola', 'SS', [None] + seq(14,19))
-    G8 = StudyType('8-ročné gymnázium', 'G8', [None] + seq(6,14))
-    BL = StudyType('Bilingválne gymnázium', 'BL', [None, 10] + seq(10,14))
-        
-    def __init__(self, name, abbr, grade_to_absolute):
-        self.name = name
-        self.abbr = abbr
-        self.grade_to_absolute = grade_to_absolute
-        self.max_grade = len(grade_to_absolute)-1
-
-
-
-class StudyTypeField(models.CharField):
-    """ Converts StudyType-s between python and database."""
-    
-    def __init__(self, *args, **kwargs):
-        kwargs['max_length'] = 2
-        super(StudyTypeField, self).__init__(*args, **kwargs)
-        
-    def to_python(self, value):
-        return getattr(StudyType, value)
-        
-    def get_prep_value(self, value):
-        return value.abbr
-'''
-        
