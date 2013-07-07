@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 ##############################
 #    PERSONAL INFORMATIONS   #
 ##############################
-# TODO(sysel) person propesties
+
 
 class Address(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -41,28 +41,81 @@ class Person(models.Model):
     # studies_in <- related name to School.studying_persons
     # teaches_as <- related name to Teacher.person
     # teaches_in <- related name to School.teaching_persons
+    # props <- related name to PersonProperty.property_type
     
-    def actual_student(self, act_date=None):
-        # TODO docstring
-        if act_date == None:
-            act_date = date.now()
+    def actual_studies_as(self):
+        """ Returns actual student relationship for this person
+            Actual student is a student, who has NULL/None end_date
+            Throws django.core.exceptions.MultipleObjectsReturned
+            if there are multiple actual studnets.
+        """
         try:
             r = self.studies_as.get(end_date = None)
             return r
         except ObjectDoesNotExist:
             return None
-         
-    def close_actual_student(self):
-        # TODO docstring
-        act_student = self.actual_student()
-        if act_student == None:
-            return
-        act_student.end_date = date.now()
-        act_student.save()
+            
+    def terminate_studies(self):
+        """ Termintes all actual student relationships for this person
+            Actual student is a student, who has NULL/None end_date
+        """
+        now = date.now()
+        for act_student in self.studies_as.get(end_date = None):
+            act_student.end_date = now
+            if act_student.start_date == act_student.end_date:
+                # act_student won't be interesting for the future
+                act_student.delete()
+                return
+            act_student.save()
+    
+    def change_students_school(school, study_type, grade = 1):
+        """ Terminates all actual students relationships
+            and creates a new one from given school, study_type and grade
+            Preffered way to create a new Student record.
+            Returns created Student object.
+        """
+        self.terminate_studies()
+        s = Student(
+            school=school, person=self, study_type=study_type,
+            start_date=date.now(), end_date=None)
+        s.set_grade(grade)
+        s.save()
+        return s
+    
+    # TODO (sysel) function for properties dictionary
     
     def __unicode__(self):
         return self.name + " " + self.surname
         
+
+class PersonPropertyCategory(models.Model):
+    """ PersonPropertyTypes can be categorized for better UI organization. """
+    abbr = models.CharField(max_length=8, primary_key=True)
+        # Used instead of id
+        # Note: primary_key=True implies null=False and unique=True
+    name = models.CharField(max_length=128)
+    # types <- related name to PersonPropertyType.category
+    
+
+class PersonPropertyType(models.Model):
+    """ Describes one possible type additional person properties """
+    abbr = models.CharField(max_length=16, primary_key=True)
+        # Used instead of id
+        # Note: primary_key=True implies null=False and unique=True
+    name = models.CharField(max_length=128)
+    validity_regex = models.TextField(null = False, default = "")
+    single_per_user = models.BooleanField(default = True)
+    category = models.ForeignKey(PersonPropertyCategory, related_name='types')
+    user_editable = models.BooleanField(default = True)
+    user_readable = models.BooleanField(default = True)
+    # records <- related name to PersonProperty.property_type
+    
+class PersonProperty():
+    """ Every adittional property of every person is stored as this. """
+    # TODO (sysel) convert PersonProperty QuerySet to dictionary
+    property_type = models.ForeignKey(PersonPropertyType, related_name='records')
+    person = models.ForeignKey(PersonPropertyCategory, related_name='props')
+    value = models.TextField(null = False, default = "")
     
         
 class School(models.Model):
@@ -114,9 +167,12 @@ class StudyTypeField(models.CharField):
     
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 2
+        kwargs['null'] = False
         super(StudyTypeField, self).__init__(*args, **kwargs)
         
     def to_python(self, value):
+        if isinstance(value, StudyType):
+            return value
         return getattr(StudyType, value)
         
     def get_prep_value(self, value):
@@ -131,11 +187,11 @@ class Student(models.Model):
     """
     school = models.ForeignKey(School, related_name='students')
     person = models.ForeignKey(Person, related_name='studies_as')
-    study_type = StudyTypeField(default = StudyType.ZS)
-    start_date = models.DateField(auto_now_add=True)
+    study_type = StudyTypeField(default = StudyType.ZS, null=False)
+    start_date = models.DateField()
         # Begining date of this relationship
         # Used to determine actual school in specified time
-    end_date = models.DateField(default=None, editable=False)
+    end_date = models.DateField()
         # Termination date of this relationship
         # Used to determine actual school in specified time
         # None/NULL when this is actual relationship
