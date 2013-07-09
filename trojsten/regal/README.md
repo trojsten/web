@@ -26,9 +26,10 @@ Skripty: e.g. stlačím tlačidla a dostanem pdf zoznam účastníkov.
 s môže byť zakomponovaná aj v prvej časti - t.j. keď si v prvej časti dám zobraziť ľudí, ktorí
 majú rok matururity 2014, tak mi to ponúkne export do rozumného formátu.
 
-### Treia časť?
+### Tretia časť?
 
 Zadáš sql select a stránka ti vypľuje výsledok.
+Plus moznost ulozit sql alebo vybrat z ulozenych.
 
 
 ## prečo regál?
