@@ -5,6 +5,7 @@
 Regál je nástupca kaspara, a teda bude slúžiť na prácu s databázou.
 
 ### Prvá časť 
+
 ..je veľmi podobná starému kasparovi - čiže zobrazovanie
 samotných tabuliek, v nejakom rozumnom formáte.
 (t.j. ak je človek študent školy, tak v políčku škola sa nebude zobrazovať id 723 ale napríklad GJH

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from trojsten.regal.models import *
+from regal.people.models import *
 
 admin.site.register(Address)
 admin.site.register(Person)
