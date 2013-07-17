@@ -131,6 +131,7 @@ INSTALLED_APPS = (
     #'social_auth',
     #'ksp_login',
     'trojsten',
+    'regal',
     'regal.people',
     'django.contrib.admin',
 )
