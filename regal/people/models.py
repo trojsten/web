@@ -9,7 +9,6 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class Address(models.Model):
-    id = models.IntegerField(primary_key=True)
     street = models.CharField(max_length=64)
     number = models.CharField(max_length=16)
     town = models.CharField(max_length=64)
