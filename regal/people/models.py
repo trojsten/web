@@ -2,19 +2,14 @@
 from django.db import models
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
-
-##############################
-#    PERSONAL INFORMATIONS   #
-##############################
-
+from regal.properties import PropsManager
 
 class Address(models.Model):
-    id = models.IntegerField(primary_key=True)
     street = models.CharField(max_length=64)
     number = models.CharField(max_length=16)
-    town = models.CharField(max_length=64)
-    postal_code = models.CharField(max_length=16)
-    country = models.CharField(max_length=32)
+    town = models.CharField(max_length=64,  db_index=True)
+    postal_code = models.CharField(max_length=16,  db_index=True)
+    country = models.CharField(max_length=32,  db_index=True)
     # schools_here <- related name to School.address
     # lives_here <- related name to Person.home_address
     # accepting_mails_here <- related name to Student.correspondence_address
@@ -30,27 +25,31 @@ class Person(models.Model):
     """ Holds, provide access to or manages all informations
         related to a person.
     """
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=128)
-    surname = models.CharField(max_length=128)
-    birth_date = models.DateField()
-    home_address = models.ForeignKey(Address, related_name='lives_here')
-    correspondence_address = models.ForeignKey(Address, related_name='accepting_mails_here')
+    name = models.CharField(max_length=128,  db_index=True)
+    surname = models.CharField(max_length=128,  db_index=True)
+    birth_date = models.DateField( db_index=True)
+    home_address = models.ForeignKey(Address,
+        related_name='lives_here', null=True)
+    correspondence_address = models.ForeignKey(Address,
+        related_name='accepting_mails_here', null=True)
     email = models.EmailField()
     # studies_as <- related name to Student.person
     # studies_in <- related name to School.studying_persons
     # teaches_as <- related name to Teacher.person
     # teaches_in <- related name to School.teaching_persons
-    # props <- related name to PersonProperty.property_type
     
-    def actual_studies_as(self):
+    def __init__(self, *args, **kwargs):
+        super(Person,self).__init__(*args,**kwargs)
+        self.props = PropsManager(self, PersonProperty)
+    
+    def study(self):
         """ Returns actual student relationship for this person
             Actual student is a student, who has NULL/None end_date
             Throws django.core.exceptions.MultipleObjectsReturned
             if there are multiple actual studnets.
         """
         try:
-            r = self.studies_as.get(end_date = None)
+            r = self.studies_as.get(end_date__isnull=True)
             return r
         except ObjectDoesNotExist:
             return None
@@ -59,16 +58,16 @@ class Person(models.Model):
         """ Termintes all actual student relationships for this person
             Actual student is a student, who has NULL/None end_date
         """
-        now = date.now()
-        for act_student in self.studies_as.get(end_date = None):
+        now = date.today()
+        for act_student in list(self.studies_as.filter(end_date__isnull=True)):
             act_student.end_date = now
-            if act_student.start_date == act_student.end_date:
+            if act_student.start_date == now:
                 # act_student won't be interesting for the future
                 act_student.delete()
-                return
+                continue
             act_student.save()
     
-    def change_students_school(school, study_type, grade = 1):
+    def change_study(self, school, study_type, grade = 1):
         """ Terminates all actual students relationships
             and creates a new one from given school, study_type and grade
             Preffered way to create a new Student record.
@@ -77,12 +76,11 @@ class Person(models.Model):
         self.terminate_studies()
         s = Student(
             school=school, person=self, study_type=study_type,
-            start_date=date.now(), end_date=None)
+            start_date=date.today(), end_date=None)
         s.set_grade(grade)
+        s.pk = None
         s.save()
         return s
-    
-    # TODO (sysel) function for properties dictionary
     
     def __unicode__(self):
         return self.name + " " + self.surname
@@ -90,32 +88,26 @@ class Person(models.Model):
 
 class PersonPropertyCategory(models.Model):
     """ PersonPropertyTypes can be categorized for better UI organization. """
-    abbr = models.CharField(max_length=8, primary_key=True)
-        # Used instead of id
-        # Note: primary_key=True implies null=False and unique=True
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128,  db_index=True)
     # types <- related name to PersonPropertyType.category
     
 
 class PersonPropertyType(models.Model):
     """ Describes one possible type additional person properties """
-    abbr = models.CharField(max_length=16, primary_key=True)
-        # Used instead of id
-        # Note: primary_key=True implies null=False and unique=True
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128,  db_index=True)
     validity_regex = models.TextField(null = False, default = "")
-    single_per_user = models.BooleanField(default = True)
+    multi = models.BooleanField(default = False)
     category = models.ForeignKey(PersonPropertyCategory, related_name='types')
     user_editable = models.BooleanField(default = True)
     user_readable = models.BooleanField(default = True)
-    # records <- related name to PersonProperty.property_type
+    # records <- related name to PersonProperty.type
     
-class PersonProperty():
+class PersonProperty(models.Model):
     """ Every adittional property of every person is stored as this. """
-    # TODO (sysel) convert PersonProperty QuerySet to dictionary
-    property_type = models.ForeignKey(PersonPropertyType, related_name='records')
-    person = models.ForeignKey(PersonPropertyCategory, related_name='props')
-    value = models.TextField(null = False, default = "")
+    type = models.ForeignKey(PersonPropertyType,
+        related_name='records')
+    object = models.ForeignKey(Person, related_name='+')
+    value = models.TextField(null = False, default = "",  db_index=True)
     
         
 class School(models.Model):
@@ -123,11 +115,11 @@ class School(models.Model):
         related to a school.
     """
     name = models.CharField(max_length=128)
-    abbr = models.CharField(max_length=16, primary_key=True)
-        # Used instead of id
+    abbr = models.CharField(max_length=16)
         # Used when full name is too long (e.g. results, list of participants)
-        # Note: primary_key=True implies null=False and unique=True
-    address = models.ForeignKey(Address, related_name='schools_here')
+    address = models.ForeignKey(Address, related_name='schools_here',
+        null=True)
+    email = models.EmailField(null=True)
     studying_persons = models.ManyToManyField(
         Person,
         through='Student',
@@ -154,7 +146,7 @@ class StudyType(object):
         self.grade_to_absolute = grade_to_absolute
         self.max_grade = len(grade_to_absolute)-1
 
-# Didn't work inside StudyType
+# Didn't work inside StudyType definition
 StudyType.ZS = StudyType('Základná škola', 'ZS', [None] + range(1,10))
 StudyType.SS = StudyType('Stredná škola', 'SS', [None] + range(10,14))
 StudyType.VS = StudyType('Vysoká škola', 'SS', [None] + range(14,19))
@@ -164,6 +156,8 @@ StudyType.BL = StudyType('Bilingválne gymnázium', 'BL', [None, 10] + range(10,
 
 class StudyTypeField(models.CharField):
     """ Converts StudyType-s between python and database."""
+    
+    __metaclass__ = models.SubfieldBase
     
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 2
@@ -187,22 +181,17 @@ class Student(models.Model):
     """
     school = models.ForeignKey(School, related_name='students')
     person = models.ForeignKey(Person, related_name='studies_as')
-    study_type = StudyTypeField(default = StudyType.ZS, null=False)
+    study_type = StudyTypeField(default = StudyType.ZS, null=False, db_index=True)
     start_date = models.DateField()
         # Begining date of this relationship
         # Used to determine actual school in specified time
-    end_date = models.DateField()
+    end_date = models.DateField(null=True)
         # Termination date of this relationship
         # Used to determine actual school in specified time
         # None/NULL when this is actual relationship
-    expected_end_year = models.SmallIntegerField(default=None)
+    expected_end_year = models.SmallIntegerField(default=None, null=True)
         # The year when full study would terimnate
         # Used to determine actual grade
-    
-    def __init__(self, *args, **kwargs):
-        super(Student, self).__init__(self, *args, **kwargs)
-        if self.expected_end_year == None :
-            self.set_grade(1)
     
     def is_actual():
         return end_date == None
@@ -212,7 +201,7 @@ class Student(models.Model):
             You can simulate another date by optional argument "act_date".
         """
         if act_date == None:
-            act_date = date.now()
+            act_date = date.today()
         act_year = Student.date_to_school_year(act_date)
         return act_year + self.study_type.max_grade - self.expected_end_year
     
@@ -221,10 +210,14 @@ class Student(models.Model):
             You can simulate another date by optional argument "act_date".
         """
         if act_date == None:
-            act_date = date.now()
+            act_date = date.today()
         act_year = Student.date_to_school_year(act_date)
         self.expected_end_year = act_year + self.study_type.max_grade - grade
+                
         
+    def get_absolute_grade(self, act_date = None):
+        return self.study_type.grade_to_absolute[self.get_grade(act_date)]
+    
     @staticmethod
     def date_to_school_year(date_):
         """ Returns a second year of a school year of given date. """
@@ -240,9 +233,9 @@ class Teacher(models.Model):
     """
     school = models.ForeignKey(School, related_name='teachers')
     person = models.ForeignKey(Person, related_name='teaches_as')
-    teaches_math = models.BooleanField()
-    teaches_physics = models.BooleanField()
-    teaches_informatics = models.BooleanField()
+    teaches_math = models.NullBooleanField()
+    teaches_physics = models.NullBooleanField()
+    teaches_informatics = models.NullBooleanField()
     
 
 
