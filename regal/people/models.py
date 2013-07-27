@@ -20,6 +20,11 @@ class Address(models.Model):
             self.town + ", " + self.postal_code + ", " +
             self.country)
 
+    class Meta:
+        verbose_name = u'Address'
+        verbose_name_plural = u'Addresses'
+
+
 
 class Person(models.Model):
     """ Holds, provide access to or manages all informations
@@ -84,7 +89,7 @@ class Person(models.Model):
     
     def __unicode__(self):
         return self.name + " " + self.surname
-        
+
 
 class PersonPropertyCategory(models.Model):
     """ PersonPropertyTypes can be categorized for better UI organization. """
@@ -133,6 +138,9 @@ class School(models.Model):
     
     def __unicode__(self):
         return self.name
+
+    def get_town(self):
+        return self.address.town
     
 
 class StudyType(object):
