@@ -5,9 +5,9 @@ from django.core.urlresolvers import reverse
 
 class YearInline(admin.TabularInline):
     model = Year
+    can_delete = False
     fk_name = 'competition'
     fields = ('number', 'year')
-    readonly_fields = ('number',)
     
 def editButton(obj):
     return "Edit"
@@ -25,7 +25,7 @@ class CompetitionAdmin(admin.ModelAdmin):
     name_to_url.short_description = "Názov"
     name_to_url.allow_tags = True
     
-    fields = ('name', ('informatics', 'math', 'physics'))
+    fields = ('name', ('informatics', 'math', 'physics'), )
     inlines = [
         YearInline, 
     ]
