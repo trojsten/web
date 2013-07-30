@@ -2,7 +2,7 @@
 from django.db import models
 from datetime import datetime
 
-class Contest(models.Model):
+class Competition(models.Model):
     """ Contest consists of years.
     """
     name = models.CharField(max_length = 128)
@@ -16,7 +16,7 @@ class Contest(models.Model):
 class Year(models.Model):
     """ Year consits of several rounds.
     """
-    contest = models.ForeignKey(Contest)
+    contest = models.ForeignKey(Competition)
     number = models.IntegerField()
     year = models.IntegerField()
 

@@ -30,9 +30,9 @@ def generate(request):
             email='a@b.cd', home_address=Address.objects.order_by('?')[0], correspondence_address=Address.objects.order_by('?')[0])
         School.objects.create(abbr=random_word(4), name=random_word(15), address=Address.objects.order_by('?')[0])
 
-    if (not Contest.objects.all()):
+    if (not Competition.objects.all()):
         for x in ['KSP', 'KSP-T', 'OI', 'KMS']:
-            c = Contest.objects.create(name=x)
+            c = Competition.objects.create(name=x)
             for i in range(random.randint(5,10)):
                 y = Year.objects.create(contest=c, number=i+1, year=random.randint(1900,2100))
                 for j in range(random.randint(0,5)):
