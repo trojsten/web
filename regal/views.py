@@ -37,6 +37,8 @@ def generate(request):
                 y = Year.objects.create(competition=c, number=i+1, year=random.randint(1900,2100))
                 for j in range(random.randint(0,5)):
                     r = Round.objects.create(year=y, number=j+1, end_time=datetime.datetime.fromtimestamp(random.randint(1,2**31)))
+                    for k in range(random.randint(0,3)):
+                        t = Task.objects.create(in_round=r, name=random_word(20), number=random.randint(1,6))
 
 
     return HttpResponse("entries generated")
