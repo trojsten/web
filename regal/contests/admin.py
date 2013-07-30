@@ -2,6 +2,7 @@
 from django.contrib import admin
 from regal.contests.models import *
 from django.core.urlresolvers import reverse
+from regal.contests.models import Year
 
 # maybe we will need this:
 #class YearInline(admin.TabularInline):
@@ -15,17 +16,25 @@ def editButton(obj):
 editButton.short_description = ""
 
 class CompetitionAdmin(admin.ModelAdmin):
-    list_display = ('name_to_url',editButton)
+    list_display = ('name_to_url','newest_year',editButton)
     list_display_links = (editButton,)
     ordering = ('name',)
 
     def name_to_url(self,obj):
         url = reverse('admin:%s_%s_changelist' % ('contests','year'))
-        url += '?competition__id__exact=%s' % (obj.id)
-        return '<a href="%s">%s</a>' % (url, obj.name)
+        url += '?competition__id=%s' % (obj.id)
+        return '<b><a href="%s">%s</a></b>' % (url, obj.name)
     name_to_url.short_description = u'Názov'
     name_to_url.allow_tags = True
     
+    def newest_year(self, obj):
+        year = Year.objects.filter(competition=obj.id).order_by('-year')[:1]
+        url = reverse('admin:%s_%s_changelist' % ('contests','round'))
+        url += '?year__id=%s' % (year[0].id)
+        return '<b><a href="%s">%s</a></b>' % (url, year[0].__unicode__())
+    newest_year.short_description = u'Najnovší ročník'
+    newest_year.allow_tags = True
+
     fields = ('name', ('informatics', 'math', 'physics'), )
 #   maybe we will need this:
 #    inlines = [
@@ -39,8 +48,8 @@ class YearAdmin(admin.ModelAdmin):
     
     def name_to_url(self, obj):
         url = reverse('admin:%s_%s_changelist' % ('contests','round'))
-        url += '?year__id__exact=%s' % (obj.id)
-        return '<a href="%s">%s</a>' % (url, obj.__unicode__())
+        url += '?year__id=%s' % (obj.id)
+        return '<b><a href="%s">%s</a></b>' % (url, obj.__unicode__())
     name_to_url.short_description = u'Názov'
     name_to_url.allow_tags = True
 
@@ -50,9 +59,9 @@ class RoundAdmin(admin.ModelAdmin):
 
     def name_to_url(self, obj):
         url = reverse('admin:%s_%s_changelist' % ('contests','task'))
-        url += '?in_round__id__exact=%s' % (obj.id)
+        url += '?in_round__id=%s' % (obj.id)
         print url
-        return '<a href="%s">%s</a>' % (url, obj.__unicode__())
+        return '<b><a href="%s">%s</a></b>' % (url, obj.__unicode__())
     name_to_url.short_description = u'Názov'
     name_to_url.allow_tags = True
 
