@@ -3,25 +3,28 @@ from django.db import models
 from datetime import datetime
 
 class Competition(models.Model):
-    """ Contest consists of years.
+    """ Competition consists of years.
     """
     name = models.CharField(max_length = 128)
     informatics = models.BooleanField()
     math = models.BooleanField()
     physics = models.BooleanField()
+    # years <- related name to Year.competition
 
     def __unicode__(self):
         return self.name
 
+    
+
 class Year(models.Model):
     """ Year consits of several rounds.
     """
-    contest = models.ForeignKey(Competition)
+    competition = models.ForeignKey(Competition, related_name='years')
     number = models.IntegerField()
     year = models.IntegerField()
 
     def __unicode__(self):
-        return str(self.number)+u'. ročník '+self.contest.__unicode__()
+        return str(self.number)+u'. ročník '+self.competition.__unicode__()
 
 class Round(models.Model):
     """ Round has tasks.

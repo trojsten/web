@@ -34,7 +34,7 @@ def generate(request):
         for x in ['KSP', 'KSP-T', 'OI', 'KMS']:
             c = Competition.objects.create(name=x)
             for i in range(random.randint(5,10)):
-                y = Year.objects.create(contest=c, number=i+1, year=random.randint(1900,2100))
+                y = Year.objects.create(competition=c, number=i+1, year=random.randint(1900,2100))
                 for j in range(random.randint(0,5)):
                     r = Round.objects.create(year=y, number=j+1, end_time=datetime.datetime.fromtimestamp(random.randint(1,2**31)))
 
