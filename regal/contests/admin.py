@@ -3,11 +3,12 @@ from django.contrib import admin
 from regal.contests.models import *
 from django.core.urlresolvers import reverse
 
-class YearInline(admin.TabularInline):
-    model = Year
-    fk_name = 'competition'
-    fields = ('number', 'year')
-    readonly_fields = ('number',)
+# maybe we will need this:
+#class YearInline(admin.TabularInline):
+#    model = Year
+#    can_delete = False
+#    fk_name = 'competition'
+#    fields = ('number', 'year')
     
 def editButton(obj):
     return u'Uprav'
@@ -25,10 +26,11 @@ class CompetitionAdmin(admin.ModelAdmin):
     name_to_url.short_description = u'Názov'
     name_to_url.allow_tags = True
     
-    fields = ('name', ('informatics', 'math', 'physics'))
-    inlines = [
-        YearInline, 
-    ]
+    fields = ('name', ('informatics', 'math', 'physics'), )
+#   maybe we will need this:
+#    inlines = [
+#        YearInline, 
+#    ]
 
 class YearAdmin(admin.ModelAdmin):
     list_display = ('name_to_url', 'year', editButton)
