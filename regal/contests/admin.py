@@ -2,6 +2,7 @@
 from django.contrib import admin
 from regal.contests.models import *
 from django.core.urlresolvers import reverse
+from datetime import date
 
 # maybe we will need this:
 #class YearInline(admin.TabularInline):
@@ -18,13 +19,14 @@ class CompetitionAdmin(admin.ModelAdmin):
     list_display = ('name_to_url',editButton)
     list_display_links = (editButton,)
     ordering = ('name',)
-
+    
     def name_to_url(self,obj):
         url = reverse('admin:%s_%s_changelist' % ('contests','year'))
         url += '?competition__id__exact=%s' % (obj.id)
         return '<a href="%s">%s</a>' % (url, obj.name)
     name_to_url.short_description = u'Názov'
     name_to_url.allow_tags = True
+    
     
     fields = ('name', ('informatics', 'math', 'physics'), )
 #   maybe we will need this:
@@ -43,6 +45,19 @@ class YearAdmin(admin.ModelAdmin):
         return '<a href="%s">%s</a>' % (url, obj.__unicode__())
     name_to_url.short_description = u'Názov'
     name_to_url.allow_tags = True
+
+    def add_view(self, request, form_url="", extra_context=None):
+        ''' predefined values in add_view form 
+        '''
+        data = request.GET.copy()
+        c_id = request.GET.get('competition', False)
+        if c_id:
+            c = Competition.objects.get(id=c_id)
+            data['number'] = Year.objects.filter(competition=c).count()+1
+        data['year'] = date.today().year      
+        
+        request.GET = data
+        return super(YearAdmin, self).add_view(request, form_url="", extra_context=extra_context)
 
 class RoundAdmin(admin.ModelAdmin):
     list_display = ('name_to_url', editButton)

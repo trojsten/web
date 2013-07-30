@@ -21,7 +21,7 @@ class Year(models.Model):
     """ Year consits of several rounds.
     """
     competition = models.ForeignKey(Competition,verbose_name=u'súťaž')
-    number = models.IntegerField(verbose_name=u'ročník')
+    number = models.IntegerField(verbose_name=u'číslo')
     year = models.IntegerField(verbose_name=u'rok')
 
     class Meta:
