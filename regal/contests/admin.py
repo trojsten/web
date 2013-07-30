@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 from django.contrib import admin
 from regal.contests.models import *
 from django.core.urlresolvers import reverse
@@ -20,7 +20,7 @@ class CompetitionAdmin(admin.ModelAdmin):
 
     def name_to_url(self,obj):
         url = reverse('admin:%s_%s_changelist' % ('contests','year'))
-        url += '?contest__id__exact=%s' % (obj.id)
+        url += '?competition__id__exact=%s' % (obj.id)
         return '<a href="%s">%s</a>' % (url,obj.name)
     name_to_url.short_description = "Názov"
     name_to_url.allow_tags = True
