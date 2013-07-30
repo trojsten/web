@@ -68,8 +68,9 @@ class YearAdmin(admin.ModelAdmin):
         return super(YearAdmin, self).add_view(request, form_url="", extra_context=extra_context)
 
 class RoundAdmin(admin.ModelAdmin):
-    list_display = ('name_to_url', editButton)
+    list_display = ('name_to_url', 'end_time', editButton)
     list_display_links = (editButton,)
+    ordering = ('number',)
 
     def name_to_url(self, obj):
         url = reverse('admin:%s_%s_changelist' % ('contests','task'))
