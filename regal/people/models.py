@@ -21,8 +21,8 @@ class Address(models.Model):
             self.country)
 
     class Meta:
-        verbose_name = u'Address'
-        verbose_name_plural = u'Addresses'
+        verbose_name = u'Adresa'
+        verbose_name_plural = u'Adresy'
 
 
 
@@ -43,6 +43,10 @@ class Person(models.Model):
     # teaches_as <- related name to Teacher.person
     # teaches_in <- related name to School.teaching_persons
     
+    class Meta:
+        verbose_name = u'Osoba'
+        verbose_name_plural = u'Ľudia'
+
     def __init__(self, *args, **kwargs):
         super(Person,self).__init__(*args,**kwargs)
         self.props = PropsManager(self, PersonProperty)
@@ -135,6 +139,10 @@ class School(models.Model):
         related_name='teaches_in')
     # students <- related name to Student.school
     # teachers <- related name to Teacher.school
+
+    class Meta:
+        verbose_name = u'Škola'
+        verbose_name_plural = u'Školy'
     
     def __unicode__(self):
         return self.name
@@ -200,6 +208,10 @@ class Student(models.Model):
     expected_end_year = models.SmallIntegerField(default=None, null=True)
         # The year when full study would terimnate
         # Used to determine actual grade
+
+    class Meta:
+        verbose_name = u'Študent'
+        verbose_name_plural = u'Študenti'
     
     def is_actual():
         return end_date == None
@@ -244,6 +256,10 @@ class Teacher(models.Model):
     teaches_math = models.NullBooleanField()
     teaches_physics = models.NullBooleanField()
     teaches_informatics = models.NullBooleanField()
+
+    class Meta:
+        verbose_name = u'Učiteľ'
+        verbose_name_plural = u'Učitelia'
     
 
 
