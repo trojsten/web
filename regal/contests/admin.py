@@ -16,8 +16,8 @@ def editButton(obj):
     return u'Uprav'
 editButton.short_description = ""
 
-def name_to_url(parent, son, obj):
-    url = reverse('admin:%s_%s_changelist' % ('contests',son))
+def name_to_url(app, parent , son, obj):
+    url = reverse('admin:%s_%s_changelist' % (app,son))
     url += '?%s__id=%s' % (parent, obj.id)
     return '<b><a href="%s">%s</a></b>' % (url, obj.__unicode__())
 #name_to_url.short_description = u'Názov'
@@ -30,7 +30,7 @@ class CompetitionAdmin(admin.ModelAdmin):
     ordering = ('name',)
     
     def name_to_url(self,obj):
-        return name_to_url('competition','year', obj)
+        return name_to_url('contests', 'competition','year', obj)
     name_to_url.short_description = u'Názov'
     name_to_url.allow_tags = True
     
@@ -56,7 +56,7 @@ class YearAdmin(admin.ModelAdmin):
     ordering = ('-year',)
     
     def name_to_url(self, obj):
-        return name_to_url('year','round', obj)
+        return name_to_url('contests', 'year','round', obj)
     name_to_url.short_description = u'Názov'
     name_to_url.allow_tags = True
 
@@ -89,7 +89,7 @@ class RoundAdmin(admin.ModelAdmin):
     ordering = ('number',)
 
     def name_to_url(self, obj):
-        return name_to_url('in_round','task', obj)
+        return name_to_url('problems', 'in_round','task', obj)
     name_to_url.short_description = u'Názov'
     name_to_url.allow_tags = True
     
