@@ -5,11 +5,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from regal.properties import PropsManager
 
 class Address(models.Model):
-    street = models.CharField(max_length=64)
-    number = models.CharField(max_length=16)
-    town = models.CharField(max_length=64,  db_index=True)
-    postal_code = models.CharField(max_length=16,  db_index=True)
-    country = models.CharField(max_length=32,  db_index=True)
+    street = models.CharField(max_length=64, verbose_name=u'ulica')
+    number = models.CharField(max_length=16, verbose_name=u'číslo')
+    town = models.CharField(max_length=64,  db_index=True, verbose_name=u'mesto')
+    postal_code = models.CharField(max_length=16,  db_index=True, verbose_name=u'PSČ')
+    country = models.CharField(max_length=32,  db_index=True, verbose_name=u'krajina')
     # schools_here <- related name to School.address
     # lives_here <- related name to Person.home_address
     # accepting_mails_here <- related name to Student.correspondence_address
@@ -30,14 +30,14 @@ class Person(models.Model):
     """ Holds, provide access to or manages all informations
         related to a person.
     """
-    name = models.CharField(max_length=128,  db_index=True)
-    surname = models.CharField(max_length=128,  db_index=True)
-    birth_date = models.DateField( db_index=True)
+    name = models.CharField(max_length=128,  db_index=True, verbose_name=u'meno')
+    surname = models.CharField(max_length=128,  db_index=True, verbose_name=u'priezvisko')
+    birth_date = models.DateField( db_index=True, verbose_name=u'dátum narodenia')
     home_address = models.ForeignKey(Address,
-        related_name='lives_here', null=True)
+        related_name='lives_here', null=True, verbose_name=u'domáca adresa')
     correspondence_address = models.ForeignKey(Address,
-        related_name='accepting_mails_here', null=True)
-    email = models.EmailField()
+        related_name='accepting_mails_here', null=True, verbose_name=u'adresa korešpondencie')
+    email = models.EmailField(verbose_name=u'e-mail')
     # studies_as <- related name to Student.person
     # studies_in <- related name to School.studying_persons
     # teaches_as <- related name to Teacher.person
@@ -97,46 +97,48 @@ class Person(models.Model):
 
 class PersonPropertyCategory(models.Model):
     """ PersonPropertyTypes can be categorized for better UI organization. """
-    name = models.CharField(max_length=128,  db_index=True)
+    name = models.CharField(max_length=128,  db_index=True, verbose_name=u'meno')
     # types <- related name to PersonPropertyType.category
     
 
 class PersonPropertyType(models.Model):
     """ Describes one possible type additional person properties """
-    name = models.CharField(max_length=128,  db_index=True)
-    validity_regex = models.TextField(null = False, default = "")
-    multi = models.BooleanField(default = False)
-    category = models.ForeignKey(PersonPropertyCategory, related_name='types')
-    user_editable = models.BooleanField(default = True)
-    user_readable = models.BooleanField(default = True)
+    name = models.CharField(max_length=128,  db_index=True, verbose_name=u'meno')
+    validity_regex = models.TextField(null = False, default = "", verbose_name=u'validačný regex')
+    multi = models.BooleanField(default = False, verbose_name=u'multi')
+    category = models.ForeignKey(PersonPropertyCategory, related_name='types', verbose_name=u'kategória')
+    user_editable = models.BooleanField(default = True, verbose_name=u'editovateľné užívateľom')
+    user_readable = models.BooleanField(default = True, verbose_name=u'čitateľné užívateľom')
     # records <- related name to PersonProperty.type
     
 class PersonProperty(models.Model):
     """ Every adittional property of every person is stored as this. """
     type = models.ForeignKey(PersonPropertyType,
-        related_name='records')
-    object = models.ForeignKey(Person, related_name='+')
-    value = models.TextField(null = False, default = "",  db_index=True)
+        related_name='records', verbose_name=u'typ')
+    object = models.ForeignKey(Person, related_name='+', verbose_name=u'objekt')
+    value = models.TextField(null = False, default = "",  db_index=True, verbose_name=u'hodnota')
     
         
 class School(models.Model):
     """ Holds, provide access to or manages all informations
         related to a school.
     """
-    name = models.CharField(max_length=128)
-    abbr = models.CharField(max_length=16)
+    name = models.CharField(max_length=128, verbose_name=u'meno')
+    abbr = models.CharField(max_length=16, verbose_name=u'skratka')
         # Used when full name is too long (e.g. results, list of participants)
     address = models.ForeignKey(Address, related_name='schools_here',
-        null=True)
-    email = models.EmailField(null=True)
+        null=True, verbose_name=u'adresa')
+    email = models.EmailField(null=True, verbose_name=u'e-mail')
     studying_persons = models.ManyToManyField(
         Person,
         through='Student',
-        related_name='studies_in')
+        related_name='studies_in',
+        verbose_name=u'študenti')
     teaching_persons = models.ManyToManyField(
         Person,
         through='Teacher',
-        related_name='teaches_in')
+        related_name='teaches_in',
+        verbose_name=u'učitelia')
     # students <- related name to Student.school
     # teachers <- related name to Teacher.school
 
@@ -197,7 +199,6 @@ class Student(models.Model):
         study type, and student's grade.
         Should be able to give information about part of person's studies.
     """
-
     STUDY_TYPE_CHOICES = (
         ('ZS', 'Základná škola'),
         ('SS', 'Stredná škola'),
@@ -206,19 +207,19 @@ class Student(models.Model):
         ('BL', 'Bilingválne gymnázium'),
     )
 
-    school = models.ForeignKey(School, related_name='students')
-    person = models.ForeignKey(Person, related_name='studies_as')
+    school = models.ForeignKey(School, related_name='students', verbose_name=u'škola')
+    person = models.ForeignKey(Person, related_name='studies_as', verbose_name=u'osoba')
     # syslove nefunkcne:
     # study_type = StudyTypeField(default = StudyType.ZS, null=False, db_index=True)
-    study_type = models.CharField(max_length=2, choices=STUDY_TYPE_CHOICES, default='SS')
-    start_date = models.DateField()
+    study_type = models.CharField(max_length=2, choices=STUDY_TYPE_CHOICES, default='SS', verbose_name=u'typ štúdia')
+    start_date = models.DateField(verbose_name=u'začiatok štúdia')
         # Begining date of this relationship
         # Used to determine actual school in specified time
-    end_date = models.DateField(null=True)
+    end_date = models.DateField(null=True, verbose_name=u'koniec štúdia')
         # Termination date of this relationship
         # Used to determine actual school in specified time
         # None/NULL when this is actual relationship
-    expected_end_year = models.SmallIntegerField(default=None, null=True)
+    expected_end_year = models.SmallIntegerField(default=None, null=True, verbose_name=u'očakávaný rok skončenia')
         # The year when full study would terimnate
         # Used to determine actual grade
 
@@ -264,11 +265,11 @@ class Teacher(models.Model):
     """ An actual relationship between school and person teaching there.
         Also stores information about teached subjects.
     """
-    school = models.ForeignKey(School, related_name='teachers')
-    person = models.ForeignKey(Person, related_name='teaches_as')
-    teaches_math = models.NullBooleanField()
-    teaches_physics = models.NullBooleanField()
-    teaches_informatics = models.NullBooleanField()
+    school = models.ForeignKey(School, related_name='teachers', verbose_name=u'škola')
+    person = models.ForeignKey(Person, related_name='teaches_as', verbose_name=u'osoba')
+    teaches_math = models.NullBooleanField(verbose_name=u'učí matematiku')
+    teaches_physics = models.NullBooleanField(verbose_name=u'učí fyziku')
+    teaches_informatics = models.NullBooleanField(verbose_name=u'učí informatiku')
 
     class Meta:
         verbose_name = u'Učiteľ'
