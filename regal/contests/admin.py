@@ -3,7 +3,7 @@ from django.contrib import admin
 from regal.contests.models import *
 from django.core.urlresolvers import reverse
 from datetime import date
-from regal.contests.models import Year
+from regal.problems.models import * 
 
 # maybe we will need this:
 #class YearInline(admin.TabularInline):
@@ -80,12 +80,6 @@ class RoundAdmin(admin.ModelAdmin):
     name_to_url.short_description = u'Názov'
     name_to_url.allow_tags = True
 
-class TaskAdmin(admin.ModelAdmin):
-    list_display = ('number','name', editButton)
-    list_display_links = (editButton,)
-    ordering = ('number',)
-
 admin.site.register(Competition,CompetitionAdmin)
 admin.site.register(Year,YearAdmin)
 admin.site.register(Round,RoundAdmin)
-admin.site.register(Task, TaskAdmin)

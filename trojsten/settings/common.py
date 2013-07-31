@@ -135,6 +135,7 @@ INSTALLED_APPS = (
     'regal.people',
     'django.contrib.admin',
     'regal.contests',
+    'regal.problems'
 )
 
 # A sample logging configuration. The only tangible logging

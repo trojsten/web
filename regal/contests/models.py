@@ -46,17 +46,3 @@ class Round(models.Model):
 
     def __unicode__(self):
         return str(self.number)+'. kolo'
-
-class Task(models.Model):
-    '''
-    '''
-    in_round = models.ForeignKey(Round, verbose_name=u'kolo')
-    name = models.CharField(max_length = 128,verbose_name=u'názov')
-    number = models.IntegerField(verbose_name=u'#')
-
-    class Meta:
-        verbose_name = u'Príklad'
-        verbose_name_plural = u'Príklady'
-
-    def __unicode__(self):
-        return self.name;

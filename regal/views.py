@@ -4,6 +4,7 @@ from django.template import RequestContext
 from django.http import HttpResponse
 from regal.people.models import *
 from regal.contests.models import *
+from regal.problems.models import *
 import random, string, datetime
 
 def random_word(length):
