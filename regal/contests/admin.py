@@ -51,6 +51,8 @@ class CompetitionAdmin(admin.ModelAdmin):
 class YearAdmin(admin.ModelAdmin):
     list_display = ('name_to_url', 'year', editButton)
     list_display_links = (editButton,)
+    list_filter = ('competition',)
+
     ordering = ('-year',)
     
     def name_to_url(self, obj):
@@ -83,6 +85,7 @@ class YearAdmin(admin.ModelAdmin):
 class RoundAdmin(admin.ModelAdmin):
 
     list_display = ('name_to_url', editButton)
+    list_filter = ('end_time',)
     list_display_links = (editButton,)
 
     def name_to_url(self, obj):
