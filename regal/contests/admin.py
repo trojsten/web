@@ -81,8 +81,9 @@ class RoundAdmin(admin.ModelAdmin):
     name_to_url.allow_tags = True
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('name', editButton)
-    list_display_links = (editButton,) 
+    list_display = ('number','name', editButton)
+    list_display_links = (editButton,)
+    ordering = ('number',)
 
 admin.site.register(Competition,CompetitionAdmin)
 admin.site.register(Year,YearAdmin)

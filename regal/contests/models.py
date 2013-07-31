@@ -52,7 +52,7 @@ class Task(models.Model):
     '''
     in_round = models.ForeignKey(Round, verbose_name=u'kolo')
     name = models.CharField(max_length = 128,verbose_name=u'názov')
-    number = models.IntegerField(verbose_name=u'číslo')
+    number = models.IntegerField(verbose_name=u'#')
 
     class Meta:
         verbose_name = u'Príklad'
