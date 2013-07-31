@@ -83,10 +83,10 @@ class YearAdmin(admin.ModelAdmin):
         return super(YearAdmin, self).changelist_view(request, extra_context=extra_context)
 
 class RoundAdmin(admin.ModelAdmin):
-
-    list_display = ('name_to_url', editButton)
-    list_filter = ('end_time',)
+    list_display = ('name_to_url', 'end_time', editButton)
     list_display_links = (editButton,)
+    list_filter = ('end_time',)
+    ordering = ('number',)
 
     def name_to_url(self, obj):
         return name_to_url('in_round','task', obj)
@@ -116,8 +116,9 @@ class RoundAdmin(admin.ModelAdmin):
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('name', editButton)
-    list_display_links = (editButton,) 
+    list_display = ('number','name', editButton)
+    list_display_links = (editButton,)
+    ordering = ('number',)
 
 admin.site.register(Competition,CompetitionAdmin)
 admin.site.register(Year,YearAdmin)
