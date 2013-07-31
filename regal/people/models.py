@@ -149,8 +149,10 @@ class School(models.Model):
 
     def get_town(self):
         return self.address.town
-    
 
+## TODO toto musi sysel opravit, lebo to cele nefunguje ##
+##########################################################
+'''
 class StudyType(object):
     """ Set of informations about study type.
         Also defines all study types.
@@ -183,11 +185,11 @@ class StudyTypeField(models.CharField):
     def to_python(self, value):
         if isinstance(value, StudyType):
             return value
-        return getattr(StudyType, value)
-        
-    def get_prep_value(self, value):
-        return value.abbr
+        return getattr(StudyType, 'ZS')
 
+    def get_prep_value(self, value):
+         return value.abbr
+'''
 
 class Student(models.Model):
     """ A relationship between School and Person studying there.
@@ -195,9 +197,20 @@ class Student(models.Model):
         study type, and student's grade.
         Should be able to give information about part of person's studies.
     """
+
+    STUDY_TYPE_CHOICES = (
+        ('ZS', 'Základná škola'),
+        ('SS', 'Stredná škola'),
+        ('VS', 'Vysoká škola'),
+        ('G8', '8-ročné gymnázium'),
+        ('BL', 'Bilingválne gymnázium'),
+    )
+
     school = models.ForeignKey(School, related_name='students')
     person = models.ForeignKey(Person, related_name='studies_as')
-    study_type = StudyTypeField(default = StudyType.ZS, null=False, db_index=True)
+    # syslove nefunkcne:
+    # study_type = StudyTypeField(default = StudyType.ZS, null=False, db_index=True)
+    study_type = models.CharField(max_length=2, choices=STUDY_TYPE_CHOICES, default='SS')
     start_date = models.DateField()
         # Begining date of this relationship
         # Used to determine actual school in specified time
