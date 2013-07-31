@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*- 
 from django.db import models
 from datetime import datetime
+from django.core.urlresolvers import reverse
 
 class Competition(models.Model):
     """ Contest consists of years.
