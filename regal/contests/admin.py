@@ -18,7 +18,7 @@ editButton.short_description = ""
 
 def name_to_url(app, parent , son, obj):
     url = reverse('admin:%s_%s_changelist' % (app,son))
-    url += '?%s__id=%s' % (parent, obj.id)
+    url += '?%s__id__exact=%s' % (parent, obj.id)
     return '<b><a href="%s">%s</a></b>' % (url, obj.__unicode__())
 #name_to_url.short_description = u'Názov'
 #name_to_url.allow_tags = True
@@ -37,7 +37,7 @@ class CompetitionAdmin(admin.ModelAdmin):
     def newest_year(self, obj):
         year = Year.objects.filter(competition=obj.id).order_by('-year')[:1]
         url = reverse('admin:%s_%s_changelist' % ('contests','round'))
-        url += '?year__id=%s' % (year[0].id)
+        url += '?year__id__exact=%s' % (year[0].id)
         return '<b><a href="%s">%s</a></b>' % (url, year[0].__unicode__())
     newest_year.short_description = u'Najnovší ročník'
     newest_year.allow_tags = True

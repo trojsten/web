@@ -90,7 +90,7 @@ class Person(models.Model):
         s.pk = None
         s.save()
         return s
-    
+
     def __unicode__(self):
         return self.name + " " + self.surname
 
