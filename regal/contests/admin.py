@@ -75,7 +75,7 @@ class YearAdmin(admin.ModelAdmin):
     
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
-        c_id = request.GET.get('competition__id', False)
+        c_id = request.GET.get('competition__id__exact', False)
         if c_id:
             extra_context['add_options'] = 'competition='+c_id
             c = Competition.objects.get(id=c_id)
@@ -107,7 +107,7 @@ class RoundAdmin(admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
-        y_id = request.GET.get('year__id', False)
+        y_id = request.GET.get('year__id__exact', False)
         if y_id:
             extra_context['add_options'] = 'year='+y_id
             y = Year.objects.get(id=y_id)
