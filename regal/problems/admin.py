@@ -35,6 +35,7 @@ class TaskAdmin(admin.ModelAdmin):
             submit_types.append(x.submit_type)
             solvers.append(x.person)
         submit_types = list(set(submit_types))
+        submit_types.append(u'súčet')
         solvers = list(set(solvers))
         results = {}
         for x in solvers:
@@ -43,9 +44,13 @@ class TaskAdmin(admin.ModelAdmin):
                 results[x.__unicode__()][y] = 0
         for x in evaulations:
             results[x.person.__unicode__()][x.submit_type] = x.points
+            results[x.person.__unicode__()][u'súčet'] += int(x.points)
 
         return render_to_response('admin/problems/task_details.html',
-        {},
+        {'name': task.__unicode__(),
+        'submit_types': submit_types,
+        'results': results,
+        },
         context_instance=RequestContext(request))
     
     def name_to_url(self, obj):
