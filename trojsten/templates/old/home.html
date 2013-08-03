@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{ caption }}{% endblock title %}
+
+{% block content %}
+
+<h2> {{ caption }} </h2>
+
+<table border="1">
+<tr>
+    <th>Názov</th>
+    <th>Popis</th>
+</tr>
+{% for row in tables %}
+    <tr>
+        <td>
+            <a href="{% url row.1 all %}">{{ row.0 }}</a>
+        </td>
+        <td>{{ row.2 }}</td>
+    </tr>
+{% endfor %}
+</table> 
+
+{% endblock content %}
