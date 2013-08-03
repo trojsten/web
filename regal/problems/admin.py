@@ -27,6 +27,23 @@ class TaskAdmin(admin.ModelAdmin):
         return my_urls + urls
 
     def review(self, request, id):
+        task = Task.objects.get(pk=id)
+        evaulations = Point.objects.all().filter(task=task.id)
+        submit_types = []
+        solvers = []
+        for x in evaulations:
+            submit_types.append(x.submit_type)
+            solvers.append(x.person)
+        submit_types = list(set(submit_types))
+        solvers = list(set(solvers))
+        results = {}
+        for x in solvers:
+            results[x.__unicode__()] = {}
+            for y in submit_types:
+                results[x.__unicode__()][y] = 0
+        for x in evaulations:
+            results[x.person.__unicode__()][x.submit_type] = x.points
+
         return render_to_response('admin/problems/task_details.html',
         {},
         context_instance=RequestContext(request))
