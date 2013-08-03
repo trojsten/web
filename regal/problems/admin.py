@@ -2,23 +2,37 @@
 from django.contrib import admin
 from regal.problems.models import *
 from django.core.urlresolvers import reverse
+from django.conf.urls.defaults import patterns
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.http import HttpResponse
 
 def editButton(obj):
     return u'Uprav'
 editButton.short_description = ""
 
-def name_to_url(app, parent, son, obj):
-    url = reverse('admin:%s_%s_changelist' % (app, son))
-    url += '?%s__id__exact=%s' % (parent, obj.id)
+def name_to_url(app, parent, obj):
+    url = reverse('admin:%s_%s_changelist' % (app, parent))
+    url += 'details/%s' % (obj.id)
     return '<b><a href="%s">%s</a></b>' % (url, obj.__unicode__())
 
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('number','name_to_url', editButton)
     list_display_links = (editButton,)
     ordering = ('number',)
+
+    def get_urls(self):
+        urls = super(TaskAdmin, self).get_urls()
+        my_urls = patterns('', (r'details/(\d+)$', self.admin_site.admin_view(self.review)),)
+        return my_urls + urls
+
+    def review(self, request, id):
+        return render_to_response('admin/problems/task_details.html',
+        {},
+        context_instance=RequestContext(request))
     
     def name_to_url(self, obj):
-        return name_to_url('problems', 'task', 'point', obj)
+        return name_to_url('problems', 'task', obj)
     name_to_url.short_description = u'Názov'
     name_to_url.allow_tags = True
 
