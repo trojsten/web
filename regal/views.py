@@ -38,10 +38,10 @@ def generate(request):
     if (not Competition.objects.all()):
         for x in ['KSP', 'KSP-T', 'OI', 'KMS']:
             c = Competition.objects.create(name=x)
-            for i in range(random.randint(5,10)):
-                y = Year.objects.create(competition=c, number=i+1, year=random.randint(1900,2100))
-                for j in range(random.randint(0,5)):
-                    r = Round.objects.create(year=y, number=j+1, end_time=datetime.datetime.fromtimestamp(random.randint(1,2**31)))
+            for i in range(random.randint(4,7)):
+                s = Series.objects.create(competition=c, name=random_word(10), year=random.randint(1,30), start_date=datetime.date.fromtimestamp(random.randint(1,2**31)))
+                for j in range(random.randint(0,3)):
+                    r = Round.objects.create(series=s, number=j+1, end_time=datetime.datetime.fromtimestamp(random.randint(1,2**31)))
                     for k in range(random.randint(0,3)):
                         t = Task.objects.create(in_round=r, name=random_word(6), number=k+1)
                         for l in range(random.randint(1,3)):

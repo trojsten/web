@@ -4,7 +4,8 @@ from datetime import datetime
 from django.core.urlresolvers import reverse
 
 class Competition(models.Model):
-    """ Contest consists of years.
+    """
+    Consists of years.
     """
     name = models.CharField(max_length = 128, verbose_name=u'názov')
     informatics = models.BooleanField(verbose_name=u'informatika')
@@ -18,25 +19,28 @@ class Competition(models.Model):
     def __unicode__(self):
         return self.name
 
-class Year(models.Model):
-    """ Year consits of several rounds.
+class Series(models.Model):
+    """
+    Series consits of several rounds.
     """
     competition = models.ForeignKey(Competition,verbose_name=u'súťaž')
-    number = models.IntegerField(verbose_name=u'číslo')
-    year = models.IntegerField(verbose_name=u'rok')
+    name = models.CharField(max_length = 32, verbose_name=u'názov')
+    start_date = models.DateField(verbose_name=u'dátum začiatku')
+    year = models.IntegerField(verbose_name=u'ročník')
 
     class Meta:
-        verbose_name = u'Ročník'
-        verbose_name_plural = u'Ročníky'
+        verbose_name = u'Séria'
+        verbose_name_plural = u'Série'
 
     def __unicode__(self):
-        return str(self.number)+u'. ročník '+self.competition.__unicode__()
+        return str(self.name)
 
 class Round(models.Model):
-    """ Round has tasks.
-        Holds informations about deadline and such things
+    """ 
+    Round has tasks.
+    Holds information about deadline and such things
     """
-    year = models.ForeignKey(Year,verbose_name=u'ročník')
+    series = models.ForeignKey(Series,verbose_name=u'séria')
     number = models.IntegerField(verbose_name=u'číslo')
     end_time = models.DateTimeField(verbose_name=u'koniec')
     visible = models.BooleanField(verbose_name=u'viditeľnosť')
