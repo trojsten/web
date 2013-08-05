@@ -15,9 +15,7 @@ from django.utils.cache import patch_vary_headers
 class MultiHostnameMiddleware:
 
     def process_request(self, request):
-        host = request.META['HTTP_HOST']
-        if host[-3:] == ':80':  # if default port, ignore it
-            host = host[:-3]
+        host = request.META['HTTP_HOST'].split(':')[0]
         try:
             request.urlconf = settings.HOST_MIDDLEWARE_URLCONF_MAP[host]
         except KeyError:
