@@ -17,8 +17,9 @@ class Task(models.Model):
     def __unicode__(self):
         return self.name;
 
-class Point(models.Model):
+class Evaluation(models.Model):
     '''
+    For storing points.
     '''
     task = models.ForeignKey(Task, verbose_name=u'úloha')
     person = models.ForeignKey(Person, verbose_name=u'riešiteľ')

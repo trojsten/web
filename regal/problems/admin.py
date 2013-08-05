@@ -28,7 +28,7 @@ class TaskAdmin(admin.ModelAdmin):
 
     def review(self, request, id):
         task = Task.objects.get(pk=id)
-        evaulations = Point.objects.all().filter(task=task.id)
+        evaulations = Evaluation.objects.all().filter(task=task.id)
         submit_types = []
         solvers = []
         for x in evaulations:
@@ -58,9 +58,9 @@ class TaskAdmin(admin.ModelAdmin):
     name_to_url.short_description = u'Názov'
     name_to_url.allow_tags = True
 
-class PointAdmin(admin.ModelAdmin):
+class EvaluationAdmin(admin.ModelAdmin):
     list_display = ['person', 'submit_type', 'points', editButton]
     list_display_links = (editButton,)
 
 admin.site.register(Task,TaskAdmin)
-admin.site.register(Point,PointAdmin)
+admin.site.register(Evaluation,EvaluationAdmin)
