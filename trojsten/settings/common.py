@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 # Common settings for trojsten.
 import os
 import trojsten

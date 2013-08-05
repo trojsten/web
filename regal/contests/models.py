@@ -1,53 +1,63 @@
-# -*- coding: utf-8 -*- 
-from django.db import models
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 from datetime import datetime
+
+from django.db import models
 from django.core.urlresolvers import reverse
 
+
 class Competition(models.Model):
+
     """
     Consists of years.
     """
-    name = models.CharField(max_length = 128, verbose_name=u'názov')
-    informatics = models.BooleanField(verbose_name=u'informatika')
-    math = models.BooleanField(verbose_name=u'matematika')
-    physics = models.BooleanField(verbose_name=u'fyzika')
+    name = models.CharField(max_length=128, verbose_name='názov')
+    informatics = models.BooleanField(verbose_name='informatika')
+    math = models.BooleanField(verbose_name='matematika')
+    physics = models.BooleanField(verbose_name='fyzika')
 
     class Meta:
-        verbose_name = u'Súťaž'
-        verbose_name_plural = u'Súťaže'
+        verbose_name = 'Súťaž'
+        verbose_name_plural = 'Súťaže'
 
     def __unicode__(self):
         return self.name
 
+
 class Series(models.Model):
+
     """
     Series consits of several rounds.
     """
-    competition = models.ForeignKey(Competition,verbose_name=u'súťaž')
-    name = models.CharField(max_length = 32, verbose_name=u'názov')
-    start_date = models.DateField(verbose_name=u'dátum začiatku')
-    year = models.IntegerField(verbose_name=u'ročník')
+    competition = models.ForeignKey(Competition, verbose_name='súťaž')
+    name = models.CharField(max_length=32, verbose_name='názov')
+    start_date = models.DateField(verbose_name='dátum začiatk')
+    year = models.IntegerField(verbose_name='ročník')
 
     class Meta:
-        verbose_name = u'Séria'
-        verbose_name_plural = u'Série'
+        verbose_name = 'Séria'
+        verbose_name_plural = 'Série'
 
     def __unicode__(self):
         return str(self.name)
 
+
 class Round(models.Model):
-    """ 
+
+    """
     Round has tasks.
     Holds information about deadline and such things
     """
-    series = models.ForeignKey(Series,verbose_name=u'séria')
-    number = models.IntegerField(verbose_name=u'číslo')
-    end_time = models.DateTimeField(verbose_name=u'koniec')
-    visible = models.BooleanField(verbose_name=u'viditeľnosť')
+    series = models.ForeignKey(Series, verbose_name='séria')
+    number = models.IntegerField(verbose_name='číslo')
+    end_time = models.DateTimeField(verbose_name='koniec')
+    visible = models.BooleanField(verbose_name='viditeľnosť')
 
     class Meta:
-        verbose_name = u'Kolo'
-        verbose_name_plural = u'Kolá'
+        verbose_name = 'Kolo'
+        verbose_name_plural = 'Kolá'
 
     def __unicode__(self):
-        return str(self.number)+'. kolo'
+        return str(self.number) + '. kolo'
