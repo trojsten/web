@@ -105,9 +105,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'trojsten.middleware.multihostname.MultiHostnameMiddleware',
 )
 
 ROOT_URLCONF = 'trojsten.urls'
+HOST_MIDDLEWARE_URLCONF_MAP = {}
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'trojsten.wsgi.application'
