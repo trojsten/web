@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 
-"""
+'''
 Collection of clases which simplifies working with 'Props' models.
 (There is at least one - regal.people.models.PersonProps)
 
@@ -17,7 +17,7 @@ PropsType model must contain attributes / fields:
         If true, property is called multiproperty
         Otherwise it's singleproperty
 
-"""
+'''
 
 from collections import MutableMapping
 from collections import MutableSet
@@ -29,13 +29,14 @@ from django.db.models.query import QuerySet
 
 class SetOfMultiproperties(MutableSet):
 
-    """ Helper class of PropsDict.
+    '''
+    Helper class of PropsDict.
 
-        Is returned by PropsDict, when multiproperty is required.
-        Stores the changes to PropsDict's chnge sets.
+    Is returned by PropsDict, when multiproperty is required.
+    Stores the changes to PropsDict's chnge sets.
 
-        Implements set's behaviour
-    """
+    Implements set's behaviour
+    '''
 
     def __init__(self, edited_types_set, del_prop_set, prop_class,
                  prop_type, prop_object):
@@ -56,7 +57,7 @@ class SetOfMultiproperties(MutableSet):
 
     def discard(self, item):
         if item in self._storage:
-            if self._storage[item].pk != None:
+            if self._storage[item].pk is not None:
                 self._del_prop_set.add(self._storage[item])
             del self._storage[item]
 
@@ -75,27 +76,28 @@ class SetOfMultiproperties(MutableSet):
 
     def _save_created(self):
         for x in self._storage.itervalues():
-            if x.pk == None:
+            if x.pk is None:
                 x.save()
 
 
 class PropsDict(MutableMapping):
 
-    """ Class used for offline properties edits.
+    '''
+    Class used for offline properties edits.
 
-        Fully encapsulates Props model interface - user is working just with
-        PropType-s keys and values. Implements dict's behaviour.
+    Fully encapsulates Props model interface - user is working just with
+    PropType-s keys and values. Implements dict's behaviour.
 
-        When multiproperty required a set is returned (SetOfMultiproperties).
+    When multiproperty required a set is returned (SetOfMultiproperties).
 
-        All changes can be commited to db in an atomic operation.
-        Object is not updatable - to update changes from db create new object.
+    All changes can be commited to db in an atomic operation.
+    Object is not updatable - to update changes from db create new object.
 
-    """
+    '''
 
     def _del_property_instance(self, key):
         if key.pk in self._data_storage:
-            if self._data_storage[key.pk].pk != None:
+            if self._data_storage[key.pk].pk is not None:
                 self._del_prop_set.add(self._data_storage[key.pk])
 
     def _add_multiproperty_set(self, key):
@@ -162,7 +164,9 @@ class PropsDict(MutableMapping):
 
     @transaction.commit_manually
     def save(self):
-        """ Atomic operation. Commits all the changes since last save to db. """
+        '''
+        Atomic operation. Commits all the changes since last save to db.
+        '''
 
         try:
             delete_Q = models.Q()
@@ -191,7 +195,9 @@ class PropsDict(MutableMapping):
 
 class PropsQuerySet(QuerySet):
 
-    """ Query set of properties owned by one object. Can create PropsDict. """
+    '''
+    Query set of properties owned by one object. Can create PropsDict.
+    '''
 
     def __init__(self, prop_object=None, *args, **kwargs):
         super(PropsQuerySet, self).__init__(*args, **kwargs)
@@ -208,9 +214,10 @@ class PropsQuerySet(QuerySet):
 
 class PropQuerySet(PropsQuerySet):
 
-    """ QuerySet of properties of one type owned by one object.
-        Provides common functionality for Multi/SinglePopr subclasses.
-    """
+    '''
+    QuerySet of properties of one type owned by one object.
+    Provides common functionality for Multi/SinglePopr subclasses.
+    '''
 
     def __init__(self, prop_type=None, *args, **kwargs):
         super(PropQuerySet, self).__init__(*args, **kwargs)
@@ -233,41 +240,52 @@ class PropQuerySet(PropsQuerySet):
 
 class MultiPropQuerySet(PropQuerySet):
 
-    """ QuerySet of multiproperties of one type owned by one object.
-        Provides interface for direct db editing.
-    """
+    '''
+    QuerySet of multiproperties of one type owned by one object.
+    Provides interface for direct db editing.
+    '''
 
     def add_value(self, value):
-        """ Adds new property with given value to database """
+        '''
+        Adds new property with given value to database
+        '''
         self._add(value)
 
     def values(self):
-        """ Returns set of values of properties in this QuerySet """
+        '''
+        Returns set of values of properties in this QuerySet
+        '''
         res = set()
         for i in list(self):
             res.add(i.value)
         return res
 
     def delete_value(self, value):
-        """ Removes property with given value from database (if exists)"""
+        '''
+        Removes property with given value from database (if exists)
+        '''
         self._safe_query_set().filter(value=value).delete()
 
 
 class SinglePropQuerySet(PropQuerySet):
 
-    """ QuerySet of multiproperties of one type owned by one object.
-        Provides interface for direct db editing.
-    """
+    '''
+    QuerySet of multiproperties of one type owned by one object.
+    Provides interface for direct db editing.
+    '''
 
     def value(self):
-        """ Abbrevitation for get().value """
+        '''
+        Abbrevitation for get().value
+        '''
         return self.get().value
 
     @transaction.commit_manually
     def set_value(self, value):
-        """ Removes all properties of this type and object from the db and
-            creates a new one. (Should be just one of this type per object.)
-        """
+        '''
+        Removes all properties of this type and object from the db and
+        creates a new one. (Should be just one of this type per object.)
+        '''
         try:
             self._safe_query_set().delete()
             self._add(value)
@@ -280,11 +298,12 @@ class SinglePropQuerySet(PropQuerySet):
 
 class PropsManager(models.Manager):
 
-    """ Manager for all properties woned by one object.
+    '''
+    Manager for all properties woned by one object.
 
-        Normally returns PropsQuerySet-s but using dictionary index returns
-        Single/MultiPropQuerySet-s.
-    """
+    Normally returns PropsQuerySet-s but using dictionary index returns
+    Single/MultiPropQuerySet-s.
+    '''
 
     def __init__(self, owner, model):
         super(PropsManager, self).__init__()
@@ -299,11 +318,15 @@ class PropsManager(models.Manager):
         return qs.filter(object=self.owner)
 
     def create_dict(self):
-        """ For direct access."""
+        '''
+        For direct access.
+        '''
         return self.get_query_set().create_dict()
 
     def __getitem__(self, key):
-        """ Returns Single/MultiPropQuerySet, for direct db manipulation """
+        '''
+        Returns Single/MultiPropQuerySet, for direct db manipulation
+        '''
         if key.multi:
             qs = MultiPropQuerySet(
                 prop_type=key,

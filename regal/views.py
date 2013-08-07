@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponse
 from regal.people.models import *
@@ -22,14 +22,13 @@ def dashboard(request):
 
     }
 
-    return render_to_response('regal/dashboard.html',
-                              context,
-                              context_instance=RequestContext(request))
+    return render(request, 'regal/dashboard.html', context)
 
 
 def generate(request):
-    ''' temporary page, just for debugging purpose
-        generates some random entries in tables
+    '''
+    temporary page, just for debugging purpose
+    generates some random entries in tables
     '''
     persons = []
 

@@ -10,9 +10,9 @@ from django.core.urlresolvers import reverse
 
 class Competition(models.Model):
 
-    """
+    '''
     Consists of years.
-    """
+    '''
     name = models.CharField(max_length=128, verbose_name='názov')
     informatics = models.BooleanField(verbose_name='informatika')
     math = models.BooleanField(verbose_name='matematika')
@@ -28,9 +28,9 @@ class Competition(models.Model):
 
 class Series(models.Model):
 
-    """
+    '''
     Series consits of several rounds.
-    """
+    '''
     competition = models.ForeignKey(Competition, verbose_name='súťaž')
     name = models.CharField(max_length=32, verbose_name='názov')
     start_date = models.DateField(verbose_name='dátum začiatk')
@@ -46,10 +46,10 @@ class Series(models.Model):
 
 class Round(models.Model):
 
-    """
+    '''
     Round has tasks.
     Holds information about deadline and such things
-    """
+    '''
     series = models.ForeignKey(Series, verbose_name='séria')
     number = models.IntegerField(verbose_name='číslo')
     end_time = models.DateTimeField(verbose_name='koniec')

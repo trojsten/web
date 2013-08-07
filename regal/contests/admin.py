@@ -10,22 +10,21 @@ from django.core.urlresolvers import reverse
 from regal.problems.models import *
 from regal.contests.models import *
 
-def editButton(obj):
+
+def edit_button(obj):
     return 'Uprav'
-editButton.short_description = ""
+edit_button.short_description = ""
 
 
 def name_to_url(app, parent, son, obj):
     url = reverse('admin:%s_%s_changelist' % (app, son))
     url += '?%s__id__exact=%s' % (parent, obj.id)
     return '<b><a href="%s">%s</a></b>' % (url, obj.__unicode__())
-#name_to_url.short_description = 'Názov'
-#name_to_url.allow_tags = True
 
 
 class CompetitionAdmin(admin.ModelAdmin):
-    list_display = ('name_to_url', 'newest_series', editButton)
-    list_display_links = (editButton,)
+    list_display = ('name_to_url', 'newest_series', edit_button)
+    list_display_links = (edit_button,)
     ordering = ('name',)
 
     def name_to_url(self, obj):
@@ -45,8 +44,8 @@ class CompetitionAdmin(admin.ModelAdmin):
 
 
 class SeriesAdmin(admin.ModelAdmin):
-    list_display = ('name_to_url', 'start_date', editButton)
-    list_display_links = (editButton,)
+    list_display = ('name_to_url', 'start_date', edit_button)
+    list_display_links = (edit_button,)
     list_filter = ('competition',)
 
     ordering = ('-start_date',)
@@ -57,9 +56,9 @@ class SeriesAdmin(admin.ModelAdmin):
     name_to_url.allow_tags = True
 
     def add_view(self, request, form_url="", extra_context=None):
-        """
+        '''
         predefined values in add_view form
-        """
+        '''
         data = request.GET.copy()
         c_id = request.GET.get('competition', False)
         if c_id:
@@ -81,8 +80,8 @@ class SeriesAdmin(admin.ModelAdmin):
 
 
 class RoundAdmin(admin.ModelAdmin):
-    list_display = ('name_to_url', 'end_time', editButton)
-    list_display_links = (editButton,)
+    list_display = ('name_to_url', 'end_time', edit_button)
+    list_display_links = (edit_button,)
     list_filter = ('end_time',)
     ordering = ('number',)
 
@@ -92,9 +91,9 @@ class RoundAdmin(admin.ModelAdmin):
     name_to_url.allow_tags = True
 
     def add_view(self, request, form_url="", extra_context=None):
-        """
+        '''
         predefined values in add_view form
-        """
+        '''
         data = request.GET.copy()
         s_id = request.GET.get('series', False)
         if s_id:

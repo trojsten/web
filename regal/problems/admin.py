@@ -12,9 +12,9 @@ from django.http import HttpResponse
 from regal.problems.models import *
 
 
-def editButton(obj):
+def edit_button(obj):
     return 'Uprav'
-editButton.short_description = ""
+edit_button.short_description = ""
 
 
 def name_to_url(app, parent, obj):
@@ -24,8 +24,8 @@ def name_to_url(app, parent, obj):
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('number', 'name_to_url', editButton)
-    list_display_links = (editButton,)
+    list_display = ('number', 'name_to_url', edit_button)
+    list_display_links = (edit_button,)
     ordering = ('number',)
 
     def get_urls(self):
@@ -68,8 +68,8 @@ class TaskAdmin(admin.ModelAdmin):
 
 
 class EvaluationAdmin(admin.ModelAdmin):
-    list_display = ['person', 'submit_type', 'points', editButton]
-    list_display_links = (editButton,)
+    list_display = ['person', 'submit_type', 'points', edit_button]
+    list_display_links = (edit_button,)
 
 admin.site.register(Task, TaskAdmin)
 admin.site.register(Evaluation, EvaluationAdmin)

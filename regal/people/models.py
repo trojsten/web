@@ -15,7 +15,7 @@ class Address(models.Model):
     number = models.CharField(max_length=16, verbose_name='číslo')
     town = models.CharField(max_length=64, db_index=True, verbose_name='mesto')
     postal_code = models.CharField(max_length=16, db_index=True, verbose_name='PSČ')
-    country = models.CharField(max_length=32,  db_index=True, verbose_name='krajina')
+    country = models.CharField(max_length=32, db_index=True, verbose_name='krajina')
     # schools_here <- related name to School.address
     # lives_here <- related name to Person.home_address
     # accepting_mails_here <- related name to Student.correspondence_address
@@ -32,10 +32,10 @@ class Address(models.Model):
 
 
 class Person(models.Model):
-
-    """ Holds, provide access to or manages all informations
-        related to a person.
-    """
+    '''
+    Holds, provide access to or manages all informations
+    related to a person.
+    '''
     name = models.CharField(
         max_length=128,  db_index=True, verbose_name='meno')
     surname = models.CharField(
@@ -43,9 +43,13 @@ class Person(models.Model):
     birth_date = models.DateField(
         db_index=True, verbose_name='dátum narodenia')
     home_address = models.ForeignKey(Address,
-            related_name='lives_here', null=True, verbose_name='domáca adresa')
+                                     related_name='lives_here',
+                                     null=True,
+                                     verbose_name='domáca adresa')
     correspondence_address = models.ForeignKey(Address,
-            related_name='accepting_mails_here', null=True, verbose_name='adresa korešpondencie')
+                                               related_name='accepting_mails_here',
+                                               null=True,
+                                               verbose_name='adresa korešpondencie')
     email = models.EmailField(verbose_name='e-mail')
     # studies_as <- related name to Student.person
     # studies_in <- related name to School.studying_persons
@@ -61,11 +65,12 @@ class Person(models.Model):
         self.props = PropsManager(self, PersonProperty)
 
     def study(self):
-        """ Returns actual student relationship for this person
-            Actual student is a student, who has NULL/None end_date
-            Throws django.core.exceptions.MultipleObjectsReturned
-            if there are multiple actual studnets.
-        """
+        '''
+        Returns actual student relationship for this person
+        Actual student is a student, who has NULL/None end_date
+        Throws django.core.exceptions.MultipleObjectsReturned
+        if there are multiple actual studnets.
+        '''
         try:
             r = self.studies_as.get(end_date__isnull=True)
             return r
@@ -73,11 +78,12 @@ class Person(models.Model):
             return None
 
     def terminate_studies(self):
-        """ Termintes all actual student relationships for this person
-            Actual student is a student, who has NULL/None end_date
-        """
+        '''
+        Termintes all actual student relationships for this person
+        Actual student is a student, who has NULL/None end_date
+        '''
         now = date.today()
-        for act_student in list(self.studies_as.filter(end_date__isnull=True)):
+        for act_student in self.studies_as.filter(end_date__isnull=True):
             act_student.end_date = now
             if act_student.start_date == now:
                 # act_student won't be interesting for the future
@@ -86,11 +92,12 @@ class Person(models.Model):
             act_student.save()
 
     def change_study(self, school, study_type, grade=1):
-        """ Terminates all actual students relationships
-            and creates a new one from given school, study_type and grade
-            Preffered way to create a new Student record.
-            Returns created Student object.
-        """
+        '''
+        Terminates all actual students relationships
+        and creates a new one from given school, study_type and grade
+        Preffered way to create a new Student record.
+        Returns created Student object.
+        '''
         self.terminate_studies()
         s = Student(
             school=school, person=self, study_type=study_type,
@@ -101,12 +108,14 @@ class Person(models.Model):
         return s
 
     def __unicode__(self):
-        return self.name + " " + self.surname
+        return '%s %s' % (self.name, self.surname)
 
 
 class PersonPropertyCategory(models.Model):
 
-    """ PersonPropertyTypes can be categorized for better UI organization. """
+    '''
+    PersonPropertyTypes can be categorized for better UI organization.
+    '''
     name = models.CharField(
         max_length=128,  db_index=True, verbose_name='meno')
     # types <- related name to PersonPropertyType.category
@@ -114,7 +123,9 @@ class PersonPropertyCategory(models.Model):
 
 class PersonPropertyType(models.Model):
 
-    """ Describes one possible type additional person properties """
+    '''
+    Describes one possible type additional person properties
+    '''
     name = models.CharField(
         max_length=128,  db_index=True, verbose_name='meno')
     validity_regex = models.TextField(
@@ -131,7 +142,9 @@ class PersonPropertyType(models.Model):
 
 class PersonProperty(models.Model):
 
-    """ Every adittional property of every person is stored as this. """
+    '''
+    Every adittional property of every person is stored as this.
+    '''
     type = models.ForeignKey(PersonPropertyType,
                              related_name='records', verbose_name='typ')
     object = models.ForeignKey(
@@ -142,12 +155,13 @@ class PersonProperty(models.Model):
 
 class School(models.Model):
 
-    """ Holds, provide access to or manages all informations
-        related to a school.
-    """
+    '''
+    Holds, provide access to or manages all informations
+    related to a school.
+    '''
     name = models.CharField(max_length=128, verbose_name='meno')
     abbr = models.CharField(max_length=16, verbose_name='skratka')
-        # Used when full name is too long (e.g. results, list of participants)
+    # Used when full name is too long (e.g. results, list of participants)
     address = models.ForeignKey(Address, related_name='schools_here',
                                 null=True, verbose_name='adresa')
     email = models.EmailField(null=True, verbose_name='e-mail')
@@ -218,11 +232,12 @@ class StudyTypeField(models.CharField):
 
 class Student(models.Model):
 
-    """ A relationship between School and Person studying there.
-        Holds and manges informations about relationship duration,
-        study type, and student's grade.
-        Should be able to give information about part of person's studies.
-    """
+    '''
+    A relationship between School and Person studying there.
+    Holds and manges informations about relationship duration,
+    study type, and student's grade.
+    Should be able to give information about part of person's studies.
+    '''
     STUDY_TYPE_CHOICES = (
         ('ZS', 'Základná škola'),
         ('SS', 'Stredná škola'),
@@ -256,22 +271,24 @@ class Student(models.Model):
         verbose_name_plural = 'Študenti'
 
     def is_actual():
-        return end_date == None
+        return end_date is None
 
     def get_grade(self, act_date=None):
-        """ Returns actual grade calculated from expected_end_year
-            You can simulate another date by optional argument "act_date".
-        """
-        if act_date == None:
+        '''
+        Returns actual grade calculated from expected_end_year
+        You can simulate another date by optional argument "act_date".
+        '''
+        if act_date is None:
             act_date = date.today()
         act_year = Student.date_to_school_year(act_date)
         return act_year + self.study_type.max_grade - self.expected_end_year
 
     def set_grade(self, grade, act_date=None):
-        """ Sets expected_end_year so that actual grade will change to given
-            You can simulate another date by optional argument "act_date".
-        """
-        if act_date == None:
+        '''
+        Sets expected_end_year so that actual grade will change to given
+        You can simulate another date by optional argument "act_date".
+        '''
+        if act_date is None:
             act_date = date.today()
         act_year = Student.date_to_school_year(act_date)
         self.expected_end_year = act_year + self.study_type.max_grade - grade
@@ -281,7 +298,9 @@ class Student(models.Model):
 
     @staticmethod
     def date_to_school_year(date_):
-        """ Returns a second year of a school year of given date. """
+        '''
+        Returns a second year of a school year of given date.
+        '''
         if date_.month > 8:
             return date_.year + 1
         else:
@@ -290,9 +309,10 @@ class Student(models.Model):
 
 class Teacher(models.Model):
 
-    """ An actual relationship between school and person teaching there.
-        Also stores information about teached subjects.
-    """
+    '''
+    An actual relationship between school and person teaching there.
+    Also stores information about teached subjects.
+    '''
     school = models.ForeignKey(
         School, related_name='teachers', verbose_name='škola')
     person = models.ForeignKey(
