@@ -20,7 +20,7 @@ class Address(models.Model):
     # lives_here <- related name to Person.home_address
     # accepting_mails_here <- related name to Student.correspondence_address
 
-    def __unicode__(self):
+    def __str__(self):
         return (
             self.street + " " + self.number + ", " +
             self.town + ", " + self.postal_code + ", " +
@@ -107,7 +107,7 @@ class Person(models.Model):
         s.save()
         return s
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s %s' % (self.name, self.surname)
 
 
@@ -182,7 +182,7 @@ class School(models.Model):
         verbose_name = 'Škola'
         verbose_name_plural = 'Školy'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_town(self):

@@ -6,6 +6,7 @@ from datetime import date
 
 from django.contrib import admin
 from django.core.urlresolvers import reverse
+from django.utils.encoding import force_text
 
 from regal.problems.models import *
 from regal.contests.models import *
@@ -19,7 +20,7 @@ edit_button.short_description = ""
 def name_to_url(app, parent, son, obj):
     url = reverse('admin:%s_%s_changelist' % (app, son))
     url += '?%s__id__exact=%s' % (parent, obj.id)
-    return '<b><a href="%s">%s</a></b>' % (url, obj.__unicode__())
+    return '<b><a href="%s">%s</a></b>' % (url, force_text(obj))
 
 
 class CompetitionAdmin(admin.ModelAdmin):
@@ -36,7 +37,7 @@ class CompetitionAdmin(admin.ModelAdmin):
         series = Series.objects.filter(competition=obj.id).latest('start_date')
         url = reverse('admin:%s_%s_changelist' % ('contests', 'round'))
         url += '?series__id__exact=%s' % (series.id)
-        return '<b><a href="%s">%s</a></b>' % (url, series.__unicode__())
+        return '<b><a href="%s">%s</a></b>' % (url, force_text(series))
     newest_series.short_description = 'Najnovšia séria'
     newest_series.allow_tags = True
 
@@ -75,7 +76,7 @@ class SeriesAdmin(admin.ModelAdmin):
         if c_id:
             extra_context['add_options'] = 'competition=' + c_id
             c = Competition.objects.get(id=c_id)
-            extra_context['title'] = 'Vybrať %s z %s' % (Series._meta.verbose_name, c.__unicode__())
+            extra_context['title'] = 'Vybrať %s z %s' % (Series._meta.verbose_name, force_text(c))
         return super(SeriesAdmin, self).changelist_view(request, extra_context=extra_context)
 
 
@@ -109,7 +110,7 @@ class RoundAdmin(admin.ModelAdmin):
         if s_id:
             extra_context['add_options'] = 'series=' + s_id
             s = Series.objects.get(id=s_id)
-            extra_context['title'] = 'Vybrať %s z %s' % (Round._meta.verbose_name, s.__unicode__())
+            extra_context['title'] = 'Vybrať %s z %s' % (Round._meta.verbose_name, force_text(s))
         return super(RoundAdmin, self).changelist_view(request, extra_context=extra_context)
 
 

@@ -8,6 +8,7 @@ from django.conf.urls.defaults import patterns
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse
+from django.utils.encoding import force_text
 
 from regal.problems.models import *
 
@@ -20,7 +21,7 @@ edit_button.short_description = ""
 def name_to_url(app, parent, obj):
     url = reverse('admin:%s_%s_changelist' % (app, parent))
     url += 'details/%s' % (obj.id)
-    return '<b><a href="%s">%s</a></b>' % (url, obj.__unicode__())
+    return '<b><a href="%s">%s</a></b>' % (url, force_text(obj))
 
 
 class TaskAdmin(admin.ModelAdmin):
@@ -47,15 +48,15 @@ class TaskAdmin(admin.ModelAdmin):
         solvers = list(set(solvers))
         results = {}
         for x in solvers:
-            results[x.__unicode__()] = {}
+            results[force_text(x)] = {}
             for y in submit_types:
-                results[x.__unicode__()][y] = 0
+                results[force_text(x)][y] = 0
         for x in evaulations:
-            results[x.person.__unicode__()][x.submit_type] = x.points
-            results[x.person.__unicode__()]['súčet'] += int(x.points)
+            results[x.force_text(person)][x.submit_type] = x.points
+            results[x.force_text(person)]['súčet'] += int(x.points)
 
         return render_to_response('admin/problems/task_details.html',
-                                  {'name': task.__unicode__(),
+                                  {'name': force_text(task),
                                    'submit_types': submit_types,
                                    'results': results,
                                    },

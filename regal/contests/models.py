@@ -22,7 +22,7 @@ class Competition(models.Model):
         verbose_name = 'Súťaž'
         verbose_name_plural = 'Súťaže'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -40,7 +40,7 @@ class Series(models.Model):
         verbose_name = 'Séria'
         verbose_name_plural = 'Série'
 
-    def __unicode__(self):
+    def __str__(self):
         return str(self.name)
 
 
@@ -59,5 +59,5 @@ class Round(models.Model):
         verbose_name = 'Kolo'
         verbose_name_plural = 'Kolá'
 
-    def __unicode__(self):
+    def __str__(self):
         return str(self.number) + '. kolo'

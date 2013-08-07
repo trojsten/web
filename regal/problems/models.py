@@ -20,7 +20,7 @@ class Task(models.Model):
         verbose_name = 'Príklad'
         verbose_name_plural = 'Príklady'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -40,5 +40,5 @@ class Evaluation(models.Model):
         verbose_name = 'Body za úloh'
         verbose_name_plural = 'Body za úloh'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.points
