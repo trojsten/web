@@ -1,4 +1,8 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
 from __future__ import absolute_import
+
 from trojsten.settings.common import *
 
 DATABASES = {
@@ -13,6 +17,10 @@ TEMPLATE_DEBUG = True
 
 INSTALLED_APPS += ('debug_toolbar',)
 MIDDLEWARE_CLASSES = (('debug_toolbar.middleware.DebugToolbarMiddleware',)
-    + MIDDLEWARE_CLASSES)
+                      + MIDDLEWARE_CLASSES)
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
+}
+
 
 INTERNAL_IPS = ('127.0.0.1',)

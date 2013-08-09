@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 # Common settings for trojsten.
 import os
 import trojsten
@@ -131,8 +135,12 @@ INSTALLED_APPS = (
     #'south',
     #'social_auth',
     #'ksp_login',
-    'django.contrib.admin',
     'trojsten',
+    'regal',
+    'regal.people',
+    'regal.contests',
+    'regal.problems',
+    'django.contrib.admin',
 )
 
 # A sample logging configuration. The only tangible logging

@@ -1,0 +1,28 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>Príklad {{name}}</h1>
+
+<table border=2>
+    <tr>
+    <td>Meno</td>
+    {% for column in submit_types %}
+        <td>{{column}}</td>
+    {% endfor %}
+    </tr>
+    {% for solver, points in results.items %}
+    <tr>
+        <td>{{solver}}</td>
+        {% for submit in submit_types %}
+            {% for key, value in points.items %}
+                {% if key == submit%}
+                    <td>{{value}}</td>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
