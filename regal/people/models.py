@@ -6,10 +6,12 @@ from datetime import date
 
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.encoding import python_2_unicode_compatible
 
 from regal.properties import PropsManager
 
 
+@python_2_unicode_compatible
 class Address(models.Model):
     street = models.CharField(max_length=64, verbose_name='ulica')
     number = models.CharField(max_length=16, verbose_name='číslo')
@@ -31,6 +33,7 @@ class Address(models.Model):
         verbose_name_plural = 'Adresy'
 
 
+@python_2_unicode_compatible
 class Person(models.Model):
     '''
     Holds, provide access to or manages all informations
@@ -153,6 +156,7 @@ class PersonProperty(models.Model):
         null=False, default="",  db_index=True, verbose_name='hodnota')
 
 
+@python_2_unicode_compatible
 class School(models.Model):
 
     '''

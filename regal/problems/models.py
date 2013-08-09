@@ -3,11 +3,13 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 
 from regal.contests.models import Round
 from regal.people.models import Person
 
 
+@python_2_unicode_compatible
 class Task(models.Model):
 
     '''
@@ -24,6 +26,7 @@ class Task(models.Model):
         return self.name
 
 
+@python_2_unicode_compatible
 class Evaluation(models.Model):
 
     '''
@@ -37,8 +40,8 @@ class Evaluation(models.Model):
         max_length=128, verbose_name='typ submit')
 
     class Meta:
-        verbose_name = 'Body za úloh'
-        verbose_name_plural = 'Body za úloh'
+        verbose_name = 'Body za úlohu'
+        verbose_name_plural = 'Body za úlohy'
 
     def __str__(self):
         return self.points

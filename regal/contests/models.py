@@ -6,8 +6,10 @@ from datetime import datetime
 
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils.encoding import python_2_unicode_compatible
 
 
+@python_2_unicode_compatible
 class Competition(models.Model):
 
     '''
@@ -26,6 +28,7 @@ class Competition(models.Model):
         return self.name
 
 
+@python_2_unicode_compatible
 class Series(models.Model):
 
     '''
@@ -44,6 +47,7 @@ class Series(models.Model):
         return str(self.name)
 
 
+@python_2_unicode_compatible
 class Round(models.Model):
 
     '''
@@ -58,6 +62,6 @@ class Round(models.Model):
     class Meta:
         verbose_name = 'Kolo'
         verbose_name_plural = 'Kolá'
-
+    
     def __str__(self):
         return str(self.number) + '. kolo'

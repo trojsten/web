@@ -52,8 +52,8 @@ class TaskAdmin(admin.ModelAdmin):
             for y in submit_types:
                 results[force_text(x)][y] = 0
         for x in evaulations:
-            results[x.force_text(person)][x.submit_type] = x.points
-            results[x.force_text(person)]['súčet'] += int(x.points)
+            results[force_text(x.person)][x.submit_type] = x.points
+            results[force_text(x.person)]['súčet'] += int(x.points)
 
         return render_to_response('admin/problems/task_details.html',
                                   {'name': force_text(task),
