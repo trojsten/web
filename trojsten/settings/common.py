@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'trojsten',
     'regal.people',
+    'regal.contests',
 )
 
 # A sample logging configuration. The only tangible logging
