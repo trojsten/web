@@ -133,6 +133,8 @@ INSTALLED_APPS = (
     #'ksp_login',
     'django.contrib.admin',
     'trojsten',
+    'regal.people',
+    'regal.contests',
 )
 
 # A sample logging configuration. The only tangible logging
