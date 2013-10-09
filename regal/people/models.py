@@ -17,7 +17,6 @@ class Address(models.Model):
     town = models.CharField(max_length=64, db_index=True, verbose_name='mesto')
     postal_code = models.CharField(max_length=16, db_index=True, verbose_name='PSČ')
     country = models.CharField(max_length=32, db_index=True, verbose_name='krajina')
-    # lives_here <- related name to Person.home_address
 
     def __str__(self):
         return (
@@ -46,7 +45,7 @@ class Person(models.Model):
                                      related_name='lives_here',
                                      null=True,
                                      verbose_name='domáca adresa')
-    correspondence_address = models.ForeignKey(Address,
+    mailing_address = models.ForeignKey(Address,
                                                related_name='accepting_mails_here',
                                                null=True,
                                                verbose_name='adresa korešpondencie')
