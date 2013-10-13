@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-
-from datetime import datetime
+from django.utils.encoding import python_2_unicode_compatible
 
 from django.db import models
-from django.core.urlresolvers import reverse
-from django.utils.encoding import python_2_unicode_compatible
-import django.utils.timezone
 from regal.people.models import Person
-
 
 @python_2_unicode_compatible
 class Task(models.Model):
@@ -34,7 +29,8 @@ class Submit(models.Model):
 
     '''
     Submit holds information about its task and person who submitted it.
-    Some submits also have responses from testers (especially tasks in informatics competitions)
+    Some submits also have responses from testers (especially tasks in
+    informatics competitions)
     '''
     task = models.ForeignKey(Task, verbose_name='úloha')
     person = models.ForeignKey(Person, verbose_name='odovzdávateľ')
