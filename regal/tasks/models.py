@@ -6,6 +6,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from regal.people.models import Person
 
+
 @python_2_unicode_compatible
 class Task(models.Model):
 
@@ -34,7 +35,12 @@ class Submit(models.Model):
     '''
     task = models.ForeignKey(Task, verbose_name='úloha')
     person = models.ForeignKey(Person, verbose_name='odovzdávateľ')
-    points = models.IntegerField(verbose_name='body')
+    desc_points = models.IntegerField(verbose_name='body za popis')
+    source_points = models.IntegerField(verbose_name='body od testovača')
+    desc_filename = models.CharField(
+        max_length=128, verbose_name='súbor s popisom')
+    source_filename = models.CharField(
+        max_length=128, verbose_name='súbor so zdrojákom')
 
     class Meta:
         verbose_name = 'Submit'
