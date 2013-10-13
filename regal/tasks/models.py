@@ -16,6 +16,8 @@ class Task(models.Model):
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
     number = models.IntegerField(verbose_name='číslo')
+    description_points = models.IntegerField(verbose_name='body za popis')
+    source_points = models.IntegerField(verbose_name='body za program')
 
     class Meta:
         verbose_name = 'Úloha'
