@@ -135,6 +135,7 @@ INSTALLED_APPS = (
     'trojsten',
     'regal.people',
     'regal.contests',
+    'regal.tasks',
 )
 
 # A sample logging configuration. The only tangible logging
