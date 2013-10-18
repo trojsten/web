@@ -1,0 +1,10 @@
+{% extends "trojsten/layout/base.html" %}
+
+{% block page_layout %}
+<header>{% include "layout/header.html" %}</header>
+<nav>{% include "layout/navigation.html" %}</nav>
+<div>{% block page_content %}{% endblock %}</div>
+<footer>{% include "layout/footer.html" %}</footer>
+{% endblock %}
+
+
