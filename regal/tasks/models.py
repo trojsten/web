@@ -42,12 +42,8 @@ class Submit(models.Model):
     person = models.ForeignKey(Person, verbose_name='odovzdávateľ')
     submit_type = models.CharField(
         max_length=16, verbose_name='typ submitu')
-    description_points = models.IntegerField(verbose_name='body za popis')
-    source_points = models.IntegerField(verbose_name='body za program')
-    description_filename = models.CharField(
-        max_length=128, verbose_name='súbor s popisom')
-    source_filename = models.CharField(
-        max_length=128, verbose_name='súbor so zdrojákom')
+    points = models.IntegerField(verbose_name='body')
+    filename = models.CharField(max_length=128, verbose_name='súbor')
     testing_status = models.CharField(
         max_length=128, verbose_name='stav testovania')
     tester_response = models.CharField(
