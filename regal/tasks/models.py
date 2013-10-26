@@ -45,8 +45,10 @@ class Submit(models.Model):
         max_length=128, verbose_name='súbor s popisom')
     source_filename = models.CharField(
         max_length=128, verbose_name='súbor so zdrojákom')
-    tester_response = models.CharField(max_length=10, verbose_name='odpoveď testovača')
-    protocol_id = models.CharField(max_length=128, verbose_name='číslo protokolu')
+    tester_response = models.CharField(
+        max_length=10, verbose_name='odpoveď testovača')
+    protocol_id = models.CharField(
+        max_length=128, verbose_name='číslo protokolu')
 
     class Meta:
         verbose_name = 'Submit'
@@ -54,4 +56,3 @@ class Submit(models.Model):
 
     def __str__(self):
         return str(self.person) + ' - ' + str(self.task)
-
