@@ -18,6 +18,7 @@ class Task(models.Model):
     number = models.IntegerField(verbose_name='číslo')
     description_points = models.IntegerField(verbose_name='body za popis')
     source_points = models.IntegerField(verbose_name='body za program')
+    task_type = models.CharField(max_length=128, verbose_name='typ úlohy')
 
     class Meta:
         verbose_name = 'Úloha'
@@ -36,6 +37,7 @@ class Submit(models.Model):
     informatics competitions)
     '''
     task = models.ForeignKey(Task, verbose_name='úloha')
+    time = models.DateTimeField(auto_now_add=True)
     person = models.ForeignKey(Person, verbose_name='odovzdávateľ')
     description_points = models.IntegerField(verbose_name='body za popis')
     source_points = models.IntegerField(verbose_name='body za program')
@@ -43,6 +45,8 @@ class Submit(models.Model):
         max_length=128, verbose_name='súbor s popisom')
     source_filename = models.CharField(
         max_length=128, verbose_name='súbor so zdrojákom')
+    tester_response = models.CharField(max_length=10, verbose_name='odpoveď testovača')
+    protocol_id = models.CharField(max_length=128, verbose_name='číslo protokolu')
 
     class Meta:
         verbose_name = 'Submit'
@@ -50,3 +54,4 @@ class Submit(models.Model):
 
     def __str__(self):
         return str(self.person) + ' - ' + str(self.task)
+
