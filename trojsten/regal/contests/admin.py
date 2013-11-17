@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
-from regal.contests.models import *
+from trojsten.regal.contests.models import *
 
 admin.site.register(Competition)
 admin.site.register(Series)
