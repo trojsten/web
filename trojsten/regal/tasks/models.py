@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.utils.encoding import python_2_unicode_compatible
 
 from django.db import models
-from regal.people.models import Person
+from trojsten.regal.people.models import Person
 
 
 @python_2_unicode_compatible
