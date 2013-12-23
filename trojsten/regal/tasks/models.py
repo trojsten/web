@@ -5,6 +5,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from django.db import models
 from trojsten.regal.people.models import Person
+from trojsten.regal.contests.models import Round
 
 
 @python_2_unicode_compatible
@@ -15,6 +16,7 @@ class Task(models.Model):
     Task has submits.
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
+    round = models.ForeignKey(Round, verbose_name='Kolo')
     number = models.IntegerField(verbose_name='číslo')
     description_points = models.IntegerField(verbose_name='body za popis')
     source_points = models.IntegerField(verbose_name='body za program')
