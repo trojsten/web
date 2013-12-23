@@ -2,14 +2,9 @@
 
 from __future__ import unicode_literals
 
-from datetime import date
-
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import User
-import django.utils.timezone
-
 
 @python_2_unicode_compatible
 class Address(models.Model):
@@ -34,7 +29,6 @@ class Address(models.Model):
 
 @python_2_unicode_compatible
 class Person(models.Model):
-
     '''
     Holds, provide access to or manages all informations
     related to a person.
