@@ -8,6 +8,9 @@ PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+SUBMIT_PATH = ''
+TESTER_URL = 'experiment'
+TESTER_PORT = 12347
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
