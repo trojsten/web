@@ -1,4 +1,3 @@
-<h3>{{ task }}</h1>
 {% if has_description %}
     <h4>Popis</h4>
     <form enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type='description' %}">
@@ -15,4 +14,3 @@
         <input type="submit" value="Submit" />
     </form>
 {% endif %}
-

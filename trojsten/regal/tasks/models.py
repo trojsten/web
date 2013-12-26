@@ -45,7 +45,7 @@ class Submit(models.Model):
     submit_type = models.CharField(
         max_length=16, verbose_name='typ submitu')
     points = models.IntegerField(verbose_name='body')
-    filename = models.CharField(max_length=128, verbose_name='súbor')
+    filepath = models.CharField(max_length=128, verbose_name='súbor')
     testing_status = models.CharField(
         max_length=128, verbose_name='stav testovania')
     tester_response = models.CharField(
@@ -59,3 +59,6 @@ class Submit(models.Model):
 
     def __str__(self):
         return str(self.person) + ' - ' + str(self.task)
+
+    def filename(self):
+        return self.filepath.rsplit('/', 1)[1]

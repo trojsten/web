@@ -40,6 +40,26 @@ def task_submit_form(request, task_id):
 
 
 @login_required
+def task_submit_list(request, task_id):
+    task = Task.objects.get(pk=task_id)
+    if not task:
+        raise Http404
+    task_types = task.task_type.split(',')
+
+    template_data = {}
+    template_data['task'] = task
+    template_data['has_source'] = 'source' in task_types
+    template_data['has_description'] = 'description' in task_types
+    submits = Submit.objects.filter(task=task, person=request.user.person)
+    template_data['source'] = submits.filter(submit_type='source')
+    template_data['description'] = submits.filter(submit_type='description')
+
+    return render_to_response('trojsten/submit/task_submit_page.html',
+                              template_data,
+                              context_instance=RequestContext(request))
+
+
+@login_required
 def task_submit_post(request, task_id, submit_type):
     task = Task.objects.get(pk=task_id)
     # Raise Not Found when submitting non existent task
@@ -68,8 +88,8 @@ def task_submit_post(request, task_id, submit_type):
             sub = Submit(task=task,
                          person=person,
                          submit_type=submit_type,
-                         points=0,
-                         filename=sfiletarget,
+                         points=-1,
+                         filepath=sfiletarget,
                          testing_status='in queue',
                          protocol_id=submit_id)
             sub.save()
@@ -86,8 +106,8 @@ def task_submit_post(request, task_id, submit_type):
             sub = Submit(task=task,
                          person=person,
                          submit_type=submit_type,
-                         points=0,
-                         filename=sfiletarget)
+                         points=-1,
+                         filepath=sfiletarget)
             sub.save()
             return redirect(reverse('task_submit_form', kwargs={'task_id': int(task_id)}))
 
