@@ -87,7 +87,7 @@ def task_submit_post(request, task_id, submit_type):
                          person=person,
                          submit_type=submit_type,
                          points=0,
-                         filename=sfile.name)
+                         filename=sfiletarget)
             sub.save()
             return redirect(reverse('task_submit_form', kwargs={'task_id': int(task_id)}))
 
