@@ -44,6 +44,18 @@ def get_lang_from_filename(filename):
     return extmapping[ext]
 
 
+def get_path_raw(contest_id, task_id, user_id):
+    return "%s/submits/%s/%s/%s" % (
+        settings.SUBMIT_PATH,
+        str(contest_id),
+        str(task_id),
+        str(user_id))
+
+
+def get_path(task, user):
+    return get_path_raw(task.round.series.competition.name, task.id, user.id)
+
+
 def build_raw(contest_id, submit_id, user_id, correct_filename, timestamp, original_name, data):
     return "%s\n%s\n%s\n%s\n%s\n%s\n%s" % (
         contest_id,
@@ -77,11 +89,7 @@ def send_submit(f, contest_id, task_id, language, user_id):
         submit_id += str(random.randint(0, 9))
 
     # Prepare local directories
-    path = settings.SUBMIT_PATH + '/submits/source/' + \
-        str(user_id) + '/' + str(task_id)
-
-    # Write local file
-    write_file(raw, path + '/' + ID + '.raw')
+    path = get_path_raw(contest_id, task_id, user_id)
 
     # Prepare variables
     user_id = contest_id + '-' + str(user_id)
@@ -90,16 +98,26 @@ def send_submit(f, contest_id, task_id, language, user_id):
     correct_filename = task_id + language
     data = f.read()
 
-    # Send submit for testing
-    raw = build_raw(contest_id, submit_id, user_id, correct_filename,
-                    timestamp, original_name, data)
-    send_submit(raw)
+    # Prepare RAW
+    raw = "%s\n%s\n%s\n%s\n%s\n%s\n%s" % (
+        contest_id,
+        submit_id,
+        user_id,
+        correct_filename,
+        timestamp,
+        original_name,
+        data)
+
+    # Write RAW to local file
+    write_file(raw, path + '/' + submit_id + '.raw')
+
+    # Send RAW for testing
+    # post_submit(raw)
 
     # Return submit "timestamp" ID
     return submit_id
 
 
 def process_submit(f, task, language, user):
-    # TODO: Determine contest from task?
-    contest_id = 'KSP'
+    contest_id = task.round.series.competition.name
     return send_submit(f, contest_id, task.id, language, user.id)

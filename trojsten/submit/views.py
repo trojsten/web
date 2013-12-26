@@ -11,7 +11,7 @@ from django.conf import settings
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.regal.people.models import Person
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm
-from trojsten.submit.helpers import save_file
+from trojsten.submit.helpers import save_file, process_submit, get_path
 
 
 @login_required
@@ -54,18 +54,16 @@ def task_submit_post(request, task_id, submit_type):
     if request.method != "POST":
         raise Http404
 
-    person = Person.objects.get(email=request.user.email)
+    person = request.user.person
     sfile = request.FILES['submit_file']
 
     if submit_type == 'source':
         form = SourceSubmitForm(request.POST, request.FILES)
         if form.is_valid():
             language = form.cleaned_data['language']
-            submit_id = process_submit(sfile, task, language, person)
-            from time import time
-            submit_id = str(int(time()))
-            sfiletarget = settings.SUBMIT_PATH + 'submits/source/' + \
-                str(person.id) + '/' + task_id + '/' + submit_id + '.data'
+            submit_id = process_submit(sfile, task, language, person.user)
+            sfiletarget = get_path(
+                task, request.user) + '/' + submit_id + '.data'
             save_file(sfile, sfiletarget)
             sub = Submit(task=task,
                          person=person,
@@ -82,15 +80,14 @@ def task_submit_post(request, task_id, submit_type):
         if form.is_valid():
             from time import time
             submit_id = str(int(time()))
-            sfiletarget = settings.SUBMIT_PATH + 'submits/description/' + \
-                str(person.id) + '/' + task_id + \
-                '/' + submit_id + '-' + sfile.name
+            sfiletarget = get_path(task, request.user) + '/' + \
+                person.surname + '-' + submit_id + '-' + sfile.name
             save_file(sfile, sfiletarget)
             sub = Submit(task=task,
                          person=person,
                          submit_type=submit_type,
                          points=0,
-                         filename=dfile.name)
+                         filename=sfile.name)
             sub.save()
             return redirect(reverse('task_submit_form', kwargs={'task_id': int(task_id)}))
 
