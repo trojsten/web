@@ -3,6 +3,7 @@ from time import time
 import os
 import random
 import socket
+import xml.etree.ElementTree as ET
 
 
 def write_file(what, where):
@@ -121,3 +122,29 @@ def send_submit(f, contest_id, task_id, language, user_id):
 def process_submit(f, task, language, user):
     contest_id = task.round.series.competition.name
     return send_submit(f, contest_id, task.id, language, user.id)
+
+def update_submit(submit):
+    protocol_path = submit.filepath.rsplit('.',1)[0] + '.protokol'
+    if os.path.exists(protocol_path):
+        tree = ET.parse(protocol_path)
+        clog = tree.find("compileLog")
+        if clog is not None:
+            result = 'CERR'
+            clog = clog.text
+            score = 0
+            points = 0
+        else:
+            runlog = tree.find("runLog")
+            result = 'OK'
+            for test in runlog:
+                if test.tag != 'test':
+                    continue
+                test_result = test[2].text
+                if test_result != 'OK':
+                    result = test_result
+                    break
+            score = int(float(tree.find("runLog/score").text))
+            points = (submit.task.source_points * score) // 100
+        submit.points = points
+        submit.tester_response = result
+        submit.testing_status = 'finished'
