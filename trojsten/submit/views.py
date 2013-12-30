@@ -11,7 +11,7 @@ from django.conf import settings
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.regal.people.models import Person
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm
-from trojsten.submit.helpers import save_file, process_submit, get_path
+from trojsten.submit.helpers import save_file, process_submit, get_path, update_submit
 
 
 @login_required
@@ -53,6 +53,9 @@ def task_submit_list(request, task_id):
     submits = Submit.objects.filter(task=task, person=request.user.person)
     template_data['source'] = submits.filter(submit_type='source')
     template_data['description'] = submits.filter(submit_type='description')
+    # Update submits which are not updated yet!
+    for submit in template_data['source'].filter(testing_status='in queue'):
+        update_submit(submit)
 
     return render_to_response('trojsten/submit/task_submit_page.html',
                               template_data,
