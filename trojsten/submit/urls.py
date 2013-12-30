@@ -5,6 +5,8 @@ urlpatterns = patterns('trojsten.submit.views',
                            'task_submit_form', name='task_submit_form'),
                        url(r'^(?P<task_id>\d+)/list/$',
                            'task_submit_list', name='task_submit_list'),
+                       url(r'^(?P<task_id>\d+)/page/$',
+                           'task_submit_page', name='task_submit_page'),
                        url(r'^(?P<task_id>\d+)/(?P<submit_type>.+)/$',
                            'task_submit_post', name='task_submit_post'),
                        )

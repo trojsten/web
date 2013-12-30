@@ -14,6 +14,35 @@ from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm
 from trojsten.submit.helpers import save_file, process_submit, get_path, update_submit
 
 
+def add_task_info(template_data, task):
+    task_types = task.task_type.split(',')
+    template_data['task'] = task
+    template_data['has_source'] = 'source' in task_types
+    template_data['has_description'] = 'description' in task_types
+    return template_data
+
+
+def add_form_data(template_data, task):
+    task_types = task.task_type.split(',')
+    if 'source' in task_types:
+        sform = SourceSubmitForm()
+        template_data['source_form'] = sform
+    if 'description' in task_types:
+        dform = DescriptionSubmitForm()
+        template_data['description_form'] = dform
+    return template_data
+
+
+def add_submit_list(template_data, task, person):
+    submits = Submit.objects.filter(task=task, person=person)
+    template_data['source'] = submits.filter(submit_type='source')
+    template_data['description'] = submits.filter(submit_type='description')
+    # Update submits which are not updated yet!
+    for submit in template_data['source'].filter(testing_status='in queue'):
+        update_submit(submit)
+    return template_data
+
+
 @login_required
 def task_submit_form(request, task_id):
     task = Task.objects.get(pk=task_id)
@@ -21,20 +50,26 @@ def task_submit_form(request, task_id):
         raise Http404
 
     template_data = {}
-    template_data['task'] = task
-    template_data['has_source'] = False
-    template_data['has_description'] = False
-    task_types = task.task_type.split(',')
-    if 'source' in task_types:
-        sform = SourceSubmitForm()
-        template_data['source_form'] = sform
-        template_data['has_source'] = True
-    if 'description' in task_types:
-        dform = DescriptionSubmitForm()
-        template_data['description_form'] = dform
-        template_data['has_description'] = True
+    template_data = add_task_info(template_data, task)
+    template_data = add_form_data(template_data, task)
 
     return render_to_response('trojsten/submit/task_submit_form.html',
+                              template_data,
+                              context_instance=RequestContext(request))
+
+
+@login_required
+def task_submit_page(request, task_id):
+    task = Task.objects.get(pk=task_id)
+    if not task:
+        raise Http404
+
+    template_data = {}
+    template_data = add_task_info(template_data, task)
+    template_data = add_form_data(template_data, task)
+    template_data = add_submit_list(template_data, task, request.user.person)
+
+    return render_to_response('trojsten/submit/task_submit_page.html',
                               template_data,
                               context_instance=RequestContext(request))
 
@@ -44,20 +79,12 @@ def task_submit_list(request, task_id):
     task = Task.objects.get(pk=task_id)
     if not task:
         raise Http404
-    task_types = task.task_type.split(',')
 
     template_data = {}
-    template_data['task'] = task
-    template_data['has_source'] = 'source' in task_types
-    template_data['has_description'] = 'description' in task_types
-    submits = Submit.objects.filter(task=task, person=request.user.person)
-    template_data['source'] = submits.filter(submit_type='source')
-    template_data['description'] = submits.filter(submit_type='description')
-    # Update submits which are not updated yet!
-    for submit in template_data['source'].filter(testing_status='in queue'):
-        update_submit(submit)
+    template_data = add_task_info(template_data, task)
+    template_data = add_submit_list(template_data, task, request.user.person)
 
-    return render_to_response('trojsten/submit/task_submit_page.html',
+    return render_to_response('trojsten/submit/task_submit_list.html',
                               template_data,
                               context_instance=RequestContext(request))
 
