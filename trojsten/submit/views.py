@@ -178,7 +178,7 @@ def task_submit_post(request, task_id, submit_type):
             sub = Submit(task=task,
                          person=person,
                          submit_type=submit_type,
-                         points=-1,
+                         points=0,
                          filepath=sfiletarget,
                          testing_status='in queue',
                          protocol_id=submit_id)
@@ -196,7 +196,8 @@ def task_submit_post(request, task_id, submit_type):
             sub = Submit(task=task,
                          person=person,
                          submit_type=submit_type,
-                         points=-1,
+                         points=0,
+                         testing_status='in queue',
                          filepath=sfiletarget)
             sub.save()
             return redirect(reverse('task_submit_form', kwargs={'task_id': int(task_id)}))
