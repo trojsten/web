@@ -40,11 +40,12 @@
         {% for submit in source %}
             <tr class="{% cycle 'even' 'odd' %}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
-                <td>{{ submit.testing_status }}</td>
                 {% if submit.testing_status == 'in queue' %}
+                <td>Testuje sa</td>
                 <td>Čaká sa na otestovanie</td>
                 <td>..</td>
                 {% else %}
+                <td>Dotestované</td>
                 <td>{{ submit.tester_response }}</td>
                 <td>{{ submit.points }}</td>
                 {% endif %}
