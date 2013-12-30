@@ -123,8 +123,9 @@ def process_submit(f, task, language, user):
     contest_id = task.round.series.competition.name
     return send_submit(f, contest_id, task.id, language, user.id)
 
+
 def update_submit(submit):
-    protocol_path = submit.filepath.rsplit('.',1)[0] + '.protokol'
+    protocol_path = submit.filepath.rsplit('.', 1)[0] + '.protokol'
     if os.path.exists(protocol_path):
         tree = ET.parse(protocol_path)
         clog = tree.find("compileLog")
@@ -148,3 +149,4 @@ def update_submit(submit):
         submit.points = points
         submit.tester_response = result
         submit.testing_status = 'finished'
+        submit.save()
