@@ -115,8 +115,10 @@ def add_submit_list(template_data, task, person):
     cloveka, potom v template include submit_list.html prida ten zoznam
     do stranky'''
     submits = Submit.objects.filter(task=task, person=person)
-    template_data['source'] = submits.filter(submit_type='source')
-    template_data['description'] = submits.filter(submit_type='description')
+    template_data['source'] = submits.filter(
+        submit_type='source').order_by('-time')
+    template_data['description'] = submits.filter(
+        submit_type='description').order_by('-time')
     # Update submits which are not updated yet!
     for submit in template_data['source'].filter(testing_status='in queue'):
         update_submit(submit)
