@@ -136,6 +136,18 @@ INSTALLED_APPS = (
     'trojsten.regal.people',
     'trojsten.regal.contests',
     'trojsten.regal.tasks',
+
+    'django.contrib.humanize',
+    'south',
+    'django_notify',
+    'mptt',
+    'sekizai',
+    'sorl.thumbnail',
+    'wiki',
+    'wiki.plugins.attachments',
+    'wiki.plugins.notifications',
+    'wiki.plugins.images',
+    'wiki.plugins.macros',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -167,18 +179,19 @@ LOGGING = {
     }
 }
 
-# TEMPLATE_CONTEXT_PROCESSORS = (
-#     "django.contrib.auth.context_processors.auth",
-#     "django.core.context_processors.debug",
-#     "django.core.context_processors.i18n",
-#     "django.core.context_processors.media",
-#     "django.core.context_processors.static",
-#     "django.core.context_processors.tz",
-#     "django.core.context_processors.request",
-#     "django.contrib.messages.context_processors.messages",
-#     "ksp_login.context_processors.login_providers_both",
-#     "trojsten.context_processors.current_site",
-# )
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.core.context_processors.request",
+    "django.contrib.messages.context_processors.messages",
+    "sekizai.context_processors.sekizai",
+    #"ksp_login.context_processors.login_providers_both",
+    #"trojsten.context_processors.current_site",
+)
 #
 # # The list of authentication backends we want to allow.
 # AUTHENTICATION_BACKENDS = (

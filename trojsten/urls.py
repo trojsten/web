@@ -3,6 +3,9 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
+from wiki.urls import get_pattern as get_wiki_pattern
+from django_notify.urls import get_pattern as get_notify_pattern
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'trojsten.views.home', name='home'),
@@ -13,4 +16,6 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^wiki/notify/', get_notify_pattern()),
+    url(r'^/', get_wiki_pattern()),
 )
