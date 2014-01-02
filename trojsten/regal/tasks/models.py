@@ -6,6 +6,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from trojsten.regal.people.models import Person
 from trojsten.regal.contests.models import Round
+import os
 
 
 @python_2_unicode_compatible
@@ -61,4 +62,4 @@ class Submit(models.Model):
         return str(self.person) + ' - ' + str(self.task)
 
     def filename(self):
-        return self.filepath.rsplit('/', 1)[1]
+        return os.path.basename(self.filepath)

@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 
 
 class SourceSubmitForm(forms.Form):
@@ -7,13 +8,13 @@ class SourceSubmitForm(forms.Form):
         (".cc", "C++ (.cpp/.cc)"),
         (".pas", "Pascal (.pas/.dpr)"),
         (".c", "C (.c)"),
-        (".py", "Python 2.5 (.py)"),
-        (".py3", "Python 3.1 (.py3)"),
+        (".py", "Python 3.2 (.py/.py3)"),
         (".hs", "Haskell (.hs)"),
         (".cs", "C# (.cs)"),
         (".java", "Java (.java)")
     )
-    submit_file = forms.FileField(max_length=100000)
+    submit_file = forms.FileField(
+        max_length=settings.UPLOADED_FILENAME_MAXLENGTH)
     language = forms.ChoiceField(label='Jazyk',
                                  choices=LANGUAGE_CHOICES)
 
@@ -35,7 +36,8 @@ class SourceSubmitForm(forms.Form):
 
 
 class DescriptionSubmitForm(forms.Form):
-    submit_file = forms.FileField(max_length=100000)
+    submit_file = forms.FileField(
+        max_length=settings.UPLOADED_FILENAME_MAXLENGTH)
 
     def __init__(self, *args, **kwargs):
         super(DescriptionSubmitForm, self).__init__(*args, **kwargs)

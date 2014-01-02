@@ -228,3 +228,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 #     'social_auth.backends.pipeline.social.load_extra_data',
 #     'social_auth.backends.pipeline.user.update_user_details'
 # )
+
+UPLOADED_FILENAME_MAXLENGTH = 100000
+PROTOCOL_FILE_EXTENSION = '.protokol'

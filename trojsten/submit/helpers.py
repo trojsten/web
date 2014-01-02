@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 def write_file(what, where):
     '''Vytvorí cieľový adresár a uloží string do súboru.'''
     try:
-        os.makedirs(where.rsplit('/', 1)[0])
+        os.makedirs(os.path.split(where)[0])
     except:
         pass
     with open(where, 'w+') as destination:
@@ -20,7 +20,7 @@ def write_file(what, where):
 def save_file(what, where):
     '''Vytvorí cieľový adresár a uloží stiahnutý súbor.'''
     try:
-        os.makedirs(where.rsplit('/', 1)[0])
+        os.makedirs(os.path.split(where)[0])
     except:
         pass
     with open(where, 'wb+') as destination:
@@ -38,7 +38,7 @@ def get_lang_from_filename(filename):
         ".dpr": ".pas",
         ".c":   ".c",
         ".py":  ".py",
-        ".py3": ".py3",
+        ".py3": ".py",
         ".hs":  ".hs",
         ".cs":  ".cs",
         ".java": ".java"}
@@ -54,11 +54,8 @@ def get_path_raw(contest_id, task_id, user_id):
     Cesta má tvar: $SUBMIT_PATH/submits/KSP/task_id/user_id
     '''
 
-    return "%s/submits/%s/%s/%s" % (
-        settings.SUBMIT_PATH,
-        str(contest_id),
-        str(task_id),
-        str(user_id))
+    return os.path.join(settings.SUBMIT_PATH, 'submits',
+                        str(contest_id), str(task_id), str(user_id))
 
 
 def get_path(task, user):
@@ -114,7 +111,7 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
         data)
 
     # Write RAW to local file
-    write_file(raw, path + '/' + submit_id + '.raw')
+    write_file(raw, os.path.join(path, submit_id + '.raw'))
 
     # Send RAW for testing (uncomment when deploying)
     # post_submit(raw)
@@ -134,10 +131,12 @@ def update_submit(submit):
 
     Ak je dotestované, tak do zložky so submitmi testovač nahral súbor
     s rovnakým názvom ako má submit len s príponou .protokol
+    (nastaviteľné v settings/common.py)
 
     Tento súbor obsahuje výstup testovača (v XML) a treba ho parse-núť
     '''
-    protocol_path = submit.filepath.rsplit('.', 1)[0] + '.protokol'
+    protocol_path = submit.filepath.rsplit(
+        '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
     if os.path.exists(protocol_path):
         tree = ET.parse(protocol_path)
         # Ak kompilátor vyhlási chyby, testovač ich vráti v tagu <compileLog>

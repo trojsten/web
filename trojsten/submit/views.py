@@ -36,10 +36,9 @@ def view_submit(request, submit_id):
         # under submit information, there should be list of all your submits.
         template_data = add_task_info(template_data, task)
         template_data = add_submit_list(template_data, task, submit.person)
-        protocol_path = submit.filepath.rsplit('.', 1)[0] + '.protokol'
-        if not os.path.exists(protocol_path):
-            template_data['protocolReady'] = False  # Not tested yet!
-        else:
+        protocol_path = submit.filepath.rsplit(
+            '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
+        if os.path.exists(protocol_path):
             template_data['protocolReady'] = True  # Tested, show the protocol
             tree = ET.parse(protocol_path)  # Protocol is in XML format
             clog = tree.find("compileLog")
@@ -63,28 +62,30 @@ def view_submit(request, submit_id):
                 test['time'] = runtest[3].text
                 tests.append(test)
             template_data['tests'] = tests
-        if not os.path.exists(submit.filepath):
-            template_data['fileReady'] = False  # File does not exist on server
         else:
+            template_data['protocolReady'] = False  # Not tested yet!
+        if os.path.exists(submit.filepath):
             # Source code available, display it!
             template_data['fileReady'] = True
             with open(submit.filepath, "r") as submitfile:
                 data = submitfile.read()
                 template_data['data'] = data
+        else:
+            template_data['fileReady'] = False  # File does not exist on server
         return render_to_response('trojsten/submit/view_submit.html',
                                   template_data,
                                   context_instance=RequestContext(request))
 
     # For description submits, return submitted file.
     if submit.submit_type == 'description':
-        if not os.path.exists(submit.filepath):
-            raise Http404  # File does not exists, can't be returned
-        else:
+        if os.path.exists(submit.filepath):
             data = open(submit.filepath, "rb")
             response = HttpResponse(data)
             response['Content-Disposition'] = 'attachment; filename=' + \
                 str(submit.filename())
             return response
+        else:
+            raise Http404  # File does not exists, can't be returned
 
 
 def add_task_info(template_data, task):
@@ -201,8 +202,8 @@ def task_submit_post(request, task_id, submit_type):
             # Source submit's should be processed by process_submit()
             submit_id = process_submit(sfile, task, language, person.user)
             # Source file-name is id.data
-            sfiletarget = get_path(
-                task, request.user) + '/' + submit_id + '.data'
+            sfiletarget = os.path.join(get_path(
+                task, request.user), submit_id + '.data')
             save_file(sfile, sfiletarget)
             sub = Submit(task=task,
                          person=person,
@@ -221,8 +222,8 @@ def task_submit_post(request, task_id, submit_type):
             from time import time
             submit_id = str(int(time()))
             # Description file-name should be: surname-id-originalfilename
-            sfiletarget = get_path(task, request.user) + '/' + \
-                person.surname + '-' + submit_id + '-' + sfile.name
+            sfiletarget = os.path.join(get_path(task, request.user),
+                                       person.surname + '-' + submit_id + '-' + sfile.name)
             save_file(sfile, sfiletarget)
             sub = Submit(task=task,
                          person=person,
