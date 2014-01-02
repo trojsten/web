@@ -18,22 +18,6 @@ class SourceSubmitForm(forms.Form):
     language = forms.ChoiceField(label='Jazyk',
                                  choices=LANGUAGE_CHOICES)
 
-    def __init__(self, *args, **kwargs):
-        task_language = ""
-
-        super(SourceSubmitForm, self).__init__(*args, **kwargs)
-
-        if "task_language" in kwargs:
-            task_language = kwargs["task_language"]
-            del kwargs["task_language"]
-
-        if task_language != "":
-            choices_dict = {x[0]: x[1] for x in self.LANGUAGE_CHOICES}
-            choices = (
-                ("." + task_language, choices_dict["." + task_language]),)
-
-            self.fields['language'].choices = choices
-
 
 class DescriptionSubmitForm(forms.Form):
     submit_file = forms.FileField(
