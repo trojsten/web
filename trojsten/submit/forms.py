@@ -38,6 +38,3 @@ class SourceSubmitForm(forms.Form):
 class DescriptionSubmitForm(forms.Form):
     submit_file = forms.FileField(
         max_length=settings.UPLOADED_FILENAME_MAXLENGTH)
-
-    def __init__(self, *args, **kwargs):
-        super(DescriptionSubmitForm, self).__init__(*args, **kwargs)

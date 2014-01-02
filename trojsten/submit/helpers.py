@@ -7,6 +7,10 @@ import socket
 import xml.etree.ElementTree as ET
 
 
+RESPONSE_ERROR = 'CERR'
+RESPONSE_OK = 'OK'
+
+
 def write_file(what, where):
     '''Vytvorí cieľový adresár a uloží string do súboru.'''
     try:
@@ -86,16 +90,14 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
     # Generate submit ID
     # Submit ID is <timestamp>-##### where ##### are 5 random digits
     timestamp = int(time())
-    submit_id = str(timestamp) + '-'
-    for i in range(0, 5):
-        submit_id += str(random.randint(0, 9))
+    submit_id = "%d-%05d" % (timestamp, random.randint(0, 99999))
 
     # Determine local directory to store RAW file into
     path = get_path_raw(contest_id, task_id, user_id)
 
     # Prepare submit parameters (not entirely sure about this yet).
-    user_id = contest_id + '-' + str(user_id)
-    task_id = contest_id + '-' + str(task_id)
+    user_id = "%s-%d" % (contest_id, user_id)
+    task_id = "%s-%d" % (contest_id, task_id)
     original_name = f.name
     correct_filename = task_id + language
     data = f.read()
@@ -143,19 +145,19 @@ def update_submit(submit):
         # Ak takýto tag existuje, výsledok je chyba pri testovaní a 0 bodov.
         clog = tree.find("compileLog")
         if clog is not None:
-            result = 'CERR'
+            result = RESPONSE_ERROR
             points = 0
         else:
             # Pre každý vstup kompilátor vyprodukuje tag <test>, všetky <test>-y
             # sú v tag-u <runLog>. Výsledok je buď OK, alebo prvý nájdený druh
             # chyby.
             runlog = tree.find("runLog")
-            result = 'OK'
+            result = RESPONSE_OK
             for test in runlog:
                 if test.tag != 'test':
                     continue
                 test_result = test[2].text
-                if test_result != 'OK':
+                if test_result != RESPONSE_OK:
                     result = test_result
                     break
             # Na konci testovača je v tagu <score> uložené percento získaných

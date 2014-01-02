@@ -20,9 +20,7 @@ import xml.etree.ElementTree as ET
 
 @login_required
 def view_submit(request, submit_id):
-    submit = Submit.objects.get(pk=submit_id)
-    if not submit:
-        raise Http404  # Return 404 if no submit with such ID exists.
+    submit = get_object_or_404(Submit, pk=submit_id)
     if submit.person != request.user.person:
         raise PermissionDenied()  # You shouldn't see other user's submits.
 
@@ -129,9 +127,7 @@ def add_submit_list(template_data, task, person):
 @login_required
 def task_submit_form(request, task_id):
     '''View, ktory zobrazi iba formular na odovzdanie jednej ulohy'''
-    task = Task.objects.get(pk=task_id)
-    if not task:
-        raise Http404
+    task = get_object_or_404(Task, pk=task_id)
 
     template_data = {}
     template_data = add_task_info(template_data, task)
@@ -146,9 +142,7 @@ def task_submit_form(request, task_id):
 def task_submit_page(request, task_id):
     '''View, ktory zobrazi formular na odovzdanie a zoznam submitov
     prave prihlaseneho cloveka pre danu ulohu'''
-    task = Task.objects.get(pk=task_id)
-    if not task:
-        raise Http404
+    task = get_object_or_404(Task, pk=task_id)
 
     template_data = {}
     template_data = add_task_info(template_data, task)
@@ -163,9 +157,7 @@ def task_submit_page(request, task_id):
 @login_required
 def task_submit_list(request, task_id):
     '''View, ktory zobrazi iba zoznam submitov jednej ulohy'''
-    task = Task.objects.get(pk=task_id)
-    if not task:
-        raise Http404
+    task = get_object_or_404(Task, pk=task_id)
 
     template_data = {}
     template_data = add_task_info(template_data, task)
@@ -179,10 +171,8 @@ def task_submit_list(request, task_id):
 @login_required
 def task_submit_post(request, task_id, submit_type):
     '''Spracovanie uploadnuteho submitu'''
-    task = Task.objects.get(pk=task_id)
     # Raise Not Found when submitting non existent task
-    if not task:
-        raise Http404
+    task = get_object_or_404(Task, pk=task_id)
 
     # Raise Not Found when submitting non-submittable submit type
     if submit_type not in task.task_type.split(','):
@@ -223,7 +213,8 @@ def task_submit_post(request, task_id, submit_type):
             submit_id = str(int(time()))
             # Description file-name should be: surname-id-originalfilename
             sfiletarget = os.path.join(get_path(task, request.user),
-                                       person.surname + '-' + submit_id + '-' + sfile.name)
+                                       "%s-%s-%s" % (
+                                           person.surname, submit_id, sfile.name)
             save_file(sfile, sfiletarget)
             sub = Submit(task=task,
                          person=person,
