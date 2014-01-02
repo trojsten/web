@@ -214,7 +214,7 @@ def task_submit_post(request, task_id, submit_type):
             # Description file-name should be: surname-id-originalfilename
             sfiletarget = os.path.join(get_path(task, request.user),
                                        "%s-%s-%s" % (
-                                           person.surname, submit_id, sfile.name)
+                                           person.surname, submit_id, sfile.name))
             save_file(sfile, sfiletarget)
             sub = Submit(task=task,
                          person=person,
