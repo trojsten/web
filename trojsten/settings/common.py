@@ -139,7 +139,7 @@ INSTALLED_APPS = (
     'trojsten.regal.people',
     'trojsten.regal.contests',
     'trojsten.regal.tasks',
-
+    'trojsten.submit',
     'django.contrib.humanize',
     'south',
     'django_notify',

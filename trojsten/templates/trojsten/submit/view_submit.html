@@ -1,4 +1,5 @@
 {% extends "trojsten/layout/main.html" %}
+{% load submit_parts %}
 {% block page_content %}
     <h2>{{ submit.protocol_id }}</h2>
     <h3>Detaily submitu</h3>
@@ -34,5 +35,5 @@
     {% else %}
         Zdrojový kód programu nie je dostupný
     {% endif %}
-    {% include "trojsten/submit/task_submit_list.html" %}
+    {% show_submit_list submit.task submit.person %}
 {% endblock %}

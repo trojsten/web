@@ -31,9 +31,6 @@ def view_submit(request, submit_id):
             update_submit(submit)
         task = submit.task
         template_data = {'submit': submit}
-        # under submit information, there should be list of all your submits.
-        template_data = add_task_info(template_data, task)
-        template_data = add_submit_list(template_data, task, submit.person)
         protocol_path = submit.filepath.rsplit(
             '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
         if os.path.exists(protocol_path):
@@ -86,84 +83,13 @@ def view_submit(request, submit_id):
             raise Http404  # File does not exists, can't be returned
 
 
-def add_task_info(template_data, task):
-    '''Prida do template_data informacie o task-u (jeho objekt a typy
-    submitu) (prerequisite na form_data a submit_list)'''
-    task_types = task.task_type.split(',')
-    template_data['task'] = task
-    template_data['has_source'] = 'source' in task_types
-    template_data['has_description'] = 'description' in task_types
-    return template_data
-
-
-def add_form_data(template_data, task):
-    '''Prida do template_data formulare na submit task-u, potom v
-    template include submit_form.html prida formular na submitovanie'''
-    task_types = task.task_type.split(',')
-    if 'source' in task_types:
-        sform = SourceSubmitForm()
-        template_data['source_form'] = sform
-    if 'description' in task_types:
-        dform = DescriptionSubmitForm()
-        template_data['description_form'] = dform
-    return template_data
-
-
-def add_submit_list(template_data, task, person):
-    '''Prida do template_data zoznam submitov k nejakej ulohe od nejakeho
-    cloveka, potom v template include submit_list.html prida ten zoznam
-    do stranky'''
-    submits = Submit.objects.filter(task=task, person=person)
-    template_data['source'] = submits.filter(
-        submit_type='source').order_by('-time')
-    template_data['description'] = submits.filter(
-        submit_type='description').order_by('-time')
-    # Update submits which are not updated yet!
-    for submit in template_data['source'].filter(testing_status='in queue'):
-        update_submit(submit)
-    return template_data
-
-
-@login_required
-def task_submit_form(request, task_id):
-    '''View, ktory zobrazi iba formular na odovzdanie jednej ulohy'''
-    task = get_object_or_404(Task, pk=task_id)
-
-    template_data = {}
-    template_data = add_task_info(template_data, task)
-    template_data = add_form_data(template_data, task)
-
-    return render_to_response('trojsten/submit/task_submit_form.html',
-                              template_data,
-                              context_instance=RequestContext(request))
-
-
 @login_required
 def task_submit_page(request, task_id):
     '''View, ktory zobrazi formular na odovzdanie a zoznam submitov
     prave prihlaseneho cloveka pre danu ulohu'''
     task = get_object_or_404(Task, pk=task_id)
-
-    template_data = {}
-    template_data = add_task_info(template_data, task)
-    template_data = add_form_data(template_data, task)
-    template_data = add_submit_list(template_data, task, request.user.person)
-
-    return render_to_response('trojsten/submit/task_submit_page.html',
-                              template_data,
-                              context_instance=RequestContext(request))
-
-
-@login_required
-def task_submit_list(request, task_id):
-    '''View, ktory zobrazi iba zoznam submitov jednej ulohy'''
-    task = get_object_or_404(Task, pk=task_id)
-
-    template_data = {}
-    template_data = add_task_info(template_data, task)
-    template_data = add_submit_list(template_data, task, request.user.person)
-
-    return render_to_response('trojsten/submit/task_submit_list.html',
+    template_data = {'task': task, 'person': request.user.person}
+    return render_to_response('trojsten/submit/task_submit.html',
                               template_data,
                               context_instance=RequestContext(request))
 
@@ -203,7 +129,7 @@ def task_submit_post(request, task_id, submit_type):
                          testing_status='in queue',
                          protocol_id=submit_id)
             sub.save()
-            return redirect(reverse('task_submit_form', kwargs={'task_id': int(task_id)}))
+            return redirect(reverse('task_submit_page', kwargs={'task_id': int(task_id)}))
 
     elif submit_type == 'description':
         form = DescriptionSubmitForm(request.POST, request.FILES)
@@ -223,7 +149,7 @@ def task_submit_post(request, task_id, submit_type):
                          testing_status='in queue',
                          filepath=sfiletarget)
             sub.save()
-            return redirect(reverse('task_submit_form', kwargs={'task_id': int(task_id)}))
+            return redirect(reverse('task_submit_page', kwargs={'task_id': int(task_id)}))
 
     else:
         # Only Description and Source submitting is developed currently
