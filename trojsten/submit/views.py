@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.db import models
 from django.http import Http404, HttpResponse
-from django.shortcuts import render_to_response, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
@@ -67,9 +67,7 @@ def view_submit(request, submit_id):
                 template_data['data'] = data
         else:
             template_data['fileReady'] = False  # File does not exist on server
-        return render_to_response('trojsten/submit/view_submit.html',
-                                  template_data,
-                                  context_instance=RequestContext(request))
+        return render(request, 'trojsten/submit/view_submit.html', template_data)
 
     # For description submits, return submitted file.
     if submit.submit_type == 'description':
@@ -89,9 +87,7 @@ def task_submit_page(request, task_id):
     prave prihlaseneho cloveka pre danu ulohu'''
     task = get_object_or_404(Task, pk=task_id)
     template_data = {'task': task, 'person': request.user.person}
-    return render_to_response('trojsten/submit/task_submit.html',
-                              template_data,
-                              context_instance=RequestContext(request))
+    return render(request, 'trojsten/submit/task_submit.html', template_data)
 
 
 @login_required
