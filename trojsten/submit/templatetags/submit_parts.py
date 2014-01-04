@@ -14,9 +14,9 @@ def show_submit_form(task):
     data['task'] = task
     data['has_source'] = 'source' in task_types
     data['has_description'] = 'description' in task_types
-    if 'source' in task_types:
+    if data['has_source']
         data['source_form'] = SourceSubmitForm()
-    if 'description' in task_types:
+    if data['has_description']
         data['description_form'] = DescriptionSubmitForm()
     return data
 
