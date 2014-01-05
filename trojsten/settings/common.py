@@ -8,6 +8,9 @@ PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+SUBMIT_PATH = ''
+TESTER_URL = 'experiment'
+TESTER_PORT = 12347
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -136,7 +139,7 @@ INSTALLED_APPS = (
     'trojsten.regal.people',
     'trojsten.regal.contests',
     'trojsten.regal.tasks',
-
+    'trojsten.submit',
     'django.contrib.humanize',
     'south',
     'django_notify',
@@ -225,3 +228,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 #     'social_auth.backends.pipeline.social.load_extra_data',
 #     'social_auth.backends.pipeline.user.update_user_details'
 # )
+
+UPLOADED_FILENAME_MAXLENGTH = 100000
+PROTOCOL_FILE_EXTENSION = '.protokol'

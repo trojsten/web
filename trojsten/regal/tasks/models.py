@@ -6,6 +6,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from trojsten.regal.people.models import Person
 from trojsten.regal.contests.models import Round
+import os
 
 
 @python_2_unicode_compatible
@@ -45,7 +46,7 @@ class Submit(models.Model):
     submit_type = models.CharField(
         max_length=16, verbose_name='typ submitu')
     points = models.IntegerField(verbose_name='body')
-    filename = models.CharField(max_length=128, verbose_name='súbor')
+    filepath = models.CharField(max_length=128, verbose_name='súbor')
     testing_status = models.CharField(
         max_length=128, verbose_name='stav testovania')
     tester_response = models.CharField(
@@ -59,3 +60,6 @@ class Submit(models.Model):
 
     def __str__(self):
         return str(self.person) + ' - ' + str(self.task)
+
+    def filename(self):
+        return os.path.basename(self.filepath)

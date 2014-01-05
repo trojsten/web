@@ -1,0 +1,56 @@
+<h3>Odovzdané súbory</h3>
+{% if has_description %}
+    <h4>Popis</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Čas</th>
+                <th>Stav</th>
+                <th>Body</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for submit in description %}
+            <tr class="{% cycle 'even' 'odd' %}">
+                <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
+                {% if submit.testing_status == 'in queue' %}
+                <td>Neopravené</td>
+                <td>..</td>
+                {% else %}
+                <td>Opravené</td>
+                <td>{{ submit.points }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% if has_source %}
+    <h4>Kód</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Čas</th>
+                <th>Stav</th>
+                <th>Správa z testovača</th>
+                <th>Body</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for submit in source %}
+            <tr class="{% cycle 'even' 'odd' %}">
+                <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
+                {% if submit.testing_status == 'in queue' %}
+                <td>Testuje sa</td>
+                <td>Čaká sa na otestovanie</td>
+                <td>..</td>
+                {% else %}
+                <td>Dotestované</td>
+                <td>{{ submit.tester_response }}</td>
+                <td>{{ submit.points }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

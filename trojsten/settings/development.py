@@ -10,9 +10,10 @@ DATABASES = {
 
 DEBUG = True
 TEMPLATE_DEBUG = True
+SUBMIT_PATH = '/tmp'
 
-INSTALLED_APPS += ('debug_toolbar',)
-MIDDLEWARE_CLASSES = (('debug_toolbar.middleware.DebugToolbarMiddleware',)
-    + MIDDLEWARE_CLASSES)
+#INSTALLED_APPS += ('debug_toolbar',)
+#MIDDLEWARE_CLASSES = (('debug_toolbar.middleware.DebugToolbarMiddleware',)
+#    + MIDDLEWARE_CLASSES)
 
 INTERNAL_IPS = ('127.0.0.1',)

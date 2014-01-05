@@ -1,0 +1,39 @@
+{% extends "trojsten/layout/main.html" %}
+{% load submit_parts %}
+{% block page_content %}
+    <h2>{{ submit.protocol_id }}</h2>
+    <h3>Detaily submitu</h3>
+    {% if protocolReady %}
+        {% if compileLogPresent %}
+            <h4>Výstup z kompilátora</h4>
+            <pre>{{ compileLog }}</pre>
+        {% endif %}
+        <table>
+            <thead>
+            <tr>
+                <th>Vstup</th>
+                <th>Výsledok</th>
+                <th>Čas</th>
+            </tr>
+        </thead>
+            <tbody>
+        {% for test in tests %}
+            <tr>
+                <td>{{ test.name }}</td>
+                <td>{{ test.result }}</td>
+                <td>{{ test.time }} ms</td>
+            </tr>
+            </tbody>
+        {% endfor %}
+    </table>
+    {% else %}
+        Program ešte nebol otestovaný
+    {% endif %}
+    <h3>Odovzdaný program</h3>
+    {% if fileReady %}
+        <pre>{{ data }}</pre>
+    {% else %}
+        Zdrojový kód programu nie je dostupný
+    {% endif %}
+    {% show_submit_list submit.task submit.person %}
+{% endblock %}
