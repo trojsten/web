@@ -76,6 +76,7 @@ def view_submit(request, submit_id):
             response = HttpResponse(data)
             response['Content-Disposition'] = 'attachment; filename=' + \
                 str(submit.filename())
+            # TODO Prerobit pomocou sendfile
             return response
         else:
             raise Http404  # File does not exists, can't be returned
