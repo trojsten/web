@@ -20,5 +20,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^submit/', include(trojsten.submit.urls)),
     url(r'^wiki/notify/', get_notify_pattern()),
-    url(r'', get_wiki_pattern()),
+    url(r'^', get_wiki_pattern()),
 )
