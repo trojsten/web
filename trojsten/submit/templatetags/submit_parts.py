@@ -7,11 +7,12 @@ register = template.Library()
 
 
 @register.inclusion_tag('trojsten/submit/parts/submit_form.html')
-def show_submit_form(task):
+def show_submit_form(task, redirect):
     '''Renderne submitovaci formular pre dany task'''
     data = {}
     task_types = task.task_type.split(',')
     data['task'] = task
+    data['redirect_to'] = redirect
     data['has_source'] = 'source' in task_types
     data['has_description'] = 'description' in task_types
     if data['has_source']:
@@ -22,11 +23,12 @@ def show_submit_form(task):
 
 
 @register.inclusion_tag('trojsten/submit/parts/submit_list.html')
-def show_submit_list(task, person):
+def show_submit_list(task, person, redirect):
     '''Renderne zoznam submitov k danej ulohe pre daneho cloveka'''
     data = {}
     task_types = task.task_type.split(',')
     data['task'] = task
+    data['redirect_to'] = redirect
     data['has_source'] = 'source' in task_types
     data['has_description'] = 'description' in task_types
     submits = Submit.objects.filter(task=task, person=person)
