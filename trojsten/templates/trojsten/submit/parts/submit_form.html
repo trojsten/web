@@ -4,6 +4,7 @@
     <form enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type='description' %}">
         {% csrf_token %}
         {{ description_form.as_p }}
+        <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
         <input type="submit" value="Submit" />
     </form>
 {% endif %}
@@ -12,6 +13,7 @@
     <form enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type='source' %}">
         {% csrf_token %}
         {{ source_form.as_p }}
+        <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
         <input type="submit" value="Submit" />
     </form>
 {% endif %}

@@ -1,0 +1,8 @@
+{% extends "trojsten/layout/main.html" %}
+{% load submit_parts %}
+{% block page_content %}
+    {% for task in tasks %}
+        <h2>{{ task }}</h2>
+        {% show_submit_form task request.path %}
+    {% endfor %}
+{% endblock %}

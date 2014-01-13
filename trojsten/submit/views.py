@@ -10,6 +10,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.conf import settings
+from trojsten.regal.contests.models import Round
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.regal.people.models import Person
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm
@@ -92,6 +93,16 @@ def task_submit_page(request, task_id):
 
 
 @login_required
+def round_submit_page(request, round_id):
+    '''View, ktorý zobrazí formuláre pre odovzdanie pre všetky úlohy
+    z daného kola'''
+    round = get_object_or_404(Round, pk=round_id)
+    tasks = Task.objects.filter(round=round).order_by('number')
+    template_data = {'tasks': tasks}
+    return render(request, 'trojsten/submit/round_submit.html', template_data)
+
+
+@login_required
 def task_submit_post(request, task_id, submit_type):
     '''Spracovanie uploadnuteho submitu'''
     # Raise Not Found when submitting non existent task
@@ -126,7 +137,10 @@ def task_submit_post(request, task_id, submit_type):
                          testing_status='in queue',
                          protocol_id=submit_id)
             sub.save()
-            return redirect(reverse('task_submit_page', kwargs={'task_id': int(task_id)}))
+            if 'redirect_to' in request.POST:
+                return redirect(request.POST['redirect_to'])
+            else:
+                return redirect(reverse('task_submit_page', kwargs={'task_id': int(task_id)}))
 
     elif submit_type == 'description':
         form = DescriptionSubmitForm(request.POST, request.FILES)
@@ -146,7 +160,10 @@ def task_submit_post(request, task_id, submit_type):
                          testing_status='in queue',
                          filepath=sfiletarget)
             sub.save()
-            return redirect(reverse('task_submit_page', kwargs={'task_id': int(task_id)}))
+            if 'redirect_to' in request.POST:
+                return redirect(request.POST['redirect_to'])
+            else:
+                return redirect(reverse('task_submit_page', kwargs={'task_id': int(task_id)}))
 
     else:
         # Only Description and Source submitting is developed currently
