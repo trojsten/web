@@ -1,0 +1,25 @@
+{% extends "trojsten/layout/main.html" %}
+{% block page_content %}
+<table class="table table-bordered table-hover table-responsive">
+<tr>
+    <th>#</th>
+    <th>Meno:</th>
+    {% for task_number in numbers %}
+        <th>{{task_number}}</th>
+    {% endfor %}
+    <th>Suma:</th>
+</tr>
+{% for result in results %}
+<tr>
+    <th>{{forloop.counter}}</th>
+    <th>{{result.person.name}} {{result.person.surname}}</th>
+    {% for task, points in result.points.items %}
+        <td>{{points.sum}}</td>
+    {% endfor %}
+    <th>{{result.sum}}</th>
+</tr>
+{% empty %}
+<tr><td>Žiadne submity</td></tr>
+{% endfor %}
+</table>
+{% endblock %}
