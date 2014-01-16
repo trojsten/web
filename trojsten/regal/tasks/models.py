@@ -10,6 +10,24 @@ import os
 
 
 @python_2_unicode_compatible
+class SubmitType(models.Model):
+
+    '''
+    Any type of submit should be declared here and then linked to tasks
+    with ManyToMany fields
+    '''
+    name = models.CharField(
+        max_length=128, verbose_name='názov', primary_key=True)
+
+    class Meta:
+        verbose_name = 'Typ submitu'
+        verbose_name_plural = 'Typy submitov'
+
+    def __str__(self):
+        return str(self.name)
+
+
+@python_2_unicode_compatible
 class Task(models.Model):
 
     '''
@@ -21,7 +39,7 @@ class Task(models.Model):
     number = models.IntegerField(verbose_name='číslo')
     description_points = models.IntegerField(verbose_name='body za popis')
     source_points = models.IntegerField(verbose_name='body za program')
-    task_type = models.CharField(max_length=128, verbose_name='typ úlohy')
+    task_types = models.ManyToManyField(SubmitType, verbose_name='typy úlohy')
 
     class Meta:
         verbose_name = 'Úloha'
@@ -43,8 +61,7 @@ class Submit(models.Model):
     task = models.ForeignKey(Task, verbose_name='úloha')
     time = models.DateTimeField(auto_now_add=True)
     person = models.ForeignKey(Person, verbose_name='odovzdávateľ')
-    submit_type = models.CharField(
-        max_length=16, verbose_name='typ submitu')
+    submit_type = models.ForeignKey(SubmitType, verbose_name='typ submitu')
     points = models.IntegerField(verbose_name='body')
     filepath = models.CharField(max_length=128, verbose_name='súbor')
     testing_status = models.CharField(

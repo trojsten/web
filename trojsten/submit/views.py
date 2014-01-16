@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.conf import settings
 from trojsten.regal.contests.models import Round
-from trojsten.regal.tasks.models import Task, Submit
+from trojsten.regal.tasks.models import Task, Submit, SubmitType
 from trojsten.regal.people.models import Person
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm
 from trojsten.submit.helpers import save_file, process_submit, get_path, update_submit
@@ -109,7 +109,8 @@ def task_submit_post(request, task_id, submit_type):
     task = get_object_or_404(Task, pk=task_id)
 
     # Raise Not Found when submitting non-submittable submit type
-    if submit_type not in task.task_type.split(','):
+    submit_type = SubmitType.objects.get(pk=submit_type)
+    if submit_type not in task.task_types.all():
         raise Http404
 
     # Raise Not Found when not submitting through POST
@@ -119,7 +120,7 @@ def task_submit_post(request, task_id, submit_type):
     person = request.user.person
     sfile = request.FILES['submit_file']
 
-    if submit_type == 'source':
+    if submit_type.name == 'source':
         form = SourceSubmitForm(request.POST, request.FILES)
         if form.is_valid():
             language = form.cleaned_data['language']
@@ -142,7 +143,7 @@ def task_submit_post(request, task_id, submit_type):
             else:
                 return redirect(reverse('task_submit_page', kwargs={'task_id': int(task_id)}))
 
-    elif submit_type == 'description':
+    elif submit_type.name == 'description':
         form = DescriptionSubmitForm(request.POST, request.FILES)
         if form.is_valid():
             # Description submit id's are currently timestamps
