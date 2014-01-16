@@ -7,9 +7,7 @@ def view_results(request, round_ids):
     res = dict()
     tasks = Task.objects.filter(
         round__in=round_ids.split(',')
-    ).order_by('number')
-
-    task_numbers = map(lambda x: x.number, tasks)
+    ).order_by('round', 'number')
 
     # hack aby som mal idcka, predpoklada, ze vacsie id pribudlo do DB neskor
     # da sa vyriesit inner joinom, ale to by chcelo SQL pisat
@@ -24,11 +22,10 @@ def view_results(request, round_ids):
     r = dict()
     for submit in submits:
         if submit.person not in r:
-            r[submit.person] = {i: {'sum': 0} for i in task_numbers}
+            r[submit.person] = {i: {'sum': 0} for i in tasks}
             r[submit.person]['sum'] = 0
-        r[submit.person][submit.task.number][submit.submit_type]\
-            = submit.points
-        r[submit.person][submit.task.number]['sum'] += submit.points
+        r[submit.person][submit.task][submit.submit_type] = submit.points
+        r[submit.person][submit.task]['sum'] += submit.points
         r[submit.person]['sum'] += submit.points
 
     res = []
@@ -39,7 +36,7 @@ def view_results(request, round_ids):
         res.append({'person': person, 'points': points, 'sum': points_sum})
 
     template_data = {
-        'numbers': task_numbers,
+        'tasks': tasks,
         'results': sorted(res, key=lambda x: -x['sum']),
     }
     return render(

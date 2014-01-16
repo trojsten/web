@@ -1,11 +1,12 @@
 {% extends "trojsten/layout/main.html" %}
+{% load dict_lookup %}
 {% block page_content %}
 <table class="table table-bordered table-hover table-responsive">
 <tr>
     <th>#</th>
     <th>Meno:</th>
-    {% for task_number in numbers %}
-        <th>{{task_number}}</th>
+    {% for task in tasks %}
+        <th>{{task.number}}</th>
     {% endfor %}
     <th>Suma:</th>
 </tr>
@@ -13,8 +14,8 @@
 <tr>
     <th>{{forloop.counter}}</th>
     <th>{{result.person.name}} {{result.person.surname}}</th>
-    {% for task, points in result.points.items %}
-        <td>{{points.sum}}</td>
+    {% for task in tasks %}
+        <th>{{result.points|lookup:task|lookup:"sum"}}</th>
     {% endfor %}
     <th>{{result.sum}}</th>
 </tr>
