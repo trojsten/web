@@ -24,11 +24,10 @@ def show_submit_form(task, redirect):
 
 
 @register.inclusion_tag('trojsten/submit/parts/submit_list.html')
-def show_submit_list(task, person, redirect):
+def show_submit_list(task, person):
     '''Renderne zoznam submitov k danej ulohe pre daneho cloveka'''
     data = {}
     data['task'] = task
-    data['redirect_to'] = redirect
     sourceType = SubmitType.objects.get(pk='source')
     descriptionType = SubmitType.objects.get(pk='description')
     data['has_source'] = sourceType in task.task_types.all()

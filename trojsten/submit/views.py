@@ -26,7 +26,7 @@ def view_submit(request, submit_id):
         raise PermissionDenied()  # You shouldn't see other user's submits.
 
     # For source submits, display testing results, source code and submit list.
-    if submit.submit_type == 'source':
+    if submit.submit_type.name == 'source':
         if submit.testing_status == 'in queue':
             # check if submit wasn't tested yet
             update_submit(submit)
@@ -71,7 +71,7 @@ def view_submit(request, submit_id):
         return render(request, 'trojsten/submit/view_submit.html', template_data)
 
     # For description submits, return submitted file.
-    if submit.submit_type == 'description':
+    if submit.submit_type.name == 'description':
         if os.path.exists(submit.filepath):
             data = open(submit.filepath, "rb")
             response = HttpResponse(data)
