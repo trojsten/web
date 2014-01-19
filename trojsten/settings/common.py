@@ -131,17 +131,20 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #'django.contrib.flatpages',
-    #'south',
-    #'social_auth',
-    #'ksp_login',
+    'south',
     'django.contrib.admin',
     'trojsten',
     'trojsten.regal.people',
     'trojsten.regal.contests',
     'trojsten.regal.tasks',
     'trojsten.submit',
+
+    # Keep this under trojsten to let trojsten override templates.
+    'social.apps.django_app.default',
+    'ksp_login',
+
+    # django-wiki and its dependencies
     'django.contrib.humanize',
-    'south',
     'django_notify',
     'mptt',
     'sekizai',
@@ -192,42 +195,40 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.contrib.messages.context_processors.messages",
     "sekizai.context_processors.sekizai",
-    #"ksp_login.context_processors.login_providers_both",
+    "ksp_login.context_processors.login_providers_both",
     #"trojsten.context_processors.current_site",
 )
-#
-# # The list of authentication backends we want to allow.
-# AUTHENTICATION_BACKENDS = (
-#     'social_auth.backends.facebook.FacebookBackend',
-# #    'social_auth.backends.twitter.TwitterBackend',
-#     'social_auth.backends.google.GoogleBackend',
-# #    'social_auth.backends.contrib.linkedin.LinkedinBackend',
-# #    'social_auth.backends.contrib.livejournal.LiveJournalBackend',
-# #    'social_auth.backends.contrib.dropbox.DropboxBackend',
-# #    'social_auth.backends.contrib.flickr.FlickrBackend',
-#     'ksp_login.backends.MyOpenIdBackend',
-#     'social_auth.backends.contrib.github.GithubBackend',
-#     'ksp_login.backends.LaunchpadBackend',
-#     'social_auth.backends.OpenIDBackend',
-#     'django.contrib.auth.backends.ModelBackend',
-# )
-#
-# # The number of authentication providers to show in the short list.
-# AUTHENTICATION_PROVIDERS_BRIEF = 3
-#
-# # The URL to which Django redirects as soon as login is required.
-# LOGIN_URL = "/account/login/"
-# LOGIN_REDIRECT_URL = "/account/"
-#
-# SOCIAL_AUTH_PIPELINE = (
-#     'social_auth.backends.pipeline.social.social_auth_user',
-#     'social_auth.backends.pipeline.user.get_username',
-#     'social_auth.backends.pipeline.misc.save_status_to_session',
-#     'ksp_login.pipeline.register_user',
-#     'social_auth.backends.pipeline.social.associate_user',
-#     'social_auth.backends.pipeline.social.load_extra_data',
-#     'social_auth.backends.pipeline.user.update_user_details'
-# )
+
+# The list of authentication backends we want to allow.
+AUTHENTICATION_BACKENDS = (
+    #'social.backends.facebook.FacebookOAuth2',
+    'social.backends.google.GoogleOpenId',
+    #'social.backends.github.GithubOAuth2',
+    'ksp_login.backends.LaunchpadAuth',
+    'social.backends.open_id.OpenIdAuth',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# The number of authentication providers to show in the short list.
+AUTHENTICATION_PROVIDERS_BRIEF = 3
+
+# The URL to which Django redirects as soon as login is required.
+LOGIN_URL = "/account/login/"
+LOGIN_REDIRECT_URL = "/account/"
+
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'ksp_login.pipeline.register_user',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details',
+)
 
 UPLOADED_FILENAME_MAXLENGTH = 100000
 PROTOCOL_FILE_EXTENSION = '.protokol'
+
+# We use ksp_login to handle accounts.
+WIKI_ACCOUNT_HANDLING = False

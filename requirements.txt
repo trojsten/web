@@ -1,3 +1,4 @@
 Django>=1.5
 wiki>=0.0.22
 South
+ksp-login>=0.2.1

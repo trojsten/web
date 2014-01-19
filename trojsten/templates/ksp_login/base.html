@@ -1,0 +1,8 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% block title %}{% block ksp_login_title %} ({{ block.super }}){% endblock ksp_login_title %}{% endblock title %}
+
+{% block page_content %}
+  {% block ksp_login_content %}
+  {% endblock ksp_login_content %}
+{% endblock page_content %}
