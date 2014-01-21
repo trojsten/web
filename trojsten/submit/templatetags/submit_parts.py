@@ -2,6 +2,7 @@ from django import template
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm
 from trojsten.regal.tasks.models import Submit, SubmitType
 from trojsten.submit.views import update_submit
+from django.conf import settings
 
 register = template.Library()
 
@@ -12,8 +13,8 @@ def show_submit_form(task, redirect):
     data = {}
     data['task'] = task
     data['redirect_to'] = redirect
-    sourceType = SubmitType.objects.get(pk='source')
-    descriptionType = SubmitType.objects.get(pk='description')
+    sourceType = SubmitType.objects.get(pk=settings.SUBMIT_TYPE_SOURCE)
+    descriptionType = SubmitType.objects.get(pk=settings.SUBMIT_TYPE_DESCRIPTION)
     data['has_source'] = sourceType in task.task_types.all()
     data['has_description'] = descriptionType in task.task_types.all()
     if data['has_source']:
@@ -28,8 +29,8 @@ def show_submit_list(task, person):
     '''Renderne zoznam submitov k danej ulohe pre daneho cloveka'''
     data = {}
     data['task'] = task
-    sourceType = SubmitType.objects.get(pk='source')
-    descriptionType = SubmitType.objects.get(pk='description')
+    sourceType = SubmitType.objects.get(pk=settings.SUBMIT_TYPE_SOURCE)
+    descriptionType = SubmitType.objects.get(pk=settings.SUBMIT_TYPE_DESCRIPTION)
     data['has_source'] = sourceType in task.task_types.all()
     data['has_description'] = descriptionType in task.task_types.all()
     submits = Submit.objects.filter(task=task, person=person)
