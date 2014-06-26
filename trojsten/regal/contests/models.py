@@ -7,6 +7,7 @@ from datetime import datetime
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.encoding import python_2_unicode_compatible
+from django.contrib.sites.models import Site
 import django.utils.timezone
 
 
@@ -17,9 +18,7 @@ class Competition(models.Model):
     Consists of series.
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
-    informatics = models.BooleanField(verbose_name='informatika')
-    math = models.BooleanField(verbose_name='matematika')
-    physics = models.BooleanField(verbose_name='fyzika')
+    sites = models.ManyToManyField(Site)
 
     class Meta:
         verbose_name = 'Súťaž'
@@ -37,7 +36,7 @@ class Series(models.Model):
     '''
     competition = models.ForeignKey(Competition, verbose_name='súťaž')
     name = models.CharField(max_length=32, verbose_name='názov')
-    start_date = models.DateField(verbose_name='dátum začiatku')
+    number = models.IntegerField(verbose_name='číslo série')
     year = models.IntegerField(verbose_name='ročník')
 
     class Meta:
