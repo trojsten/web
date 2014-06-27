@@ -1,7 +1,7 @@
 {% extends "trojsten/layout/main.html" %}
 {% load dict_lookup %}
 {% block page_content %}
-<table class="table table-bordered table-hover table-responsive">
+<table class="table table-hover table-responsive">
 <tr>
     <th>#</th>
     <th>Meno:</th>
@@ -12,15 +12,15 @@
 </tr>
 {% for result in results %}
 <tr>
-    <th>{{forloop.counter}}</th>
-    <th>{{result.person.name}} {{result.person.surname}}</th>
+    <td>{{forloop.counter}}</td>
+    <td>{{result.person.name}} {{result.person.surname}}</td>
     {% for task in tasks %}
-        <th>{{result.points|lookup:task|lookup:"sum"}}</th>
+        <td>{{result.points|lookup:task|lookup:"sum"}}</td>
     {% endfor %}
-    <th>{{result.sum}}</th>
+    <td>{{result.sum}}</td>
 </tr>
 {% empty %}
-<tr><td>Žiadne submity</td></tr>
+<tr><td colspan="{{tasks | length | add:3}}">Žiadne submity</td></tr>
 {% endfor %}
 </table>
 {% endblock %}
