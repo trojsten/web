@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 
 urlpatterns = patterns('trojsten.submit.views',
     url(r'^task/(?P<task_id>\d+)/$', 'task_submit_page', name='task_submit_page'),
