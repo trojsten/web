@@ -5,4 +5,5 @@ register = template.Library()
 
 @register.filter
 def lookup(d, key):
-    return d[key]
+    if key in d:
+        return d[key]
