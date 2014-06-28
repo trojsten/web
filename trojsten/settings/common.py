@@ -12,6 +12,9 @@ SUBMIT_PATH = ''
 TESTER_URL = 'experiment'
 TESTER_PORT = 12347
 
+SUBMIT_TYPE_SOURCE = 'source'
+SUBMIT_TYPE_DESCRIPTION = 'description'
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )

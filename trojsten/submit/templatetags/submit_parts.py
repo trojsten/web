@@ -1,7 +1,8 @@
 from django import template
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm
-from trojsten.regal.tasks.models import Submit
+from trojsten.regal.tasks.models import Submit, SubmitType
 from trojsten.submit.views import update_submit
+from django.conf import settings
 
 register = template.Library()
 
@@ -10,11 +11,12 @@ register = template.Library()
 def show_submit_form(task, redirect):
     '''Renderne submitovaci formular pre dany task'''
     data = {}
-    task_types = task.task_type.split(',')
     data['task'] = task
     data['redirect_to'] = redirect
-    data['has_source'] = 'source' in task_types
-    data['has_description'] = 'description' in task_types
+    sourceType = SubmitType.objects.get(pk=settings.SUBMIT_TYPE_SOURCE)
+    descriptionType = SubmitType.objects.get(pk=settings.SUBMIT_TYPE_DESCRIPTION)
+    data['has_source'] = sourceType in task.task_types.all()
+    data['has_description'] = descriptionType in task.task_types.all()
     if data['has_source']:
         data['source_form'] = SourceSubmitForm()
     if data['has_description']:
@@ -23,19 +25,19 @@ def show_submit_form(task, redirect):
 
 
 @register.inclusion_tag('trojsten/submit/parts/submit_list.html')
-def show_submit_list(task, person, redirect):
+def show_submit_list(task, person):
     '''Renderne zoznam submitov k danej ulohe pre daneho cloveka'''
     data = {}
-    task_types = task.task_type.split(',')
     data['task'] = task
-    data['redirect_to'] = redirect
-    data['has_source'] = 'source' in task_types
-    data['has_description'] = 'description' in task_types
+    sourceType = SubmitType.objects.get(pk=settings.SUBMIT_TYPE_SOURCE)
+    descriptionType = SubmitType.objects.get(pk=settings.SUBMIT_TYPE_DESCRIPTION)
+    data['has_source'] = sourceType in task.task_types.all()
+    data['has_description'] = descriptionType in task.task_types.all()
     submits = Submit.objects.filter(task=task, person=person)
     data['source'] = submits.filter(
-        submit_type='source').order_by('-time')
+        submit_type=sourceType).order_by('-time')
     data['description'] = submits.filter(
-        submit_type='description').order_by('-time')
+        submit_type=descriptionType).order_by('-time')
     # Update submits which are not updated yet!
     for submit in data['source'].filter(testing_status='in queue'):
         update_submit(submit)
