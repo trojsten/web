@@ -5,7 +5,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from django.db import models
 from django.contrib.auth.models import User
-from trojsten.regal.contests.models import Round
+from trojsten.regal.contests.models import Round, Competition
 import os
 
 
@@ -27,6 +27,22 @@ class SubmitType(models.Model):
         return str(self.name)
 
 
+class Category(models.Model):
+    '''
+    Competition consists of a few categories. Each task belongs to one or more
+    categories.
+    '''
+    name = models.CharField(max_length=16, verbose_name='názov')
+    competition = models.ForeignKey(Competition, verbose_name='súťaž')
+
+    class Meta:
+        verbose_name = 'Kategória'
+        verbose_name_plural = 'Kategórie'
+
+    def __str__(self):
+        return str(self.competition.name) + '-' + str(self.name)
+
+
 @python_2_unicode_compatible
 class Task(models.Model):
 
@@ -35,7 +51,8 @@ class Task(models.Model):
     Task has submits.
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
-    round = models.ForeignKey(Round, verbose_name='Kolo')
+    round = models.ForeignKey(Round, verbose_name='kolo')
+    category = models.ManyToManyField(Category, verbose_name='kategória')
     number = models.IntegerField(verbose_name='číslo')
     description_points = models.IntegerField(verbose_name='body za popis')
     source_points = models.IntegerField(verbose_name='body za program')
