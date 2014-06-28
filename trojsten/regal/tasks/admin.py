@@ -8,3 +8,5 @@ from trojsten.regal.tasks.models import *
 
 admin.site.register(Task)
 admin.site.register(Submit)
+admin.site.register(Category)
+admin.site.register(SubmitType)
