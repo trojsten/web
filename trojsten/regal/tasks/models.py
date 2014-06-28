@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.utils.encoding import python_2_unicode_compatible
 
 from django.db import models
-from trojsten.regal.people.models import Person
+from django.contrib.auth.models import User
 from trojsten.regal.contests.models import Round
 import os
 
@@ -60,7 +60,7 @@ class Submit(models.Model):
     '''
     task = models.ForeignKey(Task, verbose_name='úloha')
     time = models.DateTimeField(auto_now_add=True)
-    person = models.ForeignKey(Person, verbose_name='odovzdávateľ')
+    user = models.ForeignKey(User, verbose_name='odovzdávateľ')
     submit_type = models.ForeignKey(SubmitType, verbose_name='typ submitu')
     points = models.IntegerField(verbose_name='body')
     filepath = models.CharField(max_length=128, verbose_name='súbor')
@@ -76,7 +76,7 @@ class Submit(models.Model):
         verbose_name_plural = 'Submity'
 
     def __str__(self):
-        return str(self.person) + ' - ' + str(self.task)
+        return str(self.user) + ' - ' + str(self.task)
 
     def filename(self):
         return os.path.basename(self.filepath)
