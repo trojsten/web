@@ -7,3 +7,8 @@ register = template.Library()
 def lookup(d, key):
     if key in d:
         return d[key]
+
+
+@register.filter
+def split(value, arg):
+    return value.split(arg)

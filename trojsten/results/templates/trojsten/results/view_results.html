@@ -1,5 +1,5 @@
 {% extends "trojsten/layout/main.html" %}
-{% load dict_lookup %}
+{% load utils %}
 {% block page_content %}
 <table class="table table-hover table-responsive">
 <tr>
@@ -11,14 +11,19 @@
     <th>Suma:</th>
 </tr>
 {% for result in results %}
+{% spaceless %}
 <tr>
     <td>{{forloop.counter}}</td>
     <td>{{result.person.name}} {{result.person.surname}}</td>
     {% for task in tasks %}
-        <td>{{result.points|lookup:task|lookup:"sum"}}</td>
+        <td data-toggle="tooltip" data-placement="top" title="{% for type in task.task_type|split:',' %}{% if not forloop.first %} {% endif %}{{type|first}}:{{result.points|lookup:task|lookup:type|default:0}}{% endfor %}">
+            {{result.points|lookup:task|lookup:"sum"}}
+        </td>
     {% endfor %}
+
     <td>{{result.sum}}</td>
 </tr>
+{% endspaceless %}
 {% empty %}
 <tr><td colspan="{{tasks | length | add:3}}">Žiadne submity</td></tr>
 {% endfor %}
