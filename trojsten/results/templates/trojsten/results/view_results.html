@@ -16,8 +16,10 @@
     <td>{{forloop.counter}}</td>
     <td>{{result.person.name}} {{result.person.surname}}</td>
     {% for task in tasks %}
-        <td data-toggle="tooltip" data-placement="top" title="{% for type in task.task_type|split:',' %}{% if not forloop.first %} {% endif %}{{type|first}}:{{result.points|lookup:task|lookup:type|default:0}}{% endfor %}">
+        <td>
+        <span data-toggle="tooltip" data-placement="top" title="{% for type in task.task_type|split:',' %}{% if not forloop.first %} {% endif %}{{type|first}}:{{result.points|lookup:task|lookup:type|default:0}}{% endfor %}">
             {{result.points|lookup:task|lookup:"sum"}}
+        </span>
         </td>
     {% endfor %}
 
