@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from trojsten.regal.tasks.models import Submit, Task
+from trojsten.regal.tasks.models import Submit, Task, Category, SubmitType
 from trojsten.regal.people.models import Person, Address
 from trojsten.regal.contests.models import Competition, Series, Round
 from django.contrib.auth.models import User
@@ -16,7 +16,6 @@ class ResultsTestCase(TestCase):
         # create users and persons
         usernames = [str(i) for i in range(10)]
         self.users = [User.objects.create(username=username) for username in usernames]
-        self.persons = [Person.objects.create(user=user, birth_date=datetime.date.today()) for user in self.users]
         # create series
         self.competition = Competition.objects.create(name='test')
         self.series = Series.objects.create(competition=self.competition, name='test', number=1, year=1)
@@ -24,8 +23,16 @@ class ResultsTestCase(TestCase):
         round_names = [1, 2]
         self.rounds = [Round.objects.create(number=i, series=self.series, end_time=datetime.date.today(), visible=True) for i in round_names]
         # create tasks
+        self.submit_types = { name: SubmitType.objects.create(name=name) for name in ['source', 'description'] }
+        self.categories = { name: Category.objects.create(name=name, competition=self.competition) for name in ['z', 'o'] }
         self.task_cnt = 5
-        self.tasks = [Task.objects.create(number=i, round=round, name=str(i), task_type='source,description', description_points=10, source_points=10) for i in range(self.task_cnt) for round in self.rounds]
+        self.tasks = [Task.objects.create(number=i, round=round, name=str(i), description_points=10, source_points=10) for i in range(self.task_cnt) for round in self.rounds]
+        for t in self.tasks:
+            t.task_types.add(self.submit_types['source'])
+            t.task_types.add(self.submit_types['description'])
+            t.category.add(self.categories['z'])
+            t.category.add(self.categories['o'])
+
         # create submits
         descriptions = [
             [1,2,3],
@@ -42,14 +49,14 @@ class ResultsTestCase(TestCase):
             [4,5,6],
         ]
         self.submits = [
-                Submit.objects.create(points=10, task=task, person=self.persons[i], submit_type='description') for i, tasks in enumerate(descriptions) for task in self.tasks
+                Submit.objects.create(points=10, task=task, user=self.users[i], submit_type=self.submit_types['description']) for i, tasks in enumerate(descriptions) for task in self.tasks
             ] + [
-                Submit.objects.create(points=10, task=task, person=self.persons[i], submit_type='source') for i, tasks in enumerate(sources) for task in self.tasks
+                Submit.objects.create(points=10, task=task, user=self.users[i], submit_type=self.submit_types['source']) for i, tasks in enumerate(sources) for task in self.tasks
         ]
 
-    def test_get_tasks(self):
+    def test_get_tasks_single_round_no_category(self):
         # test count
-        tasks = views._get_tasks(str(self.rounds[0].id))
+        tasks = views._get_tasks(str(self.rounds[0].id), None)
 
         # test all belong to one round
         self.assertEqual(len(tasks), self.task_cnt)
@@ -59,9 +66,42 @@ class ResultsTestCase(TestCase):
         # test sorted
         last = None
         for t in tasks:
-            if last is not none:
-                self.assertTrue(last.number<t.number)
+            if last is not None:
+                self.assertLess(last.number, t.number)
             last = t
+
+    def test_get_tasks_single_round_one_category(self):
+        # test count
+        tasks = views._get_tasks(str(self.rounds[0].id), str(self.categories['z'].id))
+
+        # test all belong to one round
+        self.assertEqual(len(tasks), self.task_cnt)
+        for t in tasks:
+            self.assertEqual(t.round, self.rounds[0])
+
+        # test sorted
+        last = None
+        for t in tasks:
+            if last is not None:
+                self.assertLess(last.number, t.number)
+            last = t
+
+    def test_get_tasks_single_round_multi_category(self):
+        # test count
+        tasks = views._get_tasks(str(self.rounds[0].id), '%d,%d' % (self.categories['z'].id, self.categories['o'].id))
+
+        # test all belong to one round
+        self.assertEqual(len(tasks), self.task_cnt)
+        for t in tasks:
+            self.assertEqual(t.round, self.rounds[0])
+
+        # test sorted
+        last = None
+        for t in tasks:
+            if last is not None:
+                self.assertLess(last.number, t.number)
+            last = t
+
 
     def test_response(self):
         # client = Client()
