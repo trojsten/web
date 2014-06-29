@@ -140,8 +140,25 @@ class ResultsTestCase(TestCase):
 
 
     def test_response(self):
-        # client = Client()
-        pass
+        client = Client(HTTP_HOST='ksp.sk')
+        response = client.get(reverse('view_results', kwargs={'round_ids':'%s' % self.rounds[0].id}))
+        self.assertEqual(response.status_code, 200)
+
+        response = client.get(reverse('view_results', kwargs={'round_ids':'%s,%s' % (self.rounds[0].id, self.rounds[1].id)}))
+        self.assertEqual(response.status_code, 200)
+
+        response = client.get(reverse('view_results', kwargs={'round_ids':'%s' % self.rounds[0].id, 'category_ids':'%s' % self.categories['z'].id}))
+        self.assertEqual(response.status_code, 200)
+
+        response = client.get(reverse('view_results', kwargs={'round_ids':'%s,%s' % (self.rounds[0].id, self.rounds[1].id), 'category_ids':'%s' % self.categories['o'].id}))
+        self.assertEqual(response.status_code, 200)
+
+        response = client.get(reverse('view_results', kwargs={'round_ids':'%s' % self.rounds[0].id, 'category_ids':'%s,%s' % (self.categories['z'].id, self.categories['o'].id)}))
+        self.assertEqual(response.status_code, 200)
+
+        response = client.get(reverse('view_results', kwargs={'round_ids':'%s,%s' % (self.rounds[0].id, self.rounds[1].id), 'category_ids':'%s,%s' % (self.categories['z'].id, self.categories['o'].id)}))
+        self.assertEqual(response.status_code, 200)
+
 
     def test_tasks(self):
         pass
