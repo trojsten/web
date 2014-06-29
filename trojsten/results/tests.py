@@ -102,6 +102,42 @@ class ResultsTestCase(TestCase):
                 self.assertLess(last.number, t.number)
             last = t
 
+    def test_get_tasks_multi_round_no_category(self):
+        # test count
+        tasks = views._get_tasks('%s,%s' % (self.rounds[0].id, self.rounds[1].id), None)
+
+        # test sorted
+        last = None
+        for t in tasks:
+            if last is not None:
+                if last.round == t.round:
+                    self.assertLess(last.number, t.number)
+            last = t
+
+    def test_get_tasks_multi_round_one_category(self):
+        # test count
+        tasks = views._get_tasks('%s,%s' % (self.rounds[0].id, self.rounds[1].id), str(self.categories['z'].id))
+
+        # test sorted
+        last = None
+        for t in tasks:
+            if last is not None:
+                if last.round == t.round:
+                    self.assertLess(last.number, t.number)
+            last = t
+
+    def test_get_tasks_multi_round_multi_category(self):
+        # test count
+        tasks = views._get_tasks('%s,%s' % (self.rounds[0].id, self.rounds[1].id), '%d,%d' % (self.categories['z'].id, self.categories['o'].id))
+
+        # test sorted
+        last = None
+        for t in tasks:
+            if last is not None:
+                if last.round == t.round:
+                    self.assertLess(last.number, t.number)
+            last = t
+
 
     def test_response(self):
         # client = Client()
