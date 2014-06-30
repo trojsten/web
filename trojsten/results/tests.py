@@ -47,7 +47,11 @@ class ResultsTestCase(TestCase):
         self.task_cnt = 5
         self.tasks = [
             Task.objects.create(
-                number=i, round=round, name=str(i), description_points=10, source_points=10
+                number=10 * round.number + i,
+                round=round,
+                name=str(i),
+                description_points=10,
+                source_points=10,
             ) for i in range(self.task_cnt) for round in self.rounds
         ]
         for t in self.tasks:
@@ -69,6 +73,7 @@ class ResultsTestCase(TestCase):
             [i for i in range(self.task_cnt)],
             [2, 3, 5],
             [1, 2, 3],
+            [4, 2],
         ]
         self.submits = [
             Submit.objects.create(
@@ -79,7 +84,7 @@ class ResultsTestCase(TestCase):
             )
             for i, tasks in enumerate(self.descriptions)
             for task in tasks
-            for _ in range(randrange(1,10))
+            for _ in range(randrange(1, 10))
         ] + [
             Submit.objects.create(
                 points=i,
@@ -89,7 +94,7 @@ class ResultsTestCase(TestCase):
             )
             for i, tasks in enumerate(self.sources)
             for task in tasks
-            for _ in range(randrange(1,10))
+            for _ in range(randrange(1, 10))
         ]
 
     def test_get_tasks_single_round_no_category(self):
@@ -184,6 +189,8 @@ class ResultsTestCase(TestCase):
             last = t
 
     def test_response(self):
+        '''Tests whether view returns status copde 200 for all type of parameters
+        '''
         client = Client(HTTP_HOST='ksp.sk')
         response = client.get(
             reverse('view_results', kwargs={'round_ids': '%s' % self.rounds[0].id})
@@ -304,8 +311,17 @@ class ResultsTestCase(TestCase):
         task_submits = views._get_submits(self.tasks)
         self.assertEqual(len(task_submits), sumlen(self.sources) + sumlen(self.descriptions))
 
-    def test_results_single_round(self):
-        pass
+    def test_get_results_data(self):
+        submits = views._get_submits(self.tasks)
+        results_data = views._get_results_data(self.tasks, submits)
+        self.assertEqual(len(results_data), max(len(self.sources), len(self.descriptions)))
+        for k, v in results_data.items():
+            for t in self.tasks:
+                self.assertEqual(
+                    sum(v[t][s] for s in self.submit_types.values() if s in v[t].keys()),
+                    v[t]['sum']
+                )
+            self.assertEqual(sum(v[t]['sum'] for t in self.tasks), v['sum'])
 
-    def test_results_multi_round(self):
+    def test_make_result_table(self):
         pass
