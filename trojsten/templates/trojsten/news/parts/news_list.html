@@ -1,0 +1,16 @@
+{% for entry in news_entries %}
+  <div class="news_entry">
+    <h3>{{ entry.title }}</h3>
+    <p class="news_entry_details">
+        <span class="author">{{ entry.author.username }}</span>,
+        <span class="date">{{ entry.pub_date|date:"DATETIME_FORMAT" }}</span>
+    </p>
+    <div class="news_entry_text">
+        {{ entry.rendered_text }}
+    </div>
+  </div>
+{% empty %}
+    <p>
+        Nemáme žiadne novinky…
+    </p>
+{% endfor %}

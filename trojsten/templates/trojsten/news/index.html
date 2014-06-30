@@ -1,0 +1,23 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% load url from future %}
+
+{% block title %}Novinky{% endblock title %}
+
+{% block page_content %}
+    {% include "trojsten/news/parts/news_list.html" %}
+
+    {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="{% url "news_list" page=page_obj.previous_page_number %}">Novšie novinky</a>
+            {% endif %}
+            <span class="page-current">
+                Strana {{ page_obj.number }} z&nbsp;{{ page_obj.paginator.num_pages }}.
+            </span>
+            {% if page_obj.has_next %}
+                <a href="{% url "news_list" page=page_obj.next_page_number %}">Staršie novinky</a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock page_content %}

@@ -6,7 +6,6 @@ PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
     os.path.dirname(os.path.realpath(trojsten.__file__))
 )
 
-AUTH_USER_MODEL = 'people.User'
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 SUBMIT_PATH = ''
@@ -137,12 +136,15 @@ INSTALLED_APPS = (
     #'ksp_login',
     'django.contrib.admin',
     'trojsten',
-    'trojsten.utils',
     'trojsten.regal.people',
     'trojsten.regal.contests',
     'trojsten.regal.tasks',
     'trojsten.submit',
-    'trojsten.news',
+<<<<<<< Updated upstream
+=======
+    'trojsten.results',
+    'trojsten.news'
+>>>>>>> Stashed changes
     'django.contrib.humanize',
     'south',
     'django_notify',
