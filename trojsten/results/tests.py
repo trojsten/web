@@ -324,4 +324,10 @@ class ResultsTestCase(TestCase):
             self.assertEqual(sum(v[t]['sum'] for t in self.tasks), v['sum'])
 
     def test_make_result_table(self):
-        pass
+        submits = views._get_submits(self.tasks)
+        results = views._make_result_table(self.tasks, submits)
+        last = None
+        for i in results:
+            if last is not None:
+                self.assertLessEqual(i['sum'], last['sum'])
+            last = i
