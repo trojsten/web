@@ -4,6 +4,8 @@ from django.db.models import Max
 
 
 def _get_tasks(round_ids, category_ids):
+    '''Returns tasks which belong to specified round_ids and category_ids
+    '''
     tasks = Task.objects.filter(
         round__in=round_ids.split(',')
     )
@@ -15,6 +17,9 @@ def _get_tasks(round_ids, category_ids):
 
 
 def _get_submits(tasks):
+    '''Returns submits which belong to specified tasks.
+    Only one submit per user, submit type and task is returned.
+    '''
     # hack aby som mal idcka, predpoklada, ze vacsie id pribudlo do DB neskor
     # da sa vyriesit inner joinom, ale to by chcelo SQL pisat
     return Submit.objects.filter(
@@ -27,6 +32,8 @@ def _get_submits(tasks):
 
 
 def _get_results_data(tasks, submits):
+    '''Returns results data for each user who has submitted at least one task
+    '''
     res = dict()
     for submit in submits:
         if submit.user not in res:
@@ -38,8 +45,9 @@ def _get_results_data(tasks, submits):
     return res
 
 
-def _make_result_table(tasks, submits):
-    results_data = _get_results_data(tasks, submits)
+def _make_result_table(results_data):
+    '''Makes list of table rows from results_data
+    '''
     res = list()
     for user, points in results_data.items():
         points_sum = points['sum']
@@ -49,9 +57,12 @@ def _make_result_table(tasks, submits):
 
 
 def view_results(request, round_ids, category_ids=None):
+    '''Displays results for specified round_ids and category_ids
+    '''
     tasks = _get_tasks(round_ids, category_ids)
     submits = _get_submits(tasks)
-    results = _make_result_table(tasks, submits)
+    results_data = _get_results_data(tasks, submits)
+    results = _make_result_table(results_data)
 
     template_data = {
         'tasks': tasks,
