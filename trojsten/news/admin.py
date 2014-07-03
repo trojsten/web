@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from trojsten.news.models import Entry
+from trojsten.news.models import Entry, Label
 
 
 class EntryAdmin(admin.ModelAdmin):
@@ -14,3 +14,4 @@ class EntryAdmin(admin.ModelAdmin):
         obj.save()
 
 admin.site.register(Entry, EntryAdmin)
+admin.site.register(Label)
