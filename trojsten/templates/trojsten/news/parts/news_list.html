@@ -1,5 +1,5 @@
 {% for entry in news_entries %}
-  <div class="news_entry">
+  <div class="news_entry{% for label in entry.labels.all %} news-label-{{label}}{% endfor %}">
     <h3>{{ entry.title }}</h3>
     <p class="news_entry_details">
         <span class="author">{{ entry.author.username }}</span>,
@@ -11,6 +11,6 @@
   </div>
 {% empty %}
     <p>
-        Nemáme žiadne novinky…
+        Nemáme žiadne novinky&hellip;
     </p>
 {% endfor %}
