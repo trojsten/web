@@ -27,11 +27,12 @@ def show_submit_list(task, user):
     data['task'] = task
     data['Submit'] = Submit
     submits = Submit.objects.filter(task=task, user=user)
-    for submit_type, _ in Submit.SUBMIT_TYPES:
-        data[submit_type] = submits.filter(
-            submit_type=submit_type).order_by('-time')
+    data['submits'] = {
+        submit_type: submits.filter(submit_type=submit_type).order_by('-time')
+        for submit_type, _ in Submit.SUBMIT_TYPES
+    }
 
     # Update submits which are not updated yet!
-    for submit in data[Submit.SOURCE].filter(testing_status='in queue'):
+    for submit in data['submits'][Submit.SOURCE].filter(testing_status='in queue'):
         update_submit(submit)
     return data
