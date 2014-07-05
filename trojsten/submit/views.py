@@ -19,7 +19,7 @@ import xml.etree.ElementTree as ET
 @login_required
 def view_submit(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
-    if submit.person != request.user.person:
+    if submit.user != request.user:
         raise PermissionDenied()  # You shouldn't see other user's submits.
 
     # For source submits, display testing results, source code and submit list.
@@ -86,7 +86,7 @@ def task_submit_page(request, task_id):
     '''View, ktory zobrazi formular na odovzdanie a zoznam submitov
     prave prihlaseneho cloveka pre danu ulohu'''
     task = get_object_or_404(Task, pk=task_id)
-    template_data = {'task': task, 'person': request.user.person}
+    template_data = {'task': task}
     return render(request, 'trojsten/submit/task_submit.html', template_data)
 
 
@@ -114,7 +114,6 @@ def task_submit_post(request, task_id, submit_type):
     if request.method != "POST":
         raise Http404
 
-    person = request.user.person
     sfile = request.FILES['submit_file']
 
     if submit_type == Submit.SOURCE:
@@ -122,13 +121,13 @@ def task_submit_post(request, task_id, submit_type):
         if form.is_valid():
             language = form.cleaned_data['language']
             # Source submit's should be processed by process_submit()
-            submit_id = process_submit(sfile, task, language, person.user)
+            submit_id = process_submit(sfile, task, language, request.user)
             # Source file-name is id.data
             sfiletarget = os.path.join(get_path(
                 task, request.user), submit_id + '.data')
             save_file(sfile, sfiletarget)
             sub = Submit(task=task,
-                         person=person,
+                         user=request.user,
                          submit_type=submit_type,
                          points=0,
                          filepath=sfiletarget,
@@ -153,11 +152,11 @@ def task_submit_post(request, task_id, submit_type):
             # Description file-name should be: surname-id-originalfilename
             sfiletarget = os.path.join(
                 get_path(task, request.user),
-                "%s-%s-%s" % (person.surname, submit_id, sfile.name),
+                "%s-%s-%s" % (request.user.surname, submit_id, sfile.name),
             )
             save_file(sfile, sfiletarget)
             sub = Submit(task=task,
-                         person=person,
+                         user=request.user,
                          submit_type=submit_type,
                          points=0,
                          testing_status='in queue',
