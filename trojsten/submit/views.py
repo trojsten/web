@@ -2,7 +2,7 @@
 # Create your views here.
 
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
@@ -103,6 +103,11 @@ def round_submit_page(request, round_id):
 @login_required
 def task_submit_post(request, task_id, submit_type):
     '''Spracovanie uploadnuteho submitu'''
+    try:
+        submit_type = int(submit_type)
+    except ValueError:
+        raise HttpResponseBadRequest
+
     # Raise Not Found when submitting non existent task
     task = get_object_or_404(Task, pk=task_id)
 
@@ -152,7 +157,7 @@ def task_submit_post(request, task_id, submit_type):
             # Description file-name should be: surname-id-originalfilename
             sfiletarget = os.path.join(
                 get_path(task, request.user),
-                "%s-%s-%s" % (request.user.surname, submit_id, sfile.name),
+                "%s-%s-%s" % (request.user.last_name, submit_id, sfile.name),
             )
             save_file(sfile, sfiletarget)
             sub = Submit(task=task,

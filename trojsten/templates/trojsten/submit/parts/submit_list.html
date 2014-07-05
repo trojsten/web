@@ -1,5 +1,5 @@
 <h3>Odovzdané súbory</h3>
-{% if has_description %}
+{% if task.has_description %}
     <h4>Popis</h4>
     <table>
         <thead>
@@ -25,7 +25,7 @@
         </tbody>
     </table>
 {% endif %}
-{% if has_source %}
+{% if task.has_source %}
     <h4>Kód</h4>
     <table>
         <thead>
