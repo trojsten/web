@@ -9,24 +9,6 @@ from trojsten.regal.contests.models import Round, Competition
 import os
 
 
-@python_2_unicode_compatible
-class SubmitType(models.Model):
-
-    '''
-    Any type of submit should be declared here and then linked to tasks
-    with ManyToMany fields
-    '''
-    name = models.CharField(
-        max_length=128, verbose_name='názov', primary_key=True)
-
-    class Meta:
-        verbose_name = 'Typ submitu'
-        verbose_name_plural = 'Typy submitov'
-
-    def __str__(self):
-        return str(self.name)
-
-
 class Category(models.Model):
     '''
     Competition consists of a few categories. Each task belongs to one or more
@@ -45,7 +27,6 @@ class Category(models.Model):
 
 @python_2_unicode_compatible
 class Task(models.Model):
-
     '''
     Task has its number, name, type and points value.
     Task has submits.
@@ -56,7 +37,8 @@ class Task(models.Model):
     number = models.IntegerField(verbose_name='číslo')
     description_points = models.IntegerField(verbose_name='body za popis')
     source_points = models.IntegerField(verbose_name='body za program')
-    task_types = models.ManyToManyField(SubmitType, verbose_name='typy úlohy')
+    has_source = models.BooleanField(verbose_name='odovzáva sa zdroják')
+    has_description = models.BooleanField(verbose_name='odovzáva sa popis')
 
     class Meta:
         verbose_name = 'Úloha'
@@ -68,17 +50,22 @@ class Task(models.Model):
 
 @python_2_unicode_compatible
 class Submit(models.Model):
-
     '''
     Submit holds information about its task and person who submitted it.
     There are 2 types of submits. Description submit and source submit.
     Description submit has points and filename, Source submit has also
     tester response and protocol ID assigned.
     '''
+    SOURCE = 0
+    DESCRIPTION = 1
+    SUBMIT_TYPES = [
+        (SOURCE, 'source'),
+        (DESCRIPTION, 'description'),
+    ]
     task = models.ForeignKey(Task, verbose_name='úloha')
     time = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, verbose_name='odovzdávateľ')
-    submit_type = models.ForeignKey(SubmitType, verbose_name='typ submitu')
+    submit_type = models.IntegerField(verbose_name='typ submitu', choices=SUBMIT_TYPES)
     points = models.IntegerField(verbose_name='body')
     filepath = models.CharField(max_length=128, verbose_name='súbor')
     testing_status = models.CharField(
