@@ -2,19 +2,16 @@
 # Create your views here.
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from django.db import models
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
-from django.template import RequestContext
 from django.conf import settings
 from trojsten.regal.contests.models import Round
 from trojsten.regal.tasks.models import Task, Submit
-from trojsten.regal.people.models import Person
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm
-from trojsten.submit.helpers import save_file, process_submit, get_path, update_submit
+from trojsten.submit.helpers import save_file, process_submit, get_path,\
+    update_submit
 import os
 import xml.etree.ElementTree as ET
 
@@ -26,11 +23,10 @@ def view_submit(request, submit_id):
         raise PermissionDenied()  # You shouldn't see other user's submits.
 
     # For source submits, display testing results, source code and submit list.
-    if submit.submit_type == 'source':
+    if submit.submit_type == Submit.SOURCE:
         if submit.testing_status == 'in queue':
             # check if submit wasn't tested yet
             update_submit(submit)
-        task = submit.task
         template_data = {'submit': submit}
         protocol_path = submit.filepath.rsplit(
             '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
@@ -68,10 +64,12 @@ def view_submit(request, submit_id):
                 template_data['data'] = data
         else:
             template_data['fileReady'] = False  # File does not exist on server
-        return render(request, 'trojsten/submit/view_submit.html', template_data)
+        return render(
+            request, 'trojsten/submit/view_submit.html', template_data
+        )
 
     # For description submits, return submitted file.
-    if submit.submit_type == 'description':
+    if submit.submit_type == Submit.DESCRIPTION:
         if os.path.exists(submit.filepath):
             data = open(submit.filepath, "rb")
             response = HttpResponse(data)
@@ -109,7 +107,7 @@ def task_submit_post(request, task_id, submit_type):
     task = get_object_or_404(Task, pk=task_id)
 
     # Raise Not Found when submitting non-submittable submit type
-    if submit_type not in task.task_type.split(','):
+    if not task.has_submit_type(submit_type):
         raise Http404
 
     # Raise Not Found when not submitting through POST
@@ -119,7 +117,7 @@ def task_submit_post(request, task_id, submit_type):
     person = request.user.person
     sfile = request.FILES['submit_file']
 
-    if submit_type == 'source':
+    if submit_type == Submit.SOURCE:
         form = SourceSubmitForm(request.POST, request.FILES)
         if form.is_valid():
             language = form.cleaned_data['language']
@@ -140,18 +138,23 @@ def task_submit_post(request, task_id, submit_type):
             if 'redirect_to' in request.POST:
                 return redirect(request.POST['redirect_to'])
             else:
-                return redirect(reverse('task_submit_page', kwargs={'task_id': int(task_id)}))
+                return redirect(
+                    reverse(
+                        'task_submit_page', kwargs={'task_id': int(task_id)}
+                    )
+                )
 
-    elif submit_type == 'description':
+    elif submit_type == Submit.DESCRIPTION:
         form = DescriptionSubmitForm(request.POST, request.FILES)
         if form.is_valid():
             # Description submit id's are currently timestamps
             from time import time
             submit_id = str(int(time()))
             # Description file-name should be: surname-id-originalfilename
-            sfiletarget = os.path.join(get_path(task, request.user),
-                                       "%s-%s-%s" % (
-                                           person.surname, submit_id, sfile.name))
+            sfiletarget = os.path.join(
+                get_path(task, request.user),
+                "%s-%s-%s" % (person.surname, submit_id, sfile.name),
+            )
             save_file(sfile, sfiletarget)
             sub = Submit(task=task,
                          person=person,
@@ -163,7 +166,11 @@ def task_submit_post(request, task_id, submit_type):
             if 'redirect_to' in request.POST:
                 return redirect(request.POST['redirect_to'])
             else:
-                return redirect(reverse('task_submit_page', kwargs={'task_id': int(task_id)}))
+                return redirect(
+                    reverse(
+                        'task_submit_page', kwargs={'task_id': int(task_id)}
+                    )
+                )
 
     else:
         # Only Description and Source submitting is developed currently

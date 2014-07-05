@@ -47,6 +47,13 @@ class Task(models.Model):
     def __str__(self):
         return str(self.number) + '. ' + str(self.name)
 
+    def has_submit_type(self, submit_type):
+        check_field = {
+            Submit.SOURCE: self.has_source,
+            Submit.DESCRIPTION: self.has_description,
+        }
+        return check_field[submit_type]
+
 
 @python_2_unicode_compatible
 class Submit(models.Model):
