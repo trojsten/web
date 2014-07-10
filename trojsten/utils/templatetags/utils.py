@@ -7,6 +7,8 @@ register = template.Library()
 
 @register.filter
 def lookup(d, key):
+    if type(d) is list:
+        return d[key]
     return d.get(key)
 
 

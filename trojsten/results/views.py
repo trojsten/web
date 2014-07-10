@@ -39,7 +39,7 @@ def _get_results_data(tasks, submits):
         if submit.user not in res:
             res[submit.user] = {i: {'sum': 0} for i in tasks}
             res[submit.user]['sum'] = 0
-        res[submit.user][submit.task][submit.submit_type] = submit.points
+        res[submit.user][submit.task][int(submit.submit_type)] = submit.points
         res[submit.user][submit.task]['sum'] += submit.points
         res[submit.user]['sum'] += submit.points
     return res
@@ -65,6 +65,7 @@ def view_results(request, round_ids, category_ids=None):
     results = _make_result_table(results_data)
 
     template_data = {
+        'Submit': Submit,
         'tasks': tasks,
         'results': results,
     }

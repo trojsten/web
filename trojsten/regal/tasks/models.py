@@ -55,6 +55,13 @@ class Task(models.Model):
         }
         return check_field[submit_type]
 
+    def get_submit_types(self):
+        return [
+            submit_type
+            for submit_type, _ in Submit.SUBMIT_TYPES
+            if self.has_submit_type(submit_type)
+        ]
+
     def get_path(self, solution=False):
         task_file = '{}{}.html'.format(
             settings.TASK_STATEMENTS_PREFIX_TASK,

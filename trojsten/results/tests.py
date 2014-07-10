@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from trojsten.regal.tasks.models import Submit, Task, Category, SubmitType
+from trojsten.regal.tasks.models import Submit, Task, Category
 from trojsten.regal.people.models import Address
 from trojsten.regal.contests.models import Competition, Series, Round
 from django.contrib.auth.models import User
@@ -35,10 +35,6 @@ class ResultsTestCase(TestCase):
             ) for i in round_names
         ]
         # create tasks
-        self.submit_types = {
-            name: SubmitType.objects.create(name=name)
-            for name in ['source', 'description']
-        }
         self.categories = {
             name: Category.objects.create(
                 name=name, competition=self.competition
@@ -52,11 +48,11 @@ class ResultsTestCase(TestCase):
                 name=str(i),
                 description_points=10,
                 source_points=10,
+                has_source=True,
+                has_description=True,
             ) for i in range(self.task_cnt) for round in self.rounds
         ]
         for t in self.tasks:
-            t.task_types.add(self.submit_types['source'])
-            t.task_types.add(self.submit_types['description'])
             t.category.add(self.categories['z'])
             t.category.add(self.categories['o'])
         # create submits
@@ -80,7 +76,7 @@ class ResultsTestCase(TestCase):
                 points=i,
                 task=self.tasks[task],
                 user=self.users[i],
-                submit_type=self.submit_types['description'],
+                submit_type=Submit.DESCRIPTION,
             )
             for i, tasks in enumerate(self.descriptions)
             for task in tasks
@@ -90,7 +86,7 @@ class ResultsTestCase(TestCase):
                 points=i,
                 task=self.tasks[task],
                 user=self.users[i],
-                submit_type=self.submit_types['source'],
+                submit_type=Submit.SOURCE,
             )
             for i, tasks in enumerate(self.sources)
             for task in tasks
@@ -253,13 +249,18 @@ class ResultsTestCase(TestCase):
 
     def test_get_submits_single_task(self):
         task = Task.objects.create(
-            number=47, round=self.rounds[0], name='', description_points=10, source_points=10
+            number=47,
+            round=self.rounds[0],
+            name='',
+            description_points=10,
+            source_points=10,
+            has_source=True,
+            has_description=False,
         )
-        task.task_types.add(self.submit_types['source'])
         submit_cnt = 10
         submits = [
             Submit.objects.create(
-                points=10, task=task, user=self.users[0], submit_type=self.submit_types['source']
+                points=10, task=task, user=self.users[0], submit_type=Submit.SOURCE
             ) for _ in range(submit_cnt)
         ]
         task_submits = views._get_submits([task])
@@ -267,16 +268,21 @@ class ResultsTestCase(TestCase):
         self.assertEqual(task_submits[0], submits[-1])
 
         task = Task.objects.create(
-            number=42, round=self.rounds[0], name='', description_points=10, source_points=10
+            number=42,
+            round=self.rounds[0],
+            name='',
+            description_points=10,
+            source_points=10,
+            has_source=False,
+            has_description=True,
         )
-        task.task_types.add(self.submit_types['description'])
         submit_cnt = 10
         submits = [
             Submit.objects.create(
                 points=10,
                 task=task,
                 user=self.users[0],
-                submit_type=self.submit_types['description'],
+                submit_type=Submit.DESCRIPTION,
             ) for _ in range(submit_cnt)
         ]
         task_submits = views._get_submits([task])
@@ -284,14 +290,18 @@ class ResultsTestCase(TestCase):
         self.assertEqual(task_submits[0], submits[-1])
 
         task = Task.objects.create(
-            number=49, round=self.rounds[0], name='', description_points=10, source_points=10
+            number=49,
+            round=self.rounds[0],
+            name='',
+            description_points=10,
+            source_points=10,
+            has_source=True,
+            has_description=True,
         )
-        task.task_types.add(self.submit_types['source'])
-        task.task_types.add(self.submit_types['description'])
         submit_cnt = 10
         submits_s = [
             Submit.objects.create(
-                points=10, task=task, user=self.users[0], submit_type=self.submit_types['source']
+                points=10, task=task, user=self.users[0], submit_type=Submit.SOURCE
             ) for _ in range(submit_cnt)
         ]
         submits_d = [
@@ -299,7 +309,7 @@ class ResultsTestCase(TestCase):
                 points=10,
                 task=task,
                 user=self.users[0],
-                submit_type=self.submit_types['description'],
+                submit_type=Submit.DESCRIPTION,
             ) for _ in range(submit_cnt)
         ]
         task_submits = views._get_submits([task])
@@ -318,14 +328,15 @@ class ResultsTestCase(TestCase):
         for k, v in results_data.items():
             for t in self.tasks:
                 self.assertEqual(
-                    sum(v[t][s] for s in self.submit_types.values() if s in v[t].keys()),
+                    sum(v[t][s] for s, _ in Submit.SUBMIT_TYPES if s in v[t].keys()),
                     v[t]['sum']
                 )
             self.assertEqual(sum(v[t]['sum'] for t in self.tasks), v['sum'])
 
     def test_make_result_table(self):
         submits = views._get_submits(self.tasks)
-        results = views._make_result_table(self.tasks, submits)
+        results_data = views._get_results_data(self.tasks, submits)
+        results = views._make_result_table(results_data)
         last = None
         for i in results:
             if last is not None:
