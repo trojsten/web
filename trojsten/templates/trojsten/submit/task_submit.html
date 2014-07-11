@@ -3,5 +3,5 @@
 {% block page_content %}
     <h2>{{ task }}</h2>
     {% show_submit_form task request.path %}
-    {% show_submit_list task person request.path %}
+    {% show_submit_list task request.user %}
 {% endblock %}

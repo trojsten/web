@@ -136,6 +136,7 @@ INSTALLED_APPS = (
     #'ksp_login',
     'django.contrib.admin',
     'trojsten',
+    'trojsten.utils',
     'trojsten.regal.people',
     'trojsten.regal.contests',
     'trojsten.regal.tasks',

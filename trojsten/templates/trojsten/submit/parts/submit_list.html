@@ -1,5 +1,6 @@
+{% load utils %}
 <h3>Odovzdané súbory</h3>
-{% if has_description %}
+{% if task.has_description %}
     <h4>Popis</h4>
     <table>
         <thead>
@@ -10,7 +11,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for submit in description %}
+        {% for submit in submits|lookup:Submit.DESCRIPTION %}
             <tr class="{% cycle 'even' 'odd' %}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == 'in queue' %}
@@ -25,7 +26,7 @@
         </tbody>
     </table>
 {% endif %}
-{% if has_source %}
+{% if task.has_source %}
     <h4>Kód</h4>
     <table>
         <thead>
@@ -37,7 +38,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for submit in source %}
+        {% for submit in submits|lookup:Submit.SOURCE %}
             <tr class="{% cycle 'even' 'odd' %}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == 'in queue' %}

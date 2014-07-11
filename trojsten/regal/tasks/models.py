@@ -4,24 +4,41 @@ from __future__ import unicode_literals
 from django.utils.encoding import python_2_unicode_compatible
 
 from django.db import models
-from trojsten.regal.people.models import Person
-from trojsten.regal.contests.models import Round
+from django.contrib.auth.models import User
+from trojsten.regal.contests.models import Round, Competition
 import os
+
+
+class Category(models.Model):
+    '''
+    Competition consists of a few categories. Each task belongs to one or more
+    categories.
+    '''
+    name = models.CharField(max_length=16, verbose_name='názov')
+    competition = models.ForeignKey(Competition, verbose_name='súťaž')
+
+    class Meta:
+        verbose_name = 'Kategória'
+        verbose_name_plural = 'Kategórie'
+
+    def __str__(self):
+        return str(self.competition.name) + '-' + str(self.name)
 
 
 @python_2_unicode_compatible
 class Task(models.Model):
-
     '''
     Task has its number, name, type and points value.
     Task has submits.
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
-    round = models.ForeignKey(Round, verbose_name='Kolo')
+    round = models.ForeignKey(Round, verbose_name='kolo')
+    category = models.ManyToManyField(Category, verbose_name='kategória')
     number = models.IntegerField(verbose_name='číslo')
     description_points = models.IntegerField(verbose_name='body za popis')
     source_points = models.IntegerField(verbose_name='body za program')
-    task_type = models.CharField(max_length=128, verbose_name='typ úlohy')
+    has_source = models.BooleanField(verbose_name='odovzáva sa zdroják')
+    has_description = models.BooleanField(verbose_name='odovzáva sa popis')
 
     class Meta:
         verbose_name = 'Úloha'
@@ -30,21 +47,32 @@ class Task(models.Model):
     def __str__(self):
         return str(self.number) + '. ' + str(self.name)
 
+    def has_submit_type(self, submit_type):
+        check_field = {
+            Submit.SOURCE: self.has_source,
+            Submit.DESCRIPTION: self.has_description,
+        }
+        return check_field[submit_type]
+
 
 @python_2_unicode_compatible
 class Submit(models.Model):
-
     '''
     Submit holds information about its task and person who submitted it.
     There are 2 types of submits. Description submit and source submit.
     Description submit has points and filename, Source submit has also
     tester response and protocol ID assigned.
     '''
+    SOURCE = 0
+    DESCRIPTION = 1
+    SUBMIT_TYPES = [
+        (SOURCE, 'source'),
+        (DESCRIPTION, 'description'),
+    ]
     task = models.ForeignKey(Task, verbose_name='úloha')
     time = models.DateTimeField(auto_now_add=True)
-    person = models.ForeignKey(Person, verbose_name='odovzdávateľ')
-    submit_type = models.CharField(
-        max_length=16, verbose_name='typ submitu')
+    user = models.ForeignKey(User, verbose_name='odovzdávateľ')
+    submit_type = models.IntegerField(verbose_name='typ submitu', choices=SUBMIT_TYPES)
     points = models.IntegerField(verbose_name='body')
     filepath = models.CharField(max_length=128, verbose_name='súbor')
     testing_status = models.CharField(
@@ -59,7 +87,7 @@ class Submit(models.Model):
         verbose_name_plural = 'Submity'
 
     def __str__(self):
-        return str(self.person) + ' - ' + str(self.task)
+        return str(self.user) + ' - ' + str(self.task)
 
     def filename(self):
         return os.path.basename(self.filepath)

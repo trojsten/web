@@ -1,16 +1,16 @@
 <h3>Odovzdávanie</h3>
-{% if has_description %}
+{% if task.has_description %}
     <h4>Popis</h4>
-    <form enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type='description' %}">
+    <form enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.DESCRIPTION %}">
         {% csrf_token %}
         {{ description_form.as_p }}
         <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
         <input type="submit" value="Submit" />
     </form>
 {% endif %}
-{% if has_source %}
+{% if task.has_source %}
     <h4>Kód</h4>
-    <form enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type='source' %}">
+    <form enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.SOURCE %}">
         {% csrf_token %}
         {{ source_form.as_p }}
         <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
