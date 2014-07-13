@@ -6,6 +6,7 @@ PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
     os.path.dirname(os.path.realpath(trojsten.__file__))
 )
 
+AUTH_USER_MODEL = 'trojsten.User'
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 SUBMIT_PATH = ''
