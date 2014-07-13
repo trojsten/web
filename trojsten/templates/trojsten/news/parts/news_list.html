@@ -1,12 +1,17 @@
 {% for entry in news_entries %}
-  <div class="news_entry{% for label in entry.labels.all %} news-label-{{label}}{% endfor %}">
+  <div class="news-entry{% for label in entry.labels.all %} news-label-{{label}}{% endfor %}">
     <h3>{{ entry.title }}</h3>
-    <p class="news_entry_details">
+    <p class="news-entry-details">
         <span class="author">{{ entry.author.username }}</span>,
         <span class="date">{{ entry.pub_date|date:"DATETIME_FORMAT" }}</span>
     </p>
-    <div class="news_entry_text">
+    <div class="news-entry-text">
         {{ entry.rendered_text }}
+    </div>
+    <div class="news-entry-labels">
+        {% for label in entry.labels.all %}
+            <span class="label label-default news-label-{{label}}">{{label}}</span>
+        {% endfor %}
     </div>
   </div>
 {% empty %}
