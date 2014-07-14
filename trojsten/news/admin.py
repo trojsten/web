@@ -5,7 +5,6 @@ from trojsten.news.models import Entry, Label
 
 class EntryAdmin(admin.ModelAdmin):
     list_display = ('title', 'pub_date', 'author')
-    prepopulated_fields = {'slug': ['title']}
     exclude = ('author',)
 
     def save_model(self, request, obj, form, change):

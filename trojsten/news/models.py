@@ -5,6 +5,7 @@ from django.utils.html import mark_safe
 from django.contrib.sites.models import Site
 from django.utils.encoding import python_2_unicode_compatible
 from markdown import markdown
+from autoslug import AutoSlugField
 
 
 @python_2_unicode_compatible
@@ -28,7 +29,7 @@ class Entry(models.Model):
     text = models.TextField(help_text='Obsah bude prehnaný <a '
                             'href="http://en.wikipedia.org/wiki/Markdown">'
                             'Markdownom</a>.')
-    slug = models.SlugField()
+    slug = AutoSlugField(populate_from='title', unique=True)
     sites = models.ManyToManyField(Site)
     labels = models.ManyToManyField(Label)
 
