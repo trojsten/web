@@ -1,6 +1,10 @@
 from __future__ import absolute_import
 from trojsten.settings.common import *
 
+# Celery settings
+BROKER_URL = 'django://'
+
+# Django settings
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -17,7 +21,10 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 SUBMIT_PATH = '/tmp'
 
-INSTALLED_APPS += ('debug_toolbar',)
+INSTALLED_APPS += (
+    'debug_toolbar',
+    'kombu.transport.django',
+)
 MIDDLEWARE_CLASSES = (('debug_toolbar.middleware.DebugToolbarMiddleware',)
     + MIDDLEWARE_CLASSES)
 

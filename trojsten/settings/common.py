@@ -2,6 +2,15 @@
 import os
 import trojsten
 
+# Celery settings
+#: Only add pickle to this list if your broker is secured
+#: from unwanted access (see userguide/security.html)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_IMPORTS = ("trojsten.task_statements.handlers", )
+
+# Django settings
 PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
     os.path.dirname(os.path.realpath(trojsten.__file__))
 )
@@ -131,7 +140,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #'django.contrib.flatpages',
-    'south',
+    #'south',
+    #'social_auth',
+    #'ksp_login',
     'django.contrib.admin',
     'trojsten',
     'trojsten.utils',
@@ -148,6 +159,7 @@ INSTALLED_APPS = (
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
+    'south',
     'django_notify',
     'mptt',
     'sekizai',
