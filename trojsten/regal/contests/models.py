@@ -10,10 +10,10 @@ from uuidfield import UUIDField
 
 @python_2_unicode_compatible
 class Repository(models.Model):
-    url = models.CharField(max_length=128, verbose_name='url git repozitára')
     notification_string = UUIDField(
-        auto=True, version=4, verbose_name='string pre push notifikáciu'
+        auto=True, primary_key=True, version=4, verbose_name='string pre push notifikáciu'
     )
+    url = models.CharField(max_length=128, verbose_name='url git repozitára')
 
     class Meta:
         verbose_name = 'Repozitár'
