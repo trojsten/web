@@ -19,6 +19,8 @@ class Competition(models.Model):
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
     sites = models.ManyToManyField(Site)
+    repo_url = models.CharField(max_length=128, verbose_name='url git repozitára')
+    repo_root = models.CharField(max_length=128, verbose_name='adresa foldra pre súťaž v repozitári')
 
     class Meta:
         verbose_name = 'Súťaž'
