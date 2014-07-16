@@ -20,6 +20,8 @@ SENDFILE_BACKEND = 'sendfile.backends.development'
 DEBUG = True
 TEMPLATE_DEBUG = True
 SUBMIT_PATH = '/tmp'
+TASK_STATEMENTS_REPO_PATH = '/tmp'
+TASK_STATEMENTS_PATH = '/var/www/zadania'
 
 INSTALLED_APPS += (
     'debug_toolbar',
