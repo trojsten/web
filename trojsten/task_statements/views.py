@@ -6,8 +6,8 @@ from .tasks import compile_task_statements
 from trojsten.regal.tasks.models import Task
 
 
-def notify_push(request):
-    compile_task_statements.delay()
+def notify_push(request, uuid):
+    compile_task_statements.delay(uuid)
     return HttpResponse('')
 
 
