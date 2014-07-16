@@ -8,3 +8,4 @@ from trojsten.regal.people.models import *
 
 admin.site.register(Address)
 admin.site.register(School)
+admin.site.register(User)

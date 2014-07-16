@@ -9,7 +9,7 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding model 'User'
-        db.create_table(u'trojsten_user', (
+        db.create_table(u'people_user', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('password', self.gf('django.db.models.fields.CharField')(max_length=128)),
             ('last_login', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
@@ -27,22 +27,22 @@ class Migration(SchemaMigration):
             ('school', self.gf('django.db.models.fields.related.ForeignKey')(default=1, to=orm['people.School'], null=True)),
             ('graduation', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
         ))
-        db.send_create_signal(u'trojsten', ['User'])
+        db.send_create_signal(u'people', ['User'])
 
         # Adding M2M table for field groups on 'User'
-        m2m_table_name = db.shorten_name(u'trojsten_user_groups')
+        m2m_table_name = db.shorten_name(u'people_user_groups')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('user', models.ForeignKey(orm[u'trojsten.user'], null=False)),
+            ('user', models.ForeignKey(orm[u'people.user'], null=False)),
             ('group', models.ForeignKey(orm[u'auth.group'], null=False))
         ))
         db.create_unique(m2m_table_name, ['user_id', 'group_id'])
 
         # Adding M2M table for field user_permissions on 'User'
-        m2m_table_name = db.shorten_name(u'trojsten_user_user_permissions')
+        m2m_table_name = db.shorten_name(u'people_user_user_permissions')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('user', models.ForeignKey(orm[u'trojsten.user'], null=False)),
+            ('user', models.ForeignKey(orm[u'people.user'], null=False)),
             ('permission', models.ForeignKey(orm[u'auth.permission'], null=False))
         ))
         db.create_unique(m2m_table_name, ['user_id', 'permission_id'])
@@ -50,13 +50,13 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         # Deleting model 'User'
-        db.delete_table(u'trojsten_user')
+        db.delete_table(u'people_user')
 
         # Removing M2M table for field groups on 'User'
-        db.delete_table(db.shorten_name(u'trojsten_user_groups'))
+        db.delete_table(db.shorten_name(u'people_user_groups'))
 
         # Removing M2M table for field user_permissions on 'User'
-        db.delete_table(db.shorten_name(u'trojsten_user_user_permissions'))
+        db.delete_table(db.shorten_name(u'people_user_user_permissions'))
 
 
     models = {
@@ -98,7 +98,7 @@ class Migration(SchemaMigration):
             'verbose_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10', 'blank': 'True'})
         },
-        u'trojsten.user': {
+        u'people.user': {
             'Meta': {'object_name': 'User'},
             'birth_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_index': 'True'}),
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
@@ -121,4 +121,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['trojsten']
+    complete_apps = ['people']
