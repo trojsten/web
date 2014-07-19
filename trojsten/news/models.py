@@ -6,19 +6,7 @@ from django.contrib.sites.models import Site
 from django.utils.encoding import python_2_unicode_compatible
 from markdown import markdown
 from autoslug import AutoSlugField
-
-
-@python_2_unicode_compatible
-class Label(models.Model):
-    name = models.CharField(
-        max_length=128, verbose_name='názov', primary_key=True)
-
-    class Meta:
-        verbose_name = 'Štítok'
-        verbose_name_plural = 'Štítky'
-
-    def __str__(self):
-        return str(self.name)
+from taggit.managers import TaggableManager
 
 
 @python_2_unicode_compatible
@@ -31,7 +19,7 @@ class Entry(models.Model):
                             'Markdownom</a>.')
     slug = AutoSlugField(populate_from='title', unique=True)
     sites = models.ManyToManyField(Site)
-    labels = models.ManyToManyField(Label)
+    tags = TaggableManager()
 
     class Meta:
         get_latest_by = 'pub_date'
