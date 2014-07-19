@@ -25,9 +25,9 @@ def notify_push(request, uuid):
     return HttpResponse('')
 
 
-def task_statement(request, task_id):
+def _statement_view(request, task_id, solution=False):
     task = get_object_or_404(Task, pk=task_id)
-    path = _get_task_path(task, solution=False)
+    path = _get_task_path(task, solution=solution)
     if path is None:
         raise Http404
     template_data = {
@@ -35,5 +35,13 @@ def task_statement(request, task_id):
         'path': path
     }
     return render(
-        request, 'trojsten/task_statements/view_task_statement.html', template_data
+        request, 'trojsten/task_statements/view_{}_statement.html'.format('solution' if solution else 'task'), template_data
     )
+
+
+def task_statement(request, task_id):
+    return _statement_view(request, task_id, solution=False)
+
+
+def solution_statement(request, task_id):
+    return _statement_view(request, task_id, solution=True)
