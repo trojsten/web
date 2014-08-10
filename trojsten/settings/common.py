@@ -142,6 +142,7 @@ INSTALLED_APPS = (
     'trojsten.regal.contests',
     'trojsten.regal.tasks',
     'trojsten.submit',
+    'trojsten.news',
     'django.contrib.humanize',
     'south',
     'django_notify',
@@ -153,6 +154,7 @@ INSTALLED_APPS = (
     'wiki.plugins.notifications',
     'wiki.plugins.images',
     'wiki.plugins.macros',
+    'taggit',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -230,6 +232,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 #     'social_auth.backends.pipeline.social.load_extra_data',
 #     'social_auth.backends.pipeline.user.update_user_details'
 # )
+
+SOUTH_MIGRATION_MODULES = {
+    'taggit': 'taggit.south_migrations',
+}
 
 UPLOADED_FILENAME_MAXLENGTH = 100000
 PROTOCOL_FILE_EXTENSION = '.protokol'

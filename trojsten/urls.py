@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 import trojsten.submit.urls
+import trojsten.news.urls
 
 admin.autodiscover()
 
@@ -19,6 +20,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     url(r'^submit/', include(trojsten.submit.urls)),
+    url(r'^news/', include(trojsten.news.urls)),
     url(r'^wiki/notify/', get_notify_pattern()),
     url(r'^', get_wiki_pattern()),
 )

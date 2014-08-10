@@ -1,0 +1,21 @@
+{% for entry in news_entries %}
+  <div class="news-entry{% for tag in entry.tags.all %} news-tag-{{tag}}{% endfor %}">
+    <h3>{{ entry.title }}</h3>
+    <p class="news-entry-details">
+        <span class="news-entry-author">{{ entry.author.username }}</span>,
+        <span class="news-entry-date">{{ entry.pub_date|date:"DATETIME_FORMAT" }}</span>
+    </p>
+    <div class="news-entry-text">
+        {{ entry.rendered_text }}
+    </div>
+    <div class="news-entry-tags">
+        {% for tag in entry.tags.all %}
+            <span class="label label-default news-tag-{{tag}}">{{tag}}</span>
+        {% endfor %}
+    </div>
+  </div>
+{% empty %}
+    <p>
+        Nemáme žiadne novinky&hellip;
+    </p>
+{% endfor %}

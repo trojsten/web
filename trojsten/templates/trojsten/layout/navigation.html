@@ -1,7 +1,8 @@
 {% block page_navigation %}
 <div class="sidebar">
   <ul class="list-unstyled">
-    <li><a href="/">Home</a></li>
+    <li><a href="/">Domov</a></li>
+    <li><a href="{% url 'news_list' page=1 %}">Novinky</a></li>
   </ul>
 </div>
 {% endblock %}
