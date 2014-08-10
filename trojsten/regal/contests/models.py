@@ -2,23 +2,38 @@
 
 from __future__ import unicode_literals
 
-from datetime import datetime
-
 from django.db import models
-from django.core.urlresolvers import reverse
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.sites.models import Site
-import django.utils.timezone
+from uuidfield import UUIDField
+
+
+@python_2_unicode_compatible
+class Repository(models.Model):
+    notification_string = UUIDField(
+        auto=True, primary_key=True, version=4, verbose_name='string pre push notifikáciu'
+    )
+    url = models.CharField(max_length=128, verbose_name='url git repozitára')
+
+    class Meta:
+        verbose_name = 'Repozitár'
+        verbose_name_plural = 'Repozitáre'
+
+    def __str__(self):
+        return self.url
 
 
 @python_2_unicode_compatible
 class Competition(models.Model):
-
     '''
     Consists of series.
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
     sites = models.ManyToManyField(Site)
+    repo = models.ForeignKey(Repository, verbose_name='git repozitár')
+    repo_root = models.CharField(
+        max_length=128, verbose_name='adresa foldra súťaže v repozitári'
+    )
 
     class Meta:
         verbose_name = 'Súťaž'
