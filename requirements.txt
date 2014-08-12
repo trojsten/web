@@ -1,6 +1,6 @@
 Django>=1.5
 wiki>=0.0.22
 South>=0.8.4
-django-autolsug>=1.7.2
+django-autoslug>=1.7.2
 django-uuidfield>=0.5.0
 django-taggit>=0.12
