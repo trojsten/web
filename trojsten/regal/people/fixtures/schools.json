@@ -1,0 +1,3422 @@
+[
+  {
+    "pk": 137, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Polt\u00e1r", 
+      "addr_name": "Osemro\u010dn\u00e9 gymn\u00e1zium", 
+      "abbreviation": "GPolt", 
+      "street": "\u0160kolsk\u00e1 ulica \u010d. 3", 
+      "verbose_name": "8-ro\u010dn\u00e9 gym. Polt\u00e1r", 
+      "zip_code": "987 01"
+    }
+  }, 
+  {
+    "pk": 234, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Su\u010dany", 
+      "addr_name": "Bilingv\u00e1lne gymn\u00e1zium", 
+      "abbreviation": "BiGSu\u010d", 
+      "street": "Komensk\u00e9ho 215", 
+      "verbose_name": "Bilingv\u00e1lne gym. Su\u010dany", 
+      "zip_code": "038 52"
+    }
+  }, 
+  {
+    "pk": 283, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Star\u00e1 \u013dubov\u0148a", 
+      "addr_name": "Cirkevn\u00e9 gymn\u00e1zium sv. Mikul\u00e1\u0161a", 
+      "abbreviation": "CGSL", 
+      "street": "\u0160t\u00farova 3", 
+      "verbose_name": "Cirk. gym. sv. Mikul\u00e1\u0161a Star\u00e1 \u013dubov\u0148a", 
+      "zip_code": "064 01"
+    }
+  }, 
+  {
+    "pk": 185, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u0160ahy", 
+      "addr_name": "Cirkevn\u00e9 gymn\u00e1zium", 
+      "abbreviation": "CG\u0160ahy", 
+      "street": "Ul. SNP 4", 
+      "verbose_name": "Cirkevn\u00e9 gym. \u0160ahy", 
+      "zip_code": "936 01"
+    }
+  }, 
+  {
+    "pk": 45, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Brighton", 
+      "addr_name": "Dorothy Stringer School", 
+      "abbreviation": "DSHS", 
+      "street": "Loder Road, Brighton, East Sussex", 
+      "verbose_name": "Dorothy Stringer High School Brighton", 
+      "zip_code": "BN1 6P"
+    }
+  }, 
+  {
+    "pk": 23, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 5", 
+      "addr_name": "Evanjelick\u00e9 l\u00fdceum", 
+      "abbreviation": "EvL\u00fdBA", 
+      "street": "Vranovsk\u00e1 2", 
+      "verbose_name": "Ev. l\u00fdceum BA", 
+      "zip_code": "851 02"
+    }
+  }, 
+  {
+    "pk": 257, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bansk\u00e1 Bystrica", 
+      "addr_name": "Evanjelick\u00e9 gymn\u00e1zium", 
+      "abbreviation": "EvGBB", 
+      "street": "Skuteck\u00e9ho 5", 
+      "verbose_name": "Evanjelick\u00e9 gym. B. Bystrica", 
+      "zip_code": "974 01"
+    }
+  }, 
+  {
+    "pk": 274, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Liptovsk\u00fd Mikul\u00e1\u0161", 
+      "addr_name": "Evanjelick\u00e9 gymn\u00e1zium Juraja Tranovsk\u00e9ho &#8211; bilingv\u00e1lne gymn\u00e1zium", 
+      "abbreviation": "EGLM", 
+      "street": "Hurbanova 6", 
+      "verbose_name": "Evanjelick\u00e9 gym. J. Tranovsk\u00e9ho Lipt. Mikul\u00e1\u0161", 
+      "zip_code": "031 01"
+    }
+  }, 
+  {
+    "pk": 193, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Tisovec", 
+      "addr_name": "Evanjelick\u00e9 gymn\u00e1zium", 
+      "abbreviation": "EvGTis", 
+      "street": "Jesensk\u00e9ho 836", 
+      "verbose_name": "Evanjelick\u00e9 gym. Tisovec", 
+      "zip_code": "980 61"
+    }
+  }, 
+  {
+    "pk": 267, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava", 
+      "addr_name": "Evanjelick\u00e9 l\u00fdceum", 
+      "abbreviation": "ELBA", 
+      "street": "Vranovsk\u00e1 2", 
+      "verbose_name": "Evanjelick\u00e9 l\u00fdceum Bratislava", 
+      "zip_code": "851 02"
+    }
+  }, 
+  {
+    "pk": 21, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 2", 
+      "addr_name": "Gymn\u00e1zium L. Novomesk\u00e9ho", 
+      "abbreviation": "GTomBA", 
+      "street": "Tom\u00e1\u0161ikova 2", 
+      "verbose_name": "GLN Tom\u00e1\u0161ikova BA", 
+      "zip_code": "827 29"
+    }
+  }, 
+  {
+    "pk": 102, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Liptovsk\u00fd Mikul\u00e1\u0161", 
+      "addr_name": "Gymn\u00e1zium M. M. Hod\u017eu", 
+      "abbreviation": "GLipMi", 
+      "street": "Hod\u017eova 13", 
+      "verbose_name": "GMMH Liptovsk\u00fd Mikul\u00e1\u0161", 
+      "zip_code": "031 36"
+    }
+  }, 
+  {
+    "pk": 174, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Spi\u0161sk\u00e1 Nov\u00e1 Ves", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GJaSNV", 
+      "street": "Javorov\u00e1 16", 
+      "verbose_name": "Gym Javorov\u00e1 Spi\u0161. Nov\u00e1 Ves", 
+      "zip_code": "052 01"
+    }
+  }, 
+  {
+    "pk": 104, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Malacky", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GMalac", 
+      "street": "Ul. 1. m\u00e1ja 8", 
+      "verbose_name": "Gym. 1. m\u00e1ja Malacky", 
+      "zip_code": "901 01"
+    }
+  }, 
+  {
+    "pk": 196, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Topo\u013e\u010dany", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GTopo\u013e", 
+      "street": "Ul. 17. novembra 1180", 
+      "verbose_name": "Gym. 17. novembra Topo\u013e\u010dany", 
+      "zip_code": "955 01"
+    }
+  }, 
+  {
+    "pk": 189, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Trnava", 
+      "addr_name": "Gymn\u00e1zium A. Merici", 
+      "abbreviation": "GMerTT", 
+      "street": "Hviezdoslavova 10", 
+      "verbose_name": "Gym. A. Merici Trnava", 
+      "zip_code": "917 00"
+    }
+  }, 
+  {
+    "pk": 156, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Rajec", 
+      "addr_name": "Gymn\u00e1zium A. \u0160kr\u00e1bika", 
+      "abbreviation": "G\u0160kRaj", 
+      "street": "n\u00e1m.A.\u0160kr\u00e1bika 5", 
+      "verbose_name": "Gym. A. \u0160kr\u00e1bika Rajec", 
+      "zip_code": "015 01"
+    }
+  }, 
+  {
+    "pk": 71, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Jev\u00ed\u010dko - CR", 
+      "addr_name": "Gymnasium", 
+      "abbreviation": "GJev\u00ed\u010d", 
+      "street": "A.K.Vit\u00e1ka", 
+      "verbose_name": "Gym. A.K.Vit\u00e1ka Jev\u00ed\u010dko", 
+      "zip_code": "569 43"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bansk\u00e1 Bystrica", 
+      "addr_name": "Gymn\u00e1zium A.Sl\u00e1dkovi\u010da", 
+      "abbreviation": "GKomBB", 
+      "street": "Komensk\u00e9ho 18", 
+      "verbose_name": "Gym. A.Sl\u00e1dkovi\u010da B. Bystrica", 
+      "zip_code": "974 01"
+    }
+  }, 
+  {
+    "pk": 244, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GAlKE", 
+      "street": "Alejov\u00e1 1", 
+      "verbose_name": "Gym. Alejov\u00e1 Ko\u0161ice", 
+      "zip_code": "041 49"
+    }
+  }, 
+  {
+    "pk": 38, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 4", 
+      "addr_name": "Gymn\u00e1zium Alkana", 
+      "abbreviation": "GBe\u0148BA", 
+      "street": "Be\u0148ovsk\u00e9ho", 
+      "verbose_name": "Gym. Alkana Be\u0148ovsk\u00e9ho BA", 
+      "zip_code": "841 01"
+    }
+  }, 
+  {
+    "pk": 256, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GBajkBA", 
+      "street": "Bajkalsk\u00e1 20", 
+      "verbose_name": "Gym. Bajkalsk\u00e1 20 BA", 
+      "zip_code": "821 08"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bansk\u00e1 \u0160tiavnica", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GBan\u0160t", 
+      "street": "Gwerkovej-G\u00f6llnerovej 8", 
+      "verbose_name": "Gym. Bansk\u00e1 \u0160tiavnica", 
+      "zip_code": "969 17"
+    }
+  }, 
+  {
+    "pk": 214, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Vranov nad Top\u013eou", 
+      "addr_name": "Gymn\u00e1zium  8 - ro\u010dn\u00e9", 
+      "abbreviation": "GBVran", 
+      "street": "Bernol\u00e1kova 1061", 
+      "verbose_name": "Gym. Bernol\u00e1kova V.n. Top\u013eou", 
+      "zip_code": "093 80"
+    }
+  }, 
+  {
+    "pk": 39, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 4", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GBilBA", 
+      "street": "Bil\u00edkova 24", 
+      "verbose_name": "Gym. Bil\u00edkova BA", 
+      "zip_code": "844 19"
+    }
+  }, 
+  {
+    "pk": 46, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Brezno", 
+      "addr_name": "Gymn\u00e1zium J. Chalupku", 
+      "abbreviation": "GBrez", 
+      "street": "\u0160t\u00farova 13", 
+      "verbose_name": "Gym. Brezno", 
+      "zip_code": "977 18"
+    }
+  }, 
+  {
+    "pk": 50, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Byt\u010da", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GByt\u010da", 
+      "street": "\u0160tef\u00e1nikova 219/4", 
+      "verbose_name": "Gym. Byt\u010da", 
+      "zip_code": "014 44"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "people.school", 
+    "fields": {
+      "city": "B\u00e1novce nad Bebravou", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GB\u00e1nov", 
+      "street": "Radlinsk\u00e9ho 12", 
+      "verbose_name": "Gym. B\u00e1novce nad Bebravou", 
+      "zip_code": "957 01"
+    }
+  }, 
+  {
+    "pk": 147, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Praha 5 - \u010cR", 
+      "addr_name": "Gymnasium Ch. Dopplera", 
+      "abbreviation": "GZbPra", 
+      "street": "Zborovsk\u00e1 45", 
+      "verbose_name": "Gym. Ch. Dopplera Praha", 
+      "zip_code": "150 00"
+    }
+  }, 
+  {
+    "pk": 213, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Vranov nad Top\u013eou", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GDVran", 
+      "street": "Daxnera 88", 
+      "verbose_name": "Gym. Daxnera V.n. Top\u013eou", 
+      "zip_code": "093 80"
+    }
+  }, 
+  {
+    "pk": 159, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Rimavsk\u00e1 Sobota", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GRimSo", 
+      "street": "Daxnerova 42", 
+      "verbose_name": "Gym. Daxnerova R. Sobota", 
+      "zip_code": "979 01"
+    }
+  }, 
+  {
+    "pk": 52, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Detva", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GDetva", 
+      "street": "\u0160t\u00farova 849", 
+      "verbose_name": "Gym. Detva", 
+      "zip_code": "962 12"
+    }
+  }, 
+  {
+    "pk": 143, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pre\u0161ov", 
+      "addr_name": "Gymn\u00e1zium T. \u0160ev\u010denku", 
+      "abbreviation": "GDilPO", 
+      "street": "Dilongova 13", 
+      "verbose_name": "Gym. Dilongova Pre\u0161ov", 
+      "zip_code": "080 01"
+    }
+  }, 
+  {
+    "pk": 77, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GDneKE", 
+      "street": "Dnepersk\u00e1 1", 
+      "verbose_name": "Gym. Dnepersk\u00e1 Ko\u0161ice", 
+      "zip_code": "040 12"
+    }
+  }, 
+  {
+    "pk": 53, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Dob\u0161in\u00e1", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GDob\u0161", 
+      "street": "SNP 607", 
+      "verbose_name": "Gym. Dob\u0161in\u00e1", 
+      "zip_code": "049 25"
+    }
+  }, 
+  {
+    "pk": 54, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Doln\u00fd Kub\u00edn", 
+      "addr_name": "Gymn\u00e1zium P. O. Hviezdoslava", 
+      "abbreviation": "GDKub\u00ed", 
+      "street": "Hviezdoslavovo n\u00e1m. 18", 
+      "verbose_name": "Gym. Doln\u00fd Kub\u00edn", 
+      "zip_code": "026 24"
+    }
+  }, 
+  {
+    "pk": 55, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Dubnica nad V\u00e1hom", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GDubn", 
+      "street": "\u0160kolsk\u00e1 2", 
+      "verbose_name": "Gym. Dubnica nad V\u00e1hom", 
+      "zip_code": "018 41"
+    }
+  }, 
+  {
+    "pk": 144, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pre\u0161ov", 
+      "addr_name": "Gymn\u00e1zium sv. Mikul.", 
+      "abbreviation": "GDukPO", 
+      "street": "Duklianska 16", 
+      "verbose_name": "Gym. Duklianska Pre\u0161ov", 
+      "zip_code": "080 01"
+    }
+  }, 
+  {
+    "pk": 57, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Dunajsk\u00e1 Streda", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GDStr", 
+      "street": "N\u00e1m. 1. m\u00e1ja 4", 
+      "verbose_name": "Gym. Dunajsk\u00e1 Streda", 
+      "zip_code": "929 36"
+    }
+  }, 
+  {
+    "pk": 232, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 5", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GEinBA", 
+      "street": "Einsteinova 13", 
+      "verbose_name": "Gym. Einsteinova BA", 
+      "zip_code": "852 03"
+    }
+  }, 
+  {
+    "pk": 59, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Fi\u013eakovo", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GFi\u013eak", 
+      "street": "N\u00e1m. padl\u00fdch hrdinov 2", 
+      "verbose_name": "Gym. Fi\u013eakovo", 
+      "zip_code": "986 15"
+    }
+  }, 
+  {
+    "pk": 269, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Nov\u00e1 Ba\u0148a", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GFS", 
+      "street": "Bernol\u00e1kova 9", 
+      "verbose_name": "Gym. Franti\u0161ka \u0160vantnera Nov\u00e1 Ba\u0148a", 
+      "zip_code": "968 25"
+    }
+  }, 
+  {
+    "pk": 186, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u0160a\u013ea", 
+      "addr_name": "Gymn\u00e1zium F\u00e1ndlyho", 
+      "abbreviation": "G\u0160a\u013ea", 
+      "street": "\u0160kolsk\u00e1 ul. 3", 
+      "verbose_name": "Gym. F\u00e1ndlyho \u0160a\u013ea", 
+      "zip_code": "927 00"
+    }
+  }, 
+  {
+    "pk": 63, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Gelnica", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GGelni", 
+      "street": "SNP 1", 
+      "verbose_name": "Gym. Gelnica", 
+      "zip_code": "056 01"
+    }
+  }, 
+  {
+    "pk": 42, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 5", 
+      "addr_name": "Gymn\u00e1zium sv. Rodiny", 
+      "abbreviation": "GGerBA", 
+      "street": "Gercenova 10", 
+      "verbose_name": "Gym. Gercenova BA", 
+      "zip_code": "851 01"
+    }
+  }, 
+  {
+    "pk": 64, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Giraltovce", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GGiral", 
+      "street": "Dukelsk\u00e1 30", 
+      "verbose_name": "Gym. Giraltovce", 
+      "zip_code": "087 01"
+    }
+  }, 
+  {
+    "pk": 239, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Nitra", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GGolNT", 
+      "street": "Golianova 68", 
+      "verbose_name": "Gym. Golianova Nitra", 
+      "zip_code": "950 50"
+    }
+  }, 
+  {
+    "pk": 65, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 1", 
+      "addr_name": "Gymn\u00e1zium Gr\u00f6sslingov\u00e1", 
+      "abbreviation": "GAM\u010cA", 
+      "street": "Gr\u00f6sslingov\u00e1 18", 
+      "verbose_name": "Gym. Gr\u00f6sslingov\u00e1 BA", 
+      "zip_code": "811 09"
+    }
+  }, 
+  {
+    "pk": 75, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Kom\u00e1rno", 
+      "addr_name": "Gymn\u00e1zium H. Selyeho", 
+      "abbreviation": "GSmKom", 
+      "street": "Biskupa Kir\u00e1lya 5", 
+      "verbose_name": "Gym. H. Selyeho Kom\u00e1rno", 
+      "zip_code": "945 01"
+    }
+  }, 
+  {
+    "pk": 43, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 5", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GHaaBA", 
+      "street": "Haanova 28", 
+      "verbose_name": "Gym. Haanova BA", 
+      "zip_code": "851 32"
+    }
+  }, 
+  {
+    "pk": 233, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Lu\u010denec", 
+      "addr_name": "Gymn\u00e1zium B. S. Timravy", 
+      "abbreviation": "GLu\u010d", 
+      "street": "Hali\u010dsk\u00e1 cesta 9", 
+      "verbose_name": "Gym. Hali\u010dsk\u00e1 Lu\u010denec", 
+      "zip_code": "984 03"
+    }
+  }, 
+  {
+    "pk": 67, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Handlov\u00e1", 
+      "addr_name": "Gymn\u00e1zium I. Bellu", 
+      "abbreviation": "GHand", 
+      "street": "Novomesk\u00e9ho 15", 
+      "verbose_name": "Gym. Handlov\u00e1", 
+      "zip_code": "972 51"
+    }
+  }, 
+  {
+    "pk": 223, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u017dilina", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GHliZA", 
+      "street": "Hlinsk\u00e1 29", 
+      "verbose_name": "Gym. Hlinsk\u00e1 \u017dilina", 
+      "zip_code": "011 80"
+    }
+  }, 
+  {
+    "pk": 260, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Hlohovec", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GHloh", 
+      "street": "Komensk\u00e9ho 13", 
+      "verbose_name": "Gym. Hlohovec", 
+      "zip_code": "920 01"
+    }
+  }, 
+  {
+    "pk": 66, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Hn\u00fa\u0161\u0165a", 
+      "addr_name": "Gymn\u00e1zium M. Hrebendu", 
+      "abbreviation": "GHn\u00fa\u0161\u0165", 
+      "street": "Hlavn\u00e1 431", 
+      "verbose_name": "Gym. Hn\u00fa\u0161\u0165a", 
+      "zip_code": "981 12"
+    }
+  }, 
+  {
+    "pk": 150, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Trnava", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GHolTT", 
+      "street": "Holl\u00e9ho 9", 
+      "verbose_name": "Gym. Holl\u00e9ho Trnava", 
+      "zip_code": "917 26"
+    }
+  }, 
+  {
+    "pk": 41, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 5", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GHolBA", 
+      "street": "!!! ZRU\u0160EN\u00c9 !!! Hol\u00ed\u010dska 2", 
+      "verbose_name": "Gym. Hol\u00ed\u010dska BA", 
+      "zip_code": "851 05"
+    }
+  }, 
+  {
+    "pk": 30, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 2", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GHorBA", 
+      "street": "Ul. I.Horv\u00e1tha 14", 
+      "verbose_name": "Gym. Horv\u00e1tha BA", 
+      "zip_code": "821 03"
+    }
+  }, 
+  {
+    "pk": 259, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 2", 
+      "addr_name": "Gymn\u00e1zium F. G. Lorcu", 
+      "abbreviation": "GHroBA", 
+      "street": "Hronsk\u00e1 3", 
+      "verbose_name": "Gym. Hronsk\u00e1 BA", 
+      "zip_code": "821 07"
+    }
+  }, 
+  {
+    "pk": 36, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 3", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GHubBA", 
+      "street": "Huben\u00e9ho 23", 
+      "verbose_name": "Gym. Huben\u00e9ho BA", 
+      "zip_code": "834 08"
+    }
+  }, 
+  {
+    "pk": 238, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Humenn\u00e9", 
+      "addr_name": "Gymn\u00e1zium L. Svobodu", 
+      "abbreviation": "GHumen", 
+      "street": "Komensk\u00e9ho 4", 
+      "verbose_name": "Gym. Humenn\u00e9", 
+      "zip_code": "066 80"
+    }
+  }, 
+  {
+    "pk": 203, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Trnava", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GBotTT", 
+      "street": "J. Bottu 31", 
+      "verbose_name": "Gym. J. Bottu Trnava", 
+      "zip_code": "917 01"
+    }
+  }, 
+  {
+    "pk": 277, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Litom\u011b\u0159ice, \u010cesk\u00e1 republika", 
+      "addr_name": "Gymn\u00e1zium Josefa Jungmanna", 
+      "abbreviation": "GJJLit", 
+      "street": "Svojs\u00edkova 1", 
+      "verbose_name": "Gym. J. Jungmanna Litom\u011b\u0159ice", 
+      "zip_code": "412 65"
+    }
+  }, 
+  {
+    "pk": 262, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u010cadca", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u010cadca", 
+      "street": "17. novembra 1296", 
+      "verbose_name": "Gym. J. M. Hurbana \u010cadca", 
+      "zip_code": "022 01"
+    }
+  }, 
+  {
+    "pk": 33, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 2 - Ru\u017einov", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GJelBA", 
+      "street": "Jela\u010di\u010dova 5", 
+      "verbose_name": "Gym. Jela\u010di\u010dova BA", 
+      "zip_code": "821 08"
+    }
+  }, 
+  {
+    "pk": 264, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 2", 
+      "addr_name": "Gymn\u00e1zium Jura Hronca", 
+      "abbreviation": "GJH", 
+      "street": "Novohradsk\u00e1 1", 
+      "verbose_name": "Gym. Jura Hronca BA", 
+      "zip_code": "821 09"
+    }
+  }, 
+  {
+    "pk": 243, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u010cesk\u00e9 Bud\u011bjovice - CR", 
+      "addr_name": "Gymn\u00e1sium", 
+      "abbreviation": "G\u010cBud\u011b", 
+      "street": "J\u00edrovcova 8", 
+      "verbose_name": "Gym. J\u00edrovcova \u010ces. Bud\u011bjovice", 
+      "zip_code": "370 01"
+    }
+  }, 
+  {
+    "pk": 114, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Modra", 
+      "addr_name": "Gymn\u00e1zium K. \u0160t\u00fara", 
+      "abbreviation": "GModra", 
+      "street": "N\u00e1m. slobody 5", 
+      "verbose_name": "Gym. K. \u0160t\u00fara Modra", 
+      "zip_code": "900 01"
+    }
+  }, 
+  {
+    "pk": 78, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GKatKE", 
+      "street": "Katkin park 2", 
+      "verbose_name": "Gym. Katkin park Ko\u0161ice", 
+      "zip_code": "040 11"
+    }
+  }, 
+  {
+    "pk": 231, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ke\u017emarok", 
+      "addr_name": "Gymn\u00e1zium P. O. H.", 
+      "abbreviation": "GKe\u017em", 
+      "street": "Hviezdoslavova 20", 
+      "verbose_name": "Gym. Ke\u017emarok", 
+      "zip_code": "060 14"
+    }
+  }, 
+  {
+    "pk": 98, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Levo\u010da", 
+      "addr_name": "Gymn\u00e1zium J. F. R.", 
+      "abbreviation": "GLevo\u010d", 
+      "street": "Kl\u00e1\u0161torsk\u00e1 37", 
+      "verbose_name": "Gym. Kl\u00e1\u0161torsk\u00e1 Levo\u010da", 
+      "zip_code": "054 01"
+    }
+  }, 
+  {
+    "pk": 73, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Kol\u00e1rovo", 
+      "addr_name": "Gymn\u00e1zium P. M\u00e1rie", 
+      "abbreviation": "GKol\u00e1r", 
+      "street": "Brnensk\u00e9 n\u00e1m. 15", 
+      "verbose_name": "Gym. Kol\u00e1rovo", 
+      "zip_code": "946 03"
+    }
+  }, 
+  {
+    "pk": 197, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Trebi\u0161ov", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GKTreb", 
+      "street": "Komensk\u00e9ho 32", 
+      "verbose_name": "Gym. Komensk\u00e9ho Trebi\u0161ov", 
+      "zip_code": "075 36"
+    }
+  }, 
+  {
+    "pk": 145, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pre\u0161ov", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GKonPO", 
+      "street": "Kon\u0161tant\u00ednova 2", 
+      "verbose_name": "Gym. Kon\u0161tant\u00ednova Pre\u0161ov", 
+      "zip_code": "080 65"
+    }
+  }, 
+  {
+    "pk": 34, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 2 - Ru\u017einov", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GKo\u0161BA", 
+      "street": "Ko\u0161ick\u00e1", 
+      "verbose_name": "Gym. Ko\u0161ick\u00e1 BA", 
+      "zip_code": "821 09"
+    }
+  }, 
+  {
+    "pk": 91, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Kremnica", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GKrem", 
+      "street": "P. Kri\u017eku 390/4", 
+      "verbose_name": "Gym. Kremnica", 
+      "zip_code": "967 01"
+    }
+  }, 
+  {
+    "pk": 44, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 5", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GKreBA", 
+      "street": "Kremnick\u00e1 26", 
+      "verbose_name": "Gym. Kremnick\u00e1 BA", 
+      "zip_code": "851 01"
+    }
+  }, 
+  {
+    "pk": 92, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Krompachy", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GKromp", 
+      "street": "Lorencova 46", 
+      "verbose_name": "Gym. Krompachy", 
+      "zip_code": "053 42"
+    }
+  }, 
+  {
+    "pk": 94, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Krupina", 
+      "addr_name": "Gymn\u00e1zium A. Sl\u00e1dkovi\u010da", 
+      "abbreviation": "GKrup", 
+      "street": "M. R.\u0160tef\u00e1nika 8", 
+      "verbose_name": "Gym. Krupina", 
+      "zip_code": "963 88"
+    }
+  }, 
+  {
+    "pk": 201, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Kr\u00e1\u013e. Chlmec", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GKrChl", 
+      "street": "Hore\u0161sk\u00e1 18", 
+      "verbose_name": "Gym. Kr\u00e1\u013e. Chlmec", 
+      "zip_code": "077 01"
+    }
+  }, 
+  {
+    "pk": 157, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Rev\u00faca", 
+      "addr_name": "Gymn\u00e1zium M. Kuku\u010d\u00edna", 
+      "abbreviation": "GRev\u00fac", 
+      "street": "Clementisova 1166/21", 
+      "verbose_name": "Gym. Kuku\u010d\u00edna Rev\u00faca", 
+      "zip_code": "050 80"
+    }
+  }, 
+  {
+    "pk": 285, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Poprad", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GKuPP", 
+      "street": "Kuku\u010d\u00ednova 4239/1", 
+      "verbose_name": "Gym. Kuku\u010d\u00ednova Poprad", 
+      "zip_code": "058 39"
+    }
+  }, 
+  {
+    "pk": 79, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GKuzKE", 
+      "street": "Kuzm\u00e1nyho 6", 
+      "verbose_name": "Gym. Kuzm\u00e1nyho Ko\u0161ice", 
+      "zip_code": "041 74"
+    }
+  }, 
+  {
+    "pk": 263, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Senica", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GSenic", 
+      "street": "Dlh\u00e1 12", 
+      "verbose_name": "Gym. L. Novomesk\u00e9ho Senica", 
+      "zip_code": "905 40"
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bardejov", 
+      "addr_name": "Gymn\u00e1zium L. St\u00f6ckela", 
+      "abbreviation": "GLSBar", 
+      "street": "Jir\u00e1skova 12", 
+      "verbose_name": "Gym. L. St\u00f6ckela Bardejov", 
+      "zip_code": "085 36"
+    }
+  }, 
+  {
+    "pk": 106, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Martin", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GLetMT", 
+      "street": "Ul. Jozefa Lettricha", 
+      "verbose_name": "Gym. Lettricha Martin", 
+      "zip_code": "036 01"
+    }
+  }, 
+  {
+    "pk": 99, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Liberec - CR", 
+      "addr_name": "Gymnasium", 
+      "abbreviation": "GLiber", 
+      "street": "Partyz\u00e1nsk\u00e1 530/3", 
+      "verbose_name": "Gym. Liberec", 
+      "zip_code": "460 01"
+    }
+  }, 
+  {
+    "pk": 166, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Senec", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GSenec", 
+      "street": "Lichnerova 69", 
+      "verbose_name": "Gym. Lichnerova Senec", 
+      "zip_code": "903 01"
+    }
+  }, 
+  {
+    "pk": 100, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Lipany", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GLipan", 
+      "street": "Komensk\u00e9ho 13", 
+      "verbose_name": "Gym. Lipany", 
+      "zip_code": "082 71"
+    }
+  }, 
+  {
+    "pk": 122, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Liptovsk\u00fd Hr\u00e1dok", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GLipHr", 
+      "street": "Hradn\u00e1 23", 
+      "verbose_name": "Gym. Liptovsk\u00fd Hr\u00e1dok", 
+      "zip_code": "033 01"
+    }
+  }, 
+  {
+    "pk": 275, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Tur\u010dianske Teplice", 
+      "addr_name": "Tur\u010dianske Teplice", 
+      "abbreviation": "S\u0160GMGTTe", 
+      "street": "Horn\u00e9 Rakovce 1440/29", 
+      "verbose_name": "Gym. M. Galandu Tur\u010dianske Teplice", 
+      "zip_code": "039 01"
+    }
+  }, 
+  {
+    "pk": 246, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice", 
+      "addr_name": "Gym. M. R. \u0160tef\u00e1nika", 
+      "abbreviation": "GMRKE", 
+      "street": "N\u00e1m. L. Novomesk\u00e9ho 4", 
+      "verbose_name": "Gym. M. R. \u0160tef\u00e1nika, Ko\u0161ice", 
+      "zip_code": "040 01"
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "people.school", 
+    "fields": {
+      "city": "B\u00edlovec - CR", 
+      "addr_name": "Gymnasium M.Kopern\u00edka", 
+      "abbreviation": "GB\u00edlov", 
+      "street": "17.listopadu 526", 
+      "verbose_name": "Gym. M.Kopern\u00edka B\u00edlovec", 
+      "zip_code": "743 01"
+    }
+  }, 
+  {
+    "pk": 107, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Martin", 
+      "addr_name": "Gymn\u00e1zium V. P. T\u00f3tha", 
+      "abbreviation": "GT\u00f3tMT", 
+      "street": "Mal\u00e1 Hora 3", 
+      "verbose_name": "Gym. Mal\u00e1 Hora Martin", 
+      "zip_code": "036 01"
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 1", 
+      "addr_name": "Gymn\u00e1zium Matky Alexie", 
+      "abbreviation": "GMA", 
+      "street": "Jesensk\u00e9ho 4/A", 
+      "verbose_name": "Gym. Matky Alexie", 
+      "zip_code": "811 02"
+    }
+  }, 
+  {
+    "pk": 109, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Medzilaborce", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GMedzi", 
+      "street": "Duchnovi\u010dova", 
+      "verbose_name": "Gym. Medzilaborce", 
+      "zip_code": "068 01"
+    }
+  }, 
+  {
+    "pk": 253, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 5", 
+      "addr_name": "Gymn\u00e1zium Mercury", 
+      "abbreviation": "GMerBA", 
+      "street": "Dolnozemsk\u00e1 cesta 1", 
+      "verbose_name": "Gym. Mercury BA", 
+      "zip_code": "851 00"
+    }
+  }, 
+  {
+    "pk": 31, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 2", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GMetBA", 
+      "street": "Metodova 1", 
+      "verbose_name": "Gym. Metodova BA", 
+      "zip_code": "821 08"
+    }
+  }, 
+  {
+    "pk": 135, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Plze\u0148 - CR", 
+      "addr_name": "Gymnasium", 
+      "abbreviation": "GPlze\u0148`", 
+      "street": "Mikul\u00e1\u0161ske n\u00e1m. 23", 
+      "verbose_name": "Gym. Mikul\u00e1\u0161ske n\u00e1m. Plze\u0148", 
+      "zip_code": "301 54"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bansk\u00e1 Bystrica", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GMlaBB", 
+      "street": "Ml\u00e1de\u017en\u00edcka 51", 
+      "verbose_name": "Gym. Ml\u00e1de\u017en\u00edcka B. Bystrica", 
+      "zip_code": "974 00"
+    }
+  }, 
+  {
+    "pk": 184, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u0160ahy", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u0160ahy", 
+      "street": "Ml\u00e1de\u017en\u00edcka 22", 
+      "verbose_name": "Gym. Ml\u00e1de\u017en\u00edcka \u0160ahy", 
+      "zip_code": "936 01"
+    }
+  }, 
+  {
+    "pk": 258, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pre\u0161ov", 
+      "addr_name": "Gymn\u00e1zium J. A. Raymana", 
+      "abbreviation": "GRayPO", 
+      "street": "Mudro\u0148ova 20", 
+      "verbose_name": "Gym. Mudro\u0148ova Pre\u0161ov", 
+      "zip_code": "081 93"
+    }
+  }, 
+  {
+    "pk": 117, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Myjava", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GMyjav", 
+      "street": "Jablonsk\u00e1 5", 
+      "verbose_name": "Gym. Myjava", 
+      "zip_code": "907 01"
+    }
+  }, 
+  {
+    "pk": 151, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Prievidza", 
+      "addr_name": "Gymn\u00e1zium Nedo\u017eersk\u00e9ho", 
+      "abbreviation": "GPriev", 
+      "street": "Matice slov. 16", 
+      "verbose_name": "Gym. Nedo\u017eersk\u00e9ho Prievidza", 
+      "zip_code": "971 01"
+    }
+  }, 
+  {
+    "pk": 123, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Nov\u00e1 Dubnica", 
+      "addr_name": "Gymn\u00e1zium sv. J. Bosca", 
+      "abbreviation": "GNDubn", 
+      "street": "Tren\u010dianska 66/28", 
+      "verbose_name": "Gym. Nov\u00e1 Dubnica", 
+      "zip_code": "018 51"
+    }
+  }, 
+  {
+    "pk": 124, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Nov\u00e1ky", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GNov\u00e1k", 
+      "street": "Rastislavova 332", 
+      "verbose_name": "Gym. Nov\u00e1ky", 
+      "zip_code": "972 71"
+    }
+  }, 
+  {
+    "pk": 95, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Kysuck\u00e9 Nov\u00e9 Mesto", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GKysNM", 
+      "street": "Komensk\u00e9ho 1357", 
+      "verbose_name": "Gym. Nov\u00e9 Mesto", 
+      "zip_code": "024 30"
+    }
+  }, 
+  {
+    "pk": 240, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Nov\u00e9 Z\u00e1mky", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GNZ\u00e1m", 
+      "street": "Ul. M. R. \u0160tef\u00e1nika 16", 
+      "verbose_name": "Gym. Nov\u00e9 Z\u00e1mky", 
+      "zip_code": "940 61"
+    }
+  }, 
+  {
+    "pk": 119, 
+    "model": "people.school", 
+    "fields": {
+      "city": "N\u00e1mestovo", 
+      "addr_name": "Gymn\u00e1zium Bernol\u00e1ka", 
+      "abbreviation": "GN\u00e1m", 
+      "street": "Mierov\u00e1 307/23", 
+      "verbose_name": "Gym. N\u00e1mestovo", 
+      "zip_code": "029 01"
+    }
+  }, 
+  {
+    "pk": 219, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Zvolen", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GOkrZV", 
+      "street": "Okru\u017en\u00e1 2469", 
+      "verbose_name": "Gym. Okru\u017en\u00e1 Zvolen", 
+      "zip_code": "960 01"
+    }
+  }, 
+  {
+    "pk": 80, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GOpaKE", 
+      "street": "Opatovsk\u00e1 7", 
+      "verbose_name": "Gym. Opatovsk\u00e1 Ko\u0161ice", 
+      "zip_code": "041 35"
+    }
+  }, 
+  {
+    "pk": 128, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Michalovce", 
+      "addr_name": "Gymn\u00e1zium P. Horova", 
+      "abbreviation": "GHMich", 
+      "street": "Masarykova 1", 
+      "verbose_name": "Gym. P. Horova Michalovce", 
+      "zip_code": "071 79"
+    }
+  }, 
+  {
+    "pk": 202, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pie\u0161\u0165any", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GPie\u0161\u0165", 
+      "street": "N\u00e1m. SNP 9", 
+      "verbose_name": "Gym. P. de Coubertina Pie\u0161\u0165any", 
+      "zip_code": "921 26"
+    }
+  }, 
+  {
+    "pk": 194, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 5", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GPanBA", 
+      "street": "Pank\u00fachova 6", 
+      "verbose_name": "Gym. Pank\u00fachova Bratislava", 
+      "zip_code": "851 04"
+    }
+  }, 
+  {
+    "pk": 131, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Partiz\u00e1nske", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GParti", 
+      "street": "Komensk\u00e9ho 2/1074", 
+      "verbose_name": "Gym. Partiz\u00e1nske", 
+      "zip_code": "958 01"
+    }
+  }, 
+  {
+    "pk": 254, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pezinok", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GPezin", 
+      "street": "Seneck\u00e1 cesta 2", 
+      "verbose_name": "Gym. Pezinok", 
+      "zip_code": "902 01"
+    }
+  }, 
+  {
+    "pk": 120, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Nitra", 
+      "addr_name": "Piaristick\u00e9 gymn\u00e1zium", 
+      "abbreviation": "GPiaNT", 
+      "street": "Piaristick\u00e1 ul. 6", 
+      "verbose_name": "Gym. Piaristick\u00e1 Nitra", 
+      "zip_code": "949 01"
+    }
+  }, 
+  {
+    "pk": 148, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pre\u0161ov", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GPodPO", 
+      "street": "Podjavorinskej 22", 
+      "verbose_name": "Gym. Podjavorinskej Pre\u0161ov", 
+      "zip_code": "079 08"
+    }
+  }, 
+  {
+    "pk": 138, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Poprad", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GPopPP", 
+      "street": "Popradsk\u00e9 n\u00e1br. 15", 
+      "verbose_name": "Gym. Popradsk\u00e9 n\u00e1br. Poprad", 
+      "zip_code": "058 39"
+    }
+  }, 
+  {
+    "pk": 141, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pova\u017esk\u00e1 Bystrica", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GPovBy", 
+      "street": "\u0160kolsk\u00e1 8", 
+      "verbose_name": "Gym. Pov. Bystrica", 
+      "zip_code": "017 01"
+    }
+  }, 
+  {
+    "pk": 81, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GPo\u0161KE", 
+      "street": "Po\u0161tov\u00e1 9", 
+      "verbose_name": "Gym. Po\u0161tov\u00e1 Ko\u0161ice", 
+      "zip_code": "042 52"
+    }
+  }, 
+  {
+    "pk": 82, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GPu\u0161KE", 
+      "street": "Pu\u0161kinova 3", 
+      "verbose_name": "Gym. Pu\u0161kinova Ko\u0161ice", 
+      "zip_code": "040 01"
+    }
+  }, 
+  {
+    "pk": 265, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Nitra", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GP\u00e1rNT", 
+      "street": "P\u00e1rovsk\u00e1 1", 
+      "verbose_name": "Gym. P\u00e1rovsk\u00e1 Nitra", 
+      "zip_code": "950 50"
+    }
+  }, 
+  {
+    "pk": 153, 
+    "model": "people.school", 
+    "fields": {
+      "city": "P\u00fachov", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GP\u00fach", 
+      "street": "1.m\u00e1ja 905", 
+      "verbose_name": "Gym. P\u00fachov", 
+      "zip_code": "020 15"
+    }
+  }, 
+  {
+    "pk": 155, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Rajec", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GJavRaj", 
+      "street": "Javorov\u00e1 5", 
+      "verbose_name": "Gym. Rajec", 
+      "zip_code": "015 21"
+    }
+  }, 
+  {
+    "pk": 160, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ro\u017e\u0148ava", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GRo\u017e\u0148a", 
+      "street": "ul. akad. Hronca 1", 
+      "verbose_name": "Gym. Ro\u017e\u0148ava", 
+      "zip_code": "048 01"
+    }
+  }, 
+  {
+    "pk": 62, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Galanta", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GGal", 
+      "street": "\u0160tvr\u0165 SNP 34", 
+      "verbose_name": "Gym. SNP Galanta", 
+      "zip_code": "924 01"
+    }
+  }, 
+  {
+    "pk": 164, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Sabinov", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GSabin", 
+      "street": "Komensk\u00e9ho 40", 
+      "verbose_name": "Gym. Sabinov", 
+      "zip_code": "083 01"
+    }
+  }, 
+  {
+    "pk": 169, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Sere\u010f", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GSere\u010f", 
+      "street": "Kostoln\u00e1 8", 
+      "verbose_name": "Gym. Sere\u010f", 
+      "zip_code": "926 01"
+    }
+  }, 
+  {
+    "pk": 165, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Se\u010dovce", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GSe\u010dov", 
+      "street": "Koll\u00e1rova 17", 
+      "verbose_name": "Gym. Se\u010dovce", 
+      "zip_code": "078 01"
+    }
+  }, 
+  {
+    "pk": 170, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Skalica", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GSkal", 
+      "street": "N\u00e1m. Slobody 3", 
+      "verbose_name": "Gym. Skalica", 
+      "zip_code": "909 83"
+    }
+  }, 
+  {
+    "pk": 188, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u0160amor\u00edn", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u0160amor", 
+      "street": "Slne\u010dn\u00e1 2", 
+      "verbose_name": "Gym. Slne\u010dn\u00e1 \u0160amor\u00edn", 
+      "zip_code": "931 01"
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bardejov", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GSlBar", 
+      "street": "Slovensk\u00e1 5", 
+      "verbose_name": "Gym. Slovensk\u00e1 Bardejov", 
+      "zip_code": "085 29"
+    }
+  }, 
+  {
+    "pk": 171, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Snina", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GSnina", 
+      "street": "\u0160tudentsk\u00e1 4", 
+      "verbose_name": "Gym. Snina", 
+      "zip_code": "069 16"
+    }
+  }, 
+  {
+    "pk": 173, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Sobrance", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GSobr", 
+      "street": "ul. kpt. N\u00e1lepku 6", 
+      "verbose_name": "Gym. Sobrance", 
+      "zip_code": "073 01"
+    }
+  }, 
+  {
+    "pk": 177, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Spi\u0161sk\u00e1 Star\u00e1 Ves", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GSSV", 
+      "street": "SNP 3", 
+      "verbose_name": "Gym. Spi\u0161sk\u00e1 Star\u00e1 Ves", 
+      "zip_code": "061 15"
+    }
+  }, 
+  {
+    "pk": 180, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Strakonice - CR", 
+      "addr_name": "Gymnasium", 
+      "abbreviation": "GStrak", 
+      "street": "M\u00e1chova 174", 
+      "verbose_name": "Gym. Strakonice", 
+      "zip_code": "386 01"
+    }
+  }, 
+  {
+    "pk": 181, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Stropkov", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GStrop", 
+      "street": "Hlavn\u00e1 26", 
+      "verbose_name": "Gym. Stropkov", 
+      "zip_code": "091 80"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Svidn\u00edk", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GSvid", 
+      "street": "Komensk\u00e9ho 16", 
+      "verbose_name": "Gym. Svidn\u00edk", 
+      "zip_code": "089 24"
+    }
+  }, 
+  {
+    "pk": 271, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Star\u00e1 \u013dubov\u0148a", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GSt\u013dub", 
+      "street": "17. novembra 2", 
+      "verbose_name": "Gym. T. Vansovej Star\u00e1 \u013dubov\u0148a", 
+      "zip_code": "064 80"
+    }
+  }, 
+  {
+    "pk": 249, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bansk\u00e1 Bystrica", 
+      "addr_name": "Gymn\u00e1zium Tajovsk\u00e9ho", 
+      "abbreviation": "GTajBB", 
+      "street": "Tajovsk\u00e9ho 25", 
+      "verbose_name": "Gym. Tajovsk\u00e9ho B. Bystrica", 
+      "zip_code": "974 00"
+    }
+  }, 
+  {
+    "pk": 139, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Poprad", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GTatPP", 
+      "street": "D. Tatarku 14", 
+      "verbose_name": "Gym. Tatarku Poprad", 
+      "zip_code": "058 01"
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava - Karlova Ves", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GTilBA", 
+      "street": "Tilgnerova 14", 
+      "verbose_name": "Gym. Tilgnerova BA", 
+      "zip_code": "841 05"
+    }
+  }, 
+  {
+    "pk": 129, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Olomouc - CR", 
+      "addr_name": "Gymnasium", 
+      "abbreviation": "GOlom", 
+      "street": "Tomkova 45", 
+      "verbose_name": "Gym. Tomkova Olomouc", 
+      "zip_code": "770 00"
+    }
+  }, 
+  {
+    "pk": 56, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Torna\u013ea", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GTorna", 
+      "street": "Hurbanova 30", 
+      "verbose_name": "Gym. Torna\u013ea", 
+      "zip_code": "982 40"
+    }
+  }, 
+  {
+    "pk": 84, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GTreKE", 
+      "street": "Trebi\u0161ovsk\u00e1 12", 
+      "verbose_name": "Gym. Trebi\u0161ovsk\u00e1 Ko\u0161ice", 
+      "zip_code": "040 00"
+    }
+  }, 
+  {
+    "pk": 204, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Trsten\u00e1", 
+      "addr_name": "Gymn\u00e1zium M. Hattalu", 
+      "abbreviation": "GTrste", 
+      "street": "\u017delezni\u010diarov 278", 
+      "verbose_name": "Gym. Trsten\u00e1", 
+      "zip_code": "028 01"
+    }
+  }, 
+  {
+    "pk": 206, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Turzovka", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GTurzo", 
+      "street": "\u013d. \u0160t\u00fara 35", 
+      "verbose_name": "Gym. Turzovka", 
+      "zip_code": "023 54"
+    }
+  }, 
+  {
+    "pk": 207, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Tvrdo\u0161\u00edn", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GTvrdo", 
+      "street": "\u0160kolsk\u00e1 837", 
+      "verbose_name": "Gym. Tvrdo\u0161\u00edn", 
+      "zip_code": "027 44"
+    }
+  }, 
+  {
+    "pk": 68, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Hradec Kr\u00e1lov\u00e9 - CR", 
+      "addr_name": "Gymnasium", 
+      "abbreviation": "GHrKr\u00e1", 
+      "street": "Tylovo n\u00e1br. 682", 
+      "verbose_name": "Gym. Tylovo n\u00e1br. Hradec Kr\u00e1lov\u00e9", 
+      "zip_code": "502 23"
+    }
+  }, 
+  {
+    "pk": 121, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Tren\u010d\u00edn", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GM\u00e1jTN", 
+      "street": "Ul. 1. m\u00e1ja 2", 
+      "verbose_name": "Gym. Ul. 1. m\u00e1ja Tren\u010d\u00edn", 
+      "zip_code": "911 35"
+    }
+  }, 
+  {
+    "pk": 250, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 4", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GS\u00e1rBA", 
+      "street": "Ul. L. S\u00e1ru 1", 
+      "verbose_name": "Gym. Ul. L. S\u00e1ru BA", 
+      "zip_code": "842 09"
+    }
+  }, 
+  {
+    "pk": 230, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u017dilina - Vl\u010dince", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GVarZA", 
+      "street": "Var\u0161avsk\u00e1 cesta 1", 
+      "verbose_name": "Gym. Var\u0161avsk\u00e1 \u017dilina - Vl\u010dince", 
+      "zip_code": "010 08"
+    }
+  }, 
+  {
+    "pk": 22, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 1", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GVazBA", 
+      "street": "Vazovova 6", 
+      "verbose_name": "Gym. Vazovova BA", 
+      "zip_code": "811 07"
+    }
+  }, 
+  {
+    "pk": 224, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u017dilina", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GVOZA", 
+      "street": "Ve\u013ek\u00e1 Okru\u017en\u00e1 22", 
+      "verbose_name": "Gym. Ve\u013ek\u00e1 Okru\u017en\u00e1 \u017dilina", 
+      "zip_code": "011 09"
+    }
+  }, 
+  {
+    "pk": 209, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ve\u013ek\u00e9 Kapu\u0161any", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GVKapu", 
+      "street": "F\u00e1bryho 1", 
+      "verbose_name": "Gym. Ve\u013ek\u00e9 Kapu\u0161any", 
+      "zip_code": "079 01"
+    }
+  }, 
+  {
+    "pk": 210, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ve\u013ek\u00fd Krt\u00ed\u0161", 
+      "addr_name": "Gymn\u00e1zium A. H. \u0160kult\u00e9tyho", 
+      "abbreviation": "GVKrt\u00ed", 
+      "street": "\u0160kolsk\u00e1 21", 
+      "verbose_name": "Gym. Ve\u013ek\u00fd Krt\u00ed\u0161", 
+      "zip_code": "990 01"
+    }
+  }, 
+  {
+    "pk": 212, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ve\u013ek\u00fd Meder", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GVMede", 
+      "street": "Bratislavsk\u00e1 38", 
+      "verbose_name": "Gym. Ve\u013ek\u00fd Meder", 
+      "zip_code": "932 12"
+    }
+  }, 
+  {
+    "pk": 215, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Vr\u00fatky", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GVr\u00fat", 
+      "street": "\u010cachovsk\u00fd rad 36", 
+      "verbose_name": "Gym. Vr\u00fatky", 
+      "zip_code": "038 61"
+    }
+  }, 
+  {
+    "pk": 85, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GZbrKE", 
+      "street": "Zbrojni\u010dn\u00e1 3", 
+      "verbose_name": "Gym. Zbrojni\u010dn\u00e1 Ko\u0161ice", 
+      "zip_code": "040 01"
+    }
+  }, 
+  {
+    "pk": 216, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Zlat\u00e9 Moravce", 
+      "addr_name": "Gymn\u00e1zium J. Kr\u00e1\u013ea", 
+      "abbreviation": "GZlMor", 
+      "street": "Ul. SNP 3", 
+      "verbose_name": "Gym. Zlat\u00e9 Moravce", 
+      "zip_code": "953 42"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Zl\u00edn, \u010cesk\u00e1 republika", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GZl\u00edn", 
+      "street": "", 
+      "verbose_name": "Gym. Zl\u00edn", 
+      "zip_code": ""
+    }
+  }, 
+  {
+    "pk": 146, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pre\u0161ov", 
+      "addr_name": "Gymn\u00e1zium ev. kolegi\u00e1l.", 
+      "abbreviation": "EvGPO", 
+      "street": "N\u00e1m. legion\u00e1rov 3", 
+      "verbose_name": "Gym. ev. kolegi\u00e1n Pre\u0161ov", 
+      "zip_code": "080 01"
+    }
+  }, 
+  {
+    "pk": 58, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Dunajsk\u00e1 Streda", 
+      "addr_name": "Gymn\u00e1zium - ma\u010farsk\u00e9", 
+      "abbreviation": "GmDStr", 
+      "street": "N\u00e1m. 1. m\u00e1ja 4", 
+      "verbose_name": "Gym. ma\u010f. Dunajsk\u00e1 Streda", 
+      "zip_code": "929 01"
+    }
+  }, 
+  {
+    "pk": 60, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Galanta", 
+      "addr_name": "Gymn\u00e1zium - ma\u010farsk\u00e9", 
+      "abbreviation": "GmGal", 
+      "street": "Esterh\u00e1zyovcov 34", 
+      "verbose_name": "Gym. ma\u010f. Galanta", 
+      "zip_code": "924 01"
+    }
+  }, 
+  {
+    "pk": 183, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Senec", 
+      "addr_name": "Gymn\u00e1zium - ma\u010farsk\u00e9", 
+      "abbreviation": "GmSene", 
+      "street": "Lichnerova 71", 
+      "verbose_name": "Gym. ma\u010f. Senec", 
+      "zip_code": "903 01"
+    }
+  }, 
+  {
+    "pk": 236, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u017deliezovce", 
+      "addr_name": "Gymn\u00e1zium - ma\u010farsk\u00e9", 
+      "abbreviation": "Gm\u017del", 
+      "street": "Komensk\u00e9ho 1", 
+      "verbose_name": "Gym. ma\u010f. \u017deliezovce", 
+      "zip_code": "937 18"
+    }
+  }, 
+  {
+    "pk": 26, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 1", 
+      "addr_name": "Gymn\u00e1zium - ma\u010farsk\u00e9", 
+      "abbreviation": "GmDuBA", 
+      "street": "Dunajsk\u00e1 13", 
+      "verbose_name": "Gym. ma\u010farsk\u00e9 BA", 
+      "zip_code": "814 84"
+    }
+  }, 
+  {
+    "pk": 167, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u0160ahy", 
+      "addr_name": "Gymn\u00e1zium - ma\u010farsk\u00e9", 
+      "abbreviation": "Gm\u0160ahy", 
+      "street": "Ml\u00e1de\u017en\u00edcka 22", 
+      "verbose_name": "Gym. ma\u010farsk\u00e9 \u0160ahy", 
+      "zip_code": "936 01"
+    }
+  }, 
+  {
+    "pk": 235, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u0160amor\u00edn", 
+      "addr_name": "Gymn\u00e1zium - ma\u010farsk\u00e9", 
+      "abbreviation": "Gm\u0160am", 
+      "street": "Slne\u010dn\u00e1 2", 
+      "verbose_name": "Gym. ma\u010farsk\u00e9 \u0160amor\u00edn", 
+      "zip_code": "931 01"
+    }
+  }, 
+  {
+    "pk": 161, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ru\u017eomberok", 
+      "addr_name": "Gymn\u00e1zium sv. Andreja", 
+      "abbreviation": "GsAnRU", 
+      "street": "N\u00e1m. A. Hlinku 5", 
+      "verbose_name": "Gym. sv. Andreja Ru\u017eomberok", 
+      "zip_code": "034 50"
+    }
+  }, 
+  {
+    "pk": 105, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Malacky", 
+      "addr_name": "Gymn\u00e1zium sv. F. Assis.", 
+      "abbreviation": "GFAMal", 
+      "street": "Kl\u00e1\u0161torn\u00e9 n\u00e1m.", 
+      "verbose_name": "Gym. sv. Assis. Malacky", 
+      "zip_code": "901 01"
+    }
+  }, 
+  {
+    "pk": 261, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Vranov nad Top\u013eou", 
+      "addr_name": "Gymn\u00e1zium sv. Franti\u0161ka z Assisi", 
+      "abbreviation": "GFAVran", 
+      "street": "\u0160kolsk\u00e1 650", 
+      "verbose_name": "Gym. sv. Franti\u0161ka z Assisi V.n. Top\u013eou", 
+      "zip_code": "093 02"
+    }
+  }, 
+  {
+    "pk": 225, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u017dilina", 
+      "addr_name": "Gymn\u00e1zium sv. Franti\u0161ka", 
+      "abbreviation": "GHurZA", 
+      "street": "J. M. Hurbana 44", 
+      "verbose_name": "Gym. sv. Franti\u0161ka \u017dilina", 
+      "zip_code": "010 01"
+    }
+  }, 
+  {
+    "pk": 125, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Nov\u00e9 Mesto nad V\u00e1hom", 
+      "addr_name": "Gymn\u00e1zium sv. Jozefa", 
+      "abbreviation": "GsJoNM", 
+      "street": "Kl\u010dov\u00e9 87", 
+      "verbose_name": "Gym. sv. Jozefa Nov\u00e9 Mesto n.V.", 
+      "zip_code": "915 01"
+    }
+  }, 
+  {
+    "pk": 133, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pie\u0161\u0165any", 
+      "addr_name": "Gymn\u00e1zium sv. M. Arch.", 
+      "abbreviation": "GMAPie", 
+      "street": "Pod P\u00e1rovcami 127", 
+      "verbose_name": "Gym. sv. M. Arch. Pie\u0161\u0165any", 
+      "zip_code": "921 01"
+    }
+  }, 
+  {
+    "pk": 149, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pre\u0161ov", 
+      "addr_name": "Gymn\u00e1zium sv. Moniky", 
+      "abbreviation": "GMoPO", 
+      "street": "T. \u0160ev\u010denka 1", 
+      "verbose_name": "Gym. sv. Moniky Pre\u0161ov", 
+      "zip_code": "080 01"
+    }
+  }, 
+  {
+    "pk": 27, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 1", 
+      "addr_name": "Gymn\u00e1zium sv. Ur\u0161ule", 
+      "abbreviation": "GUrBA", 
+      "street": "Nedbalova 6", 
+      "verbose_name": "Gym. sv. Ur\u0161ule BA", 
+      "zip_code": "811 01"
+    }
+  }, 
+  {
+    "pk": 195, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Topo\u013e\u010dany", 
+      "addr_name": "Gymn\u00e1zium sv. de Paul", 
+      "abbreviation": "GdePTo", 
+      "street": "17. novembra 1056", 
+      "verbose_name": "Gym. sv. de Paul Topo\u013e\u010dany", 
+      "zip_code": "955 01"
+    }
+  }, 
+  {
+    "pk": 49, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Brno - CR", 
+      "addr_name": "Gymnasium", 
+      "abbreviation": "GKJBrn", 
+      "street": "t\u0159.kpt.Jaro\u0161e 14", 
+      "verbose_name": "Gym. t\u0159. kpt. Jaro\u0161e Brno", 
+      "zip_code": "625 00"
+    }
+  }, 
+  {
+    "pk": 115, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Moldava nad Bodvou", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u010cMold", 
+      "street": "ul. \u010cSA 15", 
+      "verbose_name": "Gym. \u010cSA Mol. nad Bodvou", 
+      "zip_code": "045 01"
+    }
+  }, 
+  {
+    "pk": 111, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Michalovce", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u0160Mich", 
+      "street": "ul. \u013d. \u0160t\u00fara 26", 
+      "verbose_name": "Gym. \u013d. \u0160t\u00fara Michalovce", 
+      "zip_code": "071 01"
+    }
+  }, 
+  {
+    "pk": 218, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Zvolen", 
+      "addr_name": "Gymn\u00e1zium \u013d. \u0160t\u00fara", 
+      "abbreviation": "GHroZV", 
+      "street": "Hronsk\u00e1 1467/3", 
+      "verbose_name": "Gym. \u013d. \u0160t\u00fara Zvolen", 
+      "zip_code": "960 49"
+    }
+  }, 
+  {
+    "pk": 110, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Tren\u010d\u00edn", 
+      "addr_name": "Gymn\u00e1zium \u013dudov\u00edta \u0160t\u00fara", 
+      "abbreviation": "G\u013d\u0160TN", 
+      "street": "", 
+      "verbose_name": "Gym. \u013dudov\u00edta \u0160t\u00fara  Tren\u010d\u00edn", 
+      "zip_code": "911 01"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bansk\u00e1 Bystrica", 
+      "addr_name": "Gymn\u00e1zium \u0160. Moyzesa", 
+      "abbreviation": "GHurBB", 
+      "street": "Hurbanova 9", 
+      "verbose_name": "Gym. \u0160. Moyzesa B. Bystrica", 
+      "zip_code": "974 01"
+    }
+  }, 
+  {
+    "pk": 162, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ru\u017eomberok", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GMoyRU", 
+      "street": "\u0160. Moyzesa 21", 
+      "verbose_name": "Gym. \u0160. Moyzesa Ru\u017eomberok", 
+      "zip_code": "034 01"
+    }
+  }, 
+  {
+    "pk": 190, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u0160a\u0161t\u00edn - Str\u00e1\u017ee", 
+      "addr_name": "Gymn\u00e1zium J. Bosca", 
+      "abbreviation": "G\u0160a\u0161t\u00ed", 
+      "street": "Kl\u00e1\u0161torn\u00e9 n\u00e1m. 1", 
+      "verbose_name": "Gym. \u0160a\u0161t\u00edn - Str\u00e1\u017ee", 
+      "zip_code": "908 41"
+    }
+  }, 
+  {
+    "pk": 35, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 3", 
+      "addr_name": "Gymn\u00e1zium \u0160k. bratov", 
+      "abbreviation": "G\u010cacBA", 
+      "street": "\u010cachtick\u00e1 14", 
+      "verbose_name": "Gym. \u0160k. Bratov BA", 
+      "zip_code": "831 06"
+    }
+  }, 
+  {
+    "pk": 116, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Moldava nad Bodvou", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u0160Mold", 
+      "street": "\u0160kolsk\u00e1 13", 
+      "verbose_name": "Gym. \u0160kolsk\u00e1 Mol. nad Bodvou", 
+      "zip_code": "045 17"
+    }
+  }, 
+  {
+    "pk": 175, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Spi\u0161sk\u00e1 Nov\u00e1 Ves", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u0160kSNV", 
+      "street": "\u0160kolsk\u00e1 7", 
+      "verbose_name": "Gym. \u0160kolsk\u00e1 Spi\u0161. Nov\u00e1 Ves", 
+      "zip_code": "052 01"
+    }
+  }, 
+  {
+    "pk": 205, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Tur\u010dianske Teplice", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GTurTe", 
+      "street": "\u0160kolsk\u00e1 447/2", 
+      "verbose_name": "Gym. \u0160kolsk\u00e1 Tur\u010d. Teplice", 
+      "zip_code": "039 01"
+    }
+  }, 
+  {
+    "pk": 37, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Vr\u00e1ble", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GVr\u00e1b", 
+      "street": "\u0160kolsk\u00e1 26", 
+      "verbose_name": "Gym. \u0160kolsk\u00e1 Vr\u00e1ble", 
+      "zip_code": "952 01"
+    }
+  }, 
+  {
+    "pk": 126, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Nov\u00e9 Mesto nad V\u00e1hom", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GNMes", 
+      "street": "\u0160portov\u00e1 41", 
+      "verbose_name": "Gym. \u0160portov\u00e1 Nov\u00e9 Mesto n.V.", 
+      "zip_code": "915 01"
+    }
+  }, 
+  {
+    "pk": 83, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u0160roKE", 
+      "street": "\u0160rob\u00e1rova 1", 
+      "verbose_name": "Gym. \u0160rob\u00e1rova Ko\u0161ice", 
+      "zip_code": "042 23"
+    }
+  }, 
+  {
+    "pk": 198, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Trebi\u0161ov", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u0160Treb", 
+      "street": "M. R. \u0160tef\u00e1nika 13", 
+      "verbose_name": "Gym. \u0160tef\u00e1nika Trebi\u0161ov", 
+      "zip_code": "075 01"
+    }
+  }, 
+  {
+    "pk": 220, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u017deliezovce", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u017delie", 
+      "street": "\u0160t\u00farova 16", 
+      "verbose_name": "Gym. \u0160t\u00farova \u017deliezovce", 
+      "zip_code": "937 01"
+    }
+  }, 
+  {
+    "pk": 191, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u0160t\u00farovo", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u0160t\u00faro", 
+      "street": "Adyho ul. 7", 
+      "verbose_name": "Gym. \u0160t\u00farovo", 
+      "zip_code": "943 01"
+    }
+  }, 
+  {
+    "pk": 74, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Kom\u00e1rno", 
+      "addr_name": "Gymn\u00e1zium \u013d. J. \u0160uleka", 
+      "abbreviation": "G\u0160uKom", 
+      "street": "Pohrani\u010dn\u00e1 10", 
+      "verbose_name": "Gym. \u0160uleka Kom\u00e1rno", 
+      "zip_code": "945 01"
+    }
+  }, 
+  {
+    "pk": 192, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u0160urany", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u0160uran", 
+      "street": "Bernol\u00e1kova 37", 
+      "verbose_name": "Gym. \u0160urany", 
+      "zip_code": "942 01"
+    }
+  }, 
+  {
+    "pk": 87, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice - \u0160aca", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u017delKE", 
+      "street": "\u017deleziarenska", 
+      "verbose_name": "Gym. \u017deleziarenska Ko\u0161ice", 
+      "zip_code": "040 15"
+    }
+  }, 
+  {
+    "pk": 221, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u017diar nad Hronom", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u017diar", 
+      "street": "M. R. \u0160tef\u00e1nika 17", 
+      "verbose_name": "Gym. \u017diar nad Hronom", 
+      "zip_code": "965 01"
+    }
+  }, 
+  {
+    "pk": 24, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 2", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "G\u017ditBA", 
+      "street": "\u017ditavsk\u00e1 ul. 1", 
+      "verbose_name": "Gym. \u017ditavsk\u00e1 BA", 
+      "zip_code": "821 07"
+    }
+  }, 
+  {
+    "pk": 168, 
+    "model": "people.school", 
+    "fields": {
+      "city": "B. Petrovec, Srbsko", 
+      "addr_name": "Gymn\u00e1zium J\u00e1na Koll\u00e1ra", 
+      "abbreviation": "GJK", 
+      "street": "", 
+      "verbose_name": "Gymn\u00e1zium J\u00e1na Koll\u00e1ra", 
+      "zip_code": "214 70"
+    }
+  }, 
+  {
+    "pk": 242, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Klatovy", 
+      "addr_name": "Gymn\u00e1zium", 
+      "abbreviation": "GymKlat", 
+      "street": "", 
+      "verbose_name": "Gymn\u00e1zium Klatovy", 
+      "zip_code": ""
+    }
+  }, 
+  {
+    "pk": 226, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Levice", 
+      "addr_name": "Gymn\u00e1zium Anreja Vr\u00e1bla", 
+      "abbreviation": "GLevic", 
+      "street": "Mierov\u00e1 5", 
+      "verbose_name": "Gymn\u00e1zium Levice", 
+      "zip_code": "934 05"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "people.school", 
+    "fields": {
+      "city": "", 
+      "addr_name": "", 
+      "abbreviation": "", 
+      "street": "", 
+      "verbose_name": "Gymn\u00e1zium in\u00e9", 
+      "zip_code": ""
+    }
+  }, 
+  {
+    "pk": 158, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Rev\u00faca", 
+      "addr_name": "Liter\u00e1rne gymn\u00e1zium", 
+      "abbreviation": "LiGRev", 
+      "street": "\u017delezni\u010dn\u00e1 260", 
+      "verbose_name": "Liter\u00e1rne gym. Rev\u00faca", 
+      "zip_code": "050 01"
+    }
+  }, 
+  {
+    "pk": 152, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Prievidza", 
+      "addr_name": "Piaristick\u00e9 gymn\u00e1zium", 
+      "abbreviation": "PGPrie", 
+      "street": "Ul. A. Hlinku 44", 
+      "verbose_name": "Piaristick\u00e9 gym. Prievidza", 
+      "zip_code": "971 01"
+    }
+  }, 
+  {
+    "pk": 69, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Tren\u010d\u00edn", 
+      "addr_name": "Piaristick\u00e9 gymn\u00e1zium", 
+      "abbreviation": "PiaGTN", 
+      "street": "Palack\u00e9ho 4", 
+      "verbose_name": "Piaristick\u00e9 gym. Tren\u010d\u00edn", 
+      "zip_code": "912 50"
+    }
+  }, 
+  {
+    "pk": 273, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Nitra", 
+      "addr_name": "Gymn\u00e1zium sv. Cyrila a Metoda", 
+      "abbreviation": "GCM", 
+      "street": "Farsk\u00e1 19", 
+      "verbose_name": "SK\u0160 Nitra, Gym. sv. Cyrila a Metoda", 
+      "zip_code": "949 05"
+    }
+  }, 
+  {
+    "pk": 245, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ru\u017eomberok", 
+      "addr_name": "SOU", 
+      "abbreviation": "SBCRK", 
+      "street": "Bystrick\u00e1 cesta 2", 
+      "verbose_name": "SOU Ru\u017eomberok", 
+      "zip_code": "034 01"
+    }
+  }, 
+  {
+    "pk": 70, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Poprad", 
+      "addr_name": "SOU", 
+      "abbreviation": "SOU Poprad", 
+      "street": "Kuku\u010d\u00ednova 483", 
+      "verbose_name": "SOU, Kuku\u010d\u00ednova 483, Poprad", 
+      "zip_code": "05801"
+    }
+  }, 
+  {
+    "pk": 278, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Handlov\u00e1", 
+      "addr_name": "Stredn\u00e1 odborn\u00e1 \u0161kola", 
+      "abbreviation": "Shand", 
+      "street": "Lipov\u00e1 15", 
+      "verbose_name": "SO\u0160 Handlov\u00e1", 
+      "zip_code": "972 51"
+    }
+  }, 
+  {
+    "pk": 266, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice", 
+      "addr_name": "Stredn\u00e1 odborn\u00e1 \u0161kola", 
+      "abbreviation": "SO\u0160McKE", 
+      "street": "Moldavsk\u00e1 cesta 2", 
+      "verbose_name": "SO\u0160 Moldavsk\u00e1 cesta Ko\u0161ice", 
+      "zip_code": "041 99"
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bardejov", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SBar", 
+      "street": "Komensk\u00e9ho 5", 
+      "verbose_name": "SP\u0160 Bardejov", 
+      "zip_code": "085 43"
+    }
+  }, 
+  {
+    "pk": 47, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Brezno", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SBrez", 
+      "street": "Laskomersk\u00e9ho 3", 
+      "verbose_name": "SP\u0160 Brezno", 
+      "zip_code": "977 46"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "people.school", 
+    "fields": {
+      "city": "B\u00e1novce nad Bebravou", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SB\u00e1nov", 
+      "street": "Farsk\u00e1 7", 
+      "verbose_name": "SP\u0160 B\u00e1novce nad Bebravou", 
+      "zip_code": "957 20"
+    }
+  }, 
+  {
+    "pk": 72, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Dubnica nad V\u00e1hom", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SDubn", 
+      "street": "Obrancov mieru 343/1", 
+      "verbose_name": "SP\u0160 Dubnica nad V\u00e1hom", 
+      "zip_code": "018 41"
+    }
+  }, 
+  {
+    "pk": 89, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice 1", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SGreKE", 
+      "street": "Gre\u0161\u00e1kova 1", 
+      "verbose_name": "SP\u0160 Gre\u0161\u00e1kova Ko\u0161ice", 
+      "zip_code": "043 12"
+    }
+  }, 
+  {
+    "pk": 241, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Humenn\u00e9", 
+      "addr_name": "Zdru\u017e. stredn\u00e1 \u0161kola", 
+      "abbreviation": "SHumen", 
+      "street": "Dru\u017estevn\u00e1 1737", 
+      "verbose_name": "SP\u0160 Humenn\u00e9", 
+      "zip_code": "066 01"
+    }
+  }, 
+  {
+    "pk": 228, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Trnava", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SKomTT", 
+      "street": "Komensk\u00e9ho 1", 
+      "verbose_name": "SP\u0160 Komensk\u00e9ho Trnava", 
+      "zip_code": "917 34"
+    }
+  }, 
+  {
+    "pk": 76, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Kom\u00e1rno", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SKom", 
+      "street": "Ul. Petofiho 2", 
+      "verbose_name": "SP\u0160 Kom\u00e1rno", 
+      "zip_code": "945 50"
+    }
+  }, 
+  {
+    "pk": 96, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Kysuck\u00e9 Nov\u00e9 Mesto", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SKysNM", 
+      "street": "N\u00e1bre\u017en\u00e1 1325", 
+      "verbose_name": "SP\u0160 Kysuck\u00e9 Nov\u00e9 Mesto", 
+      "zip_code": "024 14"
+    }
+  }, 
+  {
+    "pk": 97, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Levice", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SLev", 
+      "street": "Ul.F.He\u010dku 25", 
+      "verbose_name": "SP\u0160 Levice", 
+      "zip_code": "934 47"
+    }
+  }, 
+  {
+    "pk": 229, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Svit", 
+      "addr_name": "SP\u0160 M. C. Sklodowskej", 
+      "abbreviation": "SSvit", 
+      "street": "SNP 8", 
+      "verbose_name": "SP\u0160 M. C. Sklodowskej Svit", 
+      "zip_code": "059 21"
+    }
+  }, 
+  {
+    "pk": 108, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Martin", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SMT", 
+      "street": "Novomesk\u00e9ho 5/24", 
+      "verbose_name": "SP\u0160 Martin", 
+      "zip_code": "036 36"
+    }
+  }, 
+  {
+    "pk": 113, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Michalovce", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "S\u013d\u0160Mich", 
+      "street": "ul. \u013d. \u0160t\u00fara 26", 
+      "verbose_name": "SP\u0160 Michalovce", 
+      "zip_code": "071 01"
+    }
+  }, 
+  {
+    "pk": 118, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Myjava", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "Smyjav", 
+      "street": "Ulica SNP 8", 
+      "verbose_name": "SP\u0160 Myjava", 
+      "zip_code": "907 17"
+    }
+  }, 
+  {
+    "pk": 248, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Nitra", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SFKNT", 
+      "street": "Ul. F.Kr\u00e1\u013ea 20", 
+      "verbose_name": "SP\u0160 Nitra", 
+      "zip_code": "949 01"
+    }
+  }, 
+  {
+    "pk": 127, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Nov\u00e9 Mesto nad V\u00e1hom", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SNMes", 
+      "street": "Bzinsk\u00e1 11", 
+      "verbose_name": "SP\u0160 Nov\u00e9 Mesto nad V\u00e1hom", 
+      "zip_code": "915 01"
+    }
+  }, 
+  {
+    "pk": 132, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Partiz\u00e1nske", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "Sparti", 
+      "street": "N\u00e1m. SNP 14", 
+      "verbose_name": "SP\u0160 Partiz\u00e1nske", 
+      "zip_code": "958 20"
+    }
+  }, 
+  {
+    "pk": 140, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Poprad", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SPP", 
+      "street": "Mnohe\u013eova 828", 
+      "verbose_name": "SP\u0160 Poprad", 
+      "zip_code": "058 46"
+    }
+  }, 
+  {
+    "pk": 142, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pova\u017esk\u00e1 Bystrica", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SPovBy", 
+      "street": "Sloven.partiz\u00e1nov 1132/52", 
+      "verbose_name": "SP\u0160 Pova\u017esk\u00e1 Bystrica", 
+      "zip_code": "017 12"
+    }
+  }, 
+  {
+    "pk": 154, 
+    "model": "people.school", 
+    "fields": {
+      "city": "P\u00fachov", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "Sp\u00fach", 
+      "street": "T.Vansovej 1054/45", 
+      "verbose_name": "SP\u0160 P\u00fachov", 
+      "zip_code": "020 32"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Rev\u00faca", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SRev", 
+      "street": "Gener\u00e1la Viesta 6", 
+      "verbose_name": "SP\u0160 Rev\u00faca", 
+      "zip_code": "050 80"
+    }
+  }, 
+  {
+    "pk": 163, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ru\u017eomberok", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SRU", 
+      "street": "Scota Viatora 8", 
+      "verbose_name": "SP\u0160 Ru\u017eomberok", 
+      "zip_code": "034 01"
+    }
+  }, 
+  {
+    "pk": 48, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Brezov\u00e1 pod Bradlom", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SBpB", 
+      "street": "Cesta SNP 1", 
+      "verbose_name": "SP\u0160 SNP Brezov\u00e1 pod Bradlom", 
+      "zip_code": "906 13"
+    }
+  }, 
+  {
+    "pk": 172, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Snina", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SSni", 
+      "street": "Partiz\u00e1nska 1059", 
+      "verbose_name": "SP\u0160 Snina", 
+      "zip_code": "069 15"
+    }
+  }, 
+  {
+    "pk": 176, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Spi\u0161sk\u00e1 Nov\u00e1 Ves", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SSNV", 
+      "street": "\u0160tef\u00e1nikovo nam. 21/27", 
+      "verbose_name": "SP\u0160 Spi\u0161sk\u00e1 Nov\u00e1 Ves", 
+      "zip_code": "052 01"
+    }
+  }, 
+  {
+    "pk": 208, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Tvrdo\u0161\u00edn", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "Stvrdo", 
+      "street": "Medvedzie 133/1", 
+      "verbose_name": "SP\u0160 Tvrdo\u0161\u00edn", 
+      "zip_code": "027 44"
+    }
+  }, 
+  {
+    "pk": 211, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ve\u013ek\u00fd Krt\u00ed\u0161", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SVKrt\u00ed", 
+      "street": "Po\u013en\u00e1", 
+      "verbose_name": "SP\u0160 Ve\u013ek\u00fd Krt\u00ed\u0161", 
+      "zip_code": "990 01"
+    }
+  }, 
+  {
+    "pk": 217, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Zlat\u00e9 Moravce", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SZM", 
+      "street": "ul.SNP 2", 
+      "verbose_name": "SP\u0160 Zlat\u00e9 Moravce", 
+      "zip_code": "953 30"
+    }
+  }, 
+  {
+    "pk": 25, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 2", 
+      "addr_name": "SP\u0160 dopravn\u00e1, Bratislava", 
+      "abbreviation": "SP\u0160DBA", 
+      "street": "Kva\u010dalova 20", 
+      "verbose_name": "SP\u0160 dopravn\u00e1 BA", 
+      "zip_code": "821 09"
+    }
+  }, 
+  {
+    "pk": 281, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Trnava", 
+      "addr_name": "Stredn\u00e1 priemyseln\u00e1 \u0161kola dopravn\u00e1", 
+      "abbreviation": "SP\u0160DTT", 
+      "street": "\u0160tudentsk\u00e1 23", 
+      "verbose_name": "SP\u0160 dopravn\u00e1 Trnava", 
+      "zip_code": "918 45"
+    }
+  }, 
+  {
+    "pk": 51, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Spi\u0161sk\u00e1 Nov\u00e1 Ves", 
+      "addr_name": "Stredn\u00e1 priemyseln\u00e1 \u0161kola strojn\u00edcka", 
+      "abbreviation": "SSSNV", 
+      "street": "Hviezdoslavova 6", 
+      "verbose_name": "SP\u0160 strojn\u00edcka Spi\u0161sk\u00e1 Nov\u00e1 Ves", 
+      "zip_code": "052 01"
+    }
+  }, 
+  {
+    "pk": 187, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u0160a\u013ea", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "S\u0160a\u013ea", 
+      "street": "Nivy 2", 
+      "verbose_name": "SP\u0160 \u0160a\u013ea", 
+      "zip_code": "927 05"
+    }
+  }, 
+  {
+    "pk": 222, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u017diar nad Hronom", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "S\u017dnH", 
+      "street": "Dr.Jansk\u00e9ho 10", 
+      "verbose_name": "SP\u0160 \u017diar nad Hronom", 
+      "zip_code": "965 60"
+    }
+  }, 
+  {
+    "pk": 227, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u017dilina - B\u00e1nov\u00e1", 
+      "addr_name": "Stred. priem. \u0161kola", 
+      "abbreviation": "SB\u00e1ZA", 
+      "street": "Osvety 29", 
+      "verbose_name": "SP\u0160 \u017dilina - B\u00e1nov\u00e1", 
+      "zip_code": "010 04"
+    }
+  }, 
+  {
+    "pk": 255, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 5", 
+      "addr_name": "SP\u0160 Elektrotechnick\u00e1", 
+      "abbreviation": "SHaBA", 
+      "street": "H\u00e1lova 16", 
+      "verbose_name": "SP\u0160E Bratislava", 
+      "zip_code": "851 01"
+    }
+  }, 
+  {
+    "pk": 40, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 4", 
+      "addr_name": "SP\u0160 Elektrotechnick\u00e1", 
+      "abbreviation": "SKABA", 
+      "street": "ul.K.Adlera 5", 
+      "verbose_name": "SP\u0160E K. Adlera BA", 
+      "zip_code": "844 21"
+    }
+  }, 
+  {
+    "pk": 88, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice 1", 
+      "addr_name": "SP\u0160 Elektrotechnick\u00e1", 
+      "abbreviation": "SKoKE", 
+      "street": "Komensk\u00e9ho 44", 
+      "verbose_name": "SP\u0160E Komensk\u00e9ho Ko\u0161ice", 
+      "zip_code": "042 22"
+    }
+  }, 
+  {
+    "pk": 93, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Krompachy", 
+      "addr_name": "SP\u0160 Elektrotechnick\u00e1", 
+      "abbreviation": "SKromp", 
+      "street": "Maurerova 55", 
+      "verbose_name": "SP\u0160E Krompachy", 
+      "zip_code": "053 42"
+    }
+  }, 
+  {
+    "pk": 101, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Liptovsk\u00fd Hr\u00e1dok", 
+      "addr_name": "SP\u0160 Elektrotechnick\u00e1", 
+      "abbreviation": "SLipHr", 
+      "street": "Celiny 536", 
+      "verbose_name": "SP\u0160E Liptovsk\u00fd Hr\u00e1dok", 
+      "zip_code": "033 15"
+    }
+  }, 
+  {
+    "pk": 112, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Michalovce", 
+      "addr_name": "SP\u0160 Elektrotechnick\u00e1", 
+      "abbreviation": "SParMich", 
+      "street": "Partiz\u00e1nska 1", 
+      "verbose_name": "SP\u0160E Michalovce", 
+      "zip_code": "071 92"
+    }
+  }, 
+  {
+    "pk": 136, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Nov\u00e9 Z\u00e1mky", 
+      "addr_name": "SP\u0160 Elektrotechnick\u00e1", 
+      "abbreviation": "SNZ", 
+      "street": "Pod kopcom 75", 
+      "verbose_name": "SP\u0160E Nov\u00e9 Z\u00e1mky", 
+      "zip_code": "940 55"
+    }
+  }, 
+  {
+    "pk": 134, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pie\u0161\u0165any", 
+      "addr_name": "SP\u0160 Elektrotechnick\u00e1", 
+      "abbreviation": "SPie\u0161\u0165", 
+      "street": "N\u00e1m.SNP 8", 
+      "verbose_name": "SP\u0160E Pie\u0161\u0165any", 
+      "zip_code": "921 69"
+    }
+  }, 
+  {
+    "pk": 178, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pre\u0161ov", 
+      "addr_name": "SP\u0160 Elektrotechnick\u00e1", 
+      "abbreviation": "SPlPO", 
+      "street": "Plzensk\u00e1 1", 
+      "verbose_name": "SP\u0160E Pre\u0161ov", 
+      "zip_code": "080 47"
+    }
+  }, 
+  {
+    "pk": 90, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice 2", 
+      "addr_name": "SP\u0160 Elektrotechnick\u00e1", 
+      "abbreviation": "SSNPKE", 
+      "street": "SNP 104", 
+      "verbose_name": "SP\u0160E SNP Ko\u0161ice", 
+      "zip_code": "041 52"
+    }
+  }, 
+  {
+    "pk": 179, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Star\u00e1 Tur\u00e1", 
+      "addr_name": "SP\u0160 Elektrotechnick\u00e1", 
+      "abbreviation": "SGMRST", 
+      "street": "G.M.R.\u0160tef\u00e1nika 2/372", 
+      "verbose_name": "SP\u0160E Star\u00e1 Tur\u00e1", 
+      "zip_code": "916 01"
+    }
+  }, 
+  {
+    "pk": 29, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 1", 
+      "addr_name": "SP\u0160 Elektrotechnick\u00e1", 
+      "abbreviation": "SZochBA", 
+      "street": "Zochova 9", 
+      "verbose_name": "SP\u0160E Zochova BA", 
+      "zip_code": "814 60"
+    }
+  }, 
+  {
+    "pk": 276, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Vset\u00edn", 
+      "addr_name": "St\u0159edn\u00ed pr\u016fmyslov\u00e1 \u0161kola strojnick\u00e1 Vset\u00edn", 
+      "abbreviation": "SP\u0160S Vset\u00edn", 
+      "street": "", 
+      "verbose_name": "SP\u0160S Vset\u00edn", 
+      "zip_code": ""
+    }
+  }, 
+  {
+    "pk": 270, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Skalica", 
+      "addr_name": "SSO\u0160 Via Humana", 
+      "abbreviation": "S\u0160VHSK", 
+      "street": "Mall\u00e9ho 2", 
+      "verbose_name": "SSO\u0160 Via Humana Skalica", 
+      "zip_code": "909 01"
+    }
+  }, 
+  {
+    "pk": 130, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ostrava - CR", 
+      "addr_name": "Slov. gymnasium", 
+      "abbreviation": "GsOstr", 
+      "street": "Hladnovsk\u00e1 35", 
+      "verbose_name": "Slov. gym. Ostrava", 
+      "zip_code": "701 00"
+    }
+  }, 
+  {
+    "pk": 272, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u017dilina", 
+      "addr_name": "Spojen\u00e1 \u0161kola Kr\u00e1\u013eovnej pokoja", 
+      "abbreviation": "sskp", 
+      "street": "Na Z\u00e1va\u017e\u00ed 2", 
+      "verbose_name": "Spojen\u00e1 \u0161kola Kr\u00e1\u013eovnej pokoja \u017dilina", 
+      "zip_code": "010 01"
+    }
+  }, 
+  {
+    "pk": 279, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Martin", 
+      "addr_name": "Spojen\u00e1 \u0161kola", 
+      "abbreviation": "Sp\u0160MT", 
+      "street": "\u010cervenej arm\u00e1dy 25", 
+      "verbose_name": "Spojen\u00e1 \u0161kola Martin", 
+      "zip_code": "036 01"
+    }
+  }, 
+  {
+    "pk": 182, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Kom\u00e1rno", 
+      "addr_name": "SOU stroj\u00e1rske Kom\u00e1rno", 
+      "abbreviation": "SOU stroj\u00e1rske Kom\u00e1rno", 
+      "street": "Bratislavsk\u00e1 cesta 10", 
+      "verbose_name": "Stredn\u00e9 odborn\u00e9 u\u010dili\u0161te stroj\u00e1rske Kom\u00e1rno", 
+      "zip_code": "945 25"
+    }
+  }, 
+  {
+    "pk": 28, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 1", 
+      "addr_name": "S\u00fakr. bulh. gymn\u00e1zium", 
+      "abbreviation": "BulGBA", 
+      "street": "Panensk\u00e1 11", 
+      "verbose_name": "S\u00fakr. bulh. gym. BA", 
+      "zip_code": "811 03"
+    }
+  }, 
+  {
+    "pk": 61, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Galanta", 
+      "addr_name": "S\u00fakromn\u00e9 gymn\u00e1zium", 
+      "abbreviation": "S\u00faGGal", 
+      "street": "Hlavn\u00e1 ul. 16", 
+      "verbose_name": "S\u00fakr. gym. Galanta", 
+      "zip_code": "924 00"
+    }
+  }, 
+  {
+    "pk": 280, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Podbrezov\u00e1", 
+      "addr_name": "S\u00fakr. gym. \u017deleziarne Podbrezov\u00e1", 
+      "abbreviation": "SG\u017dP", 
+      "street": "ulica Dru\u017eby 554/64", 
+      "verbose_name": "S\u00fakr. gym. \u017deleziarne Podbrezov\u00e1", 
+      "zip_code": "976 81"
+    }
+  }, 
+  {
+    "pk": 247, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Hol\u00ed\u010d", 
+      "addr_name": "Humanus Via", 
+      "abbreviation": "Humanus Via", 
+      "street": "Moyzesova 27", 
+      "verbose_name": "S\u00fakromn\u00e1 SO\u0160 Humanus Via", 
+      "zip_code": "908 51"
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bernol\u00e1kovo", 
+      "addr_name": "S\u00fakromn\u00e9 gymn\u00e1zium", 
+      "abbreviation": "GBerno", 
+      "street": "Sv\u00e4toplukova 38", 
+      "verbose_name": "S\u00fakromn\u00e9 gym. Bernol\u00e1kovo", 
+      "zip_code": "900 27"
+    }
+  }, 
+  {
+    "pk": 103, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Lu\u010denec", 
+      "addr_name": "S\u00fakromn\u00e9 gymn\u00e1zium", 
+      "abbreviation": "S\u00faGLu\u010d", 
+      "street": "F\u00e1ndlyho 3", 
+      "verbose_name": "S\u00fakromn\u00e9 gym. Lu\u010denec", 
+      "zip_code": "984 01"
+    }
+  }, 
+  {
+    "pk": 200, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Tren\u010d\u00edn", 
+      "addr_name": "S\u00fakromn\u00e9 gymn\u00e1zium", 
+      "abbreviation": "S\u00faGTN", 
+      "street": "P. Jilemnick\u00e9ho 24", 
+      "verbose_name": "S\u00fakromn\u00e9 gym. Tren\u010d\u00edn", 
+      "zip_code": "912 50"
+    }
+  }, 
+  {
+    "pk": 268, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Dunajsk\u00e1 Streda", 
+      "addr_name": "S\u00fakromn\u00e9 gym. s vjm.", 
+      "abbreviation": "SGDS", 
+      "street": "Hlavn\u00e1 21", 
+      "verbose_name": "S\u00fakromn\u00e9 gym. s vjm. Dunajsk\u00e1 Streda", 
+      "zip_code": "929 01"
+    }
+  }, 
+  {
+    "pk": 20, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bansk\u00e1 Bystrica", 
+      "addr_name": "Z\u0160", 
+      "abbreviation": "ZSRadBB", 
+      "street": "Radvansk\u00e1", 
+      "verbose_name": "ZS Radvansk\u00e1 B. Bystrica", 
+      "zip_code": ""
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "people.school", 
+    "fields": {
+      "city": "\u017dilina", 
+      "addr_name": "Z\u0160", 
+      "abbreviation": "Z\u0160 Ga\u0161tanov\u00e1 \u017dilina", 
+      "street": "Ga\u0161tanov\u00e1", 
+      "verbose_name": "Z\u0160 Ga\u0161tanov\u00e1 \u017dilina", 
+      "zip_code": ""
+    }
+  }, 
+  {
+    "pk": 252, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Poprad", 
+      "addr_name": "Z\u0160", 
+      "abbreviation": "Z\u0160PDJa", 
+      "street": "Jarn\u00e1 13", 
+      "verbose_name": "Z\u0160 Jarn\u00e1 Poprad", 
+      "zip_code": "058 01"
+    }
+  }, 
+  {
+    "pk": 284, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Tren\u010d\u00edn", 
+      "addr_name": "Z\u00e1kladn\u00e1 \u0161kola", 
+      "abbreviation": "Z\u0160KTN", 
+      "street": "Kubransk\u00e1 cesta 80", 
+      "verbose_name": "Z\u0160 Kubransk\u00e1 Tren\u010d\u00edn", 
+      "zip_code": "911 01"
+    }
+  }, 
+  {
+    "pk": 282, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Pre\u0161ov", 
+      "addr_name": "Z\u00e1kladn\u00e1 \u0161kola", 
+      "abbreviation": "Z\u0160MPO", 
+      "street": "Muka\u010devsk\u00e1 1", 
+      "verbose_name": "Z\u0160 Muka\u010devsk\u00e1 Pre\u0161ov", 
+      "zip_code": "080 01"
+    }
+  }, 
+  {
+    "pk": 251, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Tren\u010d\u00edn", 
+      "addr_name": "Z\u0160", 
+      "abbreviation": "ZSSaTN", 
+      "street": "Saratovsk\u00e1", 
+      "verbose_name": "Z\u0160 Saratovsk\u00e1", 
+      "zip_code": "911 01"
+    }
+  }, 
+  {
+    "pk": 237, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava", 
+      "addr_name": "\u0160kola pre mim. nad. deti a Gym. BA", 
+      "abbreviation": "SPMNDaG", 
+      "street": "Skalick\u00e1 1", 
+      "verbose_name": "\u0160kola pre mim. nadan\u00e9 deti BA", 
+      "zip_code": "831 03"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bansk\u00e1 Bystrica", 
+      "addr_name": "\u0160portov\u00e9 gymn\u00e1zium", 
+      "abbreviation": "\u0160pGBB", 
+      "street": "Trieda SNP 54", 
+      "verbose_name": "\u0160port. gym. B. Bystrica", 
+      "zip_code": "974 00"
+    }
+  }, 
+  {
+    "pk": 32, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Bratislava 2", 
+      "addr_name": "\u0160portov\u00e9 gymn\u00e1zium", 
+      "abbreviation": "\u0160pGBA", 
+      "street": "Ostredkova 10", 
+      "verbose_name": "\u0160port. gym. BA", 
+      "zip_code": "821 02"
+    }
+  }, 
+  {
+    "pk": 86, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Ko\u0161ice", 
+      "addr_name": "\u0160portov\u00e9 gymn\u00e1zium", 
+      "abbreviation": "\u0160pGKE", 
+      "street": "Popradsk\u00e1 1", 
+      "verbose_name": "\u0160port. gym. Ko\u0161ice", 
+      "zip_code": "040 11"
+    }
+  }, 
+  {
+    "pk": 199, 
+    "model": "people.school", 
+    "fields": {
+      "city": "Tren\u010d\u00edn", 
+      "addr_name": "\u0160portov\u00e9 gymn\u00e1zium", 
+      "abbreviation": "\u0160pGTN", 
+      "street": "Ko\u017eu\u0161n\u00edcka 2", 
+      "verbose_name": "\u0160port. gym. Tren\u010d\u00edn", 
+      "zip_code": "911 01"
+    }
+  }
+]
