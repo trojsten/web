@@ -87,7 +87,7 @@ class User(AbstractUser):
                                'Pokiaľ vaša škola nie je '
                                'v&nbsp;zozname, vyberte "Gymnázium iné" '
                                'a&nbsp;pošlite nám e-mail.')
-    graduation = models.IntegerField(blank=True, null=True,
+    graduation = models.IntegerField(null=True,
                                      verbose_name="rok maturity",
                                      help_text="Povinné pre žiakov.")
 

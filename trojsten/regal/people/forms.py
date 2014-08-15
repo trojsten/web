@@ -72,6 +72,30 @@ class TrojstenUserCreationForm(forms.ModelForm):
                 self.cleaned_data.get('password2')):
             return self.clean_password2_default()
         return None
+
+    def clean_email(self):
+        if len(self.cleaned_data.get('email')) == 0:
+            raise forms.ValidationError(
+                _("This field is required."),
+                code="email_required",
+            )
+        return self.cleaned_data.get('email')
+
+    def clean_first_name(self):
+        if len(self.cleaned_data.get('first_name')) == 0:
+            raise forms.ValidationError(
+                _("This field is required."),
+                code="first_name_required",
+            )
+        return self.cleaned_data.get('first_name')
+
+    def clean_last_name(self):
+        if len(self.cleaned_data.get('last_name')) == 0:
+            raise forms.ValidationError(
+                _("This field is required."),
+                code="last_name_required",
+            )
+        return self.cleaned_data.get('last_name')
     
     def save(self, commit=True):
         user = super(TrojstenUserCreationForm, self).save(commit=False)        
