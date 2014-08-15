@@ -18,7 +18,7 @@ class Address(models.Model):
 
     def __str__(self):
         return (
-            self.street + " " + self.number + ", " +
+            self.street + ", " +
             self.town + ", " + self.postal_code + ", " +
             self.country)
 
@@ -75,6 +75,7 @@ class User(AbstractUser):
                                      verbose_name='domáca adresa')
     mailing_address = models.ForeignKey(Address,
                                         related_name='accepting_mails_here',
+                                        blank=True,
                                         null=True,
                                         verbose_name='adresa korešpondencie')
     school = models.ForeignKey(School,

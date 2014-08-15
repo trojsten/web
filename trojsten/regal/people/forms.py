@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django import forms
-from trojsten.regal.people.models import User
+from trojsten.regal.people.models import User, Address
 from django.utils.translation import string_concat, ugettext_lazy as _
 from social.apps.django_app.utils import setting
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
@@ -8,6 +9,22 @@ from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 class TrojstenUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
     password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput, help_text=_("Enter the same password as above, for verification."))
+
+    street = forms.CharField(max_length=70, label='Ulica')
+    town = forms.CharField(max_length=64, label='Mesto')
+    postal_code = forms.CharField(
+        max_length=16, label='PSČ')
+    country = forms.CharField(
+        max_length=32, label='Krajina')
+
+    has_correspondence_address = forms.BooleanField(label="Korešpondenčná adresa", required=False, help_text="Ak chceš, aby sme ti poštu posielali inde ako domov.(Typicky, ak bývaš na internáte.)")
+
+    corr_street = forms.CharField(max_length=70, label='Ulica', required=False)
+    corr_town = forms.CharField(max_length=64, label='Mesto', required=False)
+    corr_postal_code = forms.CharField(
+        max_length=16, label='PSČ', required=False)
+    corr_country = forms.CharField(
+        max_length=32, label='Krajina', required=False)
 
     class Meta:
         model = User
@@ -96,13 +113,75 @@ class TrojstenUserCreationForm(forms.ModelForm):
                 code="last_name_required",
             )
         return self.cleaned_data.get('last_name')
+
+    def clean_corr_street(self):
+        if self.cleaned_data.get('has_correspondence_address'):
+            if len(self.cleaned_data.get('corr_street')) == 0:
+                raise forms.ValidationError(
+                    _("This field is required."),
+                    code="corr_street_required",
+                    )
+
+        return self.cleaned_data.get('corr_street')
+
+    def clean_corr_town(self):
+        if self.cleaned_data.get('has_correspondence_address'):
+            if len(self.cleaned_data.get('corr_town')) == 0:
+                raise forms.ValidationError(
+                    _("This field is required."),
+                    code="corr_town_required",
+                    )
+
+        return self.cleaned_data.get('corr_town')
+
+    def clean_corr_postal_code(self):
+        if self.cleaned_data.get('has_correspondence_address'):
+            if len(self.cleaned_data.get('corr_postal_code')) == 0:
+                raise forms.ValidationError(
+                    _("This field is required."),
+                    code="corr_postal_code_required",
+                    )
+
+        return self.cleaned_data.get('corr_postal_code')
+
+    def clean_corr_country(self):
+        if self.cleaned_data.get('has_correspondence_address'):
+            if len(self.cleaned_data.get('corr_country')) == 0:
+                raise forms.ValidationError(
+                    _("This field is required."),
+                    code="corr_country_required",
+                    )
+
+        return self.cleaned_data.get('corr_country')
+
     
     def save(self, commit=True):
-        user = super(TrojstenUserCreationForm, self).save(commit=False)        
+        user = super(TrojstenUserCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data['password1'])
         if not (self.cleaned_data.get('password1') or self.password_required):
             user.set_unusable_password()
+        street = self.cleaned_data.get('street')
+        town = self.cleaned_data.get('town')
+        postal_code = self.cleaned_data.get('postal_code')
+        country = self.cleaned_data.get('country')
+
+        has_correspondence_address = self.cleaned_data.get('has_correspondence_address')
+        corr_street = self.cleaned_data.get('corr_street')
+        corr_town = self.cleaned_data.get('corr_town')
+        corr_postal_code = self.cleaned_data.get('corr_postal_code')
+        corr_country = self.cleaned_data.get('corr_country')
+
+        main_address = Address(street=street, town=town, postal_code=postal_code, country=country)
+
+        if has_correspondence_address:
+            corr_address = Address(street=corr_street, town=corr_town, postal_code=corr_postal_code, country=corr_country)
+
         if commit:
+            main_address.save()
+            user.home_address = main_address
+            if has_correspondence_address:
+                corr_address.save()
+                user.mailing_address = corr_address
             user.save()
         return user
 
