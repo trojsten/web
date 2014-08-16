@@ -7,11 +7,12 @@ admin.autodiscover()
 
 from wiki.urls import get_pattern as get_wiki_pattern
 from django_notify.urls import get_pattern as get_notify_pattern
-from trojsten.regal.people.forms import TrojstenUserCreationForm
+from trojsten.regal.people.forms import TrojstenUserCreationForm, TrojstenUserChangeForm
 
 # Override default forms in ksp_login
-urlpatterns = patterns('ksp_login.views', 
-        url(r'^account/register/$', 'register', {'creation_form': TrojstenUserCreationForm,}, name='trojsten_register'),
+urlpatterns = patterns('ksp_login.views',
+    url(r'^account/register/$', 'register', {'creation_form': TrojstenUserCreationForm, }, name='trojsten_register'),
+    url(r'^account/$', 'settings', {'settings_form': TrojstenUserChangeForm, }, name='trojsten_account_settings'),
 )
 
 urlpatterns += patterns('',
