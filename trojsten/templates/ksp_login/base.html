@@ -6,3 +6,16 @@
   {% block ksp_login_content %}
   {% endblock ksp_login_content %}
 {% endblock page_content %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+<script src="{{ STATIC_URL }}js/latinize.js"></script>
+<script src="{{ STATIC_URL }}js/autocomplete.js"></script>
+{% endblock javascript %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/base/jquery-ui.css" type="text/css">
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/smoothness/jquery-ui.css" type="text/css">
+{% endblock stylesheets %}
