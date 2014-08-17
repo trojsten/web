@@ -1,0 +1,21 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% block title %}{% block ksp_login_title %} ({{ block.super }}){% endblock ksp_login_title %}{% endblock title %}
+
+{% block page_content %}
+  {% block ksp_login_content %}
+  {% endblock ksp_login_content %}
+{% endblock page_content %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{{ STATIC_URL }}js/jquery-ui.min.js"></script>
+<script src="{{ STATIC_URL }}js/latinize.js"></script>
+<script src="{{ STATIC_URL }}js/autocomplete.js"></script>
+{% endblock javascript %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-base.css" type="text/css">
+<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-smoothness.css" type="text/css">
+{% endblock stylesheets %}

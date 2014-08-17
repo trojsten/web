@@ -18,7 +18,7 @@ class Address(models.Model):
 
     def __str__(self):
         return (
-            self.street + " " + self.number + ", " +
+            self.street + ", " +
             self.town + ", " + self.postal_code + ", " +
             self.country)
 
@@ -62,10 +62,13 @@ class School(models.Model):
 
 
 class User(AbstractUser):
+
     '''
     Holds, provide access to or manages all informations
     related to a person.
     '''
+    gender = models.CharField(max_length=2, choices=[
+                              ('M', "Chlapec"), ('F', "Dievča")], default="M", verbose_name="pohlavie")
     birth_date = models.DateField(
         null=True, db_index=True, verbose_name='dátum narodenia')
     home_address = models.ForeignKey(Address,
@@ -74,6 +77,7 @@ class User(AbstractUser):
                                      verbose_name='domáca adresa')
     mailing_address = models.ForeignKey(Address,
                                         related_name='accepting_mails_here',
+                                        blank=True,
                                         null=True,
                                         verbose_name='adresa korešpondencie')
     school = models.ForeignKey(School,
@@ -86,7 +90,7 @@ class User(AbstractUser):
                                'Pokiaľ vaša škola nie je '
                                'v&nbsp;zozname, vyberte "Gymnázium iné" '
                                'a&nbsp;pošlite nám e-mail.')
-    graduation = models.IntegerField(blank=True, null=True,
+    graduation = models.IntegerField(null=True,
                                      verbose_name="rok maturity",
                                      help_text="Povinné pre žiakov.")
 

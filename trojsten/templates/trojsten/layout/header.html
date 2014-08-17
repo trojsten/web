@@ -1,25 +1,26 @@
 {% block page_header %}
 <nav class="navbar navbar-default navbar-static-top" role="navigation">
   <div class="container">
-  <!-- Brand and toggle get grouped for better mobile display -->
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="http://www.ksp.sk">KSP</a>
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://www.ksp.sk">KSP</a>
+    </div>
+  
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="http://www.kms.sk">KMS</a></li>
+        <li><a href="http://www.fks.sk">FKS</a></li>
+        <li><a href="http://www.trojsten.sk">Trojsten</a></li>
+      </ul>
+      {% include "ksp_login/parts/login_box.html" %}
+    </div><!-- /.navbar-collapse -->
   </div>
-
-  <!-- Collect the nav links, forms, and other content for toggling -->
-  <div class="collapse navbar-collapse navbar-ex1-collapse">
-    <ul class="nav navbar-nav">
-      <li><a href="http://www.kms.sk">KMS</a></li>
-      <li><a href="http://www.fks.sk">FKS</a></li>
-      <li><a href="http://www.trojsten.sk">Trojsten</a></li>
-    </ul>
-    <a href="#" class="btn btn-primary navbar-btn navbar-right">Log in</a>
-  </div><!-- /.navbar-collapse -->
 </nav>
 {% endblock %}
