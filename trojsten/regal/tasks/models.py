@@ -81,13 +81,20 @@ class Submit(models.Model):
         max_length=10, verbose_name='odpoveď testovača')
     protocol_id = models.CharField(
         max_length=128, verbose_name='číslo protokolu')
+    submit_time = models.DateTimeField(
+        verbose_name='čas submitu',
+        auto_now_add=True,
+    )
 
     class Meta:
         verbose_name = 'Submit'
         verbose_name_plural = 'Submity'
 
     def __str__(self):
-        return str(self.user) + ' - ' + str(self.task)
+        return str(self.user)\
+            + ' - ' + str(self.task)\
+            + "<" + Submit.SUBMIT_TYPES[self.submit_type][1] + ">"\
+            + ' (' + str(self.submit_time) + ')'
 
     def filename(self):
         return os.path.basename(self.filepath)
