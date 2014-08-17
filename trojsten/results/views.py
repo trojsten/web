@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from trojsten.regal.tasks.models import Task, Submit
-from django.db.models import Max
+from django.db.models import Max, F
 
 
 def _get_tasks(round_ids, category_ids):
@@ -20,14 +20,17 @@ def _get_submits(tasks):
     '''Returns submits which belong to specified tasks.
     Only one submit per user, submit type and task is returned.
     '''
-    # hack aby som mal idcka, predpoklada, ze vacsie id pribudlo do DB neskor
-    # da sa vyriesit inner joinom, ale to by chcelo SQL pisat
     return Submit.objects.filter(
         pk__in=Submit.objects.filter(
             task__in=tasks,
+            submit_time__lte=F('task__round__end_time'),
         ).values(
             'user', 'task', 'submit_type',
-        ).annotate(id=Max('id')).values_list('id', flat=True)
+        ).annotate(
+            last_submit_time=Max('submit_time')
+        ).filter(
+            submit_time=F('last_submit_time')
+        ).values_list('id', flat=True)
     ).select_related('user', 'task')
 
 
