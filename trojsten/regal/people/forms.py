@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django import forms
 from trojsten.regal.people.models import User, Address
 from django.utils.translation import string_concat, ugettext_lazy as _
