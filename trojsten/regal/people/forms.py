@@ -6,6 +6,7 @@ from django.utils.translation import string_concat, ugettext_lazy as _
 from social.apps.django_app.utils import setting
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 
+
 class TrojstenUserBaseForm(forms.ModelForm):
     street = forms.CharField(max_length=70, label='Ulica')
     town = forms.CharField(max_length=64, label='Mesto')
@@ -14,7 +15,8 @@ class TrojstenUserBaseForm(forms.ModelForm):
     country = forms.CharField(
         max_length=32, label='Krajina')
 
-    has_correspondence_address = forms.BooleanField(label="Korešpondenčná adresa", required=False, help_text="Ak chceš, aby sme ti poštu posielali inde ako domov.(Typicky, ak bývaš na internáte.)")
+    has_correspondence_address = forms.BooleanField(
+        label="Korešpondenčná adresa", required=False, help_text="Ak chceš, aby sme ti poštu posielali inde ako domov.(Typicky, ak bývaš na internáte.)")
 
     corr_street = forms.CharField(max_length=70, label='Ulica', required=False)
     corr_town = forms.CharField(max_length=64, label='Mesto', required=False)
@@ -25,10 +27,11 @@ class TrojstenUserBaseForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'birth_date', 'gender', 'school', 'graduation',)
+        fields = ('first_name', 'last_name', 'email',
+                  'birth_date', 'gender', 'school', 'graduation',)
         widgets = {
             'school': forms.Select(attrs={'class': 'autocomplete'}),
-            }
+        }
 
     def __init__(self, *args, **kwargs):
         super(TrojstenUserBaseForm, self).__init__(*args, **kwargs)
@@ -39,14 +42,14 @@ class TrojstenUserBaseForm(forms.ModelForm):
             'first_name': pipeline_state['details']['first_name'],
             'last_name': pipeline_state['details']['last_name'],
             'email': pipeline_state['details']['email'],
-            }
+        }
 
     def clean_email(self):
         if len(self.cleaned_data.get('email')) == 0:
             raise forms.ValidationError(
                 _("This field is required."),
                 code="email_required",
-                )
+            )
         return self.cleaned_data.get('email')
 
     def clean_first_name(self):
@@ -54,7 +57,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
             raise forms.ValidationError(
                 _("This field is required."),
                 code="first_name_required",
-                )
+            )
         return self.cleaned_data.get('first_name')
 
     def clean_last_name(self):
@@ -62,7 +65,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
             raise forms.ValidationError(
                 _("This field is required."),
                 code="last_name_required",
-                )
+            )
         return self.cleaned_data.get('last_name')
 
     def clean_corr_street(self):
@@ -71,7 +74,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
                 raise forms.ValidationError(
                     _("This field is required."),
                     code="corr_street_required",
-                    )
+                )
 
         return self.cleaned_data.get('corr_street')
 
@@ -81,7 +84,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
                 raise forms.ValidationError(
                     _("This field is required."),
                     code="corr_town_required",
-                    )
+                )
 
         return self.cleaned_data.get('corr_town')
 
@@ -91,7 +94,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
                 raise forms.ValidationError(
                     _("This field is required."),
                     code="corr_postal_code_required",
-                    )
+                )
 
         return self.cleaned_data.get('corr_postal_code')
 
@@ -101,11 +104,13 @@ class TrojstenUserBaseForm(forms.ModelForm):
                 raise forms.ValidationError(
                     _("This field is required."),
                     code="corr_country_required",
-                    )
+                )
 
         return self.cleaned_data.get('corr_country')
 
+
 class TrojstenUserChangeForm(TrojstenUserBaseForm):
+
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         self.user = user
@@ -120,8 +125,10 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
             if user.mailing_address:
                 kwargs['initial']['corr_street'] = user.mailing_address.street
                 kwargs['initial']['corr_town'] = user.mailing_address.town
-                kwargs['initial']['corr_postal_code'] = user.mailing_address.postal_code
-                kwargs['initial']['corr_country'] = user.mailing_address.country
+                kwargs['initial'][
+                    'corr_postal_code'] = user.mailing_address.postal_code
+                kwargs['initial'][
+                    'corr_country'] = user.mailing_address.country
                 kwargs['initial']['has_correspondence_address'] = True
 
         super(TrojstenUserChangeForm, self).__init__(*args, **kwargs)
@@ -133,7 +140,8 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
         postal_code = self.cleaned_data.get('postal_code')
         country = self.cleaned_data.get('country')
 
-        has_correspondence_address = self.cleaned_data.get('has_correspondence_address')
+        has_correspondence_address = self.cleaned_data.get(
+            'has_correspondence_address')
         corr_street = self.cleaned_data.get('corr_street')
         corr_town = self.cleaned_data.get('corr_town')
         corr_postal_code = self.cleaned_data.get('corr_postal_code')
@@ -141,7 +149,8 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
 
         if has_correspondence_address:
             if not user.mailing_address:
-                corr_address = Address(street=corr_street, town=corr_town, postal_code=corr_postal_code, country=corr_country)
+                corr_address = Address(
+                    street=corr_street, town=corr_town, postal_code=corr_postal_code, country=corr_country)
             else:
                 user.mailing_address.street = corr_street
                 user.mailing_address.town = corr_town
@@ -166,15 +175,20 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
 
 
 class TrojstenUserCreationForm(TrojstenUserBaseForm):
-    password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
-    password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput, help_text=_("Enter the same password as above, for verification."))
+    password1 = forms.CharField(
+        label=_("Password"), widget=forms.PasswordInput)
+    password2 = forms.CharField(
+        label=_("Password confirmation"), widget=forms.PasswordInput,
+                                help_text=_("Enter the same password as above, for verification."))
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'birth_date', 'gender', 'school', 'graduation',)
+        fields = ('username', 'first_name', 'last_name', 'email',
+                  'birth_date', 'gender', 'school', 'graduation',)
         widgets = {
             'school': forms.Select(attrs={'class': 'autocomplete'}),
         }
+
     def __init__(self, *args, **kwargs):
         try:
             request = kwargs['request']
@@ -182,7 +196,8 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
         except KeyError:
             raise TypeError("Argument 'request' missing.")
         try:
-            pipeline_state = request.session[setting('SOCIAL_AUTH_PARTIAL_PIPELINE_KEY',
+            pipeline_state = request.session[setting(
+                'SOCIAL_AUTH_PARTIAL_PIPELINE_KEY',
                                                      SOCIAL_AUTH_PARTIAL_PIPELINE_KEY)]
             pipeline_state = pipeline_state['kwargs']
             self.password_required = False
@@ -215,7 +230,7 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
             raise forms.ValidationError(
                 _("The two password fields didn't match."),
                 code='password_mismatch',
-                )
+            )
         return password2
 
     def clean_password2(self):
@@ -236,16 +251,19 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
         postal_code = self.cleaned_data.get('postal_code')
         country = self.cleaned_data.get('country')
 
-        has_correspondence_address = self.cleaned_data.get('has_correspondence_address')
+        has_correspondence_address = self.cleaned_data.get(
+            'has_correspondence_address')
         corr_street = self.cleaned_data.get('corr_street')
         corr_town = self.cleaned_data.get('corr_town')
         corr_postal_code = self.cleaned_data.get('corr_postal_code')
         corr_country = self.cleaned_data.get('corr_country')
 
-        main_address = Address(street=street, town=town, postal_code=postal_code, country=country)
+        main_address = Address(
+            street=street, town=town, postal_code=postal_code, country=country)
 
         if has_correspondence_address:
-            corr_address = Address(street=corr_street, town=corr_town, postal_code=corr_postal_code, country=corr_country)
+            corr_address = Address(
+                street=corr_street, town=corr_town, postal_code=corr_postal_code, country=corr_country)
 
         if commit:
             main_address.save()
