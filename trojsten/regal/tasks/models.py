@@ -81,6 +81,10 @@ class Submit(models.Model):
         max_length=10, verbose_name='odpoveď testovača')
     protocol_id = models.CharField(
         max_length=128, verbose_name='číslo protokolu')
+    submit_time = models.DateTimeField(
+        verbose_name='čas submitu',
+        auto_now_add=True,
+    )
 
     class Meta:
         verbose_name = 'Submit'
