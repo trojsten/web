@@ -6,7 +6,7 @@ from trojsten.regal.people.models import User
 from django.core.urlresolvers import reverse
 import datetime
 from random import randrange
-from trojsten.results import views
+from trojsten.results import helpers
 
 
 def sumlen(l):
@@ -99,7 +99,7 @@ class ResultsTestCase(TestCase):
 
     def test_get_tasks_single_round_no_category(self):
         # test count
-        tasks = views._get_tasks(str(self.rounds[0].id), None)
+        tasks = helpers.get_tasks(str(self.rounds[0].id), None)
 
         # test all belong to one round
         self.assertEqual(len(tasks), self.task_cnt)
@@ -115,7 +115,7 @@ class ResultsTestCase(TestCase):
 
     def test_get_tasks_single_round_one_category(self):
         # test count
-        tasks = views._get_tasks(str(self.rounds[0].id), str(self.categories['z'].id))
+        tasks = helpers.get_tasks(str(self.rounds[0].id), str(self.categories['z'].id))
 
         # test all belong to one round
         self.assertEqual(len(tasks), self.task_cnt)
@@ -131,7 +131,7 @@ class ResultsTestCase(TestCase):
 
     def test_get_tasks_single_round_multi_category(self):
         # test count
-        tasks = views._get_tasks(
+        tasks = helpers.get_tasks(
             str(self.rounds[0].id), '%d,%d' % (self.categories['z'].id, self.categories['o'].id)
         )
 
@@ -149,7 +149,7 @@ class ResultsTestCase(TestCase):
 
     def test_get_tasks_multi_round_no_category(self):
         # test count
-        tasks = views._get_tasks('%s,%s' % (self.rounds[0].id, self.rounds[1].id), None)
+        tasks = helpers.get_tasks('%s,%s' % (self.rounds[0].id, self.rounds[1].id), None)
 
         # test sorted
         last = None
@@ -161,7 +161,7 @@ class ResultsTestCase(TestCase):
 
     def test_get_tasks_multi_round_one_category(self):
         # test count
-        tasks = views._get_tasks(
+        tasks = helpers.get_tasks(
             '%s,%s' % (self.rounds[0].id, self.rounds[1].id), str(self.categories['z'].id)
         )
 
@@ -175,7 +175,7 @@ class ResultsTestCase(TestCase):
 
     def test_get_tasks_multi_round_multi_category(self):
         # test count
-        tasks = views._get_tasks(
+        tasks = helpers.get_tasks(
             '%s,%s' % (self.rounds[0].id, self.rounds[1].id),
             '%d,%d' % (self.categories['z'].id, self.categories['o'].id),
         )
@@ -267,7 +267,7 @@ class ResultsTestCase(TestCase):
                 points=10, task=task, user=self.users[0], submit_type=Submit.SOURCE
             ) for _ in range(submit_cnt)
         ]
-        task_submits = views._get_submits([task])
+        task_submits = helpers.get_submits([task])
 
         self.assertEqual(len(task_submits), 1)
         self.assertEqual(task_submits[0], submits[-1])
@@ -290,7 +290,7 @@ class ResultsTestCase(TestCase):
                 submit_type=Submit.DESCRIPTION,
             ) for _ in range(submit_cnt)
         ]
-        task_submits = views._get_submits([task])
+        task_submits = helpers.get_submits([task])
         self.assertEqual(len(task_submits), 1)
         self.assertEqual(task_submits[0], submits[-1])
 
@@ -317,18 +317,18 @@ class ResultsTestCase(TestCase):
                 submit_type=Submit.DESCRIPTION,
             ) for _ in range(submit_cnt)
         ]
-        task_submits = views._get_submits([task])
+        task_submits = helpers.get_submits([task])
         self.assertEqual(len(task_submits), 2)
         self.assertTrue(submits_d[-1] in task_submits)
         self.assertTrue(submits_s[-1] in task_submits)
 
     def test_get_submits_multi_task(self):
-        task_submits = views._get_submits(self.tasks)
+        task_submits = helpers.get_submits(self.tasks)
         self.assertEqual(len(task_submits), sumlen(self.sources) + sumlen(self.descriptions))
 
     def test_get_results_data(self):
-        submits = views._get_submits(self.tasks)
-        results_data = views._get_results_data(self.tasks, submits)
+        submits = helpers.get_submits(self.tasks)
+        results_data = helpers.get_results_data(self.tasks, submits)
         self.assertEqual(len(results_data), max(len(self.sources), len(self.descriptions)))
         for k, v in results_data.items():
             for t in self.tasks:
@@ -339,9 +339,9 @@ class ResultsTestCase(TestCase):
             self.assertEqual(sum(v[t]['sum'] for t in self.tasks), v['sum'])
 
     def test_make_result_table(self):
-        submits = views._get_submits(self.tasks)
-        results_data = views._get_results_data(self.tasks, submits)
-        results = views._make_result_table(results_data)
+        submits = helpers.get_submits(self.tasks)
+        results_data = helpers.get_results_data(self.tasks, submits)
+        results = helpers.make_result_table(results_data)
         last = None
         for i in results:
             if last is not None:
