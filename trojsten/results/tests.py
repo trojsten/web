@@ -1,8 +1,8 @@
 from django.test import TestCase, Client
 from trojsten.regal.tasks.models import Submit, Task, Category
 from trojsten.regal.people.models import Address
-from trojsten.regal.contests.models import Competition, Series, Round
-from django.contrib.auth.models import User
+from trojsten.regal.contests.models import Competition, Series, Round, Repository
+from trojsten.regal.people.models import User
 from django.core.urlresolvers import reverse
 import datetime
 from random import randrange
@@ -17,13 +17,14 @@ class ResultsTestCase(TestCase):
     def setUp(self):
         # create empty address
         self.address = Address.objects.create(
-            street='test', town='test', number=10, postal_code='00000', country='test'
+            street='test 10', town='test', postal_code='00000', country='test'
         )
         # create users and persons
         usernames = [str(i) for i in range(10)]
         self.users = [User.objects.create(username=username) for username in usernames]
         # create series
-        self.competition = Competition.objects.create(name='test')
+        self.repository = Repository.objects.create(url='empty_repo')
+        self.competition = Competition.objects.create(name='test', repo=self.repository)
         self.series = Series.objects.create(
             competition=self.competition, name='test', number=1, year=1
         )
@@ -31,7 +32,10 @@ class ResultsTestCase(TestCase):
         round_names = [1, 2]
         self.rounds = [
             Round.objects.create(
-                number=i, series=self.series, end_time=datetime.date.today(), visible=True
+                number=i,
+                series=self.series,
+                end_time=datetime.date.today() + datetime.timedelta(days=1),
+                visible=True
             ) for i in round_names
         ]
         # create tasks
@@ -185,7 +189,7 @@ class ResultsTestCase(TestCase):
             last = t
 
     def test_response(self):
-        '''Tests whether view returns status copde 200 for all type of parameters
+        '''Tests whether view returns status code 200 for all type of parameters
         '''
         client = Client(HTTP_HOST='ksp.sk')
         response = client.get(
@@ -264,6 +268,7 @@ class ResultsTestCase(TestCase):
             ) for _ in range(submit_cnt)
         ]
         task_submits = views._get_submits([task])
+
         self.assertEqual(len(task_submits), 1)
         self.assertEqual(task_submits[0], submits[-1])
 
