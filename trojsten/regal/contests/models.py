@@ -30,7 +30,7 @@ class Competition(models.Model):
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
     sites = models.ManyToManyField(Site)
-    repo = models.ForeignKey(Repository, verbose_name='git repozitár')
+    repo = models.ForeignKey(Repository, null=True, verbose_name='git repozitár')
     repo_root = models.CharField(
         max_length=128, verbose_name='adresa foldra súťaže v repozitári'
     )
