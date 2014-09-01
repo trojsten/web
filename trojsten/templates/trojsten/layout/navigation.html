@@ -4,6 +4,7 @@
     <ul class="nav nav-pills nav-stacked">
         <li class="{% current '^/$' %}"><a href="/">Domov</a></li>
         <li class="{% current 'news_list' %}" ><a href="{% url 'news_list' page=1 %}">Novinky</a></li>
+        <li class="{% current 'latest_task_list' %}"><a href="{% url 'latest_task_list' %}">Zadania</a></li>
     </ul>
 </div>
 {% endblock %}

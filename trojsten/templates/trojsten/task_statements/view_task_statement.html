@@ -1,0 +1,15 @@
+{% extends "trojsten/layout/main.html" %}
+{% block page_content %}
+    <h1 class="task-name">{{task.number}}. {{task.name}}</h1>
+    <div class="task-points">
+        {% if task.has_description %}
+            <span class="points-item">Body za popis: {{task.description_points}}</span>
+        {% endif %}
+        {% if task.has_source %}
+            <span class="points-item">Body za program: {{task.source_points}}</span>
+        {% endif %}
+    </div>
+    <div class="task-statement">
+        {% ssi path %}
+    </div>
+{% endblock %}

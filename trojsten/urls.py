@@ -30,7 +30,7 @@ urlpatterns += patterns('',
     url(r'^account/', include('ksp_login.urls')),
     url(r'^submit/', include(trojsten.submit.urls)),
     url(r'^news/', include(trojsten.news.urls)),
-	url(r'^tasks/', include(trojsten.task_statements.urls)),
+    url(r'^statements/', include(trojsten.task_statements.urls)),
     url(r'^wiki/notify/', get_notify_pattern()),
     url(r'^', get_wiki_pattern()),
 )
