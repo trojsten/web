@@ -6,6 +6,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.sites.models import Site
 from uuidfield import UUIDField
+from django.contrib.auth.models import Group
 
 
 @python_2_unicode_compatible
@@ -30,10 +31,11 @@ class Competition(models.Model):
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
     sites = models.ManyToManyField(Site)
-    repo = models.ForeignKey(Repository, null=True, verbose_name='git repozitár')
+    repo = models.ForeignKey(Repository, null=True, blank=True, verbose_name='git repozitár')
     repo_root = models.CharField(
         max_length=128, verbose_name='adresa foldra súťaže v repozitári'
     )
+    organizers_group = models.ForeignKey(Group, null=True, verbose_name='skupina vedúcich')
 
     class Meta:
         verbose_name = 'Súťaž'
