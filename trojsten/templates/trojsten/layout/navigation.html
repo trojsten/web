@@ -1,8 +1,9 @@
+{% load utils %}
 {% block page_navigation %}
 <div class="sidebar">
-  <ul class="list-unstyled">
-    <li><a href="/">Domov</a></li>
-    <li><a href="{% url 'news_list' page=1 %}">Novinky</a></li>
-  </ul>
+    <ul class="nav nav-pills nav-stacked">
+        <li class="{% current '^/$' %}"><a href="/">Domov</a></li>
+        <li class="{% current 'news_list' %}" ><a href="{% url 'news_list' page=1 %}">Novinky</a></li>
+    </ul>
 </div>
 {% endblock %}
