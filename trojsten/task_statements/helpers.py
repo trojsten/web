@@ -26,3 +26,13 @@ def get_task_path(task, solution=False):
     print path
     if os.path.exists(path):
         return path
+
+
+def get_rounds_by_year():
+    rounds = Round.objects.filter(visible=True).order_by('-series__year', '-number')
+    rounds_dict = dict()
+    for round in rounds:
+        if not round.series.year in rounds_dict:
+            rounds_dict[round.series.year] = list()
+        rounds_dict[round.series.year].append(round)
+    return rounds_dict

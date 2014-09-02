@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .tasks import compile_task_statements
 from trojsten.regal.tasks.models import Task
 from trojsten.regal.contests.models import Round
-from .helpers import get_latest_round, get_task_path
+from .helpers import get_latest_round, get_task_path, get_rounds_by_year
 
 
 def notify_push(request, uuid):
@@ -42,9 +42,11 @@ def solution_statement(request, task_id):
 def task_list(request, round_id):
     round = Round.objects.get(pk=round_id)
     tasks = Task.objects.filter(round=round)
+    other_rounds = get_rounds_by_year()
     template_data = {
         'round': round,
         'tasks': tasks,
+        'rounds': other_rounds,
     }
     return render(
         request,

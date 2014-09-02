@@ -9,4 +9,17 @@
         Žiadne úlohy
     {% endfor %}
     </ul>
+    <h2>Staršie zadania</h2>
+    <ul>
+    {% for year, round_list in rounds.items %}
+        <li>
+        <h3 class="statements-year">{{year}}. ročník</h3>
+        <ul>
+        {% for round in round_list %}
+            <li><a href="{% url 'task_list' round_id=round.id %}">{{round.number}}. kolo</a></li>
+        {% endfor %}
+        </ul>
+        </li>
+    {% endfor %}
+    </ul>
 {% endblock %}
