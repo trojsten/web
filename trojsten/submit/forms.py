@@ -1,10 +1,12 @@
+# coding: utf-8
+from __future__ import unicode_literals
 from django import forms
 from django.conf import settings
 
 
 class SourceSubmitForm(forms.Form):
     LANGUAGE_CHOICES = (
-        (".", "Zisti podla pripony"),
+        (".", "Zisti podľa prípony"),
         (".cc", "C++ (.cpp/.cc)"),
         (".pas", "Pascal (.pas/.dpr)"),
         (".c", "C (.c)"),
