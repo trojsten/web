@@ -2,6 +2,7 @@
 {% block page_content %}
     <h1>Zadania {{round.number}}. kola {{round.series.number}}. série {{round.series.year}}. ročníka {{round.series.competition.name}}</h1>
     <a class="btn btn-primary" href="{% url 'view_pdf' round_id=round.id%}">Stiahnuť pdf</a>
+    <a class="btn btn-success" href="{% url 'round_submit_page' round_id=round.id%}">Odovzdaj riešenia</a>
     <h2>Zoznam úloh aktuálneho kola</h2>
     <ul>
     {% for task in tasks %}
