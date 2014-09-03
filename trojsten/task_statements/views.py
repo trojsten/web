@@ -5,7 +5,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .tasks import compile_task_statements
 from trojsten.regal.tasks.models import Task
 from trojsten.regal.contests.models import Round
-from .helpers import get_latest_round, get_task_path, get_rounds_by_year
+from .helpers import get_latest_round, get_task_path, get_rounds_by_year,\
+    get_pdf_path
+from sendfile import sendfile
 
 
 def notify_push(request, uuid):
@@ -57,3 +59,9 @@ def task_list(request, round_id):
 
 def latest_task_list(request):
     return redirect('task_list', round_id=get_latest_round().id)
+
+
+def view_pdf(request, round_id):
+    round = Round.objects.get(pk=round_id)
+    path = get_pdf_path(round)
+    return sendfile(request, path)
