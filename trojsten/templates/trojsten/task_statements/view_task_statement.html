@@ -1,4 +1,5 @@
 {% extends "trojsten/layout/main.html" %}
+{% load submit_parts %}
 {% block page_content %}
     <h1 class="task-name">{{task.number}}. {{task.name}}</h1>
     <div class="task-points">
@@ -11,5 +12,9 @@
     </div>
     <div class="task-statement">
         {% ssi path %}
+    </div>
+    <div class="task-submit">
+    {% show_submit_form task request.path %}
+    {% show_submit_list task request.user %}
     </div>
 {% endblock %}
