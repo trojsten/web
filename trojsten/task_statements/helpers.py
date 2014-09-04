@@ -3,8 +3,13 @@ from django.conf import settings
 import os
 
 
-def get_latest_round():
-    return Round.objects.filter(visible=True).order_by('end_time')[0]
+def get_latest_rounds_by_competition():
+    rounds = Round.objects.filter(
+        visible=True
+    ).order_by(
+        'series__competition', 'end_time'
+    ).distinct('series__competition')
+    return {r.series.competition: r for r in rounds}
 
 
 def _get_round_path(round, solution=False):

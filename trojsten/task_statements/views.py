@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from django.http import HttpResponse, Http404
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from .tasks import compile_task_statements
 from trojsten.regal.tasks.models import Task
 from trojsten.regal.contests.models import Round
-from .helpers import get_latest_round, get_task_path, get_rounds_by_year,\
-    get_pdf_path
+from .helpers import get_task_path, get_rounds_by_year,\
+    get_pdf_path, get_latest_rounds_by_competition
 from sendfile import sendfile
 
 
@@ -46,7 +46,7 @@ def task_list(request, round_id):
     other_rounds = get_rounds_by_year()
     template_data = {
         'round': round,
-        'rounds': other_rounds,
+        'other_rounds': other_rounds,
     }
     return render(
         request,
@@ -56,7 +56,17 @@ def task_list(request, round_id):
 
 
 def latest_task_list(request):
-    return redirect('task_list', round_id=get_latest_round().id)
+    rounds = get_latest_rounds_by_competition()
+    other_rounds = get_rounds_by_year()
+    template_data = {
+        'rounds': rounds,
+        'other_rounds': other_rounds,
+    }
+    return render(
+        request,
+        'trojsten/task_statements/list_latest_tasks.html',
+        template_data,
+    )
 
 
 def view_pdf(request, round_id):
