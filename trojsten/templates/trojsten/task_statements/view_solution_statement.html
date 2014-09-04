@@ -1,5 +1,6 @@
 {% extends "trojsten/layout/main.html" %}
 {% block page_content %}
+    <a href="{% url 'task_list' round_id=task.round.id %}" class="btn btn-lg btn-default pull-right"><span class="glyphicon glyphicon-list"></span> Všetky úlohy</a>
     <h1 class="task-name">{{task.number}}. {{task.name}} - riešenie</h1>
     <div class="task-statement">
         {% ssi path %}
