@@ -11,6 +11,11 @@
             <span class="points-item">Body za program: {{task.source_points}}</span>
         {% endif %}
     </div>
+    <div class="task-categories">
+        {% for category in task.category.all %}
+        <span class="label label-default category-{{category}}">{{category}}</span>
+        {% endfor %}
+    </div>
     <div class="task-statement">
         {% ssi path %}
     </div>
