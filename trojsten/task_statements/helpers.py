@@ -7,7 +7,7 @@ def get_latest_rounds_by_competition():
     rounds = Round.objects.filter(
         visible=True
     ).order_by(
-        'series__competition', 'end_time'
+        'series__competition', '-end_time'
     ).distinct('series__competition')
     return {r.series.competition: r for r in rounds}
 
