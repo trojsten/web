@@ -157,6 +157,7 @@ INSTALLED_APPS = (
     'trojsten.regal.tasks',
     'trojsten.submit',
     'trojsten.news',
+    'trojsten.task_statements',
 
     # Keep this under trojsten to let trojsten override templates.
     'social.apps.django_app.default',
