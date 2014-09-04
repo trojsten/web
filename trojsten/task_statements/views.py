@@ -43,11 +43,9 @@ def solution_statement(request, task_id):
 
 def task_list(request, round_id):
     round = Round.objects.get(pk=round_id)
-    tasks = Task.objects.filter(round=round)
     other_rounds = get_rounds_by_year()
     template_data = {
         'round': round,
-        'tasks': tasks,
         'rounds': other_rounds,
     }
     return render(

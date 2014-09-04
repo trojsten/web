@@ -1,0 +1,7 @@
+<ul>
+{% for task in tasks %}
+    <li><a href="{% url 'task_statement' task_id=task.id %}">{{task.number}}. {{task.name}}</a></li>
+{% empty %}
+    Žiadne úlohy
+{% endfor %}
+</ul>
