@@ -1,19 +1,28 @@
+{% load bootstrap %}
 <h3>Odovzdávanie</h3>
 {% if task.has_description %}
     <h4>Popis</h4>
-    <form enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.DESCRIPTION %}">
+    <form class="form-horizontal" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.DESCRIPTION %}">
         {% csrf_token %}
-        {{ description_form.as_p }}
+        {{ description_form | bootstrap_horizontal }}
         <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
-        <input type="submit" value="Submit" />
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input class="btn btn-primary" type="submit" value="Submit" />
+            </div>
+        </div>
     </form>
 {% endif %}
 {% if task.has_source %}
     <h4>Kód</h4>
-    <form enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.SOURCE %}">
+    <form class="form-horizontal" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.SOURCE %}">
         {% csrf_token %}
-        {{ source_form.as_p }}
+        {{ source_form | bootstrap_horizontal }}
         <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
-        <input type="submit" value="Submit" />
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input class="btn btn-primary" type="submit" value="Submit" />
+            </div>
+        </div>
     </form>
 {% endif %}

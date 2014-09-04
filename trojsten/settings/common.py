@@ -144,6 +144,7 @@ INSTALLED_APPS = (
     # Keep this under trojsten to let trojsten override templates.
     'social.apps.django_app.default',
     'ksp_login',
+    'bootstrapform',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
