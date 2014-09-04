@@ -13,13 +13,13 @@
     <div class="task-statement">
         {% ssi path %}
     </div>
-    <h2>Odovzdávanie</h2>
     <div class="task-submit">
     {% if request.user.is_authenticated %}
     {% show_submit_form task request.path %}
     <h3>Odovzdané súbory</h3>
     {% show_submit_list task request.user %}
     {% else %}
+    <h3>Odovzdávanie</h3>
     <p class="text-danger">Na odovzdávanie sa musíš prihlásiť</p>
     {% endif %}
     </div>
