@@ -7,6 +7,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.sites.models import Site
 from uuidfield import UUIDField
 from django.contrib.auth.models import Group
+from datetime import datetime
+import pytz
 
 
 @python_2_unicode_compatible
@@ -66,7 +68,6 @@ class Series(models.Model):
 
 @python_2_unicode_compatible
 class Round(models.Model):
-
     '''
     Round has tasks.
     Holds information about deadline and such things
@@ -76,6 +77,12 @@ class Round(models.Model):
     end_time = models.DateTimeField(verbose_name='koniec')
     visible = models.BooleanField(verbose_name='viditeľnosť')
     solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov')
+
+    @property
+    def can_submit(self):
+        if datetime.now(pytz.utc) <= self.end_time:
+            return True
+        return False
 
     class Meta:
         verbose_name = 'Kolo'

@@ -19,6 +19,7 @@
     <div class="task-statement">
         {% ssi path %}
     </div>
+    {% if task.round.can_submit %}
     <div class="task-submit">
     {% if request.user.is_authenticated %}
     {% show_submit_form task request.path %}
@@ -29,4 +30,5 @@
     <p class="text-danger">Na odovzdávanie sa musíš prihlásiť</p>
     {% endif %}
     </div>
+    {% endif %}
 {% endblock %}
