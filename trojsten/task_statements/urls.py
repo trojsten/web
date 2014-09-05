@@ -8,6 +8,6 @@ urlpatterns = patterns('trojsten.task_statements.views',
     url(r'^tasks/(?P<task_id>\d+)/$', 'task_statement', name='task_statement'),
     url(r'^solutions/(?P<task_id>\d+)/$', 'solution_statement', name='solution_statement'),
     url(r'^(?P<round_id>\d+)/$', 'task_list', name='task_list'),
-    url(r'^latest/$', 'latest_task_list', name='latest_task_list'),
+    url(r'^$', 'latest_task_list', name='latest_task_list'),
     url(r'^pdf/(?P<round_id>\d+)/', 'view_pdf', name='view_pdf'),
 )
