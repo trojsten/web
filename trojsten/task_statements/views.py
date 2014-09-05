@@ -5,8 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from .tasks import compile_task_statements
 from trojsten.regal.tasks.models import Task
 from trojsten.regal.contests.models import Round
-from .helpers import get_task_path, get_rounds_by_year,\
-    get_pdf_path, get_latest_rounds_by_competition
+from .helpers import get_rounds_by_year, get_latest_rounds_by_competition
 from sendfile import sendfile
 
 
@@ -17,20 +16,21 @@ def notify_push(request, uuid):
 
 def _statement_view(request, task_id, solution=False):
     task = get_object_or_404(Task, pk=task_id)
-    path = get_task_path(task, solution=solution)
-    if path is None:
+    try:
+        path = task.get_path(solution=solution)
+        template_data = {
+            'task': task,
+            'path': path
+        }
+        return render(
+            request,
+            'trojsten/task_statements/view_{}_statement.html'.format(
+                'solution' if solution else 'task'
+            ),
+            template_data,
+        )
+    except IOError:
         raise Http404
-    template_data = {
-        'task': task,
-        'path': path
-    }
-    return render(
-        request,
-        'trojsten/task_statements/view_{}_statement.html'.format(
-            'solution' if solution else 'task'
-        ),
-        template_data,
-    )
 
 
 def task_statement(request, task_id):
@@ -71,5 +71,8 @@ def latest_task_list(request):
 
 def view_pdf(request, round_id):
     round = Round.objects.get(pk=round_id)
-    path = get_pdf_path(round)
-    return sendfile(request, path)
+    try:
+        path = round.get_pdf_path()
+        return sendfile(request, path)
+    except IOError:
+        raise Http404

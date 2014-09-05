@@ -5,6 +5,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from trojsten.regal.contests.models import Round, Competition
 import os
 
@@ -53,6 +54,36 @@ class Task(models.Model):
             Submit.DESCRIPTION: self.has_description,
         }
         return check_field[submit_type]
+
+    def get_path(self, solution=False):
+        task_file = '{}{}.html'.format(
+            settings.TASK_STATEMENTS_PREFIX_TASK,
+            self.number,
+        )
+        path = os.path.join(
+            self.round.get_path(solution),
+            settings.TASK_STATEMENTS_HTML_DIR,
+            task_file,
+        )
+        if not os.path.exists(path):
+            raise IOError("path doesn't exist")
+        return path
+
+    @property
+    def task_file_exists(self):
+        try:
+            self.get_path(solution=False)
+            return True
+        except IOError:
+            return False
+
+    @property
+    def solution_file_exists(self):
+        try:
+            self.get_path(solution=True)
+            return True
+        except IOError:
+            return False
 
 
 @python_2_unicode_compatible
