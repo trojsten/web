@@ -73,6 +73,7 @@ class Round(models.Model):
     number = models.IntegerField(verbose_name='číslo')
     end_time = models.DateTimeField(verbose_name='koniec')
     visible = models.BooleanField(verbose_name='viditeľnosť')
+    solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov')
 
     class Meta:
         verbose_name = 'Kolo'
