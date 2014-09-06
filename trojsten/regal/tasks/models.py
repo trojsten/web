@@ -96,5 +96,6 @@ class Submit(models.Model):
             + "<" + Submit.SUBMIT_TYPES[self.submit_type][1] + ">"\
             + ' (' + str(self.submit_time) + ')'
 
+    @property
     def filename(self):
         return os.path.basename(self.filepath)

@@ -11,6 +11,8 @@ DATABASES = {
     },
 }
 
+SENDFILE_BACKEND = 'sendfile.backends.development'
+
 DEBUG = True
 TEMPLATE_DEBUG = True
 SUBMIT_PATH = '/tmp'
