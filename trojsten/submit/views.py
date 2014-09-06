@@ -96,7 +96,7 @@ def round_submit_page(request, round_id):
     z daného kola'''
     round = get_object_or_404(Round, pk=round_id)
     tasks = Task.objects.filter(round=round).order_by('number')
-    template_data = {'tasks': tasks}
+    template_data = {'round': round, 'tasks': tasks}
     return render(request, 'trojsten/submit/round_submit.html', template_data)
 
 

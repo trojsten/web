@@ -1,7 +1,11 @@
 {% extends "trojsten/layout/main.html" %}
 {% load submit_parts %}
+
+{% block page_header %}
+<h1>Odovzdávanie <small>{{ task }}</small></h1>
+{% endblock %}
+
 {% block page_content %}
-    <h2>{{ task }}</h2>
     {% show_submit_form task request.path %}
     {% show_submit_list task request.user %}
 {% endblock %}

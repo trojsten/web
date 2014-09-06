@@ -1,5 +1,9 @@
 {% extends "trojsten/layout/main.html" %}
 {% load submit_parts %}
+{% block page_header %}
+<h1>Odovzdávanie <small>{{round}}</small></h1>
+{% endblock %}
+
 {% block page_content %}
     {% for task in tasks %}
         <h2>{{ task }}</h2>
