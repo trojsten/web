@@ -2,6 +2,15 @@
 import os
 import trojsten
 
+# Celery settings
+#: Only add pickle to this list if your broker is secured
+#: from unwanted access (see userguide/security.html)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_IMPORTS = ("trojsten.task_statements.handlers", )
+
+# Django settings
 PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
     os.path.dirname(os.path.realpath(trojsten.__file__))
 )
@@ -10,6 +19,8 @@ AUTH_USER_MODEL = 'people.User'
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 SUBMIT_PATH = ''
+TASK_STATEMENTS_PATH = ''
+TASK_STATEMENTS_REPO_PATH = ''
 TESTER_URL = 'experiment'
 TESTER_PORT = 12347
 
@@ -111,6 +122,10 @@ MIDDLEWARE_CLASSES = (
     'trojsten.middleware.multihostname.MultiHostnameMiddleware',
 )
 
+ALLOWED_INCLUDE_ROOTS = (
+    TASK_STATEMENTS_PATH,
+)
+
 ROOT_URLCONF = 'trojsten.urls'
 HOST_MIDDLEWARE_URLCONF_MAP = {}
 
@@ -131,7 +146,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #'django.contrib.flatpages',
-    'south',
+    #'south',
+    #'social_auth',
+    #'ksp_login',
     'django.contrib.admin',
     'trojsten',
     'trojsten.utils',
@@ -140,6 +157,7 @@ INSTALLED_APPS = (
     'trojsten.regal.tasks',
     'trojsten.submit',
     'trojsten.news',
+    'trojsten.task_statements',
 
     # Keep this under trojsten to let trojsten override templates.
     'social.apps.django_app.default',
@@ -148,6 +166,7 @@ INSTALLED_APPS = (
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
+    'south',
     'django_notify',
     'mptt',
     'sekizai',
@@ -237,6 +256,15 @@ SOUTH_MIGRATION_MODULES = {
 
 UPLOADED_FILENAME_MAXLENGTH = 100000
 PROTOCOL_FILE_EXTENSION = '.protokol'
+
+TASK_STATEMENTS_SUFFIX_YEAR = 'rocnik'
+TASK_STATEMENTS_SUFFIX_ROUND = 'kolo'
+TASK_STATEMENTS_TASKS_DIR = 'zadania'
+TASK_STATEMENTS_PREFIX_TASK = 'prikl'
+TASK_STATEMENTS_SOLUTIONS_DIR = 'vzoraky'
+TASK_STATEMENTS_HTML_DIR = 'html'
+TASK_STATEMENTS_PDF = 'zadania.pdf'
+TASK_STATEMENTS_SOLUTIONS_PDF = 'vzoraky.pdf'
 
 # We use ksp_login to handle accounts.
 WIKI_ACCOUNT_HANDLING = False

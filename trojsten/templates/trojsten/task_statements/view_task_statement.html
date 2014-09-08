@@ -1,0 +1,45 @@
+{% extends "trojsten/layout/main.html" %}
+{% load submit_parts %}
+
+{% block page_header %}
+<ul class="nav nav-pills">
+  <li class="pull-left" id="article-title-li">
+    <h1 id="article-title" class="task-name">{{task.number}}. {{task.name}}
+    <small>
+    {% for category in task.category.all %}
+        <span class="label label-default category-{{category}}">{{category}}</span>
+    {% endfor %}
+    </small></h1>
+  </li>
+  <li class="pull-right">
+    <a href="{% url 'task_list' round_id=task.round.id %}"><span class="glyphicon glyphicon-list"></span> Všetky úlohy</a>
+  </li>
+</ul>
+{% endblock %}
+
+{% block page_content %}
+    <div class="task-points">
+        {% if task.has_description %}
+            <span class="points-item">Body za popis: {{task.description_points}}</span>
+        {% endif %}
+        {% if task.has_source %}
+            <span class="points-item">Body za program: {{task.source_points}}</span>
+        {% endif %}
+    </div>
+    <div class="task-statement">
+        {% ssi path %}
+    </div>
+    <div class="task-submit">
+    <h2>Odovzdávanie</h2>
+    {% if request.user.is_authenticated %}
+    {% if task.round.can_submit %}
+    {% show_submit_form task request.path %}
+    {% else %}
+    <p class="text-danger">Už sa nedá odovzdávať.</p>
+    {% endif %}
+    {% show_submit_list task request.user %}
+    {% else %}
+    <p class="text-danger">Na odovzdávanie sa musíš prihlásiť</p>
+    {% endif %}
+    </div>
+{% endblock %}

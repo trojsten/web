@@ -1,0 +1,23 @@
+{% extends "trojsten/layout/main.html" %}
+{% block page_header %}
+<ul class="nav nav-pills">
+  <li class="pull-left" id="article-title-li">
+    <h1 id="article-title" class="task-name">{{task.number}}. {{task.name}}
+    <small>
+    riešenie
+    {% for category in task.category.all %}
+        <span class="label label-default category-{{category}}">{{category}}</span>
+    {% endfor %}
+    </small></h1>
+  </li>
+  <li class="pull-right">
+    <a href="{% url 'task_list' round_id=task.round.id %}"><span class="glyphicon glyphicon-list"></span> Všetky úlohy</a>
+  </li>
+</ul>
+{% endblock %}
+
+{% block page_content %}
+    <div class="task-statement">
+        {% ssi path %}
+    </div>
+{% endblock %}

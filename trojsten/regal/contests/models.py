@@ -5,8 +5,12 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.sites.models import Site
+from django.conf import settings
+import os
 from uuidfield import UUIDField
 from django.contrib.auth.models import Group
+from datetime import datetime
+import pytz
 
 
 @python_2_unicode_compatible
@@ -66,7 +70,6 @@ class Series(models.Model):
 
 @python_2_unicode_compatible
 class Round(models.Model):
-
     '''
     Round has tasks.
     Holds information about deadline and such things
@@ -76,6 +79,56 @@ class Round(models.Model):
     end_time = models.DateTimeField(verbose_name='koniec')
     visible = models.BooleanField(verbose_name='viditeľnosť')
     solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov')
+
+    @property
+    def can_submit(self):
+        if datetime.now(pytz.utc) <= self.end_time:
+            return True
+        return False
+
+    def get_path(self, solution=False):
+        round_dir = '{}{}'.format(self.number, settings.TASK_STATEMENTS_SUFFIX_ROUND)
+        year_dir = '{}{}'.format(self.series.year, settings.TASK_STATEMENTS_SUFFIX_YEAR)
+        competition_name = self.series.competition.name
+        path_type = settings.TASK_STATEMENTS_SOLUTIONS_DIR if solution\
+            else settings.TASK_STATEMENTS_TASKS_DIR
+        path = os.path.join(
+            settings.TASK_STATEMENTS_PATH,
+            competition_name,
+            year_dir,
+            round_dir,
+            path_type,
+        )
+        if not os.path.exists(path):
+            raise IOError("path doesn't exist")
+        return path
+
+    def get_pdf_path(self, solution=False):
+        pdf_file = settings.TASK_STATEMENTS_SOLUTIONS_PDF if solution\
+            else settings.TASK_STATEMENTS_PDF
+        path = os.path.join(
+            self.get_path(solution),
+            pdf_file,
+        )
+        if not os.path.exists(path):
+            raise IOError("path doesn't exist")
+        return path
+
+    @property
+    def tasks_pdf_exists(self):
+        try:
+            self.get_pdf_path(solution=False)
+            return True
+        except IOError:
+            return False
+
+    @property
+    def solutions_pdf_exists(self):
+        try:
+            self.get_pdf_path(solution=True)
+            return True
+        except IOError:
+            return False
 
     class Meta:
         verbose_name = 'Kolo'

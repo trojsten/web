@@ -1,0 +1,28 @@
+{% extends "trojsten/layout/main.html" %}
+{% load statements_parts %}
+{% block page_header %}
+<h1>Zadania <small>{{round.number}}. kola {{round.series.number}}. série {{round.series.year}}. ročníka {{round.series.competition.name}}</small></h1>
+{% endblock %}
+{% block page_content %}
+    {% if round.tasks_pdf_exists %}
+    <a class="btn btn-primary" href="{% url 'view_pdf' round_id=round.id%}">Stiahnuť pdf</a>
+    {% endif %}
+    {% if round.can_submit %}
+    <a class="btn btn-success" href="{% url 'round_submit_page' round_id=round.id%}">Odovzdaj riešenia</a>
+    {% endif %}
+    <h2>Zoznam úloh</h2>
+    {% show_task_list round %}
+    <h2>Všetky zadania</h2>
+    <ul>
+    {% for year, round_list in other_rounds.items %}
+        <li>
+        <h3 class="statements-year">{{year}}. ročník</h3>
+        <ul>
+        {% for round in round_list %}
+            <li><a href="{% url 'task_list' round_id=round.id %}">{{round.number}}. kolo</a></li>
+        {% endfor %}
+        </ul>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

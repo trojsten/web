@@ -1,0 +1,13 @@
+<ul>
+{% for task in tasks %}
+    <li>
+        {% if task.task_file_exists %}
+            <a href="{% url 'task_statement' task_id=task.id %}">{{task.number}}. {{task.name}}</a>
+        {% else %}
+            {{task.number}}. {{task.name}}
+        {% endif %}
+    </li>
+{% empty %}
+    Žiadne úlohy
+{% endfor %}
+</ul>
