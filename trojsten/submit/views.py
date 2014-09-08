@@ -2,7 +2,7 @@
 # Create your views here.
 
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
@@ -12,6 +12,7 @@ from trojsten.regal.tasks.models import Task, Submit
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm
 from trojsten.submit.helpers import save_file, process_submit, get_path,\
     update_submit
+from sendfile import sendfile
 import os
 import xml.etree.ElementTree as ET
 
@@ -71,12 +72,10 @@ def view_submit(request, submit_id):
     # For description submits, return submitted file.
     if submit.submit_type == Submit.DESCRIPTION:
         if os.path.exists(submit.filepath):
-            data = open(submit.filepath, "rb")
-            response = HttpResponse(data)
-            response['Content-Disposition'] = 'attachment; filename=' + \
-                str(submit.filename())
-            # TODO Prerobit pomocou sendfile
-            return response
+            return sendfile(
+                request,
+                submit.filepath,
+            )
         else:
             raise Http404  # File does not exists, can't be returned
 
