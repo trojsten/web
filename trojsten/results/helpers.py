@@ -21,9 +21,9 @@ def get_submits(tasks):
     '''
     return Submit.objects.filter(
         task__in=tasks,
-        submit_time__lte=F('task__round__end_time'),
+        time__lte=F('task__round__end_time'),
     ).order_by(
-        'user', 'task', 'submit_type', '-submit_time', '-id',
+        'user', 'task', 'submit_type', '-time', '-id',
     ).distinct(
         'user', 'task', 'submit_type'
     ).prefetch_related('user', 'task')
