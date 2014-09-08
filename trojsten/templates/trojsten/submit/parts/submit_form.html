@@ -1,7 +1,6 @@
 {% load bootstrap %}
-<h3>Odovzdávanie</h3>
 {% if task.has_description %}
-    <h4>Popis</h4>
+    <h3>Popis</h3>
     <form class="form-horizontal" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.DESCRIPTION %}">
         {% csrf_token %}
         {{ description_form | bootstrap_horizontal }}
@@ -14,7 +13,7 @@
     </form>
 {% endif %}
 {% if task.has_source %}
-    <h4>Kód</h4>
+    <h3>Kód</h3>
     <form class="form-horizontal" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.SOURCE %}">
         {% csrf_token %}
         {{ source_form | bootstrap_horizontal }}
