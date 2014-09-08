@@ -1,7 +1,11 @@
 {% extends "trojsten/layout/main.html" %}
 {% load statements_parts %}
+
+{% block page_header %}
+<h1>Aktuálne zadania</h1>
+{% endblock %}
+
 {% block page_content %}
-    <h1>Aktuálne zadania</h1>
     {% for competition, round in rounds.items %}
         <h2>{{competition}} - {{round.number}}. kolo</h2>
         {% if round.tasks_pdf_exists %}

@@ -1,7 +1,9 @@
 {% extends "trojsten/layout/main.html" %}
 {% load statements_parts %}
+{% block page_header %}
+<h1>Zadania <small>{{round.number}}. kola {{round.series.number}}. série {{round.series.year}}. ročníka {{round.series.competition.name}}</small></h1>
+{% endblock %}
 {% block page_content %}
-    <h1>Zadania {{round.number}}. kola {{round.series.number}}. série {{round.series.year}}. ročníka {{round.series.competition.name}}</h1>
     {% if round.tasks_pdf_exists %}
     <a class="btn btn-primary" href="{% url 'view_pdf' round_id=round.id%}">Stiahnuť pdf</a>
     {% endif %}

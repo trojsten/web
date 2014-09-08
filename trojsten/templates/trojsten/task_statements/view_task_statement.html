@@ -1,8 +1,24 @@
 {% extends "trojsten/layout/main.html" %}
 {% load submit_parts %}
+
+{% block page_header %}
+<ul class="nav nav-pills">
+  <li class="pull-left" id="article-title-li">
+    <h1 id="article-title" class="task-name">{{task.number}}. {{task.name}}
+    <small>
+    {% for category in task.category.all %}
+        <span class="label label-default category-{{category}}">{{category}}</span>
+    {% endfor %}
+    </small></h1>
+  </li>
+  <li class="pull-right">
+    <a href="{% url 'task_list' round_id=task.round.id %}"><span class="glyphicon glyphicon-list"></span> Všetky úlohy</a>
+  </li>
+</ul>
+{% endblock %}
+
 {% block page_content %}
-    <a href="{% url 'task_list' round_id=task.round.id %}" class="btn btn-lg btn-default pull-right"><span class="glyphicon glyphicon-list"></span> Všetky úlohy</a>
-    <h1 class="task-name">{{task.number}}. {{task.name}}</h1>
+
     <div class="task-points">
         {% if task.has_description %}
             <span class="points-item">Body za popis: {{task.description_points}}</span>
@@ -11,22 +27,16 @@
             <span class="points-item">Body za program: {{task.source_points}}</span>
         {% endif %}
     </div>
-    <div class="task-categories">
-        {% for category in task.category.all %}
-        <span class="label label-default category-{{category}}">{{category}}</span>
-        {% endfor %}
-    </div>
     <div class="task-statement">
         {% ssi path %}
     </div>
     {% if task.round.can_submit %}
     <div class="task-submit">
+    <h2>Odovzdávanie</h2>
     {% if request.user.is_authenticated %}
     {% show_submit_form task request.path %}
-    <h3>Odovzdané súbory</h3>
     {% show_submit_list task request.user %}
     {% else %}
-    <h3>Odovzdávanie</h3>
     <p class="text-danger">Na odovzdávanie sa musíš prihlásiť</p>
     {% endif %}
     </div>
