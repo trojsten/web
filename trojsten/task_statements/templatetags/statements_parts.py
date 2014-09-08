@@ -1,6 +1,5 @@
 from django import template
 from trojsten.regal.tasks.models import Task
-# from trojsten.regal.contests.models import Round
 
 register = template.Library()
 

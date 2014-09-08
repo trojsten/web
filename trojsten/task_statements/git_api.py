@@ -1,17 +1,22 @@
 # -*- coding: utf-8 -*-
 
 import os
+import subprocess
 
 
 def clone(path, url):
-    os.system('git clone {} {}'.format(path, url))
+    p = subprocess.Popen(['git', 'clone', path, url])
+    p.wait()
+    return p.returncode
 
 
 def pull(path, url):
     if not os.path.exists(path):
         raise IOError('Path does not exist: %s' % path)
     os.chdir(path)
-    os.system('git pull')
+    p = subprocess.Popen(['git', 'pull'])
+    p.wait()
+    return p.returncode
 
 
 def pull_or_clone(path, url):

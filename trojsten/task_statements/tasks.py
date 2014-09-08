@@ -7,8 +7,6 @@ from trojsten.regal.contests.models import Repository
 from django.conf import settings
 from .git_api import pull_or_clone
 
-ROOT_DIR = 'task_statements'
-
 
 def build(source_path, target_path):
     raise NotImplementedError
@@ -21,7 +19,7 @@ def compile_task_statements(repository_uuid):
     repo_name = os.path.split(repo_url)[-1]
     repo_path = os.path.join(
         settings.TASK_STATEMENTS_REPO_PATH,
-        ROOT_DIR,
+        settings.TASK_STATEMENTS_PATH,
         repo_name,
     )
     pull_or_clone(repo_path, repo_url)
