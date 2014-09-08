@@ -75,8 +75,6 @@ def view_submit(request, submit_id):
             return sendfile(
                 request,
                 submit.filepath,
-                attachment=True,
-                attachment_filename=submit.filename
             )
         else:
             raise Http404  # File does not exists, can't be returned
