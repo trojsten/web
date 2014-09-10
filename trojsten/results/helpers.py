@@ -53,3 +53,7 @@ def make_result_table(results_data):
         del points['sum']
         res.append({'user': user, 'points': points, 'sum': points_sum})
     return sorted(res, key=lambda x: -x['sum'])
+
+
+def check_round_series(rounds):
+    return all(r.series == rounds[0].series for r in rounds)
