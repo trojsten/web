@@ -35,7 +35,8 @@ class ResultsTestCase(TestCase):
                 number=i,
                 series=self.series,
                 end_time=datetime.date.today() + datetime.timedelta(days=1),
-                visible=True
+                visible=True,
+                solutions_visible=True,
             ) for i in round_names
         ]
         # create tasks
