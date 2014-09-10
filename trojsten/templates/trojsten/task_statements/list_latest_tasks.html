@@ -8,18 +8,13 @@
 {% block page_content %}
     {% for competition, round in rounds.items %}
         <h2>{{competition}} - {{round.number}}. kolo</h2>
-        {% if round.tasks_pdf_exists %}
-        <a class="btn btn-primary" href="{% url 'view_pdf' round_id=round.id%}">Stiahnuť pdf</a>
-        {% endif %}
-        {% if round.can_submit %}
-        <a class="btn btn-success" href="{% url 'round_submit_page' round_id=round.id%}">Odovzdaj riešenia</a>
-        {% endif %}
+        {% show_buttons round %}
         <h3>Zoznam úloh</h3>
         {% show_task_list round %}
     {% endfor %}
     <h2>Všetky zadania</h2>
     <ul>
-    {% for year, round_list in other_rounds.items %}
+    {% for year, round_list in all_rounds.items %}
         <li>
         <h3 class="statements-year">{{year}}. ročník</h3>
         <ul>
