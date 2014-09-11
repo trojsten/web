@@ -66,7 +66,7 @@ class Series(models.Model):
         verbose_name_plural = 'Série'
 
     def __str__(self):
-        return self.name
+        return '%i. (%s) séria, %i. ročník %s' % (self.number, self.name, self.year, self.competition)
 
 
 @python_2_unicode_compatible
@@ -143,4 +143,4 @@ class Round(models.Model):
         verbose_name_plural = 'Kolá'
 
     def __str__(self):
-        return str(self.number) + '. kolo'
+        return '%i. kolo, %i. ročník %s' % (self.number, self.series.year, self.series.competition)

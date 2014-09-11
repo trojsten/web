@@ -47,7 +47,7 @@ class Task(models.Model):
         verbose_name_plural = 'Úlohy'
 
     def __str__(self):
-        return str(self.number) + '. ' + self.name
+        return '%i. %s, %s' % (self.number, self.name, self.round)
 
     def has_submit_type(self, submit_type):
         check_field = {
@@ -74,7 +74,7 @@ class Task(models.Model):
             task_file,
         )
         if not os.path.exists(path):
-            raise IOError("path doesn't exist")
+            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     @property
