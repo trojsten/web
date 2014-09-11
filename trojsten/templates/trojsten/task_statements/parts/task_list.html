@@ -1,13 +1,49 @@
-<ul>
+<table class="table">
+<thead>
+<tr>
+    <th>
+        #
+    </th>
+    <th>
+        Úloha
+    </th>
+    <th>
+        Kategória
+    </th>
+    <th>
+        Body
+    </th>
+</tr>
+</thead>
 {% for task in tasks %}
-    <li>
+    <tr>
+        <td>
+            {{task.number}}.
+        </td>
+        <td>
         {% if task.task_file_exists %}
-            <a href="{% url 'task_statement' task_id=task.id %}">{{task.number}}. {{task.name}}</a>
+            <a href="{% url 'task_statement' task_id=task.id %}">{{task.name}}</a>
         {% else %}
-            {{task.number}}. {{task.name}}
+            {{task.name}}
         {% endif %}
-    </li>
+        </td>
+        <td>
+            {% for category in task.category.all %}
+                <span class="label label-default category-{{category}}">{{category}}</span>
+            {% endfor %}
+        </td>
+        <td>
+            {% if task.has_description %}
+                <span class="points-item">Popis: {{task.description_points}}</span>
+            {% endif %}
+            {% if task.has_source %}
+                <span class="points-item">Program: {{task.source_points}}</span>
+            {% endif %}
+        </td>
+    </tr>
 {% empty %}
-    Žiadne úlohy
+    <tr>
+        <td colspan="4">Žiadne úlohy</td>
+    </tr>
 {% endfor %}
-</ul>
+</table>
