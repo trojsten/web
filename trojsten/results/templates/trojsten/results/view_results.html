@@ -13,6 +13,7 @@ kolo {{series.number}}. série {{series.year}}. ročníka {{series.competition}}
 
 {% block page_content %}
 <table class="table table-hover table-responsive">
+<thead>
 <tr>
     <th>#</th>
     <th>Meno:</th>
@@ -21,6 +22,7 @@ kolo {{series.number}}. série {{series.year}}. ročníka {{series.competition}}
     {% endfor %}
     <th>Suma:</th>
 </tr>
+</thead>
 {% for result in results %}
 {% spaceless %}
 <tr>
