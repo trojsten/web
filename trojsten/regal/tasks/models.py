@@ -55,6 +55,13 @@ class Task(models.Model):
         }
         return check_field[submit_type]
 
+    def get_submit_types(self):
+        return [
+            submit_type
+            for submit_type, _ in Submit.SUBMIT_TYPES
+            if self.has_submit_type(submit_type)
+        ]
+
     def get_path(self, solution=False):
         task_file = '{}{}.html'.format(
             settings.TASK_STATEMENTS_PREFIX_TASK,
@@ -112,10 +119,6 @@ class Submit(models.Model):
         max_length=10, verbose_name='odpoveď testovača')
     protocol_id = models.CharField(
         max_length=128, verbose_name='číslo protokolu')
-    submit_time = models.DateTimeField(
-        verbose_name='čas submitu',
-        auto_now_add=True,
-    )
 
     class Meta:
         verbose_name = 'Submit'
@@ -125,7 +128,7 @@ class Submit(models.Model):
         return str(self.user)\
             + ' - ' + str(self.task)\
             + "<" + Submit.SUBMIT_TYPES[self.submit_type][1] + ">"\
-            + ' (' + str(self.submit_time) + ')'
+            + ' (' + str(self.time) + ')'
 
     @property
     def filename(self):

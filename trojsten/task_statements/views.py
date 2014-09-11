@@ -43,10 +43,10 @@ def solution_statement(request, task_id):
 
 def task_list(request, round_id):
     round = Round.objects.get(pk=round_id)
-    other_rounds = get_rounds_by_year()
+    all_rounds = get_rounds_by_year()
     template_data = {
         'round': round,
-        'other_rounds': other_rounds,
+        'all_rounds': all_rounds,
     }
     return render(
         request,
@@ -57,10 +57,10 @@ def task_list(request, round_id):
 
 def latest_task_list(request):
     rounds = get_latest_rounds_by_competition()
-    other_rounds = get_rounds_by_year()
+    all_rounds = get_rounds_by_year()
     template_data = {
         'rounds': rounds,
-        'other_rounds': other_rounds,
+        'all_rounds': all_rounds,
     }
     return render(
         request,

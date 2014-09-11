@@ -18,3 +18,8 @@ def get_rounds_by_year():
             rounds_dict[round.series.year] = list()
         rounds_dict[round.series.year].append(round)
     return rounds_dict
+
+
+def get_result_rounds(round):
+    rounds = Round.objects.filter(visible=True, series=round.series, number__lte=round.number).order_by('number')
+    return ','.join(str(r.id) for r in rounds)
