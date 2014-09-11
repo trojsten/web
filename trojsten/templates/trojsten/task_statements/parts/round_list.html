@@ -6,7 +6,7 @@
       <div class="panel-body">
         <ul class="list-unstyled">
         {% for round in round_list %}
-            <li><a href="{% url 'task_list' round_id=round.id %}">{{round.number}}. kolo</a></li>
+            <li><a href="{% url 'task_list' round_id=round.id %}">{{round.number}}. kolo</a> {% if not round.visible %}<span class="label label-danger">skryté</span>{% endif %}</li>
         {% endfor %}
         </ul>
       </div>

@@ -27,8 +27,8 @@ def show_buttons(round):
 
 
 @register.inclusion_tag('trojsten/task_statements/parts/round_list.html')
-def show_round_list(competition):
-    all_rounds = get_rounds_by_year(competition)
+def show_round_list(user, competition):
+    all_rounds = get_rounds_by_year(user, competition)
     data = {
         'all_rounds': all_rounds,
     }

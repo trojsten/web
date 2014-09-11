@@ -1,7 +1,7 @@
 {% extends "trojsten/layout/main.html" %}
 {% load statements_parts %}
 {% block page_header %}
-<h1>Zadania <small>{{round.number}}. kola {{round.series.number}}. série {{round.series.year}}. ročníka {{round.series.competition.name}}</small></h1>
+<h1>Zadania <small>{{round.number}}. kola {{round.series.number}}. série {{round.series.year}}. ročníka {{round.series.competition.name}} {% if not round.visible %}<span class="label label-danger">skryté</span>{% endif %}</small></h1>
 {% endblock %}
 {% block page_content %}
     {% show_buttons round %}
@@ -17,7 +17,7 @@
     <!-- Tab panes -->
     <div class="tab-content">
         {% for competition in competitions %}
-            <div class="tab-pane fade {% if competition == round.series.competition %}in active{%endif%}" id="competition-tab-{{competition.name}}">{% show_round_list competition=competition%}</div>
+            <div class="tab-pane fade {% if competition == round.series.competition %}in active{%endif%}" id="competition-tab-{{competition.name}}">{% show_round_list user=request.user competition=competition%}</div>
         {% endfor %}
     </div>
 {% endblock %}

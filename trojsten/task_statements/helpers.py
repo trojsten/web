@@ -1,17 +1,15 @@
 from trojsten.regal.contests.models import Round
 
 
-def get_latest_rounds_by_competition():
-    rounds = Round.objects.filter(
-        visible=True
-    ).order_by(
+def get_latest_rounds_by_competition(user):
+    rounds = Round.visible_rounds(user).order_by(
         'series__competition', '-end_time'
     ).distinct('series__competition')
     return {r.series.competition: r for r in rounds}
 
 
-def get_rounds_by_year(competition):
-    rounds = Round.objects.filter(visible=True, series__competition=competition).order_by('-series__year', '-number')
+def get_rounds_by_year(user, competition):
+    rounds = Round.visible_rounds(user).filter(series__competition=competition).order_by('-series__year', '-number')
     rounds_dict = dict()
     for round in rounds:
         if not round.series.year in rounds_dict:

@@ -42,7 +42,7 @@ def solution_statement(request, task_id):
 
 
 def task_list(request, round_id):
-    round = Round.objects.get(pk=round_id)
+    round = get_object_or_404(Round.visible_rounds(request.user), pk=round_id)
     competitions = Competition.objects.all()  # Todo: filter by site
     template_data = {
         'round': round,
@@ -56,7 +56,7 @@ def task_list(request, round_id):
 
 
 def latest_task_list(request):
-    rounds = get_latest_rounds_by_competition()
+    rounds = get_latest_rounds_by_competition(request.user)
     competitions = Competition.objects.all()  # Todo: filter by site
     template_data = {
         'rounds': rounds,
@@ -70,7 +70,7 @@ def latest_task_list(request):
 
 
 def view_pdf(request, round_id):
-    round = Round.objects.get(pk=round_id)
+    round = get_object_or_404(Round.visible_rounds(request.user), pk=round_id)
     try:
         path = round.get_pdf_path()
         return sendfile(request, path)
