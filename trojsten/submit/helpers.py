@@ -93,15 +93,15 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
     timestamp = int(time())
     submit_id = "%d-%05d" % (timestamp, random.randint(0, 99999))
 
-    # Determine local directory to store RAW file into
-    path = get_path_raw(contest_id, task_id, user_id)
-
     # Prepare submit parameters (not entirely sure about this yet).
     user_id = "%s-%d" % (contest_id, user_id)
     task_id = "%s-%d" % (contest_id, task_id)
     original_name = f.name
     correct_filename = task_id + language
     data = f.read()
+    
+    # Determine local directory to store RAW file into
+    path = get_path_raw(contest_id, task_id, user_id)
 
     # Prepare RAW from submit parameters
     raw = "%s\n%s\n%s\n%s\n%s\n%s\n%s" % (
