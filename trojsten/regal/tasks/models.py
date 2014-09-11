@@ -92,6 +92,16 @@ class Task(models.Model):
         except IOError:
             return False
 
+    def visible(self, user):
+        return user.is_superuser\
+            or self.round.series.competition.organizers_group in user.groups.all()\
+            or self.round.visible
+
+    def solutions_visible(self, user):
+        return user.is_superuser\
+            or self.round.series.competition.organizers_group in user.groups.all()\
+            or self.round.solutions_visible
+
 
 @python_2_unicode_compatible
 class Submit(models.Model):

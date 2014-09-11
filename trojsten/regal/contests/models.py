@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.db.models import Q
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.sites.models import Site
 from django.conf import settings
@@ -129,6 +130,13 @@ class Round(models.Model):
             return True
         except IOError:
             return False
+
+    @staticmethod
+    def visible_rounds(user):
+        if user.is_superuser:
+            return Round.objects
+        else:
+            return Round.objects.filter(Q(series__competition__organizers_group__in=user.groups.all()) | Q(visible=True))
 
     class Meta:
         verbose_name = 'Kolo'

@@ -1,6 +1,6 @@
 from django import template
 from trojsten.regal.tasks.models import Task, Category
-from ..helpers import get_result_rounds
+from ..helpers import get_result_rounds, get_rounds_by_year
 
 register = template.Library()
 
@@ -22,5 +22,14 @@ def show_buttons(round):
         'round': round,
         'result_rounds': result_rounds,
         'categories': categories,
+    }
+    return data
+
+
+@register.inclusion_tag('trojsten/task_statements/parts/round_list.html')
+def show_round_list(user, competition):
+    all_rounds = get_rounds_by_year(user, competition)
+    data = {
+        'all_rounds': all_rounds,
     }
     return data

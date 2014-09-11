@@ -1,23 +1,23 @@
 {% extends "trojsten/layout/main.html" %}
 {% load statements_parts %}
 {% block page_header %}
-<h1>Zadania <small>{{round.number}}. kola {{round.series.number}}. série {{round.series.year}}. ročníka {{round.series.competition.name}}</small></h1>
+<h1>Zadania <small>{{round.number}}. kola {{round.series.number}}. série {{round.series.year}}. ročníka {{round.series.competition.name}} {% if not round.visible %}<span class="label label-danger">skryté</span>{% endif %}</small></h1>
 {% endblock %}
 {% block page_content %}
     {% show_buttons round %}
     <h2>Zoznam úloh</h2>
     {% show_task_list round %}
     <h2>Všetky zadania</h2>
-    <ul>
-    {% for year, round_list in all_rounds.items %}
-        <li>
-        <h3 class="statements-year">{{year}}. ročník</h3>
-        <ul>
-        {% for round in round_list %}
-            <li><a href="{% url 'task_list' round_id=round.id %}">{{round.number}}. kolo</a></li>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        {% for competition in competitions %}
+            <li {% if competition == round.series.competition %}class="active"{%endif%}><a href="#competition-tab-{{competition.name}}" role="tab" data-toggle="tab">{{competition.name}}</a></li>
         {% endfor %}
-        </ul>
-        </li>
-    {% endfor %}
     </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        {% for competition in competitions %}
+            <div class="tab-pane fade {% if competition == round.series.competition %}in active{%endif%}" id="competition-tab-{{competition.name}}">{% show_round_list user=request.user competition=competition%}</div>
+        {% endfor %}
+    </div>
 {% endblock %}

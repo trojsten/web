@@ -4,7 +4,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
 from .tasks import compile_task_statements
 from trojsten.regal.tasks.models import Task
-from trojsten.regal.contests.models import Round
+from trojsten.regal.contests.models import Round, Competition
 from .helpers import get_rounds_by_year, get_latest_rounds_by_competition
 from sendfile import sendfile
 
@@ -16,6 +16,8 @@ def notify_push(request, uuid):
 
 def _statement_view(request, task_id, solution=False):
     task = get_object_or_404(Task, pk=task_id)
+    if not task.visible(request.user) or (solution and not task.solutions_visible(request.user)):
+        raise Http404
     try:
         path = task.get_path(solution=solution)
         template_data = {
@@ -42,11 +44,11 @@ def solution_statement(request, task_id):
 
 
 def task_list(request, round_id):
-    round = Round.objects.get(pk=round_id)
-    all_rounds = get_rounds_by_year()
+    round = get_object_or_404(Round.visible_rounds(request.user), pk=round_id)
+    competitions = Competition.objects.all()  # Todo: filter by site
     template_data = {
         'round': round,
-        'all_rounds': all_rounds,
+        'competitions': competitions,
     }
     return render(
         request,
@@ -56,11 +58,11 @@ def task_list(request, round_id):
 
 
 def latest_task_list(request):
-    rounds = get_latest_rounds_by_competition()
-    all_rounds = get_rounds_by_year()
+    rounds = get_latest_rounds_by_competition(request.user)
+    competitions = Competition.objects.all()  # Todo: filter by site
     template_data = {
         'rounds': rounds,
-        'all_rounds': all_rounds,
+        'competitions': competitions,
     }
     return render(
         request,
@@ -70,7 +72,7 @@ def latest_task_list(request):
 
 
 def view_pdf(request, round_id):
-    round = Round.objects.get(pk=round_id)
+    round = get_object_or_404(Round.visible_rounds(request.user), pk=round_id)
     try:
         path = round.get_pdf_path()
         return sendfile(request, path)
