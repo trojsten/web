@@ -5,6 +5,7 @@
         <li class="{% current '^/$' %}"><a href="/">Domov</a></li>
         <li class="{% current 'news_list' %}" ><a href="{% url 'news_list' page=1 %}">Novinky</a></li>
         <li class="{% current 'latest_task_list' %} {% current 'task_list' %}"><a href="{% url 'latest_task_list' %}">Zadania</a></li>
+        <li class="{% current 'view_latest_results' %} {% current 'view_results' %}"><a href="{% url 'view_latest_results' %}">Výsledky</a></li>
     </ul>
 </div>
 {% endblock %}

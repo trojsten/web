@@ -8,7 +8,7 @@ def get_tasks(round_ids, category_ids=None):
     tasks = Task.objects.filter(
         round__in=round_ids.split(',')
     )
-    if category_ids is not None:
+    if category_ids is not None and category_ids != '':
         tasks = tasks.filter(
             category__in=category_ids.split(',')
         ).distinct()

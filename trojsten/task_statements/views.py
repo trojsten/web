@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from .tasks import compile_task_statements
 from trojsten.regal.tasks.models import Task
 from trojsten.regal.contests.models import Round, Competition
-from .helpers import get_rounds_by_year, get_latest_rounds_by_competition
+from .helpers import get_rounds_by_year
 from sendfile import sendfile
 
 
@@ -58,7 +58,7 @@ def task_list(request, round_id):
 
 
 def latest_task_list(request):
-    rounds = get_latest_rounds_by_competition(request.user)
+    rounds = Round.get_latest_by_competition(request.user)
     competitions = Competition.objects.all()  # Todo: filter by site
     template_data = {
         'rounds': rounds,
