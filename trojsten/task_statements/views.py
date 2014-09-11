@@ -4,7 +4,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
 from .tasks import compile_task_statements
 from trojsten.regal.tasks.models import Task
-from trojsten.regal.contests.models import Round
+from trojsten.regal.contests.models import Round, Competition
 from .helpers import get_rounds_by_year, get_latest_rounds_by_competition
 from sendfile import sendfile
 
@@ -43,10 +43,10 @@ def solution_statement(request, task_id):
 
 def task_list(request, round_id):
     round = Round.objects.get(pk=round_id)
-    all_rounds = get_rounds_by_year()
+    competitions = Competition.objects.all()  # Todo: filter by site
     template_data = {
         'round': round,
-        'all_rounds': all_rounds,
+        'competitions': competitions,
     }
     return render(
         request,
@@ -57,10 +57,10 @@ def task_list(request, round_id):
 
 def latest_task_list(request):
     rounds = get_latest_rounds_by_competition()
-    all_rounds = get_rounds_by_year()
+    competitions = Competition.objects.all()  # Todo: filter by site
     template_data = {
         'rounds': rounds,
-        'all_rounds': all_rounds,
+        'competitions': competitions,
     }
     return render(
         request,

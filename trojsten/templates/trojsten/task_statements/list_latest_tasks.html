@@ -13,16 +13,16 @@
         {% show_task_list round %}
     {% endfor %}
     <h2>Všetky zadania</h2>
-    <ul>
-    {% for year, round_list in all_rounds.items %}
-        <li>
-        <h3 class="statements-year">{{year}}. ročník</h3>
-        <ul>
-        {% for round in round_list %}
-            <li><a href="{% url 'task_list' round_id=round.id %}">{{round.number}}. kolo</a></li>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        {% for competition in competitions %}
+            <li {% if forloop.first %}class="active"{%endif%}><a href="#competition-tab-{{competition.name}}" role="tab" data-toggle="tab">{{competition.name}}</a></li>
         {% endfor %}
-        </ul>
-        </li>
-    {% endfor %}
     </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        {% for competition in competitions %}
+            <div class="tab-pane fade {% if forloop.first %}in active{%endif%}" id="competition-tab-{{competition.name}}">{% show_round_list competition=competition%}</div>
+        {% endfor %}
+    </div>
 {% endblock %}
