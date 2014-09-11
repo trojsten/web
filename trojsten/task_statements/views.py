@@ -16,6 +16,8 @@ def notify_push(request, uuid):
 
 def _statement_view(request, task_id, solution=False):
     task = get_object_or_404(Task, pk=task_id)
+    if not task.visible(request.user) or (solution and not task.solutions_visible(request.user)):
+        raise Http404
     try:
         path = task.get_path(solution=solution)
         template_data = {

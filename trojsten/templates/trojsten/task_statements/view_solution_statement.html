@@ -8,6 +8,7 @@
     {% for category in task.category.all %}
         <span class="label label-default category-{{category}}">{{category}}</span>
     {% endfor %}
+    {% if not task.round.visible %}<span class="label label-danger">skryté</span>{% endif %}
     </small></h1>
   </li>
   <li class="pull-right">
