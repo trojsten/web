@@ -6,6 +6,8 @@ from django.db.models import F
 def get_tasks(round_ids, category_ids=None):
     '''Returns tasks which belong to specified round_ids and category_ids
     '''
+    if round_ids == '':
+        return Task.objects.none()
     tasks = Task.objects.filter(
         round__in=round_ids.split(',')
     )

@@ -31,14 +31,14 @@ def view_results(request, round_ids, category_ids=None):
 
 
 def view_latest_results(request):
-    def append_none(iterable):
+    def prepend_none(iterable):
+        yield None
         for i in iterable:
             yield i
-        yield None
 
     tasks_by_round = {
-        r: {
-            cat: get_tasks(
+        r: [
+            (cat, get_tasks(
                 ','.join(
                     str(round.id)
                     for round in Round.objects.filter(
@@ -46,9 +46,9 @@ def view_latest_results(request):
                     ).order_by('number')
                 ),
                 str(getattr(cat, 'id', '')),
-            )
-            for cat in append_none(Category.objects.filter(competition=c))
-        }
+            ))
+            for cat in prepend_none(Category.objects.filter(competition=c))
+        ]
         for c, r in Round.get_latest_by_competition(request.user).items()
     }
 
