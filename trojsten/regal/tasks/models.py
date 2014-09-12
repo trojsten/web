@@ -136,10 +136,7 @@ class Submit(models.Model):
         verbose_name_plural = 'Submity'
 
     def __str__(self):
-        return str(self.user)\
-            + ' - ' + str(self.task)\
-            + "<" + Submit.SUBMIT_TYPES[self.submit_type][1] + ">"\
-            + ' (' + str(self.time) + ')'
+        return '%s - %s <%s> (%s)' % (self.user, self.task, Submit.SUBMIT_TYPES[self.submit_type][1], str(self.time))
 
     @property
     def filename(self):
