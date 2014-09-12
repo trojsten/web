@@ -23,6 +23,7 @@ def view_results(request, round_ids, category_ids=None):
         'series': rounds[0].series,
         'categories': categories,
         'tasks': tasks,
+        'show_staff': request.GET.get('show_staff', False),
     }
     return render(
         request, 'trojsten/results/view_results.html', template_data
@@ -52,7 +53,8 @@ def view_latest_results(request):
     }
 
     template_data = {
-        'tasks_by_round': tasks_by_round
+        'tasks_by_round': tasks_by_round,
+        'show_staff': request.GET.get('show_staff', False)
     }
     return render(
         request, 'trojsten/results/view_latest_results.html', template_data

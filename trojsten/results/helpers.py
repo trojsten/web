@@ -1,4 +1,5 @@
 from trojsten.regal.tasks.models import Task, Submit
+from trojsten.regal.people.models import User
 from django.db.models import F
 
 
@@ -15,11 +16,18 @@ def get_tasks(round_ids, category_ids=None):
     return tasks.order_by('round', 'number')
 
 
-def get_submits(tasks):
+def get_submits(tasks, show_staff=False):
     '''Returns submits which belong to specified tasks.
     Only one submit per user, submit type and task is returned.
     '''
-    return Submit.objects.filter(
+    submits = Submit.objects
+    if not show_staff and len(tasks):
+        submits = submits.exclude(
+            user__in=User.objects.filter(
+                groups=tasks[0].round.series.competition.organizers_group
+            )
+        )
+    return submits.filter(
         task__in=tasks,
         time__lte=F('task__round__end_time'),
     ).order_by(
