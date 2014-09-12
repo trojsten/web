@@ -54,6 +54,13 @@ def view_submit(request, submit_id):
                     test['name'] = runtest[0].text
                     test['result'] = runtest[2].text
                     test['time'] = runtest[3].text
+                    if len(runtest) > 4:
+                        details = runtest[4].text
+                    else:
+                        details = None
+                    test['details'] = details
+                    showDetails = details is not None and 'sample' in test['name']
+                    test['showDetails'] = showDetails
                     tests.append(test)
             template_data['tests'] = tests
             template_data['have_tests'] = len(tests) > 0

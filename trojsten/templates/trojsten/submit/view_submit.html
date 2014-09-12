@@ -24,6 +24,11 @@
                     <td>{{ test.result }}</td>
                     <td>{{ test.time }} ms</td>
                 </tr>
+                    {% if test.showDetails %}
+                    <tr>
+                        <td><pre>{{ test.details }}</pre></td>
+                    </tr>
+                    {% endif %}
                 </tbody>
             {% endfor %}
         {% endif %}
