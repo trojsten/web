@@ -44,17 +44,19 @@ def view_submit(request, submit_id):
             template_data['compileLog'] = clog
             tests = []
             runlog = tree.find("runLog")
-            for runtest in runlog:
-                # Test log format in protocol is:
-                # name, resultCode, resultMsg, time, details
-                if runtest.tag != 'test':
-                    continue
-                test = {}
-                test['name'] = runtest[0].text
-                test['result'] = runtest[2].text
-                test['time'] = runtest[3].text
-                tests.append(test)
+            if runlog is not None:
+                for runtest in runlog:
+                    # Test log format in protocol is:
+                    # name, resultCode, resultMsg, time, details
+                    if runtest.tag != 'test':
+                        continue
+                    test = {}
+                    test['name'] = runtest[0].text
+                    test['result'] = runtest[2].text
+                    test['time'] = runtest[3].text
+                    tests.append(test)
             template_data['tests'] = tests
+            template_data['have_tests'] = len(tests) > 0
         else:
             template_data['protocolReady'] = False  # Not tested yet!
         if os.path.exists(submit.filepath):
