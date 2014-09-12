@@ -59,7 +59,7 @@ def get_path_raw(contest_id, task_id, user_id):
     '''
 
     return os.path.join(settings.SUBMIT_PATH, 'submits',
-                        str(contest_id), str(task_id), str(user_id))
+                        str(user_id), str(task_id))
 
 
 def get_path(task, user):
@@ -67,7 +67,8 @@ def get_path(task, user):
 
     Cesta má tvar: $SUBMIT_PATH/submits/KSP/task_id/user_id
     '''
-    return get_path_raw(task.round.series.competition.name, task.id, user.id)
+    return get_path_raw(task.round.series.competition.name, "%s-%d" % (task.round.series.competition.name, task.id),
+            "%s-%d" % (task.round.series.competition.name, user.id))
 
 
 def post_submit(raw):
@@ -92,15 +93,15 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
     timestamp = int(time())
     submit_id = "%d-%05d" % (timestamp, random.randint(0, 99999))
 
-    # Determine local directory to store RAW file into
-    path = get_path_raw(contest_id, task_id, user_id)
-
     # Prepare submit parameters (not entirely sure about this yet).
     user_id = "%s-%d" % (contest_id, user_id)
     task_id = "%s-%d" % (contest_id, task_id)
     original_name = f.name
     correct_filename = task_id + language
     data = f.read()
+    
+    # Determine local directory to store RAW file into
+    path = get_path_raw(contest_id, task_id, user_id)
 
     # Prepare RAW from submit parameters
     raw = "%s\n%s\n%s\n%s\n%s\n%s\n%s" % (
@@ -116,7 +117,7 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
     write_file(raw, os.path.join(path, submit_id + '.raw'))
 
     # Send RAW for testing (uncomment when deploying)
-    # post_submit(raw)
+    post_submit(raw)
 
     # Return submit ID
     return submit_id
