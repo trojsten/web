@@ -15,6 +15,9 @@ def write_file(what, where):
     '''Vytvorí cieľový adresár a uloží string do súboru.'''
     try:
         os.makedirs(os.path.split(where)[0])
+        fd = os.open(os.path.split(where)[0], os.O_RDONLY)
+        os.fchmod(fd, 0777)
+        os.close(fd)
     except:
         pass
     with open(where, 'w+') as destination:
@@ -25,6 +28,9 @@ def save_file(what, where):
     '''Vytvorí cieľový adresár a uloží stiahnutý súbor.'''
     try:
         os.makedirs(os.path.split(where)[0])
+        fd = os.open(os.path.split(where)[0], os.O_RDONLY)
+        os.fchmod(fd, 0777)
+        os.close(fd)
     except:
         pass
     with open(where, 'wb+') as destination:
