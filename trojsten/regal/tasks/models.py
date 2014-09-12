@@ -10,6 +10,7 @@ from trojsten.regal.contests.models import Round, Competition
 import os
 
 
+@python_2_unicode_compatible
 class Category(models.Model):
     '''
     Competition consists of a few categories. Each task belongs to one or more
@@ -23,7 +24,7 @@ class Category(models.Model):
         verbose_name_plural = 'Kategórie'
 
     def __str__(self):
-        return str(self.competition.name) + '-' + str(self.name)
+        return self.competition.name + '-' + self.name
 
 
 @python_2_unicode_compatible
@@ -46,7 +47,7 @@ class Task(models.Model):
         verbose_name_plural = 'Úlohy'
 
     def __str__(self):
-        return str(self.number) + '. ' + str(self.name)
+        return '%i. %s, %s' % (self.number, self.name, self.round)
 
     def has_submit_type(self, submit_type):
         check_field = {
@@ -73,7 +74,7 @@ class Task(models.Model):
             task_file,
         )
         if not os.path.exists(path):
-            raise IOError("path doesn't exist")
+            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     @property

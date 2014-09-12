@@ -66,7 +66,7 @@ class Series(models.Model):
         verbose_name_plural = 'Série'
 
     def __str__(self):
-        return str(self.name)
+        return '%i. (%s) séria, %i. ročník %s' % (self.number, self.name, self.year, self.competition)
 
 
 @python_2_unicode_compatible
@@ -101,7 +101,7 @@ class Round(models.Model):
             path_type,
         )
         if not os.path.exists(path):
-            raise IOError("path doesn't exist")
+            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     def get_pdf_path(self, solution=False):
@@ -112,7 +112,7 @@ class Round(models.Model):
             pdf_file,
         )
         if not os.path.exists(path):
-            raise IOError("path doesn't exist")
+            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     @property
@@ -143,4 +143,4 @@ class Round(models.Model):
         verbose_name_plural = 'Kolá'
 
     def __str__(self):
-        return str(self.number) + '. kolo'
+        return '%i. kolo, %i. ročník %s' % (self.number, self.series.year, self.series.competition)
