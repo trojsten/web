@@ -8,23 +8,25 @@
             <h4>Výstup z kompilátora</h4>
             <pre>{{ compileLog }}</pre>
         {% endif %}
-        <table>
-            <thead>
-            <tr>
-                <th>Vstup</th>
-                <th>Výsledok</th>
-                <th>Čas</th>
-            </tr>
-        </thead>
-            <tbody>
-        {% for test in tests %}
-            <tr>
-                <td>{{ test.name }}</td>
-                <td>{{ test.result }}</td>
-                <td>{{ test.time }} ms</td>
-            </tr>
-            </tbody>
-        {% endfor %}
+        {% if have_tests %}
+            <table>
+                <thead>
+                <tr>
+                    <th>Vstup</th>
+                    <th>Výsledok</th>
+                    <th>Čas</th>
+                </tr>
+            </thead>
+                <tbody>
+            {% for test in tests %}
+                <tr>
+                    <td>{{ test.name }}</td>
+                    <td>{{ test.result }}</td>
+                    <td>{{ test.time }} ms</td>
+                </tr>
+                </tbody>
+            {% endfor %}
+        {% endif %}
     </table>
     {% else %}
         Program ešte nebol otestovaný
