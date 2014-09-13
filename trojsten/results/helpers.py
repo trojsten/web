@@ -1,25 +1,35 @@
 from trojsten.regal.tasks.models import Task, Submit
+from trojsten.regal.people.models import User
 from django.db.models import F
 
 
 def get_tasks(round_ids, category_ids=None):
     '''Returns tasks which belong to specified round_ids and category_ids
     '''
+    if round_ids == '':
+        return Task.objects.none()
     tasks = Task.objects.filter(
         round__in=round_ids.split(',')
     )
-    if category_ids is not None:
+    if category_ids is not None and category_ids != '':
         tasks = tasks.filter(
             category__in=category_ids.split(',')
         ).distinct()
     return tasks.order_by('round', 'number')
 
 
-def get_submits(tasks):
+def get_submits(tasks, show_staff=False):
     '''Returns submits which belong to specified tasks.
     Only one submit per user, submit type and task is returned.
     '''
-    return Submit.objects.filter(
+    submits = Submit.objects
+    if not show_staff and len(tasks):
+        submits = submits.exclude(
+            user__in=User.objects.filter(
+                groups=tasks[0].round.series.competition.organizers_group
+            )
+        )
+    return submits.filter(
         task__in=tasks,
         time__lte=F('task__round__end_time'),
     ).order_by(

@@ -4,10 +4,12 @@
 {% if round.can_submit %}
 <a class="btn btn-success" href="{% url 'round_submit_page' round_id=round.id%}">Odovzdaj riešenia</a>
 {% endif %}
-{% if categories %}
-    {% for category in categories %}
-    <a class="btn btn-danger category-{{category}}" href="{% url 'view_results' round_ids=result_rounds category_ids=category.id %}">Výsledky <span class="label label-default category-{{category}}">{{category}}</span></a>
-    {% endfor %}
-{% else %}
-    <a class="btn btn-danger" href="{% url 'view_results' round_ids=result_rounds %}">Výsledky</a>
+{% if result_rounds %}
+    {% if categories %}
+        {% for category in categories %}
+        <a class="btn btn-danger category-{{category}}" href="{% url 'view_results' round_ids=result_rounds category_ids=category.id %}">Výsledky <span class="label label-default category-{{category}}">{{category}}</span></a>
+        {% endfor %}
+    {% else %}
+        <a class="btn btn-danger" href="{% url 'view_results' round_ids=result_rounds %}">Výsledky</a>
+    {% endif %}
 {% endif %}

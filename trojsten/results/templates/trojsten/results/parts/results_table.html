@@ -1,0 +1,34 @@
+{% load utils %}
+<table class="table table-hover table-responsive">
+<thead>
+<tr>
+    <th>#</th>
+    <th>Meno:</th>
+    {% for task in tasks %}
+        <th>{{task.number}}</th>
+    {% endfor %}
+    <th>Suma:</th>
+</tr>
+</thead>
+{% for result in results %}
+{% spaceless %}
+<tr>
+    <td>{{forloop.counter}}</td>
+    <td>{{result.user.first_name}} {{result.user.last_name}}</td>
+    {% for task in tasks %}
+        <td>
+        {% if result.points|lookup:task|lookup:"submitted" %}
+            <span data-toggle="tooltip" data-placement="top" title="{% for type in task.get_submit_types %}{% if not forloop.first %} {% endif %}{{Submit.SUBMIT_TYPES|lookup:type|last|first}}:{{result.points|lookup:task|lookup:type|default:0}}{% endfor %}">
+                {{result.points|lookup:task|lookup:"sum"}}
+            </span>
+        {% endif %}
+        </td>
+    {% endfor %}
+
+    <td>{{result.sum}}</td>
+</tr>
+{% endspaceless %}
+{% empty %}
+<tr><td colspan="{{tasks | length | add:3}}">Žiadne submity</td></tr>
+{% endfor %}
+</table>

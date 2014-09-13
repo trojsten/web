@@ -136,7 +136,17 @@ class Round(models.Model):
         if user.is_superuser:
             return Round.objects
         else:
-            return Round.objects.filter(Q(series__competition__organizers_group__in=user.groups.all()) | Q(visible=True))
+            return Round.objects.filter(
+                Q(series__competition__organizers_group__in=user.groups.all())
+                | Q(visible=True)
+            )
+
+    @staticmethod
+    def get_latest_by_competition(user):
+        rounds = Round.visible_rounds(user).order_by(
+            'series__competition', '-end_time'
+        ).distinct('series__competition')
+        return {r.series.competition: r for r in rounds}
 
     class Meta:
         verbose_name = 'Kolo'

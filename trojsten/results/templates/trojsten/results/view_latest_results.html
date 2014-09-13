@@ -1,0 +1,36 @@
+{% extends "trojsten/layout/main.html" %}
+{% load results_parts %}
+{% load utils %}
+
+{% block page_header %}
+<h1>Aktuálne výsledky</h1>
+{% endblock %}
+
+{% block page_content %}
+{% for round, tasks_by_round in tasks_by_round.items %}
+    <h2>{{round.series.competition}} <small>{{round}}</small></h2>
+    {% if tasks_by_round|length > 1 %}
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            {% for category, tasks in tasks_by_round %}
+                {% if category != None %}
+                    <li {% if forloop.counter == 2 %}class="active"{%endif%}><a href="#category-tab-{{category}}" role="tab" data-toggle="tab">{{category}}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            {% for category, tasks in tasks_by_round %}
+                {% if category != None %}
+                    <div class="tab-pane fade{% if forloop.counter == 2 %} in active{%endif%}" id="category-tab-{{category}}">
+                        {% show_results_table tasks=tasks show_staff=show_staff %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        {% show_results_table tasks=tasks_by_round|lookup:0|lookup:1 show_staff=show_staff %}
+    {% endif %}
+
+{% endfor %}
+{% endblock %}

@@ -1,13 +1,6 @@
 from trojsten.regal.contests.models import Round
 
 
-def get_latest_rounds_by_competition(user):
-    rounds = Round.visible_rounds(user).order_by(
-        'series__competition', '-end_time'
-    ).distinct('series__competition')
-    return {r.series.competition: r for r in rounds}
-
-
 def get_rounds_by_year(user, competition):
     rounds = Round.visible_rounds(user).filter(series__competition=competition).order_by('-series__year', '-number')
     rounds_dict = dict()
