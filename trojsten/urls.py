@@ -4,18 +4,24 @@ import trojsten.submit.urls
 import trojsten.results.urls
 import trojsten.news.urls
 import trojsten.task_statements.urls
-import trojsten.feedback.urls
 
 admin.autodiscover()
 
 from wiki.urls import get_pattern as get_wiki_pattern
 from django_notify.urls import get_pattern as get_notify_pattern
 from trojsten.regal.people.forms import TrojstenUserCreationForm, TrojstenUserChangeForm
+from contact_form.views import ContactFormView
 
 # Override default forms in ksp_login
 urlpatterns = patterns('ksp_login.views',
     url(r'^ucet/register/$', 'register', {'creation_form': TrojstenUserCreationForm, }, name='trojsten_register'),
     url(r'^ucet/$', 'settings', {'settings_form': TrojstenUserChangeForm, }, name='trojsten_account_settings'),
+)
+
+# Override default views in contact_form
+urlpatterns += patterns('trojsten.views',
+    url(r'^contact_form/$', ContactFormView.as_view(), name='contact_form'),
+    url(r'^contact_form/sent/$', 'contact_form_sent_redirect',),
 )
 
 urlpatterns += patterns('',
@@ -35,6 +41,6 @@ urlpatterns += patterns('',
     url(r'^novinky/', include(trojsten.news.urls)),
     url(r'^ulohy/', include(trojsten.task_statements.urls)),
     url(r'^wiki/notify/', get_notify_pattern()),
-    url(r'^feedback/', include(trojsten.feedback.urls)),
+    url(r'^contact_form/', include('contact_form.urls')),
     url(r'^', get_wiki_pattern()),
 )
