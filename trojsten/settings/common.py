@@ -98,7 +98,7 @@ STATICFILES_DIRS = ()
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -108,7 +108,7 @@ SECRET_KEY = '*ev5i*d2v+ln+hm=swggoo-+%62y4*r8va@nign_mgq*&%x+z)'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    # 'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -263,9 +263,11 @@ TASK_STATEMENTS_SUFFIX_ROUND = 'kolo'
 TASK_STATEMENTS_TASKS_DIR = 'zadania'
 TASK_STATEMENTS_PREFIX_TASK = 'prikl'
 TASK_STATEMENTS_SOLUTIONS_DIR = 'vzoraky'
+TASK_STATEMENTS_PICTURES_DIR = 'obrazky'
 TASK_STATEMENTS_HTML_DIR = 'html'
 TASK_STATEMENTS_PDF = 'zadania.pdf'
 TASK_STATEMENTS_SOLUTIONS_PDF = 'vzoraky.pdf'
+ALLOWED_PICTURE_EXT = {'.jpg', '.png', '.gif', '.webp', }
 
 # We use ksp_login to handle accounts.
 WIKI_ACCOUNT_HANDLING = False
