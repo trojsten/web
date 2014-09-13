@@ -33,11 +33,11 @@
             {% endfor %}
         </td>
         <td>
-            {% if task.has_description %}
-                <span class="points-item">Popis: {{task.description_points}}</span>
+            {% if task.description_points > 0 %}
+                <span class="points-item">Body za popis: {{task.description_points}}</span>
             {% endif %}
-            {% if task.has_source %}
-                <span class="points-item">Program: {{task.source_points}}</span>
+            {% if task.source_points > 0 %}
+                <span class="points-item">Body za program: {{task.source_points}}</span>
             {% endif %}
         </td>
     </tr>

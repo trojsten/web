@@ -20,10 +20,10 @@
 
 {% block page_content %}
     <div class="task-points">
-        {% if task.has_description %}
+        {% if task.description_points > 0 %}
             <span class="points-item">Body za popis: {{task.description_points}}</span>
         {% endif %}
-        {% if task.has_source %}
+        {% if task.source_points > 0 %}
             <span class="points-item">Body za program: {{task.source_points}}</span>
         {% endif %}
     </div>
@@ -31,16 +31,20 @@
         {% ssi path %}
     </div>
     <div class="task-submit">
-    <h2>Odovzdávanie</h2>
-    {% if request.user.is_authenticated %}
-    {% if task.round.can_submit %}
-    {% show_submit_form task request.path %}
+    {% if task.get_submit_types|length > 0 %}
+        <h2>Odovzdávanie</h2>
+        {% if request.user.is_authenticated %}
+        {% if task.round.can_submit %}
+        {% show_submit_form task request.path %}
+        {% else %}
+        <p class="text-danger">Už sa nedá odovzdávať.</p>
+        {% endif %}
+        {% show_submit_list task request.user %}
+        {% else %}
+        <p class="text-danger">Na odovzdávanie sa musíš prihlásiť</p>
+        {% endif %}
     {% else %}
-    <p class="text-danger">Už sa nedá odovzdávať.</p>
-    {% endif %}
-    {% show_submit_list task request.user %}
-    {% else %}
-    <p class="text-danger">Na odovzdávanie sa musíš prihlásiť</p>
+        <p class="text-danger">Tento príklad momentálne nemá možnosť odovzdávania.</p>
     {% endif %}
     </div>
 {% endblock %}

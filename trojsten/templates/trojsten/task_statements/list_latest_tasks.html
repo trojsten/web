@@ -7,7 +7,7 @@
 
 {% block page_content %}
     {% for competition, round in rounds.items %}
-        <h2>{{competition}} - {{round.number}}. kolo {% if not round.visible %}<span class="label label-danger">skryté</span>{% endif %}</h2>
+        <h2>{{competition}} <small>{{round}} {% if not round.visible %}<span class="label label-danger">skryté</span>{% endif %}</small></h2>
         {% show_buttons round %}
         <h3>Zoznam úloh</h3>
         {% show_task_list round %}
