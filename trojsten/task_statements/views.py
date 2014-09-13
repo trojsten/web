@@ -7,6 +7,8 @@ from trojsten.regal.tasks.models import Task
 from trojsten.regal.contests.models import Round, Competition
 from .helpers import get_rounds_by_year
 from sendfile import sendfile
+import os
+from django.conf import settings
 
 
 def notify_push(request, uuid):
@@ -75,6 +77,23 @@ def view_pdf(request, round_id):
     round = get_object_or_404(Round.visible_rounds(request.user), pk=round_id)
     try:
         path = round.get_pdf_path()
+        return sendfile(request, path)
+    except IOError:
+        raise Http404
+
+
+def show_picture(request, type, task_id, picture):
+    task = get_object_or_404(Task, pk=task_id)
+    if not task.visible(request.user):
+        raise Http404
+    _, ext = os.path.splitext(picture)
+    if not ext in settings.ALLOWED_PICTURE_EXT:
+        raise Http404
+    try:
+        path = os.path.join(
+            task.round.get_pictures_path(),
+            picture,
+        )
         return sendfile(request, path)
     except IOError:
         raise Http404

@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from django.conf import settings
 
 
 uuid_regex = '[a-fA-F0-9]{8}-?[a-fA-F0-9]{4}-?[a-fA-F0-9]{4}-?[a-fA-F0-9]{4}-?[a-fA-F0-9]{12}'
@@ -10,4 +11,5 @@ urlpatterns = patterns('trojsten.task_statements.views',
     url(r'^(?P<round_id>\d+)/$', 'task_list', name='task_list'),
     url(r'^$', 'latest_task_list', name='latest_task_list'),
     url(r'^pdf/(?P<round_id>\d+)/', 'view_pdf', name='view_pdf'),
+    url(r'^(?P<type>(tasks)|(solutions))/(?P<task_id>\d+)/%s/(?P<picture>.+)$' % settings.TASK_STATEMENTS_PICTURES_DIR, 'show_picture', name='show_picture'),
 )

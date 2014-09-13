@@ -66,7 +66,8 @@ class Series(models.Model):
         verbose_name_plural = 'Série'
 
     def __str__(self):
-        return '%i. (%s) séria, %i. ročník %s' % (self.number, self.name, self.year, self.competition)
+        return '%i. (%s) séria, %i. ročník %s'\
+            % (self.number, self.name, self.year, self.competition)
 
 
 @python_2_unicode_compatible
@@ -87,17 +88,25 @@ class Round(models.Model):
             return True
         return False
 
-    def get_path(self, solution=False):
+    def get_base_path(self):
         round_dir = '{}{}'.format(self.number, settings.TASK_STATEMENTS_SUFFIX_ROUND)
         year_dir = '{}{}'.format(self.series.year, settings.TASK_STATEMENTS_SUFFIX_YEAR)
         competition_name = self.series.competition.name
-        path_type = settings.TASK_STATEMENTS_SOLUTIONS_DIR if solution\
-            else settings.TASK_STATEMENTS_TASKS_DIR
         path = os.path.join(
             settings.TASK_STATEMENTS_PATH,
             competition_name,
             year_dir,
             round_dir,
+        )
+        if not os.path.exists(path):
+            raise IOError("path '%s' doesn't exist" % path)
+        return path
+
+    def get_path(self, solution=False):
+        path_type = settings.TASK_STATEMENTS_SOLUTIONS_DIR if solution\
+            else settings.TASK_STATEMENTS_TASKS_DIR
+        path = os.path.join(
+            self.get_base_path(),
             path_type,
         )
         if not os.path.exists(path):
@@ -110,6 +119,15 @@ class Round(models.Model):
         path = os.path.join(
             self.get_path(solution),
             pdf_file,
+        )
+        if not os.path.exists(path):
+            raise IOError("path '%s' doesn't exist" % path)
+        return path
+
+    def get_pictures_path(self):
+        path = os.path.join(
+            self.get_base_path(),
+            settings.TASK_STATEMENTS_PICTURES_DIR,
         )
         if not os.path.exists(path):
             raise IOError("path '%s' doesn't exist" % path)
@@ -153,4 +171,5 @@ class Round(models.Model):
         verbose_name_plural = 'Kolá'
 
     def __str__(self):
-        return '%i. kolo, %i. ročník %s' % (self.number, self.series.year, self.series.competition)
+        return '%i. kolo, %i. ročník %s'\
+            % (self.number, self.series.year, self.series.competition)
