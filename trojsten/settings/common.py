@@ -163,6 +163,7 @@ INSTALLED_APPS = (
     'trojsten.results',
     'trojsten.news',
     'trojsten.task_statements',
+    'trojsten.feedback',
 
     # Keep this under trojsten to let trojsten override templates.
     'social.apps.django_app.default',
@@ -275,3 +276,11 @@ ALLOWED_PICTURE_EXT = {'.jpg', '.png', '.gif', '.webp', }
 
 # We use ksp_login to handle accounts.
 WIKI_ACCOUNT_HANDLING = False
+
+# Feedback mail sending
+FEEDBACK_RECIPIENT_LIST = ['mlipovskysk@gmail.com']
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.centrum.sk'
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER = 'lipovsky6b@centrum.sk'
+EMAIL_HOST_PASSWORD = ''

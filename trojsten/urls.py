@@ -4,6 +4,7 @@ import trojsten.submit.urls
 import trojsten.results.urls
 import trojsten.news.urls
 import trojsten.task_statements.urls
+import trojsten.feedback.urls
 
 admin.autodiscover()
 
@@ -34,5 +35,6 @@ urlpatterns += patterns('',
     url(r'^novinky/', include(trojsten.news.urls)),
     url(r'^ulohy/', include(trojsten.task_statements.urls)),
     url(r'^wiki/notify/', get_notify_pattern()),
+    url(r'^feedback/', include(trojsten.feedback.urls)),
     url(r'^', get_wiki_pattern()),
 )
