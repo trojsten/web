@@ -7,6 +7,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from trojsten.regal.contests.models import Round, Competition
+from django.utils.translation import ugettext_lazy as _
 import os
 
 
@@ -141,3 +142,7 @@ class Submit(models.Model):
     @property
     def filename(self):
         return os.path.basename(self.filepath)
+
+    @property
+    def tester_response_verbose(self):
+        return _(self.tester_response)
