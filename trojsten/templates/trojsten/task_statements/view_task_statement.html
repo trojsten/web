@@ -19,14 +19,17 @@
 {% endblock %}
 
 {% block page_content %}
-    <div class="task-points">
+    {% if task.description_points > 0 or task.source_points > 0 %}
+    <div class="well pull-right task-points">
+        <strong>Počet bodov:</strong>
         {% if task.description_points > 0 %}
-            <span class="points-item">Body za popis: {{task.description_points}}</span>
+            <div class="points-item points-item-description">Popis:&nbsp; <span class="badge pull-right">{{task.description_points}}b</span></div>
         {% endif %}
         {% if task.source_points > 0 %}
-            <span class="points-item">Body za program: {{task.source_points}}</span>
+            <div class="points-item points-item-description">Program:&nbsp; <span class="badge pull-right">{{task.source_points}}b</span></div>
         {% endif %}
     </div>
+    {% endif %}
     <div class="task-statement">
         {% ssi path %}
     </div>
