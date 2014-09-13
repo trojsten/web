@@ -1,0 +1,17 @@
+msgid "WA"
+msgstr "Zlá odpoveď"
+
+msgid "CERR"
+msgstr "Chyba počas kompilácie"
+
+msgid "TLE"
+msgstr "Prekročený časový limit"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "EXC"
+msgstr "Chyba počas behu programu"
+
+msgid "SEC"
+msgstr "Pokus o narušenie bezpečnosti"
