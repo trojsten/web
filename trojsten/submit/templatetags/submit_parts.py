@@ -1,5 +1,5 @@
 from django import template
-from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm
+from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
 from trojsten.regal.tasks.models import Submit
 from trojsten.submit.views import update_submit
 
@@ -17,6 +17,8 @@ def show_submit_form(task, redirect):
         data['source_form'] = SourceSubmitForm()
     if task.has_description:
         data['description_form'] = DescriptionSubmitForm()
+    if task.has_testablezip:
+        data['testablezip_form'] = TestableZipSubmitForm()
     return data
 
 
@@ -34,5 +36,7 @@ def show_submit_list(task, user):
 
     # Update submits which are not updated yet!
     for submit in data['submits'][Submit.SOURCE].filter(testing_status='in queue'):
+        update_submit(submit)
+    for submit in data['submits'][Submit.TESTABLE_ZIP].filter(testing_status='in queue'):
         update_submit(submit)
     return data

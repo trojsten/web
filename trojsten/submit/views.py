@@ -2,6 +2,7 @@
 # Create your views here.
 
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
@@ -9,7 +10,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from trojsten.regal.contests.models import Round
 from trojsten.regal.tasks.models import Task, Submit
-from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm
+from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
 from trojsten.submit.helpers import save_file, process_submit, get_path,\
     update_submit
 from sendfile import sendfile
@@ -24,7 +25,7 @@ def view_submit(request, submit_id):
         raise PermissionDenied()  # You shouldn't see other user's submits.
 
     # For source submits, display testing results, source code and submit list.
-    if submit.submit_type == Submit.SOURCE:
+    if submit.submit_type == Submit.SOURCE or submit.submit_type == Submit.TESTABLE_ZIP:
         if submit.testing_status == 'in queue':
             # check if submit wasn't tested yet
             update_submit(submit)
@@ -56,7 +57,7 @@ def view_submit(request, submit_id):
                     test['time'] = runtest[3].text
                     details = runtest[4].text if len(runtest) > 4 else None
                     test['details'] = details
-                    test['showDetails'] = details is not None and 'sample' in test['name']
+                    test['showDetails'] = details is not None and ('sample' in test['name'] or submit.submit_type == Submit.TESTABLE_ZIP)
                     tests.append(test)
             template_data['tests'] = tests
             template_data['have_tests'] = len(tests) > 0
@@ -64,10 +65,14 @@ def view_submit(request, submit_id):
             template_data['protocolReady'] = False  # Not tested yet!
         if os.path.exists(submit.filepath):
             # Source code available, display it!
-            template_data['fileReady'] = True
-            with open(submit.filepath, "r") as submitfile:
-                data = submitfile.read()
-                template_data['data'] = data
+            if submit.submit_type == Submit.SOURCE:
+                template_data['fileReady'] = True
+                with open(submit.filepath, "r") as submitfile:
+                    data = submitfile.read()
+                    template_data['data'] = data
+            else:
+                template_data['fileReady'] = False
+                template_data['isZip'] = True
         else:
             template_data['fileReady'] = False  # File does not exist on server
         return render(
@@ -123,12 +128,23 @@ def task_submit_post(request, task_id, submit_type):
     if request.method != "POST":
         raise Http404
 
-    sfile = request.FILES['submit_file']
+    try:
+        sfile = request.FILES['submit_file']
+    except:
+        # error will be reported from form validation
+        pass
 
-    if submit_type == Submit.SOURCE:
-        form = SourceSubmitForm(request.POST, request.FILES)
+    # File will be sent to tester
+    if submit_type == Submit.SOURCE or submit_type == Submit.TESTABLE_ZIP:
+        if submit_type == Submit.SOURCE:
+            form = SourceSubmitForm(request.POST, request.FILES)
+        else:
+            form = TestableZipSubmitForm(request.POST, request.FILES)
         if form.is_valid():
-            language = form.cleaned_data['language']
+            if submit_type == Submit.SOURCE:
+                language = form.cleaned_data['language']
+            else:
+                language = '.zip'
             # Source submit's should be processed by process_submit()
             submit_id = process_submit(sfile, task, language, request.user)
             # Source file-name is id.data
@@ -143,15 +159,21 @@ def task_submit_post(request, task_id, submit_type):
                          testing_status='in queue',
                          protocol_id=submit_id)
             sub.save()
-            if 'redirect_to' in request.POST:
-                return redirect(request.POST['redirect_to'])
-            else:
-                return redirect(
-                    reverse(
-                        'task_submit_page', kwargs={'task_id': int(task_id)}
-                    )
+        else:
+            for field in form:
+                for error in field.errors:
+                    messages.add_message(request, messages.WARNING, "%s: %s" % (field.label, error))
+        if 'redirect_to' in request.POST:
+            return redirect(request.POST['redirect_to'])
+        else:
+            return redirect(
+                reverse(
+                    'task_submit_page', kwargs={'task_id': int(task_id)}
                 )
+            )
 
+
+    # File won't be sent to tester
     elif submit_type == Submit.DESCRIPTION:
         form = DescriptionSubmitForm(request.POST, request.FILES)
         if form.is_valid():
@@ -171,14 +193,19 @@ def task_submit_post(request, task_id, submit_type):
                          testing_status='in queue',
                          filepath=sfiletarget)
             sub.save()
-            if 'redirect_to' in request.POST:
-                return redirect(request.POST['redirect_to'])
-            else:
-                return redirect(
-                    reverse(
-                        'task_submit_page', kwargs={'task_id': int(task_id)}
-                    )
+        else:
+            for field in form:
+                for error in field.errors:
+                    messages.add_message(request, messages.WARNING, "%s: %s" % (field.label, error))
+
+        if 'redirect_to' in request.POST:
+            return redirect(request.POST['redirect_to'])
+        else:
+            return redirect(
+                reverse(
+                    'task_submit_page', kwargs={'task_id': int(task_id)}
                 )
+            )
 
     else:
         # Only Description and Source submitting is developed currently

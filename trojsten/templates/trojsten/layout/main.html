@@ -9,6 +9,15 @@
     <div class="page-header">
         {% block page_header %}{% endblock %}
     </div>
+        {% if messages %}
+        <!-- Messages for this instance -->
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
     {% block page_content %}{% endblock %}
     </div>
   </div>
