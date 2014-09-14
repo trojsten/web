@@ -13,8 +13,8 @@ from trojsten.regal.people.forms import TrojstenUserCreationForm, TrojstenUserCh
 
 # Override default forms in ksp_login
 urlpatterns = patterns('ksp_login.views',
-    url(r'^account/register/$', 'register', {'creation_form': TrojstenUserCreationForm, }, name='trojsten_register'),
-    url(r'^account/$', 'settings', {'settings_form': TrojstenUserChangeForm, }, name='trojsten_account_settings'),
+    url(r'^ucet/registracia/$', 'register', {'creation_form': TrojstenUserCreationForm, }, name='trojsten_register'),
+    url(r'^ucet/$', 'settings', {'settings_form': TrojstenUserChangeForm, }, name='trojsten_account_settings'),
 )
 
 urlpatterns += patterns('',
@@ -28,11 +28,11 @@ urlpatterns += patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^account/', include('ksp_login.urls')),
-    url(r'^submit/', include(trojsten.submit.urls)),
-    url(r'^results/', include(trojsten.results.urls)),
-    url(r'^news/', include(trojsten.news.urls)),
-    url(r'^statements/', include(trojsten.task_statements.urls)),
+    url(r'^ucet/', include('ksp_login.urls')),
+    url(r'^odovzdavanie/', include(trojsten.submit.urls)),
+    url(r'^vysledky/', include(trojsten.results.urls)),
+    url(r'^novinky/', include(trojsten.news.urls)),
+    url(r'^ulohy/', include(trojsten.task_statements.urls)),
     url(r'^wiki/notify/', get_notify_pattern()),
     url(r'^', get_wiki_pattern()),
 )
