@@ -275,3 +275,5 @@ ALLOWED_PICTURE_EXT = {'.jpg', '.png', '.gif', '.webp', }
 
 # We use ksp_login to handle accounts.
 WIKI_ACCOUNT_HANDLING = False
+
+WIKI_ATTACHMENTS_USE_SENDFILE = True
