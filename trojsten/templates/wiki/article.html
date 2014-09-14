@@ -23,7 +23,6 @@
       </small>
     </h1>
   </li>
-  {% include "wiki/includes/article_menu.html" %}
 </ul>
 {% endblock %}
 
@@ -37,5 +36,6 @@
 {% endblock %}
 
 {% block wiki_footer_prepend %}
+  <ul class="list-inline pull-right">{% include "wiki/includes/article_menu.html" %}</ul>
   <p style="margin-bottom: 10px;"><em>{% trans "This article was last modified:" %} {{ article.current_revision.modified }}</em></p>
 {% endblock %}
