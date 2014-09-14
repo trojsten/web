@@ -208,5 +208,5 @@ def task_submit_post(request, task_id, submit_type):
             )
 
     else:
-        # Only Description and Source submitting is developed currently
+        # Only Description and Source and Zip submitting is developed currently
         raise Http404

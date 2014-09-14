@@ -11,7 +11,7 @@ RESPONSE_ERROR = 'CERR'
 RESPONSE_OK = 'OK'
 
 
-def write_file(what, data, where):
+def write_file(text, binary, where):
     '''Vytvorí cieľový adresár a uloží string do súboru.'''
     try:
         os.makedirs(os.path.split(where)[0])
@@ -21,8 +21,8 @@ def write_file(what, data, where):
     except:
         pass
     with open(where, 'w+') as destination:
-        destination.write(what)
-        destination.write(data)
+        destination.write(text)
+        destination.write(binary)
 
 
 def save_file(what, where):
