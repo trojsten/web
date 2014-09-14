@@ -25,3 +25,17 @@
         </div>
     </form>
 {% endif %}
+{% if task.has_testablezip %}
+    <h3>Zip</h3>
+    <form class="form-horizontal" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.TESTABLE_ZIP %}">
+        {% csrf_token %}
+        {{ testablezip_form | bootstrap_horizontal }}
+        <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input class="btn btn-primary" type="submit" value="Submit" />
+            </div>
+        </div>
+    </form>
+{% endif %}
+

@@ -26,8 +26,12 @@
         </tbody>
     </table>
 {% endif %}
-{% if task.has_source %}
-    <h3>Kód</h3>
+{% if task.has_source or task.has_testablezip %}
+    {% if task.has_source %}
+        <h3>Kód</h3>
+    {% else %}
+        <h3>Zip</h3>
+    {% endif %}
     <table class="table table-hover">
         <thead>
             <tr>
@@ -38,6 +42,7 @@
             </tr>
         </thead>
         <tbody>
+        {% if task.has_source %}
         {% for submit in submits|lookup:Submit.SOURCE %}
             <tr class="{% cycle 'even' 'odd' %}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
@@ -52,6 +57,24 @@
                 {% endif %}
             </tr>
         {% endfor %}
+        {% endif %}
+        {% if task.has_testablezip %}
+        {% for submit in submits|lookup:Submit.TESTABLE_ZIP %}
+            <tr class="{% cycle 'even' 'odd' %}">
+                <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
+                {% if submit.testing_status == 'in queue' %}
+                <td>Testuje sa</td>
+                <td>Čaká sa na otestovanie</td>
+                <td>..</td>
+                {% else %}
+                <td>Dotestované</td>
+                <td>{{ submit.tester_response_verbose }}</td>
+                <td>{{ submit.points }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        {% endif %}
+
         </tbody>
     </table>
 {% endif %}

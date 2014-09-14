@@ -11,7 +11,7 @@ RESPONSE_ERROR = 'CERR'
 RESPONSE_OK = 'OK'
 
 
-def write_file(what, where):
+def write_file(text, binary, where):
     '''Vytvorí cieľový adresár a uloží string do súboru.'''
     try:
         os.makedirs(os.path.split(where)[0])
@@ -21,7 +21,8 @@ def write_file(what, where):
     except:
         pass
     with open(where, 'w+') as destination:
-        destination.write(what)
+        destination.write(text)
+        destination.write(binary)
 
 
 def save_file(what, where):
@@ -51,7 +52,8 @@ def get_lang_from_filename(filename):
         ".py3": ".py",
         ".hs":  ".hs",
         ".cs":  ".cs",
-        ".java": ".java"}
+        ".java": ".java",
+        ".zip": ".zip"}
 
     if not ext in extmapping:
         return False
@@ -77,11 +79,12 @@ def get_path(task, user):
             "%s-%d" % (task.round.series.competition.name, user.id))
 
 
-def post_submit(raw):
+def post_submit(raw, data):
     '''Pošle RAW na otestovanie'''
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((settings.TESTER_URL, settings.TESTER_PORT))
     sock.send(raw)
+    sock.send(data)
     sock.close()
 
 
@@ -110,20 +113,19 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
     path = get_path_raw(contest_id, task_id, user_id)
 
     # Prepare RAW from submit parameters
-    raw = "%s\n%s\n%s\n%s\n%s\n%s\n%s" % (
+    raw = "%s\n%s\n%s\n%s\n%s\n%s\n" % (
         contest_id,
         submit_id,
         user_id,
         correct_filename,
         timestamp,
-        original_name,
-        data)
+        original_name)
 
     # Write RAW to local file
-    write_file(raw, os.path.join(path, submit_id + '.raw'))
+    write_file(raw, data, os.path.join(path, submit_id + '.raw'))
 
     # Send RAW for testing (uncomment when deploying)
-    post_submit(raw)
+    post_submit(raw, data)
 
     # Return submit ID
     return submit_id
