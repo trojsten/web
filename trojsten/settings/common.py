@@ -241,8 +241,8 @@ AUTHENTICATION_BACKENDS = (
 AUTHENTICATION_PROVIDERS_BRIEF = 3
 
 # The URL to which Django redirects as soon as login is required.
-LOGIN_URL = "/account/login/"
-LOGIN_REDIRECT_URL = "/account/"
+LOGIN_URL = "/ucet/login/"
+LOGIN_REDIRECT_URL = "/ucet/"
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
