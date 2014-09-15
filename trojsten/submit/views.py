@@ -159,6 +159,9 @@ def task_submit_post(request, task_id, submit_type):
                          testing_status='in queue',
                          protocol_id=submit_id)
             sub.save()
+            messages.add_message(request, messages.SUCCESS,
+                                 "Úspešne si submitol program, výsledok testovania nájdeš <a href='%s'>tu</a>" %
+                                 reverse("view_submit", args=[sub.id]))
         else:
             for field in form:
                 for error in field.errors:
@@ -193,6 +196,9 @@ def task_submit_post(request, task_id, submit_type):
                          testing_status='in queue',
                          filepath=sfiletarget)
             sub.save()
+            messages.add_message(request, messages.SUCCESS,
+                                 "Úspešne sa ti podarilo submitnúť popis, keď ti ho vedúci opravia, tak si nájdeš výsledok <a href='%s'>tu</a>" %
+                                 reverse("view_submit", args=[sub.id]))
         else:
             for field in form:
                 for error in field.errors:

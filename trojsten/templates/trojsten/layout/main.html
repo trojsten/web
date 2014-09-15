@@ -14,7 +14,7 @@
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }}" role="alert">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            {{ message }}
+            {{ message|safe }}
         </div>
         {% endfor %}
         {% endif %}
