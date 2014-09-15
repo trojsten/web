@@ -171,7 +171,10 @@ def update_submit(submit):
                     break
             # Na konci testovača je v tagu <score> uložené percento získaných
             # bodov.
-            score = int(float(tree.find("runLog/score").text))
+            try:
+                score = int(float(tree.find("runLog/score").text))
+            except:
+                score = 0
             points = (submit.task.source_points * score) // 100
         submit.points = points
         submit.tester_response = result
