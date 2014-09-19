@@ -17,6 +17,10 @@ msgstr "Chyba počas behu programu"
 msgid "SEC"
 msgstr "Pokus o narušenie bezpečnosti"
 
+# Login
+msgid "Registration"
+msgstr "Registrácia"
+
 # Wiki
 msgid "View"
 msgstr "Pozrieť"
