@@ -23,6 +23,8 @@ SUBMIT_PATH = '/tmp'
 TASK_STATEMENTS_REPO_PATH = '/tmp'
 TASK_STATEMENTS_PATH = '/var/www/zadania'
 
+WIKI_ATTACHMENTS_PATH = 'wiki/attachments/%aid/'
+
 INSTALLED_APPS += (
     'debug_toolbar',
     'kombu.transport.django',
