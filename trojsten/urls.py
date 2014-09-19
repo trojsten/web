@@ -13,7 +13,7 @@ from trojsten.regal.people.forms import TrojstenUserCreationForm, TrojstenUserCh
 
 # Override default forms in ksp_login
 urlpatterns = patterns('ksp_login.views',
-    url(r'^ucet/registracia/$', 'register', {'creation_form': TrojstenUserCreationForm, }, name='trojsten_register'),
+    url(r'^ucet/register/$', 'register', {'creation_form': TrojstenUserCreationForm, }, name='trojsten_register'),
     url(r'^ucet/$', 'settings', {'settings_form': TrojstenUserChangeForm, }, name='trojsten_account_settings'),
 )
 
