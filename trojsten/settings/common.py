@@ -26,6 +26,7 @@ TESTER_PORT = 12347
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
+    ('All admins', 'trojsten-web@ksp.com'),
 )
 
 MANAGERS = ADMINS
@@ -168,6 +169,7 @@ INSTALLED_APPS = (
     'social.apps.django_app.default',
     'ksp_login',
     'bootstrapform',
+    'contact_form',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',

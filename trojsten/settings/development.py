@@ -31,3 +31,8 @@ MIDDLEWARE_CLASSES = (('debug_toolbar.middleware.DebugToolbarMiddleware',)
    + MIDDLEWARE_CLASSES)
 
 INTERNAL_IPS = ('127.0.0.1',)
+
+# Feedback mail sending via "contact_form" - SMTP must be set for production
+# Send from: EMAIL_USE_TLS, EMAIL_HOST, EMAIL_PORT, DEFAULT_FROM_EMAIL, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
+# Send to: MANAGERS
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
