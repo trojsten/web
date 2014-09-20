@@ -20,8 +20,8 @@ urlpatterns = patterns('ksp_login.views',
 
 # Override default views in contact_form
 urlpatterns += patterns('trojsten.views',
-    url(r'^problem/$', ContactFormView.as_view(), name='contact_form'),
-    url(r'^problem/sent/$', 'contact_form_sent_redirect',),
+    url(r'^nahlasit-problem/$', ContactFormView.as_view(), name='contact_form'),
+    url(r'^nahlasit-problem/sent/$', 'contact_form_sent_redirect',),
 )
 
 urlpatterns += patterns('',
@@ -40,7 +40,7 @@ urlpatterns += patterns('',
     url(r'^vysledky/', include(trojsten.results.urls)),
     url(r'^novinky/', include(trojsten.news.urls)),
     url(r'^ulohy/', include(trojsten.task_statements.urls)),
-    url(r'^problem/', include('contact_form.urls')),
+    url(r'^nahlasit-problem/', include('contact_form.urls')),
     url(r'^wiki/notify/', get_notify_pattern()),
     url(r'^', get_wiki_pattern()),
 )
