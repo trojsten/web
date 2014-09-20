@@ -1,8 +1,12 @@
 {% extends "trojsten/layout/main.html" %}
 {% load statements_parts %}
+
+{% block title %}Zadania{% endblock %}
+
 {% block page_header %}
 <h1>Zadania <small>{{round.number}}. kola {{round.series.number}}. série {{round.series.year}}. ročníka {{round.series.competition.name}} {% if not round.visible %}<span class="label label-danger">skryté</span>{% endif %}</small></h1>
 {% endblock %}
+
 {% block page_content %}
     {% show_buttons round %}
     <h2>Zoznam úloh</h2>

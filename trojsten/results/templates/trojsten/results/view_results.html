@@ -1,6 +1,8 @@
 {% extends "trojsten/layout/main.html" %}
 {% load results_parts %}
 
+{% block title %}Výsledky{% endblock %}
+
 {% block page_header %}
 <h1>Výsledky<small>
 {% for round in rounds %}{% if not forloop.first and not forloop.last %},{% endif %} {% if not forloop.first and forloop.last %} a {% endif %} {{round.number}}.{% endfor %}

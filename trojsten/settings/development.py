@@ -38,3 +38,5 @@ INTERNAL_IPS = ('127.0.0.1',)
 # Send from: EMAIL_USE_TLS, EMAIL_HOST, EMAIL_PORT, DEFAULT_FROM_EMAIL, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
 # Send to: MANAGERS
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+SITES[SITE_ID]['URL'] = 'http://localhost:8000'

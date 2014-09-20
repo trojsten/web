@@ -1,6 +1,8 @@
 {% extends "trojsten/layout/main.html" %}
 {% load submit_parts %}
 
+{% block title %}{{task.number}}. {{task.name}}{% endblock %}
+
 {% block page_header %}
 <ul class="nav nav-pills">
   <li class="pull-left" id="article-title-li">
