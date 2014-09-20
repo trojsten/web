@@ -1,3 +1,4 @@
+# Submit
 msgid "WA"
 msgstr "Zlá odpoveď"
 
@@ -15,3 +16,22 @@ msgstr "Chyba počas behu programu"
 
 msgid "SEC"
 msgstr "Pokus o narušenie bezpečnosti"
+
+# Wiki
+msgid "View"
+msgstr "Pozrieť"
+
+msgid "Edit"
+msgstr "Upraviť"
+
+msgid "Changes"
+msgstr "Zmeny"
+
+msgid "Attachments"
+msgstr "Prílohy"
+
+msgid "View Source"
+msgstr "Pozrieť zdroják"
+
+msgid "This article was last modified:"
+msgstr "Čas poslednej úpravy:"
