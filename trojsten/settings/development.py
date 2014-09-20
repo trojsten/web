@@ -23,7 +23,7 @@ SUBMIT_PATH = '/tmp'
 TASK_STATEMENTS_REPO_PATH = '/tmp'
 TASK_STATEMENTS_PATH = '/var/www/zadania'
 
-WIKI_ATTACHMENTS_PATH = 'wiki/attachments/%aid/'
+WIKI_ATTACHMENTS_PATH = os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'media/wiki_attachments/%aid/')
 
 INSTALLED_APPS += (
     'debug_toolbar',
