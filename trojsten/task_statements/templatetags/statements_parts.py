@@ -10,7 +10,12 @@ register = template.Library()
 
 
 @register.inclusion_tag('trojsten/task_statements/parts/task_list.html')
-def show_task_list(user, round_id):
+def show_task_list(user, round):
+    def prepend_none(iterable):
+        yield None
+        for i in iterable:
+            yield i
+
     tasks = Task.objects.filter(
         round_id=round_id
     ).order_by(
@@ -18,9 +23,14 @@ def show_task_list(user, round_id):
     ).select_related(
         'round', 'round__series', 'round__series__competition'
     )
+    categories = Category.objects.filter(competition=round.series.competition)
+
     data = {
         'user': user,
+        'round': round,
         'tasks': tasks,
+        'categories':  prepend_none(categories),
+        'categories_cnt':  categories.count(),
     }
     if user.is_authenticated:
         submits = get_submits(tasks, user)
