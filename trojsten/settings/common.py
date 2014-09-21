@@ -184,6 +184,9 @@ INSTALLED_APPS = (
     'wiki.plugins.images',
     'wiki.plugins.macros',
     'taggit',
+
+    # Task specific pulgins
+    'trojsten.plugin_ksp_32_1_1'
 )
 
 # A sample logging configuration. The only tangible logging
