@@ -15,7 +15,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         max_length=32, label='Krajina')
 
     has_correspondence_address = forms.BooleanField(
-        label="Korešpondenčná adresa", required=False, help_text="Ak chceš, aby sme ti poštu posielali inde ako domov.(Typicky, ak bývaš na internáte.)")
+        label="Korešpondenčná adresa", required=False, help_text="Zaškrtni, ak chceš aby sme ti poštu posielali inde ako domov.(Typicky, ak bývaš na internáte.)")
 
     corr_street = forms.CharField(max_length=70, label='Ulica', required=False)
     corr_town = forms.CharField(max_length=64, label='Mesto', required=False)
