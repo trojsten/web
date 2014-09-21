@@ -1,0 +1,17 @@
+{% extends "ksp_login/base.html" %}
+
+{% load i18n %}
+
+{% block ksp_login_title %}{% trans "Registration" %}{% endblock ksp_login_title %}
+
+{% block page_header %}
+<h1>{% trans "Registration" %}</h1>
+{% endblock %}
+
+
+{% block ksp_login_content %}
+    <p class="lead">
+        {% trans "Welcome, new user. You only need to give us a few details in order to finish the registration process." %}
+    </p>
+    {% include "ksp_login/parts/multiple_forms.html" %}
+{% endblock ksp_login_content %}

@@ -1,0 +1,30 @@
+{% extends "ksp_login/base.html" %}
+
+{% load url from future %}
+{% load i18n %}
+
+{% block ksp_login_title %}{% trans "Account settings" %}{% endblock ksp_login_title %}
+
+{% block page_header %}
+<h1>{% trans "Account settings" %}</h1>
+{% endblock %}
+
+
+{% block ksp_login_content %}
+    {% include "ksp_login/parts/multiple_forms.html" %}
+    <h2>{% trans "Login settings" %}</h2>
+    <p>
+        {% trans "You can use any of the following services to log in to your account." %}
+    </p>
+    {% include "ksp_login/parts/associated_accounts_list.html" %}
+    <p>
+        {% trans "If you want to associate other services to your account, feel free to pick any from the list below." %}
+    </p>
+    {% include "ksp_login/parts/backend_list.html" %}
+    <p>
+        {% url "account_password" as passwd_url %}
+        {% blocktrans %}
+            You can change your password <a href="{{ passwd_url }}">here</a>.
+        {% endblocktrans %}
+    </p>
+{% endblock ksp_login_content %}

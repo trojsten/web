@@ -7,6 +7,7 @@ from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 
 
 class TrojstenUserBaseForm(forms.ModelForm):
+    required_css_class = 'required'
     street = forms.CharField(max_length=70, label='Ulica')
     town = forms.CharField(max_length=64, label='Mesto')
     postal_code = forms.CharField(
@@ -34,6 +35,9 @@ class TrojstenUserBaseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(TrojstenUserBaseForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['email'].required = True
 
     def get_initial_from_pipeline(self, pipeline_state):
         return None if not pipeline_state else {

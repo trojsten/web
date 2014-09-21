@@ -9,3 +9,7 @@ li > h1 {
 .well.task-points.pull-right {
     margin-left:5px;
 }
+
+label.required:after {
+    content:"*";
+}
