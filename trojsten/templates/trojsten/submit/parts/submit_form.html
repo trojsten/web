@@ -39,3 +39,7 @@
     </form>
 {% endif %}
 
+{% if task.external_submit_link %}
+    <p>Tento príklad sa odovzdáva na zvlášť stránke. </p>
+    <a class="btn btn-primary" href="{{task.external_submit_link}}">Stránka s odovzdávaním</a>
+{% endif %}
