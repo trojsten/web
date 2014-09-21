@@ -197,8 +197,7 @@ def task_submit_post(request, task_id, submit_type):
                          filepath=sfiletarget)
             sub.save()
             messages.add_message(request, messages.SUCCESS,
-                                 "Úspešne sa ti podarilo submitnúť popis, keď ti ho vedúci opravia, tak si nájdeš výsledok <a href='%s'>tu</a>" %
-                                 reverse("view_submit", args=[sub.id]))
+                                 "Úspešne sa ti podarilo submitnúť popis, po skončení kola ti ho vedúci opravia")
         else:
             for field in form:
                 for error in field.errors:
