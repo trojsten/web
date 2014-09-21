@@ -42,10 +42,10 @@ def get_submits(tasks, user):
 def get_results_data(tasks, submits):
     '''Returns results data for each task
     '''
-    res = {i: {'description': '??', 'source': 0} for i in tasks}
+    res = {i: {'description': 0, 'source': 0} for i in tasks}
     for submit in submits:
         if submit.submit_type == Submit.DESCRIPTION:
-            res[submit.task]['description'] = submit.points
+            res[submit.task]['description'] = '??'  # Fixme
         else:
             res[submit.task]['source'] += submit.points
     return res
