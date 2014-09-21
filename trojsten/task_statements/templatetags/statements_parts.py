@@ -7,7 +7,13 @@ register = template.Library()
 
 @register.inclusion_tag('trojsten/task_statements/parts/task_list.html')
 def show_task_list(round_id):
-    tasks = Task.objects.filter(round_id=round_id).order_by('number')
+    tasks = Task.objects.filter(
+        round_id=round_id
+    ).order_by(
+        'number'
+    ).select_related(
+        'round', 'round__series', 'round__series__competition'
+    )
     data = {
         'tasks': tasks,
     }
@@ -17,7 +23,11 @@ def show_task_list(round_id):
 @register.inclusion_tag('trojsten/task_statements/parts/buttons.html')
 def show_buttons(round):
     result_rounds = get_result_rounds(round)
-    categories = Category.objects.filter(competition=round.series.competition)
+    categories = Category.objects.filter(
+        competition=round.series.competition
+    ).select_related(
+        'competition'
+    )
     data = {
         'round': round,
         'result_rounds': result_rounds,

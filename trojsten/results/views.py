@@ -10,7 +10,7 @@ def view_results(request, round_ids, category_ids=None):
     '''
     rounds = Round.visible_rounds(request.user).filter(
         pk__in=round_ids.split(',')
-    )
+    ).select_related('series')
     if len(rounds) == 0 or not check_round_series(rounds):
         return HttpResponseBadRequest()
     categories = None if category_ids is None else Category.objects.filter(
