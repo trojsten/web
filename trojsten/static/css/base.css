@@ -13,3 +13,10 @@ li > h1 {
 label.required:after {
     content:"*";
 }
+
+.social-button {
+    padding: 16px 0;
+    height: 50px;
+    margin-right:10px;
+
+}
