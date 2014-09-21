@@ -2,7 +2,13 @@ from trojsten.regal.contests.models import Round
 
 
 def get_rounds_by_year(user, competition):
-    rounds = Round.visible_rounds(user).filter(series__competition=competition).order_by('-series__year', '-number')
+    rounds = Round.visible_rounds(
+        user
+    ).filter(
+        series__competition=competition
+    ).order_by(
+        '-series__year', '-number'
+    ).select_related('series__year')
     rounds_dict = dict()
     for round in rounds:
         if not round.series.year in rounds_dict:

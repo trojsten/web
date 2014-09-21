@@ -163,7 +163,11 @@ class Round(models.Model):
     def get_latest_by_competition(user):
         rounds = Round.visible_rounds(user).order_by(
             'series__competition', '-end_time'
-        ).distinct('series__competition')
+        ).distinct(
+            'series__competition'
+        ).select_related(
+            'series__competition'
+        )
         return {r.series.competition: r for r in rounds}
 
     class Meta:
