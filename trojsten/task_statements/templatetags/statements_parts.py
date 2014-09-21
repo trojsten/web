@@ -1,15 +1,16 @@
 from django import template
 from django.conf import settings
 from trojsten.regal.tasks.models import Task, Category
-from ..helpers import get_result_rounds, get_rounds_by_year
+from ..helpers import get_result_rounds, get_rounds_by_year, get_submits, get_results_data
 from datetime import datetime
 import pytz
+
 
 register = template.Library()
 
 
 @register.inclusion_tag('trojsten/task_statements/parts/task_list.html')
-def show_task_list(round_id):
+def show_task_list(user, round_id):
     tasks = Task.objects.filter(
         round_id=round_id
     ).order_by(
@@ -18,8 +19,13 @@ def show_task_list(round_id):
         'round', 'round__series', 'round__series__competition'
     )
     data = {
+        'user': user,
         'tasks': tasks,
     }
+    if user.is_authenticated:
+        submits = get_submits(tasks, user)
+        results = get_results_data(tasks, submits)
+        data['points'] = results
     return data
 
 

@@ -1,3 +1,4 @@
+{% load utils %}
 <table class="table">
 <thead>
 <tr>
@@ -11,8 +12,13 @@
         Kategória
     </th>
     <th>
-        Body
+        Max. body
     </th>
+    {% if user.is_authenticated %}
+    <th>
+        Tvoje body
+    </th>
+    {% endif %}
 </tr>
 </thead>
 {% for task in tasks %}
@@ -34,12 +40,24 @@
         </td>
         <td>
             {% if task.description_points > 0 %}
-                <span class="points-item">Body za popis: {{task.description_points}}</span>
+                <span class="points-item">popis: {{task.description_points}}</span>
+                {% if task.source_points > 0 %}<br/>{% endif %}
             {% endif %}
             {% if task.source_points > 0 %}
-                <span class="points-item">Body za program: {{task.source_points}}</span>
+                <span class="points-item">program: {{task.source_points}}</span>
             {% endif %}
         </td>
+        {% if user.is_authenticated %}
+        <td>
+            {% if task.description_points > 0 %}
+                <span class="points-item">popis: {{points|lookup:task|lookup:'description'}}</span>
+                {% if task.source_points > 0 %}<br/>{% endif %}
+            {% endif %}
+            {% if task.source_points > 0 %}
+                <span class="points-item">program: {{points|lookup:task|lookup:'source'}}</span>
+            {% endif %}
+        </td>
+        {% endif %}
     </tr>
 {% empty %}
     <tr>
