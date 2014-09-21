@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Common settings for trojsten.
 import os
 import trojsten
@@ -57,6 +59,30 @@ TIME_ZONE = 'Europe/Bratislava'
 LANGUAGE_CODE = 'sk-SK'
 
 SITE_ID = 1
+
+SITES = {
+    1: {
+        'NAME': 'Korešpondenčný seminár z programovania',
+        'SHORT_NAME': 'KSP',
+        'URL': 'http://ksp.sk',
+    },
+    2: {
+        'NAME': 'Fyzikálny korešpondenčný seminár',
+        'SHORT_NAME': 'FKS',
+        'URL': 'http://fks.sk',
+    },
+    3: {
+        'NAME': 'Korešpondenčný matematický seminár',
+        'SHORT_NAME': 'KMS',
+        'URL': 'http://kms.sk',
+    },
+    4: {
+        'NAME': 'Trojsten',
+        'SHORT_NAME': 'Trojsten',
+        'URL': 'http://trojsten.sk',
+    },
+}
+
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -226,7 +252,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "sekizai.context_processors.sekizai",
     "ksp_login.context_processors.login_providers_both",
-    #"trojsten.context_processors.current_site",
+    "trojsten.context_processors.current_site",
 )
 
 # The list of authentication backends we want to allow.

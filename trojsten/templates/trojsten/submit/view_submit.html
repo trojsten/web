@@ -1,9 +1,14 @@
 {% extends "trojsten/layout/main.html" %}
 {% load submit_parts %}
+
+{% block title %}Detaily submitu{% endblock %}
+
+{% block page_header %}
+<h1>Detaily submitu <small>{{ submit.protocol_id }}</small></h1>
+{% endblock %}
+
 {% block page_content %}
-    <h2>{{ submit.protocol_id }}</h2>
-    <h3>Detaily submitu</h3>
-    {% if protocolReady %}
+        {% if protocolReady %}
         {% if compileLogPresent %}
             <h4>Výstup z kompilátora</h4>
             <pre>{{ compileLog }}</pre>

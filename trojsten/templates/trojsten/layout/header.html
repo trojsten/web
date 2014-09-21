@@ -9,15 +9,15 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="http://www.ksp.sk">KSP</a>
+      <a class="navbar-brand" href="{{SITE.URL}}">{{SITE.SHORT_NAME}}</a>
     </div>
-  
+
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse navbar-ex1-collapse">
       <ul class="nav navbar-nav">
-        <li><a href="http://www.kms.sk">KMS</a></li>
-        <li><a href="http://www.fks.sk">FKS</a></li>
-        <li><a href="http://www.trojsten.sk">Trojsten</a></li>
+        {%for OTHER_SITE in OTHER_SITES %}
+        <li><a href="{{OTHER_SITE.URL}}">{{OTHER_SITE.SHORT_NAME}}</a></li>
+        {% endfor %}
       </ul>
       {% include "ksp_login/parts/login_box.html" %}
     </div><!-- /.navbar-collapse -->
