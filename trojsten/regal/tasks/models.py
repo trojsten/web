@@ -43,6 +43,7 @@ class Task(models.Model):
     has_source = models.BooleanField(verbose_name='odovzáva sa zdroják')
     has_description = models.BooleanField(verbose_name='odovzáva sa popis')
     has_testablezip = models.BooleanField(verbose_name='odovzdáva sa zip na testovač', default=False)
+    external_submit_link = models.CharField(max_length=128, verbose_name='Odkaz na externé odovzdávanie', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Úloha'
@@ -56,6 +57,7 @@ class Task(models.Model):
             Submit.SOURCE: self.has_source,
             Submit.DESCRIPTION: self.has_description,
             Submit.TESTABLE_ZIP: self.has_testablezip,
+            Submit.EXTERNAL: bool(self.external_submit_link),
         }
         return check_field[submit_type]
 
@@ -118,10 +120,12 @@ class Submit(models.Model):
     SOURCE = 0
     DESCRIPTION = 1
     TESTABLE_ZIP = 2
+    EXTERNAL = 3
     SUBMIT_TYPES = [
         (SOURCE, 'source'),
         (DESCRIPTION, 'description'),
         (TESTABLE_ZIP, 'testable_zip'),
+        (EXTERNAL, 'external'),
     ]
     task = models.ForeignKey(Task, verbose_name='úloha')
     time = models.DateTimeField(auto_now_add=True)
