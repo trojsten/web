@@ -6,6 +6,7 @@
         <li class="{% current 'news_list' %}" ><a href="{% url 'news_list' page=1 %}">Novinky</a></li>
         <li class="{% current 'latest_task_list' %} {% current 'task_list' %}"><a href="{% url 'latest_task_list' %}">Zadania</a></li>
         <li class="{% current 'view_latest_results' %} {% current 'view_results' %}"><a href="{% url 'view_latest_results' %}">Výsledky</a></li>
+        <li class="{% current '^/zbierky/$' %}"><a href="/zbierky/">Zbierky</a></li>
         <li class="{% current '^/pravidla/$' %}"><a href="/pravidla/">Pravidlá</a></li>
         <li class="{% current '^/faq/$' %}"><a href="/faq/">FAQ</a></li>
         <li class="{% current '^/organizatori/$' %}"><a href="/organizatori/">Organizátori</a></li>
