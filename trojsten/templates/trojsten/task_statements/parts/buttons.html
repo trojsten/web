@@ -7,9 +7,9 @@
 {% if result_rounds %}
     {% if categories %}
         {% for category in categories %}
-        <a class="btn btn-danger category-{{category}}" href="{% url 'view_results' round_ids=result_rounds category_ids=category.id %}">Výsledky <span class="label label-default category-{{category}}">{{category}}</span></a>
+        <a class="btn btn-info category-{{category}}" href="{% url 'view_results' round_ids=result_rounds category_ids=category.id %}">Výsledky <span class="label label-default category-{{category}}">{{category}}</span></a>
         {% endfor %}
     {% else %}
-        <a class="btn btn-danger" href="{% url 'view_results' round_ids=result_rounds %}">Výsledky</a>
+        <a class="btn btn-info" href="{% url 'view_results' round_ids=result_rounds %}">Výsledky</a>
     {% endif %}
 {% endif %}

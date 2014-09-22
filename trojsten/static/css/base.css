@@ -14,6 +14,15 @@ label.required:after {
     content:"*";
 }
 
+input {
+  color: black;
+}
+
+div.form-group {
+    border: none;
+    background-color: #222;
+}
+
 .social-button {
     padding: 16px 0;
     height: 50px;
@@ -30,10 +39,12 @@ html {
   position: relative;
   min-height: 100%;
 }
+
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
 footer {
   position: absolute;
   bottom: 0;
