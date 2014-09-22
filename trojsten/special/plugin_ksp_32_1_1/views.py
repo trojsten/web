@@ -11,8 +11,8 @@ from .models import UserLevel
 @login_required()
 def main(request, level=1):
     level = max(min(int(level), 10), 1)
-    uid = request.user.id
-    userlevel, _ = UserLevel.objects.get_or_create(level_id=level, user_id=uid)
+    user = request.user
+    userlevel, _ = UserLevel.objects.get_or_create(level_id=level, user=user)
 
     target = str(LEVELS[level].TARGET)
 
@@ -21,7 +21,7 @@ def main(request, level=1):
         try_set.append((x.input, x.output, x.output == target))
 
     levels = [[i, False] for i in range(1, 11)]
-    for x in UserLevel.objects.filter(user_id=uid):
+    for x in UserLevel.objects.filter(user=user):
         levels[x.level_id - 1][1] = x.solved
 
     return render(request, 'plugin_ksp_32_1_1/level.html', {
@@ -39,8 +39,8 @@ def main(request, level=1):
 @login_required()
 def run(request, level=1):
     level = max(min(int(level), 10), 1)
-    uid = request.user.id
-    userlevel, _ = UserLevel.objects.get_or_create(level_id=level, user_id=uid)
+    user = request.user
+    userlevel, _ = UserLevel.objects.get_or_create(level_id=level, user=user)
 
     data = json.loads(request.read().decode("utf-8"))
     _input = str(int(data["input"]))
