@@ -5,6 +5,10 @@ local_settings.py
 database.sqlite3
 trojsten/media/wiki_attachments/*/*
 
+#nodejs
+*/node_modules/*
+npm-debug.log
+
 # Vim-specific
 .*.swp
 Session.vim
