@@ -1,9 +1,11 @@
+import json
+
 from django.shortcuts import render
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+
 from .core import LEVELS
 from .models import UserLevel
-import json
 
 
 @login_required()
@@ -29,6 +31,8 @@ def main(request, level=1):
         "target": target,
         "try_set": try_set,
         "try_count": userlevel.try_count,
+        "try_count_ending":
+        {1: '', 2: 'y', 3: 'y', 4: 'y'}.get(userlevel.try_count, 'ov'),
     })
 
 

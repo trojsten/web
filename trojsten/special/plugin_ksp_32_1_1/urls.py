@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from . import views
+from trojsten.special.plugin_ksp_32_1_1 import views
 
 urlpatterns = patterns(
     '',

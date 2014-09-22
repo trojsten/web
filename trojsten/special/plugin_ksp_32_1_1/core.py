@@ -35,7 +35,7 @@ class Level3:
 
 class Level4:
 
-    SECRET = 1415926535
+    SECRET = 14159265
 
     TARGET = "OK"
 
@@ -121,6 +121,7 @@ class Level8:
                 last = i
                 num = 1
         return res
+
 
 class Level9:
 
