@@ -3,6 +3,7 @@
 # Common settings for trojsten.
 import os
 import trojsten
+import trojsten.special.installed_apps
 
 # Celery settings
 #: Only add pickle to this list if your broker is secured
@@ -211,6 +212,8 @@ INSTALLED_APPS = (
     'wiki.plugins.macros',
     'taggit',
 )
+
+INSTALLED_APPS += trojsten.special.installed_apps.INSTALLED_APPS
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

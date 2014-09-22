@@ -1,0 +1,9 @@
+{
+    "level":"{{level}}",
+    "input":"{{input}}",
+    "output":"{{output}}",
+    "try_count":"{{try_count}}",
+    "solved":{{solved|yesno:"true,false"}},
+    "refresh":{{refresh|yesno:"true,false"}},
+    "next_url":"{% url "run" level %}"
+}

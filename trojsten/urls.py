@@ -42,5 +42,6 @@ urlpatterns += patterns('',
     url(r'^ulohy/', include(trojsten.task_statements.urls)),
     url(r'^nahlasit-problem/', include('contact_form.urls')),
     url(r'^wiki/notify/', get_notify_pattern()),
+    url(r'^specialne/', include('trojsten.special.urls')),
     url(r'^', get_wiki_pattern()),
 )
