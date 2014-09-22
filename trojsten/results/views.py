@@ -31,11 +31,6 @@ def view_results(request, round_ids, category_ids=None):
 
 
 def view_latest_results(request):
-    def prepend_none(iterable):
-        yield None
-        for i in iterable:
-            yield i
-
     tasks_by_round = {
         r: [
             (cat, get_tasks(
@@ -47,7 +42,7 @@ def view_latest_results(request):
                 ),
                 str(getattr(cat, 'id', '')),
             ))
-            for cat in prepend_none(Category.objects.filter(competition=c))
+            for cat in [None] + list(Category.objects.filter(competition=c))
         ]
         for c, r in Round.get_latest_by_competition(request.user).items()
     }

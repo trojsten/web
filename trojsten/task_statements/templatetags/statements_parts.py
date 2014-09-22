@@ -13,11 +13,6 @@ register = template.Library()
 
 @register.inclusion_tag('trojsten/task_statements/parts/task_list.html')
 def show_task_list(user, round):
-    def prepend_none(iterable):
-        yield None
-        for i in iterable:
-            yield i
-
     tasks = Task.objects.filter(
         round=round
     ).order_by(
@@ -31,7 +26,7 @@ def show_task_list(user, round):
         'user': user,
         'round': round,
         'tasks': tasks,
-        'categories': prepend_none(categories),
+        'categories': [None] + list(categories),
         'categories_cnt': categories.count(),
     }
     if user.is_authenticated:
