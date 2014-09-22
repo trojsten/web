@@ -97,3 +97,23 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "používateľ"
         verbose_name_plural = "používatelia"
+
+
+@python_2_unicode_compatible
+class UserProperty(models.Model):
+    """
+    Dodatočné vlastnosti usera, dajú sa vyhľadávať pomocou related_name v QuerySete od Usera.
+    """
+    user = models.ForeignKey(User,
+                             related_name='properties')
+    key = models.CharField(max_length=100,
+                           verbose_name="názov vlastnosti")
+    value = models.CharField(max_length=100,
+                             verbose_name="hodnota vlastnosti")
+
+    def __str__(self):
+        return self.key + ": " + self.value
+
+    class Meta:
+        verbose_name = "dodatočná vlastnosť"
+        verbose_name_plural = "dodatočné vlastnosti"
