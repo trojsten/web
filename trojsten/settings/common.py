@@ -211,6 +211,7 @@ INSTALLED_APPS = (
     'wiki.plugins.images',
     'wiki.plugins.macros',
     'taggit',
+    'disqus',
 )
 
 INSTALLED_APPS += trojsten.special.installed_apps.INSTALLED_APPS
@@ -303,6 +304,9 @@ TASK_STATEMENTS_HTML_DIR = 'html'
 TASK_STATEMENTS_PDF = 'zadania.pdf'
 TASK_STATEMENTS_SOLUTIONS_PDF = 'vzoraky.pdf'
 ALLOWED_PICTURE_EXT = {'.jpg', '.png', '.gif', '.webp', }
+
+DISQUS_WEBSITE_SHORTNAME = 'trojsten-ksp'
+
 
 # We use ksp_login to handle accounts.
 WIKI_ACCOUNT_HANDLING = False
