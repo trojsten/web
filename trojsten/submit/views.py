@@ -148,7 +148,7 @@ def task_submit_post(request, task_id, submit_type):
             # Source submit's should be processed by process_submit()
             submit_id = process_submit(sfile, task, language, request.user)
             if not submit_id:
-                messages.add_message(request, messages.WARNING, "Nepodporovaný formát súboru")
+                messages.add_message(request, messages.ERROR, "Nepodporovaný formát súboru")
             else:
                 # Source file-name is id.data
                 sfiletarget = os.path.join(get_path(
@@ -168,7 +168,7 @@ def task_submit_post(request, task_id, submit_type):
         else:
             for field in form:
                 for error in field.errors:
-                    messages.add_message(request, messages.WARNING, "%s: %s" % (field.label, error))
+                    messages.add_message(request, messages.ERROR, "%s: %s" % (field.label, error))
         if 'redirect_to' in request.POST:
             return redirect(request.POST['redirect_to'])
         else:
@@ -204,7 +204,7 @@ def task_submit_post(request, task_id, submit_type):
         else:
             for field in form:
                 for error in field.errors:
-                    messages.add_message(request, messages.WARNING, "%s: %s" % (field.label, error))
+                    messages.add_message(request, messages.ERROR, "%s: %s" % (field.label, error))
 
         if 'redirect_to' in request.POST:
             return redirect(request.POST['redirect_to'])
