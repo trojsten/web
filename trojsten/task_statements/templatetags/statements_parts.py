@@ -1,7 +1,9 @@
 from django import template
 from django.conf import settings
 from trojsten.regal.tasks.models import Task, Category
-from ..helpers import get_result_rounds, get_rounds_by_year, get_submits, get_results_data
+from ..helpers import get_result_rounds, get_rounds_by_year,\
+    get_latest_submits_for_user, get_points_from_submits
+
 from datetime import datetime
 import pytz
 
@@ -29,12 +31,12 @@ def show_task_list(user, round):
         'user': user,
         'round': round,
         'tasks': tasks,
-        'categories':  prepend_none(categories),
-        'categories_cnt':  categories.count(),
+        'categories': prepend_none(categories),
+        'categories_cnt': categories.count(),
     }
     if user.is_authenticated:
-        submits = get_submits(tasks, user)
-        results = get_results_data(tasks, submits)
+        submits = get_latest_submits_for_user(tasks, user)
+        results = get_points_from_submits(tasks, submits)
         data['points'] = results
     return data
 

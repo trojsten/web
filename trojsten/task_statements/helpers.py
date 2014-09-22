@@ -26,8 +26,8 @@ def get_result_rounds(round):
     return ','.join(str(r.id) for r in rounds)
 
 
-def get_submits(tasks, user):
-    '''Returns submits which belong to specified tasks and user.
+def get_latest_submits_for_user(tasks, user):
+    '''Returns latest submits which belong to specified tasks and user.
     Only one submit per submit type and task is returned.
     '''
     return Submit.objects.filter(
@@ -41,7 +41,7 @@ def get_submits(tasks, user):
     )
 
 
-def get_results_data(tasks, submits):
+def get_points_from_submits(tasks, submits):
     '''Returns results data for each task
     '''
     res = {i: {'description': 0, 'source': 0} for i in tasks}
