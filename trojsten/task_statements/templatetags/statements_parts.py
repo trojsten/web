@@ -17,7 +17,7 @@ def show_task_list(user, round):
             yield i
 
     tasks = Task.objects.filter(
-        round_id=round_id
+        round=round
     ).order_by(
         'number'
     ).select_related(

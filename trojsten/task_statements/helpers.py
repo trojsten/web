@@ -1,4 +1,6 @@
 from trojsten.regal.contests.models import Round
+from trojsten.regal.tasks.models import Submit
+from django.db.models import F
 
 
 def get_rounds_by_year(user, competition):
