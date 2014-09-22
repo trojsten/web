@@ -1,5 +1,6 @@
 {% extends "trojsten/layout/main.html" %}
 {% load submit_parts %}
+{% load disqus_tags %}
 
 {% block title %}{{task.number}}. {{task.name}}{% endblock %}
 
@@ -21,6 +22,10 @@
 {% endblock %}
 
 {% block page_content %}
+    {% set_disqus_identifier "task" task.id %}
+    {% set_disqus_url "http://" request.META.HTTP_HOST request.path %}
+    {% set_disqus_title task.number ". " task.name %}
+    
     {% if task.description_points > 0 or task.source_points > 0 %}
     <div class="well pull-right task-points">
         <strong>Počet bodov:</strong>
@@ -51,5 +56,7 @@
     {% else %}
         <p class="text-danger">Tento príklad momentálne nemá možnosť odovzdávania.</p>
     {% endif %}
-    </div>
+    </div>    
+    
+    {% disqus_show_comments %}
 {% endblock %}
