@@ -322,3 +322,5 @@ WIKI_ATTACHMENTS_USE_SENDFILE = True
 WIKI_MARKDOWN_KWARGS = {
     'safe_mode': False,
 }
+
+WIKI_EDITOR = 'trojsten.markdown_editors.TrojstenMarkItUp'
