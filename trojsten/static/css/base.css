@@ -4,6 +4,10 @@ li > h1 {
     margin-top: 0;
 }
 
+.simplemodal-container {
+    color: black;
+}
+
 .panel-rounds {
     margin-top: 1em;
 }
