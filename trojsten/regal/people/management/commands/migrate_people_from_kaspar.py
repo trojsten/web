@@ -77,6 +77,7 @@ class Command(NoArgsCommand):
                 'last_name': last_name,
                 'username': first_name + last_name,
                 'is_active': False,
+                'school': school_id_map[school_id]
             }
 
             if grad_year:
