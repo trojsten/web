@@ -8,14 +8,14 @@
 //## Gray and brand colors for use across Bootstrap.
 
 
-@gray-darker:            lighten(#000, 13.5%); // #222
-@gray-dark:              #303030;   // #333
+@gray-dark:              #333;
+@gray-darker:            #111;
 @gray:                   #464545;
 @gray-light:             #999;   // #999
 @gray-lighter:           #EBEBEB; // #eee
 
 @brand-primary:         #429031;
-@brand-success:         #429031;
+@brand-success:         #00bc8c;
 @brand-info:            #3498DB;
 @brand-warning:         #F39C12;
 @brand-danger:          #E74C3C;
@@ -28,10 +28,10 @@
 //** Background color for `<body>`.
 @body-bg:               @gray-darker;
 //** Global text color on `<body>`.
-@text-color:            #fff;
+@text-color:            #fafafa;
 
 //** Global textual link color.
-@link-color:            desaturate(lighten(@brand-success, 10%),10%);
+@link-color:            desaturate(lighten(@brand-primary, 15%),10%);
 //** Link hover color set via `darken()` function.
 @link-hover-color:      @link-color;
 
@@ -40,7 +40,7 @@
 //
 //## Font, line-height, and color for body text, headings, and more.
 
-@font-family-sans-serif:  "Merriweather Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-family-sans-serif:  "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 @font-family-serif:       Georgia, "Times New Roman", Times, serif;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
@@ -64,7 +64,7 @@
 
 //** By default, this inherits from the `<body>`.
 @headings-font-family:    @font-family-base;
-@headings-font-weight:    400;
+@headings-font-weight:    300;
 @headings-line-height:    1.1;
 @headings-color:          inherit;
 
@@ -107,7 +107,7 @@
 //** Global color for active items (e.g., navs or dropdowns).
 @component-active-color:    #fff;
 //** Global background color for active items (e.g., navs or dropdowns).
-@component-active-bg:       @brand-success;
+@component-active-bg:       @brand-primary;
 
 //** Width of the `border` for generating carets that indicator dropdowns.
 @caret-width-base:          4px;
@@ -174,18 +174,18 @@
 //##
 
 //** `<input>` background color
-@input-bg:                       @gray-lighter;
+@input-bg:                       #030303;
 //** `<input disabled>` background color
-@input-bg-disabled:              @gray-lighter;
+@input-bg-disabled:              @gray-darker;
 
 //** Text color for `<input>`s
-@input-color:                    @gray;
+@input-color:                    @gray-lighter;
 //** `<input>` border color
-@input-border:                   #f1f1f1;
+@input-border:                   lighten(@input-bg, 15%);
 //** `<input>` border radius
 @input-border-radius:            @border-radius-base;
 //** Border color for inputs on focus
-@input-border-focus:             #fff;
+@input-border-focus:             @brand-primary;
 
 //** Placeholder text color
 @input-color-placeholder:        @gray-light;
@@ -412,7 +412,7 @@
 @nav-tabs-link-hover-border-color:          @gray;
 
 @nav-tabs-active-link-hover-bg:             @body-bg;
-@nav-tabs-active-link-hover-color:          @brand-success;
+@nav-tabs-active-link-hover-color:          @brand-primary;
 @nav-tabs-active-link-hover-border-color:   @nav-tabs-link-hover-border-color;
 
 @nav-tabs-justified-link-border-color:            @gray-lighter;
@@ -429,19 +429,19 @@
 //##
 
 @pagination-color:                     #fff;
-@pagination-bg:                        @brand-success;
+@pagination-bg:                        @brand-primary;
 @pagination-border:                    transparent;
 
 @pagination-hover-color:               #fff;
-@pagination-hover-bg:                  lighten(@brand-success, 6%);
+@pagination-hover-bg:                  lighten(@brand-primary, 6%);
 @pagination-hover-border:              transparent;
 
 @pagination-active-color:              #fff;
-@pagination-active-bg:                 lighten(@brand-success, 6%);
+@pagination-active-bg:                 lighten(@brand-primary, 6%);
 @pagination-active-border:             transparent;
 
 @pagination-disabled-color:            #fff;
-@pagination-disabled-bg:               darken(@brand-success, 15%);;
+@pagination-disabled-bg:               darken(@brand-primary, 15%);;
 @pagination-disabled-border:           transparent;
 
 
@@ -556,7 +556,6 @@
 @label-warning-bg:            @brand-warning;
 //** Danger label background color
 @label-danger-bg:             @brand-danger;
-@label-results-bg:            darken(@brand-primary, 10%);
 
 //** Default label text color
 @label-color:                 #fff;

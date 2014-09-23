@@ -4,7 +4,7 @@
 {% block title %}Zadania{% endblock %}
 
 {% block page_header %}
-<h1>Zadania <small>{{round.number}}. kola {{round.series.number}}. série {{round.series.year}}. ročníka {{round.series.competition.name}} {% if not round.visible %}<span class="label label-warning">skryté</span>{% endif %}</small></h1>
+<h1>Zadania <small>{{round.number}}. kola {{round.series.number}}. série {{round.series.year}}. ročníka {{round.series.competition.name}} {% if not round.visible %}<span class="label label-danger">skryté</span>{% endif %}</small></h1>
 {% endblock %}
 
 {% block page_content %}
