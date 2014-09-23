@@ -6,6 +6,7 @@ import random
 import socket
 import xml.etree.ElementTree as ET
 from decimal import Decimal
+from unidecode import unidecode
 
 
 RESPONSE_ERROR = 'CERR'
@@ -21,7 +22,7 @@ def write_file(text, binary, where):
         os.close(fd)
     except:
         pass
-    with open(where, 'w+') as destination:
+    with open(unidecode(where), 'w+') as destination:
         destination.write(text)
         destination.write(binary)
 
@@ -35,7 +36,7 @@ def save_file(what, where):
         os.close(fd)
     except:
         pass
-    with open(where, 'wb+') as destination:
+    with open(unidecode(where), 'wb+') as destination:
         for chunk in what.chunks():
             destination.write(chunk)
 
