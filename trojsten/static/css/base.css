@@ -30,6 +30,14 @@ input {
     margin-right:10px;
 }
 
+.label-button {
+  border: 1px solid rgba(0,0,0,.3);
+}
+
+.main-content {
+  text-align: justify;
+}
+
 .sidebar h2 {
   font-size:1.2em;
 }
@@ -58,6 +66,3 @@ footer ul {
   margin: 20px 0;
 }
 
-.label-button {
-  border: 1px solid rgba(0,0,0,.3);
-}
