@@ -1,14 +1,11 @@
 {% load utils %}
 <!-- Nav tabs -->
 
-{% if categories_cnt > 1 %}
+{% if categories.count > 1 %}
 <ul class="nav nav-tabs" role="tablist">
+    <li class="active"><a href="#category-tab-all" role="tab" data-toggle="tab" onclick="$('#task-list-{{round.id}} tr').show()">Všetky</a></li>
     {% for category in categories %}
-        {% if category == None %}
-            <li class="active"><a href="#category-tab-all" role="tab" data-toggle="tab" onclick="$('#task-list-{{round.id}} tr').show()">Všetky</a></li>
-        {% else %}
-            <li><a href="#category-tab-{{category}}" role="tab" data-toggle="tab" onclick="$('#task-list-{{round.id}} tr:not(.category-{{category}})').hide();$('#task-list-{{round.id}} tr.category-{{category}}').show();$('#task-list-{{round.id}} thead>tr').show();">{{category}}</a></li>
-        {% endif %}
+    <li><a href="#category-tab-{{category}}" role="tab" data-toggle="tab" onclick="$('#task-list-{{round.id}} tr:not(.category-{{category}})').hide();$('#task-list-{{round.id}} tr.category-{{category}}').show();$('#task-list-{{round.id}} thead>tr').show();">{{category}}</a></li>
     {% endfor %}
 </ul>
 {% endif %}
