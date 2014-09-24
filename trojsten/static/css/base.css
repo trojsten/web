@@ -19,6 +19,11 @@ label.required:after {
     height: 50px;
     margin-right:10px;
 }
+
+.sidebar h2 {
+  font-size:1.2em;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
