@@ -87,7 +87,9 @@ class Command(NoArgsCommand):
             new_user_args = {
                 'first_name': first_name,
                 'last_name': last_name,
-                'username': first_name + last_name,
+                # The username needs to be unique, hopefully this is
+                # unique enough.
+                'username': '%s%s%d' % (first_name, last_name, man_id),
                 'is_active': False,
                 'school': school_id_map[school_id]
             }
