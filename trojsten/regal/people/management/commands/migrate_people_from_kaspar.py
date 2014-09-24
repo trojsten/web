@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from datetime import datetime
+
 from django.core.management.base import NoArgsCommand, CommandError
 from django.utils.six.moves import input
 from django.db import connections
@@ -68,9 +70,19 @@ class Command(NoArgsCommand):
             FROM people;
         """)
         man_id_map = dict()
+        # This loop takes O(N) queries and I don't care -- it's a one-time
+        # background job anyway.
         for row in c:
             man_id, first_name, last_name, school_id = row[0:4]
             grad_year, note = row[4:]
+
+            # If the user already exists in our database, skip.
+            if UserProperty.objects.filter(key=KASPAR_ID_LABEL,
+                                           value=man_id).count() > 0:
+                if self.verbosity >= 2:
+                    self.stdout.write("Skipping user %s %s" % (first_name,
+                                                               last_name))
+                    continue
 
             new_user_args = {
                 'first_name': first_name,
@@ -83,21 +95,22 @@ class Command(NoArgsCommand):
             if grad_year:
                 new_user_args['graduation'] = grad_year
 
-            # The following takes O(N) queries and I don't care --
-            # it's a one-time background job anyway.
             d = kaspar.cursor()
             d.execute("""
                 SELECT ppt_id, value
                 FROM people_prop
-                WHERE man_id = ? AND ppt_id IN [?, ?]
-            """, (man_id, EMAIL_PROP, BIRTHDAY_PROP)
+                WHERE people_prop.man_id = %s AND ppt_id IN (%s, %s);
+            """, (man_id, EMAIL_PROP, BIRTHDAY_PROP))
             for prop_id, value in d:
                 if prop_id == EMAIL_PROP:
                     new_user_args['email'] = value
                 elif prop_id == BIRTHDAY_PROP:
-                    new_user_args['birth_date'] = value
+                    new_user_args['birth_date'] = self.parse_date(value)
             d.close()
             del d
+
+            if self.verbosity >= 2:
+                self.stdout.write("Creating user %s %s" % (first_name, last_name))
 
             new_user = User.objects.create(**new_user_args)
             man_id_map[man_id] = new_user
@@ -120,3 +133,9 @@ class Command(NoArgsCommand):
         if self.verbosity >= 2:
             self.stdout.write("Created new school %s" % school)
         return school
+
+    def parse_date(self, date_string):
+        # Remove any whitespace inside the string.
+        date_string = ''.join(date_string.split())
+        # Just hope that all dates are in the same format.
+        return datetime.strptime(date_string, '%d.%m.%Y')
