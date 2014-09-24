@@ -18,8 +18,7 @@ class TrojstenMarkItUp(MarkItUp):
     class Media:
         css = {
             'all': (
-                "wiki/markitup/skins/simple/style.css",
-                "wiki/markitup/sets/frontend/style.css",
+                "css/markitup-dark.css",
             )
         }
         js = (
