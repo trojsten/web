@@ -17,6 +17,8 @@ BIRTHDAY_PROP = 2
 # Labels for auto-generated properties
 KASPAR_ID_LABEL = "kaspar ID"
 KASPAR_NOTE_LABEL = "kaspar note"
+KASPAR_NOTE_CHUNK_LABEL = KASPAR_NOTE_LABEL + ' %d'
+KASPAR_NOTE_LENGTH = 99
 
 
 class Command(NoArgsCommand):
@@ -123,7 +125,15 @@ class Command(NoArgsCommand):
 
             new_user.properties.create(key=KASPAR_ID_LABEL,
                                        value=man_id)
-            if note:
+            if len(note) > KASPAR_NOTE_LENGTH:
+                # Split the note into chunks.
+                for i, start in enumerate(range(0, len(note), KASPAR_NOTE_LENGTH)):
+                    chunk = note[start:start + KASPAR_NOTE_LENGTH]
+                    new_user.properties.create(
+                        key=KASPAR_NOTE_CHUNK_LABEL % i,
+                        value=chunk
+                    )
+            elif note:
                 new_user.properties.create(key=KASPAR_NOTE_LABEL,
                                            value=note)
 
