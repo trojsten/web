@@ -107,7 +107,11 @@ class Command(NoArgsCommand):
                 if prop_id == EMAIL_PROP:
                     new_user_args['email'] = value
                 elif prop_id == BIRTHDAY_PROP:
-                    new_user_args['birth_date'] = self.parse_date(value)
+                    try:
+                        new_user_args['birth_date'] = self.parse_date(value)
+                    except ValueError:
+                        # If we can't parse the date, give up.
+                        pass
             d.close()
             del d
 
