@@ -1,5 +1,6 @@
 {% extends "trojsten/layout/main.html" %}
 {% load submit_parts %}
+{% load statements_parts %}
 
 {% block title %}Odovzdávanie{% endblock %}
 
@@ -8,6 +9,7 @@
 {% endblock %}
 
 {% block page_content %}
+    {% show_progress task.round%}
     {% show_submit_form task request.path %}
     {% show_submit_list task request.user %}
 {% endblock %}
