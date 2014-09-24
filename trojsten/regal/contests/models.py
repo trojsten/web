@@ -176,5 +176,5 @@ class Round(models.Model):
         verbose_name_plural = 'Kolá'
 
     def __str__(self):
-        return '%i. kolo, %i. ročník %s'\
-            % (self.number, self.series.year, self.series.competition)
+        return '%i. kolo, %i. séria, %i. ročník %s'\
+            % (self.number, self.series.number, self.series.year, self.series.competition)

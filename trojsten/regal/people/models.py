@@ -37,10 +37,10 @@ class School(models.Model):
                                     help_text="Sktatka názvu školy.")
     verbose_name = models.CharField(max_length=100,
                                     verbose_name="celý názov")
-    addr_name = models.CharField(max_length=100, blank=True)
-    street = models.CharField(max_length=100, blank=True)
-    city = models.CharField(max_length=100, blank=True)
-    zip_code = models.CharField(max_length=10, blank=True)
+    addr_name = models.CharField(max_length=100, blank=True, verbose_name='názov v adrese')
+    street = models.CharField(max_length=100, blank=True, verbose_name='ulica')
+    city = models.CharField(max_length=100, blank=True, verbose_name='mesto')
+    zip_code = models.CharField(max_length=10, blank=True, verbose_name='PSČ')
 
     class Meta:
         verbose_name = "škola"
