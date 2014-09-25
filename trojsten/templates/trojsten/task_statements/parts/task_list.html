@@ -1,22 +1,39 @@
-<table class="table">
+{% load utils %}
+<!-- Nav tabs -->
+
+{% if categories.count > 1 %}
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active"><a href="#category-tab-all" role="tab" data-toggle="tab" onclick="$('#task-list-{{round.id}} tr').show()">Všetky</a></li>
+    {% for category in categories %}
+    <li><a href="#category-tab-{{category}}" role="tab" data-toggle="tab" onclick="$('#task-list-{{round.id}} tr:not(.category-{{category}})').hide();$('#task-list-{{round.id}} tr.category-{{category}}').show();$('#task-list-{{round.id}} thead>tr').show();">{{category}}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<table class="table" id="task-list-{{round.id}}">
 <thead>
 <tr>
-    <th>
+    <th width="5%">
         #
     </th>
     <th>
         Úloha
     </th>
-    <th>
+    <th width="15%">
         Kategória
     </th>
-    <th>
-        Body
+    <th width="15%">
+        Max. body
     </th>
+    {% if user.is_authenticated %}
+    <th width="15%">
+        Tvoje body
+    </th>
+    {% endif %}
 </tr>
 </thead>
 {% for task in tasks %}
-    <tr>
+    <tr class="{% for category in task.category.all %} category-{{category}}{% endfor %}">
         <td>
             {{task.number}}.
         </td>
@@ -34,12 +51,24 @@
         </td>
         <td>
             {% if task.description_points > 0 %}
-                <span class="points-item">Body za popis: {{task.description_points}}</span>
+                <span class="points-item">popis: {{task.description_points}}</span>
+                {% if task.source_points > 0 %}<br/>{% endif %}
             {% endif %}
             {% if task.source_points > 0 %}
-                <span class="points-item">Body za program: {{task.source_points}}</span>
+                <span class="points-item">program: {{task.source_points}}</span>
             {% endif %}
         </td>
+        {% if user.is_authenticated %}
+        <td>
+            {% if task.description_points > 0 %}
+                <span class="points-item">popis: {{points|lookup:task|lookup:'description'}}</span>
+                {% if task.source_points > 0 %}<br/>{% endif %}
+            {% endif %}
+            {% if task.source_points > 0 %}
+                <span class="points-item">program: {{points|lookup:task|lookup:'source'}}</span>
+            {% endif %}
+        </td>
+        {% endif %}
     </tr>
 {% empty %}
     <tr>

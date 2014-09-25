@@ -13,7 +13,7 @@
         {% show_progress round%}
         {% show_buttons round %}
         <h3>Zoznam úloh</h3>
-        {% show_task_list round %}
+        {% show_task_list request.user round %}
     {% endfor %}
     <h2>Všetky zadania</h2>
     <!-- Nav tabs -->
