@@ -52,7 +52,7 @@ class Command(NoArgsCommand):
             elif len(candidates) > 1:
                 self.stdout.write("Multiple candidates for %r:\n%s" % (
                     row,
-                    "\n".join(("%02d: %s" % i, candidate)
+                    "\n".join("%02d: %s" % (i, candidate)
                               for i, candidate in enumerate(candidates))
                 ))
                 try:
@@ -75,8 +75,8 @@ class Command(NoArgsCommand):
         # This loop takes O(N) queries and I don't care -- it's a one-time
         # background job anyway.
         for row in c:
-            man_id, first_name, last_name, school_id = row[0:4]
-            grad_year, note = row[4:]
+            (man_id, first_name, last_name, school_id,
+                grad_year, note) = row
 
             # If the user already exists in our database, skip.
             if UserProperty.objects.filter(key=KASPAR_ID_LABEL,
@@ -152,6 +152,6 @@ class Command(NoArgsCommand):
 
     def parse_date(self, date_string):
         # Remove any whitespace inside the string.
-        date_string = ''.join(date_string.split())
+        date_string = date_string.replace(' ', '')
         # Just hope that all dates are in the same format.
         return datetime.strptime(date_string, '%d.%m.%Y')
