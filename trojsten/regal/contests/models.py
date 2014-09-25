@@ -78,6 +78,7 @@ class Round(models.Model):
     '''
     series = models.ForeignKey(Series, verbose_name='séria')
     number = models.IntegerField(verbose_name='číslo')
+    start_time = models.DateTimeField(verbose_name='začiatok')
     end_time = models.DateTimeField(verbose_name='koniec')
     visible = models.BooleanField(verbose_name='viditeľnosť')
     solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov')
