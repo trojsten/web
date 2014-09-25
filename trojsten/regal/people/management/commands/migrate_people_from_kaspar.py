@@ -56,11 +56,10 @@ class Command(NoArgsCommand):
                               for i, candidate in enumerate(candidates))
                 ))
                 try:
-                    choice = int(input("Choice (empty to create new): "))
-                except ValueError:
-                    school_id_map[kaspar_id] = self.create_school(*row)
-                else:
+                    choice = int(input("Choice (empty or invalid to create new): "))
                     school_id_map[kaspar_id] = choices[choice]
+                except (ValueError, KeyError):
+                    school_id_map[kaspar_id] = self.create_school(*row)
             else:
                 school_id_map[kaspar_id] = self.create_school(*row)
 
