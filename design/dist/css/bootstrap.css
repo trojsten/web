@@ -898,7 +898,7 @@ body {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
   line-height: 1.42857143;
-  color: #fafafa;
+  color: #c2c2c2;
   background-color: #111;
 }
 input,
@@ -2305,7 +2305,7 @@ legend {
   margin-bottom: 21px;
   font-size: 22.5px;
   line-height: inherit;
-  color: #fafafa;
+  color: #c2c2c2;
   border: 0;
   border-bottom: 1px solid transparent;
 }
@@ -2811,7 +2811,7 @@ select[multiple].form-group-lg .form-control {
 .btn:hover,
 .btn:focus,
 .btn.focus {
-  color: #fafafa;
+  color: #c2c2c2;
   text-decoration: none;
 }
 .btn:active,
@@ -2832,7 +2832,7 @@ fieldset[disabled] .btn {
   opacity: .65;
 }
 .btn-default {
-  color: #fafafa;
+  color: #c2c2c2;
   background-color: #464545;
   border-color: #464545;
 }
@@ -2842,7 +2842,7 @@ fieldset[disabled] .btn {
 .btn-default:active,
 .btn-default.active,
 .open > .dropdown-toggle.btn-default {
-  color: #fafafa;
+  color: #c2c2c2;
   background-color: #2c2c2c;
   border-color: #272727;
 }
@@ -2874,7 +2874,7 @@ fieldset[disabled] .btn-default.active {
 }
 .btn-default .badge {
   color: #464545;
-  background-color: #fafafa;
+  background-color: #c2c2c2;
 }
 .btn-primary {
   color: #fff;
@@ -4390,7 +4390,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 .breadcrumb > li + li:before {
   padding: 0 5px;
-  color: #fafafa;
+  color: #c2c2c2;
   content: "/\00a0";
 }
 .breadcrumb > .active {
@@ -4696,7 +4696,7 @@ a.thumbnail.active {
 }
 .thumbnail .caption {
   padding: 9px;
-  color: #fafafa;
+  color: #c2c2c2;
 }
 .alert {
   padding: 15px;
@@ -5309,7 +5309,7 @@ a.list-group-item-danger.active:focus {
   border-color: #464545;
 }
 .panel-default > .panel-heading {
-  color: #fafafa;
+  color: #c2c2c2;
   background-color: #333;
   border-color: #464545;
 }
@@ -5318,7 +5318,7 @@ a.list-group-item-danger.active:focus {
 }
 .panel-default > .panel-heading .badge {
   color: #333;
-  background-color: #fafafa;
+  background-color: #c2c2c2;
 }
 .panel-default > .panel-footer + .panel-collapse > .panel-body {
   border-bottom-color: #464545;
