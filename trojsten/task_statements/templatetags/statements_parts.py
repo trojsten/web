@@ -28,7 +28,7 @@ def show_task_list(user, round):
         'tasks': tasks,
         'categories': categories,
     }
-    if user.is_authenticated:
+    if user.is_authenticated():
         submits = get_latest_submits_for_user(tasks, user)
         results = get_points_from_submits(tasks, submits)
         data['points'] = results
