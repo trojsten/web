@@ -1,23 +1,23 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,latin-ext);
 
 li > h1 {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .simplemodal-container {
-    color: black;
+  color: black;
 }
 
 .panel-rounds {
-    margin-top: 1em;
+  margin-top: 1em;
 }
 
 .well.task-points.pull-right {
-    margin-left:5px;
+  margin-left: 5px;
 }
 
 label.required:after {
-    content:"*";
+  content: "*";
 }
 
 input {
@@ -25,13 +25,13 @@ input {
 }
 
 .social-button {
-    padding: 16px 0;
-    height: 50px;
-    margin-right:10px;
+  padding: 16px 0;
+  height: 50px;
+  margin-right: 10px;
 }
 
 .label-button {
-  border: 1px solid rgba(0,0,0,.3);
+  border: 1px solid rgba(0, 0, 0, .3);
 }
 
 .main-content {
@@ -39,7 +39,7 @@ input {
 }
 
 .sidebar h2 {
-  font-size:1.2em;
+  font-size: 1.2em;
 }
 
 /* Sticky footer styles
@@ -62,6 +62,7 @@ footer {
   height: 60px;
   background-color: #030303;
 }
+
 footer ul {
   margin: 20px 0;
 }
