@@ -59,7 +59,7 @@ class UserAdmin(DefaultUserAdmin):
     get_is_staff = attribute_format(attribute='is_staff', description="vedúci", boolean=True)
 
     def get_properties(self, obj):
-        return str("<br>").join(str(x) for x in obj.properties.all())
+        return str("<br />").join(str(x) for x in obj.properties.all())
     get_properties.short_description = 'dodatočné vlastnosti'
     get_properties.allow_tags = True
 
