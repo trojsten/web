@@ -31,9 +31,9 @@ class Repository(models.Model):
 
 @python_2_unicode_compatible
 class Competition(models.Model):
-    '''
+    """
     Consists of series.
-    '''
+    """
     name = models.CharField(max_length=128, verbose_name='názov')
     sites = models.ManyToManyField(Site)
     repo = models.ForeignKey(Repository, null=True, blank=True, verbose_name='git repozitár')
@@ -52,10 +52,9 @@ class Competition(models.Model):
 
 @python_2_unicode_compatible
 class Series(models.Model):
-
-    '''
-    Series consits of several rounds.
-    '''
+    """
+    Series consists of several rounds.
+    """
     competition = models.ForeignKey(Competition, verbose_name='súťaž')
     name = models.CharField(max_length=32, verbose_name='názov')
     number = models.IntegerField(verbose_name='číslo série')
@@ -69,13 +68,17 @@ class Series(models.Model):
         return '%i. (%s) séria, %i. ročník %s'\
             % (self.number, self.name, self.year, self.competition)
 
+    def short_str(self):
+        return '%i. (%s) séria'\
+            % (self.number, self.name)
+    short_str.short_description = 'Séria'
 
 @python_2_unicode_compatible
 class Round(models.Model):
-    '''
+    """
     Round has tasks.
     Holds information about deadline and such things
-    '''
+    """
     series = models.ForeignKey(Series, verbose_name='séria')
     number = models.IntegerField(verbose_name='číslo')
     start_time = models.DateTimeField(verbose_name='začiatok')
@@ -178,3 +181,7 @@ class Round(models.Model):
     def __str__(self):
         return '%i. kolo, %i. séria, %i. ročník %s'\
             % (self.number, self.series.number, self.series.year, self.series.competition)
+
+    def short_str(self):
+        return '%i. kolo' % self.number
+    short_str.short_description = 'kolo'

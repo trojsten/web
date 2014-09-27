@@ -5,10 +5,11 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from trojsten.regal.people.models import *
+from trojsten.regal.utils import *
 
 
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'street', 'town', 'postal_code', 'country')
+    list_display = ('street', 'town', 'postal_code', 'country')
     search_fields = ('street', 'town', 'postal_code', 'country')
 
 
@@ -45,26 +46,22 @@ class UserAdmin(DefaultUserAdmin):
     def __init__(self, *args, **kwargs):
         super(UserAdmin, self).__init__(*args, **kwargs)
         self.fieldsets += (('Extra', {'fields': ('gender', 'birth_date', 'home_address', 'mailing_address', 'school', 'graduation')}),)
-        self.inlines = [UserPropertyInLine]
+        self.inlines = (UserPropertyInLine,)
     list_display = ('username', 'first_name', 'last_name', 'email', 'school',
                     'get_is_staff', 'get_groups', 'is_active', 'get_properties')
     list_filter = ('groups', StaffFilter)
     search_fields = ('username', 'first_name', 'last_name')
 
     def get_groups(self, obj):
-        return ", ".join([unicode(x) for x in obj.groups.all()])
+        return str(", ").join(str(x) for x in obj.groups.all())
     get_groups.short_description = 'skupiny'
 
-    def get_is_staff(self, obj):
-        return obj.is_staff
-    get_is_staff.boolean = True
-    get_is_staff.short_description = 'vedúci'
+    get_is_staff = attribute_format(attribute='is_staff', description="vedúci", boolean=True)
 
     def get_properties(self, obj):
-        return unicode("<br>").join(unicode(x) for x in obj.properties.all())
+        return str("<br>").join(str(x) for x in obj.properties.all())
     get_properties.short_description = 'dodatočné vlastnosti'
     get_properties.allow_tags = True
-
 
 
 admin.site.register(Address, AddressAdmin)
