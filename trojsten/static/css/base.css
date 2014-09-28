@@ -60,6 +60,12 @@ input {
   line-height: 1.5;
 }
 
+.main-content .wiki-article {
+  padding-bottom: 3em;
+  margin-bottom: 1em;
+  border-bottom: 1px dotted #455905;
+}
+
 .page-header {
   border-bottom: 1px dotted #455905;
 }
@@ -67,6 +73,13 @@ input {
 .sidebar {
   margin-left: 50px;
   text-align: right;
+}
+
+.sidebar a:link,
+.sidebar a:visited,
+footer a:link,
+footer a:visited {
+  color: #86a525;
 }
 
 .sidebar h2 {
