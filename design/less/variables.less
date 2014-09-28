@@ -9,13 +9,13 @@
 
 
 @gray-dark:              #333;
-@gray-darker:            #111;
+@gray-darker:            #222;
 @gray:                   #464545;
 @gray-light:             #999;   // #999
 @gray-lighter:           #EBEBEB; // #eee
 
-@brand-primary:         #429031;
-@brand-success:         #7BB661;
+@brand-primary:         #6A831E;
+@brand-success:         #8EA83f;
 @brand-info:            #3498DB;
 @brand-warning:         #F39C12;
 @brand-danger:          #E74C3C;
@@ -28,7 +28,7 @@
 //** Background color for `<body>`.
 @body-bg:               @gray-darker;
 //** Global text color on `<body>`.
-@text-color:            #C2C2C2;
+@text-color:            @gray-darker;
 
 //** Global textual link color.
 @link-color:            desaturate(lighten(@brand-primary, 15%),10%);
@@ -46,7 +46,7 @@
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
 @font-family-base:        @font-family-sans-serif;
 
-@font-size-base:          15px;
+@font-size-base:          14px;
 @font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
 @font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
 
@@ -127,13 +127,13 @@
 //** Default background color used for all tables.
 @table-bg:                      transparent;
 //** Background color used for `.table-striped`.
-@table-bg-accent:               @gray-dark;
+@table-bg-accent:               @gray-lighter;
 //** Background color used for `.table-hover`.
 @table-bg-hover:                @gray;
 @table-bg-active:               @table-bg-hover;
 
 //** Border color for table and cell borders.
-@table-border-color:            @gray;
+@table-border-color:            @gray-lighter;
 
 
 //== Buttons
@@ -343,8 +343,8 @@
 @navbar-padding-vertical:          ((@navbar-height - @line-height-computed) / 2);
 @navbar-collapse-max-height:       340px;
 
-@navbar-default-color:             #429031;
-@navbar-default-bg:                @brand-primary;
+@navbar-default-color:             #fff;
+@navbar-default-bg:                @gray;
 @navbar-default-border:            transparent;
 
 // Navbar links
@@ -398,7 +398,7 @@
 //##
 
 //=== Shared nav styles
-@nav-link-padding:                          10px 15px;
+@nav-link-padding:                          7px 25px;
 @nav-link-hover-bg:                         @gray-dark;
 
 @nav-disabled-link-color:                   lighten(@gray, 10%);
