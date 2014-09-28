@@ -399,7 +399,7 @@
 
 //=== Shared nav styles
 @nav-link-padding:                          7px 25px;
-@nav-link-hover-bg:                         @gray-dark;
+@nav-link-hover-bg:                         @gray-lighter;
 
 @nav-disabled-link-color:                   lighten(@gray, 10%);
 @nav-disabled-link-hover-color:             lighten(@gray, 10%);
@@ -407,12 +407,12 @@
 @nav-open-link-hover-color:                 #fff;
 
 //== Tabs
-@nav-tabs-border-color:                     @gray;
+@nav-tabs-border-color:                     @brand-info;
 
-@nav-tabs-link-hover-border-color:          @gray;
+@nav-tabs-link-hover-border-color:          @gray-lighter;
 
-@nav-tabs-active-link-hover-bg:             @body-bg;
-@nav-tabs-active-link-hover-color:          @brand-primary;
+@nav-tabs-active-link-hover-bg:             @brand-info;
+@nav-tabs-active-link-hover-color:          #fff;
 @nav-tabs-active-link-hover-border-color:   @nav-tabs-link-hover-border-color;
 
 @nav-tabs-justified-link-border-color:            @gray-lighter;
@@ -545,7 +545,7 @@
 //##
 
 //** Default label background color
-@label-default-bg:            @gray;
+@label-default-bg:            @gray-light;
 //** Primary label background color
 @label-primary-bg:            @brand-primary;
 //** Success label background color
@@ -626,7 +626,7 @@
 //##
 
 //** Background color of the whole progress component
-@progress-bg:                 @gray-lighter;
+@progress-bg:                 @gray-light;
 //** Progress bar text color
 @progress-bar-color:          #fff;
 
@@ -680,19 +680,19 @@
 //
 //##
 
-@panel-bg:                    @gray-dark;
+@panel-bg:                    transparent;
 @panel-body-padding:          15px;
 @panel-heading-padding:       10px 15px;
 @panel-footer-padding:        @panel-heading-padding;
 @panel-border-radius:         @border-radius-base;
 
 //** Border color for elements within panels
-@panel-inner-border:          @gray;
-@panel-footer-bg:             @gray;
+@panel-inner-border:          @gray-lighter;
+@panel-footer-bg:             @gray-lighter;
 
-@panel-default-text:          @text-color;
-@panel-default-border:        @gray;
-@panel-default-heading-bg:    @gray-dark;
+@panel-default-text:          #000;
+@panel-default-border:        @gray-lighter;
+@panel-default-heading-bg:    @gray-lighter;
 
 @panel-primary-text:          #fff;
 @panel-primary-border:        @brand-primary;
