@@ -68,6 +68,10 @@ footer a:visited {
   color: #86a525;
 }
 
+.sidebar li a:hover {
+  background-color: #333;
+}
+
 .sidebar h2 {
   font-size: 1.2em;
   padding: 10px 25px 0 0;
