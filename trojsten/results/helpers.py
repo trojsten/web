@@ -1,6 +1,7 @@
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.regal.people.models import User
 from django.db.models import F
+from datetime import date
 
 
 def get_tasks(round_ids, category_ids=None):
@@ -25,6 +26,8 @@ def get_submits(tasks, show_staff=False):
     submits = Submit.objects
     if not show_staff and len(tasks):
         submits = submits.exclude(
+            user__graduation__lt=date.today().year
+        ).exclude(
             user__in=User.objects.filter(
                 groups=tasks[0].round.series.competition.organizers_group
             )
