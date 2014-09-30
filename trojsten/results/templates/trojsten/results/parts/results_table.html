@@ -4,6 +4,8 @@
 <tr>
     <th>#</th>
     <th>Meno:</th>
+    <th>Škola</th>
+    <th>Ročník</th>
     {% for task in tasks %}
         <th>{{task.number}}</th>
     {% endfor %}
@@ -15,6 +17,8 @@
 <tr {% if user == result.user %}class="active"{%endif%}>
     <td>{{forloop.counter}}</td>
     <td>{{result.user.first_name}} {{result.user.last_name}}</td>
+    <td>{%if result.user.school.has_abbreviation %}<abbr title="{{result.user.school.verbose_name}}">{{result.user.school.abbreviation}}</abbr>{%else%}{{result.user.school.verbose_name}}{%endif%}</td>
+    <td>{{result.user.school_year}}</td>
     {% for task in tasks %}
         <td>
         {% if result.points|lookup:task|lookup:"submitted" %}
