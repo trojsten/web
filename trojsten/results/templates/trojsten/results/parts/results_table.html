@@ -12,7 +12,7 @@
 </thead>
 {% for result in results %}
 {% spaceless %}
-<tr>
+<tr {% if user == result.user %}class="active"{%endif%}>
     <td>{{forloop.counter}}</td>
     <td>{{result.user.first_name}} {{result.user.last_name}}</td>
     {% for task in tasks %}

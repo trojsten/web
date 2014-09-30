@@ -14,5 +14,5 @@ kolo {{series.number}}. série {{series.year}}. ročníka {{series.competition}}
 {% endblock %}
 
 {% block page_content %}
-{% show_results_table tasks=tasks show_staff=show_staff %}
+{% show_results_table tasks=tasks user=request.user show_staff=show_staff %}
 {% endblock %}
