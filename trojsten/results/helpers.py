@@ -45,9 +45,17 @@ def get_results_data(tasks, submits):
     res = dict()
     for submit in submits:
         if submit.user not in res:
-            res[submit.user] = {i: {'sum': 0, 'submitted': False} for i in tasks}
+            res[submit.user] = {
+                i: {'sum': 0, 'description': 0, 'source': 0, 'submitted': False}
+                for i in tasks
+            }
             res[submit.user]['sum'] = 0
-        res[submit.user][submit.task][int(submit.submit_type)] = submit.points
+
+        if submit.submit_type == Submit.DESCRIPTION:
+            res[submit.user][submit.task]['description'] = '??'  # Fixme
+        else:
+            res[submit.user][submit.task]['source'] += submit.points
+
         res[submit.user][submit.task]['sum'] += submit.points
         res[submit.user][submit.task]['submitted'] = True
         res[submit.user]['sum'] += submit.points
