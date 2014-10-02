@@ -110,8 +110,9 @@ class User(AbstractUser):
 
     @property
     def school_year(self):
-        current_year = date.today().year\
-            + (date.today().month > settings.SCHOOL_YEAR_END_MONTH)
+        current_year = date.today().year + int(
+            date.today().month > settings.SCHOOL_YEAR_END_MONTH
+        )
         return current_year - self.graduation + settings.GRADUATION_SCHOOL_YEAR
 
 

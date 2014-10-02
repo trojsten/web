@@ -26,7 +26,7 @@ def get_submits(tasks, show_staff=False):
     submits = Submit.objects
     if not show_staff and len(tasks):
         submits = submits.exclude(
-            user__graduation__lt=tasks[0].round.end_time.year + (
+            user__graduation__lt=tasks[0].round.end_time.year + int(
                 tasks[0].round.end_time.month > settings.SCHOOL_YEAR_END_MONTH
             )
         ).exclude(
