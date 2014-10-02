@@ -74,7 +74,7 @@ class User(AbstractUser):
     related to a person.
     '''
     gender = models.CharField(
-        max_length=2,
+        max_length=1,
         choices=[('M', "Chlapec"), ('F', "Dievča")],
         default="M",
         verbose_name="pohlavie",
