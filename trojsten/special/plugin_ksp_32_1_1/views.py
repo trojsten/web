@@ -46,8 +46,12 @@ def run(request, level=1):
     user = request.user
     userlevel, _ = UserLevel.objects.get_or_create(level_id=level, user=user)
 
-    data = json.loads(request.read().decode("utf-8"))
-    _input = str(int(data["input"]))
+    try:
+        data = json.loads(request.read().decode("utf-8"))
+        _input = str(int(data["input"]))
+    except (KeyError, ValueError):
+        return HttpResponseBadRequest()
+
     _output = LEVELS[level].run(_input)
 
     solved = _output == LEVELS[level].TARGET
