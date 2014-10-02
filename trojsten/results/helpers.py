@@ -26,6 +26,10 @@ def get_submits(tasks, show_staff=False):
     submits = Submit.objects
     if not show_staff and len(tasks):
         submits = submits.exclude(
+            # kolo konci Januar 2014 => exclude 2013, 2012,
+            # kolo konci Jun 2014 => exclude 2013, 2012,
+            # kolo konci September 2014 => exclude 2014, 2013,
+            # kolo konci December 2014 => exclude 2014, 2013,
             user__graduation__lt=tasks[0].round.end_time.year + int(
                 tasks[0].round.end_time.month > settings.SCHOOL_YEAR_END_MONTH
             )
