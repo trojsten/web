@@ -8,7 +8,6 @@ except Exception:
 
 
 def update_points(user):
-    print("user")
     points = len(UserLevel.objects.filter(user=user.id, solved=True))
     submit = Submit(
         task=TASK,
