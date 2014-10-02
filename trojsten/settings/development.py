@@ -13,6 +13,13 @@ DATABASES = {
         'USER': 'trojsten',
         'PASSWORD': 'trojsten',
     },
+    'kaspar': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': 'localhost',
+        'NAME': 'kaspar',
+        'USER': 'trojsten',
+        'PASSWORD': 'trojsten',
+    },
 }
 
 SENDFILE_BACKEND = 'sendfile.backends.development'
