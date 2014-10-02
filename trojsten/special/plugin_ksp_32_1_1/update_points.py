@@ -2,7 +2,7 @@ from .models import UserLevel
 from trojsten.regal.tasks.models import Submit, Task
 
 try:
-    TASK = Task.objects.get()
+    TASK = Task.objects.get(pk=972)
 except Exception:
     pass
 
