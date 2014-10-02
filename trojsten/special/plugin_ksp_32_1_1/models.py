@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-
 class UserLevel(models.Model):
     user = models.ForeignKey(get_user_model())
     level_id = models.IntegerField()
@@ -23,3 +22,6 @@ class Try(models.Model):
     userlevel = models.ForeignKey('UserLevel')
     input = models.CharField(max_length=15)
     output = models.CharField(max_length=30)
+
+
+
