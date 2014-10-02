@@ -77,7 +77,6 @@ def run(request, level=1):
 
 @staff_member_required
 def update_all_points(request):
-    print("user")
     user_ids = UserLevel.objects.all().values_list('user', flat=True).distinct()
     users = get_user_model().objects.filter(id__in=user_ids)
     for user in users:
