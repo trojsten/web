@@ -46,10 +46,21 @@ input {
   line-height: 1.5;
 }
 
-.main-content .wiki-article {
+.main-content .wiki-article,
+.main-content .news-entry {
   padding-bottom: 3em;
   margin-bottom: 1em;
   border-bottom: 1px dotted #455905;
+}
+
+.main-content .news-entry > .news-entry-details {
+  color: #777;
+  font-size: .9em;
+  margin-top: -1em;
+}
+
+.main-content .news-entry > .news-entry-text {
+  margin-top: 1em;
 }
 
 .page-header {
