@@ -1,16 +1,22 @@
 from .models import UserLevel
 from trojsten.regal.tasks.models import Submit, Task
 
-try:
-    TASK = Task.objects.get(pk=972)
-except Exception:
-    pass
+
+ZWARTE_DOOS_TASK_ID = 972
 
 
+def get_task():
+    try:
+        return get_task._cache
+    except AttributeError:
+        get_task._cache = Task.objects.get(pk=ZWARTE_DOOS_TASK_ID)
+        return get_task._cache
+        
+        
 def update_points(user):
     points = len(UserLevel.objects.filter(user=user.id, solved=True))
     submit = Submit(
-        task=TASK,
+        task=get_task(),
         user=user,
         points=points,
         submit_type=Submit.DESCRIPTION,
