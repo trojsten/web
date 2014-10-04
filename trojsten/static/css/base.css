@@ -63,6 +63,14 @@ input {
   margin-top: 1em;
 }
 
+.main-content .wiki-article table th {
+  font-size: 1.3em;
+}
+
+.main-content .wiki-article table td {
+  padding: 0.5em 2em 0 0;
+}
+
 .page-header {
   border-bottom: 1px dotted #455905;
 }
