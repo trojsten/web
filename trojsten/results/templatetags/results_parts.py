@@ -5,17 +5,17 @@ from trojsten.regal.tasks.models import Submit
 register = template.Library()
 
 
-@register.inclusion_tag('trojsten/results/parts/results_table.html')
-def show_results_table(tasks, show_staff=False):
+@register.inclusion_tag('trojsten/results/parts/results_table.html', takes_context=True)
+def show_results_table(context, tasks):
     '''Displays results for specified tasks and categories
     '''
-    submits = get_submits(tasks, show_staff)
+    submits = get_submits(tasks, context['show_staff'],)
     results_data = get_results_data(tasks, submits)
     results = make_result_table(results_data)
 
-    data = {
+    context.update({
         'Submit': Submit,
         'tasks': tasks,
         'results': results,
-    }
-    return data
+    })
+    return context

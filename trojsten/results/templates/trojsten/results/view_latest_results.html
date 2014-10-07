@@ -25,13 +25,13 @@
             {% for category, tasks in tasks_by_round %}
                 {% if category != None %}
                     <div class="tab-pane fade{% if forloop.counter == 2 %} in active{%endif%}" id="category-tab-{{category}}">
-                        {% show_results_table tasks=tasks show_staff=show_staff %}
+                        {% show_results_table tasks=tasks %}
                     </div>
                 {% endif %}
             {% endfor %}
         </div>
     {% else %}
-        {% show_results_table tasks=tasks_by_round|lookup:0|lookup:1 show_staff=show_staff %}
+        {% show_results_table tasks=tasks_by_round|lookup:0|lookup:1 %}
     {% endif %}
 
 {% endfor %}

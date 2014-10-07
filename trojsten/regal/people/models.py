@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import AbstractUser
+from datetime import date
+from django.conf import settings
 
 
 @python_2_unicode_compatible
@@ -60,6 +62,10 @@ class School(models.Model):
             result += " " + self.city
         return result
 
+    @property
+    def has_abbreviation(self):
+        return self.abbreviation.strip() != ''
+
 
 class User(AbstractUser):
 
@@ -67,8 +73,12 @@ class User(AbstractUser):
     Holds, provide access to or manages all informations
     related to a person.
     '''
-    gender = models.CharField(max_length=2, choices=[
-                              ('M', "Chlapec"), ('F', "Dievča")], default="M", verbose_name="pohlavie")
+    gender = models.CharField(
+        max_length=1,
+        choices=[('M', "Chlapec"), ('F', "Dievča")],
+        default="M",
+        verbose_name="pohlavie",
+    )
     birth_date = models.DateField(
         null=True, db_index=True, verbose_name='dátum narodenia')
     home_address = models.ForeignKey(Address,
@@ -98,11 +108,19 @@ class User(AbstractUser):
         verbose_name = "používateľ"
         verbose_name_plural = "používatelia"
 
+    @property
+    def school_year(self):
+        current_year = date.today().year + int(
+            date.today().month > settings.SCHOOL_YEAR_END_MONTH
+        )
+        return current_year - self.graduation + settings.GRADUATION_SCHOOL_YEAR
+
 
 @python_2_unicode_compatible
 class UserProperty(models.Model):
     """
-    Dodatočné vlastnosti usera, dajú sa vyhľadávať pomocou related_name v QuerySete od Usera.
+    Dodatočné vlastnosti usera, dajú sa vyhľadávať pomocou related_name
+    v QuerySete od Usera.
     """
     user = models.ForeignKey(User,
                              related_name='properties')

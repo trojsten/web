@@ -1,6 +1,7 @@
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.regal.people.models import User
 from django.db.models import F
+from django.conf import settings
 
 
 def get_tasks(round_ids, category_ids=None):
@@ -25,6 +26,14 @@ def get_submits(tasks, show_staff=False):
     submits = Submit.objects
     if not show_staff and len(tasks):
         submits = submits.exclude(
+            # kolo konci Januar 2014 => exclude 2013, 2012,
+            # kolo konci Jun 2014 => exclude 2013, 2012,
+            # kolo konci September 2014 => exclude 2014, 2013,
+            # kolo konci December 2014 => exclude 2014, 2013,
+            user__graduation__lt=tasks[0].round.end_time.year + int(
+                tasks[0].round.end_time.month > settings.SCHOOL_YEAR_END_MONTH
+            )
+        ).exclude(
             user__in=User.objects.filter(
                 groups=tasks[0].round.series.competition.organizers_group
             )
@@ -43,11 +52,15 @@ def get_results_data(tasks, submits):
     '''Returns results data for each user who has submitted at least one task
     '''
     res = dict()
+    empty_submit = {'sum': 0, 'description': 0, 'source': 0, 'submitted': False}
     for submit in submits:
         if submit.user not in res:
-            res[submit.user] = {i: {'sum': 0, 'submitted': False} for i in tasks}
+            res[submit.user] = {i: empty_submit.copy() for i in tasks}
             res[submit.user]['sum'] = 0
-        res[submit.user][submit.task][int(submit.submit_type)] = submit.points
+        if submit.submit_type == Submit.DESCRIPTION:
+            res[submit.user][submit.task]['description'] = '??'  # Fixme
+        else:
+            res[submit.user][submit.task]['source'] += submit.points
         res[submit.user][submit.task]['sum'] += submit.points
         res[submit.user][submit.task]['submitted'] = True
         res[submit.user]['sum'] += submit.points

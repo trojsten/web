@@ -4,6 +4,8 @@
 <tr>
     <th>#</th>
     <th>Meno:</th>
+    <th>Škola</th>
+    <th>Ročník</th>
     {% for task in tasks %}
         <th>{{task.number}}</th>
     {% endfor %}
@@ -12,13 +14,15 @@
 </thead>
 {% for result in results %}
 {% spaceless %}
-<tr>
+<tr {% if user == result.user %}class="active"{%endif%}>
     <td>{{forloop.counter}}</td>
     <td>{{result.user.first_name}} {{result.user.last_name}}</td>
+    <td>{%if result.user.school.has_abbreviation %}<abbr title="{{result.user.school.verbose_name}}">{{result.user.school.abbreviation}}</abbr>{%else%}{{result.user.school.verbose_name}}{%endif%}</td>
+    <td>{{result.user.school_year}}</td>
     {% for task in tasks %}
         <td>
         {% if result.points|lookup:task|lookup:"submitted" %}
-            <span data-toggle="tooltip" data-placement="top" title="{% for type in task.get_submit_types %}{% if not forloop.first %} {% endif %}{{Submit.SUBMIT_TYPES|lookup:type|last|first}}:{{result.points|lookup:task|lookup:type|default:0}}{% endfor %}">
+            <span data-toggle="tooltip" data-placement="top" title="{% if task.description_points > 0 %}popis: {{result.points|lookup:task|lookup:'description'}}{% if task.source_points > 0 %} {% endif %}{% endif %}{% if task.source_points > 0 %}program: {{result.points|lookup:task|lookup:'source'}}{% endif %}">
                 {{result.points|lookup:task|lookup:"sum"}}
             </span>
         {% endif %}
