@@ -1,0 +1,99 @@
+/* -------------------------------------------------------------------
+// markItUp! Universal MarkUp Engine, JQuery plugin
+// By Jay Salvat - http://markitup.jaysalvat.com/
+// ------------------------------------------------------------------*/
+/* skins */
+.markItUpResizeHandle {
+    overflow:hidden;
+    width:22px; height:5px;
+    margin-left:auto;
+    margin-right:auto;
+    background-image:url(../images/markitup/handle.png);
+    cursor:n-resize;
+}
+/***************************************************************************************/
+.markItUpHeader ul {
+    padding: 0;
+}
+
+.markItUpHeader ul li   {
+    list-style:none;
+    float:left;
+    position:relative;
+    background-color:#ffe;
+}
+
+.markItUpHeader ul li:hover > ul{
+    display:block;
+}
+
+.markItUpHeader ul .markItUpSeparator {
+    margin:0 2px;
+    width:0px;
+    height:16px;
+    overflow:hidden;
+}
+
+.markItUpHeader ul a {
+    display:block;
+    width:16px; height:16px;
+    text-indent:-10000px;
+    background-repeat:no-repeat;
+}
+
+/* sets */
+/* -------------------------------------------------------------------
+// markItUp!
+// By Jay Salvat - http://markitup.jaysalvat.com/
+// ------------------------------------------------------------------*/
+
+.markItUp .markItUpButton1 a {
+    background-image:url(../images/markitup/h1.png);
+}
+.markItUp .markItUpButton2 a {
+    background-image:url(../images/markitup/h2.png);
+}
+.markItUp .markItUpButton3 a {
+    background-image:url(../images/markitup/h3.png);
+}
+.markItUp .markItUpButton4 a {
+    background-image:url(../images/markitup/h4.png);
+}
+.markItUp .markItUpButton5 a {
+    background-image:url(../images/markitup/h5.png);
+}
+.markItUp .markItUpButton6 a {
+    background-image:url(../images/markitup/h6.png);
+}
+
+.markItUp .markItUpButton7 a {
+    background-image:url(../images/markitup/bold.png);
+}
+.markItUp .markItUpButton8 a {
+    background-image:url(../images/markitup/italic.png);
+}
+
+.markItUp .markItUpButton9 a {
+    background-image:url(../images/markitup/list-bullet.png);
+}
+.markItUp .markItUpButton10 a {
+    background-image:url(../images/markitup/list-numeric.png);
+}
+
+.markItUp .markItUpButton11 a {
+    background-image:url(../images/markitup/picture.png);
+}
+.markItUp .markItUpButton12 a {
+    background-image:url(../images/markitup/link.png);
+}
+
+.markItUp .markItUpButton11 a   {
+    background-image:url(../images/markitup/quotes.png);
+}
+.markItUp .markItUpButton12 a   {
+    background-image:url(../images/markitup/code.png);
+}
+
+.markItUp .preview a {
+    background-image:url(../images/markitup/preview.png);
+}

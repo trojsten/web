@@ -4,12 +4,13 @@
   <head>
     <title>{% block title %}{% endblock %}{% if request.path != '/' %} - {{SITE.NAME}}{%endif%}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% render_block "css" %}
     {% block stylesheets %}
       <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}" type="text/css" />
       <link rel="stylesheet" href="{% static "ksp_login/css/base.css" %}" type="text/css" />
+      <link rel="stylesheet" href="{% static "css/icons-awesome.css" %}" type="text/css" />
       <link rel="stylesheet" href="{% static "css/base.css" %}" type="text/css" />
     {% endblock %}
-    {% render_block "css" %}
     {% block extra_head %}{% endblock %}
   </head>
   <body>

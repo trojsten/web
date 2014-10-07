@@ -1,47 +1,143 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,latin-ext);
+
 li > h1 {
-    margin-top: 0;
+  margin-top: 0;
+}
+
+.simplemodal-container {
+  color: black;
 }
 
 .panel-rounds {
-    margin-top: 1em;
+  margin-top: 1em;
 }
 
 .well.task-points.pull-right {
-    margin-left:5px;
+  margin-left: 5px;
 }
 
 label.required:after {
-    content:"*";
+  content: "*";
 }
 
 .social-button {
-    padding: 16px 0;
-    height: 50px;
-    margin-right:10px;
+  padding: 16px 0;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.label-button {
+  border: 1px solid rgba(0, 0, 0, .3);
+}
+
+.main-content {
+  text-align: justify;
+  background-color: #fff;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-bottom: 3em;
+}
+
+.main-content p {
+  line-height: 1.5;
+}
+
+.main-content .wiki-article,
+.main-content .news-entry {
+  padding-bottom: 3em;
+  margin-bottom: 1em;
+  border-bottom: 1px dotted #455905;
+}
+
+.main-content .news-entry > .news-entry-details {
+  color: #777;
+  font-size: .9em;
+  margin-top: -1em;
+}
+
+.main-content .news-entry > .news-entry-text {
+  margin-top: 1em;
+}
+
+.main-content .wiki-article table th {
+  font-size: 1.3em;
+}
+
+.main-content .wiki-article table td {
+  padding: 0.5em 2em 0 0;
+}
+
+.page-header {
+  border-bottom: 1px dotted #455905;
+}
+
+.sidebar {
+  margin-left: 50px;
+  text-align: right;
+}
+
+.sidebar a:link,
+.sidebar a:visited,
+footer a:link,
+footer a:visited {
+  color: #86a525;
+}
+
+.sidebar li a:hover {
+  background-color: #333;
 }
 
 .sidebar h2 {
-  font-size:1.2em;
+  font-size: 1.2em;
+  padding: 10px 25px 0 0;
+  color: #fff;
 }
 
+.sidebar .nav>li>a {
+  padding-left: 15px;
+}
+
+/* wiki fixes */
+.wiki-modal .modal-content {
+  width: 100%;
+}
+
+.wiki-modal .modal-dialog {
+  width: 80%;
+  /*margin-left: -40%;*/
+}
+
+.wiki-modal .modal-body iframe {
+  width: 100%;
+  min-height: 400px;
+  height: 100%;
+  border: 0;
+}
+
+.ui-resizable {
+  position: fixed !important;
+}
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
   position: relative;
   min-height: 100%;
 }
+
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
 footer {
   position: absolute;
   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
   height: 60px;
-  background-color: #f5f5f5;
+  background-color: #111;
 }
+
 footer ul {
   margin: 20px 0;
 }

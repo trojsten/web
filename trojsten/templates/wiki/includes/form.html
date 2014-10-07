@@ -1,0 +1,13 @@
+{% csrf_token %}{% load sekizai_tags %}
+{% load bootstrap %}
+{% include "wiki/includes/formerrors.html" %}
+
+{% addtoblock "js" %}
+{{ form.media.js }}
+{% endaddtoblock %}
+
+{% addtoblock "css" %}
+{{ form.media.css }}
+{% endaddtoblock %}
+
+{{form | bootstrap_horizontal}}
