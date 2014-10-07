@@ -97,6 +97,9 @@ footer a:visited {
   color: #fff;
 }
 
+.sidebar .nav>li>a {
+  padding-left: 15px;
+}
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
