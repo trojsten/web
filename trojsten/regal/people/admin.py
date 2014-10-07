@@ -50,7 +50,7 @@ class UserAdmin(DefaultUserAdmin):
         super(UserAdmin, self).__init__(*args, **kwargs)
         self.fieldsets += (('Extra', {'fields': ('gender', 'birth_date', 'home_address', 'mailing_address', 'school', 'graduation')}),)
         self.inlines = (UserPropertyInLine,)
-    list_display = ('username', 'first_name', 'last_name', 'email', 'school',
+    list_display = ('username', 'first_name', 'last_name', 'email', 'school', 'graduation',
                     'get_is_staff', 'get_groups', 'is_active', 'get_properties')
     list_filter = ('groups', StaffFilter)
     search_fields = ('username', 'first_name', 'last_name')
