@@ -118,9 +118,9 @@ class User(AbstractUser):
 
 @python_2_unicode_compatible
 class UserProperty(models.Model):
-    """
-    Dodatočné vlastnosti usera, dajú sa vyhľadávať pomocou related_name v QuerySete od Usera.
-    """
+    '''
+    Additional user properties, can be called as related_name in QuerySet of User.
+    '''
     user = models.ForeignKey(User,
                              related_name='properties')
     key = models.CharField(max_length=100,

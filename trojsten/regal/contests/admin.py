@@ -3,16 +3,17 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
+from django.utils.encoding import force_text
 
 from trojsten.regal.contests.models import *
-from trojsten.regal.utils import *
+from trojsten.regal.utils import get_related, attribute_format
 
 
 class CompetitionAdmin(admin.ModelAdmin):
     list_display = ('name', 'organizers_group', 'get_sites', 'repo', 'repo_root')
 
     def get_sites(self, obj):
-        return str(", ").join(str(x) for x in obj.sites.all())
+        return ", ".join(force_text(x) for x in obj.sites.all())
     get_sites.short_description = 'doména súťaže'
 
 

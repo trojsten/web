@@ -13,10 +13,10 @@ import os
 
 @python_2_unicode_compatible
 class Category(models.Model):
-    """
+    '''
     Competition consists of a few categories. Each task belongs to one or more
     categories.
-    """
+    '''
     name = models.CharField(max_length=16, verbose_name='názov')
     competition = models.ForeignKey(Competition, verbose_name='súťaž')
 
@@ -30,10 +30,10 @@ class Category(models.Model):
 
 @python_2_unicode_compatible
 class Task(models.Model):
-    """
+    '''
     Task has its number, name, type and points value.
     Task has submits.
-    """
+    '''
     name = models.CharField(max_length=128, verbose_name='názov')
     round = models.ForeignKey(Round, verbose_name='kolo')
     category = models.ManyToManyField(Category, verbose_name='kategória')
@@ -111,12 +111,12 @@ class Task(models.Model):
 
 @python_2_unicode_compatible
 class Submit(models.Model):
-    """
+    '''
     Submit holds information about its task and person who submitted it.
     There are 2 types of submits. Description submit and source submit.
     Description submit has points and filename, Source submit has also
     tester response and protocol ID assigned.
-    """
+    '''
     SOURCE = 0
     DESCRIPTION = 1
     TESTABLE_ZIP = 2

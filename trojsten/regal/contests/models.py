@@ -31,9 +31,9 @@ class Repository(models.Model):
 
 @python_2_unicode_compatible
 class Competition(models.Model):
-    """
+    '''
     Consists of series.
-    """
+    '''
     name = models.CharField(max_length=128, verbose_name='názov')
     sites = models.ManyToManyField(Site)
     repo = models.ForeignKey(Repository, null=True, blank=True, verbose_name='git repozitár')
@@ -52,9 +52,9 @@ class Competition(models.Model):
 
 @python_2_unicode_compatible
 class Series(models.Model):
-    """
+    '''
     Series consists of several rounds.
-    """
+    '''
     competition = models.ForeignKey(Competition, verbose_name='súťaž')
     name = models.CharField(max_length=32, verbose_name='názov')
     number = models.IntegerField(verbose_name='číslo série')
@@ -75,10 +75,10 @@ class Series(models.Model):
 
 @python_2_unicode_compatible
 class Round(models.Model):
-    """
+    '''
     Round has tasks.
     Holds information about deadline and such things
-    """
+    '''
     series = models.ForeignKey(Series, verbose_name='séria')
     number = models.IntegerField(verbose_name='číslo')
     start_time = models.DateTimeField(verbose_name='začiatok')
@@ -102,7 +102,7 @@ class Round(models.Model):
             year_dir,
             round_dir,
         )
-        if not os.path.exists(path):
+        if not os.path.exists(path.encode('utf-8')):
             raise IOError("path '%s' doesn't exist" % path)
         return path
 

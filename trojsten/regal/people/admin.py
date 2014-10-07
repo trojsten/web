@@ -4,8 +4,11 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
+from django.utils.encoding import force_text
+from django.utils.html import escape
+
 from trojsten.regal.people.models import *
-from trojsten.regal.utils import *
+from trojsten.regal.utils import attribute_format
 
 
 class AddressAdmin(admin.ModelAdmin):
@@ -53,13 +56,13 @@ class UserAdmin(DefaultUserAdmin):
     search_fields = ('username', 'first_name', 'last_name')
 
     def get_groups(self, obj):
-        return str(", ").join(str(x) for x in obj.groups.all())
+        return ", ".join(force_text(x) for x in obj.groups.all())
     get_groups.short_description = 'skupiny'
 
     get_is_staff = attribute_format(attribute='is_staff', description="vedúci", boolean=True)
 
     def get_properties(self, obj):
-        return str("<br />").join(str(x) for x in obj.properties.all())
+        return "<br />".join(escape(force_text(x)) for x in obj.properties.all())
     get_properties.short_description = 'dodatočné vlastnosti'
     get_properties.allow_tags = True
 

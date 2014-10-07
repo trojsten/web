@@ -3,16 +3,16 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
+from django.utils.encoding import force_text
 
 from trojsten.regal.tasks.models import *
-from trojsten.regal.contests.models import *
-from trojsten.regal.utils import *
+from trojsten.regal.utils import get_related, attribute_format
 
 
 class TaskByYearSubFilter(admin.SimpleListFilter):
-    """
+    '''
     Shows only lookups of years for chosen competition.
-    """
+    '''
     title = 'ročník'
     parameter_name = 'year_subfilter'
 
@@ -22,7 +22,7 @@ class TaskByYearSubFilter(admin.SimpleListFilter):
             tasks = tasks.filter(category__competition__id__exact=request.GET['category__competition__id__exact'])
         tasks = tasks.select_related('round__series__year').distinct('round__series__year').order_by('-round__series__year')
         years = (x.round.series.year for x in tasks.all())
-        return ((y, str(y)) for y in years)
+        return ((y, force_text(y)) for y in years)
 
     def queryset(self, request, queryset):
         if self.value():
@@ -32,9 +32,9 @@ class TaskByYearSubFilter(admin.SimpleListFilter):
 
 
 class TaskByRoundSubFilter(admin.SimpleListFilter):
-    """
+    '''
     Shows only lookups of rounds for chosen competition and year.
-    """
+    '''
     title = 'kolo'
     parameter_name = 'round_subfilter'
 
@@ -44,11 +44,11 @@ class TaskByRoundSubFilter(admin.SimpleListFilter):
             tasks = tasks.filter(category__competition__id__exact=request.GET['category__competition__id__exact'])
         if 'year_subfilter' in request.GET:
             tasks = tasks.filter(round__series__year=request.GET['year_subfilter'])
-        tasks = tasks.select_related('round', 'round__series', 'round__series__competition')
+        tasks = tasks.select_related('round__series__competition')
         tasks = tasks.distinct('round__series__competition', 'round__series__year', 'round__series__number', 'round__number')
         tasks = tasks.order_by('round__series__competition', '-round__series__year', '-round__series__number', '-round__number')
         rounds = (x.round for x in tasks.all())
-        return ((r.id, str(r)) for r in rounds)
+        return ((r.id, force_text(r)) for r in rounds)
 
     def queryset(self, request, queryset):
         if self.value():
@@ -71,7 +71,7 @@ class TaskAdmin(admin.ModelAdmin):
     get_year = get_related(attribute=('round', 'series', 'year'), description="ročník", order='round__series__year')
 
     def get_category(self, obj):
-        return str(", ").join(str(x) for x in obj.category.all())
+        return ", ".join(force_text(x) for x in obj.category.all())
     get_category.short_description = 'kategória'
 
     def submit_type(self, obj):
@@ -107,7 +107,7 @@ class SubmitAdmin(admin.ModelAdmin):
     get_year = get_related(attribute=('task', 'round', 'series', 'year'), description="ročník", order='task__round__series__year')
 
     def get_category(self, obj):
-        return str(", ").join(str(x) for x in obj.task.category.all())
+        return ", ".join(force_text(x) for x in obj.task.category.all())
     get_category.short_description = 'kategória'
 
 
