@@ -13,7 +13,7 @@ class CompetitionAdmin(admin.ModelAdmin):
     list_display = ('name', 'organizers_group', 'get_sites', 'repo', 'repo_root')
 
     def get_sites(self, obj):
-        return ", ".join(force_text(x) for x in obj.sites.all())
+        return ', '.join(force_text(x) for x in obj.sites.all())
     get_sites.short_description = 'doména súťaže'
 
 
@@ -31,14 +31,28 @@ class RoundAdmin(admin.ModelAdmin):
                     'solutions_visible', 'solutions_pdf')
     list_filter = ('series__competition', 'series__year')
 
-    get_series_number = get_related(attribute=('series', 'number'), description="séria", order='series__number')
-    get_series_name = get_related(attribute=('series', 'name'), description="názov série", order='series__name')
-    get_year = get_related(attribute=('series', 'year'), description="ročník", order='series__year')
-    get_competition = get_related(attribute=('series', 'competition'), description="súťaž", order='series__competition')
+    get_series_number = get_related(attribute_chain=('series', 'number'),
+                                    description='séria',
+                                    order='series__number')
+    get_series_name = get_related(attribute_chain=('series', 'name'),
+                                  description='názov série',
+                                  order='series__name')
+    get_year = get_related(attribute_chain=('series', 'year'),
+                           description='ročník',
+                           order='series__year')
+    get_competition = get_related(attribute_chain=('series', 'competition'),
+                                  description='súťaž',
+                                  order='series__competition')
 
-    tasks_pdf = attribute_format(attribute='tasks_pdf_exists', description="zadania v pdf", boolean=True)
-    solutions_pdf = attribute_format(attribute='solutions_pdf_exists', description="vozráky v pdf", boolean=True)
-    can_submit = attribute_format(attribute='can_submit', description="prebieha", boolean=True)
+    tasks_pdf = attribute_format(attribute='tasks_pdf_exists',
+                                 description='zadania v pdf',
+                                 boolean=True)
+    solutions_pdf = attribute_format(attribute='solutions_pdf_exists',
+                                     description='vozráky v pdf',
+                                     boolean=True)
+    can_submit = attribute_format(attribute='can_submit',
+                                  description='prebieha',
+                                  boolean=True)
 
 
 class RepositoryAdmin(admin.ModelAdmin):

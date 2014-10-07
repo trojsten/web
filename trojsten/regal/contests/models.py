@@ -102,7 +102,7 @@ class Round(models.Model):
             year_dir,
             round_dir,
         )
-        if not os.path.exists(path.encode('utf-8')):
+        if not os.path.exists(path):
             raise IOError("path '%s' doesn't exist" % path)
         return path
 

@@ -48,7 +48,8 @@ class StaffFilter(admin.SimpleListFilter):
 class UserAdmin(DefaultUserAdmin):
     def __init__(self, *args, **kwargs):
         super(UserAdmin, self).__init__(*args, **kwargs)
-        self.fieldsets += (('Extra', {'fields': ('gender', 'birth_date', 'home_address', 'mailing_address', 'school', 'graduation')}),)
+        self.fieldsets += (('Extra', {'fields': ('gender', 'birth_date', 'home_address',
+                                                 'mailing_address', 'school', 'graduation')}),)
         self.inlines = (UserPropertyInLine,)
     list_display = ('username', 'first_name', 'last_name', 'email', 'school', 'graduation',
                     'get_is_staff', 'get_groups', 'is_active', 'get_properties')
@@ -56,13 +57,13 @@ class UserAdmin(DefaultUserAdmin):
     search_fields = ('username', 'first_name', 'last_name')
 
     def get_groups(self, obj):
-        return ", ".join(force_text(x) for x in obj.groups.all())
+        return ', '.join(force_text(x) for x in obj.groups.all())
     get_groups.short_description = 'skupiny'
 
-    get_is_staff = attribute_format(attribute='is_staff', description="vedúci", boolean=True)
+    get_is_staff = attribute_format(attribute='is_staff', description='vedúci', boolean=True)
 
     def get_properties(self, obj):
-        return "<br />".join(escape(force_text(x)) for x in obj.properties.all())
+        return '<br />'.join(escape(force_text(x)) for x in obj.properties.all())
     get_properties.short_description = 'dodatočné vlastnosti'
     get_properties.allow_tags = True
 
