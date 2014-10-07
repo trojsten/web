@@ -11,8 +11,8 @@ def get_task():
     except AttributeError:
         get_task._cache = Task.objects.get(pk=ZWARTE_DOOS_TASK_ID)
         return get_task._cache
-        
-        
+
+
 def update_points(user):
     points = UserLevel.objects.filter(user=user.id, solved=True).count()
     submit = Submit(
@@ -26,5 +26,3 @@ def update_points(user):
         protocol_id="",
     )
     submit.save()
-
-

@@ -82,5 +82,3 @@ def update_all_points(request):
     for user in users:
         update_points(user)
     return HttpResponse()
-
-
