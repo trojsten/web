@@ -2,10 +2,14 @@ import json
 
 from django.shortcuts import render
 from django.template import RequestContext
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from django.http import HttpResponseBadRequest, HttpResponse
 
 from .core import LEVELS
 from .models import UserLevel
+from .update_points import update_points
 
 
 @login_required()
@@ -42,8 +46,12 @@ def run(request, level=1):
     user = request.user
     userlevel, _ = UserLevel.objects.get_or_create(level_id=level, user=user)
 
-    data = json.loads(request.read().decode("utf-8"))
-    _input = str(int(data["input"]))
+    try:
+        data = json.loads(request.read().decode("utf-8"))
+        _input = str(int(data["input"]))
+    except (KeyError, ValueError):
+        return HttpResponseBadRequest()
+
     _output = LEVELS[level].run(_input)
 
     solved = _output == LEVELS[level].TARGET
@@ -55,6 +63,7 @@ def run(request, level=1):
     if solved_right_now:
         userlevel.solved = True
         userlevel.save()
+        update_points(user)
 
     return render(request, 'plugin_ksp_32_1_1/result.json', {
         "level": level,
@@ -64,3 +73,12 @@ def run(request, level=1):
         "refresh": solved_right_now,
         "try_count": userlevel.try_count,
     }, context_instance=RequestContext(request))
+
+
+@staff_member_required
+def update_all_points(request):
+    user_ids = UserLevel.objects.all().values_list('user', flat=True).distinct()
+    users = get_user_model().objects.filter(id__in=user_ids)
+    for user in users:
+        update_points(user)
+    return HttpResponse()

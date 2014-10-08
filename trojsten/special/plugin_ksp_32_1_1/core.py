@@ -12,7 +12,7 @@ class Level1:
 
     @staticmethod
     def run(x):
-        return int(x)+1
+        return int(x) + 1
 
 
 class Level2:
@@ -97,7 +97,7 @@ class Level7:
     def run(x):
         x = int(x)
         if x in Level7.WAY:
-            return Level7.WAY[1+Level7.WAY.index(x)]
+            return Level7.WAY[1 + Level7.WAY.index(x)]
         else:
             return Level7.WAY[0]
 
@@ -113,7 +113,7 @@ class Level8:
         last = digits[0]
         num = 1
         res = ""
-        for i in (digits[1:]+[None]):
+        for i in (digits[1:] + [None]):
             if last == i:
                 num += 1
             else:
