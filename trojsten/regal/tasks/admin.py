@@ -92,7 +92,7 @@ class TaskAdmin(admin.ModelAdmin):
         if obj.has_testablezip:
             res += 'zip '
         if bool(obj.external_submit_link):
-            res += 'link:' + obj.external_submit_link
+            res += 'link: %s' % obj.external_submit_link
         return res
     submit_type.short_description = 'odovzdávanie a bodovanie'
 

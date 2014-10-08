@@ -19,10 +19,7 @@ class Address(models.Model):
         max_length=32, db_index=True, verbose_name='krajina')
 
     def __str__(self):
-        return (
-            self.street + ', ' +
-            self.town + ', ' + self.postal_code + ', ' +
-            self.country)
+        return '%s, %s, %s, %s' % (self.street, self.town, self.postal_code, self.country)
 
     class Meta:
         verbose_name = 'Adresa'
@@ -129,7 +126,7 @@ class UserProperty(models.Model):
                              verbose_name='hodnota vlastnosti')
 
     def __str__(self):
-        return self.key + ': ' + self.value
+        return '%s: %s' % (self.key, self.value)
 
     class Meta:
         verbose_name = 'dodatočná vlastnosť'
