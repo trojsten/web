@@ -19,10 +19,7 @@ class Address(models.Model):
         max_length=32, db_index=True, verbose_name='krajina')
 
     def __str__(self):
-        return (
-            self.street + ", " +
-            self.town + ", " + self.postal_code + ", " +
-            self.country)
+        return '%s, %s, %s, %s' % (self.street, self.town, self.postal_code, self.country)
 
     class Meta:
         verbose_name = 'Adresa'
@@ -33,33 +30,33 @@ class Address(models.Model):
 class School(models.Model):
     abbreviation = models.CharField(max_length=100,
                                     blank=True,
-                                    verbose_name="skratka",
-                                    help_text="Sktatka názvu školy.")
+                                    verbose_name='skratka',
+                                    help_text='Sktatka názvu školy.')
     verbose_name = models.CharField(max_length=100,
-                                    verbose_name="celý názov")
-    addr_name = models.CharField(max_length=100, blank=True)
-    street = models.CharField(max_length=100, blank=True)
-    city = models.CharField(max_length=100, blank=True)
-    zip_code = models.CharField(max_length=10, blank=True)
+                                    verbose_name='celý názov')
+    addr_name = models.CharField(max_length=100, blank=True, verbose_name='názov v adrese')
+    street = models.CharField(max_length=100, blank=True, verbose_name='ulica')
+    city = models.CharField(max_length=100, blank=True, verbose_name='mesto')
+    zip_code = models.CharField(max_length=10, blank=True, verbose_name='PSČ')
 
     class Meta:
-        verbose_name = "škola"
-        verbose_name_plural = "školy"
-        ordering = ("city", "street", "verbose_name")
+        verbose_name = 'škola'
+        verbose_name_plural = 'školy'
+        ordering = ('city', 'street', 'verbose_name')
 
     def __str__(self):
-        result = ""
+        result = ''
         if self.abbreviation:
-            result += self.abbreviation + ", "
+            result += self.abbreviation + ', '
         result += self.verbose_name
         if self.street:
-            result += ", " + self.street
+            result += ', ' + self.street
         if self.city or self.zip_code:
-            result += ", "
+            result += ', '
         if self.zip_code:
             result += self.zip_code
         if self.city:
-            result += " " + self.city
+            result += ' ' + self.city
         return result
 
     @property
@@ -75,9 +72,9 @@ class User(AbstractUser):
     '''
     gender = models.CharField(
         max_length=1,
-        choices=[('M', "Chlapec"), ('F', "Dievča")],
-        default="M",
-        verbose_name="pohlavie",
+        choices=[('M', 'Chlapec'), ('F', 'Dievča')],
+        default='M',
+        verbose_name='pohlavie',
     )
     birth_date = models.DateField(
         null=True, db_index=True, verbose_name='dátum narodenia')
@@ -93,7 +90,7 @@ class User(AbstractUser):
     school = models.ForeignKey(School,
                                null=True,
                                default=1,
-                               verbose_name="škola",
+                               verbose_name='škola',
                                help_text='Do políčka napíšte skratku, '
                                'časť názvu alebo adresy školy a následne '
                                'vyberte správnu možnosť zo zoznamu. '
@@ -101,12 +98,12 @@ class User(AbstractUser):
                                'v&nbsp;zozname, vyberte "Gymnázium iné" '
                                'a&nbsp;pošlite nám e-mail.')
     graduation = models.IntegerField(null=True,
-                                     verbose_name="rok maturity",
-                                     help_text="Povinné pre žiakov.")
+                                     verbose_name='rok maturity',
+                                     help_text='Povinné pre žiakov.')
 
     class Meta:
-        verbose_name = "používateľ"
-        verbose_name_plural = "používatelia"
+        verbose_name = 'používateľ'
+        verbose_name_plural = 'používatelia'
 
     @property
     def school_year(self):
@@ -118,20 +115,19 @@ class User(AbstractUser):
 
 @python_2_unicode_compatible
 class UserProperty(models.Model):
-    """
-    Dodatočné vlastnosti usera, dajú sa vyhľadávať pomocou related_name
-    v QuerySete od Usera.
-    """
+    '''
+    Additional user properties, can be called as related_name in QuerySet of User.
+    '''
     user = models.ForeignKey(User,
                              related_name='properties')
     key = models.CharField(max_length=100,
-                           verbose_name="názov vlastnosti")
+                           verbose_name='názov vlastnosti')
     value = models.CharField(max_length=100,
-                             verbose_name="hodnota vlastnosti")
+                             verbose_name='hodnota vlastnosti')
 
     def __str__(self):
-        return self.key + ": " + self.value
+        return '%s: %s' % (self.key, self.value)
 
     class Meta:
-        verbose_name = "dodatočná vlastnosť"
-        verbose_name_plural = "dodatočné vlastnosti"
+        verbose_name = 'dodatočná vlastnosť'
+        verbose_name_plural = 'dodatočné vlastnosti'

@@ -25,7 +25,7 @@ class Category(models.Model):
         verbose_name_plural = 'Kategórie'
 
     def __str__(self):
-        return self.competition.name + '-' + self.name
+        return '%s-%s' % (self.competition.name, self.name)
 
 
 @python_2_unicode_compatible
