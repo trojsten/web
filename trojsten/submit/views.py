@@ -26,7 +26,7 @@ def view_submit(request, submit_id):
 
     # For source submits, display testing results, source code and submit list.
     if submit.submit_type == Submit.SOURCE or submit.submit_type == Submit.TESTABLE_ZIP:
-        if submit.testing_status == 'in queue':
+        if submit.testing_status == settings.SUBMIT_STATUS_IN_QUEUE:
             # check if submit wasn't tested yet
             update_submit(submit)
         template_data = {'submit': submit}
@@ -159,7 +159,7 @@ def task_submit_post(request, task_id, submit_type):
                              submit_type=submit_type,
                              points=0,
                              filepath=sfiletarget,
-                             testing_status='in queue',
+                             testing_status=settings.SUBMIT_STATUS_IN_QUEUE,
                              protocol_id=submit_id)
                 sub.save()
                 messages.add_message(request, messages.SUCCESS,
@@ -196,7 +196,7 @@ def task_submit_post(request, task_id, submit_type):
                          user=request.user,
                          submit_type=submit_type,
                          points=0,
-                         testing_status='in queue',
+                         testing_status=settings.SUBMIT_STATUS_IN_QUEUE,
                          filepath=sfiletarget)
             sub.save()
             messages.add_message(request, messages.SUCCESS,

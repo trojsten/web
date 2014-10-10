@@ -17,7 +17,7 @@
         {% for submit in submits|lookup:Submit.DESCRIPTION %}
             <tr>
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
-                {% if submit.testing_status == 'in queue' %}
+                {% if submit.testing_status == IN_QUEUE %}
                 <td>Neopravené</td>
                 <td>..</td>
                 {% else %}
@@ -49,7 +49,7 @@
         {% for submit in submits|lookup:Submit.SOURCE %}
             <tr class="{{ submit|submitcolor }}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
-                {% if submit.testing_status == 'in queue' %}
+                {% if submit.testing_status == IN_QUEUE %}
                 <td>Testuje sa</td>
                 <td>Čaká sa na otestovanie</td>
                 <td>..</td>
@@ -65,7 +65,7 @@
         {% for submit in submits|lookup:Submit.TESTABLE_ZIP %}
             <tr class="{{ submit|submitcolor }}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
-                {% if submit.testing_status == 'in queue' %}
+                {% if submit.testing_status == IN_QUEUE %}
                 <td>Testuje sa</td>
                 <td>Čaká sa na otestovanie</td>
                 <td>..</td>
