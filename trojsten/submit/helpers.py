@@ -15,6 +15,7 @@ RESPONSE_OK = 'OK'
 
 def write_file(text, binary, where):
     '''Vytvorí cieľový adresár a uloží string do súboru.'''
+    where = unidecode(where)
     try:
         os.makedirs(os.path.split(where)[0])
         fd = os.open(os.path.split(where)[0], os.O_RDONLY)
@@ -22,12 +23,13 @@ def write_file(text, binary, where):
         os.close(fd)
     except:
         pass
-    with open(unidecode(where), 'w+') as destination:
+    with open(where, 'w+') as destination:
         destination.write(text)
         destination.write(binary)
 
 
 def save_file(what, where):
+    where = unidecode(where)
     '''Vytvorí cieľový adresár a uloží stiahnutý súbor.'''
     try:
         os.makedirs(os.path.split(where)[0])
@@ -36,7 +38,7 @@ def save_file(what, where):
         os.close(fd)
     except:
         pass
-    with open(unidecode(where), 'wb+') as destination:
+    with open(where, 'wb+') as destination:
         for chunk in what.chunks():
             destination.write(chunk)
 
