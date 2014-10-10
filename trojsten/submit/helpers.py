@@ -11,35 +11,36 @@ from unidecode import unidecode
 
 RESPONSE_ERROR = 'CERR'
 RESPONSE_OK = 'OK'
+SUBMIT_DIR_PERMISSIONS = '0777'
 
 
-def write_file(text, binary, where):
+def write_raw(raw, data, filepath):
     '''Vytvorí cieľový adresár a uloží string do súboru.'''
-    where = unidecode(where)
+    filepath = unidecode(filepath)
     try:
-        os.makedirs(os.path.split(where)[0])
-        fd = os.open(os.path.split(where)[0], os.O_RDONLY)
-        os.fchmod(fd, 0777)
+        os.makedirs(os.path.split(filepath)[0])
+        fd = os.open(os.path.split(filepath)[0], os.O_RDONLY)
+        os.fchmod(fd, SUBMIT_DIR_PERMISSIONS)
         os.close(fd)
     except:
         pass
-    with open(where, 'w+') as destination:
-        destination.write(text)
-        destination.write(binary)
+    with open(filepath, 'w+') as destination:
+        destination.write(raw)
+        destination.write(data)
 
 
-def save_file(what, where):
-    where = unidecode(where)
+def save_file(data, filepath):
+    filepath = unidecode(filepath)
     '''Vytvorí cieľový adresár a uloží stiahnutý súbor.'''
     try:
-        os.makedirs(os.path.split(where)[0])
-        fd = os.open(os.path.split(where)[0], os.O_RDONLY)
-        os.fchmod(fd, 0777)
+        os.makedirs(os.path.split(filepath)[0])
+        fd = os.open(os.path.split(filepath)[0], os.O_RDONLY)
+        os.fchmod(fd, SUBMIT_DIR_PERMISSIONS)
         os.close(fd)
     except:
         pass
-    with open(where, 'wb+') as destination:
-        for chunk in what.chunks():
+    with open(filepath, 'wb+') as destination:
+        for chunk in data.chunks():
             destination.write(chunk)
 
 
@@ -130,7 +131,7 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
         original_name)
 
     # Write RAW to local file
-    write_file(raw, data, os.path.join(path, submit_id + '.raw'))
+    write_raw(raw, data, os.path.join(path, submit_id + '.raw'))
 
     # Send RAW for testing (uncomment when deploying)
     post_submit(raw, data)
