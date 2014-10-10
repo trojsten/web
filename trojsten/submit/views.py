@@ -21,8 +21,8 @@ import xml.etree.ElementTree as ET
 @login_required
 def view_submit(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
-    if submit.user != request.user:
-        raise PermissionDenied()  # You shouldn't see other user's submits.
+    if submit.user != request.user and not request.user in submit.task.round.series.competition.organizers_group.user_set.all():
+        raise PermissionDenied()  # You shouldn't see other user's submits if you are not an organizer of the competition
 
     # For source submits, display testing results, source code and submit list.
     if submit.submit_type == Submit.SOURCE or submit.submit_type == Submit.TESTABLE_ZIP:
