@@ -15,7 +15,7 @@
         </thead>
         <tbody>
         {% for submit in submits|lookup:Submit.DESCRIPTION %}
-            <tr class="{% cycle 'even' 'odd' %}">
+            <tr>
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == 'in queue' %}
                 <td>Neopravené</td>
@@ -47,7 +47,7 @@
         <tbody>
         {% if task.has_source %}
         {% for submit in submits|lookup:Submit.SOURCE %}
-            <tr class="{% cycle 'even' 'odd' %} {{ submit|submitcolor }}">
+            <tr class="{{ submit|submitcolor }}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == 'in queue' %}
                 <td>Testuje sa</td>
@@ -63,7 +63,7 @@
         {% endif %}
         {% if task.has_testablezip %}
         {% for submit in submits|lookup:Submit.TESTABLE_ZIP %}
-            <tr class="{% cycle 'even' 'odd' %}">
+            <tr class="{{ submit|submitcolor }}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == 'in queue' %}
                 <td>Testuje sa</td>
