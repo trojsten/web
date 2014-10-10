@@ -30,7 +30,7 @@ def clone(path, url):
     run_git_command(command)
 
 
-def pull(path, url):
+def pull(path):
     if not os.path.exists(path):
         raise IOError('Path does not exist: %s' % path)
     command = ['git', 'pull', '--git-dir=%s' % path]
@@ -39,6 +39,6 @@ def pull(path, url):
 
 def pull_or_clone(path, url):
     try:
-        pull(url, path)
+        pull(path)
     except IOError:
-        clone(url, path)
+        clone(path, url)
