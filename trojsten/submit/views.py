@@ -8,6 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.utils.html import format_html
 from trojsten.regal.contests.models import Round
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
@@ -148,7 +149,8 @@ def task_submit_post(request, task_id, submit_type):
             # Source submit's should be processed by process_submit()
             submit_id = process_submit(sfile, task, language, request.user)
             if not submit_id:
-                messages.add_message(request, messages.ERROR, "Nepodporovaný formát súboru")
+                messages.add_message(request, messages.ERROR,
+                                     "Nepodporovaný formát súboru")
             else:
                 # Source file-name is id.data
                 sfiletarget = os.path.join(get_path(
@@ -162,13 +164,17 @@ def task_submit_post(request, task_id, submit_type):
                              testing_status='in queue',
                              protocol_id=submit_id)
                 sub.save()
-                messages.add_message(request, messages.SUCCESS,
-                                     "Úspešne si submitol program, výsledok testovania nájdeš <a href='%s'>tu</a>" %
-                                     reverse("view_submit", args=[sub.id]))
+                success_message = format_html(
+                    "Úspešne si submitol program, výsledok testovania nájdeš "
+                    "<a href='{}'>tu</a>",
+                    reverse("view_submit", args=[sub.id])
+                )
+                messages.add_message(request, messages.SUCCESS, success_message)
         else:
             for field in form:
                 for error in field.errors:
-                    messages.add_message(request, messages.ERROR, "%s: %s" % (field.label, error))
+                    messages.add_message(request, messages.ERROR,
+                                         "%s: %s" % (field.label, error))
         if 'redirect_to' in request.POST:
             return redirect(request.POST['redirect_to'])
         else:
@@ -200,11 +206,13 @@ def task_submit_post(request, task_id, submit_type):
                          filepath=sfiletarget)
             sub.save()
             messages.add_message(request, messages.SUCCESS,
-                                 "Úspešne sa ti podarilo submitnúť popis, po skončení kola ti ho vedúci opravia")
+                                 "Úspešne sa ti podarilo submitnúť popis, "
+                                 "po skončení kola ti ho vedúci opravia")
         else:
             for field in form:
                 for error in field.errors:
-                    messages.add_message(request, messages.ERROR, "%s: %s" % (field.label, error))
+                    messages.add_message(request, messages.ERROR,
+                                         "%s: %s" % (field.label, error))
 
         if 'redirect_to' in request.POST:
             return redirect(request.POST['redirect_to'])
