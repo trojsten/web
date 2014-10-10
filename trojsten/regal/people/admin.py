@@ -68,6 +68,11 @@ class UserAdmin(DefaultUserAdmin):
     get_properties.allow_tags = True
 
 
+class UserPropertyKeyAdmin(admin.ModelAdmin):
+    list_display = ('key_name',)
+
+
 admin.site.register(Address, AddressAdmin)
 admin.site.register(School, SchoolAdmin)
 admin.site.register(User, UserAdmin)
+admin.site.register(UserPropertyKey, UserPropertyKeyAdmin)

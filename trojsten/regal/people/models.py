@@ -114,14 +114,30 @@ class User(AbstractUser):
 
 
 @python_2_unicode_compatible
+class UserPropertyKey(models.Model):
+    '''
+    Type of key for additional user properties.
+    '''
+    key_name = models.CharField(max_length=100,
+                                verbose_name='názov vlastnosti')
+
+    def __str__(self):
+        return self.key_name
+
+    class Meta:
+        verbose_name = 'kľúč dodatočnej vlastnosti'
+        verbose_name_plural = 'kľúče dodatočnej vlastnosti'
+
+
+@python_2_unicode_compatible
 class UserProperty(models.Model):
     '''
     Additional user properties, can be called as related_name in QuerySet of User.
     '''
     user = models.ForeignKey(User,
                              related_name='properties')
-    key = models.CharField(max_length=100,
-                           verbose_name='názov vlastnosti')
+    key = models.ForeignKey(UserPropertyKey,
+                            verbose_name='názov vlastnosti')
     value = models.CharField(max_length=100,
                              verbose_name='hodnota vlastnosti')
 
