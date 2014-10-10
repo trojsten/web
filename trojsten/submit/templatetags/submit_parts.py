@@ -40,3 +40,16 @@ def show_submit_list(task, user):
     for submit in data['submits'][Submit.TESTABLE_ZIP].filter(testing_status='in queue'):
         update_submit(submit)
     return data
+
+
+@register.filter
+def submitcolor(submit):
+    if submit.testing_status == 'in queue':
+        return 'info'
+    elif submit.tester_response == 'OK':
+        return 'success'
+    elif submit.points > 0:
+        return 'warning'
+    else:
+        return 'danger'
+
