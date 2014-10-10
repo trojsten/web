@@ -19,7 +19,6 @@ def compile_task_statements(repository_uuid):
     repo_name = os.path.split(repo_url)[-1]
     repo_path = os.path.join(
         settings.TASK_STATEMENTS_REPO_PATH,
-        settings.TASK_STATEMENTS_PATH,
         repo_name,
     )
     pull_or_clone(repo_path, repo_url)
