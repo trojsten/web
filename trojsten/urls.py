@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from django.contrib.auth.decorators import login_required
 from django.contrib import admin
 import trojsten.submit.urls
 import trojsten.results.urls
@@ -6,6 +7,7 @@ import trojsten.news.urls
 import trojsten.task_statements.urls
 
 admin.autodiscover()
+admin.site.login = login_required(admin.site.login)
 
 from wiki.urls import get_pattern as get_wiki_pattern
 from django_notify.urls import get_pattern as get_notify_pattern
