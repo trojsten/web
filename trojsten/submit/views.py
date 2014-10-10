@@ -69,7 +69,7 @@ def view_submit(request, submit_id):
                 template_data['fileReady'] = True
                 with open(submit.filepath, "r") as submitfile:
                     data = submitfile.read()
-                    template_data['data'] = data
+                    template_data['data'] = data.decode('utf-8', 'replace')
             else:
                 template_data['fileReady'] = False
                 template_data['isZip'] = True
