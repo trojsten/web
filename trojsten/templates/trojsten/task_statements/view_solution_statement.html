@@ -1,4 +1,5 @@
 {% extends "trojsten/layout/main.html" %}
+{% load disqus_tags %}
 
 {% block title %}{{task.number}}. {{task.name}} (riešenie){% endblock %}
 
@@ -21,7 +22,27 @@
 {% endblock %}
 
 {% block page_content %}
+    {% set_disqus_identifier "task-sol" task.id %}
+    {% set_disqus_url "http://" request.META.HTTP_HOST request.path %}
+    {% set_disqus_title task.number ". " task.name " - riešenie" %}
     <div class="task-statement">
+        <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+              Zadanie
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse">
+          <div class="panel-body">
+            {% ssi statement_path %}
+          </div>
+        </div>
+      </div>
         {% ssi path %}
     </div>
+    <h2>Diskusia</h2>
+    <p>Tu môžte voľne diskutovať o riešení, deliť sa o svoje kusy kódu a podobne.</p>
+    {% disqus_show_comments %}
 {% endblock %}

@@ -19,6 +19,11 @@
     <th>
         Úloha
     </th>
+    {% if round.solutions_visible %}
+    <th>
+        Riešenie
+    </th>
+    {% endif %}
     <th width="15%">
         Kategória
     </th>
@@ -44,6 +49,15 @@
             {{task.name}}
         {% endif %}
         </td>
+        {% if round.solutions_visible %}
+            <td>
+                {% if task.solution_file_exists %}
+                    <a href="{% url 'solution_statement' task_id=task.id %}">riešenie</a>
+                {% else %}
+                    pozri PDF
+                {% endif %}
+            </td>
+        {% endif %}
         <td>
             {% for category in task.category.all %}
                 <span class="label label-default category-{{category}}">{{category}}</span>

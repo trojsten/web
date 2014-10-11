@@ -25,6 +25,8 @@ def _statement_view(request, task_id, solution=False):
             'task': task,
             'path': path,
         }
+        if solution:
+            template_data['statement_path'] = task.get_path(solution=False)
         return render(
             request,
             'trojsten/task_statements/view_{}_statement.html'.format(
