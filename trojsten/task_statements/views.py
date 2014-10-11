@@ -5,7 +5,6 @@ from django.shortcuts import render, get_object_or_404
 from .tasks import compile_task_statements
 from trojsten.regal.tasks.models import Task
 from trojsten.regal.contests.models import Round, Competition
-from .helpers import get_rounds_by_year
 from sendfile import sendfile
 import os
 from django.conf import settings
@@ -24,7 +23,7 @@ def _statement_view(request, task_id, solution=False):
         path = task.get_path(solution=solution)
         template_data = {
             'task': task,
-            'path': path
+            'path': path,
         }
         return render(
             request,
@@ -73,10 +72,10 @@ def latest_task_list(request):
     )
 
 
-def view_pdf(request, round_id):
+def view_pdf(request, round_id, solution=False):
     round = get_object_or_404(Round.visible_rounds(request.user), pk=round_id)
     try:
-        path = round.get_pdf_path()
+        path = round.get_pdf_path(solution)
         return sendfile(request, path)
     except IOError:
         raise Http404

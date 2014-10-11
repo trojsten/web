@@ -1,6 +1,9 @@
 {% if round.tasks_pdf_exists %}
 <a class="btn btn-info" href="{% url 'view_pdf' round_id=round.id%}">Stiahnuť pdf</a>
 {% endif %}
+{% if round.solutions_visible and round.solutions_pdf_exists %}
+<a class="btn btn-info" href="{% url 'view_solutions_pdf' round_id=round.id%}">Stiahnuť riešenia</a>
+{% endif %}
 <a class="btn btn-success" href="{% url 'round_submit_page' round_id=round.id%}">Odovzdaj riešenia</a>
 {% if result_rounds %}
     {% if categories %}
