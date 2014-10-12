@@ -93,7 +93,7 @@ class Task(models.Model):
     def visible(self, user):
         return self.round.is_visible_for_user(user)
 
-    def solutions_visible(self, user):
+    def solution_visible(self, user):
         return self.round.solutions_are_visible_for_user(user)
 
 
