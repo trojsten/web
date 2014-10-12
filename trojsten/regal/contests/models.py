@@ -175,23 +175,31 @@ class Round(models.Model):
         )
         return {r.series.competition: r for r in rounds}
 
-    def visible_for_user(self, user):
-        return user.is_superuser\
-            or self.series.competition.organizers_group in user.groups.all()\
-            or self.visible
+    def is_visible_for_user(self, user):
+        return (
+            user.is_superuser or
+            self.series.competition.organizers_group in user.groups.all() or
+            self.visible
+        )
 
-    def solutions_visible_for_user(self, user):
-        return user.is_superuser\
-            or self.series.competition.organizers_group in user.groups.all()\
-            or self.solutions_visible
+    def solutions_are_visible_for_user(self, user):
+        return (
+            user.is_superuser or
+            self.series.competition.organizers_group in user.groups.all() or
+            self.solutions_visible
+        )
 
     class Meta:
         verbose_name = 'Kolo'
         verbose_name_plural = 'Kolá'
 
     def __str__(self):
-        return '%i. kolo, %i. séria, %i. ročník %s'\
-            % (self.number, self.series.number, self.series.year, self.series.competition)
+        return '%i. kolo, %i. séria, %i. ročník %s' % (
+            self.number,
+            self.series.number,
+            self.series.year,
+            self.series.competition,
+        )
 
     def short_str(self):
         return '%i. kolo' % self.number

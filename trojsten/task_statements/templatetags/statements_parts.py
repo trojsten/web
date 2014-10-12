@@ -27,7 +27,7 @@ def show_task_list(user, round):
         'round': round,
         'tasks': tasks,
         'categories': categories,
-        'solutions_visible': round.solutions_visible_for_user(user),
+        'solutions_visible': round.solutions_are_visible_for_user(user),
     }
     if user.is_authenticated():
         submits = get_latest_submits_for_user(tasks, user)

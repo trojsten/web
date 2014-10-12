@@ -99,10 +99,10 @@ class Task(models.Model):
             return False
 
     def visible(self, user):
-        return self.round.visible_for_user(user)
+        return self.round.is_visible_for_user(user)
 
     def solutions_visible(self, user):
-        return self.round.solutions_visible_for_user(user)
+        return self.round.solutions_are_visible_for_user(user)
 
 
 @python_2_unicode_compatible
