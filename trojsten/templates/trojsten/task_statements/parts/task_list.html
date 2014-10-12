@@ -19,9 +19,9 @@
     <th>
         Úloha
     </th>
-    {% if round.solutions_visible %}
-    <th>
-        Riešenie
+    {% if solutions_visible %}
+    <th width="15%">
+        Riešenie {% if not round.solutions_visible %}<small><span class="label label-danger" title="skryté">skr.</span></small>{% endif %}
     </th>
     {% endif %}
     <th width="15%">
@@ -43,19 +43,11 @@
             {{task.number}}.
         </td>
         <td>
-        {% if task.task_file_exists %}
             <a href="{% url 'task_statement' task_id=task.id %}">{{task.name}}</a>
-        {% else %}
-            {{task.name}}
-        {% endif %}
         </td>
-        {% if round.solutions_visible %}
+        {% if solutions_visible %}
             <td>
-                {% if task.solution_file_exists %}
-                    <a href="{% url 'solution_statement' task_id=task.id %}">riešenie</a>
-                {% else %}
-                    pozri PDF
-                {% endif %}
+                <a href="{% url 'solution_statement' task_id=task.id %}">riešenie</a>
             </td>
         {% endif %}
         <td>

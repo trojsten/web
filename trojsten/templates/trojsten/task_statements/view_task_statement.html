@@ -39,7 +39,11 @@
     </div>
     {% endif %}
     <div class="task-statement">
-        {% ssi path %}
+        {% if task.task_file_exists %}
+            {% ssi path %}
+        {% else %}
+        <div class="alert alert-warning">HTML zadanie nie je k dispozícii.</div>
+        {% endif %}
     </div>
     <div class="task-submit">
     {% if task.get_submit_types|length > 0 %}

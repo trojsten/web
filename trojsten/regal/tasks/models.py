@@ -99,14 +99,10 @@ class Task(models.Model):
             return False
 
     def visible(self, user):
-        return user.is_superuser\
-            or self.round.series.competition.organizers_group in user.groups.all()\
-            or self.round.visible
+        return self.round.visible_for_user(user)
 
     def solutions_visible(self, user):
-        return user.is_superuser\
-            or self.round.series.competition.organizers_group in user.groups.all()\
-            or self.round.solutions_visible
+        return self.round.solutions_visible_for_user(user)
 
 
 @python_2_unicode_compatible

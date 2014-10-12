@@ -73,6 +73,7 @@ class Series(models.Model):
             % (self.number, self.name)
     short_str.short_description = 'Séria'
 
+
 @python_2_unicode_compatible
 class Round(models.Model):
     '''
@@ -173,6 +174,16 @@ class Round(models.Model):
             'series__competition'
         )
         return {r.series.competition: r for r in rounds}
+
+    def visible_for_user(self, user):
+        return user.is_superuser\
+            or self.series.competition.organizers_group in user.groups.all()\
+            or self.visible
+
+    def solutions_visible_for_user(self, user):
+        return user.is_superuser\
+            or self.series.competition.organizers_group in user.groups.all()\
+            or self.solutions_visible
 
     class Meta:
         verbose_name = 'Kolo'

@@ -21,21 +21,24 @@ def _statement_view(request, task_id, solution=False):
         raise Http404
     try:
         path = task.get_path(solution=solution)
-        template_data = {
-            'task': task,
-            'path': path,
-        }
-        if solution:
-            template_data['statement_path'] = task.get_path(solution=False)
-        return render(
-            request,
-            'trojsten/task_statements/view_{}_statement.html'.format(
-                'solution' if solution else 'task'
-            ),
-            template_data,
-        )
     except IOError:
-        raise Http404
+        path = None
+    template_data = {
+        'task': task,
+        'path': path,
+    }
+    if solution:
+        try:
+            template_data['statement_path'] = task.get_path(solution=False)
+        except IOError:
+            pass
+    return render(
+        request,
+        'trojsten/task_statements/view_{}_statement.html'.format(
+            'solution' if solution else 'task'
+        ),
+        template_data,
+    )
 
 
 def task_statement(request, task_id):
