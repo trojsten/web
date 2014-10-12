@@ -78,25 +78,17 @@ class Task(models.Model):
             settings.TASK_STATEMENTS_HTML_DIR,
             task_file,
         )
-        if not os.path.exists(path):
-            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     @property
     def task_file_exists(self):
-        try:
-            self.get_path(solution=False)
-            return True
-        except IOError:
-            return False
+        path = self.get_path(solution=False)
+        return os.path.exists(path)
 
     @property
     def solution_file_exists(self):
-        try:
-            self.get_path(solution=True)
-            return True
-        except IOError:
-            return False
+        path = self.get_path(solution=True)
+        return os.path.exists(path)
 
     def visible(self, user):
         return self.round.is_visible_for_user(user)

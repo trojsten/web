@@ -19,19 +19,12 @@ def _statement_view(request, task_id, solution=False):
     task = get_object_or_404(Task, pk=task_id)
     if not task.visible(request.user) or (solution and not task.solutions_visible(request.user)):
         raise Http404
-    try:
-        path = task.get_path(solution=solution)
-    except IOError:
-        path = None
     template_data = {
         'task': task,
-        'path': path,
+        'path': task.get_path(solution=solution),
     }
     if solution:
-        try:
-            template_data['statement_path'] = task.get_path(solution=False)
-        except IOError:
-            pass
+        template_data['statement_path'] = task.get_path(solution=False)
     return render(
         request,
         'trojsten/task_statements/view_{}_statement.html'.format(
@@ -79,10 +72,10 @@ def latest_task_list(request):
 
 def view_pdf(request, round_id, solution=False):
     round = get_object_or_404(Round.visible_rounds(request.user), pk=round_id)
-    try:
-        path = round.get_pdf_path(solution)
+    path = round.get_pdf_path(solution)
+    if os.path.exists(path):
         return sendfile(request, path)
-    except IOError:
+    else:
         raise Http404
 
 
@@ -93,11 +86,11 @@ def show_picture(request, type, task_id, picture):
     _, ext = os.path.splitext(picture)
     if not ext in settings.ALLOWED_PICTURE_EXT:
         raise Http404
-    try:
-        path = os.path.join(
-            task.round.get_pictures_path(),
-            picture,
-        )
+    path = os.path.join(
+        task.round.get_pictures_path(),
+        picture,
+    )
+    if os.path.exists(path):
         return sendfile(request, path)
-    except IOError:
+    else:
         raise Http404
