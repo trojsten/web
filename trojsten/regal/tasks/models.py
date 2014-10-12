@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 from trojsten.regal.contests.models import Round, Competition
 from django.utils.translation import ugettext_lazy as _
+from decimal import Decimal
 import os
 
 
@@ -131,7 +132,8 @@ class Submit(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(get_user_model(), verbose_name='odovzdávateľ')
     submit_type = models.IntegerField(verbose_name='typ submitu', choices=SUBMIT_TYPES)
-    points = models.IntegerField(verbose_name='body')
+    points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body')
+
     filepath = models.CharField(max_length=128, verbose_name='súbor')
     testing_status = models.CharField(
         max_length=128, verbose_name='stav testovania')
@@ -145,7 +147,12 @@ class Submit(models.Model):
         verbose_name_plural = 'Submity'
 
     def __str__(self):
-        return '%s - %s <%s> (%s)' % (self.user, self.task, Submit.SUBMIT_TYPES[self.submit_type][1], str(self.time))
+        return '%s - %s <%s> (%s)' % (
+            self.user,
+            self.task,
+            Submit.SUBMIT_TYPES[self.submit_type][1],
+            str(self.time),
+        )
 
     @property
     def filename(self):
@@ -154,3 +161,15 @@ class Submit(models.Model):
     @property
     def tester_response_verbose(self):
         return _(self.tester_response)
+
+    @property
+    def normalized_points(self):
+        def remove_exponent(d):
+            '''Remove exponent and trailing zeros.
+
+            >>> remove_exponent(Decimal('5E+3'))
+            Decimal('5000')
+
+            '''
+            return d.quantize(Decimal(1)) if d == d.to_integral() else d.normalize()
+        return remove_exponent(self.points)
