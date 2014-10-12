@@ -4,7 +4,7 @@
 <div class="col-md-7">
 <div class="progress">
   <div class="progress-bar {{progressbar_class}}" role="progressbar" aria-valuenow="{{elapsed.days}}" aria-valuemin="0" aria-valuemax="{{full.days}}" style="width: {{percent}}%;">
-    zostáva {{remaining.days}} {%if remaining.days >= 5 or remaining.days == 0%}dní{% elif remaining.days >= 2%}dni{%else%}deň{%endif%}
+    {{remaining.days}} {%if remaining.days >= 5 or remaining.days == 0%}dní{% elif remaining.days >= 2%}dni{%else%}deň{%endif%}
   </div>
 </div>
 </div>
