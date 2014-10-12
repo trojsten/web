@@ -19,7 +19,7 @@ def update_points(user):
         task=get_task(),
         user=user,
         points=points,
-        submit_type=Submit.DESCRIPTION,
+        submit_type=Submit.EXTERNAL,
         filepath="",
         testing_status="OK",
         tester_response="",
