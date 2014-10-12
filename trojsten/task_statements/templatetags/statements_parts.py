@@ -80,7 +80,7 @@ def show_progress(round):
         'full': full,
         'remaining': remaining,
         'elapsed': elapsed,
-        'percent': 100 * elapsed.days // full.days,
+        'percent': 100 * elapsed.days // full.days if full.days > 0 else 100,
         'progressbar_class': progressbar_class
 
     }

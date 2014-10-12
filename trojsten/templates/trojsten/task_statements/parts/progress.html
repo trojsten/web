@@ -1,10 +1,11 @@
-{% if remaining.days > 0 %}
+{% load i18n %}
+{% if remaining.days >= 0 %}
 <div class="row">
 <div class="col-md-5"><em>Koniec kola: {{end}}</em></div>
 <div class="col-md-7">
 <div class="progress">
   <div class="progress-bar {{progressbar_class}}" role="progressbar" aria-valuenow="{{elapsed.days}}" aria-valuemin="0" aria-valuemax="{{full.days}}" style="width: {{percent}}%;">
-    {{remaining.days}} {%if remaining.days >= 5 or remaining.days == 0%}dní{% elif remaining.days >= 2%}dni{%else%}deň{%endif%}
+    {% blocktrans count days=remaining.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktrans %}
   </div>
 </div>
 </div>
