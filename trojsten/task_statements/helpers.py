@@ -49,5 +49,5 @@ def get_points_from_submits(tasks, submits):
         if submit.submit_type == Submit.DESCRIPTION:
             res[submit.task]['description'] = '??'  # Fixme
         else:
-            res[submit.task]['source'] += submit.normalized_points
+            res[submit.task]['source'] += submit.user_points
     return res

@@ -41,6 +41,7 @@ class Task(models.Model):
     number = models.IntegerField(verbose_name='číslo')
     description_points = models.IntegerField(verbose_name='body za popis')
     source_points = models.IntegerField(verbose_name='body za program')
+    integer_source_points = models.BooleanField(default=True, verbose_name='celočíselné body za program')
     has_source = models.BooleanField(verbose_name='odovzáva sa zdroják')
     has_description = models.BooleanField(verbose_name='odovzáva sa popis')
     has_testablezip = models.BooleanField(verbose_name='odovzdáva sa zip na testovač', default=False)
@@ -163,13 +164,18 @@ class Submit(models.Model):
         return _(self.tester_response)
 
     @property
-    def normalized_points(self):
-        def remove_exponent(d):
-            '''Remove exponent and trailing zeros.
+    def user_points(self):
+        '''
+        Returns points visible to user.
+        Description points is always converted to integer.
+        Source points are converted to integer if self.task.integer_source_points == True
+        '''
+        if self.submit_type == Submit.DESCRIPTION or self.task.integer_source_points:
+            integer_points = True
+        else:
+            integer_points = False
 
-            >>> remove_exponent(Decimal('5E+3'))
-            Decimal('5000')
-
-            '''
-            return d.quantize(Decimal(1)) if d == d.to_integral() else d.normalize()
-        return remove_exponent(self.points)
+        if integer_points:
+            return self.points.quantize(Decimal(1))
+        else:
+            return self.points.quantize(Decimal('1.00'))
