@@ -19,7 +19,7 @@ def write_raw(raw, data, filepath):
     filepath = unidecode(filepath)
     try:
         os.makedirs(os.path.dirname(filepath))
-        os.chmod(os.path.dirname(filepath)
+        os.chmod(os.path.dirname(filepath))
     except:
         pass
     with open(filepath, 'w+') as destination:
@@ -32,7 +32,7 @@ def save_file(data, filepath):
     '''Vytvorí cieľový adresár a uloží stiahnutý súbor.'''
     try:
         os.makedirs(os.path.dirname(filepath))
-        os.chmod(os.path.dirname(filepath)
+        os.chmod(os.path.dirname(filepath))
     except:
         pass
     with open(filepath, 'wb+') as destination:
