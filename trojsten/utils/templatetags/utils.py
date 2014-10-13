@@ -22,6 +22,11 @@ def split(value, arg):
     return value.split(arg)
 
 
+@register.filter
+def as_list(value):
+    return [value]
+
+
 @register.simple_tag(takes_context=True)
 def current(context, url_name, return_value='active', **kwargs):
     matches = current_url_equals(context, url_name, **kwargs)

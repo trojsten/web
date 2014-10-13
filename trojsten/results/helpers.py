@@ -4,17 +4,17 @@ from django.db.models import F
 from django.conf import settings
 
 
-def get_tasks(round_ids, category_ids=None):
+def get_tasks(rounds, categories=None):
     '''Returns tasks which belong to specified round_ids and category_ids
     '''
-    if round_ids == '':
+    if rounds is None or rounds == []:
         return Task.objects.none()
     tasks = Task.objects.filter(
-        round__in=round_ids.split(',')
+        round__in=rounds
     )
-    if category_ids is not None and category_ids != '':
+    if categories is not None and categories != []:
         tasks = tasks.filter(
-            category__in=category_ids.split(',')
+            category__in=categories
         ).distinct()
     return tasks.order_by('round', 'number')
 
