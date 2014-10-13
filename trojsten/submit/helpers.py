@@ -14,14 +14,6 @@ RESPONSE_OK = 'OK'
 SUBMIT_DIR_PERMISSIONS = 0777
 
 
-def write_raw(raw, data, filepath):
-    '''Vytvorí cieľový adresár a uloží string do súboru.'''
-    write_chunks_to_file(filepath, [raw, data])
-
-def save_file(data, filepath):
-    '''Vytvorí cieľový adresár a uloží stiahnutý súbor.'''
-    write_chunks_to_file(filepath, data.chunks())
-
 def write_chunks_to_file(filepath, chunks):
     filepath = unidecode(filepath)
     try:
@@ -121,7 +113,7 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
         original_name)
 
     # Write RAW to local file
-    write_raw(raw, data, os.path.join(path, submit_id + '.raw'))
+    write_chunks_to_file(os.path.join(path, submit_id + '.raw'), [raw, data])
 
     # Send RAW for testing (uncomment when deploying)
     post_submit(raw, data)
