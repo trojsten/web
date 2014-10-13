@@ -5,6 +5,7 @@ import os
 import random
 import socket
 import xml.etree.ElementTree as ET
+from decimal import Decimal
 
 
 RESPONSE_ERROR = 'CERR'
@@ -75,8 +76,12 @@ def get_path(task, user):
 
     Cesta má tvar: $SUBMIT_PATH/submits/KSP/task_id/user_id
     '''
-    return get_path_raw(task.round.series.competition.name, "%s-%d" % (task.round.series.competition.name, task.id),
-            "%s-%d" % (task.round.series.competition.name, user.id))
+    return get_path_raw(
+        task.round.series.competition.name, "%s-%d" % (
+            task.round.series.competition.name, task.id
+        ),
+        "%s-%d" % (task.round.series.competition.name, user.id)
+    )
 
 
 def post_submit(raw, data):
@@ -108,7 +113,7 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
     original_name = f.name
     correct_filename = task_id + language
     data = f.read()
-    
+
     # Determine local directory to store RAW file into
     path = get_path_raw(contest_id, task_id, user_id)
 
@@ -172,10 +177,10 @@ def update_submit(submit):
             # Na konci testovača je v tagu <score> uložené percento získaných
             # bodov.
             try:
-                score = int(float(tree.find("runLog/score").text))
+                score = Decimal(tree.find("runLog/score").text)
             except:
                 score = 0
-            points = (submit.task.source_points * score) // 100
+            points = (submit.task.source_points * score) / Decimal(100)
         submit.points = points
         submit.tester_response = result
         submit.testing_status = 'finished'
