@@ -104,7 +104,7 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
     # Prepare submit parameters (not entirely sure about this yet).
     user_id = "%s-%d" % (contest_id, user_id)
     task_id = "%s-%d" % (contest_id, task_id)
-    original_name = f.name
+    original_name = unidecode(f.name)
     correct_filename = task_id + language
     data = f.read()
 
