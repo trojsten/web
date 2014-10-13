@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .helpers import get_tasks, check_round_series
+from .helpers import check_round_series
 from trojsten.regal.tasks.models import Category
 from trojsten.regal.contests.models import Round
 from django.http import HttpResponseBadRequest
@@ -16,13 +16,11 @@ def view_results(request, round_ids, category_ids=None):
     categories = None if category_ids is None else Category.objects.filter(
         pk__in=category_ids.split(',')
     )
-    tasks = get_tasks(round_ids, category_ids)
 
     template_data = {
         'rounds': rounds,
         'series': rounds[0].series,
         'categories': categories,
-        'tasks': tasks,
         'show_staff': request.GET.get('show_staff', False),
     }
     return render(
@@ -31,24 +29,26 @@ def view_results(request, round_ids, category_ids=None):
 
 
 def view_latest_results(request):
-    tasks_by_round = {
-        r: [
-            (cat, get_tasks(
-                ','.join(
-                    str(round.id)
-                    for round in Round.objects.filter(
-                        visible=True, series=r.series, number__lte=r.number
-                    ).order_by('number')
-                ),
-                str(getattr(cat, 'id', '')),
-            ))
-            for cat in [None] + list(Category.objects.filter(competition=c))
-        ]
+    rounds_info = {
+        r: {
+            'all_rounds': [
+                round
+                for round in Round.objects.filter(
+                    visible=True, series=r.series, number__lte=r.number
+                ).order_by('number')
+            ],
+            'categories': [
+                cat
+                for cat in [None] + list(
+                    Category.objects.filter(competition=c)
+                )
+            ],
+        }
         for c, r in Round.get_latest_by_competition(request.user).items()
     }
 
     template_data = {
-        'tasks_by_round': tasks_by_round,
+        'rounds_info': rounds_info,
         'show_staff': request.GET.get('show_staff', False)
     }
     return render(
