@@ -11,17 +11,15 @@ from unidecode import unidecode
 
 RESPONSE_ERROR = 'CERR'
 RESPONSE_OK = 'OK'
-SUBMIT_DIR_PERMISSIONS = '0777'
+SUBMIT_DIR_PERMISSIONS = 0777
 
 
 def write_raw(raw, data, filepath):
     '''Vytvorí cieľový adresár a uloží string do súboru.'''
     filepath = unidecode(filepath)
     try:
-        os.makedirs(os.path.split(filepath)[0])
-        fd = os.open(os.path.split(filepath)[0], os.O_RDONLY)
-        os.fchmod(fd, SUBMIT_DIR_PERMISSIONS)
-        os.close(fd)
+        os.makedirs(os.path.dirname(filepath))
+        os.chmod(os.path.dirname(filepath)
     except:
         pass
     with open(filepath, 'w+') as destination:
@@ -33,10 +31,8 @@ def save_file(data, filepath):
     filepath = unidecode(filepath)
     '''Vytvorí cieľový adresár a uloží stiahnutý súbor.'''
     try:
-        os.makedirs(os.path.split(filepath)[0])
-        fd = os.open(os.path.split(filepath)[0], os.O_RDONLY)
-        os.fchmod(fd, SUBMIT_DIR_PERMISSIONS)
-        os.close(fd)
+        os.makedirs(os.path.dirname(filepath))
+        os.chmod(os.path.dirname(filepath)
     except:
         pass
     with open(filepath, 'wb+') as destination:
