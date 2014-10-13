@@ -16,27 +16,21 @@ SUBMIT_DIR_PERMISSIONS = 0777
 
 def write_raw(raw, data, filepath):
     '''Vytvorí cieľový adresár a uloží string do súboru.'''
-    filepath = unidecode(filepath)
-    try:
-        os.makedirs(os.path.dirname(filepath))
-        os.chmod(os.path.dirname(filepath))
-    except:
-        pass
-    with open(filepath, 'w+') as destination:
-        destination.write(raw)
-        destination.write(data)
-
+    write_chunks_to_file(filepath, [raw, data])
 
 def save_file(data, filepath):
-    filepath = unidecode(filepath)
     '''Vytvorí cieľový adresár a uloží stiahnutý súbor.'''
+    write_chunks_to_file(filepath, data.chunks())
+
+def write_chunks_to_file(filepath, chunks):
+    filepath = unidecode(filepath)
     try:
         os.makedirs(os.path.dirname(filepath))
         os.chmod(os.path.dirname(filepath))
     except:
         pass
     with open(filepath, 'wb+') as destination:
-        for chunk in data.chunks():
+        for chunk in chunks:
             destination.write(chunk)
 
 
