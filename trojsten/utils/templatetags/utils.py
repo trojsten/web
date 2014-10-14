@@ -13,7 +13,7 @@ def lookup(object, key):
     '''
     try:
         return object[key]
-    except (KeyError, IndexError):
+    except (KeyError, IndexError, TypeError):
         return None
 
 
