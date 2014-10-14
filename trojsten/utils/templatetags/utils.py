@@ -6,10 +6,15 @@ register = template.Library()
 
 
 @register.filter
-def lookup(d, key):
-    if type(d) is list or type(d) is tuple:
-        return d[key]
-    return d.get(key)
+def lookup(object, key):
+    '''
+    Looks up for key in object.
+    Returns None if key is not found.
+    '''
+    try:
+        return object[key]
+    except (KeyError, IndexError):
+        return None
 
 
 @register.filter

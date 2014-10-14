@@ -1,6 +1,7 @@
 from trojsten.regal.contests.models import Round
 from trojsten.regal.tasks.models import Submit
 from django.db.models import F
+from collections import defaultdict
 
 
 def get_rounds_by_year(user, competition):
@@ -11,10 +12,8 @@ def get_rounds_by_year(user, competition):
     ).order_by(
         '-series__year', '-number'
     ).select_related('series__year')
-    rounds_dict = dict()
+    rounds_dict = defaultdict(list)
     for round in rounds:
-        if not round.series.year in rounds_dict:
-            rounds_dict[round.series.year] = list()
         rounds_dict[round.series.year].append(round)
     return rounds_dict
 
