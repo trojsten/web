@@ -197,6 +197,7 @@ INSTALLED_APPS = (
     'ksp_login',
     'bootstrapform',
     'contact_form',
+    'mathfilters',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',

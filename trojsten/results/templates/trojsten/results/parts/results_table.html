@@ -1,4 +1,6 @@
 {% load utils %}
+{% load mathfilters %}
+
 <table class="table table-hover table-responsive">
 <thead>
 <tr>
@@ -6,7 +8,7 @@
     <th>Meno:</th>
     <th>Škola</th>
     <th>Ročník</th>
-    {% if show_previous_results %}
+    {% if has_previous_results %}
         <th>Predošlé kolá</th>
     {% endif %}
     {% for task in tasks %}
@@ -20,20 +22,22 @@
 <tr {% if user == result.user %}class="active"{%endif%}>
     <td class="text-right">
     {% if result.show_rank %} {{result.rank}} {% endif %}
-    {% if result.prev_rank == None %}
-        <span class="text-info glyphicon glyphicon-asterisk"></span>
-    {% elif result.rank < result.prev_rank %}
-        <span class="text-success glyphicon glyphicon-chevron-up"></span>
-    {% elif result.rank > result.prev_rank %}
-        <span class="text-danger glyphicon glyphicon-chevron-down"></span>
-    {% else %}
-        <span class="text-muted glyphicon glyphicon-pushpin"></span>
+    {% if has_previous_results %}
+        {% if result.prev_rank == None %}
+            <span class="text-info glyphicon glyphicon-asterisk"></span>
+        {% elif result.rank < result.prev_rank %}
+            <span class="text-success glyphicon glyphicon-chevron-up" title="+{{result.prev_rank|sub:result.rank}}"></span>
+        {% elif result.rank > result.prev_rank %}
+            <span class="text-danger glyphicon glyphicon-chevron-down" title="-{{result.rank|sub:result.prev_rank}}"></span>
+        {% else %}
+            <span class="text-muted glyphicon glyphicon-pushpin"></span>
+        {% endif %}
     {% endif %}
     </td>
     <td>{{result.user.first_name}} {{result.user.last_name}}</td>
     <td>{%if result.user.school.has_abbreviation %}<abbr title="{{result.user.school.verbose_name}}">{{result.user.school.abbreviation}}</abbr>{%else%}{{result.user.school.verbose_name}}{%endif%}</td>
     <td>{{result.user.school_year}}</td>
-    {% if show_previous_results %}
+    {% if has_previous_results %}
         <td>{{result.previous_points}}</td>
     {% endif %}
     {% for task in tasks %}
