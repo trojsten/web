@@ -15,7 +15,7 @@ def get_rounds_by_year(user, competition):
     rounds_dict = defaultdict(list)
     for round in rounds:
         rounds_dict[round.series.year].append(round)
-    return rounds_dict
+    return dict(rounds_dict)
 
 
 def get_result_rounds(round):
