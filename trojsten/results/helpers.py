@@ -67,7 +67,7 @@ def get_results_data(tasks, submits):
     return res
 
 
-def make_result_table(results_data, previous_results_data=None):
+def format_results_data(results_data, previous_results_data=None):
     '''Makes list of table rows from results_data
     '''
     res = list()
@@ -122,3 +122,19 @@ def make_result_table(results_data, previous_results_data=None):
 
 def check_round_series(rounds):
     return all(r.series == rounds[0].series for r in rounds)
+
+
+def make_result_table(rounds, categories=False, show_staff=False):
+    current_round = list(rounds)[-1]
+    current_tasks = get_tasks([current_round], categories)
+    current_submits = get_submits(current_tasks, show_staff,)
+    current_results_data = get_results_data(current_tasks, current_submits)
+
+    previous_results_data = None
+    previous_rounds = list(rounds)[:-1]
+    if len(previous_rounds):
+        previous_tasks = get_tasks(previous_rounds, categories)
+        previous_submits = get_submits(previous_tasks, show_staff,)
+        previous_results_data = get_results_data(previous_tasks, previous_submits)
+
+    return current_tasks, format_results_data(current_results_data, previous_results_data), previous_results_data is not None

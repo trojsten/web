@@ -201,6 +201,7 @@ INSTALLED_APPS = (
     'bootstrapform',
     'contact_form',
     'easy_select2',
+    'mathfilters',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
