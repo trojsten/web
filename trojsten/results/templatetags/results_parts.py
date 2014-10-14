@@ -9,13 +9,13 @@ register = template.Library()
 def show_results_table(context, rounds, categories=None):
     '''Displays results for specified tasks and categories
     '''
-    current_round = rounds[-1]
+    current_round = list(rounds)[-1]
     current_tasks = get_tasks([current_round], categories)
     current_submits = get_submits(current_tasks, context['show_staff'],)
     current_results_data = get_results_data(current_tasks, current_submits)
 
     previous_results_data = None
-    previous_rounds = rounds[:-1]
+    previous_rounds = list(rounds)[:-1]
     if len(previous_rounds):
         previous_tasks = get_tasks(previous_rounds, categories)
         previous_submits = get_submits(previous_tasks, context['show_staff'],)
