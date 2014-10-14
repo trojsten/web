@@ -67,14 +67,29 @@ def get_results_data(tasks, submits):
     return res
 
 
-def make_result_table(results_data):
+def make_result_table(results_data, previous_results_data=None):
     '''Makes list of table rows from results_data
     '''
     res = list()
+    if previous_results_data is not None:
+        for user, points in previous_results_data.items():
+            if user not in results_data:
+                results_data[user] = dict()
+            results_data[user]['previous'] = points['sum']
     for user, points in results_data.items():
-        points_sum = points['sum']
-        del points['sum']
-        res.append({'user': user, 'points': points, 'sum': points_sum})
+        previous_points = points.get('previous', 0)
+        points_sum = points.get('sum', 0) + previous_points
+        if 'sum' in points:
+            del points['sum']
+        if 'previous' in points:
+            del points['previous']
+        res.append({
+            'user': user,
+            'points': points,
+            'sum': points_sum,
+            'previous_points': previous_points,
+            'show_previous': previous_results_data is not None,
+        })
     return sorted(res, key=lambda x: -x['sum'])
 
 

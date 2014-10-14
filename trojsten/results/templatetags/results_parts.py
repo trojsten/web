@@ -9,14 +9,24 @@ register = template.Library()
 def show_results_table(context, rounds, categories=None):
     '''Displays results for specified tasks and categories
     '''
-    tasks = get_tasks(rounds, categories)
-    submits = get_submits(tasks, context['show_staff'],)
-    results_data = get_results_data(tasks, submits)
-    results = make_result_table(results_data)
+    current_round = rounds[-1]
+    current_tasks = get_tasks([current_round], categories)
+    current_submits = get_submits(current_tasks, context['show_staff'],)
+    current_results_data = get_results_data(current_tasks, current_submits)
+
+    previous_results_data = None
+    previous_rounds = rounds[:-1]
+    if len(previous_rounds):
+        previous_tasks = get_tasks(previous_rounds, categories)
+        previous_submits = get_submits(previous_tasks, context['show_staff'],)
+        previous_results_data = get_results_data(previous_tasks, previous_submits)
+
+    results = make_result_table(current_results_data, previous_results_data)
 
     context.update({
         'Submit': Submit,
-        'tasks': tasks,
+        'tasks': current_tasks,
         'results': results,
+        'show_previous_results': previous_results_data is not None
     })
     return context
