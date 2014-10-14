@@ -90,7 +90,34 @@ def make_result_table(results_data, previous_results_data=None):
             'previous_points': previous_points,
             'show_previous': previous_results_data is not None,
         })
-    return sorted(res, key=lambda x: -x['sum'])
+
+    res = sorted(res, key=lambda x: -x['previous_points'])
+    last_points = None
+    last_rank = 0
+    for i, r in enumerate(res):
+        if previous_results_data is not None and r['user'] in previous_results_data:
+            if r['previous_points'] != last_points:
+                last_rank = i
+                r['prev_rank'] = 1 + i
+            else:
+                r['prev_rank'] = 1 + last_rank
+            last_points = r['previous_points']
+        else:
+            r['prev_rank'] = None
+
+    res = sorted(res, key=lambda x: -x['sum'])
+    last_points = None
+    last_rank = 0
+    for i, r in enumerate(res):
+        if r['sum'] != last_points:
+            last_rank = i
+            r['show_rank'] = True
+            r['rank'] = 1 + i
+        else:
+            r['show_rank'] = False
+            r['rank'] = 1 + last_rank
+        last_points = r['sum']
+    return res
 
 
 def check_round_series(rounds):

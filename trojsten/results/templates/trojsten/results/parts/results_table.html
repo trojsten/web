@@ -2,7 +2,7 @@
 <table class="table table-hover table-responsive">
 <thead>
 <tr>
-    <th>#</th>
+    <th class="text-right">#</th>
     <th>Meno:</th>
     <th>Škola</th>
     <th>Ročník</th>
@@ -18,7 +18,18 @@
 {% for result in results %}
 {% spaceless %}
 <tr {% if user == result.user %}class="active"{%endif%}>
-    <td>{{forloop.counter}}</td>
+    <td class="text-right">
+    {% if result.show_rank %} {{result.rank}} {% endif %}
+    {% if result.prev_rank == None %}
+        <span class="text-info glyphicon glyphicon-asterisk"></span>
+    {% elif result.rank < result.prev_rank %}
+        <span class="text-success glyphicon glyphicon-chevron-up"></span>
+    {% elif result.rank > result.prev_rank %}
+        <span class="text-danger glyphicon glyphicon-chevron-down"></span>
+    {% else %}
+        <span class="text-muted glyphicon glyphicon-pushpin"></span>
+    {% endif %}
+    </td>
     <td>{{result.user.first_name}} {{result.user.last_name}}</td>
     <td>{%if result.user.school.has_abbreviation %}<abbr title="{{result.user.school.verbose_name}}">{{result.user.school.abbreviation}}</abbr>{%else%}{{result.user.school.verbose_name}}{%endif%}</td>
     <td>{{result.user.school_year}}</td>
