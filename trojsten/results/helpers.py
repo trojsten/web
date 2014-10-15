@@ -145,7 +145,6 @@ def make_result_table(rounds, categories=False, show_staff=False):
     return (
         current_tasks,
         format_results_data(current_results_data, previous_results_data),
-        previous_results_data is not None
     )
 
 
