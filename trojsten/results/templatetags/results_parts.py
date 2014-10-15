@@ -13,7 +13,7 @@ def show_results_table(context, rounds, categories=None):
 
     context.update({
         'Submit': Submit,
-        'tasks': current_tasks,
+        'tasks': list(current_tasks),
         'results': results,
         'has_previous_results': has_previous_results
     })

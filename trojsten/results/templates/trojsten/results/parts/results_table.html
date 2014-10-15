@@ -42,9 +42,9 @@
     {% endif %}
     {% for task in tasks %}
         <td>
-        {% if result.points|lookup:task|lookup:"submitted" %}
-            <span data-toggle="tooltip" data-placement="top" title="{% if task.description_points > 0 %}popis: {{result.points|lookup:task|lookup:'description'}}{% if task.source_points > 0 %} {% endif %}{% endif %}{% if task.source_points > 0 %}program: {{result.points|lookup:task|lookup:'source'}}{% endif %}">
-                {{result.points|lookup:task|lookup:"sum"}}
+        {% if result.points|lookup:task.id|lookup:"submitted" %}
+            <span data-toggle="tooltip" data-placement="top" title="{% if task.description_points > 0 %}popis: {{result.points|lookup:task.id|lookup:'description'}}{% if task.source_points > 0 %} {% endif %}{% endif %}{% if task.source_points > 0 %}program: {{result.points|lookup:task.id|lookup:'source'}}{% endif %}">
+                {{result.points|lookup:task.id|lookup:"sum"}}
             </span>
         {% endif %}
         </td>
