@@ -189,6 +189,7 @@ class ResultsEncoder(json.JSONEncoder):
             'id': obj.id,
             'abbreviation': obj.abbreviation,
             'verbose_name': obj.verbose_name,
+            'has_abbreviation': obj.has_abbreviation,
         }
 
     def encode_category(self, obj):
