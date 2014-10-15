@@ -78,7 +78,7 @@ def freeze_results(request, round_ids, category_ids=None):
         pk__in=category_ids.split(',')
     )
 
-    current_tasks, results, has_previous_results = make_result_table(rounds, categories)
+    current_tasks, results = make_result_table(rounds, categories)
     path = get_frozen_results_path(rounds, categories)
 
     #serialize data
@@ -86,7 +86,6 @@ def freeze_results(request, round_ids, category_ids=None):
         json.dump({
             'current_tasks': list(current_tasks),
             'results': results,
-            'has_previous_results': has_previous_results,
         }, f, cls=ResultsEncoder, sort_keys=True, indent=4, separators=(',', ': '),)
 
     messages.add_message(
