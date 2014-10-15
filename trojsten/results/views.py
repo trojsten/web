@@ -7,6 +7,8 @@ from .helpers import check_round_series, make_result_table, get_frozen_results_p
 from trojsten.regal.tasks.models import Category
 from trojsten.regal.contests.models import Round
 from django.http import HttpResponseBadRequest
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 import json
 
 
@@ -61,19 +63,22 @@ def view_latest_results(request):
     )
 
 
+@login_required
 def freeze_results(request, round_ids, category_ids=None):
-    def freeze_task(task):
-        return {
-            'id': task.id,
-            'number': task.number,
-            'name': task.name,
-        }
 
     rounds = Round.objects.filter(
         pk__in=round_ids.split(',')
-    ).select_related('series')
+    ).select_related('series__competition__organizers_group')
     if len(rounds) == 0 or not check_round_series(rounds):
         return HttpResponseBadRequest()
+
+    if (
+        not request.user.is_superuser or
+        rounds[0].series.competition.organizers_group
+        in request.user.groups.all()
+    ):
+        raise PermissionDenied
+
     categories = None if category_ids is None else Category.objects.filter(
         pk__in=category_ids.split(',')
     )
