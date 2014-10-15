@@ -1,8 +1,13 @@
-from django.shortcuts import render
-from .helpers import check_round_series
+# -*- coding: utf-8 -*-
+
+from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
+from django.contrib import messages
+from .helpers import check_round_series, make_result_table, get_frozen_results_path, ResultsEncoder
 from trojsten.regal.tasks.models import Category
 from trojsten.regal.contests.models import Round
 from django.http import HttpResponseBadRequest
+import json
 
 
 def view_results(request, round_ids, category_ids=None):
@@ -54,3 +59,42 @@ def view_latest_results(request):
     return render(
         request, 'trojsten/results/view_latest_results.html', template_data
     )
+
+
+def freeze_results(request, round_ids, category_ids=None):
+    def freeze_task(task):
+        return {
+            'id': task.id,
+            'number': task.number,
+            'name': task.name,
+        }
+
+    rounds = Round.objects.filter(
+        pk__in=round_ids.split(',')
+    ).select_related('series')
+    if len(rounds) == 0 or not check_round_series(rounds):
+        return HttpResponseBadRequest()
+    categories = None if category_ids is None else Category.objects.filter(
+        pk__in=category_ids.split(',')
+    )
+
+    current_tasks, results, has_previous_results = make_result_table(rounds, categories)
+    path = get_frozen_results_path(rounds, categories)
+
+    #serialize data
+    with open(path, 'w') as f:
+        json.dump({
+            'current_tasks': list(current_tasks),
+            'results': results,
+            'has_previous_results': has_previous_results,
+        }, f, cls=ResultsEncoder, sort_keys=True, indent=4, separators=(',', ': '),)
+
+    messages.add_message(
+        request,
+        messages.SUCCESS,
+        "Výsledkovka bola úspešne zmrazená do súboru: %s" % path,
+    )
+    return redirect(reverse(
+        'view_results',
+        kwargs={'round_ids': round_ids, 'category_ids': category_ids},
+    ))

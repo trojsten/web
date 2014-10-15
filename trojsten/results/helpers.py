@@ -1,7 +1,12 @@
-from trojsten.regal.tasks.models import Task, Submit
-from trojsten.regal.people.models import User
+from trojsten.regal.tasks.models import Task, Submit, Category
+from trojsten.regal.people.models import User, School
 from django.db.models import F
+from django.db.models.query import QuerySet
 from django.conf import settings
+import os
+import json
+from django.core import serializers
+from decimal import Decimal
 
 
 def get_tasks(rounds, categories=None):
@@ -55,14 +60,14 @@ def get_results_data(tasks, submits):
     empty_submit = {'sum': 0, 'description': 0, 'source': 0, 'submitted': False}
     for submit in submits:
         if submit.user not in res:
-            res[submit.user] = {i: empty_submit.copy() for i in tasks}
+            res[submit.user] = {task.id: empty_submit.copy() for task in tasks}
             res[submit.user]['sum'] = 0
         if submit.submit_type == Submit.DESCRIPTION:
-            res[submit.user][submit.task]['description'] = '??'  # Fixme
+            res[submit.user][submit.task.id]['description'] = '??'  # Fixme
         else:
-            res[submit.user][submit.task]['source'] += submit.user_points
-        res[submit.user][submit.task]['sum'] += submit.user_points
-        res[submit.user][submit.task]['submitted'] = True
+            res[submit.user][submit.task.id]['source'] += submit.user_points
+        res[submit.user][submit.task.id]['sum'] += submit.user_points
+        res[submit.user][submit.task.id]['submitted'] = True
         res[submit.user]['sum'] += submit.user_points
     return res
 
@@ -137,4 +142,75 @@ def make_result_table(rounds, categories=False, show_staff=False):
         previous_submits = get_submits(previous_tasks, show_staff,)
         previous_results_data = get_results_data(previous_tasks, previous_submits)
 
-    return current_tasks, format_results_data(current_results_data, previous_results_data), previous_results_data is not None
+    return (
+        current_tasks,
+        format_results_data(current_results_data, previous_results_data),
+        previous_results_data is not None
+    )
+
+
+def get_frozen_results_path(rounds, categories=None):
+    s = '#'.join(str(r.id) for r in rounds)
+    if categories is not None:
+        s += '-' + '#'.join(str(c.id) for c in categories)
+    return os.path.join(
+        settings.FROZEN_RESULTS_PATH,
+        'results_%s.json' % s
+    )
+
+
+class ResultsEncoder(json.JSONEncoder):
+    def encode_user(self, obj):
+        return {
+            'id': obj.id,
+            'username': obj.username,
+            'first_name': obj.first_name,
+            'last_name': obj.last_name,
+            'school_year': obj.school_year,
+            'school': obj.school,
+        }
+
+    def encode_task(self, obj):
+        return {
+            'id': obj.id,
+            'number': obj.number,
+            'name': obj.name,
+            'category': list(obj.category.all()),
+            'external_submit_link': obj.external_submit_link,
+            'has_description': obj.has_description,
+            'has_source': obj.has_source,
+            'has_testablezip': obj.has_testablezip,
+            'integer_source_points': obj.integer_source_points,
+            'source_points': obj.source_points,
+            'description_points': obj.description_points,
+        }
+
+    def encode_school(self, obj):
+        return {
+            'id': obj.id,
+            'abbreviation': obj.abbreviation,
+            'verbose_name': obj.verbose_name,
+        }
+
+    def encode_category(self, obj):
+        return {
+            'id': obj.id,
+            'name': obj.name,
+            'full_name': obj.full_name,
+        }
+
+    def default(self, obj):
+        if isinstance(obj, QuerySet):
+            return serializers.serialize('json', obj)
+        if isinstance(obj, Decimal):
+            return str(obj)
+        if isinstance(obj, User):
+            return self.encode_user(obj)
+        if isinstance(obj, School):
+            return self.encode_school(obj)
+        if isinstance(obj, Task):
+            return self.encode_task(obj)
+        if isinstance(obj, Category):
+            return self.encode_category(obj)
+        # Let the base class default method raise the TypeError
+        return json.JSONEncoder.default(self, obj)
