@@ -12,13 +12,10 @@
         {% if messages %}
         <!-- Messages for this instance -->
         {% for message in messages %}
-            {% if message.tags == 'error' %}
-            <div class="alert alert-danger" role="alert">
-            {% else %}
+            {# TODO: after bump to Django>=1.7, use level_tag here #}
             <div class="alert alert-{{ message.tags }}" role="alert">
-            {% endif %}
                 <a class="close" data-dismiss="alert" href="#">&times;</a>
-                {{ message|safe }}
+                {{ message }}
             </div>
         {% endfor %}
         {% endif %}

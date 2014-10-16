@@ -259,6 +259,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "trojsten.context_processors.current_site",
 )
 
+# Override message tags for bootstrap 3 compatibility.
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
+
 # The list of authentication backends we want to allow.
 AUTHENTICATION_BACKENDS = (
     #'social.backends.facebook.FacebookOAuth2',
