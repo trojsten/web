@@ -150,8 +150,10 @@ def make_result_table(rounds, categories=False, show_staff=False):
 
 def get_frozen_results_path(rounds, categories=None):
     s = '#'.join(str(r.id) for r in rounds)
-    if categories is not None:
-        s += '-' + '#'.join(str(c.id) for c in categories)
+    if categories is not None and len(list(filter(lambda x: x is not None, categories))):
+        s += '-' + '#'.join(
+            str(c.id) for c in filter(lambda x: x is not None, sorted(categories))
+        )
     return os.path.join(
         settings.FROZEN_RESULTS_PATH,
         'results_%s.json' % s
