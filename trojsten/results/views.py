@@ -29,6 +29,7 @@ def view_results(request, round_ids, category_ids=None):
         'series': rounds[0].series,
         'categories': categories,
         'show_staff': request.GET.get('show_staff', False),
+        'force_generate': request.GET.get('force_generate', False),
     }
     return render(
         request, 'trojsten/results/view_results.html', template_data
@@ -56,7 +57,8 @@ def view_latest_results(request):
 
     template_data = {
         'rounds_info': rounds_info,
-        'show_staff': request.GET.get('show_staff', False)
+        'show_staff': request.GET.get('show_staff', False),
+        'force_generate': request.GET.get('force_generate', False),
     }
     return render(
         request, 'trojsten/results/view_latest_results.html', template_data

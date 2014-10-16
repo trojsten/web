@@ -27,3 +27,8 @@ def show_results_table(context, rounds, categories=None):
         'has_previous_results': len(rounds) > 1
     })
     return context
+
+
+@register.assignment_tag
+def is_final(rounds, categories=None):
+    return os.path.exists(get_frozen_results_path(rounds, categories))
