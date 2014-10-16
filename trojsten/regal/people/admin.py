@@ -71,3 +71,4 @@ class UserAdmin(DefaultUserAdmin):
 admin.site.register(Address, AddressAdmin)
 admin.site.register(School, SchoolAdmin)
 admin.site.register(User, UserAdmin)
+admin.site.register(UserPropertyKey)
