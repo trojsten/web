@@ -74,8 +74,8 @@ def freeze_results(request, round_ids, category_ids=None):
     if len(rounds) == 0 or not check_round_series(rounds):
         return HttpResponseBadRequest()
 
-    if (
-        not request.user.is_superuser or
+    if not (
+        request.user.is_superuser or
         rounds[0].series.competition.organizers_group
         in request.user.groups.all()
     ):

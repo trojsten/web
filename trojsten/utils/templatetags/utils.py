@@ -28,6 +28,11 @@ def as_list(value):
     return [value]
 
 
+@register.filter
+def as_ids(value):
+    return [i.id for i in value]
+
+
 @register.simple_tag(takes_context=True)
 def current(context, url_name, return_value='active', **kwargs):
     matches = current_url_equals(context, url_name, **kwargs)
