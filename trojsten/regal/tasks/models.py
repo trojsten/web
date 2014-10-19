@@ -78,35 +78,23 @@ class Task(models.Model):
             settings.TASK_STATEMENTS_HTML_DIR,
             task_file,
         )
-        if not os.path.exists(path):
-            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     @property
     def task_file_exists(self):
-        try:
-            self.get_path(solution=False)
-            return True
-        except IOError:
-            return False
+        path = self.get_path(solution=False)
+        return os.path.exists(path)
 
     @property
     def solution_file_exists(self):
-        try:
-            self.get_path(solution=True)
-            return True
-        except IOError:
-            return False
+        path = self.get_path(solution=True)
+        return os.path.exists(path)
 
     def visible(self, user):
-        return user.is_superuser\
-            or self.round.series.competition.organizers_group in user.groups.all()\
-            or self.round.visible
+        return self.round.is_visible_for_user(user)
 
-    def solutions_visible(self, user):
-        return user.is_superuser\
-            or self.round.series.competition.organizers_group in user.groups.all()\
-            or self.round.solutions_visible
+    def solution_visible(self, user):
+        return self.round.solutions_are_visible_for_user(user)
 
 
 @python_2_unicode_compatible

@@ -1,3 +1,8 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;"
+
 # Submit
 msgid "WA"
 msgstr "Zlá odpoveď"
@@ -39,3 +44,10 @@ msgstr "Pozrieť zdroják"
 
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
+
+#task statements
+msgid "%(days)s day"
+msgid_plural "%(days)s days"
+msgstr[0] "%(days)s deň"
+msgstr[1] "%(days)s dni"
+msgstr[2] "%(days)s dní"

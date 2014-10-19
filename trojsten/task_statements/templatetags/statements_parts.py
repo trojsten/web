@@ -11,8 +11,8 @@ import pytz
 register = template.Library()
 
 
-@register.inclusion_tag('trojsten/task_statements/parts/task_list.html')
-def show_task_list(user, round):
+@register.inclusion_tag('trojsten/task_statements/parts/task_list.html', takes_context=True)
+def show_task_list(context, round):
     tasks = Task.objects.filter(
         round=round
     ).order_by(
@@ -23,16 +23,17 @@ def show_task_list(user, round):
     categories = Category.objects.filter(competition=round.series.competition)
 
     data = {
-        'user': user,
         'round': round,
         'tasks': tasks,
         'categories': categories,
+        'solutions_visible': round.solutions_are_visible_for_user(context['user']),
     }
-    if user.is_authenticated():
-        submits = get_latest_submits_for_user(tasks, user)
+    if context['user'].is_authenticated():
+        submits = get_latest_submits_for_user(tasks, context['user'])
         results = get_points_from_submits(tasks, submits)
         data['points'] = results
-    return data
+    context.update(data)
+    return context
 
 
 @register.inclusion_tag('trojsten/task_statements/parts/buttons.html')
@@ -60,8 +61,8 @@ def show_round_list(user, competition):
     return data
 
 
-@register.inclusion_tag('trojsten/task_statements/parts/progress.html')
-def show_progress(round):
+@register.inclusion_tag('trojsten/task_statements/parts/progress.html', takes_context=True)
+def show_progress(context, round):
     start = round.start_time
     end = round.end_time
     full = end - start
@@ -73,14 +74,13 @@ def show_progress(round):
         progressbar_class = settings.ROUND_PROGRESS_WARNING_CLASS
     else:
         progressbar_class = settings.ROUND_PROGRESS_DEFAULT_CLASS
-    data = {
+    context.update({
         'start': start,
         'end': end,
         'full': full,
         'remaining': remaining,
         'elapsed': elapsed,
-        'percent': 100 * elapsed.days // full.days,
+        'percent': 100 * elapsed.days // full.days if full.days > 0 else 100,
         'progressbar_class': progressbar_class
-
-    }
-    return data
+    })
+    return context

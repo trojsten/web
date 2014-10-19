@@ -73,6 +73,7 @@ class Series(models.Model):
             % (self.number, self.name)
     short_str.short_description = 'Séria'
 
+
 @python_2_unicode_compatible
 class Round(models.Model):
     '''
@@ -102,8 +103,6 @@ class Round(models.Model):
             year_dir,
             round_dir,
         )
-        if not os.path.exists(path):
-            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     def get_path(self, solution=False):
@@ -113,8 +112,6 @@ class Round(models.Model):
             self.get_base_path(),
             path_type,
         )
-        if not os.path.exists(path):
-            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     def get_pdf_path(self, solution=False):
@@ -124,8 +121,6 @@ class Round(models.Model):
             self.get_path(solution),
             pdf_file,
         )
-        if not os.path.exists(path):
-            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     def get_pictures_path(self):
@@ -133,25 +128,17 @@ class Round(models.Model):
             self.get_base_path(),
             settings.TASK_STATEMENTS_PICTURES_DIR,
         )
-        if not os.path.exists(path):
-            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     @property
     def tasks_pdf_exists(self):
-        try:
-            self.get_pdf_path(solution=False)
-            return True
-        except IOError:
-            return False
+        path = self.get_pdf_path(solution=False)
+        return os.path.exists(path)
 
     @property
     def solutions_pdf_exists(self):
-        try:
-            self.get_pdf_path(solution=True)
-            return True
-        except IOError:
-            return False
+        path = self.get_pdf_path(solution=True)
+        return os.path.exists(path)
 
     @staticmethod
     def visible_rounds(user):
@@ -174,13 +161,31 @@ class Round(models.Model):
         )
         return {r.series.competition: r for r in rounds}
 
+    def is_visible_for_user(self, user):
+        return (
+            user.is_superuser or
+            self.series.competition.organizers_group in user.groups.all() or
+            self.visible
+        )
+
+    def solutions_are_visible_for_user(self, user):
+        return (
+            user.is_superuser or
+            self.series.competition.organizers_group in user.groups.all() or
+            self.solutions_visible
+        )
+
     class Meta:
         verbose_name = 'Kolo'
         verbose_name_plural = 'Kolá'
 
     def __str__(self):
-        return '%i. kolo, %i. séria, %i. ročník %s'\
-            % (self.number, self.series.number, self.series.year, self.series.competition)
+        return '%i. kolo, %i. séria, %i. ročník %s' % (
+            self.number,
+            self.series.number,
+            self.series.year,
+            self.series.competition,
+        )
 
     def short_str(self):
         return '%i. kolo' % self.number

@@ -39,17 +39,20 @@
     </div>
     {% endif %}
     <div class="task-statement">
-        {% ssi path %}
+        {% if task.task_file_exists %}
+            {% ssi path %}
+        {% else %}
+        <div class="alert alert-warning">HTML zadanie nie je k dispozícii.</div>
+        {% endif %}
     </div>
     <div class="task-submit">
     {% if task.get_submit_types|length > 0 %}
         <h2>Odovzdávanie</h2>
         {% if request.user.is_authenticated %}
-        {% if task.round.can_submit %}
-        {% show_submit_form task request.path %}
-        {% else %}
-        <p class="text-danger">Už sa nedá odovzdávať.</p>
+        {% if not task.round.can_submit %}
+        <div class="alert alert-warning" role="alert">Kolo už skončilo. Ďalšie submity sa už nerátajú do výsledkovky.</div>
         {% endif %}
+        {% show_submit_form task request.path %}
         {% show_submit_list task request.user %}
         {% else %}
         <p class="text-danger">Na odovzdávanie sa musíš prihlásiť</p>
@@ -58,6 +61,7 @@
         <p class="text-danger">Tento príklad momentálne nemá možnosť odovzdávania.</p>
     {% endif %}
     </div>
-
+    <h2>Diskusia</h2>
+    <p>Ak mate nejaké otázky k úlohe, môžte sa spýtať tu. Prosím nevkladajte časti riešenia, ani nediskutujte o riešení a to ani po skončení kola (budete mať príležitosť v diskusii pod riešením).</p>
     {% disqus_show_comments %}
 {% endblock %}
