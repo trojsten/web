@@ -4,6 +4,7 @@ from time import time
 import os
 import random
 import socket
+import stat
 import xml.etree.ElementTree as ET
 from decimal import Decimal
 from unidecode import unidecode
@@ -11,14 +12,14 @@ from unidecode import unidecode
 
 RESPONSE_ERROR = 'CERR'
 RESPONSE_OK = 'OK'
-SUBMIT_DIR_PERMISSIONS = 0777
+SUBMIT_DIR_PERMISSIONS = stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO
 
 
 def write_chunks_to_file(filepath, chunks):
     filepath = unidecode(filepath)
     try:
         os.makedirs(os.path.dirname(filepath))
-        os.chmod(os.path.dirname(filepath))
+        os.chmod(os.path.dirname(filepath), SUBMIT_DIR_PERMISSIONS)
     except:
         pass
     with open(filepath, 'wb+') as destination:
