@@ -2,6 +2,7 @@ from django import template
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
 from trojsten.regal.tasks.models import Submit
 from trojsten.submit.views import update_submit
+from trojsten.submit.helpers import RESPONSE_OK
 from django.conf import settings
 
 register = template.Library()
@@ -47,7 +48,7 @@ def show_submit_list(task, user):
 def submitcolor(submit):
     if submit.testing_status == settings.SUBMIT_STATUS_IN_QUEUE:
         return 'info'
-    elif submit.tester_response == 'OK':
+    elif submit.tester_response == RESPONSE_OK:
         return 'success'
     elif submit.points > 0:
         return 'warning'
