@@ -46,15 +46,23 @@ class StaffFilter(admin.SimpleListFilter):
 
 
 class UserAdmin(DefaultUserAdmin):
+    list_display = ('username', 'first_name', 'last_name', 'email',
+                    'school', 'graduation', 'get_is_staff', 'get_groups',
+                    'is_active', 'get_properties')
+    list_filter = ('groups', StaffFilter)
+    search_fields = ('username', 'first_name', 'last_name')
+
     def __init__(self, *args, **kwargs):
         super(UserAdmin, self).__init__(*args, **kwargs)
         self.fieldsets += (('Extra', {'fields': ('gender', 'birth_date', 'home_address',
                                                  'mailing_address', 'school', 'graduation')}),)
         self.inlines = (UserPropertyInLine,)
-    list_display = ('username', 'first_name', 'last_name', 'email', 'school', 'graduation',
-                    'get_is_staff', 'get_groups', 'is_active', 'get_properties')
-    list_filter = ('groups', StaffFilter)
-    search_fields = ('username', 'first_name', 'last_name')
+
+    def get_queryset(self, request):
+        qs = super(UserAdmin, self).get_queryset(request)
+        return qs.select_related('school').prefetch_related(
+            'groups', 'properties__key'
+        )
 
     def get_groups(self, obj):
         return ', '.join(force_text(x) for x in obj.groups.all())
