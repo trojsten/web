@@ -1,0 +1,14 @@
+{% load url from future %}
+{% load i18n %}
+{% load bootstrap %}
+
+
+<form action="" method="post" class="form-horizontal">
+    {% csrf_token %}
+    {{ form | bootstrap_horizontal }}
+     <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input class="btn btn-primary" type="submit" value="{% trans "Submit" %}" />
+        </div>
+    </div>
+</form>
