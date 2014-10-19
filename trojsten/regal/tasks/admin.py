@@ -64,7 +64,7 @@ class TaskAdmin(admin.ModelAdmin):
     list_select_related = True
     list_display = ('name', 'number',
                     'get_round', 'get_series', 'get_year', 'get_category',
-                    'submit_type',
+                    'submit_type', 'integer_source_points',
                     'tasks_pdf', 'solutions_pdf')
     list_filter = ('category__competition', TaskByYearSubFilter, TaskByRoundSubFilter)
     search_fields = ('name',)
@@ -108,9 +108,14 @@ class SubmitAdmin(admin.ModelAdmin):
     list_select_related = True
     list_display = ('get_task_name', 'get_task_number',
                     'get_round', 'get_series', 'get_year', 'get_category',
-                    'user', 'submit_type', 'testing_status', 'points', 'filepath', 'time')
+                    'user', 'submit_type', 'testing_status', 'get_points', 'filepath', 'time')
     list_filter = ('task__category__competition',)
     search_fields = ('user__username', 'task__name',)
+
+    get_points = attribute_format(
+        attribute='user_points',
+        description='body',
+    )
 
     get_task_name = get_related(attribute_chain=('task', 'name'),
                                 description='úloha',

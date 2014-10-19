@@ -60,10 +60,10 @@ def get_results_data(tasks, submits):
         if submit.submit_type == Submit.DESCRIPTION:
             res[submit.user][submit.task]['description'] = '??'  # Fixme
         else:
-            res[submit.user][submit.task]['source'] += submit.points
-        res[submit.user][submit.task]['sum'] += submit.points
+            res[submit.user][submit.task]['source'] += submit.user_points
+        res[submit.user][submit.task]['sum'] += submit.user_points
         res[submit.user][submit.task]['submitted'] = True
-        res[submit.user]['sum'] += submit.points
+        res[submit.user]['sum'] += submit.user_points
     return res
 
 
