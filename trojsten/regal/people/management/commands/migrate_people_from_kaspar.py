@@ -7,7 +7,7 @@ from django.utils.six.moves import input
 from django.db import connections
 from django.db.models import Q
 
-from trojsten.regal.people.models import (User, UserProperty, Address,
+from trojsten.regal.people.models import (User, UserPropertyKey, Address,
     School)
 
 
@@ -17,8 +17,6 @@ BIRTHDAY_PROP = 2
 # Labels for auto-generated properties
 KASPAR_ID_LABEL = "kaspar ID"
 KASPAR_NOTE_LABEL = "kaspar note"
-KASPAR_NOTE_CHUNK_LABEL = KASPAR_NOTE_LABEL + ' %d'
-KASPAR_NOTE_LENGTH = 99
 
 
 class Command(NoArgsCommand):
@@ -64,6 +62,12 @@ class Command(NoArgsCommand):
                 school_id_map[kaspar_id] = self.create_school(*row)
 
         if self.verbosity >= 1:
+            self.stdout.write("Creating/retrieving required UserPropertyKeys...")
+
+        kaspar_id_key, _ = UserPropertyKey.objects.get_or_create(key_name=KASPAR_ID_LABEL)
+        kaspar_note_key, _ = UserPropertyKey.objects.get_or_create(key_name=KASPAR_NOTE_LABEL)
+
+        if self.verbosity >= 1:
             self.stdout.write("Migrating people...")
 
         c.execute("""
@@ -78,8 +82,7 @@ class Command(NoArgsCommand):
                 grad_year, note) = row
 
             # If the user already exists in our database, skip.
-            if UserProperty.objects.filter(key=KASPAR_ID_LABEL,
-                                           value=man_id).count() > 0:
+            if kaspar_id_key.properties.filter(value=man_id).exists():
                 if self.verbosity >= 2:
                     self.stdout.write("Skipping user %s %s" % (first_name,
                                                                last_name))
@@ -122,19 +125,9 @@ class Command(NoArgsCommand):
             new_user = User.objects.create(**new_user_args)
             man_id_map[man_id] = new_user
 
-            new_user.properties.create(key=KASPAR_ID_LABEL,
-                                       value=man_id)
-            if len(note) > KASPAR_NOTE_LENGTH:
-                # Split the note into chunks.
-                for i, start in enumerate(range(0, len(note), KASPAR_NOTE_LENGTH)):
-                    chunk = note[start:start + KASPAR_NOTE_LENGTH]
-                    new_user.properties.create(
-                        key=KASPAR_NOTE_CHUNK_LABEL % i,
-                        value=chunk
-                    )
-            elif note:
-                new_user.properties.create(key=KASPAR_NOTE_LABEL,
-                                           value=note)
+            new_user.properties.create(key=kaspar_id_key, value=man_id)
+            if note:
+                new_user.properties.create(key=kaspar_note_key, value=note)
 
     def create_school(self, kaspar_id, abbr, name, addr_name, street,
                       city, zip_code):

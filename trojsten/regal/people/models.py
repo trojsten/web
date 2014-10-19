@@ -137,7 +137,8 @@ class UserProperty(models.Model):
     user = models.ForeignKey(User,
                              related_name='properties')
     key = models.ForeignKey(UserPropertyKey,
-                            verbose_name='názov vlastnosti')
+                            verbose_name='názov vlastnosti',
+                            related_name='properties')
     value = models.TextField(verbose_name='hodnota vlastnosti')
 
     def __str__(self):
