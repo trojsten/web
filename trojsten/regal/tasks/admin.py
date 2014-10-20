@@ -7,7 +7,7 @@ from django.utils.encoding import force_text
 
 from trojsten.regal.tasks.models import *
 from trojsten.regal.utils import get_related, attribute_format
-from trojsten.reviews.urls import task_review_urls
+from trojsten.reviews.urls import task_review_urls, submit_urls
 
 
 class TaskByYearSubFilter(admin.SimpleListFilter):
@@ -113,6 +113,12 @@ class TaskAdmin(admin.ModelAdmin):
 
 
 class SubmitAdmin(admin.ModelAdmin):
+    change_form_template = "admin/submit_form.html"
+
+    def get_urls(self):
+            return submit_urls + super(SubmitAdmin, self).get_urls()
+
+
     list_select_related = True
     list_display = ('get_task_name', 'get_task_number',
                     'get_round', 'get_series', 'get_year', 'get_category',
