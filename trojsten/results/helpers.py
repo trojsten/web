@@ -1,20 +1,29 @@
-from trojsten.regal.tasks.models import Task, Submit
-from trojsten.regal.people.models import User
+from trojsten.regal.tasks.models import Task, Submit, Category
+from trojsten.regal.people.models import User, School
 from django.db.models import F
+from django.db.models.query import QuerySet
 from django.conf import settings
+import os
+import json
+from django.core import serializers
+from decimal import Decimal
 
 
-def get_tasks(round_ids, category_ids=None):
+def has_permission(group, user):
+    return user.is_superuser or (group in user.groups.all())
+
+
+def get_tasks(rounds, categories=None):
     '''Returns tasks which belong to specified round_ids and category_ids
     '''
-    if round_ids == '':
+    if not rounds:
         return Task.objects.none()
     tasks = Task.objects.filter(
-        round__in=round_ids.split(',')
+        round__in=rounds
     )
-    if category_ids is not None and category_ids != '':
+    if categories:
         tasks = tasks.filter(
-            category__in=category_ids.split(',')
+            category__in=categories
         ).distinct()
     return tasks.order_by('round', 'number')
 
@@ -24,7 +33,7 @@ def get_submits(tasks, show_staff=False):
     Only one submit per user, submit type and task is returned.
     '''
     submits = Submit.objects
-    if not show_staff and len(tasks):
+    if not show_staff and tasks:
         submits = submits.exclude(
             # kolo konci Januar 2014 => exclude 2013, 2012,
             # kolo konci Jun 2014 => exclude 2013, 2012,
@@ -55,28 +64,161 @@ def get_results_data(tasks, submits):
     empty_submit = {'sum': 0, 'description': 0, 'source': 0, 'submitted': False}
     for submit in submits:
         if submit.user not in res:
-            res[submit.user] = {i: empty_submit.copy() for i in tasks}
+            res[submit.user] = {task.id: empty_submit.copy() for task in tasks}
             res[submit.user]['sum'] = 0
         if submit.submit_type == Submit.DESCRIPTION:
-            res[submit.user][submit.task]['description'] = '??'  # Fixme
+            res[submit.user][submit.task.id]['description'] = '??'  # Fixme
         else:
-            res[submit.user][submit.task]['source'] += submit.user_points
-        res[submit.user][submit.task]['sum'] += submit.user_points
-        res[submit.user][submit.task]['submitted'] = True
+            res[submit.user][submit.task.id]['source'] += submit.user_points
+        res[submit.user][submit.task.id]['sum'] += submit.user_points
+        res[submit.user][submit.task.id]['submitted'] = True
         res[submit.user]['sum'] += submit.user_points
     return res
 
 
-def make_result_table(results_data):
+def format_results_data(results_data, previous_results_data=None):
     '''Makes list of table rows from results_data
     '''
     res = list()
+    if previous_results_data:
+        for user, points in previous_results_data.items():
+            if user not in results_data:
+                results_data[user] = dict()
+            results_data[user]['previous'] = points['sum']
     for user, points in results_data.items():
-        points_sum = points['sum']
-        del points['sum']
-        res.append({'user': user, 'points': points, 'sum': points_sum})
-    return sorted(res, key=lambda x: -x['sum'])
+        previous_points = points.get('previous', 0)
+        points_sum = points.get('sum', 0) + previous_points
+        if 'sum' in points:
+            del points['sum']
+        if 'previous' in points:
+            del points['previous']
+        res.append({
+            'user': user,
+            'points': points,
+            'sum': points_sum,
+            'previous_points': previous_points,
+            'show_previous': previous_results_data is not None,
+        })
+
+    res = sorted(res, key=lambda x: -x['previous_points'])
+    last_points = None
+    last_rank = 0
+    for i, r in enumerate(res):
+        if previous_results_data and (r['user'] in previous_results_data):
+            if r['previous_points'] != last_points:
+                last_rank = i
+                r['prev_rank'] = 1 + i
+            else:
+                r['prev_rank'] = 1 + last_rank
+            last_points = r['previous_points']
+        else:
+            r['prev_rank'] = None
+
+    res = sorted(res, key=lambda x: -x['sum'])
+    last_points = None
+    last_rank = 0
+    for i, r in enumerate(res):
+        if r['sum'] != last_points:
+            last_rank = i
+            r['show_rank'] = True
+            r['rank'] = 1 + i
+        else:
+            r['show_rank'] = False
+            r['rank'] = 1 + last_rank
+        last_points = r['sum']
+    return res
 
 
 def check_round_series(rounds):
     return all(r.series == rounds[0].series for r in rounds)
+
+
+def make_result_table(rounds, categories=None, show_staff=False):
+    if not rounds:
+        return (list(), list())
+    current_round = list(rounds)[-1]
+    current_tasks = get_tasks([current_round], categories)
+    current_submits = get_submits(current_tasks, show_staff)
+    current_results_data = get_results_data(current_tasks, current_submits)
+
+    previous_results_data = None
+    previous_rounds = list(rounds)[:-1]
+    if previous_rounds:
+        previous_tasks = get_tasks(previous_rounds, categories)
+        previous_submits = get_submits(previous_tasks, show_staff)
+        previous_results_data = get_results_data(previous_tasks, previous_submits)
+
+    return (
+        current_tasks,
+        format_results_data(current_results_data, previous_results_data),
+    )
+
+
+def get_frozen_results_path(rounds, categories=None):
+    s = '#'.join(str(r.id) for r in rounds)
+    if categories and [cat for cat in categories if cat]:
+        s += '-' + '#'.join(
+            str(c.id) for c in (cat for cat in sorted(categories) if cat)
+        )
+    return os.path.join(
+        settings.FROZEN_RESULTS_PATH,
+        'results_%s.json' % s
+    )
+
+
+class ResultsEncoder(json.JSONEncoder):
+    def encode_user(self, obj):
+        return {
+            'id': obj.id,
+            'username': obj.username,
+            'first_name': obj.first_name,
+            'last_name': obj.last_name,
+            'school_year': obj.school_year,
+            'school': obj.school,
+        }
+
+    def encode_task(self, obj):
+        return {
+            'id': obj.id,
+            'number': obj.number,
+            'name': obj.name,
+            'category': list(obj.category.all()),
+            'external_submit_link': obj.external_submit_link,
+            'has_description': obj.has_description,
+            'has_source': obj.has_source,
+            'has_testablezip': obj.has_testablezip,
+            'integer_source_points': obj.integer_source_points,
+            'source_points': obj.source_points,
+            'description_points': obj.description_points,
+        }
+
+    def encode_school(self, obj):
+        return {
+            'id': obj.id,
+            'abbreviation': obj.abbreviation,
+            'verbose_name': obj.verbose_name,
+            'has_abbreviation': obj.has_abbreviation,
+        }
+
+    def encode_category(self, obj):
+        return {
+            'id': obj.id,
+            'name': obj.name,
+            'full_name': obj.full_name,
+        }
+
+    def default(self, obj):
+        if isinstance(obj, QuerySet):
+            return serializers.serialize('json', obj)
+        if isinstance(obj, Decimal):
+            return str(obj)
+        if isinstance(obj, User):
+            return self.encode_user(obj)
+        if isinstance(obj, School):
+            return self.encode_school(obj)
+        if isinstance(obj, Task):
+            return self.encode_task(obj)
+        if isinstance(obj, Category):
+            return self.encode_category(obj)
+        # Let the base class default method raise the TypeError
+        return json.JSONEncoder.default(self, obj)

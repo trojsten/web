@@ -21,12 +21,16 @@ class Category(models.Model):
     name = models.CharField(max_length=16, verbose_name='názov')
     competition = models.ForeignKey(Competition, verbose_name='súťaž')
 
+    @property
+    def full_name(self):
+        return '%s-%s' % (self.competition.name, self.name)
+
     class Meta:
         verbose_name = 'Kategória'
         verbose_name_plural = 'Kategórie'
 
     def __str__(self):
-        return '%s-%s' % (self.competition.name, self.name)
+        return self.full_name
 
 
 @python_2_unicode_compatible

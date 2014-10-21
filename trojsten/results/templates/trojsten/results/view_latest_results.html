@@ -9,12 +9,12 @@
 {% endblock %}
 
 {% block page_content %}
-{% for round, tasks_by_round in tasks_by_round.items %}
+{% for round, info in rounds_info.items %}
     <h2>{{round.series.competition}} <small>{{round}}</small></h2>
-    {% if tasks_by_round|length > 1 %}
+    {% if info.categories|length > 1 %}
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-            {% for category, tasks in tasks_by_round %}
+            {% for category in info.categories %}
                 {% if category != None %}
                     <li {% if forloop.counter == 2 %}class="active"{%endif%}><a href="#category-tab-{{category}}" role="tab" data-toggle="tab">{{category}}</a></li>
                 {% endif %}
@@ -22,16 +22,19 @@
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-            {% for category, tasks in tasks_by_round %}
+            {% for category in info.categories %}
                 {% if category != None %}
                     <div class="tab-pane fade{% if forloop.counter == 2 %} in active{%endif%}" id="category-tab-{{category}}">
-                        {% show_results_table tasks=tasks %}
+                        {% is_final rounds=info.all_rounds categories=category|as_list as final_results %}
+                        {% is_organizer competition=round.series.competition as organizer %}
+                        {% if not final_results %}<div class="alert alert-warning">Výsledky sú predbežné.{% if organizer %} <a class="alert-link" href="{% url 'freeze_results' round_ids=info.all_rounds|as_ids|join:',' category_ids=category.id %}">Zamraziť.</a>{% endif %}</div>{% endif %}
+                        {% show_results_table rounds=info.all_rounds categories=category|as_list %}
                     </div>
                 {% endif %}
             {% endfor %}
         </div>
     {% else %}
-        {% show_results_table tasks=tasks_by_round|lookup:0|lookup:1 %}
+        {% show_results_table rounds=info.all_rounds %}
     {% endif %}
 
 {% endfor %}

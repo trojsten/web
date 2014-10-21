@@ -13,13 +13,23 @@ def lookup(object, key):
     '''
     try:
         return object[key]
-    except (KeyError, IndexError):
+    except (KeyError, IndexError, TypeError):
         return None
 
 
 @register.filter
 def split(value, arg):
     return value.split(arg)
+
+
+@register.filter
+def as_list(value):
+    return [value]
+
+
+@register.filter
+def as_ids(value):
+    return [i.id for i in value]
 
 
 @register.simple_tag(takes_context=True)

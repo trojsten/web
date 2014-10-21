@@ -1,5 +1,6 @@
 {% extends "trojsten/layout/main.html" %}
 {% load results_parts %}
+{% load utils %}
 
 {% block title %}Výsledky{% endblock %}
 
@@ -14,5 +15,9 @@ kolo {{series.number}}. série {{series.year}}. ročníka {{series.competition}}
 {% endblock %}
 
 {% block page_content %}
-{% show_results_table tasks=tasks%}
+{% is_final rounds=rounds categories=categories as final_results %}
+{% is_organizer competition=series.competition as organizer %}
+
+{% if not final_results %}<div class="alert alert-warning">Výsledky sú predbežné.{% if organizer %} <a class="alert-link" href="{% url 'freeze_results' round_ids=rounds|as_ids|join:',' category_ids=categories|as_ids|join:',' %}">Zamraziť.</a>{% endif %}</div>{% endif %}
+{% show_results_table rounds=rounds categories=categories%}
 {% endblock %}
