@@ -21,14 +21,14 @@
 {% spaceless %}
 <tr {% if user == result.user %}class="active"{%endif%}>
     <td class="text-right">
-    {% if result.show_rank %}<strong>{{result.rank}}. </strong>{% endif %}
+    {% ifchanged result.data.sum %}<strong>{{result.data.rank}}. </strong>{% endifchanged %}
     {% if has_previous_results %}
-        {% if result.prev_rank == None %}
+        {% if result.data.prev_rank == None %}
             <span class="text-info glyphicon glyphicon-asterisk"></span>
-        {% elif result.rank < result.prev_rank %}
-            <span class="text-success glyphicon glyphicon-chevron-up" title="+{{result.prev_rank|sub:result.rank}}"></span>
-        {% elif result.rank > result.prev_rank %}
-            <span class="text-danger glyphicon glyphicon-chevron-down" title="-{{result.rank|sub:result.prev_rank}}"></span>
+        {% elif result.data.rank < result.data.prev_rank %}
+            <span class="text-success glyphicon glyphicon-chevron-up" title="+{{result.data.prev_rank|sub:result.data.rank}}"></span>
+        {% elif result.data.rank > result.data.prev_rank %}
+            <span class="text-danger glyphicon glyphicon-chevron-down" title="-{{result.data.rank|sub:result.data.prev_rank}}"></span>
         {% else %}
             <span class="text-muted glyphicon glyphicon-pushpin"></span>
         {% endif %}
@@ -38,22 +38,23 @@
     <td>{{result.user.school_year}}</td>
     <td>{%if result.user.school.has_abbreviation %}<abbr title="{{result.user.school.verbose_name}}">{{result.user.school.abbreviation}}</abbr>{%else%}{{result.user.school.verbose_name}}{%endif%}</td>
     {% if has_previous_results %}
-        <td>{{result.previous_points}}</td>
+        <td>{{result.data.previous}}</td>
     {% endif %}
     {% for task in tasks %}
         <td>
-        {% if result.points|lookup:task.id|lookup:"submitted" %}
-            <span data-toggle="tooltip" data-placement="top" title="{% if task.description_points > 0 %}popis: {{result.points|lookup:task.id|lookup:'description'}}{% if task.source_points > 0 %} {% endif %}{% endif %}{% if task.source_points > 0 %}program: {{result.points|lookup:task.id|lookup:'source'}}{% endif %}">
-                {{result.points|lookup:task.id|lookup:"sum"}}
+        {% lookup_as result.data.tasks task.id as task_points %}
+        {% if task_points.submitted %}
+            <span data-toggle="tooltip" data-placement="top" title="{% if task.description_points > 0 %}popis: {{task_points.description_points}}{% if task.source_points > 0 %} {% endif %}{% endif %}{% if task.source_points > 0 %}program: {{task_points.source_points}}{% endif %}">
+                {{task_points.sum}}
             </span>
         {% endif %}
         </td>
     {% endfor %}
 
-    <td><strong>{{result.sum}}</strong></td>
+    <td><strong>{{result.data.sum}}</strong></td>
 </tr>
 {% endspaceless %}
 {% empty %}
-<tr><td colspan="{{tasks | length | add:3}}">Žiadne submity</td></tr>
+<tr><td colspan="{{tasks | length | add:5}}">Žiadne submity</td></tr>
 {% endfor %}
 </table>
