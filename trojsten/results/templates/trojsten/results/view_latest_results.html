@@ -25,8 +25,7 @@
             {% for category in info.categories %}
                 {% if category != None %}
                     <div class="tab-pane fade{% if forloop.counter == 2 %} in active{%endif%}" id="category-tab-{{category}}">
-                        {% is_final rounds=info.all_rounds categories=category|as_list as final_results %}
-                        {% if not final_results %}<div class="alert alert-warning">Výsledky sú predbežné.</div>{% endif %}
+                        <div class="alert alert-warning">Výsledky sú predbežné.</div>
                         {% show_results_table rounds=info.all_rounds categories=category|as_list %}
                     </div>
                 {% endif %}

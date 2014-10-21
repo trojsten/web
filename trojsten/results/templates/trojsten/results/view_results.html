@@ -15,7 +15,6 @@ kolo {{series.number}}. série {{series.year}}. ročníka {{series.competition}}
 {% endblock %}
 
 {% block page_content %}
-{% is_final rounds=rounds categories=categories as final_results %}
-{% if not final_results %}<div class="alert alert-warning">Výsledky sú predbežné.</div>{% endif %}
+<div class="alert alert-warning">Výsledky sú predbežné.</div>
 {% show_results_table rounds=rounds categories=categories%}
 {% endblock %}
