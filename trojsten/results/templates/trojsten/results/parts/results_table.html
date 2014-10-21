@@ -6,8 +6,8 @@
 <tr>
     <th class="text-right">#</th>
     <th>Meno:</th>
-    <th>Škola</th>
     <th>Roč.</th>
+    <th>Škola</th>
     {% if has_previous_results %}
         <th>Predošlé</th>
     {% endif %}
@@ -35,8 +35,8 @@
     {% endif %}
     </td>
     <td>{{result.user.first_name}} {{result.user.last_name}}</td>
-    <td>{%if result.user.school.has_abbreviation %}<abbr title="{{result.user.school.verbose_name}}">{{result.user.school.abbreviation}}</abbr>{%else%}{{result.user.school.verbose_name}}{%endif%}</td>
     <td>{{result.user.school_year}}</td>
+    <td>{%if result.user.school.has_abbreviation %}<abbr title="{{result.user.school.verbose_name}}">{{result.user.school.abbreviation}}</abbr>{%else%}{{result.user.school.verbose_name}}{%endif%}</td>
     {% if has_previous_results %}
         <td>{{result.previous_points}}</td>
     {% endif %}
