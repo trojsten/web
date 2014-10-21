@@ -36,32 +36,57 @@ def get_users (task):
 
     users = {}
     for submit in des_submits:
-    	if not submit.user in users:
-    		users[submit.user] = {'user':submit.user, 'description': submit}
-    	
-    	elif users[submit.user]['description'].time < submit.time:
-    		users[submit.user]['description'] = submit
+        if not submit.user in users:
+            users[submit.user] = {'description': submit}
+        
+        elif users[submit.user]['description'].time < submit.time:
+            users[submit.user]['description'] = submit
 
     for submit in rev_submits:
-    	if not submit.user in users:
-    		users[submit.user] = {'user':submit.user, 'review': submit}
-    	
-    	elif not 'review' in users[submit.user]:
-    		users[submit.user]['review'] = submit
+        if not submit.user in users:
+            users[submit.user] = {'review': submit}
+        
+        elif not 'review' in users[submit.user]:
+            users[submit.user]['review'] = submit
 
-    	elif users[submit.user]['review'].time < submit.time:
-    		users[submit.user]['review'] = submit
+        elif users[submit.user]['review'].time < submit.time:
+            users[submit.user]['review'] = submit
 
 
 
 
     return users
 
+
+def submit_readable_name (submit):
+	return '%s_%s_%s' % (str(submit.user.username), str(submit.pk), submit.filename.split('-')[-1])
+
+
 def submit_download_view (request, submit_pk):
     submit = get_object_or_404(Submit, pk=submit_pk)
-    name = '%s_%s_%s' % (str(submit.user.username), str(submit.pk), submit.filename.split('-')[-1])
+    name = submit(submit_readable_name(submit))
 
     response = HttpResponse(open(submit.filepath).read(), content_type='plain/text')
     response['Content-Disposition'] = 'attachment; filename=' + name
 
+    return response
+
+import zipfile
+import io
+
+def download_latest_submits_view (request, task_pk):
+    task = get_object_or_404(Task, pk=task_pk)
+    data = [data['description'] for data in get_users(task).values()]
+
+    result = io.BytesIO()
+    zipper = zipfile.ZipFile(result, 'w')
+
+    for submit in data:
+        zipper.write(submit.filepath, submit_readable_name(submit))
+
+    zipper.close()
+    result.seek(0)
+    
+    response = HttpResponse(result.read(),content_type='plain/text')
+    response['Content-Disposition'] = 'attachment; filename=Uloha %s.zip' % task.name 
     return response
