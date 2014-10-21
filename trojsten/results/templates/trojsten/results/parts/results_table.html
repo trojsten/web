@@ -45,7 +45,7 @@
         {% lookup_as result.data.tasks task.id as task_points %}
         {% if task_points.submitted %}
             <span data-toggle="tooltip" data-placement="top" title="{% if task.description_points > 0 %}popis: {{task_points.description_points}}{% if task.source_points > 0 %} {% endif %}{% endif %}{% if task.source_points > 0 %}program: {{task_points.source_points}}{% endif %}">
-                {{task_points.sum}}
+                {% if task_points.description_pending %} ({{task_points.sum}}) {% else %} {{task_points.sum}} {% endif %}
             </span>
         {% endif %}
         </td>
