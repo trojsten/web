@@ -9,15 +9,19 @@ from django.core import serializers
 from decimal import Decimal
 
 
+def has_permission(group, user):
+    return user.is_superuser or (group in user.groups.all())
+
+
 def get_tasks(rounds, categories=None):
     '''Returns tasks which belong to specified round_ids and category_ids
     '''
-    if rounds is None or rounds == []:
+    if not rounds:
         return Task.objects.none()
     tasks = Task.objects.filter(
         round__in=rounds
     )
-    if categories is not None and categories != []:
+    if categories:
         tasks = tasks.filter(
             category__in=categories
         ).distinct()
@@ -29,7 +33,7 @@ def get_submits(tasks, show_staff=False):
     Only one submit per user, submit type and task is returned.
     '''
     submits = Submit.objects
-    if not show_staff and len(tasks):
+    if not show_staff and tasks:
         submits = submits.exclude(
             # kolo konci Januar 2014 => exclude 2013, 2012,
             # kolo konci Jun 2014 => exclude 2013, 2012,
@@ -76,7 +80,7 @@ def format_results_data(results_data, previous_results_data=None):
     '''Makes list of table rows from results_data
     '''
     res = list()
-    if previous_results_data is not None:
+    if previous_results_data:
         for user, points in previous_results_data.items():
             if user not in results_data:
                 results_data[user] = dict()
@@ -100,7 +104,7 @@ def format_results_data(results_data, previous_results_data=None):
     last_points = None
     last_rank = 0
     for i, r in enumerate(res):
-        if previous_results_data is not None and r['user'] in previous_results_data:
+        if previous_results_data and (r['user'] in previous_results_data):
             if r['previous_points'] != last_points:
                 last_rank = i
                 r['prev_rank'] = 1 + i
@@ -129,17 +133,19 @@ def check_round_series(rounds):
     return all(r.series == rounds[0].series for r in rounds)
 
 
-def make_result_table(rounds, categories=False, show_staff=False):
+def make_result_table(rounds, categories=None, show_staff=False):
+    if not rounds:
+        return (list(), list())
     current_round = list(rounds)[-1]
     current_tasks = get_tasks([current_round], categories)
-    current_submits = get_submits(current_tasks, show_staff,)
+    current_submits = get_submits(current_tasks, show_staff)
     current_results_data = get_results_data(current_tasks, current_submits)
 
     previous_results_data = None
     previous_rounds = list(rounds)[:-1]
-    if len(previous_rounds):
+    if previous_rounds:
         previous_tasks = get_tasks(previous_rounds, categories)
-        previous_submits = get_submits(previous_tasks, show_staff,)
+        previous_submits = get_submits(previous_tasks, show_staff)
         previous_results_data = get_results_data(previous_tasks, previous_submits)
 
     return (
@@ -150,9 +156,9 @@ def make_result_table(rounds, categories=False, show_staff=False):
 
 def get_frozen_results_path(rounds, categories=None):
     s = '#'.join(str(r.id) for r in rounds)
-    if categories is not None and len(list(filter(lambda x: x is not None, categories))):
+    if categories and [cat for cat in categories if cat]:
         s += '-' + '#'.join(
-            str(c.id) for c in filter(lambda x: x is not None, sorted(categories))
+            str(c.id) for c in (cat for cat in sorted(categories) if cat)
         )
     return os.path.join(
         settings.FROZEN_RESULTS_PATH,

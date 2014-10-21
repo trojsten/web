@@ -13,8 +13,7 @@ def show_results_table(context, rounds, categories=None):
     '''
     path = get_frozen_results_path(rounds, categories)
     force_generate = (
-        'force_generate' in context and
-        context['force_generate'] and
+        ('force_generate' in context) and context['force_generate'] and
         (  # only organizer can force generate results
             context['user'].is_superuser or
             rounds[0].series.competition.organizers_group in context['user'].groups.all()
