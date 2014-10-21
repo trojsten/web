@@ -119,7 +119,7 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
 
     # Prepare RAW from submit parameters
     raw = "%s\n%s\n%s\n%s\n%s\n%s\n" % (
-        contest_id,
+        settings.TESTER_WEB_IDENTIFIER,
         submit_id,
         user_id,
         correct_filename,
