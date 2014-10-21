@@ -3,7 +3,8 @@
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.contrib import messages
-from .helpers import check_round_series, make_result_table, get_frozen_results_path, ResultsEncoder
+from .helpers import (check_round_series, make_result_table,
+                      get_frozen_results_path, ResultsEncoder, has_permission)
 from trojsten.regal.tasks.models import Category
 from trojsten.regal.contests.models import Round
 from django.http import HttpResponseBadRequest
@@ -18,7 +19,7 @@ def view_results(request, round_ids, category_ids=None):
     rounds = Round.visible_rounds(request.user).filter(
         pk__in=round_ids.split(',')
     ).select_related('series')
-    if len(rounds) == 0 or not check_round_series(rounds):
+    if rounds or not check_round_series(rounds):
         return HttpResponseBadRequest()
     categories = None if category_ids is None else Category.objects.filter(
         pk__in=category_ids.split(',')
@@ -71,13 +72,11 @@ def freeze_results(request, round_ids, category_ids=None):
     rounds = Round.objects.filter(
         pk__in=round_ids.split(',')
     ).select_related('series__competition__organizers_group')
-    if len(rounds) == 0 or not check_round_series(rounds):
+    if rounds or not check_round_series(rounds):
         return HttpResponseBadRequest()
 
-    if not (
-        request.user.is_superuser or
-        rounds[0].series.competition.organizers_group
-        in request.user.groups.all()
+    if not has_permission(
+        rounds[0].series.competition.organizers_group, request.user
     ):
         raise PermissionDenied
 
