@@ -26,6 +26,7 @@ TASK_STATEMENTS_PATH = ''
 TASK_STATEMENTS_REPO_PATH = ''
 TESTER_URL = 'experiment'
 TESTER_PORT = 12347
+TESTER_WEB_IDENTIFIER = 'KSP'
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
