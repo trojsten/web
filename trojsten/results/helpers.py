@@ -7,6 +7,56 @@ import os
 import json
 from django.core import serializers
 from decimal import Decimal
+from collections import defaultdict
+
+
+class TaskPoints:
+    def __init__(self):
+        self.sum = 0
+        self.source_points = 0
+        self.description_points = 0
+        self.submitted = False
+        self.description_pending = False
+
+    def add_source_points(self, points):
+        self.submitted = True
+        self.source_points += points
+        self.sum += self.source_points
+
+    def set_description_points(self, points):
+        self.submitted = True
+        self.sum -= self.description_points
+        self.description_points = points
+        self.sum += self.description_points
+
+    def set_pending_description_points(self):
+        self.submitted = True
+        self.description_pending = True
+        self.description_points = '??'
+
+
+class UserResult:
+    def __init__(self):
+        self.sum = 0
+        self.previous = 0
+        self.has_previous_results = False
+        self.tasks = defaultdict(TaskPoints)
+        self.rank = None
+        self.prev_rank = None
+
+    def add_task_points(self, task, submit_type, points):
+        self.sum -= self.tasks[task.id].sum
+        if submit_type == Submit.DESCRIPTION:
+            self.tasks[task.id].set_pending_description_points()  # Fixme
+        else:
+            self.tasks[task.id].add_source_points(points)
+        self.sum += self.tasks[task.id].sum
+
+    def set_previous(self, previous_points):
+        self.has_previous_results = True
+        self.sum -= self.previous
+        self.previous = previous_points
+        self.sum += self.previous
 
 
 def has_permission(group, user):
@@ -60,20 +110,21 @@ def get_submits(tasks, show_staff=False):
 def get_results_data(tasks, submits):
     '''Returns results data for each user who has submitted at least one task
     '''
-    res = dict()
-    empty_submit = {'sum': 0, 'description': 0, 'source': 0, 'submitted': False}
+    res = defaultdict(UserResult)
     for submit in submits:
-        if submit.user not in res:
-            res[submit.user] = {task.id: empty_submit.copy() for task in tasks}
-            res[submit.user]['sum'] = 0
-        if submit.submit_type == Submit.DESCRIPTION:
-            res[submit.user][submit.task.id]['description'] = '??'  # Fixme
-        else:
-            res[submit.user][submit.task.id]['source'] += submit.user_points
-        res[submit.user][submit.task.id]['sum'] += submit.user_points
-        res[submit.user][submit.task.id]['submitted'] = True
-        res[submit.user]['sum'] += submit.user_points
+        res[submit.user].add_task_points(
+            submit.task, submit.submit_type, submit.points
+        )
     return res
+
+
+def get_ranks(score_list):
+    last_score = None
+    last_rank = 1
+    for i, score in enumerate(score_list):
+        if score != last_score:
+            last_rank = i + 1
+        yield last_rank
 
 
 def format_results_data(results_data, previous_results_data=None):
@@ -81,51 +132,25 @@ def format_results_data(results_data, previous_results_data=None):
     '''
     res = list()
     if previous_results_data:
-        for user, points in previous_results_data.items():
+        for user, data in previous_results_data.items():
             if user not in results_data:
-                results_data[user] = dict()
-            results_data[user]['previous'] = points['sum']
-    for user, points in results_data.items():
-        previous_points = points.get('previous', 0)
-        points_sum = points.get('sum', 0) + previous_points
-        if 'sum' in points:
-            del points['sum']
-        if 'previous' in points:
-            del points['previous']
+                results_data[user] = UserResult()
+            results_data[user].set_previous(data.sum)
+
+    for user, data in results_data.items():
         res.append({
             'user': user,
-            'points': points,
-            'sum': points_sum,
-            'previous_points': previous_points,
-            'show_previous': previous_results_data is not None,
+            'data': data,
         })
 
-    res = sorted(res, key=lambda x: -x['previous_points'])
-    last_points = None
-    last_rank = 0
-    for i, r in enumerate(res):
-        if previous_results_data and (r['user'] in previous_results_data):
-            if r['previous_points'] != last_points:
-                last_rank = i
-                r['prev_rank'] = 1 + i
-            else:
-                r['prev_rank'] = 1 + last_rank
-            last_points = r['previous_points']
-        else:
-            r['prev_rank'] = None
+    res = sorted(res, key=lambda x: -x['data'].previous)
+    for rank, r in zip(get_ranks(res), res):
+        r['data'].prev_rank = rank
 
-    res = sorted(res, key=lambda x: -x['sum'])
-    last_points = None
-    last_rank = 0
-    for i, r in enumerate(res):
-        if r['sum'] != last_points:
-            last_rank = i
-            r['show_rank'] = True
-            r['rank'] = 1 + i
-        else:
-            r['show_rank'] = False
-            r['rank'] = 1 + last_rank
-        last_points = r['sum']
+    res = sorted(res, key=lambda x: -x['data'].sum)
+    for rank, r in zip(get_ranks(res), res):
+        r['data'].rank = rank
+
     return res
 
 

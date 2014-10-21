@@ -17,6 +17,18 @@ def lookup(object, key):
         return None
 
 
+@register.assignment_tag
+def lookup_as(object, key):
+    '''
+    Looks up for key in object.
+    Returns None if key is not found.
+    '''
+    try:
+        return object[key]
+    except (KeyError, IndexError, TypeError):
+        return None
+
+
 @register.filter
 def split(value, arg):
     return value.split(arg)
@@ -29,6 +41,8 @@ def as_list(value):
 
 @register.filter
 def as_ids(value):
+    if not value:
+        return []
     return [i.id for i in value]
 
 
