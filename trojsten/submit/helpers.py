@@ -4,39 +4,26 @@ from time import time
 import os
 import random
 import socket
+import stat
 import xml.etree.ElementTree as ET
 from decimal import Decimal
+from unidecode import unidecode
 
 
 RESPONSE_ERROR = 'CERR'
 RESPONSE_OK = 'OK'
+SUBMIT_DIR_PERMISSIONS = stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO
 
 
-def write_file(text, binary, where):
-    '''Vytvorí cieľový adresár a uloží string do súboru.'''
+def write_chunks_to_file(filepath, chunks):
+    filepath = unidecode(filepath)
     try:
-        os.makedirs(os.path.split(where)[0])
-        fd = os.open(os.path.split(where)[0], os.O_RDONLY)
-        os.fchmod(fd, 0777)
-        os.close(fd)
+        os.makedirs(os.path.dirname(filepath))
+        os.chmod(os.path.dirname(filepath), SUBMIT_DIR_PERMISSIONS)
     except:
         pass
-    with open(where, 'w+') as destination:
-        destination.write(text)
-        destination.write(binary)
-
-
-def save_file(what, where):
-    '''Vytvorí cieľový adresár a uloží stiahnutý súbor.'''
-    try:
-        os.makedirs(os.path.split(where)[0])
-        fd = os.open(os.path.split(where)[0], os.O_RDONLY)
-        os.fchmod(fd, 0777)
-        os.close(fd)
-    except:
-        pass
-    with open(where, 'wb+') as destination:
-        for chunk in what.chunks():
+    with open(filepath, 'wb+') as destination:
+        for chunk in chunks:
             destination.write(chunk)
 
 
@@ -110,7 +97,7 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
     # Prepare submit parameters (not entirely sure about this yet).
     user_id = "%s-%d" % (contest_id, user_id)
     task_id = "%s-%d" % (contest_id, task_id)
-    original_name = f.name
+    original_name = unidecode(f.name)
     correct_filename = task_id + language
     data = f.read()
 
@@ -127,7 +114,7 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
         original_name)
 
     # Write RAW to local file
-    write_file(raw, data, os.path.join(path, submit_id + '.raw'))
+    write_chunks_to_file(os.path.join(path, submit_id + '.raw'), [raw, data])
 
     # Send RAW for testing (uncomment when deploying)
     post_submit(raw, data)

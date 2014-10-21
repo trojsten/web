@@ -11,3 +11,4 @@ django-sendfile>=0.3.6
 Celery>=3.1.13
 django-contact-form
 django-disqus
+unidecode

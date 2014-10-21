@@ -12,7 +12,7 @@ from django.utils.html import format_html
 from trojsten.regal.contests.models import Round
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
-from trojsten.submit.helpers import save_file, process_submit, get_path,\
+from trojsten.submit.helpers import write_chunks_to_file, process_submit, get_path,\
     update_submit
 from sendfile import sendfile
 import os
@@ -155,7 +155,7 @@ def task_submit_post(request, task_id, submit_type):
                 # Source file-name is id.data
                 sfiletarget = os.path.join(get_path(
                     task, request.user), submit_id + '.data')
-                save_file(sfile, sfiletarget)
+                write_chunks_to_file(sfiletarget, sfile.chunks())
                 sub = Submit(task=task,
                              user=request.user,
                              submit_type=submit_type,
@@ -197,7 +197,7 @@ def task_submit_post(request, task_id, submit_type):
                 get_path(task, request.user),
                 "%s-%s-%s" % (request.user.last_name, submit_id, sfile.name),
             )
-            save_file(sfile, sfiletarget)
+            write_chunks_to_file(sfiletarget, sfile.chunks())
             sub = Submit(task=task,
                          user=request.user,
                          submit_type=submit_type,
