@@ -113,7 +113,7 @@ def get_results_data(tasks, submits):
     res = defaultdict(UserResult)
     for submit in submits:
         res[submit.user].add_task_points(
-            submit.task, submit.submit_type, submit.points
+            submit.task, submit.submit_type, submit.user_points
         )
     return res
 

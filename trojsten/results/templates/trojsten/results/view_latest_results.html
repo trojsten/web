@@ -34,6 +34,9 @@
     {% else %}
         {% show_results_table rounds=info.all_rounds %}
     {% endif %}
-
 {% endfor %}
+
+<h2>Legenda</h2>
+{% include 'trojsten/results/parts/legend.html' %}
+
 {% endblock %}
