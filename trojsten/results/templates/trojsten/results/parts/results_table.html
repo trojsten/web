@@ -6,10 +6,10 @@
 <tr>
     <th class="text-right">#</th>
     <th>Meno:</th>
-    <th>Roč.</th>
+    <th><abbr title="Ročník">R.</abbr></th>
     <th>Škola</th>
     {% if has_previous_results %}
-        <th>Predošlé</th>
+        <th><abbr title="Predchádzajúce kolá">P.</abbr></th>
     {% endif %}
     {% for task in tasks %}
         <th><a href="{% url 'task_statement' task_id=task.id %}" title="{{task.name}}">{{task.number}}</a></th>
