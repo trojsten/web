@@ -12,7 +12,7 @@ from django import forms
 import os
 # the code will be later refractored to proper files
 
-def submit_review (filecontent, filename, task, user):
+def submit_review (filecontent, filename, task, user, points):
     from time import time
     submit_id = str(int(time()))
     
@@ -24,9 +24,9 @@ def submit_review (filecontent, filename, task, user):
     save_file(filecontent, sfiletarget)
     sub = Submit(task=task,
                  user=user,
-                 submit_type=Submit.REVIEW,
-                 points=0,
-                 testing_status='in queue',
+                 submit_type=Submit.DESCRIPTION,
+                 points=points,
+                 testing_status=Submit.STATUS_REVIEWED,
                  filepath=sfiletarget)
     sub.save()
 
@@ -35,36 +35,39 @@ def submit_review (filecontent, filename, task, user):
 
 def review_task_view (request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
-    users = get_users(task)
-    choices = [("auto", "Auto"), ("all", "All")] + [(str(user.pk), user.username) for user in users]
+    max_points = task.description_points
+    users = get_latest_submits_by_task(task)
+    choices = [(-1, "Auto"), (None, "All")] + [(user.pk, user.username) for user in users]
 
     if request.method == 'POST':
-        form = ReviewForm(request.POST, request.FILES, users=choices)
+        form = ReviewForm(request.POST, request.FILES, choices=choices, max_value=max_points)
 
         if form.is_valid():
-            user = None
+            user = form.cleaned_data["user"]
+            filecontent = request.FILES["file"]
+            filename = form.cleaned_data["file"].name
+            points = form.cleaned_data["points"]
 
-            if form.cleaned_data["user"] == "all":
+            if user == None:
                 #not implemented
                 raise Http404
-            else:
-                if form.cleaned_data["user"] == "auto":
-                    filename = form.cleaned_data["file"].name
+            else:    
+                user = int(user)
+                if user == -1:
                     try:
-                        form.cleaned_data["user"] = Submit.objects.get(pk=int(filename.split('-')[1])).user.pk
+                        print int(filename.split('-')[1])
+                        user = Submit.objects.get(pk=int(filename.split('-')[1])).user
                     except KeyError:
-                        messages.add_message(request, messages.ERROR, "Auto failed")                        
-                
-                user = User.objects.get(pk=int(form.cleaned_data["user"]))
+                        messages.add_message(request, messages.ERROR, "Auto failed")
+                else:
+                    user = User.objects.get(pk=user)
+                    
                 #TODO: add regex to check for Name-submitID-filename format
 
-                fname = "".join(form.cleaned_data["file"].name.split("-")[2:])
-                fcont = request.FILES['file']
+                fname = "".join(filename.split("-")[2:])
+                submit_review(filecontent, filename, task, user, points)
 
-                submit_review(fcont, fname, task, user)
-
-                messages.add_message(request, messages.SUCCESS,
-                                 "Uploadnute")
+                messages.add_message(request, messages.SUCCESS, "Uploadnute")
 
                 return redirect("admin:review_task", task.pk)
 
@@ -72,28 +75,20 @@ def review_task_view (request, task_pk):
     template_data = {
         'task': task,
         'users': users,
-        'form' : ReviewForm(users=choices),
+        'form' : ReviewForm(choices=choices, max_value=max_points),
     }
 
     return render (
         request, 'admin/review_form.html', template_data
     )
 
-def task_user_view (request, task_pk, user_pk):
-    task = get_object_or_404(Task, pk=task_pk)
-    submits = task.submit_set.filter(submit_type=Submit.DESCRIPTION)
-
-    if user_pk != 'all':
-        submits = submits.filter(user=user_pk)
-
-    return HttpResponse('<br>'.join([str(submit) for submit in submits]))
 
 # Na toto by sa mohol pozriet niekto kto vie SQL
 # dorobit filtrovanie veducich, a pod ...
 
-def get_users (task):
-    des_submits = task.submit_set.filter(submit_type=Submit.DESCRIPTION, time__lt=task.round.end_time).select_related('user', 'user__username')
-    rev_submits = task.submit_set.filter(submit_type=Submit.REVIEW).select_related('user', 'user__username')
+def get_latest_submits_by_task (task):
+    des_submits = task.submit_set.filter(submit_type=Submit.DESCRIPTION, time__lt=task.round.end_time, testing_status="in queue").select_related('user', 'user__username')
+    rev_submits = task.submit_set.filter(submit_type=Submit.DESCRIPTION, testing_status=Submit.STATUS_REVIEWED).select_related('user', 'user__username')
 
     users = {}
     for submit in des_submits:
@@ -113,14 +108,11 @@ def get_users (task):
         elif users[submit.user]['review'].time < submit.time:
             users[submit.user]['review'] = submit
 
-
-
-
     return users
 
 
 def submit_readable_name (submit):
-    return '%s-%s-%s' % (str(submit.user.last_name), str(submit.pk), "".join(submit.filename.split('-')[2:]))
+    return '%s-%s-%s' % (submit.user.last_name, submit.pk, "".join(submit.filename.split('-')[2:]))
 
 
 def submit_download_view (request, submit_pk):
@@ -137,7 +129,7 @@ import io
 
 def download_latest_submits_view (request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
-    data = [data['description'] for data in get_users(task).values()]
+    data = [data['description'] for data in get_latest_submits_by_task(task).values()]
 
     result = io.BytesIO()
     zipper = zipfile.ZipFile(result, 'w')
@@ -158,9 +150,12 @@ from django import forms
 class ReviewForm (forms.Form):
     file = forms.FileField(max_length=128)
     user = forms.ChoiceField ()
+    points = forms.IntegerField(min_value=0, required=False)
 
     def __init__ (self, *args, **kwargs):
-        users = kwargs.pop("users")
+        choices = kwargs.pop("choices")
+        max_value = kwargs.pop("max_value")
         super(ReviewForm, self).__init__(*args, **kwargs)
 
-        self.fields["user"].choices = users
+        self.fields["user"].choices = choices
+        self.fields["points"] = forms.IntegerField(min_value=0, max_value=max_value, required=False)

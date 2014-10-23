@@ -1,0 +1,22 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static admin_modify %}
+
+{% block content %}
+
+<a href="{% url 'admin:download_latest_submits' task.pk %}">  Download all </a><br> <br>
+{% for user, data in users.items %}
+  <a href="{% url 'admin:tasks_submit_changelist' %}?q={{user}}">{{ user }}</a> - 
+  {% if data.description %} <a href="{% url 'admin:submit_download' data.description.pk %}"> Popis </a> {% endif %}
+  {% if data.review %} <a href="{% url 'admin:tasks_submit_change' data.review.pk %}"> Opravene </a> {% endif %}
+  <br>
+{% endfor %}
+
+<form enctype="multipart/form-data" method="post" action="{% url 'admin:review_task' task.pk %}">
+{% csrf_token %}
+{% for field in form %}
+    {{ field }}
+{% endfor %}
+<input type="submit" text="Upload"/> 
+</form>
+
+{% endblock %}
