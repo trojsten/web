@@ -6,13 +6,13 @@
 <tr>
     <th class="text-right">#</th>
     <th>Meno:</th>
-    <th><abbr title="Ročník">R.</abbr></th>
+    <th><abbr title="Ročník" data-toggle="tooltip" data-placement="top">R.</abbr></th>
     <th>Škola</th>
     {% if has_previous_results %}
-        <th><abbr title="Predchádzajúce kolá">P.</abbr></th>
+        <th><abbr title="Predchádzajúce kolá" data-toggle="tooltip" data-placement="top">P.</abbr></th>
     {% endif %}
     {% for task in tasks %}
-        <th><a href="{% url 'task_statement' task_id=task.id %}" title="{{task.name}}">{{task.number}}</a></th>
+        <th><a href="{% url 'task_statement' task_id=task.id %}" title="{{task.name}}" data-toggle="tooltip" data-placement="top">{{task.number}}</a></th>
     {% endfor %}
     <th><strong>&sum;</strong></th>
 </tr>
@@ -26,9 +26,9 @@
         {% if result.data.prev_rank == None %}
             <span class="text-info glyphicon glyphicon-asterisk"></span>
         {% elif result.data.rank < result.data.prev_rank %}
-            <span class="text-success glyphicon glyphicon-chevron-up" title="+{{result.data.prev_rank|sub:result.data.rank}}"></span>
+            <span class="text-success glyphicon glyphicon-chevron-up" title="+{{result.data.prev_rank|sub:result.data.rank}}" data-toggle="tooltip" data-placement="top"></span>
         {% elif result.data.rank > result.data.prev_rank %}
-            <span class="text-danger glyphicon glyphicon-chevron-down" title="-{{result.data.rank|sub:result.data.prev_rank}}"></span>
+            <span class="text-danger glyphicon glyphicon-chevron-down" title="-{{result.data.rank|sub:result.data.prev_rank}}" data-toggle="tooltip" data-placement="top"></span>
         {% else %}
             <span class="text-muted glyphicon glyphicon-pushpin"></span>
         {% endif %}
@@ -36,7 +36,7 @@
     </td>
     <td>{{result.user.first_name}} {{result.user.last_name}}</td>
     <td>{{result.user.school_year}}</td>
-    <td>{%if result.user.school.has_abbreviation %}<abbr title="{{result.user.school.verbose_name}}">{{result.user.school.abbreviation}}</abbr>{%else%}{{result.user.school.verbose_name}}{%endif%}</td>
+    <td>{%if result.user.school.has_abbreviation %}<abbr title="{{result.user.school.verbose_name}}" data-toggle="tooltip" data-placement="top">{{result.user.school.abbreviation}}</abbr>{%else%}{{result.user.school.verbose_name}}{%endif%}</td>
     {% if has_previous_results %}
         <td>{{result.data.previous}}</td>
     {% endif %}
