@@ -206,7 +206,8 @@ INSTALLED_APPS = (
     # django-wiki and its dependencies
     'django.contrib.humanize',
     'south',
-    'django_notify',
+    # 'django_notify',
+    'django_nyt',
     'mptt',
     'sekizai',
     'sorl.thumbnail',
@@ -299,6 +300,11 @@ SOCIAL_AUTH_PIPELINE = (
 
 SOUTH_MIGRATION_MODULES = {
     'taggit': 'taggit.south_migrations',
+    'django_nyt': 'django_nyt.south_migrations',
+    'wiki': 'wiki.south_migrations',
+    'images': 'wiki.plugins.images.south_migrations',
+    'notifications': 'wiki.plugins.notifications.south_migrations',
+    'attachments': 'wiki.plugins.attachments.south_migrations',
 }
 
 UPLOADED_FILENAME_MAXLENGTH = 100000
