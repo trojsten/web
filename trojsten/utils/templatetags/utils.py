@@ -44,3 +44,11 @@ def current_url_equals(context, url_name, **kwargs):
     if not matches:
         return re.search(url_name, context.get('request').path)
     return matches
+
+
+@register.assignment_tag(takes_context=True)
+def is_organizer(context, competition):
+    return (
+        context['user'].is_superuser or
+        competition.organizers_group in context['user'].groups.all()
+    )

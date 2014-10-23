@@ -36,20 +36,20 @@ def show_task_list(context, round):
     return context
 
 
-@register.inclusion_tag('trojsten/task_statements/parts/buttons.html')
-def show_buttons(round):
+@register.inclusion_tag('trojsten/task_statements/parts/buttons.html', takes_context=True)
+def show_buttons(context, round):
     result_rounds = get_result_rounds(round)
     categories = Category.objects.filter(
         competition=round.series.competition
     ).select_related(
         'competition'
     )
-    data = {
+    context.update({
         'round': round,
         'result_rounds': result_rounds,
         'categories': categories,
-    }
-    return data
+    })
+    return context
 
 
 @register.inclusion_tag('trojsten/task_statements/parts/round_list.html')
