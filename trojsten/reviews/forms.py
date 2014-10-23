@@ -12,3 +12,4 @@ class ReviewForm (forms.Form):
 
         self.fields["user"].choices = choices
         self.fields["points"] = forms.IntegerField(min_value=0, max_value=max_value, required=False)
+

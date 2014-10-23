@@ -10,7 +10,6 @@ from trojsten.submit.helpers import save_file, get_path
 from trojsten.reviews.helpers import submit_review, submit_readable_name, get_latest_submits_by_task
 from trojsten.reviews.forms import ReviewForm
 
-from django import forms
 import os
 import zipfile
 import io
@@ -19,7 +18,7 @@ def review_task_view (request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     max_points = task.description_points
     users = get_latest_submits_by_task(task)
-    choices = [(-1, "Auto"), (None, "All")] + [(user.pk, user.username) for user in users]
+    choices = [(None, "Auto / all")] + [(user.pk, user.username) for user in users]
 
     if request.method == 'POST':
         form = ReviewForm(request.POST, request.FILES, choices=choices, max_value=max_points)
@@ -30,26 +29,26 @@ def review_task_view (request, task_pk):
             filename = form.cleaned_data["file"].name
             points = form.cleaned_data["points"]
 
-            if user == None:
+            if user == 'None' and filename.endswith(".zip"):
                 #not implemented
                 raise Http404
+
             else:    
-                user = int(user)
-                if user == -1:
+                if user == 'None':
                     try:
                         print int(filename.split('-')[1])
                         user = Submit.objects.get(pk=int(filename.split('-')[1])).user
                     except KeyError:
                         messages.add_message(request, messages.ERROR, "Auto failed")
                 else:
-                    user = User.objects.get(pk=user)
+                    user = User.objects.get(pk=int(user))
 
                 #TODO: add regex to check for Name-submitID-filename format
 
                 fname = "".join(filename.split("-")[2:])
                 submit_review(filecontent, filename, task, user, points)
 
-                messages.add_message(request, messages.SUCCESS, "Uploadnute")
+                messages.add_message(request, messages.SUCCESS, "Uploaded file %s to %s" % (fname, user.last_name))
 
                 return redirect("admin:review_task", task.pk)
 
@@ -90,7 +89,7 @@ def download_latest_submits_view (request, task_pk):
     zipper.close()
     result.seek(0)
     
-    response = HttpResponse(result.read(),content_type='plain/text')
+    response = HttpResponse(result.read(), content_type='plain/text')
     response['Content-Disposition'] = 'attachment; filename=Uloha %s.zip' % task.name 
     return response
 
