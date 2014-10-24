@@ -18,8 +18,8 @@ class TaskByYearSubFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         tasks = Task.objects
-        if 'category__competition__id__exact' in request.GET:
-            tasks = tasks.filter(category__competition__id__exact=request.GET['category__competition__id__exact'])
+        if 'round__series__competition__id__exact' in request.GET:
+            tasks = tasks.filter(round__series__competition__id__exact=request.GET['round__series__competition__id__exact'])
         tasks = tasks.select_related('round__series__year')
         tasks = tasks.distinct('round__series__year').order_by('-round__series__year')
         years = (x.round.series.year for x in tasks.all())
@@ -41,8 +41,8 @@ class TaskByRoundSubFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         tasks = Task.objects
-        if 'category__competition__id__exact' in request.GET:
-            tasks = tasks.filter(category__competition__id__exact=request.GET['category__competition__id__exact'])
+        if 'round__series__competition__id__exact' in request.GET:
+            tasks = tasks.filter(round__series__competition__id__exact=request.GET['round__series__competition__id__exact'])
         if 'year_subfilter' in request.GET:
             tasks = tasks.filter(round__series__year=request.GET['year_subfilter'])
         tasks = tasks.select_related('round__series__competition')
@@ -63,10 +63,10 @@ class TaskByRoundSubFilter(admin.SimpleListFilter):
 class TaskAdmin(admin.ModelAdmin):
     list_select_related = True
     list_display = ('name', 'number',
-                    'get_round', 'get_series', 'get_year', 'get_category',
+                    'get_round', 'get_series', 'get_year', 'get_competition', 'get_category',
                     'submit_type', 'integer_source_points',
                     'tasks_pdf', 'solutions_pdf')
-    list_filter = ('category__competition', TaskByYearSubFilter, TaskByRoundSubFilter)
+    list_filter = ('round__series__competition', TaskByYearSubFilter, TaskByRoundSubFilter)
     search_fields = ('name',)
 
     get_round = get_related(attribute_chain=('round', 'short_str'),
@@ -78,10 +78,14 @@ class TaskAdmin(admin.ModelAdmin):
     get_year = get_related(attribute_chain=('round', 'series', 'year'),
                            description='ročník',
                            order='round__series__year')
+    get_competition = get_related(attribute_chain=('round', 'series', 'competition'),
+                                  description='súťaž',
+                                  order='round__series__competition')
 
     def get_category(self, obj):
-        return ', '.join(force_text(x) for x in obj.category.all())
+        return ', '.join(force_text(x.name) for x in obj.category.all())
     get_category.short_description = 'kategória'
+    get_category.admin_order_field = 'category'
 
     def submit_type(self, obj):
         res = ''
@@ -107,9 +111,9 @@ class TaskAdmin(admin.ModelAdmin):
 class SubmitAdmin(admin.ModelAdmin):
     list_select_related = True
     list_display = ('get_task_name', 'get_task_number',
-                    'get_round', 'get_series', 'get_year', 'get_category',
+                    'get_round', 'get_series', 'get_year', 'get_competition', 'get_category',
                     'user', 'submit_type', 'testing_status', 'get_points', 'filepath', 'time')
-    list_filter = ('task__category__competition',)
+    list_filter = ('task__round__series__competition',)
     search_fields = ('user__username', 'task__name',)
 
     get_points = attribute_format(
@@ -133,10 +137,15 @@ class SubmitAdmin(admin.ModelAdmin):
     get_year = get_related(attribute_chain=('task', 'round', 'series', 'year'),
                            description='ročník',
                            order='task__round__series__year')
+    get_competition = get_related(attribute_chain=('task', 'round', 'series', 'competition'),
+                                  description='súťaž',
+                                  order='task__round__series__competition')
+
 
     def get_category(self, obj):
-        return ', '.join(force_text(x) for x in obj.task.category.all())
+        return ', '.join(force_text(x.name) for x in obj.task.category.all())
     get_category.short_description = 'kategória'
+    get_category.admin_order_field = 'task__category'
 
 
 class CategoryAdmin(admin.ModelAdmin):

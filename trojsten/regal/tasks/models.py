@@ -37,7 +37,7 @@ class Task(models.Model):
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
     round = models.ForeignKey(Round, verbose_name='kolo')
-    category = models.ManyToManyField(Category, verbose_name='kategória')
+    category = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
     description_points = models.IntegerField(verbose_name='body za popis')
     source_points = models.IntegerField(verbose_name='body za program')
