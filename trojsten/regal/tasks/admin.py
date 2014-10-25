@@ -6,6 +6,7 @@ from django.contrib import admin
 from django.utils.encoding import force_text
 
 from trojsten.regal.tasks.models import *
+from trojsten.regal.tasks.forms import TaskValidationForm
 from trojsten.regal.utils import get_related, attribute_format
 
 
@@ -61,6 +62,7 @@ class TaskByRoundSubFilter(admin.SimpleListFilter):
 
 
 class TaskAdmin(admin.ModelAdmin):
+    form = TaskValidationForm
     list_select_related = True
     list_display = ('name', 'number',
                     'get_round', 'get_series', 'get_year', 'get_competition', 'get_category',
