@@ -48,7 +48,7 @@ class RoundAdmin(admin.ModelAdmin):
                                  description='zadania v pdf',
                                  boolean=True)
     solutions_pdf = attribute_format(attribute='solutions_pdf_exists',
-                                     description='vozráky v pdf',
+                                     description='vzoráky v pdf',
                                      boolean=True)
     can_submit = attribute_format(attribute='can_submit',
                                   description='prebieha',

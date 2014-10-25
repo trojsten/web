@@ -112,7 +112,7 @@ class SubmitAdmin(admin.ModelAdmin):
     list_select_related = True
     list_display = ('get_task_name', 'get_task_number',
                     'get_round', 'get_series', 'get_year', 'get_competition', 'get_category',
-                    'user', 'submit_type', 'testing_status', 'get_points', 'filepath', 'time')
+                    'user', 'time', 'get_points', 'submit_type', 'testing_status', 'filepath',)
     list_filter = ('task__round__series__competition',)
     search_fields = ('user__username', 'task__name',)
 
@@ -125,9 +125,8 @@ class SubmitAdmin(admin.ModelAdmin):
                                 description='úloha',
                                 order='task__name')
     get_task_number = get_related(attribute_chain=('task', 'number'),
-                                  description='č. úlohy',
+                                  description='č.ú.',
                                   order='task__number')
-
     get_round = get_related(attribute_chain=('task', 'round', 'short_str'),
                             description='kolo',
                             order='task__round__number')
@@ -140,7 +139,6 @@ class SubmitAdmin(admin.ModelAdmin):
     get_competition = get_related(attribute_chain=('task', 'round', 'series', 'competition'),
                                   description='súťaž',
                                   order='task__round__series__competition')
-
 
     def get_category(self, obj):
         return ', '.join(force_text(x.name) for x in obj.task.category.all())
