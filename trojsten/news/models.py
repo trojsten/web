@@ -20,7 +20,7 @@ class Entry(models.Model):
                             'Markdownom</a>.')
     slug = AutoSlugField(populate_from='title', unique=True)
     sites = models.ManyToManyField(Site)
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     class Meta:
         get_latest_by = 'pub_date'
