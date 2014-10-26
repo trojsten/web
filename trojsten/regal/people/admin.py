@@ -75,7 +75,7 @@ class UserAdmin(DefaultUserAdmin):
             show = obj.school.abbreviation
         else:
             show = obj.school.verbose_name
-        return '<span title="%s">%s</span>' % (obj.school, show)
+        return '<span title="%s">%s</span>' % (escape(force_text(obj.school)), escape(force_text(show)))
     get_school.short_description = 'škola'
     get_school.admin_order_field = 'school'
     get_school.allow_tags = True
