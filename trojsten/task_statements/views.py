@@ -72,6 +72,8 @@ def latest_task_list(request):
 
 def view_pdf(request, round_id, solution=False):
     round = get_object_or_404(Round.visible_rounds(request.user), pk=round_id)
+    if solution and not round.solutions_are_visible_for_user(request.user):
+        raise Http404
     path = round.get_pdf_path(solution)
     if os.path.exists(path):
         return sendfile(request, path)
