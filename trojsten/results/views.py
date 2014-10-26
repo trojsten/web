@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render
-from .helpers import check_round_series
+from django.http import HttpResponseBadRequest
+
 from trojsten.regal.tasks.models import Category
 from trojsten.regal.contests.models import Round
-from django.http import HttpResponseBadRequest
+
+from .helpers import check_round_series
 
 
 def view_results(request, round_ids, category_ids=None):

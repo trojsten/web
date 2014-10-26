@@ -1,66 +1,58 @@
-from trojsten.regal.tasks.models import Task, Submit, Category
-from trojsten.regal.people.models import User, School
-from django.db.models import F
-from django.db.models.query import QuerySet
-from django.conf import settings
-import os
-import json
-from django.core import serializers
-from decimal import Decimal
+# -*- coding: utf-8 -*-
+
 from collections import defaultdict
+
+from django.db.models import F
+from django.conf import settings
+
+from trojsten.regal.tasks.models import Task, Submit
+from trojsten.regal.people.models import User
 
 
 class TaskPoints:
     def __init__(self):
-        self.sum = 0
         self.source_points = 0
         self.description_points = 0
         self.submitted = False
         self.description_pending = False
 
+    @property
+    def sum(self):
+        return self.description_points + self.source_points
+
     def add_source_points(self, points):
         self.submitted = True
         self.source_points += points
-        self.sum += self.source_points
 
     def set_description_points(self, points):
         self.submitted = True
-        self.sum -= self.description_points
         self.description_points = points
-        self.sum += self.description_points
 
     def set_pending_description_points(self):
         self.submitted = True
         self.description_pending = True
-        self.description_points = '??'
+        self.description_points = 0
 
 
 class UserResult:
     def __init__(self):
-        self.sum = 0
         self.previous = 0
-        self.has_previous_results = False
         self.tasks = defaultdict(TaskPoints)
         self.rank = None
         self.prev_rank = None
 
+    @property
+    def sum(self):
+        return self.previous + sum(t.sum for _, t in self.tasks.items())
+
     def add_task_points(self, task, submit_type, points):
-        self.sum -= self.tasks[task.id].sum
         if submit_type == Submit.DESCRIPTION:
             self.tasks[task.id].set_pending_description_points()  # Fixme
         else:
             self.tasks[task.id].add_source_points(points)
-        self.sum += self.tasks[task.id].sum
 
     def set_previous(self, previous_points):
-        self.has_previous_results = True
-        self.sum -= self.previous
         self.previous = previous_points
-        self.sum += self.previous
-
-
-def has_permission(group, user):
-    return user.is_superuser or (group in user.groups.all())
 
 
 def get_tasks(rounds, categories=None):
@@ -127,7 +119,7 @@ def get_ranks(score_list):
         yield last_rank
 
 
-def format_results_data(results_data, previous_results_data=None):
+def merge_results_data(results_data, previous_results_data=None):
     '''Makes list of table rows from results_data
     '''
     res = list()
@@ -175,5 +167,5 @@ def make_result_table(rounds, categories=None, show_staff=False):
 
     return (
         current_tasks,
-        format_results_data(current_results_data, previous_results_data),
+        merge_results_data(current_results_data, previous_results_data),
     )
