@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Create your views here.
 
+import os
+import xml.etree.ElementTree as ET
+
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import Http404, HttpResponseBadRequest
@@ -9,14 +12,14 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.html import format_html
+
+from sendfile import sendfile
+
 from trojsten.regal.contests.models import Round
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
 from trojsten.submit.helpers import write_chunks_to_file, process_submit, get_path,\
     update_submit
-from sendfile import sendfile
-import os
-import xml.etree.ElementTree as ET
 
 
 @login_required

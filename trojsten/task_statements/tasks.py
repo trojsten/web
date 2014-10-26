@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
+
 import os
 from celery import shared_task
-from trojsten.regal.contests.models import Repository
+
 from django.conf import settings
+
+from trojsten.regal.contests.models import Repository
+
 from .git_api import pull_or_clone
 
 

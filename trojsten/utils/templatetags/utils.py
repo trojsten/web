@@ -1,6 +1,7 @@
+import re
+
 from django import template
 from django.core import urlresolvers
-import re
 
 register = template.Library()
 

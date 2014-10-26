@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
-from .tasks import compile_task_statements
+from django.conf import settings
+
+from sendfile import sendfile
+
 from trojsten.regal.tasks.models import Task
 from trojsten.regal.contests.models import Round, Competition
-from sendfile import sendfile
-import os
-from django.conf import settings
+
+from .tasks import compile_task_statements
 
 
 def notify_push(request, uuid):
