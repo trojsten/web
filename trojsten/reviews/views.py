@@ -1,18 +1,21 @@
+import os.path
+import zipfile
+import io
+from time import time
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.conf import settings
 
 from trojsten.regal.tasks.models  import Task, Submit
 from trojsten.regal.people.models import User
 from trojsten.submit.helpers import save_file, get_path
 
 from trojsten.reviews.helpers import submit_review, submit_readable_name, get_latest_submits_by_task
-from trojsten.reviews.forms import ReviewForm
+from trojsten.reviews.forms import ReviewForm, get_zip_form_set
 
-import os
-import zipfile
-import io
 
 def review_task_view (request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
@@ -30,27 +33,30 @@ def review_task_view (request, task_pk):
             points = form.cleaned_data["points"]
 
             if user == 'None' and filename.endswith(".zip"):
-                #not implemented
-                raise Http404
+                path = os.path.join(settings.SUBMIT_PATH, "reviews", "%s-%s.zip" % (int(time()), request.user.pk))
+                save_file(filecontent, path)
 
-            else:    
-                if user == 'None':
-                    try:
-                        print int(filename.split('-')[1])
-                        user = Submit.objects.get(pk=int(filename.split('-')[1])).user
-                    except KeyError:
-                        messages.add_message(request, messages.ERROR, "Auto failed")
-                else:
-                    user = User.objects.get(pk=int(user))
+                request.session["review_archive"] = path
+                return redirect ("admin:review_submit_zip", task.pk)
 
-                #TODO: add regex to check for Name-submitID-filename format
+            if user == 'None':      
+                try:
+                    user = Submit.objects.get(pk=int(filename.split('-')[1])).user
+                
+                except Submit.DoesNotExist:
+                    messages.add_message(request, messages.ERROR, "Auto failed")
+                    return redirect("admin:review_task", task.pk)
+            else:
+                user = User.objects.get(pk=int(user))
 
-                fname = "".join(filename.split("-")[2:])
-                submit_review(filecontent, filename, task, user, points)
+            #TODO: add regex to check for Name-submitID-filename format
 
-                messages.add_message(request, messages.SUCCESS, "Uploaded file %s to %s" % (fname, user.last_name))
+            fname = "".join(filename.split("-")[2:])
+            submit_review(filecontent, filename, task, user, points)
 
-                return redirect("admin:review_task", task.pk)
+            messages.add_message(request, messages.SUCCESS, "Uploaded file %s to %s" % (fname, user.last_name))
+
+            return redirect("admin:review_task", task.pk)
 
     template_data = {
         'task': task,
@@ -62,9 +68,6 @@ def review_task_view (request, task_pk):
         request, 'admin/review_form.html', template_data
     )
 
-
-# Na toto by sa mohol pozriet niekto kto vie SQL
-# dorobit filtrovanie veducich, a pod ...
 
 def submit_download_view (request, submit_pk):
     submit = get_object_or_404(Submit, pk=submit_pk)
@@ -92,5 +95,44 @@ def download_latest_submits_view (request, task_pk):
     response = HttpResponse(result.read(), content_type='plain/text')
     response['Content-Disposition'] = 'attachment; filename=Uloha %s.zip' % task.name 
     return response
+
+
+def zip_upload (request, task_pk):
+    task = get_object_or_404(Task, pk=task_pk)
+    name = request.session.get("review_archive", None)
+    try:
+        data = zipfile.ZipFile(name)
+
+    except (zipfile.BadZipfile, IOError):
+        messages.add_message(request, messages.ERROR, "Problems with uploaded zip")
+        return redirect ("admin:review_task", task.pk)
+
+    users = [(None, "")] +  [(user.pk, user.username) for user in get_latest_submits_by_task(task)]
+    initial =   [{
+                    'filename': file, 
+                    'choices': users, 
+                    'max_value': task.description_points,
+                } 
+                for file in data.namelist()]   
+
+    ZipFormSet = get_zip_form_set (users, task.description_points, extra=0)
+    
+    if request.method == 'POST':
+        formset = ZipFormSet (request.POST)
+        
+        if formset.is_valid():
+            for form in formset:
+                print form.cleaned_data
+
+        return redirect("admin:review_task", task.pk)
+
+    template_data = {
+        'formset': ZipFormSet (initial=initial),
+        'task': task
+    } 
+    return render (
+        request, "admin/zip_upload.html", template_data
+    )
+
 
 
