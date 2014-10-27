@@ -36,18 +36,14 @@ def view_results(request, round_ids, category_ids=None):
 def view_latest_results(request):
     rounds_info = {
         r: {
-            'all_rounds': [
-                round
-                for round in Round.objects.filter(
+            'all_rounds': list(
+                Round.objects.filter(
                     visible=True, series=r.series, number__lte=r.number
                 ).order_by('number')
-            ],
-            'categories': [
-                cat
-                for cat in [None] + list(
-                    Category.objects.filter(competition=c)
-                )
-            ],
+            ),
+            'categories': [None] + list(
+                Category.objects.filter(competition=c)
+            ),
         }
         for c, r in Round.get_latest_by_competition(request.user).items()
     }

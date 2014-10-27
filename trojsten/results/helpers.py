@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 
 from django.db.models import F
 from django.conf import settings
@@ -36,23 +36,24 @@ class TaskPoints:
 
 class UserResult:
     def __init__(self):
-        self.previous = 0
+        self.previous_rounds_points = 0
         self.tasks = defaultdict(TaskPoints)
         self.rank = None
         self.prev_rank = None
 
     @property
     def sum(self):
-        return self.previous + sum(t.sum for _, t in self.tasks.items())
+        return self.previous_rounds_points + sum(t.sum for t in self.tasks.values())
 
     def add_task_points(self, task, submit_type, points):
         if submit_type == Submit.DESCRIPTION:
-            self.tasks[task.id].set_pending_description_points()  # Fixme
+            # Fixme - description points are not currently supported
+            self.tasks[task.id].set_pending_description_points()
         else:
             self.tasks[task.id].add_source_points(points)
 
-    def set_previous(self, previous_points):
-        self.previous = previous_points
+    def set_previous_rounds_points(self, previous_rounds_points):
+        self.previous_rounds_points = previous_rounds_points
 
 
 def get_tasks(rounds, categories=None):
@@ -77,10 +78,10 @@ def get_submits(tasks, show_staff=False):
     submits = Submit.objects
     if not show_staff and tasks:
         submits = submits.exclude(
-            # kolo konci Januar 2014 => exclude 2013, 2012,
-            # kolo konci Jun 2014 => exclude 2013, 2012,
-            # kolo konci September 2014 => exclude 2014, 2013,
-            # kolo konci December 2014 => exclude 2014, 2013,
+            # round ends January 2014 => exclude 2013, 2012,
+            # round ends Jun 2014 => exclude 2013, 2012,
+            # round ends September 2014 => exclude 2014, 2013,
+            # round ends December 2014 => exclude 2014, 2013,
             user__graduation__lt=tasks[0].round.end_time.year + int(
                 tasks[0].round.end_time.month > settings.SCHOOL_YEAR_END_MONTH
             )
@@ -111,6 +112,10 @@ def get_results_data(tasks, submits):
 
 
 def get_ranks(score_list):
+    '''
+    Get ranks for score_list
+    score_list must be sorted
+    '''
     last_score = None
     last_rank = 1
     for i, score in enumerate(score_list):
@@ -120,22 +125,26 @@ def get_ranks(score_list):
 
 
 def merge_results_data(results_data, previous_results_data=None):
-    '''Makes list of table rows from results_data
     '''
-    res = list()
+    Adds previous_rounds_points from previous_results_data to results_data
+    This function modifies results_data
+    '''
     if previous_results_data:
         for user, data in previous_results_data.items():
             if user not in results_data:
                 results_data[user] = UserResult()
-            results_data[user].set_previous(data.sum)
+            results_data[user].set_previous_rounds_points(data.sum)
+    return results_data
 
-    for user, data in results_data.items():
-        res.append({
-            'user': user,
-            'data': data,
-        })
 
-    res = sorted(res, key=lambda x: -x['data'].previous)
+def format_results_data(results_data):
+    '''Formats results_data as sorted list of rows so it can be easily displayed as results_table
+    Appends user and ranks.
+    This function modifies results_data
+    '''
+    res = [{'user': user, 'data': data} for user, data in results_data.items()]
+
+    res = sorted(res, key=lambda x: -x['data'].previous_rounds_points)
     for rank, r in zip(get_ranks(res), res):
         r['data'].prev_rank = rank
 
@@ -147,25 +156,33 @@ def merge_results_data(results_data, previous_results_data=None):
 
 
 def check_round_series(rounds):
-    return all(r.series == rounds[0].series for r in rounds)
+    if rounds:
+        return all(r.series == rounds[0].series for r in rounds)
+    else:
+        return True
 
 
 def make_result_table(rounds, categories=None, show_staff=False):
+    ResultsTable = namedtuple('ResultsTable', ['tasks', 'results_data'])
     if not rounds:
-        return (list(), list())
-    current_round = list(rounds)[-1]
+        return ResultsTable(tasks=list(), results_data=list())
+    rounds = list(rounds)
+
+    current_round = rounds[-1]
     current_tasks = get_tasks([current_round], categories)
     current_submits = get_submits(current_tasks, show_staff)
     current_results_data = get_results_data(current_tasks, current_submits)
 
     previous_results_data = None
-    previous_rounds = list(rounds)[:-1]
+    previous_rounds = rounds[:-1]
     if previous_rounds:
         previous_tasks = get_tasks(previous_rounds, categories)
         previous_submits = get_submits(previous_tasks, show_staff)
         previous_results_data = get_results_data(previous_tasks, previous_submits)
 
-    return (
-        current_tasks,
-        merge_results_data(current_results_data, previous_results_data),
+    return ResultsTable(
+        tasks=current_tasks,
+        results_data=format_results_data(
+            merge_results_data(current_results_data, previous_results_data),
+        ),
     )
