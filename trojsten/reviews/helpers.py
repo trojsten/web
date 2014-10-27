@@ -1,5 +1,5 @@
 from trojsten.regal.tasks.models  import Submit
-from trojsten.submit.helpers import save_file, get_path
+from trojsten.submit.helpers import save_file, get_path, write_file
 
 import os
 import zipfile
@@ -14,7 +14,11 @@ def submit_review (filecontent, filename, task, user, points):
         "%s-%s-%s" % (user.last_name, submit_id, filename),
     )
 
-    save_file(filecontent, sfiletarget)
+    if hasattr(filecontent, "chunks"): 
+        save_file(filecontent, sfiletarget)
+    else:
+        write_file (filename, "", sfiletarget)
+
     sub = Submit(task=task,
                  user=user,
                  submit_type=Submit.DESCRIPTION,

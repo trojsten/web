@@ -1,6 +1,16 @@
 {% extends "admin/base_site.html" %}
 {% load i18n admin_urls admin_static admin_modify %}
 
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label='tasks' %}">Tasks</a>
+&rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}"> Tasks</a>
+&rsaquo; <a href="{% url 'admin:tasks_task_change' task.pk %}"> {{ task.name }} </a>
+&rsaquo; Review
+</div>
+{% endblock %}
+
 {% block content %}
 
 <a href="{% url 'admin:download_latest_submits' task.pk %}">  Download all </a><br> <br>

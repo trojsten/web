@@ -1,4 +1,4 @@
-from django.forms.formsets import formset_factory
+from django.forms.formsets import formset_factory, BaseFormSet
 from functools import partial, wraps
 
 from django import forms
@@ -19,7 +19,8 @@ class ReviewForm (forms.Form):
 
 
 def get_zip_form_set (choices, max_value, *args, **kwargs):
-    return formset_factory(wraps(ZipForm)(partial(ZipForm, choices=choices, max_value=max_value)), *args, **kwargs)
+    return formset_factory(wraps(ZipForm)(partial(ZipForm, choices=choices, max_value=max_value)), *args, formset=BaseZipSet, **kwargs)
+
 
 class ZipForm (forms.Form):
     filename = forms.CharField(widget=HiddenInput())
@@ -35,3 +36,24 @@ class ZipForm (forms.Form):
         # self.fields["user"].label = self.fields["filename"].text
         if 'initial' in kwargs: self.name = kwargs["initial"]["filename"]
         self.fields["points"].max_value = max_value
+
+    def clean (self):
+        cleaned_data = super(ZipForm, self).clean()
+
+        if cleaned_data["points"] is None and cleaned_data["user"] != "None":
+            raise forms.ValidationError("Must have set points, or user must be empty")
+
+        return cleaned_data
+
+class BaseZipSet(BaseFormSet):
+    def clean(self):
+        if any(self.errors):
+            return
+
+        users = set()
+        for form in self.forms:
+            user = form.cleaned_data['user']
+            if user and user in users:
+                raise forms.ValidationError("Assigned 2 files to same user.")
+            
+            users |= {user}
