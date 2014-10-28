@@ -116,6 +116,23 @@ footer a:visited {
 .ui-resizable {
   position: fixed !important;
 }
+
+/* Results table */
+.result-task, .result-sum, .result-prev{
+  text-align: center;
+  width:4ex;
+}
+
+.result-task-integer {
+  width: 2ex;
+}
+
+.result-year {
+  text-align: center;
+  width: 1ex;
+}
+
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
