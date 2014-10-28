@@ -56,7 +56,7 @@ class Series(models.Model):
     Series consists of several rounds.
     '''
     competition = models.ForeignKey(Competition, verbose_name='súťaž')
-    name = models.CharField(max_length=32, verbose_name='názov')
+    name = models.CharField(max_length=32, verbose_name='názov', blank=True)
     number = models.IntegerField(verbose_name='číslo série')
     year = models.IntegerField(verbose_name='ročník')
 
@@ -82,8 +82,10 @@ class Round(models.Model):
     '''
     series = models.ForeignKey(Series, verbose_name='séria')
     number = models.IntegerField(verbose_name='číslo')
-    start_time = models.DateTimeField(verbose_name='začiatok')
-    end_time = models.DateTimeField(verbose_name='koniec')
+    start_time = models.DateTimeField(verbose_name='začiatok',
+                                      default=datetime.now().replace(hour=0, minute=0, second=0, microsecond=0))
+    end_time = models.DateTimeField(verbose_name='koniec',
+                                    default=datetime.now().replace(hour=23, minute=59, second=59, microsecond=0))
     visible = models.BooleanField(verbose_name='viditeľnosť')
     solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov')
 

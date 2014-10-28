@@ -118,18 +118,18 @@ class Submit(models.Model):
         (EXTERNAL, 'external'),
     ]
     task = models.ForeignKey(Task, verbose_name='úloha')
-    time = models.DateTimeField(auto_now_add=True)
+    time = models.DateTimeField(auto_now_add=True, verbose_name='čas')
     user = models.ForeignKey(get_user_model(), verbose_name='odovzdávateľ')
     submit_type = models.IntegerField(verbose_name='typ submitu', choices=SUBMIT_TYPES)
     points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body')
 
-    filepath = models.CharField(max_length=128, verbose_name='súbor')
+    filepath = models.CharField(max_length=128, verbose_name='súbor', blank=True)
     testing_status = models.CharField(
-        max_length=128, verbose_name='stav testovania')
+        max_length=128, verbose_name='stav testovania', blank=True)
     tester_response = models.CharField(
-        max_length=10, verbose_name='odpoveď testovača')
+        max_length=10, verbose_name='odpoveď testovača', blank=True)
     protocol_id = models.CharField(
-        max_length=128, verbose_name='číslo protokolu')
+        max_length=128, verbose_name='číslo protokolu', blank=True)
 
     class Meta:
         verbose_name = 'Submit'

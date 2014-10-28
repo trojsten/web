@@ -47,7 +47,7 @@ class StaffFilter(admin.SimpleListFilter):
 
 class UserAdmin(DefaultUserAdmin):
     list_display = ('username', 'first_name', 'last_name', 'email',
-                    'school', 'graduation', 'get_is_staff', 'get_groups',
+                    'get_school', 'graduation', 'get_is_staff', 'get_groups',
                     'is_active', 'get_properties')
     list_filter = ('groups', StaffFilter)
     search_fields = ('username', 'first_name', 'last_name')
@@ -69,6 +69,17 @@ class UserAdmin(DefaultUserAdmin):
     get_groups.short_description = 'skupiny'
 
     get_is_staff = attribute_format(attribute='is_staff', description='vedúci', boolean=True)
+
+    def get_school(self, obj):
+        if obj.school.has_abbreviation:
+            show = obj.school.abbreviation
+        else:
+            show = obj.school.verbose_name
+        return '<span title="%s">%s</span>' % (escape(force_text(obj.school)), escape(force_text(show)))
+    get_school.short_description = 'škola'
+    get_school.admin_order_field = 'school'
+    get_school.allow_tags = True
+
 
     def get_properties(self, obj):
         return '<br />'.join(escape(force_text(x)) for x in obj.properties.all())
