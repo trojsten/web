@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.contrib import admin
@@ -56,3 +57,10 @@ urlpatterns += patterns('',
     url(r'^wiki/notify/', get_notify_pattern()),
     url(r'^', get_wiki_pattern()),
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+   )
