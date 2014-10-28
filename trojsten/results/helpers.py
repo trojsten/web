@@ -127,7 +127,8 @@ def get_ranks(score_list):
 def merge_results_data(results_data, previous_results_data=None):
     '''
     Adds previous_rounds_points from previous_results_data to results_data
-    This function modifies results_data
+    Side effect: This function modifies objects (i.e. individual results)
+    contained in results_data
     '''
     if previous_results_data:
         for user, data in previous_results_data.items():
@@ -140,7 +141,8 @@ def merge_results_data(results_data, previous_results_data=None):
 def format_results_data(results_data):
     '''Formats results_data as sorted list of rows so it can be easily displayed as results_table
     Appends user and ranks.
-    This function modifies results_data
+    Side effect: This function modifies objects (i.e. individual results)
+    contained in results_data
     '''
     res = [{'user': user, 'data': data} for user, data in results_data.items()]
 
