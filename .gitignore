@@ -2,8 +2,7 @@
 *.pot
 *.py[co]
 local_settings.py
-database.sqlite3
-trojsten/media/wiki_attachments/*/*
+media/*
 
 #nodejs
 */node_modules/*
