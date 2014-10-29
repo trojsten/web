@@ -6,8 +6,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import Group
-
-from ..people.models import User
+from django.contrib.auth import get_user_model
 
 
 @python_2_unicode_compatible
@@ -56,8 +55,8 @@ class EventPlace(models.Model):
 class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
     event_type = models.ForeignKey(EventType, verbose_name='typ akcie')
-    list_of_organizers = models.ManyToManyField(User, verbose_name='zoznam vedúcich', blank=True, related_name='organizing_event_set')
-    list_of_participants = models.ManyToManyField(User, verbose_name='zoznam účastníkov', blank=True, related_name='participating_event_set')
+    list_of_organizers = models.ManyToManyField(get_user_model(), verbose_name='zoznam vedúcich', blank=True, related_name='organizing_event_set')
+    list_of_participants = models.ManyToManyField(get_user_model(), verbose_name='zoznam účastníkov', blank=True, related_name='participating_event_set')
     place = models.ForeignKey(EventPlace, verbose_name='miesto')
     start_time = models.DateTimeField(verbose_name='čas začiatku')
     end_time = models.DateTimeField(verbose_name='čas konca')
