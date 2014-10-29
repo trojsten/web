@@ -1,5 +1,11 @@
 {% extends "trojsten/layout/main.html" %}
 {% load disqus_tags %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/syntax_highlight.css" %}" type="text/css" />
+{% endblock %}
 
 {% block title %}{{task.number}}. {{task.name}} (riešenie){% endblock %}
 
