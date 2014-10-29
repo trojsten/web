@@ -16,7 +16,9 @@ class EventType(models.Model):
     '''
     name = models.CharField(max_length=100, verbose_name='názov')
     sites = models.ManyToManyField(Site)
-    organizers_group = models.ForeignKey(Group, null=True, verbose_name='skupina vedúcich')
+    organizers_group = models.ForeignKey(
+        Group, null=True, verbose_name='skupina vedúcich'
+    )
 
     class Meta:
         verbose_name = 'Typ akcie'
@@ -29,7 +31,7 @@ class EventType(models.Model):
 @python_2_unicode_compatible
 class EventLink(models.Model):
     title = models.CharField(max_length=100, verbose_name='názov')
-    url = models.CharField(max_length=300)
+    url = models.URLField(max_length=300)
 
     class Meta:
         verbose_name = 'Odkaz'
@@ -55,12 +57,20 @@ class EventPlace(models.Model):
 class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
     event_type = models.ForeignKey(EventType, verbose_name='typ akcie')
-    list_of_organizers = models.ManyToManyField(get_user_model(), verbose_name='zoznam vedúcich', blank=True, related_name='organizing_event_set')
-    list_of_participants = models.ManyToManyField(get_user_model(), verbose_name='zoznam účastníkov', blank=True, related_name='participating_event_set')
+    list_of_organizers = models.ManyToManyField(
+        get_user_model(), verbose_name='zoznam vedúcich',
+        blank=True, related_name='organizing_event_set',
+    )
     place = models.ForeignKey(EventPlace, verbose_name='miesto')
     start_time = models.DateTimeField(verbose_name='čas začiatku')
     end_time = models.DateTimeField(verbose_name='čas konca')
-    links = models.ManyToManyField(EventLink, blank=True, verbose_name='zoznam odkazov')
+    links = models.ManyToManyField(
+        EventLink, blank=True, verbose_name='zoznam odkazov'
+    )
+
+    @property
+    def list_of_participants(self):
+        return self.eventinvitation_set.filter(invitation_type=0, going=1)
 
     class Meta:
         verbose_name = 'Akcie'
@@ -68,3 +78,26 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
+
+
+@python_2_unicode_compatible
+class EventInvitation(models.Model):
+    event = models.ForeignKey(Event, verbose_name='akcia')
+    user = models.ForeignKey(get_user_model(), verbose_name='účastník')
+    invitation_type = models.IntegerField(
+        choices=[(0, 'účastník'), (1, 'náhradník')],
+        default=0, verbose_name='typ pozvánky'
+    )
+    going = models.BooleanField(
+        choices=[(False, 'nie'), (True, 'áno')],
+        default=0, verbose_name='zúčastní sa'
+    )
+
+    class Meta:
+        verbose_name = 'Pozvánka'
+        verbose_name_plural = 'Pozvánky'
+
+    def __str__(self):
+        return '%s(%s): %s (%s)' % (
+            self.event, self.invitation_type, self.user, self.going
+        )
