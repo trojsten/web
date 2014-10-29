@@ -8,11 +8,13 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
+from ..people.models import Address
+
 
 @python_2_unicode_compatible
 class EventType(models.Model):
     '''
-    Type of event e.g. campus
+    Type of event e.g. camp
     '''
     name = models.CharField(max_length=100, verbose_name='názov')
     sites = models.ManyToManyField(Site)
@@ -44,6 +46,7 @@ class EventLink(models.Model):
 @python_2_unicode_compatible
 class EventPlace(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
+    address = models.ForeignKey(Address, null=True)
 
     class Meta:
         verbose_name = 'Miesto akcie'
