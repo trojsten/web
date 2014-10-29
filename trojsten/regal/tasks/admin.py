@@ -66,7 +66,7 @@ class TaskAdmin(admin.ModelAdmin):
     list_select_related = True
     list_display = ('name', 'number',
                     'get_round', 'get_series', 'get_year', 'get_competition', 'get_category',
-                    'submit_type', 'integer_source_points',
+                    'submit_type', 'integer_source_points', 'reviewer',
                     'tasks_pdf', 'solutions_pdf')
     list_filter = ('round__series__competition', TaskByYearSubFilter, TaskByRoundSubFilter)
     search_fields = ('name',)

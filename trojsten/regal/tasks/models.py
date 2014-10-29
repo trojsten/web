@@ -38,6 +38,7 @@ class Task(models.Model):
     Task has submits.
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
+    reviewer = models.ForeignKey(get_user_model(), null=True, blank=True, verbose_name='opravovateľ')
     round = models.ForeignKey(Round, verbose_name='kolo')
     category = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
