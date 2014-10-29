@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-from django.utils.encoding import python_2_unicode_compatible
 
+from decimal import Decimal
+import os
+
+from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.conf import settings
-from trojsten.regal.contests.models import Round, Competition
 from django.utils.translation import ugettext_lazy as _
-from decimal import Decimal
-import os
+
+from trojsten.regal.contests.models import Round, Competition
 
 
 @python_2_unicode_compatible

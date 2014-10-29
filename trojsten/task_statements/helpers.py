@@ -1,7 +1,9 @@
+from collections import defaultdict
+
+from django.db.models import F
+
 from trojsten.regal.contests.models import Round
 from trojsten.regal.tasks.models import Submit
-from django.db.models import F
-from collections import defaultdict
 
 
 def get_rounds_by_year(user, competition):

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
 from time import time
 import os
 import random
@@ -8,6 +7,8 @@ import stat
 import xml.etree.ElementTree as ET
 from decimal import Decimal
 from unidecode import unidecode
+
+from django.conf import settings
 
 
 RESPONSE_ERROR = 'CERR'
@@ -31,15 +32,15 @@ def get_lang_from_filename(filename):
     ext = os.path.splitext(filename)[1].lower()
     extmapping = {
         ".cpp": ".cc",
-        ".cc":  ".cc",
-        ".pp":  ".pas",
+        ".cc": ".cc",
+        ".pp": ".pas",
         ".pas": ".pas",
         ".dpr": ".pas",
-        ".c":   ".c",
-        ".py":  ".py",
+        ".c": ".c",
+        ".py": ".py",
         ".py3": ".py",
-        ".hs":  ".hs",
-        ".cs":  ".cs",
+        ".hs": ".hs",
+        ".cs": ".cs",
         ".java": ".java",
         ".zip": ".zip"}
 

@@ -1,12 +1,15 @@
 # coding: utf-8
 from __future__ import unicode_literals
+
+from markdown import markdown
+
 from django.db import models
 from django.utils.html import mark_safe
 from django.contrib.sites.models import Site
 from django.utils.encoding import python_2_unicode_compatible
-from markdown import markdown
-from autoslug import AutoSlugField
 from django.contrib.auth import get_user_model
+
+from autoslug import AutoSlugField
 from taggit.managers import TaggableManager
 
 

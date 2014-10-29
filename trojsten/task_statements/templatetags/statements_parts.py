@@ -1,11 +1,13 @@
-from django import template
-from django.conf import settings
-from trojsten.regal.tasks.models import Task, Category
-from ..helpers import get_result_rounds, get_rounds_by_year,\
-    get_latest_submits_for_user, get_points_from_submits
-
 from datetime import datetime
 import pytz
+
+from django import template
+from django.conf import settings
+
+from trojsten.regal.tasks.models import Task, Category
+
+from ..helpers import get_result_rounds, get_rounds_by_year,\
+    get_latest_submits_for_user, get_points_from_submits
 
 
 register = template.Library()
