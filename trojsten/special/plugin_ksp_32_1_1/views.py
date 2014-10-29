@@ -2,7 +2,7 @@ import json
 
 from django.shortcuts import render
 from django.template import RequestContext
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseBadRequest, HttpResponse
@@ -78,7 +78,7 @@ def run(request, level=1):
 @staff_member_required
 def update_all_points(request):
     user_ids = UserLevel.objects.all().values_list('user', flat=True).distinct()
-    users = get_user_model().objects.filter(id__in=user_ids)
+    users = settings.AUTH_USER_MODEL.objects.filter(id__in=user_ids)
     for user in users:
         update_points(user)
     return HttpResponse()
