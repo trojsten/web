@@ -2,11 +2,11 @@
 
 from __future__ import unicode_literals
 
+from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import Group
-from django.contrib.auth import get_user_model
 
 from ..people.models import Address
 
@@ -61,7 +61,7 @@ class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
     event_type = models.ForeignKey(EventType, verbose_name='typ akcie')
     list_of_organizers = models.ManyToManyField(
-        get_user_model(), verbose_name='zoznam vedúcich',
+        settings.AUTH_USER_MODEL, verbose_name='zoznam vedúcich',
         blank=True, related_name='organizing_event_set',
     )
     place = models.ForeignKey(EventPlace, verbose_name='miesto')
@@ -86,7 +86,7 @@ class Event(models.Model):
 @python_2_unicode_compatible
 class EventInvitation(models.Model):
     event = models.ForeignKey(Event, verbose_name='akcia')
-    user = models.ForeignKey(get_user_model(), verbose_name='účastník')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='účastník')
     invitation_type = models.IntegerField(
         choices=[(0, 'účastník'), (1, 'náhradník')],
         default=0, verbose_name='typ pozvánky'
