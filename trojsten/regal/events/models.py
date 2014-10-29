@@ -46,7 +46,7 @@ class EventLink(models.Model):
 @python_2_unicode_compatible
 class EventPlace(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
-    address = models.ForeignKey(Address, null=True)
+    address = models.ForeignKey(Address, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Miesto akcie'
