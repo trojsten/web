@@ -14,18 +14,22 @@
 {% block content %}
 
 <a href="{% url 'admin:download_latest_submits' task.pk %}">  Download all </a><br> <br>
+<table>
 {% for user, data in users.items %}
-  <a href="{% url 'admin:tasks_submit_changelist' %}?q={{user}}">{{ user }}</a> - 
-  {% if data.description %} <a href="{% url 'admin:submit_download' data.description.pk %}"> Popis </a> {% endif %}
-  {% if data.review %} <a href="{% url 'admin:tasks_submit_change' data.review.pk %}"> Opravene </a> {% endif %}
-  <br>
+<tr>  
+  <td><a href="{% url 'admin:tasks_submit_changelist' %}?q={{user}}">{{ user.last_name }}</a></td>
+  <td>{% if data.description %} <a href="{% url 'admin:submit_download' data.description.pk %}"> Popis </a> {% endif %}</td>
+  <td>{% if data.review %} <a href="{% url 'admin:tasks_submit_change' data.review.pk %}"> Opravene </a> {% endif %}</td>
+</tr>  
 {% endfor %}
+</table>
 
+<br/>
 <form enctype="multipart/form-data" method="post" action="{% url 'admin:review_task' task.pk %}">
 {% csrf_token %}
-{% for field in form %}
-    {{ field }}
-{% endfor %}
+<table>
+{{ form }}
+</table>
 <input type="submit" text="Upload"/> 
 </form>
 
