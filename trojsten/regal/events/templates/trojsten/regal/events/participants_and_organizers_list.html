@@ -1,0 +1,37 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% block title %}Zoznam účastníkov{% endblock %}
+
+{% block page_header %}
+<h1>Zoznam účastníkov</h1>
+{% endblock %}
+
+{% block page_content %}
+
+<div class="table-responsive">
+<table class="table table-hover table-condensed results-table">
+<thead>
+<tr>
+    <th>Meno:</th>
+    <th><abbr title="Ročník" data-toggle="tooltip" data-placement="top">R.</abbr></th>
+    <th>Škola</th>
+</tr>
+</thead>
+{% for participant in participants %}
+<tr {% if user == participant %}class="active"{%endif%}>
+    <td>{{participant.first_name}} {{participant.last_name}}</td>
+    <td>{{participant.school_year}}</td>
+    <td>{%if participant.school.has_abbreviation %}<abbr title="{{participant.school.verbose_name}}" data-toggle="tooltip" data-placement="top">{{participant.school.abbreviation}}</abbr>{%else%}{{participant.school.verbose_name}}{%endif%}</td>
+</tr>
+{% endfor %}
+<tr><th colspan="3">Vedúci:</th></tr>
+{% for organizer in organizers %}
+<tr {% if user == organizer %}class="active"{%endif%}>
+    <td colspan="2">{{organizer.first_name}} {{organizer.last_name}}</td>
+    <td><abbr title="Fakulta Matematiky, Fizyky a Informatiky Univerzity Komenského" data-toggle="tooltip" data-placement="top">FMFI UK</abbr></td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+{% endblock %}
