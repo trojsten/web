@@ -53,5 +53,4 @@ def get_latest_submits_by_task (task):
 
 
 def submit_readable_name (submit):
-    return '%s-%s-%s' % (submit.user.last_name, submit.pk, "".join(submit.filename.split('-')[2:]))
-
+    return '%s_%s_%s' % (submit.user.last_name, submit.pk, submit.filename.split('-', 2)[-1])

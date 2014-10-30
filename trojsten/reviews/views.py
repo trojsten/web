@@ -1,6 +1,7 @@
 import os.path
 import zipfile
 import io
+import re
 from time import time
 
 from django.shortcuts import render, get_object_or_404, redirect
@@ -16,6 +17,7 @@ from trojsten.submit.helpers import save_file, get_path
 from trojsten.reviews.helpers import submit_review, submit_readable_name, get_latest_submits_by_task
 from trojsten.reviews.forms import ReviewForm, get_zip_form_set
 
+file_re = re.compile (r"(?P<lastname>[^_]*)_(?P<submit_pk>[0-9]+)_(?P<filename>.+\.[^.]+)")
 
 def review_task_view (request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
@@ -33,30 +35,39 @@ def review_task_view (request, task_pk):
             points = form.cleaned_data["points"]
 
             if user == 'None' and filename.endswith(".zip"):
-                path = os.path.join(settings.SUBMIT_PATH, "reviews", "%s-%s.zip" % (int(time()), request.user.pk))
-                print filecontent.chunks()
-
+                path = os.path.join(settings.SUBMIT_PATH, "reviews", "%s_%s.zip" % (int(time()), request.user.pk))
                 save_file(filecontent, path)
 
                 request.session["review_archive"] = path
                 return redirect ("admin:review_submit_zip", task.pk)
 
-            if user == 'None':      
+
+            filematch = file_re.match (filename)
+            
+            if filematch:
+                filename = filematch["filename"]
+
+            if user == 'None':
+                if not filematch: 
+                    messages.add_message(request, messages.ERROR, "Unknown target")
+                    return redirect("admin:review_task", task.pk)
+
                 try:
-                    user = Submit.objects.get(pk=int(filename.split('-')[1])).user
+                    user = Submit.objects.get(pk=int(filematch["submit_pk"])).user
                 
                 except Submit.DoesNotExist:
-                    messages.add_message(request, messages.ERROR, "Auto failed")
+                    messages.add_message(request, messages.ERROR, "Unknown target")
                     return redirect("admin:review_task", task.pk)
             else:
-                user = User.objects.get(pk=int(user))
+                try:
+                    user = User.objects.get(pk=int(user))
+                
+                except User.DoesNotExist:
+                    messages.add_message(request, messages.ERROR, "User does not exists")
+                    return redirect("admin:review_task", task.pk)
 
-            #TODO: add regex to check for Name-submitID-filename format
-
-            fname = "".join(filename.split("-")[2:])
             submit_review(filecontent, filename, task, user, points)
-
-            messages.add_message(request, messages.SUCCESS, "Uploaded file %s to %s" % (fname, user.last_name))
+            messages.add_message(request, messages.SUCCESS, "Uploaded file %s to %s" % (filename, user.last_name))
 
             return redirect("admin:review_task", task.pk)
 
@@ -154,6 +165,3 @@ def zip_upload (request, task_pk):
     return render (
         request, "admin/zip_upload.html", template_data
     )
-
-
-
