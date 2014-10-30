@@ -26,7 +26,7 @@ def review_task_view (request, task_pk):
     users = get_latest_submits_by_task(task)
     choices = [(None, "Auto / all")] + [(user.pk, user.username) for user in users]
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ReviewForm(request.POST, request.FILES, choices=choices, max_value=max_points)
 
         if form.is_valid():
@@ -35,7 +35,7 @@ def review_task_view (request, task_pk):
             filename = form.cleaned_data["file"].name
             points = form.cleaned_data["points"]
 
-            if user == 'None' and filename.endswith(".zip"):
+            if user == "None" and filename.endswith(".zip"):
                 path = os.path.join(settings.SUBMIT_PATH, "reviews", "%s_%s.zip" % (int(time()), request.user.pk))
                 save_file(filecontent, path)
 
@@ -48,7 +48,7 @@ def review_task_view (request, task_pk):
             if filematch:
                 filename = filematch["filename"]
 
-            if user == 'None':
+            if user == "None":
                 if not filematch: 
                     messages.add_message(request, messages.ERROR, "Unknown target")
                     return redirect("admin:review_task", task.pk)
@@ -73,13 +73,13 @@ def review_task_view (request, task_pk):
             return redirect("admin:review_task", task.pk)
 
     template_data = {
-        'task': task,
-        'users': users,
-        'form' : ReviewForm(choices=choices, max_value=max_points),
+        "task": task,
+        "users": users,
+        "form" : ReviewForm(choices=choices, max_value=max_points),
     }
 
     return render (
-        request, 'admin/review_form.html', template_data
+        request, "admin/review_form.html", template_data
     )
 
 
@@ -92,7 +92,7 @@ def submit_download_view (request, submit_pk):
 
 def download_latest_submits_view (request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
-    data = [data['description'] for data in get_latest_submits_by_task(task).values()]
+    data = [data["description"] for data in get_latest_submits_by_task(task).values()]
 
     path = os.path.join(settings.SUBMIT_PATH, "reviews")
     if not os.path.isdir (path):
@@ -103,7 +103,7 @@ def download_latest_submits_view (request, task_pk):
 
     path = os.path.join(path, "Uloha %s-%s-%s.zip" %(task.name, int(time()), request.user))
 
-    zipper = zipfile.ZipFile(path, 'w')
+    zipper = zipfile.ZipFile(path, "w")
     for submit in data:
         zipper.write(submit.filepath, submit_readable_name(submit))
 
@@ -111,8 +111,6 @@ def download_latest_submits_view (request, task_pk):
     
     return sendfile(request, path, attachment=True)
 
-
-from django import forms
 def zip_upload (request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     name = request.session.get("review_archive", None)
@@ -125,45 +123,46 @@ def zip_upload (request, task_pk):
 
     users = [(None, "")] +  [(user.pk, user.username) for user in get_latest_submits_by_task(task)]
     initial =   [{
-                    'filename': file, 
+                    "filename": file, 
                 } 
                 for file in data.namelist()]   
 
-    ZipFormSet = get_zip_form_set (users, task.description_points, extra=0, can_delete=True)
+    ZipFormSet = get_zip_form_set (users, task.description_points, extra=0)
     formset = ZipFormSet (initial=initial)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         formset = ZipFormSet (request.POST)
         
-        try:
-            if not formset.is_valid(): raise forms.ValidationError("Jump out")
+        if formset.is_valid():
             names = data.namelist()
+            valid = True
 
             for form in formset:
                 user = form.cleaned_data["user"]
                 filename = form.cleaned_data["filename"]
                 points = form.cleaned_data["points"]
 
-                if user == 'None': continue
+                if user == "None": continue
                 
                 if not filename in names:
                     err = "Invalid filename %s" % filename
                     form._errors["__all__"] = form.error_class([err])
-                    raise forms.ValidationError(err)
+                    
+                    valid = False
+                    continue
 
                 user = User.objects.get(pk=int(user))
                 submit_review (data.read(filename), os.path.split(filename)[1], task, user, points)
 
             
-            return redirect("admin:review_task", task.pk)
+            if valid: return redirect("admin:review_task", task.pk)
         
-        except forms.ValidationError:
-            for form in formset:
-                form.name = form.cleaned_data["filename"]
+        for form in formset:
+            form.name = form.cleaned_data["filename"]
 
     template_data = {
-        'formset': formset,
-        'task': task
+        "formset": formset,
+        "task": task
     } 
     return render (
         request, "admin/zip_upload.html", template_data

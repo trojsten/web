@@ -54,6 +54,6 @@ class BaseZipSet(BaseFormSet):
         for form in self.forms:
             user = form.cleaned_data['user']
             if user and user in users:
-                raise forms.ValidationError("Assigned 2 files to same user.")
+                raise forms.ValidationError("Assigned 2 or more files to same user.")
             
-            users |= {user}
+            users.add(user)
