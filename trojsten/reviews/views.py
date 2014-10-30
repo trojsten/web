@@ -46,7 +46,7 @@ def review_task_view (request, task_pk):
             filematch = file_re.match (filename)
             
             if filematch:
-                filename = filematch["filename"]
+                filename = filematch.groupdict()["filename"]
 
             if user == "None":
                 if not filematch: 
@@ -111,6 +111,7 @@ def download_latest_submits_view (request, task_pk):
     
     return sendfile(request, path, attachment=True)
 
+
 def zip_upload (request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     name = request.session.get("review_archive", None)
@@ -125,7 +126,18 @@ def zip_upload (request, task_pk):
     initial =   [{
                     "filename": file, 
                 } 
-                for file in data.namelist()]   
+                for file in data.namelist()] 
+
+    for form_data in initial:
+        match = file_re.match(form_data["filename"])
+        if not match: continue
+
+        pk = match.groupdict()["submit_pk"]
+        try:
+            form_data["user"] = Submit.objects.get(pk=pk).user.pk
+        
+        except Submit.DoesNotExist:
+            pass 
 
     ZipFormSet = get_zip_form_set (users, task.description_points, extra=0)
     formset = ZipFormSet (initial=initial)
