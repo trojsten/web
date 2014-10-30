@@ -73,7 +73,7 @@ class Event(models.Model):
 
     @property
     def list_of_participants(self):
-        return self.eventinvitation_set.filter(invitation_type=0, going=1)
+        return [invitation.user for invitation in self.eventinvitation_set.filter(invitation_type=0, going=True)]
 
     class Meta:
         verbose_name = 'Akcie'
