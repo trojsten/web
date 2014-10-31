@@ -15,7 +15,7 @@ from ..events.models import Invitation
 class UserManager(models.Manager):
     def invited_to(self, event, participants_only=False):
         res = self.filter(
-            eventinvitation__event=event
+            invitation__event=event
         )
         if participants_only:
             res = res.filter(invitation__type=Invitation.PARTICIPANT)
