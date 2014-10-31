@@ -107,5 +107,5 @@ class EventInvitation(models.Model):
 
     def __str__(self):
         return '%s(%s): %s (%s)' % (
-            self.event, self.invitation_type, self.user, self.going
+            self.event, self.get_type_display(), self.user, self.going
         )
