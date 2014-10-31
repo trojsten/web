@@ -25,7 +25,7 @@ class EventAdmin(admin.ModelAdmin):
 
 
 class EventIvitationAdmin(admin.ModelAdmin):
-    list_display = ('event', 'user', 'invitation_type', 'going')
+    list_display = ('event', 'user', 'type', 'going')
 
 
 admin.site.register(EventType, EventTypeAdmin)

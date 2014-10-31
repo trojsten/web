@@ -14,8 +14,8 @@ class ParticipantsAndOrganizersListView(TemplateView):
         event = Event.objects.get(
             pk=kwargs['event_id']
         )
-        participants = event.list_of_participants
-        organizers = event.list_of_organizers.all()
+        participants = event.participants.all()
+        organizers = event.organizers.all()
 
         context.update({
             'event': event,

@@ -7,6 +7,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
 
 from ..people.models import Address
 
@@ -60,7 +61,7 @@ class EventPlace(models.Model):
 class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
     event_type = models.ForeignKey(EventType, verbose_name='typ akcie')
-    list_of_organizers = models.ManyToManyField(
+    organizers = models.ManyToManyField(
         settings.AUTH_USER_MODEL, verbose_name='zoznam vedúcich',
         blank=True, related_name='organizing_event_set',
     )
@@ -72,8 +73,10 @@ class Event(models.Model):
     )
 
     @property
-    def list_of_participants(self):
-        return [invitation.user for invitation in self.eventinvitation_set.filter(invitation_type=0, going=True)]
+    def participants(self):
+        return get_user_model().objects.filter(
+            eventinvitation__event=self, eventinvitation__type=EventInvitation.PARTICIPANT
+        )
 
     class Meta:
         verbose_name = 'Akcie'
@@ -85,16 +88,18 @@ class Event(models.Model):
 
 @python_2_unicode_compatible
 class EventInvitation(models.Model):
-    event = models.ForeignKey(Event, verbose_name='akcia')
+    PARTICIPANT = 0
+    RESERVE = 1
+    TYPE_CHOICES = (
+        (PARTICIPANT, 'účastník'),
+        (RESERVE, 'náhradník'),
+    )
+    event = models.ForeignKey(Event, verbose_name='akcia', related_name='invitations')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='účastník')
-    invitation_type = models.IntegerField(
-        choices=[(0, 'účastník'), (1, 'náhradník')],
-        default=0, verbose_name='typ pozvánky'
+    type = models.SmallIntegerField(
+        choices=TYPE_CHOICES, default=PARTICIPANT, verbose_name='typ pozvánky'
     )
-    going = models.BooleanField(
-        choices=[(False, 'nie'), (True, 'áno')],
-        default=0, verbose_name='zúčastní sa'
-    )
+    going = models.NullBooleanField(verbose_name='zúčastní sa')
 
     class Meta:
         verbose_name = 'Pozvánka'
