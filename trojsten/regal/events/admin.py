@@ -13,7 +13,7 @@ class EventTypeAdmin(admin.ModelAdmin):
 
     def get_sites(self, obj):
         return ', '.join(force_text(x) for x in obj.sites.all())
-    get_sites.short_description = 'doména akcie'
+    get_sites.short_description = 'zobraziť na'
 
 
 class LinkAdmin(admin.ModelAdmin):
