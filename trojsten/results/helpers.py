@@ -28,7 +28,7 @@ class TaskPoints:
         self.submitted = True
         self.description_points = points
 
-    def set_pending_description_points(self):
+    def set_description_pending(self):
         self.submitted = True
         self.description_pending = True
         self.description_points = 0
@@ -48,7 +48,7 @@ class UserResult:
     def add_task_points(self, task, submit_type, points):
         if submit_type == Submit.DESCRIPTION:
             # Fixme - description points are not currently supported
-            self.tasks[task.id].set_pending_description_points()
+            self.tasks[task.id].set_description_pending()
         else:
             self.tasks[task.id].add_source_points(points)
 
@@ -144,15 +144,16 @@ def format_results_data(results_data):
     Side effect: This function modifies objects (i.e. individual results)
     contained in results_data
     '''
-    res = [{'user': user, 'data': data} for user, data in results_data.items()]
+    Result = namedtuple('Result', ['user', 'data'])
+    res = [Result(user=user, data=data) for user, data in results_data.items()]
 
-    res = sorted(res, key=lambda x: -x['data'].previous_rounds_points)
+    res.sort(key=lambda x: -x.data.previous_rounds_points)
     for rank, r in zip(get_ranks(res), res):
-        r['data'].prev_rank = rank
+        r.data.prev_rank = rank
 
-    res = sorted(res, key=lambda x: -x['data'].sum)
+    res.sort(key=lambda x: -x.data.sum)
     for rank, r in zip(get_ranks(res), res):
-        r['data'].rank = rank
+        r.data.rank = rank
 
     return res
 

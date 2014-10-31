@@ -38,7 +38,7 @@ def view_latest_results(request):
         r: {
             'all_rounds': list(
                 Round.objects.filter(
-                    visible=True, series=r.series, number__lte=r.number
+                    visible=True, series=r.series
                 ).order_by('number')
             ),
             'categories': [None] + list(
