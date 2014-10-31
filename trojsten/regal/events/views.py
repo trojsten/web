@@ -11,9 +11,7 @@ class ParticipantsAndOrganizersListView(TemplateView):
             ParticipantsAndOrganizersListView, self
         ).get_context_data(**kwargs)
 
-        event = Event.objects.get(
-            pk=kwargs['event_id']
-        )
+        event = Event.objects.get(pk=kwargs['event_id'])
         participants = event.participants.all()
         organizers = event.organizers.all()
 
