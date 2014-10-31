@@ -9,6 +9,8 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
+from ..people.models import Address, UserPropertyKey
+
 
 @python_2_unicode_compatible
 class EventType(models.Model):
@@ -56,9 +58,31 @@ class Place(models.Model):
 
 
 @python_2_unicode_compatible
+class EventRegistration(models.Model):
+    name = models.CharField(max_length=100, verbose_name='názov')
+    text = models.TextField(help_text='Obsah bude prehnaný <a '
+                            'href="http://en.wikipedia.org/wiki/Markdown">'
+                            'Markdownom</a>.')
+    required_user_properties = models.ManyToManyField(
+        UserPropertyKey, verbose_name='povinné údaje',
+        blank=True, related_name='+',
+    )
+
+    class Meta:
+        verbose_name = 'Prihláška'
+        verbose_name_plural = 'Prihlášky'
+
+    def __str__(self):
+        return self.name
+
+
+@python_2_unicode_compatible
 class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
     type = models.ForeignKey(EventType, verbose_name='typ akcie')
+    event_registration = models.ForeignKey(
+        EventRegistration, null=True, blank=True, verbose_name='prihláška'
+    )
     place = models.ForeignKey(Place, verbose_name='miesto')
     start_time = models.DateTimeField(verbose_name='čas začiatku')
     end_time = models.DateTimeField(verbose_name='čas konca')

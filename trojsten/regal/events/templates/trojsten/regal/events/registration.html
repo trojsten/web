@@ -1,0 +1,18 @@
+{% extends "trojsten/layout/main.html" %}
+{% load bootstrap %}
+
+{% block page_header %}
+<h1>Prihláška na {{form.event.name}}</h1>
+{% endblock page_header %}
+
+{% block page_content %}
+<form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
+    {% csrf_token %}
+    {{ form | bootstrap_horizontal }}
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input class="btn btn-primary" type="submit" value="Submit" />
+        </div>
+    </div>
+</form>
+{% endblock page_content %}

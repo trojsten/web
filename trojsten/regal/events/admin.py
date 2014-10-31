@@ -62,5 +62,6 @@ class InvitationAdmin(admin.ModelAdmin):
 admin.site.register(EventType, EventTypeAdmin)
 admin.site.register(Link, LinkAdmin)
 admin.site.register(Place)
+admin.site.register(EventRegistration)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Invitation, InvitationAdmin)
