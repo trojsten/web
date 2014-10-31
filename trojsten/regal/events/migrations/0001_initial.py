@@ -12,6 +12,7 @@ class Migration(SchemaMigration):
         db.create_table(u'events_eventtype', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('organizers_group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.Group'])),
         ))
         db.send_create_signal(u'events', ['EventType'])
 
@@ -24,43 +25,35 @@ class Migration(SchemaMigration):
         ))
         db.create_unique(m2m_table_name, ['eventtype_id', 'site_id'])
 
-        # Adding model 'EventLink'
-        db.create_table(u'events_eventlink', (
+        # Adding model 'Link'
+        db.create_table(u'events_link', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('url', self.gf('django.db.models.fields.CharField')(max_length=300)),
+            ('url', self.gf('django.db.models.fields.URLField')(max_length=300)),
         ))
-        db.send_create_signal(u'events', ['EventLink'])
+        db.send_create_signal(u'events', ['Link'])
 
-        # Adding model 'EventPlace'
-        db.create_table(u'events_eventplace', (
+        # Adding model 'Place'
+        db.create_table(u'events_place', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('address', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['people.Address'], null=True, blank=True)),
         ))
-        db.send_create_signal(u'events', ['EventPlace'])
+        db.send_create_signal(u'events', ['Place'])
 
         # Adding model 'Event'
         db.create_table(u'events_event', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('event_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['events.EventType'])),
-            ('place', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['events.EventPlace'])),
+            ('place', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['events.Place'])),
             ('start_time', self.gf('django.db.models.fields.DateTimeField')()),
             ('end_time', self.gf('django.db.models.fields.DateTimeField')()),
         ))
         db.send_create_signal(u'events', ['Event'])
 
-        # Adding M2M table for field list_of_organizers on 'Event'
-        m2m_table_name = db.shorten_name(u'events_event_list_of_organizers')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('event', models.ForeignKey(orm[u'events.event'], null=False)),
-            ('user', models.ForeignKey(orm[u'people.user'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['event_id', 'user_id'])
-
-        # Adding M2M table for field list_of_participants on 'Event'
-        m2m_table_name = db.shorten_name(u'events_event_list_of_participants')
+        # Adding M2M table for field organizers on 'Event'
+        m2m_table_name = db.shorten_name(u'events_event_organizers')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('event', models.ForeignKey(orm[u'events.event'], null=False)),
@@ -73,9 +66,19 @@ class Migration(SchemaMigration):
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('event', models.ForeignKey(orm[u'events.event'], null=False)),
-            ('eventlink', models.ForeignKey(orm[u'events.eventlink'], null=False))
+            ('link', models.ForeignKey(orm[u'events.link'], null=False))
         ))
-        db.create_unique(m2m_table_name, ['event_id', 'eventlink_id'])
+        db.create_unique(m2m_table_name, ['event_id', 'link_id'])
+
+        # Adding model 'Invitation'
+        db.create_table(u'events_invitation', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('event', self.gf('django.db.models.fields.related.ForeignKey')(related_name=u'invitations', to=orm['events.Event'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['people.User'])),
+            ('type', self.gf('django.db.models.fields.SmallIntegerField')(default=0)),
+            ('going', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
+        ))
+        db.send_create_signal(u'events', ['Invitation'])
 
 
     def backwards(self, orm):
@@ -85,23 +88,23 @@ class Migration(SchemaMigration):
         # Removing M2M table for field sites on 'EventType'
         db.delete_table(db.shorten_name(u'events_eventtype_sites'))
 
-        # Deleting model 'EventLink'
-        db.delete_table(u'events_eventlink')
+        # Deleting model 'Link'
+        db.delete_table(u'events_link')
 
-        # Deleting model 'EventPlace'
-        db.delete_table(u'events_eventplace')
+        # Deleting model 'Place'
+        db.delete_table(u'events_place')
 
         # Deleting model 'Event'
         db.delete_table(u'events_event')
 
-        # Removing M2M table for field list_of_organizers on 'Event'
-        db.delete_table(db.shorten_name(u'events_event_list_of_organizers'))
-
-        # Removing M2M table for field list_of_participants on 'Event'
-        db.delete_table(db.shorten_name(u'events_event_list_of_participants'))
+        # Removing M2M table for field organizers on 'Event'
+        db.delete_table(db.shorten_name(u'events_event_organizers'))
 
         # Removing M2M table for field links on 'Event'
         db.delete_table(db.shorten_name(u'events_event_links'))
+
+        # Deleting model 'Invitation'
+        db.delete_table(u'events_invitation')
 
 
     models = {
@@ -130,29 +133,38 @@ class Migration(SchemaMigration):
             'end_time': ('django.db.models.fields.DateTimeField', [], {}),
             'event_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.EventType']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'links': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['events.EventLink']", 'symmetrical': 'False'}),
-            'list_of_organizers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "u'organizing_event_set'", 'symmetrical': 'False', 'to': u"orm['people.User']"}),
-            'list_of_participants': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "u'participating_event_set'", 'symmetrical': 'False', 'to': u"orm['people.User']"}),
+            'links': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['events.Link']", 'symmetrical': 'False', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'place': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.EventPlace']"}),
+            'organizers': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'organizing_event_set'", 'blank': 'True', 'to': u"orm['people.User']"}),
+            'place': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.Place']"}),
             'start_time': ('django.db.models.fields.DateTimeField', [], {})
-        },
-        u'events.eventlink': {
-            'Meta': {'object_name': 'EventLink'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'url': ('django.db.models.fields.CharField', [], {'max_length': '300'})
-        },
-        u'events.eventplace': {
-            'Meta': {'object_name': 'EventPlace'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'events.eventtype': {
             'Meta': {'object_name': 'EventType'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'organizers_group': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.Group']"}),
             'sites': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['sites.Site']", 'symmetrical': 'False'})
+        },
+        u'events.invitation': {
+            'Meta': {'object_name': 'Invitation'},
+            'event': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'invitations'", 'to': u"orm['events.Event']"}),
+            'going': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'type': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.User']"})
+        },
+        u'events.link': {
+            'Meta': {'object_name': 'Link'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'url': ('django.db.models.fields.URLField', [], {'max_length': '300'})
+        },
+        u'events.place': {
+            'Meta': {'object_name': 'Place'},
+            'address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.Address']", 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'people.address': {
             'Meta': {'object_name': 'Address'},

@@ -18,7 +18,7 @@ class EventType(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
     sites = models.ManyToManyField(Site)
     organizers_group = models.ForeignKey(
-        Group, null=True, verbose_name='skupina vedúcich'
+        Group, verbose_name='skupina vedúcich'
     )
 
     class Meta:
