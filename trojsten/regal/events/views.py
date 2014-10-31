@@ -23,3 +23,5 @@ class ParticipantsAndOrganizersListView(TemplateView):
             'organizers': organizers,
         })
         return context
+
+participants_organizers_list = ParticipantsAndOrganizersListView.as_view()
