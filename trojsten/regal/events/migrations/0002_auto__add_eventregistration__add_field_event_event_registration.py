@@ -11,6 +11,7 @@ class Migration(SchemaMigration):
         # Adding model 'EventRegistration'
         db.create_table(u'events_eventregistration', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('text', self.gf('django.db.models.fields.TextField')()),
         ))
         db.send_create_signal(u'events', ['EventRegistration'])
@@ -30,9 +31,6 @@ class Migration(SchemaMigration):
                       keep_default=False)
 
 
-        # Changing field 'EventInvitation.going'
-        db.alter_column(u'events_eventinvitation', 'going', self.gf('django.db.models.fields.NullBooleanField')(null=True))
-
     def backwards(self, orm):
         # Deleting model 'EventRegistration'
         db.delete_table(u'events_eventregistration')
@@ -43,9 +41,6 @@ class Migration(SchemaMigration):
         # Deleting field 'Event.event_registration'
         db.delete_column(u'events_event', 'event_registration_id')
 
-
-        # Changing field 'EventInvitation.going'
-        db.alter_column(u'events_eventinvitation', 'going', self.gf('django.db.models.fields.BooleanField')())
 
     models = {
         u'auth.group': {
@@ -74,35 +69,16 @@ class Migration(SchemaMigration):
             'event_registration': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.EventRegistration']", 'null': 'True', 'blank': 'True'}),
             'event_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.EventType']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'links': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['events.EventLink']", 'symmetrical': 'False', 'blank': 'True'}),
-            'list_of_organizers': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'organizing_event_set'", 'blank': 'True', 'to': u"orm['people.User']"}),
+            'links': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['events.Link']", 'symmetrical': 'False', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'place': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.EventPlace']"}),
+            'organizers': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'organizing_event_set'", 'blank': 'True', 'to': u"orm['people.User']"}),
+            'place': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.Place']"}),
             'start_time': ('django.db.models.fields.DateTimeField', [], {})
-        },
-        u'events.eventinvitation': {
-            'Meta': {'object_name': 'EventInvitation'},
-            'event': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.Event']"}),
-            'going': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'invitation_type': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.User']"})
-        },
-        u'events.eventlink': {
-            'Meta': {'object_name': 'EventLink'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'url': ('django.db.models.fields.URLField', [], {'max_length': '300'})
-        },
-        u'events.eventplace': {
-            'Meta': {'object_name': 'EventPlace'},
-            'address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.Address']", 'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'events.eventregistration': {
             'Meta': {'object_name': 'EventRegistration'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'required_user_properties': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'+'", 'blank': 'True', 'to': u"orm['people.UserPropertyKey']"}),
             'text': ('django.db.models.fields.TextField', [], {})
         },
@@ -110,8 +86,28 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'EventType'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'organizers_group': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.Group']", 'null': 'True'}),
+            'organizers_group': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.Group']"}),
             'sites': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['sites.Site']", 'symmetrical': 'False'})
+        },
+        u'events.invitation': {
+            'Meta': {'object_name': 'Invitation'},
+            'event': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'invitations'", 'to': u"orm['events.Event']"}),
+            'going': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'type': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.User']"})
+        },
+        u'events.link': {
+            'Meta': {'object_name': 'Link'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'url': ('django.db.models.fields.URLField', [], {'max_length': '300'})
+        },
+        u'events.place': {
+            'Meta': {'object_name': 'Place'},
+            'address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.Address']", 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'people.address': {
             'Meta': {'object_name': 'Address'},

@@ -9,8 +9,6 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
-from ..people.models import Address, UserPropertyKey
-
 
 @python_2_unicode_compatible
 class EventType(models.Model):
@@ -64,7 +62,7 @@ class EventRegistration(models.Model):
                             'href="http://en.wikipedia.org/wiki/Markdown">'
                             'Markdownom</a>.')
     required_user_properties = models.ManyToManyField(
-        UserPropertyKey, verbose_name='povinné údaje',
+        'people.UserPropertyKey', verbose_name='povinné údaje',
         blank=True, related_name='+',
     )
 
