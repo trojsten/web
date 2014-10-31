@@ -9,6 +9,18 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
+from ..events.models import EventInvitation
+
+
+class UserManager(models.Manager):
+    def invited_to(self, event, participants_only=False):
+        res = self.filter(
+            eventinvitation__event=event
+        )
+        if participants_only:
+            res = res.filter(eventinvitation__type=EventInvitation.PARTICIPANT)
+        return res
+
 
 @python_2_unicode_compatible
 class Address(models.Model):
@@ -66,11 +78,12 @@ class School(models.Model):
 
 
 class User(AbstractUser):
-
     '''
     Holds, provide access to or manages all informations
     related to a person.
     '''
+    objects = UserManager()
+
     gender = models.CharField(
         max_length=1,
         choices=[('M', 'Chlapec'), ('F', 'Dievča')],

@@ -9,8 +9,6 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
-from ..people.models import Address
-
 
 @python_2_unicode_compatible
 class EventType(models.Model):
@@ -47,7 +45,7 @@ class EventLink(models.Model):
 @python_2_unicode_compatible
 class EventPlace(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
-    address = models.ForeignKey(Address, null=True, blank=True)
+    address = models.ForeignKey('people.Address', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Miesto akcie'
@@ -74,9 +72,7 @@ class Event(models.Model):
 
     @property
     def participants(self):
-        return get_user_model().objects.filter(
-            eventinvitation__event=self, eventinvitation__type=EventInvitation.PARTICIPANT
-        )
+        return get_user_model().objects.invited_to(self, participants_only=True)
 
     class Meta:
         verbose_name = 'Akcie'
