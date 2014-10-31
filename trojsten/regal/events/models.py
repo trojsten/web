@@ -56,7 +56,7 @@ class Place(models.Model):
 
 
 @python_2_unicode_compatible
-class EventRegistration(models.Model):
+class Registration(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
     text = models.TextField(help_text='Obsah bude prehnaný <a '
                             'href="http://en.wikipedia.org/wiki/Markdown">'
@@ -79,7 +79,7 @@ class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
     type = models.ForeignKey(EventType, verbose_name='typ akcie')
     event_registration = models.ForeignKey(
-        EventRegistration, null=True, blank=True, verbose_name='prihláška'
+        Registration, null=True, blank=True, verbose_name='prihláška'
     )
     place = models.ForeignKey(Place, verbose_name='miesto')
     start_time = models.DateTimeField(verbose_name='čas začiatku')

@@ -8,35 +8,35 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'EventRegistration'
-        db.create_table(u'events_eventregistration', (
+        # Adding model 'Registration'
+        db.create_table(u'events_registration', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('text', self.gf('django.db.models.fields.TextField')()),
         ))
-        db.send_create_signal(u'events', ['EventRegistration'])
+        db.send_create_signal(u'events', ['Registration'])
 
-        # Adding M2M table for field required_user_properties on 'EventRegistration'
-        m2m_table_name = db.shorten_name(u'events_eventregistration_required_user_properties')
+        # Adding M2M table for field required_user_properties on 'Registration'
+        m2m_table_name = db.shorten_name(u'events_registration_required_user_properties')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('eventregistration', models.ForeignKey(orm[u'events.eventregistration'], null=False)),
+            ('registration', models.ForeignKey(orm[u'events.registration'], null=False)),
             ('userpropertykey', models.ForeignKey(orm[u'people.userpropertykey'], null=False))
         ))
-        db.create_unique(m2m_table_name, ['eventregistration_id', 'userpropertykey_id'])
+        db.create_unique(m2m_table_name, ['registration_id', 'userpropertykey_id'])
 
         # Adding field 'Event.event_registration'
         db.add_column(u'events_event', 'event_registration',
-                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['events.EventRegistration'], null=True, blank=True),
+                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['events.Registration'], null=True, blank=True),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting model 'EventRegistration'
-        db.delete_table(u'events_eventregistration')
+        # Deleting model 'Registration'
+        db.delete_table(u'events_registration')
 
-        # Removing M2M table for field required_user_properties on 'EventRegistration'
-        db.delete_table(db.shorten_name(u'events_eventregistration_required_user_properties'))
+        # Removing M2M table for field required_user_properties on 'Registration'
+        db.delete_table(db.shorten_name(u'events_registration_required_user_properties'))
 
         # Deleting field 'Event.event_registration'
         db.delete_column(u'events_event', 'event_registration_id')
@@ -66,7 +66,7 @@ class Migration(SchemaMigration):
         u'events.event': {
             'Meta': {'object_name': 'Event'},
             'end_time': ('django.db.models.fields.DateTimeField', [], {}),
-            'event_registration': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.EventRegistration']", 'null': 'True', 'blank': 'True'}),
+            'event_registration': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.Registration']", 'null': 'True', 'blank': 'True'}),
             'event_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.EventType']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'links': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['events.Link']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -74,13 +74,6 @@ class Migration(SchemaMigration):
             'organizers': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'organizing_event_set'", 'blank': 'True', 'to': u"orm['people.User']"}),
             'place': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.Place']"}),
             'start_time': ('django.db.models.fields.DateTimeField', [], {})
-        },
-        u'events.eventregistration': {
-            'Meta': {'object_name': 'EventRegistration'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'required_user_properties': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'+'", 'blank': 'True', 'to': u"orm['people.UserPropertyKey']"}),
-            'text': ('django.db.models.fields.TextField', [], {})
         },
         u'events.eventtype': {
             'Meta': {'object_name': 'EventType'},
@@ -108,6 +101,13 @@ class Migration(SchemaMigration):
             'address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['people.Address']", 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'events.registration': {
+            'Meta': {'object_name': 'Registration'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'required_user_properties': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'+'", 'blank': 'True', 'to': u"orm['people.UserPropertyKey']"}),
+            'text': ('django.db.models.fields.TextField', [], {})
         },
         u'people.address': {
             'Meta': {'object_name': 'Address'},
