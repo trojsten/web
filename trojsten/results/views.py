@@ -14,7 +14,7 @@ def view_results(request, round_ids, category_ids=None):
     '''
     rounds = Round.visible_rounds(request.user).filter(
         pk__in=round_ids.split(',')
-    ).select_related('series')
+    ).order_by('number').select_related('series')
     if not rounds or not check_round_series(rounds):
         return HttpResponseBadRequest()
     categories = None if category_ids is None else Category.objects.filter(
