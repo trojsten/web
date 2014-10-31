@@ -30,7 +30,7 @@ class EventType(models.Model):
 
 
 @python_2_unicode_compatible
-class EventLink(models.Model):
+class Link(models.Model):
     title = models.CharField(max_length=100, verbose_name='názov')
     url = models.URLField(max_length=300)
 
@@ -43,7 +43,7 @@ class EventLink(models.Model):
 
 
 @python_2_unicode_compatible
-class EventPlace(models.Model):
+class Place(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
     address = models.ForeignKey('people.Address', null=True, blank=True)
 
@@ -63,11 +63,11 @@ class Event(models.Model):
         settings.AUTH_USER_MODEL, verbose_name='zoznam vedúcich',
         blank=True, related_name='organizing_event_set',
     )
-    place = models.ForeignKey(EventPlace, verbose_name='miesto')
+    place = models.ForeignKey(Place, verbose_name='miesto')
     start_time = models.DateTimeField(verbose_name='čas začiatku')
     end_time = models.DateTimeField(verbose_name='čas konca')
     links = models.ManyToManyField(
-        EventLink, blank=True, verbose_name='zoznam odkazov'
+        Link, blank=True, verbose_name='zoznam odkazov'
     )
 
     @property
@@ -83,7 +83,7 @@ class Event(models.Model):
 
 
 @python_2_unicode_compatible
-class EventInvitation(models.Model):
+class Invitation(models.Model):
     PARTICIPANT = 0
     RESERVE = 1
     TYPE_CHOICES = (

@@ -16,7 +16,7 @@ class EventTypeAdmin(admin.ModelAdmin):
     get_sites.short_description = 'doména akcie'
 
 
-class EventLinkAdmin(admin.ModelAdmin):
+class LinkAdmin(admin.ModelAdmin):
     list_display = ('title', 'url')
 
 
@@ -24,12 +24,12 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('name', 'event_type', 'place', 'start_time', 'end_time')
 
 
-class EventIvitationAdmin(admin.ModelAdmin):
+class IvitationAdmin(admin.ModelAdmin):
     list_display = ('event', 'user', 'type', 'going')
 
 
 admin.site.register(EventType, EventTypeAdmin)
-admin.site.register(EventLink, EventLinkAdmin)
-admin.site.register(EventPlace)
+admin.site.register(Link, LinkAdmin)
+admin.site.register(Place)
 admin.site.register(Event, EventAdmin)
-admin.site.register(EventInvitation, EventIvitationAdmin)
+admin.site.register(Invitation, IvitationAdmin)

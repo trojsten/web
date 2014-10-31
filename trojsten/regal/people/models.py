@@ -9,7 +9,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
-from ..events.models import EventInvitation
+from ..events.models import Invitation
 
 
 class UserManager(models.Manager):
@@ -18,7 +18,7 @@ class UserManager(models.Manager):
             eventinvitation__event=event
         )
         if participants_only:
-            res = res.filter(eventinvitation__type=EventInvitation.PARTICIPANT)
+            res = res.filter(invitation__type=Invitation.PARTICIPANT)
         return res
 
 
