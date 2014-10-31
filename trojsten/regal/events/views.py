@@ -27,3 +27,4 @@ class RegistrationView(FormView):
         kwargs['event'] = get_object_or_404(Event, pk=self.kwargs.get('event_id'))
         return kwargs
 
+registration = RegistrationView.as_view()
