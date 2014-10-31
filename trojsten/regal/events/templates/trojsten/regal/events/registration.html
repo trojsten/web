@@ -1,6 +1,8 @@
 {% extends "trojsten/layout/main.html" %}
 {% load bootstrap %}
 
+{% block title %}Prihláška na {{form.event.name}}{% endblock %}
+
 {% block page_header %}
 <h1>Prihláška na {{form.event.name}}</h1>
 {% endblock page_header %}
