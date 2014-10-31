@@ -115,6 +115,9 @@ def download_latest_submits_view (request, task_pk):
 def zip_upload (request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     name = request.session.get("review_archive", None)
+    
+    if name is None: raise Http404
+    
     try:
         data = zipfile.ZipFile(name)
 
@@ -150,24 +153,28 @@ def zip_upload (request, task_pk):
             valid = True
 
             for form in formset:
-                user = form.cleaned_data["user"]
-                filename = form.cleaned_data["filename"]
-                points = form.cleaned_data["points"]
-
-                if user == "None": continue
-                
-                if not filename in names:
+                if not form.cleaned_data["filename"] in names:
                     err = "Invalid filename %s" % filename
                     form._errors["__all__"] = form.error_class([err])
                     
                     valid = False
                     continue
 
-                user = User.objects.get(pk=int(user))
-                submit_review (data.read(filename), os.path.split(filename)[1], task, user, points)
+            if valid:
+                for form in formset:
+                    user = form.cleaned_data["user"]
+                    filename = form.cleaned_data["filename"]
+                    points = form.cleaned_data["points"]
 
-            
-            if valid: return redirect("admin:review_task", task.pk)
+                    if user == "None": continue
+
+                    user = User.objects.get(pk=int(user))
+                    submit_review (data.read(filename), os.path.split(filename)[1], task, user, points)
+
+                data.close()
+                os.remove(name)
+                request.session.pop("review_archive")
+                return redirect("admin:review_task", task.pk)
         
         for form in formset:
             form.name = form.cleaned_data["filename"]
