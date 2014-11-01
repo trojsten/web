@@ -59,10 +59,6 @@ class Place(models.Model):
 class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
     type = models.ForeignKey(EventType, verbose_name='typ akcie')
-    organizers = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, verbose_name='zoznam vedúcich',
-        blank=True, related_name='organizing_event_set',
-    )
     place = models.ForeignKey(Place, verbose_name='miesto')
     start_time = models.DateTimeField(verbose_name='čas začiatku')
     end_time = models.DateTimeField(verbose_name='čas konca')
@@ -72,7 +68,11 @@ class Event(models.Model):
 
     @property
     def participants(self):
-        return get_user_model().objects.invited_to(self, participants_only=True)
+        return get_user_model().objects.invited_to(self, invitation_type=Invitation.PARTICIPANT, going_only=True)
+
+    @property
+    def organizers(self):
+        return get_user_model().objects.invited_to(self, invitation_type=Invitation.ORGANIZER)
 
     class Meta:
         verbose_name = 'Akcie'
@@ -86,9 +86,11 @@ class Event(models.Model):
 class Invitation(models.Model):
     PARTICIPANT = 0
     RESERVE = 1
+    ORGANIZER = 2
     TYPE_CHOICES = (
         (PARTICIPANT, 'účastník'),
         (RESERVE, 'náhradník'),
+        (ORGANIZER, 'vedúci'),
     )
     event = models.ForeignKey(Event, verbose_name='akcia', related_name='invitations')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='účastník')

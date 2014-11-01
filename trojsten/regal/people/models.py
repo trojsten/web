@@ -9,16 +9,16 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
-from ..events.models import Invitation
-
 
 class UserManager(models.Manager):
-    def invited_to(self, event, participants_only=False):
+    def invited_to(self, event, invitation_type=None, going_only=False):
         res = self.filter(
             invitation__event=event
         )
-        if participants_only:
-            res = res.filter(invitation__type=Invitation.PARTICIPANT)
+        if invitation_type:
+            res = res.filter(invitation__type=invitation_type)
+        if going_only:
+            res = res.filter(going=True)
         return res
 
 

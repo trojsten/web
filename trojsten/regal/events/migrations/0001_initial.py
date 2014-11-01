@@ -52,15 +52,6 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'events', ['Event'])
 
-        # Adding M2M table for field organizers on 'Event'
-        m2m_table_name = db.shorten_name(u'events_event_organizers')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('event', models.ForeignKey(orm[u'events.event'], null=False)),
-            ('user', models.ForeignKey(orm[u'people.user'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['event_id', 'user_id'])
-
         # Adding M2M table for field links on 'Event'
         m2m_table_name = db.shorten_name(u'events_event_links')
         db.create_table(m2m_table_name, (
@@ -97,9 +88,6 @@ class Migration(SchemaMigration):
         # Deleting model 'Event'
         db.delete_table(u'events_event')
 
-        # Removing M2M table for field organizers on 'Event'
-        db.delete_table(db.shorten_name(u'events_event_organizers'))
-
         # Removing M2M table for field links on 'Event'
         db.delete_table(db.shorten_name(u'events_event_links'))
 
@@ -134,7 +122,6 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'links': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['events.Link']", 'symmetrical': 'False', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'organizers': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'organizing_event_set'", 'blank': 'True', 'to': u"orm['people.User']"}),
             'place': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.Place']"}),
             'start_time': ('django.db.models.fields.DateTimeField', [], {}),
             'type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.EventType']"})
