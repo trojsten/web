@@ -3,10 +3,13 @@
 from __future__ import unicode_literals
 
 from django import forms
+from django.utils.translation import ugettext_lazy as _
+from django.forms.util import ErrorList
 
 
 class RegistrationForm(forms.Form):
-    PROP_FIELD_NAME = 'prop_%d'
+    PROP_FIELD_PREFIX = 'prop_'
+    PROP_FIELD_NAME = PROP_FIELD_PREFIX + '%d'
 
     going = forms.TypedChoiceField(
         label='Prihlasujem sa ako %s',
@@ -27,3 +30,13 @@ class RegistrationForm(forms.Form):
             self.fields[RegistrationForm.PROP_FIELD_NAME % prop.id] = forms.CharField(
                 label=prop.key_name, required=False, initial=initial
             )
+
+    def clean(self):
+        cleaned_data = super(RegistrationForm, self).clean()
+        for f in self.fields:
+            if RegistrationForm.PROP_FIELD_PREFIX in f:
+                if cleaned_data.get('going', False) and not cleaned_data[f]:
+                    if f not in self._errors:
+                        self._errors[f] = ErrorList()
+                    self._errors[f].append(_('This field is required.'))
+        return cleaned_data

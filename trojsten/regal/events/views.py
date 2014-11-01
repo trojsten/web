@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.shortcuts import get_object_or_404
@@ -6,7 +10,7 @@ from django.utils.decorators import method_decorator
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction
-
+from django.contrib import messages
 
 from .models import Event, Invitation
 from .forms import RegistrationForm
@@ -39,9 +43,9 @@ class RegistrationView(FormView):
         kwargs = super(RegistrationView, self).get_form_kwargs()
         event = get_object_or_404(Event, pk=self.kwargs.get('event_id'))
         try:
-            kwargs['invite'] = Invitation.objects.select_related('event__registration', 'user').get(
-                user=self.request.user, event=event
-            )
+            kwargs['invite'] = Invitation.objects.select_related(
+                'event__registration', 'user'
+            ).get(user=self.request.user, event=event)
         except Invitation.DoesNotExist:
             raise PermissionDenied()
         return kwargs
@@ -50,10 +54,14 @@ class RegistrationView(FormView):
     def form_valid(self, form):
         form.invite.going = form.cleaned_data['going']
         form.invite.save()
-        for prop in form.invite.event.registration.required_user_properties.all():
-            user_prop, _ = self.request.user.properties.get_or_create(key=prop)
-            user_prop.value = form.cleaned_data[RegistrationForm.PROP_FIELD_NAME % prop.id]
-            user_prop.save()
+        if form.invite.going:
+            for prop in form.invite.event.registration.required_user_properties.all():
+                user_prop, _ = self.request.user.properties.get_or_create(key=prop)
+                user_prop.value = form.cleaned_data[RegistrationForm.PROP_FIELD_NAME % prop.id]
+                user_prop.save()
+        messages.add_message(
+            self.request, messages.SUCCESS, 'Ďakujeme, prihláška bola spracovaná.'
+        )
         return super(RegistrationView, self).form_valid(form)
 
 registration = RegistrationView.as_view()
