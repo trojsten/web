@@ -18,7 +18,7 @@ class UserManager(DjangoUserManager):
         if invitation_type:
             res = res.filter(invitation__type=invitation_type)
         if going_only:
-            res = res.filter(going=True)
+            res = res.filter(invitation__going=True)
         return res
 
 
