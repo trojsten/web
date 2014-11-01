@@ -8,6 +8,7 @@
 {% endblock page_header %}
 
 {% block page_content %}
+{{form.invite.event.registration.rendered_text}}
 <form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
     {% csrf_token %}
     {{ form | bootstrap_horizontal }}

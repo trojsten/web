@@ -17,3 +17,5 @@ class RegistrationForm(forms.Form):
         super(RegistrationForm, self).__init__(*args, **kwargs)
         self.invite = invite
         self.fields['going'].label %= self.invite.get_type_display()
+        for prop in self.invite.event.registration.required_user_properties.all():
+            self.fields[prop] = forms.CharField(label=prop.key_name)

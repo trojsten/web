@@ -2,12 +2,15 @@
 
 from __future__ import unicode_literals
 
+from markdown import markdown
+
 from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
+from django.utils.html import mark_safe
 
 
 @python_2_unicode_compatible
@@ -72,6 +75,10 @@ class Registration(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def rendered_text(self):
+        return mark_safe(markdown(self.text, safe_mode=False))
 
 
 @python_2_unicode_compatible
