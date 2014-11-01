@@ -22,8 +22,8 @@ class EventType(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Typ akcie'
-        verbose_name_plural = 'Typy akcií'
+        verbose_name = 'typ akcie'
+        verbose_name_plural = 'typy akcií'
 
     def __str__(self):
         return self.name
@@ -35,8 +35,8 @@ class Link(models.Model):
     url = models.URLField(max_length=300)
 
     class Meta:
-        verbose_name = 'Odkaz'
-        verbose_name_plural = 'Odkazy'
+        verbose_name = 'odkaz'
+        verbose_name_plural = 'odkazy'
 
     def __str__(self):
         return '%s(%s)' % (self.title, self.url)
@@ -48,8 +48,8 @@ class Place(models.Model):
     address = models.ForeignKey('people.Address', null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Miesto akcie'
-        verbose_name_plural = 'Miesto akcie'
+        verbose_name = 'miesto akcie'
+        verbose_name_plural = 'miesta akcií'
 
     def __str__(self):
         return self.name
@@ -75,8 +75,8 @@ class Event(models.Model):
         return get_user_model().objects.invited_to(self, invitation_type=Invitation.ORGANIZER)
 
     class Meta:
-        verbose_name = 'Akcie'
-        verbose_name_plural = 'Akcie'
+        verbose_name = 'akcia'
+        verbose_name_plural = 'akcie'
 
     def __str__(self):
         return self.name
@@ -100,8 +100,8 @@ class Invitation(models.Model):
     going = models.NullBooleanField(verbose_name='zúčastní sa')
 
     class Meta:
-        verbose_name = 'Pozvánka'
-        verbose_name_plural = 'Pozvánky'
+        verbose_name = 'pozvánka'
+        verbose_name_plural = 'pozvánky'
 
     def __str__(self):
         return '%s(%s): %s (%s)' % (
