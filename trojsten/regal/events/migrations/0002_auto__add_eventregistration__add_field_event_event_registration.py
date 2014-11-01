@@ -25,8 +25,8 @@ class Migration(SchemaMigration):
         ))
         db.create_unique(m2m_table_name, ['registration_id', 'userpropertykey_id'])
 
-        # Adding field 'Event.event_registration'
-        db.add_column(u'events_event', 'event_registration',
+        # Adding field 'Event.registration'
+        db.add_column(u'events_event', 'registration',
                       self.gf('django.db.models.fields.related.ForeignKey')(to=orm['events.Registration'], null=True, blank=True),
                       keep_default=False)
 
@@ -38,8 +38,8 @@ class Migration(SchemaMigration):
         # Removing M2M table for field required_user_properties on 'Registration'
         db.delete_table(db.shorten_name(u'events_registration_required_user_properties'))
 
-        # Deleting field 'Event.event_registration'
-        db.delete_column(u'events_event', 'event_registration_id')
+        # Deleting field 'Event.registration'
+        db.delete_column(u'events_event', 'registration_id')
 
 
     models = {
@@ -66,14 +66,14 @@ class Migration(SchemaMigration):
         u'events.event': {
             'Meta': {'object_name': 'Event'},
             'end_time': ('django.db.models.fields.DateTimeField', [], {}),
-            'event_registration': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.Registration']", 'null': 'True', 'blank': 'True'}),
-            'event_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.EventType']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'links': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['events.Link']", 'symmetrical': 'False', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'organizers': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'organizing_event_set'", 'blank': 'True', 'to': u"orm['people.User']"}),
             'place': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.Place']"}),
-            'start_time': ('django.db.models.fields.DateTimeField', [], {})
+            'registration': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.Registration']", 'null': 'True', 'blank': 'True'}),
+            'start_time': ('django.db.models.fields.DateTimeField', [], {}),
+            'type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.EventType']"})
         },
         u'events.eventtype': {
             'Meta': {'object_name': 'EventType'},

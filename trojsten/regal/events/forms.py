@@ -7,12 +7,13 @@ from django import forms
 
 class RegistrationForm(forms.Form):
     going = forms.TypedChoiceField(
-        label='Prídem',
+        label='Prihlasujem sa ako %s',
         coerce=lambda x: x == 'True',
         choices=((True, 'Áno'), (False, 'Nie')),
         widget=forms.RadioSelect,
     )
 
-    def __init__(self, event, *args, **kwargs):
-        self.event = event
+    def __init__(self, invite, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
+        self.invite = invite
+        self.fields['going'].label %= self.invite.get_type_display()

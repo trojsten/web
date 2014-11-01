@@ -78,7 +78,7 @@ class Registration(models.Model):
 class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
     type = models.ForeignKey(EventType, verbose_name='typ akcie')
-    event_registration = models.ForeignKey(
+    registration = models.ForeignKey(
         Registration, null=True, blank=True, verbose_name='prihláška'
     )
     place = models.ForeignKey(Place, verbose_name='miesto')

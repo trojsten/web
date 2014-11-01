@@ -1,8 +1,12 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.core.exceptions import PermissionDenied
 
-from .models import Event
+
+from .models import Event, Invitation
 from .forms import RegistrationForm
 
 
@@ -19,12 +23,22 @@ class RegistrationView(FormView):
     template_name = "trojsten/regal/events/registration.html"
     form_class = RegistrationForm
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(RegistrationView, self).dispatch(*args, **kwargs)
+
     def get_form_kwargs(self):
         """
         Returns the keyword arguments for instantiating the form.
         """
         kwargs = super(RegistrationView, self).get_form_kwargs()
-        kwargs['event'] = get_object_or_404(Event, pk=self.kwargs.get('event_id'))
+        event = get_object_or_404(Event, pk=self.kwargs.get('event_id'))
+        try:
+            kwargs['invite'] = Invitation.objects.get(
+                user=self.request.user, event=event
+            )
+        except Invitation.DoesNotExist:
+            raise PermissionDenied()
         return kwargs
 
 registration = RegistrationView.as_view()
