@@ -21,7 +21,7 @@ class LinkAdmin(admin.ModelAdmin):
 
 
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('name', 'event_type', 'place', 'start_time', 'end_time')
+    list_display = ('name', 'type', 'place', 'start_time', 'end_time')
 
 
 class IvitationAdmin(admin.ModelAdmin):

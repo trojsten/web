@@ -58,7 +58,7 @@ class Place(models.Model):
 @python_2_unicode_compatible
 class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
-    event_type = models.ForeignKey(EventType, verbose_name='typ akcie')
+    type = models.ForeignKey(EventType, verbose_name='typ akcie')
     organizers = models.ManyToManyField(
         settings.AUTH_USER_MODEL, verbose_name='zoznam vedúcich',
         blank=True, related_name='organizing_event_set',

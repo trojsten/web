@@ -45,7 +45,7 @@ class Migration(SchemaMigration):
         db.create_table(u'events_event', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('event_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['events.EventType'])),
+            ('type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['events.EventType'])),
             ('place', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['events.Place'])),
             ('start_time', self.gf('django.db.models.fields.DateTimeField')()),
             ('end_time', self.gf('django.db.models.fields.DateTimeField')()),
@@ -131,13 +131,13 @@ class Migration(SchemaMigration):
         u'events.event': {
             'Meta': {'object_name': 'Event'},
             'end_time': ('django.db.models.fields.DateTimeField', [], {}),
-            'event_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.EventType']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'links': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['events.Link']", 'symmetrical': 'False', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'organizers': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'organizing_event_set'", 'blank': 'True', 'to': u"orm['people.User']"}),
             'place': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.Place']"}),
-            'start_time': ('django.db.models.fields.DateTimeField', [], {})
+            'start_time': ('django.db.models.fields.DateTimeField', [], {}),
+            'type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['events.EventType']"})
         },
         u'events.eventtype': {
             'Meta': {'object_name': 'EventType'},
