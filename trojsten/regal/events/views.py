@@ -4,6 +4,8 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
+from django.db import transaction
 
 
 from .models import Event, Invitation
@@ -27,6 +29,9 @@ class RegistrationView(FormView):
     def dispatch(self, *args, **kwargs):
         return super(RegistrationView, self).dispatch(*args, **kwargs)
 
+    def get_success_url(self):
+        return reverse('event_registration', kwargs={'event_id': self.kwargs.get('event_id')})
+
     def get_form_kwargs(self):
         """
         Returns the keyword arguments for instantiating the form.
@@ -34,11 +39,21 @@ class RegistrationView(FormView):
         kwargs = super(RegistrationView, self).get_form_kwargs()
         event = get_object_or_404(Event, pk=self.kwargs.get('event_id'))
         try:
-            kwargs['invite'] = Invitation.objects.get(
+            kwargs['invite'] = Invitation.objects.select_related('event__registration', 'user').get(
                 user=self.request.user, event=event
             )
         except Invitation.DoesNotExist:
             raise PermissionDenied()
         return kwargs
+
+    @method_decorator(transaction.atomic)
+    def form_valid(self, form):
+        form.invite.going = form.cleaned_data['going']
+        form.invite.save()
+        for prop in form.invite.event.registration.required_user_properties.all():
+            user_prop, _ = self.request.user.properties.get_or_create(key=prop)
+            user_prop.value = form.cleaned_data[RegistrationForm.PROP_FIELD_NAME % prop.id]
+            user_prop.save()
+        return super(RegistrationView, self).form_valid(form)
 
 registration = RegistrationView.as_view()

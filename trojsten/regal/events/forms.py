@@ -20,4 +20,10 @@ class RegistrationForm(forms.Form):
         self.invite = invite
         self.fields['going'].label %= self.invite.get_type_display()
         for prop in self.invite.event.registration.required_user_properties.all():
-            self.fields[RegistrationForm.PROP_FIELD_NAME % prop.id] = forms.CharField(label=prop.key_name, required=False)
+            try:
+                initial = invite.user.properties.get(key=prop).value
+            except:
+                initial = None
+            self.fields[RegistrationForm.PROP_FIELD_NAME % prop.id] = forms.CharField(
+                label=prop.key_name, required=False, initial=initial
+            )
