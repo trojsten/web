@@ -24,7 +24,7 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('name', 'type', 'place', 'start_time', 'end_time')
 
 
-class IvitationAdmin(admin.ModelAdmin):
+class InvitationAdmin(admin.ModelAdmin):
     list_display = ('event', 'user', 'type', 'going')
 
 
@@ -32,4 +32,4 @@ admin.site.register(EventType, EventTypeAdmin)
 admin.site.register(Link, LinkAdmin)
 admin.site.register(Place)
 admin.site.register(Event, EventAdmin)
-admin.site.register(Invitation, IvitationAdmin)
+admin.site.register(Invitation, InvitationAdmin)
