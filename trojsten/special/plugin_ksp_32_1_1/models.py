@@ -1,9 +1,9 @@
 from django.db import models
-from django.contrib.auth import get_user_model
+from django.conf import settings
 
 
 class UserLevel(models.Model):
-    user = models.ForeignKey(get_user_model())
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     level_id = models.IntegerField()
     try_count = models.IntegerField(default=0)
     solved = models.BooleanField(default=False)

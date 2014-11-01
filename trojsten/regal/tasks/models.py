@@ -7,7 +7,6 @@ import os
 
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
-from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
@@ -38,7 +37,7 @@ class Task(models.Model):
     Task has submits.
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
-    reviewer = models.ForeignKey(get_user_model(), null=True, blank=True, verbose_name='opravovateľ')
+    reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, verbose_name='opravovateľ')
     round = models.ForeignKey(Round, verbose_name='kolo')
     category = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
@@ -122,7 +121,7 @@ class Submit(models.Model):
     ]
     task = models.ForeignKey(Task, verbose_name='úloha')
     time = models.DateTimeField(auto_now_add=True, verbose_name='čas')
-    user = models.ForeignKey(get_user_model(), verbose_name='odovzdávateľ')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='odovzdávateľ')
     submit_type = models.IntegerField(verbose_name='typ submitu', choices=SUBMIT_TYPES)
     points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body')
 

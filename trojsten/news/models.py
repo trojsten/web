@@ -7,7 +7,7 @@ from django.db import models
 from django.utils.html import mark_safe
 from django.contrib.sites.models import Site
 from django.utils.encoding import python_2_unicode_compatible
-from django.contrib.auth import get_user_model
+from django.conf import settings
 
 from autoslug import AutoSlugField
 from taggit.managers import TaggableManager
@@ -15,7 +15,7 @@ from taggit.managers import TaggableManager
 
 @python_2_unicode_compatible
 class Entry(models.Model):
-    author = models.ForeignKey(get_user_model(), related_name='news_entries')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='news_entries')
     pub_date = models.DateTimeField(verbose_name='publication date', auto_now_add=True)
     title = models.CharField(max_length=100)
     text = models.TextField(help_text='Obsah bude prehnaný <a '
