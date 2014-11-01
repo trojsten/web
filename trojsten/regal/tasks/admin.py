@@ -64,9 +64,6 @@ class TaskByRoundSubFilter(admin.SimpleListFilter):
 class TaskAdmin(admin.ModelAdmin):
     change_form_template = "admin/task_review.html"
 
-    def get_urls(self):
-            return task_review_urls + super(TaskAdmin, self).get_urls()
-    
     list_select_related = True
     list_display = ('name', 'number',
                     'get_round', 'get_series', 'get_year', 'get_category',
@@ -85,6 +82,9 @@ class TaskAdmin(admin.ModelAdmin):
                            description='ročník',
                            order='round__series__year')
 
+    def get_urls(self):
+        return task_review_urls + super(TaskAdmin, self).get_urls()
+    
     def get_category(self, obj):
         return ', '.join(force_text(x) for x in obj.category.all())
     get_category.short_description = 'kategória'
@@ -115,10 +115,6 @@ class TaskAdmin(admin.ModelAdmin):
 class SubmitAdmin(admin.ModelAdmin):
     change_form_template = "admin/submit_form.html"
 
-    def get_urls(self):
-            return submit_urls + super(SubmitAdmin, self).get_urls()
-
-
     list_select_related = True
     list_display = ('get_task_name', 'get_task_number',
                     'get_round', 'get_series', 'get_year', 'get_category',
@@ -142,6 +138,9 @@ class SubmitAdmin(admin.ModelAdmin):
     get_year = get_related(attribute_chain=('task', 'round', 'series', 'year'),
                            description='ročník',
                            order='task__round__series__year')
+
+    def get_urls(self):
+        return submit_urls + super(SubmitAdmin, self).get_urls()
 
     def get_category(self, obj):
         return ', '.join(force_text(x) for x in obj.task.category.all())

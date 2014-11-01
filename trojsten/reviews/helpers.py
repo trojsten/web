@@ -1,12 +1,13 @@
-from trojsten.regal.tasks.models  import Submit
-from trojsten.submit.helpers import save_file, get_path, write_file
-
 import os
 import zipfile
 import io
+from time import time
 
-def submit_review (filecontent, filename, task, user, points):
-    from time import time
+from trojsten.regal.tasks.models  import Submit
+from trojsten.submit.helpers import save_file, get_path, write_file
+
+
+def submit_review(filecontent, filename, task, user, points):    
     submit_id = str(int(time()))
     
     sfiletarget = os.path.join(
@@ -17,40 +18,37 @@ def submit_review (filecontent, filename, task, user, points):
     if hasattr(filecontent, "chunks"): 
         save_file(filecontent, sfiletarget)
     else:
-        write_file (filename, "", sfiletarget)
+        write_file(filecontent, "", sfiletarget)
 
-    sub = Submit(task=task,
-                 user=user,
-                 submit_type=Submit.DESCRIPTION,
-                 points=points,
-                 testing_status=Submit.STATUS_REVIEWED,
-                 filepath=sfiletarget)
+    sub = Submit(task=task, user=user, points=points, submit_type=Submit.DESCRIPTION,
+                 testing_status=Submit.STATUS_REVIEWED, filepath=sfiletarget)
     sub.save()
 
-def get_latest_submits_by_task (task):
-    des_submits = task.submit_set.filter(submit_type=Submit.DESCRIPTION, time__lt=task.round.end_time, testing_status="in queue").select_related("user", "user__username")
-    rev_submits = task.submit_set.filter(submit_type=Submit.DESCRIPTION, testing_status=Submit.STATUS_REVIEWED).select_related("user", "user__username")
+def get_latest_submits_by_task(task):
+    description_submits = task.submit_set.filter(submit_type=Submit.DESCRIPTION, \
+                                                 time__lt=task.round.end_time)\
+        .exclude(testing_status=Submit.STATUS_REVIEWED).select_related("user", "user__username")
+    
+    review_submits = task.submit_set.filter(submit_type=Submit.DESCRIPTION, \
+                  testing_status=Submit.STATUS_REVIEWED).select_related("user", "user__username")
 
     users = {}
-    for submit in des_submits:
+    for submit in description_submits:
         if not submit.user in users:
             users[submit.user] = {"description": submit}
-        
         elif users[submit.user]["description"].time < submit.time:
             users[submit.user]["description"] = submit
 
-    for submit in rev_submits:
+    for submit in review_submits:
         if not submit.user in users:
             users[submit.user] = {"review": submit}
-        
         elif not "review" in users[submit.user]:
             users[submit.user]["review"] = submit
-
         elif users[submit.user]["review"].time < submit.time:
             users[submit.user]["review"] = submit
 
     return users
 
 
-def submit_readable_name (submit):
+def submit_download_filename(submit):
     return "%s_%s_%s" % (submit.user.last_name, submit.pk, submit.filename.split("-", 2)[-1])

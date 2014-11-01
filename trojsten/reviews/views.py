@@ -9,18 +9,20 @@ from django.http import HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
+
 from sendfile import sendfile
 
 from trojsten.regal.tasks.models  import Task, Submit
 from trojsten.regal.people.models import User
 from trojsten.submit.helpers import save_file, get_path
 
-from trojsten.reviews.helpers import submit_review, submit_readable_name, get_latest_submits_by_task
+from trojsten.reviews.helpers import submit_review, submit_download_filename, get_latest_submits_by_task
 from trojsten.reviews.forms import ReviewForm, get_zip_form_set
 
-file_re = re.compile (r"(?P<lastname>[^_]*)_(?P<submit_pk>[0-9]+)_(?P<filename>.+\.[^.]+)")
+reviews_upload_pattern = re.compile(r"(?P<lastname>[^_]*)_(?P<submit_pk>[0-9]+)_(?P<filename>.+\.[^.]+)")
 
-def review_task_view (request, task_pk):
+def review_task_view(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     max_points = task.description_points
     users = get_latest_submits_by_task(task)
@@ -40,35 +42,24 @@ def review_task_view (request, task_pk):
                 save_file(filecontent, path)
 
                 request.session["review_archive"] = path
-                return redirect ("admin:review_submit_zip", task.pk)
+                return redirect("admin:review_submit_zip", task.pk)
 
-
-            filematch = file_re.match (filename)
+            filematch = reviews_upload_pattern.match(filename)
             
             if filematch:
-                filename = filematch.groupdict()["filename"]
+                filename = filematch.group("filename")
 
-            if user == "None":
-                if not filematch: 
-                    messages.add_message(request, messages.ERROR, "Unknown target")
-                    return redirect("admin:review_task", task.pk)
+            try:
+                if user == "None" and filematch:
+                    user = Submit.objects.get(pk=int(filematch.group("submit_pk"))).user.pk
+                user = User.objects.get(pk=int(user))
 
-                try:
-                    user = Submit.objects.get(pk=int(filematch["submit_pk"])).user
-                
-                except Submit.DoesNotExist:
-                    messages.add_message(request, messages.ERROR, "Unknown target")
-                    return redirect("admin:review_task", task.pk)
-            else:
-                try:
-                    user = User.objects.get(pk=int(user))
-                
-                except User.DoesNotExist:
-                    messages.add_message(request, messages.ERROR, "User does not exists")
-                    return redirect("admin:review_task", task.pk)
+            except (User.DoesNotExist, ValueError, Submit.DoesNotExist):
+                messages.add_message(request, messages.ERROR, "User does not exists")
+                return redirect("admin:review_task", task.pk)
 
             submit_review(filecontent, filename, task, user, points)
-            messages.add_message(request, messages.SUCCESS, "Uploaded file %s to %s" % (filename, user.last_name))
+            messages.add_message(request, messages.SUCCESS, _("Uploaded file %(file)s to %(user)s") % {"file":filename, "user":user.last_name})
 
             return redirect("admin:review_task", task.pk)
 
@@ -78,24 +69,24 @@ def review_task_view (request, task_pk):
         "form" : ReviewForm(choices=choices, max_value=max_points),
     }
 
-    return render (
+    return render(
         request, "admin/review_form.html", template_data
     )
 
 
-def submit_download_view (request, submit_pk):
+def submit_download_view(request, submit_pk):
     submit = get_object_or_404(Submit, pk=submit_pk)
-    name = submit_readable_name(submit)
+    name = submit_download_filename(submit)
 
     return sendfile(request, submit.filepath, attachment=True, attachment_filename=name)
 
 
-def download_latest_submits_view (request, task_pk):
+def download_latest_submits_view(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     data = [data["description"] for data in get_latest_submits_by_task(task).values()]
 
     path = os.path.join(settings.SUBMIT_PATH, "reviews")
-    if not os.path.isdir (path):
+    if not os.path.isdir(path):
         os.makedirs(path)
         fd = os.open(path, os.O_RDONLY)
         os.fchmod(fd, 0777)
@@ -105,48 +96,45 @@ def download_latest_submits_view (request, task_pk):
 
     zipper = zipfile.ZipFile(path, "w")
     for submit in data:
-        zipper.write(submit.filepath, submit_readable_name(submit))
+        zipper.write(submit.filepath, submit_download_filename(submit))
 
     zipper.close()
     
     return sendfile(request, path, attachment=True)
 
 
-def zip_upload (request, task_pk):
+def zip_upload(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     name = request.session.get("review_archive", None)
     
-    if name is None: raise Http404
-    
+    if name is None: 
+        raise Http404
+
     try:
         data = zipfile.ZipFile(name)
-
     except (zipfile.BadZipfile, IOError):
-        messages.add_message(request, messages.ERROR, "Problems with uploaded zip")
-        return redirect ("admin:review_task", task.pk)
+        messages.add_message(request, messages.ERROR, _("Problems with uploaded zip"))
+        return redirect("admin:review_task", task.pk)
 
     users = [(None, "")] +  [(user.pk, user.username) for user in get_latest_submits_by_task(task)]
-    initial =   [{
-                    "filename": file, 
-                } 
-                for file in data.namelist()] 
+    initial =   [{"filename": file} for file in data.namelist()] 
 
     for form_data in initial:
-        match = file_re.match(form_data["filename"])
-        if not match: continue
+        match = reviews_upload_pattern.match(form_data["filename"])
+        if not match: 
+            continue
 
-        pk = match.groupdict()["submit_pk"]
+        pk = match.group("submit_pk")
         try:
             form_data["user"] = Submit.objects.get(pk=pk).user.pk
-        
         except Submit.DoesNotExist:
             pass 
 
-    ZipFormSet = get_zip_form_set (users, task.description_points, extra=0)
-    formset = ZipFormSet (initial=initial)
+    ZipFormSet = get_zip_form_set(users, task.description_points, extra=0)
+    formset = ZipFormSet(initial=initial)
 
     if request.method == "POST":
-        formset = ZipFormSet (request.POST)
+        formset = ZipFormSet(request.POST)
         
         if formset.is_valid():
             names = data.namelist()
@@ -154,7 +142,7 @@ def zip_upload (request, task_pk):
 
             for form in formset:
                 if not form.cleaned_data["filename"] in names:
-                    err = "Invalid filename %s" % filename
+                    err = _("Invalid filename %(file)s") % {"file": filename}
                     form._errors["__all__"] = form.error_class([err])
                     
                     valid = False
@@ -166,10 +154,11 @@ def zip_upload (request, task_pk):
                     filename = form.cleaned_data["filename"]
                     points = form.cleaned_data["points"]
 
-                    if user == "None": continue
+                    if user == "None": 
+                        continue
 
                     user = User.objects.get(pk=int(user))
-                    submit_review (data.read(filename), os.path.split(filename)[1], task, user, points)
+                    submit_review(data.read(filename), os.path.split(filename)[1], task, user, points)
 
                 data.close()
                 os.remove(name)
@@ -179,10 +168,10 @@ def zip_upload (request, task_pk):
         for form in formset:
             form.name = form.cleaned_data["filename"]
 
-    template_data = {
+    context = {
         "formset": formset,
         "task": task
     } 
-    return render (
-        request, "admin/zip_upload.html", template_data
+    return render(
+        request, "admin/zip_upload.html", context
     )

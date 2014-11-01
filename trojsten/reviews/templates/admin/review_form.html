@@ -7,19 +7,19 @@
 &rsaquo; <a href="{% url 'admin:app_list' app_label='tasks' %}">Tasks</a>
 &rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}"> Tasks</a>
 &rsaquo; <a href="{% url 'admin:tasks_task_change' task.pk %}"> {{ task.name }} </a>
-&rsaquo; Review
+&rsaquo; {% trans 'Review' %}
 </div>
 {% endblock %}
 
 {% block content %}
 
-<a href="{% url 'admin:download_latest_submits' task.pk %}">  Download all </a><br> <br>
+<a href="{% url 'admin:download_latest_submits' task.pk %}">  {% trans 'Download all' %} </a><br> <br>
 <table>
 {% for user, data in users.items %}
 <tr>  
   <td><a href="{% url 'admin:tasks_submit_changelist' %}?q={{user}}">{{ user.last_name }}</a></td>
-  <td>{% if data.description %} <a href="{% url 'admin:submit_download' data.description.pk %}"> Popis </a> {% endif %}</td>
-  <td>{% if data.review %} <a href="{% url 'admin:tasks_submit_change' data.review.pk %}"> Opravene </a> {% endif %}</td>
+  <td>{% if data.description %} <a href="{% url 'admin:submit_download' data.description.pk %}"> {% trans 'Description' %} </a> {% endif %}</td>
+  <td>{% if data.review %} <a href="{% url 'admin:tasks_submit_change' data.review.pk %}"> {% trans 'Reviewed' %} </a> {% endif %}</td>
 </tr>  
 {% endfor %}
 </table>
