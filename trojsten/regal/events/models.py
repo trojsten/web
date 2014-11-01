@@ -68,11 +68,15 @@ class Event(models.Model):
 
     @property
     def participants(self):
-        return get_user_model().objects.invited_to(self, invitation_type=Invitation.PARTICIPANT, going_only=True)
+        return get_user_model().objects.invited_to(
+            self, invitation_type=Invitation.PARTICIPANT, going_only=True
+        )
 
     @property
     def organizers(self):
-        return get_user_model().objects.invited_to(self, invitation_type=Invitation.ORGANIZER)
+        return get_user_model().objects.invited_to(
+            self, invitation_type=Invitation.ORGANIZER
+        )
 
     class Meta:
         verbose_name = 'akcia'
@@ -102,6 +106,7 @@ class Invitation(models.Model):
     class Meta:
         verbose_name = 'pozvánka'
         verbose_name_plural = 'pozvánky'
+        unique_together = ('event', 'user')
 
     def __str__(self):
         return '%s(%s): %s (%s)' % (
