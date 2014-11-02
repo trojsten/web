@@ -30,11 +30,11 @@ class ParticipantModelForm(forms.ModelForm):
         ]
 
 
-class ParticipantInvitationInline(admin.StackedInline):
+class ParticipantInvitationInline(admin.TabularInline):
     model = Invitation
     form = ParticipantModelForm
     extra = 1
-    fields = (('user', 'type'),)
+    fields = ('user', 'type'),
     verbose_name = 'účastník'
     verbose_name_plural = 'účastníci'
 
@@ -59,7 +59,7 @@ class OrganizerModelForm(forms.ModelForm):
         return obj
 
 
-class OrganizerInvitationInline(admin.StackedInline):
+class OrganizerInvitationInline(admin.TabularInline):
     form = OrganizerModelForm
     model = Invitation
     extra = 1
