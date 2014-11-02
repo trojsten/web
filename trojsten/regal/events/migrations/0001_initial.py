@@ -71,8 +71,14 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'events', ['Invitation'])
 
+        # Adding unique constraint on 'Invitation', fields ['event', 'user']
+        db.create_unique(u'events_invitation', ['event_id', 'user_id'])
+
 
     def backwards(self, orm):
+        # Removing unique constraint on 'Invitation', fields ['event', 'user']
+        db.delete_unique(u'events_invitation', ['event_id', 'user_id'])
+
         # Deleting model 'EventType'
         db.delete_table(u'events_eventtype')
 
@@ -134,7 +140,7 @@ class Migration(SchemaMigration):
             'sites': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['sites.Site']", 'symmetrical': 'False'})
         },
         u'events.invitation': {
-            'Meta': {'object_name': 'Invitation'},
+            'Meta': {'unique_together': "((u'event', u'user'),)", 'object_name': 'Invitation'},
             'event': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'invitations'", 'to': u"orm['events.Event']"}),
             'going': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
