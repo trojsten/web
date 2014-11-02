@@ -44,19 +44,25 @@ class ParticipantInvitationInline(admin.StackedInline):
 
 
 class OrganizerModelForm(forms.ModelForm):
+    class Meta:
+        fields = ('user', )
+
     def __init__(self, *args, **kwargs):
         super(OrganizerModelForm, self).__init__(*args, **kwargs)
-        self.fields['type'].initial = Invitation.ORGANIZER
-        self.fields['type'].widget = forms.widgets.HiddenInput()
-        self.fields['type'].label = ''
         self.fields['user'].label = 'Vedúci:'
+
+    def save(self, commit=True):
+        obj = super().save(commit=False)
+        obj.type = Invitation.ORGANIZER
+        if commit:
+            obj.save()
+        return obj
 
 
 class OrganizerInvitationInline(admin.StackedInline):
     form = OrganizerModelForm
     model = Invitation
     extra = 1
-    fields = (('user', 'type'),)
     verbose_name = 'vedúci'
 
     def get_queryset(self, request):
