@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from django import forms
 from django.utils.encoding import force_text
 
 from .models import *
@@ -21,18 +20,8 @@ class LinkAdmin(admin.ModelAdmin):
     list_display = ('title', 'url')
 
 
-class ParticipantModelForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(ParticipantModelForm, self).__init__(*args, **kwargs)
-        self.fields['type'].choices = [
-            choice for choice in self.fields['type'].choices
-            if choice[0] != Invitation.ORGANIZER
-        ]
-
-
 class ParticipantInvitationInline(admin.TabularInline):
     model = Invitation
-    form = ParticipantModelForm
     extra = 1
     fields = ('user', 'type'),
     verbose_name = 'účastník'
@@ -42,28 +31,21 @@ class ParticipantInvitationInline(admin.TabularInline):
         qs = super(ParticipantInvitationInline, self).get_queryset(request)
         return qs.exclude(type=Invitation.ORGANIZER)
 
-
-class OrganizerModelForm(forms.ModelForm):
-    class Meta:
-        fields = ('user', )
-
-    def __init__(self, *args, **kwargs):
-        super(OrganizerModelForm, self).__init__(*args, **kwargs)
-        self.fields['user'].label = 'Vedúci:'
-
-    def save(self, commit=True):
-        obj = super().save(commit=False)
-        obj.type = Invitation.ORGANIZER
-        if commit:
-            obj.save()
-        return obj
+    def formfield_for_choice_field(self, db_field, request, **kwargs):
+        if db_field.name == 'type':
+            kwargs['choices'] = [
+                choice for choice in db_field.get_choices(include_blank=False)
+                if choice[0] != Invitation.ORGANIZER
+            ]
+        return super(
+            ParticipantInvitationInline, self
+        ).formfield_for_choice_field(db_field, request, **kwargs)
 
 
 class OrganizerInvitationInline(admin.TabularInline):
-    form = OrganizerModelForm
-    model = Invitation
+    model = OrganizerInvitation
+    fields = ('user', )
     extra = 1
-    verbose_name = 'vedúci'
 
     def get_queryset(self, request):
         qs = super(OrganizerInvitationInline, self).get_queryset(request)

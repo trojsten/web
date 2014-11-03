@@ -97,7 +97,7 @@ class Invitation(models.Model):
         (ORGANIZER, 'vedúci'),
     )
     event = models.ForeignKey(Event, verbose_name='akcia', related_name='invitations')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='účastník')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='používateľ')
     type = models.SmallIntegerField(
         choices=TYPE_CHOICES, default=PARTICIPANT, verbose_name='typ pozvánky'
     )
@@ -112,3 +112,15 @@ class Invitation(models.Model):
         return '%s(%s): %s (%s)' % (
             self.event, self.get_type_display(), self.user, self.going
         )
+
+
+class OrganizerInvitation(Invitation):
+    class Meta:
+        proxy = True
+        verbose_name = 'vedúci'
+        verbose_name_plural = 'vedúci'
+
+
+    def save(self, *args, **kwargs):
+        self.type = Invitation.ORGANIZER
+        super(OrganizerInvitation, self).save(*args, **kwargs)
