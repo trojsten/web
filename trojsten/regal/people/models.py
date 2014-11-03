@@ -148,3 +148,4 @@ class UserProperty(models.Model):
     class Meta:
         verbose_name = 'dodatočná vlastnosť'
         verbose_name_plural = 'dodatočné vlastnosti'
+        unique_together = ('user', 'key')
