@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.exceptions import PermissionDenied
@@ -41,7 +42,9 @@ class RegistrationView(FormView):
         Returns the keyword arguments for instantiating the form.
         """
         kwargs = super(RegistrationView, self).get_form_kwargs()
-        event = get_object_or_404(Event, pk=self.kwargs.get('event_id'))
+        event = get_object_or_404(Event, pk=self.kwargs.get('event_id', None))
+        if not event.registration:
+            raise Http404
         try:
             kwargs['invite'] = Invitation.objects.select_related(
                 'event__registration', 'user'

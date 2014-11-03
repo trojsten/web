@@ -8,6 +8,7 @@
 {% endblock page_header %}
 
 {% block page_content %}
+{% if form.invite.going == None %}
 {{form.invite.event.registration.rendered_text}}
 <form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
     {% csrf_token %}
@@ -18,4 +19,9 @@
         </div>
     </div>
 </form>
+{% else %}
+<div class="alert alert-info" role="alert">
+    Si vedený, že <strong>{% if form.invite.going %}ideš{% else %}nejdeš{% endif %}</strong> na sústredko. Ak by si chcel vo svojej prihláške niečo zmeniť, napíš alebo zavolaj vedúcemu uvedenému v pozvánke.
+</div>
+{% endif %}
 {% endblock page_content %}
