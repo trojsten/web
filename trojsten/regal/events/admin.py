@@ -47,10 +47,6 @@ class OrganizerInvitationInline(admin.TabularInline):
     fields = ('user', )
     extra = 1
 
-    def get_queryset(self, request):
-        qs = super(OrganizerInvitationInline, self).get_queryset(request)
-        return qs.filter(type=Invitation.ORGANIZER)
-
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ('name', 'type', 'place', 'start_time', 'end_time')

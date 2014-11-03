@@ -114,12 +114,20 @@ class Invitation(models.Model):
         )
 
 
+class OrganizerInvitationManager(models.Manager):
+    def get_queryset(self):
+        return super(OrganizerInvitationManager, self).get_queryset().filter(
+            type=Invitation.ORGANIZER
+        )
+
+
 class OrganizerInvitation(Invitation):
+    objects = OrganizerInvitationManager()
+
     class Meta:
         proxy = True
         verbose_name = 'vedúci'
         verbose_name_plural = 'vedúci'
-
 
     def save(self, *args, **kwargs):
         self.type = Invitation.ORGANIZER
