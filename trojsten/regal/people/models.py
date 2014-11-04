@@ -9,6 +9,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import AbstractUser, UserManager as DjangoUserManager
 from django.conf import settings
 
+from . import constants
+
 
 class UserManager(DjangoUserManager):
     def invited_to(self, event, invitation_type=None, going_only=False):
@@ -127,9 +129,9 @@ class User(AbstractUser):
     @property
     def school_year(self):
         current_year = date.today().year + int(
-            date.today().month > settings.SCHOOL_YEAR_END_MONTH
+            date.today().month > constants.SCHOOL_YEAR_END_MONTH
         )
-        return current_year - self.graduation + settings.GRADUATION_SCHOOL_YEAR
+        return current_year - self.graduation + constants.GRADUATION_SCHOOL_YEAR
 
     def __str__(self):
         return '%s (%s)' % (self.username, self.get_full_name())

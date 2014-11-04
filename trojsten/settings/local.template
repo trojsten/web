@@ -197,10 +197,6 @@
 #ROUND_PROGRESS_DANGER_DAYS = 7
 #ROUND_PROGRESS_DANGER_CLASS = 'progress-bar-danger'
 
-# Graduation settings
-#GRADUATION_SCHOOL_YEAR = 4
-#SCHOOL_YEAR_END_MONTH = 6
-
 # Submit settings
 # Submits uploaded through submit application will be stored here
 #SUBMIT_PATH = ''
