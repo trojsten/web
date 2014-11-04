@@ -3,6 +3,9 @@
 *.py[co]
 local_settings.py
 media/*
+database.sqlite3
+trojsten/media/wiki_attachments/*/*
+trojsten/settings/local.py
 
 #nodejs
 */node_modules/*
