@@ -6,8 +6,20 @@ from datetime import date
 
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager as DjangoUserManager
 from django.conf import settings
+
+
+class UserManager(DjangoUserManager):
+    def invited_to(self, event, invitation_type=None, going_only=False):
+        res = self.filter(
+            invitation__event=event
+        )
+        if invitation_type:
+            res = res.filter(invitation__type=invitation_type)
+        if going_only:
+            res = res.filter(invitation__going=True)
+        return res
 
 
 @python_2_unicode_compatible
@@ -66,11 +78,11 @@ class School(models.Model):
 
 
 class User(AbstractUser):
-
     '''
     Holds, provide access to or manages all informations
     related to a person.
     '''
+
     gender = models.CharField(
         max_length=1,
         choices=[('M', 'Chlapec'), ('F', 'Dievča')],
@@ -101,6 +113,8 @@ class User(AbstractUser):
     graduation = models.IntegerField(null=True,
                                      verbose_name='rok maturity',
                                      help_text='Povinné pre žiakov.')
+
+    objects = UserManager()
 
     class Meta:
         verbose_name = 'používateľ'
