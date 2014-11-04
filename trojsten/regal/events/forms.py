@@ -6,6 +6,8 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
 
+from ..people.models import UserProperty
+
 
 class RegistrationForm(forms.Form):
     PROP_FIELD_PREFIX = 'prop_'
@@ -25,9 +27,9 @@ class RegistrationForm(forms.Form):
         for prop in self.invite.event.registration.required_user_properties.all():
             try:
                 initial = invite.user.properties.get(key=prop).value
-            except:
+            except UserProperty.DoesNotExist:
                 initial = None
-            self.fields[RegistrationForm.PROP_FIELD_NAME % prop.id] = forms.CharField(
+            self.fields[self.PROP_FIELD_NAME % prop.id] = forms.CharField(
                 label=prop.key_name, required=False, initial=initial
             )
 

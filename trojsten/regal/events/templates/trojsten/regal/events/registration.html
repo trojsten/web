@@ -1,15 +1,15 @@
 {% extends "trojsten/layout/main.html" %}
 {% load bootstrap %}
 
-{% block title %}Prihláška na {{form.invite.event.name}}{% endblock %}
+{% block title %}Prihláška na {{ form.invite.event.name }}{% endblock %}
 
 {% block page_header %}
-<h1>Prihláška na {{form.invite.event.name}}</h1>
+<h1>Prihláška na {{ form.invite.event.name }}</h1>
 {% endblock page_header %}
 
 {% block page_content %}
 {% if form.invite.going == None %}
-{{form.invite.event.registration.rendered_text}}
+{{ form.invite.event.registration.rendered_text }}
 <form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
     {% csrf_token %}
     {{ form | bootstrap_horizontal }}
