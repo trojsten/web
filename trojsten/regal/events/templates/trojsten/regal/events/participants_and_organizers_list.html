@@ -27,9 +27,9 @@
               data-toggle="tooltip" data-placement="top">
             {{ participant.school.abbreviation }}
         </abbr>
-    {%else%}
+    {% else %}
         {{ participant.school.verbose_name }}
-    {%endif%}
+    {% endif %}
     </td>
 </tr>
 {% endfor %}
