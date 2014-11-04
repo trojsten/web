@@ -193,6 +193,7 @@ INSTALLED_APPS = (
     'wiki.plugins.macros',
     'taggit',
     'disqus',
+    'kombu.transport.django',
 )
 
 INSTALLED_APPS += trojsten.special.installed_apps.INSTALLED_APPS

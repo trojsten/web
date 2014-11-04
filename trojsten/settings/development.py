@@ -8,7 +8,6 @@ SENDFILE_BACKEND = 'sendfile.backends.development'
 # Django debug toolbar set-up
 INSTALLED_APPS += (
     'debug_toolbar',
-    'kombu.transport.django',
 )
 MIDDLEWARE_CLASSES = (('debug_toolbar.middleware.DebugToolbarMiddleware',)
    + MIDDLEWARE_CLASSES)
