@@ -1,19 +1,17 @@
 from __future__ import absolute_import
 from trojsten.settings.common import *
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'trojsten',
-        'USER': 'trojsten',
-    }
-}
+DEBUG = False
+TEMPLATE_DEBUG = False
 
-STATIC_ROOT = '/var/www/trojsten/static/'
-MEDIA_ROOT = '/var/www/trojsten/media/'
-MEDIA_URL = '/media/'
+SENDFILE_BACKEND = 'sendfile.backends.xsendfile'
 
+# Load local settings
 try:
     from trojsten.settings.local import *
 except ImportError:
     pass
+
+ALLOWED_INCLUDE_ROOTS = (
+    TASK_STATEMENTS_PATH,
+)

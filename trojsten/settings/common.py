@@ -5,15 +5,12 @@ import os
 import trojsten
 import trojsten.special.installed_apps
 
-# Celery settings
-#: Only add pickle to this list if your broker is secured
-#: from unwanted access (see userguide/security.html)
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_IMPORTS = ("trojsten.task_statements.handlers", )
 
+#
 # Django settings
+#
+
+
 PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
     os.path.dirname(os.path.realpath(trojsten.__file__))
 )
@@ -21,31 +18,10 @@ PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
 AUTH_USER_MODEL = 'people.User'
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-SUBMIT_STATUS_IN_QUEUE = 'in queue'
-SUBMIT_PATH = ''
-TASK_STATEMENTS_PATH = ''
-TASK_STATEMENTS_REPO_PATH = ''
-TESTER_URL = 'experiment'
-TESTER_PORT = 12347
-TESTER_WEB_IDENTIFIER = 'KSP'
 
-ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
-    ('All admins', 'trojsten-web@ksp.com'),
-)
+ADMINS = ()
 
 MANAGERS = ADMINS
-
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-#        'NAME': '',                      # Or path to database file if using sqlite3.
-#        'USER': '',                      # Not used with sqlite3.
-#        'PASSWORD': '',                  # Not used with sqlite3.
-#        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-#        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-#    }
-#}
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -117,7 +93,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -156,9 +132,7 @@ MIDDLEWARE_CLASSES = (
     'trojsten.middleware.multihostname.MultiHostnameMiddleware',
 )
 
-ALLOWED_INCLUDE_ROOTS = (
-    TASK_STATEMENTS_PATH,
-)
+ALLOWED_INCLUDE_ROOTS = ()
 
 ROOT_URLCONF = 'trojsten.urls'
 HOST_MIDDLEWARE_URLCONF_MAP = {}
@@ -272,6 +246,17 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+# The URL to which Django redirects as soon as login is required.
+LOGIN_URL = "/ucet/login/"
+LOGIN_REDIRECT_URL = "/ucet/"
+
+
+#
+# Included packages settings
+#
+
+
+# KSP-Login settings
 # The list of authentication backends we want to allow.
 AUTHENTICATION_BACKENDS = (
     #'social.backends.facebook.FacebookOAuth2',
@@ -281,13 +266,6 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.open_id.OpenIdAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
-
-# The number of authentication providers to show in the short list.
-AUTHENTICATION_PROVIDERS_BRIEF = 3
-
-# The URL to which Django redirects as soon as login is required.
-LOGIN_URL = "/ucet/login/"
-LOGIN_REDIRECT_URL = "/ucet/"
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
@@ -299,6 +277,11 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.load_extra_data',
 )
 
+# The number of authentication providers to show in the short list.
+AUTHENTICATION_PROVIDERS_BRIEF = 3
+
+DISQUS_WEBSITE_SHORTNAME = 'trojsten-ksp'
+
 SOUTH_MIGRATION_MODULES = {
     'taggit': 'taggit.south_migrations',
     'django_nyt': 'django_nyt.south_migrations',
@@ -308,10 +291,35 @@ SOUTH_MIGRATION_MODULES = {
     'attachments': 'wiki.plugins.attachments.south_migrations',
 }
 
-UPLOADED_FILENAME_MAXLENGTH = 100000
-PROTOCOL_FILE_EXTENSION = '.protokol'
-SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS = ['.pdf', '.txt', '.md', '.rtf', '.doc', '.docx', '.odt']
+# WIKI SETTINGS
+# We use ksp_login to handle accounts.
+WIKI_ACCOUNT_HANDLING = False
+# We use sendfile for downloading files
+WIKI_ATTACHMENTS_USE_SENDFILE = True
+WIKI_MARKDOWN_KWARGS = {
+    'safe_mode': False,
+}
+WIKI_EDITOR = 'trojsten.markdown_editors.TrojstenMarkItUp'
+WIKI_ATTACHMENTS_PATH = os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'media/wiki_attachments/%aid/')
 
+# Celery settings
+#: Only add pickle to this list if your broker is secured
+#: from unwanted access (see userguide/security.html)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_IMPORTS = ("trojsten.task_statements.handlers", )
+BROKER_URL = 'django://'
+
+
+#
+# Trojstenweb Settings
+#
+
+
+# Task statements settings
+TASK_STATEMENTS_PATH = os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'statements')
+TASK_STATEMENTS_REPO_PATH = os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'statements_repo')
 TASK_STATEMENTS_SUFFIX_YEAR = 'rocnik'
 TASK_STATEMENTS_SUFFIX_ROUND = 'kolo'
 TASK_STATEMENTS_TASKS_DIR = 'zadania'
@@ -322,6 +330,8 @@ TASK_STATEMENTS_HTML_DIR = 'html'
 TASK_STATEMENTS_PDF = 'zadania.pdf'
 TASK_STATEMENTS_SOLUTIONS_PDF = 'vzoraky.pdf'
 ALLOWED_PICTURE_EXT = {'.jpg', '.png', '.gif', '.webp', }
+
+# Round progressbar settings
 ROUND_PROGRESS_DEFAULT_CLASS = 'progress-bar-info'
 ROUND_PROGRESS_WARNING_DAYS = 14
 ROUND_PROGRESS_WARNING_CLASS = 'progress-bar-warning'
@@ -329,23 +339,18 @@ ROUND_PROGRESS_DANGER_DAYS = 7
 ROUND_PROGRESS_DANGER_CLASS = 'progress-bar-danger'
 FROZEN_RESULTS_PATH = 'frozen_results'
 
+# Graduation settings
 GRADUATION_SCHOOL_YEAR = 4
 SCHOOL_YEAR_END_MONTH = 6
-
-DISQUS_WEBSITE_SHORTNAME = 'trojsten-ksp'
-
-
-# We use ksp_login to handle accounts.
-WIKI_ACCOUNT_HANDLING = False
-
-WIKI_ATTACHMENTS_USE_SENDFILE = True
-
-
-WIKI_MARKDOWN_KWARGS = {
-    'safe_mode': False,
-}
-
-WIKI_EDITOR = 'trojsten.markdown_editors.TrojstenMarkItUp'
-
 GRADUATION_YEAR_MIN = 1957
 GRADUATION_YEAR_MAX_AHEAD = 10
+
+# Submit settings
+SUBMIT_STATUS_IN_QUEUE = 'in queue'
+SUBMIT_PATH = os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'submits')
+SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS = ['.pdf', '.txt', '.md', '.rtf', '.doc', '.docx', '.odt']
+UPLOADED_FILENAME_MAXLENGTH = 100000
+PROTOCOL_FILE_EXTENSION = '.protokol'
+TESTER_URL = 'experiment'
+TESTER_PORT = 12347
+TESTER_WEB_IDENTIFIER = 'KSP'
