@@ -1,11 +1,10 @@
-import json
+
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseBadRequest, HttpResponse
 
 from django.shortcuts import render
-from django.template import RequestContext
-from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
-from django.http import HttpResponseBadRequest, HttpResponse
+import json
 
 from .core import LEVELS
 from .models import UserLevel
@@ -37,7 +36,7 @@ def main(request, level=1):
         "try_count": userlevel.try_count,
         "try_count_ending":
         {1: '', 2: 'y', 3: 'y', 4: 'y'}.get(userlevel.try_count, 'ov'),
-    })
+    }, current_app=request.resolver_match.namespace)
 
 
 @login_required()
@@ -65,20 +64,15 @@ def run(request, level=1):
         userlevel.save()
         update_points(user)
 
-    return render(request, 'plugin_ksp_32_1_1/result.json', {
-        "level": level,
-        "input": _input,
-        "output": str(_output),
-        "solved": solved,
-        "refresh": solved_right_now,
-        "try_count": userlevel.try_count,
-    }, context_instance=RequestContext(request))
-
-
-@staff_member_required
-def update_all_points(request):
-    user_ids = UserLevel.objects.all().values_list('user', flat=True).distinct()
-    users = get_user_model().objects.filter(id__in=user_ids)
-    for user in users:
-        update_points(user)
-    return HttpResponse()
+    return HttpResponse(
+        json.dumps({
+            "level": level,
+            "input": str(_input),
+            "output": _output,
+            "solved": solved,
+            "refresh": solved_right_now,
+            "try_count": userlevel.try_count,
+            "next_url": reverse('plugin_zwarte:run', args=(level,),
+                                current_app=request.resolver_match.namespace)
+        }),
+        content_type="application/json",)

@@ -1,20 +1,29 @@
 from .models import UserLevel
 from trojsten.regal.tasks.models import Submit, Task
 
-try:
-    TASK = Task.objects.get()
-except Exception:
-    pass
+from .models import UserLevel
+from trojsten.regal.tasks.models import Submit, Task
+
+
+# @TODO(sysel): update for Zwarte doos 2
+ZWARTE_DOOS_TASK_ID = 972
+
+
+def get_task():
+    try:
+        return get_task._cache
+    except AttributeError:
+        get_task._cache = Task.objects.get(pk=ZWARTE_DOOS_TASK_ID)
+        return get_task._cache
 
 
 def update_points(user):
-    print("user")
-    points = len(UserLevel.objects.filter(user=user.id, solved=True))
+    points = UserLevel.objects.filter(user=user.id, solved=True).count()
     submit = Submit(
-        task=TASK,
+        task=get_task(),
         user=user,
         points=points,
-        submit_type=Submit.DESCRIPTION,
+        submit_type=Submit.EXTERNAL,
         filepath="",
         testing_status="OK",
         tester_response="",

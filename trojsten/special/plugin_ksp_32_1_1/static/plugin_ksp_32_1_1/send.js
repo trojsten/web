@@ -11,7 +11,6 @@ $('#valueForm').submit( function(){
             "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val(),
         }
     }).done(function(data) {
-        data = JSON.parse(data);
 
         if(data.refresh){
             location.reload();
