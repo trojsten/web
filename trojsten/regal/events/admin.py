@@ -5,10 +5,13 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from django.utils.encoding import force_text
 
+from easy_select2 import select2_modelform
+
 from .models import *
 
 
 class EventTypeAdmin(admin.ModelAdmin):
+    form = select2_modelform(EventType)
     list_display = ('name', 'organizers_group', 'get_sites')
 
     def get_sites(self, obj):
@@ -21,6 +24,7 @@ class LinkAdmin(admin.ModelAdmin):
 
 
 class ParticipantInvitationInline(admin.TabularInline):
+    form = select2_modelform(Invitation)
     model = Invitation
     extra = 1
     fields = ('user', 'type'),
@@ -43,12 +47,14 @@ class ParticipantInvitationInline(admin.TabularInline):
 
 
 class OrganizerInvitationInline(admin.TabularInline):
+    form = select2_modelform(Invitation)
     model = OrganizerInvitation
     fields = ('user', )
     extra = 1
 
 
 class EventAdmin(admin.ModelAdmin):
+    form = select2_modelform(Event)
     list_display = ('name', 'type', 'place', 'start_time', 'end_time')
     inlines = [
         ParticipantInvitationInline, OrganizerInvitationInline
@@ -56,6 +62,7 @@ class EventAdmin(admin.ModelAdmin):
 
 
 class InvitationAdmin(admin.ModelAdmin):
+    form = select2_modelform(Invitation)
     list_display = ('event', 'user', 'type', 'going')
 
 

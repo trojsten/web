@@ -7,6 +7,8 @@ from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from django.utils.encoding import force_text
 from django.utils.html import escape
 
+from easy_select2.widgets import Select2
+
 from trojsten.regal.people.models import *
 from trojsten.regal.utils import attribute_format
 
@@ -52,6 +54,10 @@ class UserAdmin(DefaultUserAdmin):
     list_filter = ('groups', StaffFilter)
     search_fields = ('username', 'first_name', 'last_name')
 
+    formfield_overrides = {
+        models.ForeignKey: {'widget': Select2()}
+    }
+
     def __init__(self, *args, **kwargs):
         super(UserAdmin, self).__init__(*args, **kwargs)
         self.fieldsets += (('Extra', {'fields': ('gender', 'birth_date', 'home_address',
@@ -79,7 +85,6 @@ class UserAdmin(DefaultUserAdmin):
     get_school.short_description = 'škola'
     get_school.admin_order_field = 'school'
     get_school.allow_tags = True
-
 
     def get_properties(self, obj):
         return '<br />'.join(escape(force_text(x)) for x in obj.properties.all())
