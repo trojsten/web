@@ -77,6 +77,7 @@ class School(models.Model):
         return self.abbreviation.strip() != ''
 
 
+@python_2_unicode_compatible
 class User(AbstractUser):
     '''
     Holds, provide access to or manages all informations
@@ -126,6 +127,9 @@ class User(AbstractUser):
             date.today().month > settings.SCHOOL_YEAR_END_MONTH
         )
         return current_year - self.graduation + settings.GRADUATION_SCHOOL_YEAR
+
+    def __str__(self):
+        return '%s (%s)' % (self.username, self.get_full_name())
 
 
 @python_2_unicode_compatible
