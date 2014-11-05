@@ -1,10 +1,8 @@
 Django==1.6.8
--e git+https://github.com/django-wiki/django-wiki.git@375483515afc91ef0dd92d371cc16321560c95b7#egg=wiki-master
 South==1.0
 django-autoslug==1.7.2
 django-uuidfield==0.5.0
 django-taggit==0.12.2
--e git://github.com/koniiiik/ksp_login@00a1b3d90405434d4f0354d2632b0eeadfdb8a44#egg=ksp_login-master
 psycopg2==2.5.3
 django-bootstrap-form==3.1
 django-sendfile==0.3.6
@@ -12,5 +10,8 @@ celery==3.1.16
 django-contact-form==1.0
 django-disqus==0.4.3
 Unidecode==0.04.16
--e git+https://github.com/benjaoming/django-nyt@660f9c387cc1c363ab26e3ab2812da098d086876#egg=django_nyt-master
+python-social-auth==0.1.26
 django-easy-select2==1.2.12
+-e git://github.com/koniiiik/ksp_login@00a1b3d90405434d4f0354d2632b0eeadfdb8a44#egg=ksp_login-master
+-e git+https://github.com/django-wiki/django-wiki@93049a373791388d914b95b094fdefc12d8a859a#egg=wiki-master
+-e git+https://github.com/benjaoming/django-nyt@8ea5f4e6bec655f11bdcf81d9dffc2a9e86c77bc#egg=django_nyt-master
