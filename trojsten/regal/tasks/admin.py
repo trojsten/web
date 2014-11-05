@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from django.utils.encoding import force_text
 
+from easy_select2 import select2_modelform
+
 from trojsten.regal.tasks.models import *
 from trojsten.regal.tasks.forms import TaskValidationForm
 from trojsten.regal.utils import get_related, attribute_format
@@ -62,7 +64,8 @@ class TaskByRoundSubFilter(admin.SimpleListFilter):
 
 
 class TaskAdmin(admin.ModelAdmin):
-    form = TaskValidationForm
+    form = select2_modelform(Task, form_class=TaskValidationForm)
+
     list_select_related = True
     list_display = ('name', 'number',
                     'get_round', 'get_series', 'get_year', 'get_competition', 'get_category',
@@ -111,6 +114,7 @@ class TaskAdmin(admin.ModelAdmin):
 
 
 class SubmitAdmin(admin.ModelAdmin):
+    form = select2_modelform(Submit)
     list_select_related = True
     list_display = ('get_task_name', 'get_task_number',
                     'get_round', 'get_series', 'get_year', 'get_competition', 'get_category',
@@ -149,6 +153,7 @@ class SubmitAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
+    form = select2_modelform(Category)
     list_filter = ('competition',)
 
 admin.site.register(Task, TaskAdmin)

@@ -5,11 +5,14 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from django.utils.encoding import force_text
 
+from easy_select2 import select2_modelform
+
 from trojsten.regal.contests.models import *
 from trojsten.regal.utils import get_related, attribute_format
 
 
 class CompetitionAdmin(admin.ModelAdmin):
+    form = select2_modelform(Competition)
     list_display = ('name', 'organizers_group', 'get_sites', 'repo', 'repo_root')
 
     def get_sites(self, obj):
@@ -18,11 +21,13 @@ class CompetitionAdmin(admin.ModelAdmin):
 
 
 class SeriesAdmin(admin.ModelAdmin):
+    form = select2_modelform(Series)
     list_display = ('short_str', 'number', 'name', 'competition', 'year')
     list_filter = ('competition', 'year')
 
 
 class RoundAdmin(admin.ModelAdmin):
+    form = select2_modelform(Round)
     list_select_related = True
     list_display = ('short_str',
                     'get_series_number', 'get_series_name', 'get_year', 'get_competition',
