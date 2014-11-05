@@ -201,6 +201,7 @@ INSTALLED_APPS = (
     'bootstrapform',
     'contact_form',
     'easy_select2',
+    'mathfilters',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
@@ -318,6 +319,7 @@ ROUND_PROGRESS_WARNING_DAYS = 14
 ROUND_PROGRESS_WARNING_CLASS = 'progress-bar-warning'
 ROUND_PROGRESS_DANGER_DAYS = 7
 ROUND_PROGRESS_DANGER_CLASS = 'progress-bar-danger'
+FROZEN_RESULTS_PATH = 'frozen_results'
 
 GRADUATION_SCHOOL_YEAR = 4
 SCHOOL_YEAR_END_MONTH = 6

@@ -117,6 +117,9 @@ class User(AbstractUser):
 
     objects = UserManager()
 
+    def is_in_group(self, group):
+        return self.is_superuser or self.groups.filter(pk=group.pk).exists()
+
     class Meta:
         verbose_name = 'používateľ'
         verbose_name_plural = 'používatelia'

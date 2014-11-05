@@ -14,13 +14,30 @@ def lookup(object, key):
     '''
     try:
         return object[key]
-    except (KeyError, IndexError):
+    except (KeyError, IndexError, TypeError):
+        return None
+
+
+@register.assignment_tag
+def lookup_as(object, key):
+    '''
+    Looks up for key in object.
+    Returns None if key is not found.
+    '''
+    try:
+        return object[key]
+    except (KeyError, IndexError, TypeError):
         return None
 
 
 @register.filter
 def split(value, arg):
     return value.split(arg)
+
+
+@register.filter
+def as_list(value):
+    return [value]
 
 
 @register.simple_tag(takes_context=True)

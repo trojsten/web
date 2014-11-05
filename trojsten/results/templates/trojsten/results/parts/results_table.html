@@ -1,38 +1,62 @@
 {% load utils %}
-<table class="table table-hover table-responsive">
+{% load mathfilters %}
+
+<div class="table-responsive">
+<table class="table table-hover table-condensed results-table">
 <thead>
 <tr>
-    <th>#</th>
-    <th>Meno:</th>
-    <th>Škola</th>
-    <th>Ročník</th>
+    <th class="text-right result-header result-rank">#</th>
+    <th class="result-header result-name">Meno:</th>
+    <th class="result-header result-year"><abbr title="Ročník" data-toggle="tooltip" data-placement="top">R.</abbr></th>
+    <th class="result-header result-school">Škola</th>
+    {% if has_previous_results %}
+        <th class="result-header result-prev"><abbr title="Predchádzajúce kolá" data-toggle="tooltip" data-placement="top">P.</abbr></th>
+    {% endif %}
     {% for task in tasks %}
-        <th>{{task.number}}</th>
+        <th class="result-header result-task{% if task.integer_source_points %} result-task-integer{% endif %}"><a href="{% url 'task_statement' task_id=task.id %}" title="{{task.name}}" data-toggle="tooltip" data-placement="top">{{task.number}}</a></th>
     {% endfor %}
-    <th>Suma:</th>
+    <th class="result-header result-sum"><strong>&sum;</strong></th>
 </tr>
 </thead>
 {% for result in results %}
 {% spaceless %}
 <tr {% if user == result.user %}class="active"{%endif%}>
-    <td>{{forloop.counter}}</td>
-    <td>{{result.user.first_name}} {{result.user.last_name}}</td>
-    <td>{%if result.user.school.has_abbreviation %}<abbr title="{{result.user.school.verbose_name}}">{{result.user.school.abbreviation}}</abbr>{%else%}{{result.user.school.verbose_name}}{%endif%}</td>
-    <td>{{result.user.school_year}}</td>
+    <td class="text-right result-rank">
+    {% ifchanged result.data.sum %}<strong>{{result.data.rank}}. </strong>{% endifchanged %}
+    {% if has_previous_results %}
+        {% if not result.data.prev_rank %}
+            <span class="text-info glyphicon glyphicon-asterisk"></span>
+        {% elif result.data.rank < result.data.prev_rank %}
+            <span class="text-success glyphicon glyphicon-chevron-up" title="+{{result.data.prev_rank|sub:result.data.rank}}" data-toggle="tooltip" data-placement="top"></span>
+        {% elif result.data.rank > result.data.prev_rank %}
+            <span class="text-danger glyphicon glyphicon-chevron-down" title="-{{result.data.rank|sub:result.data.prev_rank}}" data-toggle="tooltip" data-placement="top"></span>
+        {% else %}
+            <span class="text-muted glyphicon glyphicon-pushpin"></span>
+        {% endif %}
+    {% endif %}
+    </td>
+    <td class="result-name">{{result.user.first_name}} {{result.user.last_name}}</td>
+    <td class="result-year">{{result.user.school_year}}</td>
+    <td class="result-school">{%if result.user.school.has_abbreviation %}<abbr title="{{result.user.school.verbose_name}}" data-toggle="tooltip" data-placement="top">{{result.user.school.abbreviation}}</abbr>{%else%}{{result.user.school.verbose_name}}{%endif%}</td>
+    {% if has_previous_results %}
+        <td class="result-prev">{{result.data.previous}}</td>
+    {% endif %}
     {% for task in tasks %}
-        <td>
-        {% if result.points|lookup:task|lookup:"submitted" %}
-            <span data-toggle="tooltip" data-placement="top" title="{% if task.description_points > 0 %}popis: {{result.points|lookup:task|lookup:'description'}}{% if task.source_points > 0 %} {% endif %}{% endif %}{% if task.source_points > 0 %}program: {{result.points|lookup:task|lookup:'source'}}{% endif %}">
-                {{result.points|lookup:task|lookup:"sum"}}
+        <td class="result-task{% if task.integer_source_points %} result-task-integer{% endif %}">
+        {% lookup_as result.data.tasks task.id as task_points %}
+        {% if task_points.submitted %}
+            <span data-toggle="tooltip" data-placement="top" title="{% if task.description_points > 0 %}popis: {% if task_points.description_pending %}??{% else %}{{task_points.description_points}}{% endif %}{% if task.source_points > 0 %} {% endif %}{% endif %}{% if task.source_points > 0 %}program: {{task_points.source_points}}{% endif %}">
+                {% if task_points.description_pending %} ({{task_points.sum}}) {% else %} {{task_points.sum}} {% endif %}
             </span>
         {% endif %}
         </td>
     {% endfor %}
 
-    <td>{{result.sum}}</td>
+    <td class="result-sum"><strong>{{result.data.sum}}</strong></td>
 </tr>
 {% endspaceless %}
 {% empty %}
-<tr><td colspan="{{tasks | length | add:3}}">Žiadne submity</td></tr>
+<tr><td colspan="{{tasks | length | add:5}}">Žiadne submity</td></tr>
 {% endfor %}
 </table>
+</div>

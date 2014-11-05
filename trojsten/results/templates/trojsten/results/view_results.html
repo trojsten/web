@@ -1,5 +1,6 @@
 {% extends "trojsten/layout/main.html" %}
 {% load results_parts %}
+{% load utils %}
 
 {% block title %}Výsledky{% endblock %}
 
@@ -14,5 +15,8 @@ kolo {{series.number}}. série {{series.year}}. ročníka {{series.competition}}
 {% endblock %}
 
 {% block page_content %}
-{% show_results_table tasks=tasks%}
+<div class="alert alert-warning">Výsledky sú predbežné.</div>
+{% show_results_table rounds=rounds categories=categories%}
+<h2>Vysvetlivky</h2>
+{% include 'trojsten/results/parts/legend.html' %}
 {% endblock %}
