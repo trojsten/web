@@ -5,8 +5,7 @@ from .models import UserLevel
 from trojsten.regal.tasks.models import Submit, Task
 
 
-# @TODO(sysel): update for Zwarte doos 2
-ZWARTE_DOOS_TASK_ID = 972
+ZWARTE_DOOS_TASK_ID = 984
 
 
 def get_task():
