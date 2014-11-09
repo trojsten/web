@@ -19,7 +19,7 @@
     <form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
         {% csrf_token %}
         {% for field in form.hidden_fields %}
-        {{ field }}
+            {{ field }}
         {% endfor %}
         {% for field  in form.visible_fields %}
             {% if field.html_name != 'going' %}
@@ -50,7 +50,7 @@
     {% endfor %}
     </ul>
     <p class="text-muted">
-     V prípade, že chceš vo svojej prihláške niečo zmeniť, napíš, alebo zavolaj kontaktnej osobe z pozvánky.
+        V prípade, že chceš vo svojej prihláške niečo zmeniť, napíš, alebo zavolaj kontaktnej osobe z pozvánky.
     </p>
 {% endif %}
 {% endblock page_content %}

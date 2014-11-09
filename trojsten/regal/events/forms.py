@@ -37,10 +37,12 @@ class RegistrationForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(RegistrationForm, self).clean()
-        for field_name in self.fields:
-            if field_name.startswith(RegistrationForm.PROPERTY_FIELD_PREFIX):
-                if cleaned_data.get('going', False) and not cleaned_data[field_name]:
-                    if field_name not in self._errors:
-                        self._errors[field_name] = ErrorList()
-                    self._errors[field_name].append(_('This field is required.'))
+        # We only need additional data when user is going to the event
+        if cleaned_data.get('going', False):
+            for field_name in self.fields:
+                if field_name.startswith(RegistrationForm.PROPERTY_FIELD_PREFIX):
+                    if not cleaned_data[field_name]:
+                        if field_name not in self._errors:
+                            self._errors[field_name] = ErrorList()
+                        self._errors[field_name].append(_('This field is required.'))
         return cleaned_data
