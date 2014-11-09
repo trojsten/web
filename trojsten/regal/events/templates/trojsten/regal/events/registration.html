@@ -38,13 +38,19 @@
         </div>
     </form>
     {% else %}
-    <div class="alert alert-info" role="alert">
-        Si vedený, že
-        <strong>
-            {% if form.invite.going %}ideš{% else %}nejdeš{% endif %}
-        </strong>
-        na sústredko. Ak by si chcel vo svojej prihláške niečo zmeniť,
-        napíš alebo zavolaj vedúcemu uvedenému v pozvánke.
-    </div>
+    <ul class="list-unstyled">
+     {% for field  in form.visible_fields %}
+        <li class="row">
+        {% if field.html_name == 'going' %}
+            <strong class="col-sm-3">Prihlásený ako {{form.invite.get_type_display}}:</strong>{{form.invite.going|yesno:'Áno,Nie'}}
+        {% elif form.invite.going %}
+            <strong class="col-sm-3">{{field.label}}:</strong>{{field.value}}
+        {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+    <p class="text-muted">
+     V prípade, že chceš vo svojej prihláške niečo zmeniť, napíš, alebo zavolaj kontaktnej osobe z pozvánky.
+    </p>
 {% endif %}
 {% endblock page_content %}
