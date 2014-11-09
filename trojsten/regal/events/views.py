@@ -35,7 +35,15 @@ class RegistrationView(FormView):
         return super(RegistrationView, self).dispatch(*args, **kwargs)
 
     def get_success_url(self):
-        return reverse('event_registration', kwargs={'event_id': self.kwargs.get('event_id')})
+        return reverse(
+            'event_registration',
+            kwargs={'event_id': self.kwargs.get('event_id')},
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super(RegistrationView, self).get_context_data(**kwargs)
+        context['show_form'] = context['form'].invite.going is None
+        return context
 
     def get_form_kwargs(self):
         """
@@ -59,11 +67,17 @@ class RegistrationView(FormView):
         form.invite.save()
         if form.invite.going:
             for prop in form.invite.event.registration.required_user_properties.all():
-                user_prop, _ = self.request.user.properties.get_or_create(key=prop)
-                user_prop.value = form.cleaned_data[RegistrationForm.PROP_FIELD_NAME % prop.id]
+                user_prop, _ = self.request.user.properties.get_or_create(
+                    key=prop,
+                )
+                user_prop.value = form.cleaned_data[
+                    RegistrationForm.PROPERTY_FIELD_NAME_TEMPLATE % prop.id
+                ]
                 user_prop.save()
         messages.add_message(
-            self.request, messages.SUCCESS, 'Ďakujeme, prihláška bola spracovaná.'
+            self.request,
+            messages.SUCCESS,
+            'Ďakujeme, prihláška bola spracovaná.',
         )
         return super(RegistrationView, self).form_valid(form)
 

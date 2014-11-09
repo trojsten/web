@@ -14,32 +14,37 @@
 {% endblock page_header %}
 
 {% block page_content %}
-{% if form.invite.going == None %}
-{{ form.invite.event.registration.rendered_text }}
-<form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
-    {% csrf_token %}
-    {% for field in form.hidden_fields %}
-    {{ field }}
-    {% endfor %}
-    {% for field  in form.visible_fields %}
-        {% if field.html_name != 'going' %}
-        <div class="hidable_field">
-            {{ field | bootstrap_horizontal }}
-        </div>
-        {% else %}
-        {{ field | bootstrap_horizontal }}
-        {% endif %}
-    {% endfor %}
+{% if show_form %}
+    {{ form.invite.event.registration.rendered_text }}
+    <form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
+        {% csrf_token %}
+        {% for field in form.hidden_fields %}
+        {{ field }}
+        {% endfor %}
+        {% for field  in form.visible_fields %}
+            {% if field.html_name != 'going' %}
+                <div class="hidable_field">
+                    {{ field | bootstrap_horizontal }}
+                </div>
+            {% else %}
+                {{ field | bootstrap_horizontal }}
+            {% endif %}
+        {% endfor %}
 
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <input class="btn btn-primary" type="submit" value="Submit" />
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input class="btn btn-primary" type="submit" value="Submit" />
+            </div>
         </div>
+    </form>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        Si vedený, že
+        <strong>
+            {% if form.invite.going %}ideš{% else %}nejdeš{% endif %}
+        </strong>
+        na sústredko. Ak by si chcel vo svojej prihláške niečo zmeniť,
+        napíš alebo zavolaj vedúcemu uvedenému v pozvánke.
     </div>
-</form>
-{% else %}
-<div class="alert alert-info" role="alert">
-    Si vedený, že <strong>{% if form.invite.going %}ideš{% else %}nejdeš{% endif %}</strong> na sústredko. Ak by si chcel vo svojej prihláške niečo zmeniť, napíš alebo zavolaj vedúcemu uvedenému v pozvánke.
-</div>
 {% endif %}
 {% endblock page_content %}
