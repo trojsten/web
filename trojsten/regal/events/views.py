@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -63,6 +63,13 @@ class RegistrationView(FormView):
 
     @method_decorator(transaction.atomic)
     def form_valid(self, form):
+        if form.invite.going is not None:
+            messages.add_message(
+                self.request,
+                messages.ERROR,
+                'Prihláška nebola spracovaná, pretože bola vyplnená už predtým.',
+            )
+            return redirect(self.get_success_url())
         form.invite.going = form.cleaned_data['going']
         form.invite.save()
         if form.invite.going:
