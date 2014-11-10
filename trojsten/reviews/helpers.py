@@ -1,6 +1,5 @@
 import os
 import zipfile
-import io
 from time import time
 
 from trojsten.regal.tasks.models  import Submit
@@ -25,12 +24,13 @@ def submit_review(filecontent, filename, task, user, points):
     sub.save()
 
 def get_latest_submits_by_task(task):
-    description_submits = task.submit_set.filter(submit_type=Submit.DESCRIPTION, \
-                                                 time__lt=task.round.end_time)\
-        .exclude(testing_status=Submit.STATUS_REVIEWED).select_related("user", "user__username")
+    description_submits = task.submit_set.filter(
+            submit_type=Submit.DESCRIPTION, time__lt=task.round.end_time
+        ).exclude(testing_status=Submit.STATUS_REVIEWED).select_related("user", "user__username")
     
-    review_submits = task.submit_set.filter(submit_type=Submit.DESCRIPTION, \
-                  testing_status=Submit.STATUS_REVIEWED).select_related("user", "user__username")
+    review_submits = task.submit_set.filter(
+        submit_type=Submit.DESCRIPTION, testing_status=Submit.STATUS_REVIEWED
+        ).select_related("user", "user__username")
 
     users = {}
     for submit in description_submits:

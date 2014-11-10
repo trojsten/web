@@ -5,9 +5,9 @@
 <div class="breadcrumbs">
     <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
     &rsaquo; <a href="{% url 'admin:app_list' app_label='tasks' %}">Tasks</a>
-    &rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}"> Tasks</a>
-    &rsaquo; <a href="{% url 'admin:tasks_task_change' task.pk %}"> {{ task.name }} </a>
-    &rsaquo; <a href="{% url 'admin:review_task' task.pk %}"> {% trans 'Review' %} </a>
+    &rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}">Tasks</a>
+    &rsaquo; <a href="{% url 'admin:tasks_task_change' task.pk %}">{{ task.name }}</a>
+    &rsaquo; <a href="{% url 'admin:review_task' task.pk %}">{% trans 'Review' %}</a>
     &rsaquo; {% trans 'Upload Zip' %}
 </div>
 {% endblock %}
@@ -27,9 +27,9 @@
     <table>
         {{ formset.management_form }}
         <thead>
-            <td> {% trans 'Filename' %} </td>
-            <td> {% trans 'User' %} </td>
-            <td> {% trans 'Points' %} </td>
+            <td>{% trans 'Filename' %}</td>
+            <td>{% trans 'User' %}</td>
+            <td>{% trans 'Points' %}</td>
         </thead>
         
         {% for form in formset %}

@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.utils.text import slugify
 
 from sendfile import sendfile
 
@@ -22,7 +23,7 @@ from trojsten.reviews.forms import ReviewForm, get_zip_form_set
 
 reviews_upload_pattern = re.compile(r"(?P<lastname>[^_]*)_(?P<submit_pk>[0-9]+)_(?P<filename>.+\.[^.]+)")
 
-def review_task_view(request, task_pk):
+def review_task(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     max_points = task.description_points
     users = get_latest_submits_by_task(task)
@@ -51,54 +52,56 @@ def review_task_view(request, task_pk):
 
             try:
                 if user == "None" and filematch:
-                    user = Submit.objects.get(pk=int(filematch.group("submit_pk"))).user.pk
-                user = User.objects.get(pk=int(user))
+                    user = Submit.objects.get(pk=filematch.group("submit_pk")).user.pk
+                user = User.objects.get(pk=user)
 
-            except (User.DoesNotExist, ValueError, Submit.DoesNotExist):
-                messages.add_message(request, messages.ERROR, "User does not exists")
+            except (User.DoesNotExist, Submit.DoesNotExist):
+                messages.add_message(request, messages.ERROR, _("User %s does not exists") % filematch.group("submit_pk"))
                 return redirect("admin:review_task", task.pk)
 
             submit_review(filecontent, filename, task, user, points)
-            messages.add_message(request, messages.SUCCESS, _("Uploaded file %(file)s to %(user)s") % {"file":filename, "user":user.last_name})
+            messages.add_message(
+                request, messages.SUCCESS, 
+                _("Uploaded file %(file)s to %(fname)s %(lname)s") % {
+                    "file": filename, "fname": user.first_name, "lname": user.last_name
+                }
+            )
 
             return redirect("admin:review_task", task.pk)
 
-    template_data = {
+    context = {
         "task": task,
         "users": users,
         "form" : ReviewForm(choices=choices, max_value=max_points),
     }
 
     return render(
-        request, "admin/review_form.html", template_data
+        request, "admin/review_form.html", context
     )
 
 
-def submit_download_view(request, submit_pk):
+def submit_download(request, submit_pk):
     submit = get_object_or_404(Submit, pk=submit_pk)
     name = submit_download_filename(submit)
 
     return sendfile(request, submit.filepath, attachment=True, attachment_filename=name)
 
 
-def download_latest_submits_view(request, task_pk):
+def download_latest_submits(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
-    data = [data["description"] for data in get_latest_submits_by_task(task).values()]
+    submits = [data["description"] for data in get_latest_submits_by_task(task).values()]
 
     path = os.path.join(settings.SUBMIT_PATH, "reviews")
     if not os.path.isdir(path):
         os.makedirs(path)
-        fd = os.open(path, os.O_RDONLY)
-        os.fchmod(fd, 0777)
-        os.close(fd)
+        os.chmod(path, 0777)
 
-    path = os.path.join(path, "Uloha %s-%s-%s.zip" %(task.name, int(time()), request.user))
+    path = os.path.join(path, "Uloha-%s-%s-%s.zip" % (slugify(task.name), int(time()), request.user.username))
 
-    zipper = zipfile.ZipFile(path, "w")
-    for submit in data:
-        zipper.write(submit.filepath, submit_download_filename(submit))
+    with zipfile.ZipFile(path, "w") as zipper:
+        for submit in submits:
+            zipper.write(submit.filepath, submit_download_filename(submit))
 
-    zipper.close()
     
     return sendfile(request, path, attachment=True)
 
@@ -111,13 +114,13 @@ def zip_upload(request, task_pk):
         raise Http404
 
     try:
-        data = zipfile.ZipFile(name)
-    except (zipfile.BadZipfile, IOError):
+        archive = zipfile.ZipFile(name)
+    except (zipfile.BadZipfile, IOdError):
         messages.add_message(request, messages.ERROR, _("Problems with uploaded zip"))
         return redirect("admin:review_task", task.pk)
 
-    users = [(None, "")] +  [(user.pk, user.username) for user in get_latest_submits_by_task(task)]
-    initial =   [{"filename": file} for file in data.namelist()] 
+    users = [(None, "")] + [(user.pk, user.username) for user in get_latest_submits_by_task(task)]
+    initial = [{"filename": file} for file in archive.namelist()] 
 
     for form_data in initial:
         match = reviews_upload_pattern.match(form_data["filename"])
@@ -137,13 +140,13 @@ def zip_upload(request, task_pk):
         formset = ZipFormSet(request.POST)
         
         if formset.is_valid():
-            names = data.namelist()
+            names = archive.namelist()
             valid = True
 
             for form in formset:
                 if not form.cleaned_data["filename"] in names:
                     err = _("Invalid filename %(file)s") % {"file": filename}
-                    form._errors["__all__"] = form.error_class([err])
+                    form._errors["__all__"].append(form.error_class([err]))
                     
                     valid = False
                     continue
@@ -157,16 +160,19 @@ def zip_upload(request, task_pk):
                     if user == "None": 
                         continue
 
-                    user = User.objects.get(pk=int(user))
-                    submit_review(data.read(filename), os.path.split(filename)[1], task, user, points)
+                    user = User.objects.get(pk=user)
+                    submit_review(archive.read(filename), os.path.basename(filename), task, user, points)
 
-                data.close()
+                archive.close()
                 os.remove(name)
+
                 request.session.pop("review_archive")
                 return redirect("admin:review_task", task.pk)
         
         for form in formset:
             form.name = form.cleaned_data["filename"]
+
+    archive.close()            
 
     context = {
         "formset": formset,

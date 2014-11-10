@@ -6,7 +6,7 @@ from django.forms.widgets import HiddenInput
 from django import forms
 
 
-class ReviewForm (forms.Form):
+class ReviewForm(forms.Form):
     file = forms.FileField(max_length=128)
     user = forms.ChoiceField()
     points = forms.IntegerField(min_value=0, required=False)
@@ -21,7 +21,7 @@ class ReviewForm (forms.Form):
 
 
 def get_zip_form_set(choices, max_value, *args, **kwargs):
-    """Creates ZipFormSet which has forms with filled in choices"""
+    """Creates ZipFormSet which has forms with filled-in choices"""
 
     ZipFormWithChoices = wraps(ZipForm)(partial(ZipForm, choices=choices, max_value=max_value))
     return formset_factory(ZipFormWithChoices, *args, formset=BaseZipSet, **kwargs)
@@ -60,6 +60,6 @@ class BaseZipSet(BaseFormSet):
         for form in self.forms:
             user = form.cleaned_data['user']
             if user and user in users:
-                raise forms.ValidationError(_("Assigned 2 or more files to same user."))
+                raise forms.ValidationError(_("Assigned 2 or more files to the same user."))
             
             users.add(user)
