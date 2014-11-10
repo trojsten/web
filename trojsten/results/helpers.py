@@ -56,7 +56,7 @@ class UserResult:
         self.previous_rounds_points = previous_rounds_points
 
 
-def get_tasks(rounds, categories=None):
+def get_tasks(rounds, category=None):
     '''Returns tasks which belong to specified round_ids and category_ids
     '''
     if not rounds:
@@ -64,10 +64,10 @@ def get_tasks(rounds, categories=None):
     tasks = Task.objects.filter(
         round__in=rounds
     )
-    if categories:
+    if category:
         tasks = tasks.filter(
-            category__in=categories
-        ).distinct()
+            category=category
+        )
     return tasks.order_by('round', 'number')
 
 
@@ -165,21 +165,21 @@ def check_round_series(rounds):
         return True
 
 
-def make_result_table(rounds, categories=None, show_staff=False):
+def make_result_table(rounds, category=None, show_staff=False):
     ResultsTable = namedtuple('ResultsTable', ['tasks', 'results_data'])
     if not rounds:
         return ResultsTable(tasks=list(), results_data=list())
     rounds = list(rounds)
 
     current_round = rounds[-1]
-    current_tasks = get_tasks([current_round], categories)
+    current_tasks = get_tasks([current_round], category)
     current_submits = get_submits(current_tasks, show_staff)
     current_results_data = get_results_data(current_tasks, current_submits)
 
     previous_results_data = None
     previous_rounds = rounds[:-1]
     if previous_rounds:
-        previous_tasks = get_tasks(previous_rounds, categories)
+        previous_tasks = get_tasks(previous_rounds, category)
         previous_submits = get_submits(previous_tasks, show_staff)
         previous_results_data = get_results_data(previous_tasks, previous_submits)
 

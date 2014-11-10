@@ -9,22 +9,20 @@ from trojsten.regal.contests.models import Round
 from .helpers import check_round_series
 
 
-def view_results(request, round_ids, category_ids=None):
-    '''Displays results for specified round_ids and category_ids
+def view_results(request, round_ids, category_id=None):
+    '''Displays results for specified round_ids and category_id
     '''
     rounds = Round.objects.visible(request.user).filter(
         pk__in=round_ids.split(',')
     ).order_by('number').select_related('series')
     if not rounds or not check_round_series(rounds):
         return HttpResponseBadRequest()
-    categories = None if category_ids is None else Category.objects.filter(
-        pk__in=category_ids.split(',')
-    )
+    category = None if category_id is None else Category.objects.get(pk=category_id)
 
     template_data = {
         'rounds': rounds,
         'series': rounds[0].series,
-        'categories': categories,
+        'category': category,
         'show_staff': request.GET.get('show_staff', False),
         'force_generate': request.GET.get('force_generate', False),
     }

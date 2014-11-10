@@ -26,7 +26,7 @@
                 {% if category != None %}
                     <div class="tab-pane fade{% if forloop.counter == 2 %} in active{%endif%}" id="category-tab-{{category}}">
                         <div class="alert alert-warning">Výsledky sú predbežné.</div>
-                        {% show_results_table rounds=info.all_rounds categories=category|as_list %}
+                        {% show_results_table rounds=info.all_rounds category=category %}
                     </div>
                 {% endif %}
             {% endfor %}

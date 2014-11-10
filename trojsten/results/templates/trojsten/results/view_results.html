@@ -8,15 +8,13 @@
 <h1>Výsledky<small>
 {% for round in rounds %}{% if not forloop.first and not forloop.last %},{% endif %} {% if not forloop.first and forloop.last %} a {% endif %} {{round.number}}.{% endfor %}
 kolo {{series.number}}. série {{series.year}}. ročníka {{series.competition}}
-{% for category in categories %}
-    <span class="label label-default category-{{category}}">{{category}}</span>
-{% endfor %}
+<span class="label label-default category-{{category}}">{{category}}</span>
 </small></h1>
 {% endblock %}
 
 {% block page_content %}
 <div class="alert alert-warning">Výsledky sú predbežné.</div>
-{% show_results_table rounds=rounds categories=categories%}
+{% show_results_table rounds=rounds category=category%}
 <h2>Vysvetlivky</h2>
 {% include 'trojsten/results/parts/legend.html' %}
 {% endblock %}
