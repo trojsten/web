@@ -6,6 +6,9 @@ from trojsten.regal.tasks.models import Category
 from trojsten.regal.contests.models import Round
 
 
+is_true = lambda value: bool(value) and value.lower() not in ('false', '0')
+
+
 def view_results(request, round_id, category_id=None):
     '''Displays results for specified round_ids and category_id
     '''
@@ -16,9 +19,9 @@ def view_results(request, round_id, category_id=None):
         'round': round,
         'series': round.series,
         'category': category,
-        'show_staff': request.GET.get('show_staff', False),
-        'single_round': request.GET.get('single_round', False),
-        'force_generate': request.GET.get('force_generate', False),
+        'show_staff': is_true(request.GET.get('show_staff', False)),
+        'single_round': is_true(request.GET.get('single_round', False)),
+        'force_generate': is_true(request.GET.get('force_generate', False)),
     }
     return render(
         request, 'trojsten/results/view_results.html', context
@@ -40,9 +43,9 @@ def view_latest_results(request):
 
     context = {
         'rounds_info': rounds_info,
-        'show_staff': request.GET.get('show_staff', False),
-        'single_round': request.GET.get('single_round', False),
-        'force_generate': request.GET.get('force_generate', False),
+        'show_staff': is_true(request.GET.get('show_staff', False)),
+        'single_round': is_true(request.GET.get('single_round', False)),
+        'force_generate': is_true(request.GET.get('force_generate', False)),
     }
     return render(
         request, 'trojsten/results/view_latest_results.html', context

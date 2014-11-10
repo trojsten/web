@@ -15,6 +15,7 @@
 {% block page_content %}
 <div class="alert alert-warning">Výsledky sú predbežné.</div>
 {% show_results_table round=round category=category%}
+{% include 'trojsten/results/parts/buttons.html' %}
 <h2>Vysvetlivky</h2>
 {% include 'trojsten/results/parts/legend.html' %}
 {% endblock %}

@@ -70,3 +70,22 @@ def is_organizer(context, competition):
         context['user'].is_superuser or
         competition.organizers_group in context['user'].groups.all()
     )
+
+
+@register.filter
+def exclude(object, key):
+    res = object.copy()
+    try:
+        del res[key]
+    except KeyError:
+        pass
+    return res
+
+
+@register.assignment_tag
+def exclude_as(object, key):
+    '''
+    Looks up for key in object.
+    Returns None if key is not found.
+    '''
+    return exclude(object, key)

@@ -1,0 +1,17 @@
+{% load utils %}
+<div class="btn-group pull-right">
+    {% exclude_as request.GET 'single_round' as single_round_params %}
+    {% if single_round %}
+        <a href="?{% if single_round_params %}{{ single_round_params.urlencode }}{% endif %}" class="btn btn-default btn-sm">Aj predošlé kolá</a>
+    {% else %}
+        <a href="?single_round=True{% if single_round_params %}&amp;{{ single_round_params.urlencode }}{% endif %}" class="btn btn-default btn-sm">Iba toto kolo</a>
+    {% endif %}
+    {% if user.is_staff %}
+        {% exclude_as request.GET 'show_staff' as show_staff_params %}
+        {% if show_staff %}
+            <a href="?{% if show_staff_params %}{{ show_staff_params.urlencode }}{% endif %}" class="btn btn-default btn-sm">Skryť vedúcich</a>
+        {% else %}
+            <a href="?show_staff=True{% if show_staff_params %}&amp;{{ show_staff_params.urlencode }}{% endif %}" class="btn btn-default btn-sm">Zobraziť vedúcich</a>
+        {% endif %}
+    {% endif %}
+</div>
