@@ -162,6 +162,9 @@ def format_results_data(results_data):
 def make_result_table(user, round, category=None, single_round=False, show_staff=False):
     ResultsTable = namedtuple('ResultsTable', ['tasks', 'results_data', 'has_previous_results'])
 
+    if not user.is_authenticated() or not user.is_in_group(round.series.competition.organizers_group):
+        show_staff = False
+
     current_tasks = get_tasks([round], category)
     current_submits = get_submits(current_tasks, show_staff)
     current_results_data = get_results_data(current_tasks, current_submits)
