@@ -7,6 +7,7 @@ from django.conf import settings
 
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.regal.people.models import User
+from trojsten.regal.contests.models import Round
 
 
 class TaskPoints:
@@ -97,7 +98,7 @@ def get_submits(tasks, show_staff=False):
         'user', 'task', 'submit_type', '-time', '-id',
     ).distinct(
         'user', 'task', 'submit_type'
-    ).prefetch_related('user', 'task')
+    ).select_related('user__school', 'task')
 
 
 def get_results_data(tasks, submits):
@@ -158,34 +159,28 @@ def format_results_data(results_data):
     return res
 
 
-def check_round_series(rounds):
-    if rounds:
-        return all(r.series == rounds[0].series for r in rounds)
-    else:
-        return True
+def make_result_table(user, round, category=None, single_round=False, show_staff=False):
+    ResultsTable = namedtuple('ResultsTable', ['tasks', 'results_data', 'has_previous_results'])
 
-
-def make_result_table(rounds, category=None, show_staff=False):
-    ResultsTable = namedtuple('ResultsTable', ['tasks', 'results_data'])
-    if not rounds:
-        return ResultsTable(tasks=list(), results_data=list())
-    rounds = list(rounds)
-
-    current_round = rounds[-1]
-    current_tasks = get_tasks([current_round], category)
+    current_tasks = get_tasks([round], category)
     current_submits = get_submits(current_tasks, show_staff)
     current_results_data = get_results_data(current_tasks, current_submits)
 
     previous_results_data = None
-    previous_rounds = rounds[:-1]
-    if previous_rounds:
-        previous_tasks = get_tasks(previous_rounds, category)
-        previous_submits = get_submits(previous_tasks, show_staff)
-        previous_results_data = get_results_data(previous_tasks, previous_submits)
+    if not single_round:
+        previous_rounds = Round.objects.visible(user).filter(
+            series=round.series, number__lt=round.number
+        ).order_by('number')
+
+        if previous_rounds:
+            previous_tasks = get_tasks(previous_rounds, category)
+            previous_submits = get_submits(previous_tasks, show_staff)
+            previous_results_data = get_results_data(previous_tasks, previous_submits)
 
     return ResultsTable(
         tasks=current_tasks,
         results_data=format_results_data(
             merge_results_data(current_results_data, previous_results_data),
         ),
+        has_previous_results=previous_results_data is not None,
     )

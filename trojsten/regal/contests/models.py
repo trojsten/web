@@ -26,6 +26,15 @@ class RoundManager(models.Manager):
                 | Q(visible=True)
             )
 
+    def latest_visible(self, user):
+        return self.visible(user).order_by(
+            'series__competition', '-end_time'
+        ).distinct(
+            'series__competition'
+        ).select_related(
+            'series__competition'
+        )
+
 
 @python_2_unicode_compatible
 class Repository(models.Model):
@@ -162,17 +171,6 @@ class Round(models.Model):
     def solutions_pdf_exists(self):
         path = self.get_pdf_path(solution=True)
         return os.path.exists(path)
-
-    @staticmethod
-    def get_latest_by_competition(user):
-        rounds = Round.objects.visible(user).order_by(
-            'series__competition', '-end_time'
-        ).distinct(
-            'series__competition'
-        ).select_related(
-            'series__competition'
-        )
-        return {r.series.competition: r for r in rounds}
 
     def is_visible_for_user(self, user):
         return (

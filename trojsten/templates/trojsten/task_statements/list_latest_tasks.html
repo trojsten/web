@@ -8,8 +8,8 @@
 {% endblock %}
 
 {% block page_content %}
-    {% for competition, round in rounds.items %}
-        <h2>{{competition}} <small>{{round}} {% if not round.visible %}<span class="label label-danger">skryté</span>{% endif %}</small></h2>
+    {% for round in rounds %}
+        <h2>{{round.series.competition}} <small>{{round}} {% if not round.visible %}<span class="label label-danger">skryté</span>{% endif %}</small></h2>
         {% show_progress round%}
         {% show_buttons round %}
         <h3>Zoznam úloh</h3>

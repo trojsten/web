@@ -39,7 +39,7 @@
     <td class="result-year">{{result.user.school_year}}</td>
     <td class="result-school">{%if result.user.school.has_abbreviation %}<abbr title="{{result.user.school.verbose_name}}" data-toggle="tooltip" data-placement="top">{{result.user.school.abbreviation}}</abbr>{%else%}{{result.user.school.verbose_name}}{%endif%}</td>
     {% if has_previous_results %}
-        <td class="result-prev">{{result.data.previous}}</td>
+        <td class="result-prev">{{result.data.previous_rounds_points}}</td>
     {% endif %}
     {% for task in tasks %}
         <td class="result-task{% if task.integer_source_points %} result-task-integer{% endif %}">

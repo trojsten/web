@@ -20,13 +20,6 @@ def get_rounds_by_year(user, competition):
     return dict(rounds_dict)
 
 
-def get_result_rounds(round):
-    rounds = Round.objects.filter(
-        visible=True, series=round.series, number__lte=round.number
-    ).order_by('number')
-    return ','.join(str(r.id) for r in rounds)
-
-
 def get_latest_submits_for_user(tasks, user):
     '''Returns latest submits which belong to specified tasks and user.
     Only one submit per submit type and task is returned.
