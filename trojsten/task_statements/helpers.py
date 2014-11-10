@@ -7,7 +7,7 @@ from trojsten.regal.tasks.models import Submit
 
 
 def get_rounds_by_year(user, competition):
-    rounds = Round.visible_rounds(
+    rounds = Round.objects.visible(
         user
     ).filter(
         series__competition=competition

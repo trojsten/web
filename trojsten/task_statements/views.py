@@ -47,7 +47,7 @@ def solution_statement(request, task_id):
 
 
 def task_list(request, round_id):
-    round = get_object_or_404(Round.visible_rounds(request.user), pk=round_id)
+    round = get_object_or_404(Round.objects.visible(request.user), pk=round_id)
     competitions = Competition.objects.all()  # Todo: filter by site
     template_data = {
         'round': round,
@@ -75,7 +75,7 @@ def latest_task_list(request):
 
 
 def view_pdf(request, round_id, solution=False):
-    round = get_object_or_404(Round.visible_rounds(request.user), pk=round_id)
+    round = get_object_or_404(Round.objects.visible(request.user), pk=round_id)
     if solution and not round.solutions_are_visible_for_user(request.user):
         raise Http404
     path = round.get_pdf_path(solution)
