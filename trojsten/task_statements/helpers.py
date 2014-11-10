@@ -41,5 +41,8 @@ def get_points_from_submits(tasks, submits):
     '''
     res = UserResult()
     for submit in submits:
-        res.add_task_points(submit.task, submit.submit_type, submit.user_points)
+        res.add_task_points(
+            submit.task, submit.submit_type, submit.user_points,
+            submit.testing_status,
+        )
     return res

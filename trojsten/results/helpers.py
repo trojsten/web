@@ -2,7 +2,7 @@
 
 from collections import defaultdict, namedtuple
 
-from django.db.models import F
+from django.db.models import F, Q
 from django.conf import settings
 
 from trojsten.regal.tasks.models import Task, Submit
@@ -46,10 +46,12 @@ class UserResult:
     def sum(self):
         return self.previous_rounds_points + sum(t.sum for t in self.tasks.values())
 
-    def add_task_points(self, task, submit_type, points):
+    def add_task_points(self, task, submit_type, points, submit_status):
         if submit_type == Submit.DESCRIPTION:
-            # Fixme - description points are not currently supported
-            self.tasks[task.id].set_description_pending()
+            if submit_status == Submit.STATUS_REVIEWED:
+                self.tasks[task.id].set_description_points(points)
+            else:
+                self.tasks[task.id].set_description_pending()
         else:
             self.tasks[task.id].add_source_points(points)
 
@@ -93,7 +95,8 @@ def get_submits(tasks, show_staff=False):
         )
     return submits.filter(
         task__in=tasks,
-        time__lte=F('task__round__end_time'),
+    ).filter(
+        Q(time__lte=F('task__round__end_time')) | Q(testing_status=Submit.STATUS_REVIEWED)
     ).order_by(
         'user', 'task', 'submit_type', '-time', '-id',
     ).distinct(
@@ -107,7 +110,7 @@ def get_results_data(tasks, submits):
     res = defaultdict(UserResult)
     for submit in submits:
         res[submit.user].add_task_points(
-            submit.task, submit.submit_type, submit.user_points
+            submit.task, submit.submit_type, submit.user_points, submit.testing_status,
         )
     return res
 
@@ -162,7 +165,10 @@ def format_results_data(results_data):
 def make_result_table(user, round, category=None, single_round=False, show_staff=False):
     ResultsTable = namedtuple('ResultsTable', ['tasks', 'results_data', 'has_previous_results'])
 
-    if not user.is_authenticated() or not user.is_in_group(round.series.competition.organizers_group):
+    if not (
+        user.is_authenticated()
+        or user.is_in_group(round.series.competition.organizers_group)
+    ):
         show_staff = False
 
     current_tasks = get_tasks([round], category)
