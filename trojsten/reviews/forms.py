@@ -9,6 +9,8 @@ from django import forms
 from trojsten.regal.tasks.models  import Submit
 from trojsten.regal.people.models import User
 
+from trojsten.reviews.helpers import submit_review
+
 reviews_upload_pattern = re.compile(r"(?P<lastname>[^_]*)_(?P<submit_pk>[0-9]+)_(?P<filename>.+\.[^.]+)")
 
 class ReviewForm(forms.Form):
@@ -21,8 +23,10 @@ class ReviewForm(forms.Form):
         max_value = kwargs.pop("max_value")
         super(ReviewForm, self).__init__(*args, **kwargs)
 
-        self.fields["user"].choices = choices
+        #setting max_value doesn't work
         self.fields["points"] = forms.IntegerField(min_value=0, max_value=max_value, required=False)
+        self.fields["user"].choices = choices
+
 
     def clean(self):
         cleaned_data = super(ReviewForm, self).clean()
@@ -61,7 +65,19 @@ class ReviewForm(forms.Form):
 
         return cleaned_data
 
+    def save (self, request, task):
+        user = self.cleaned_data["user"]
+        filecontent = self.cleaned_data["file"].file.read()
+        filename = self.cleaned_data["file"].name
+        points = self.cleaned_data["points"]
 
+        if user is None and filename.endswith(".zip"):
+            path = os.path.join(settings.SUBMIT_PATH, "reviews", "%s_%s.zip" % (int(time()), request.user.pk))
+            write_file(filecontent,"", path)
+            return path
+
+        submit_review(filecontent, filename, task, user, points)
+        return False
 
 def get_zip_form_set(choices, max_value, *args, **kwargs):
     """Creates ZipFormSet which has forms with filled-in choices"""

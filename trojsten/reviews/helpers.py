@@ -2,6 +2,8 @@ import os
 import zipfile
 from time import time
 
+from unidecode import unidecode
+
 from trojsten.regal.tasks.models  import Submit
 from trojsten.submit.helpers import save_file, get_path, write_file
 
@@ -14,10 +16,8 @@ def submit_review(filecontent, filename, task, user, points):
         "%s-%s-%s" % (user.last_name, submit_id, filename),
     )
 
-    if hasattr(filecontent, "chunks"): 
-        save_file(filecontent, sfiletarget)
-    else:
-        write_file(filecontent, "", sfiletarget)
+    sfiletarget = unidecode(sfiletarget)
+    write_file(filecontent, "", sfiletarget)
 
     sub = Submit(task=task, user=user, points=points, submit_type=Submit.DESCRIPTION,
                  testing_status=Submit.STATUS_REVIEWED, filepath=sfiletarget)

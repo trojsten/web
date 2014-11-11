@@ -33,26 +33,16 @@ def review_task(request, task_pk):
         form = ReviewForm(request.POST, request.FILES, choices=choices, max_value=max_points)
 
         if form.is_valid():
-            print ("Passed !")
-
-            user = form.cleaned_data["user"]
-            filecontent = request.FILES["file"]
-            filename = form.cleaned_data["file"].name
-            points = form.cleaned_data["points"]
-
-            if user is None and filename.endswith(".zip"):
-                path = os.path.join(settings.SUBMIT_PATH, "reviews", "%s_%s.zip" % (int(time()), request.user.pk))
-                save_file(filecontent, path)
-
-                request.session["review_archive"] = path
+            path_to_zip = form.save(request, task)
+            if path_to_zip:
+                request.session["review_archive"] = path_to_zip
                 return redirect("admin:review_submit_zip", task.pk)
 
-
-            submit_review(filecontent, filename, task, user, points)
             messages.add_message(
                 request, messages.SUCCESS, 
                 _("Uploaded file %(file)s to %(fname)s %(lname)s") % {
-                    "file": filename, "fname": user.first_name, "lname": user.last_name
+                    "file": form.cleaned_data["file"].name, 
+                    "fname": form.cleaned_data["user"].first_name, "lname": form.cleaned_data["user"].last_name
                 }
             )
 
