@@ -39,8 +39,6 @@ def view_latest_results(request):
         ],
     )
 
-    print(rounds_info)
-
     context = {
         'rounds_info': rounds_info,
         'show_staff': is_true(request.GET.get('show_staff', False)),
