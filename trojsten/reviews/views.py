@@ -33,31 +33,20 @@ def review_task(request, task_pk):
         form = ReviewForm(request.POST, request.FILES, choices=choices, max_value=max_points)
 
         if form.is_valid():
+            print ("Passed !")
+
             user = form.cleaned_data["user"]
             filecontent = request.FILES["file"]
             filename = form.cleaned_data["file"].name
             points = form.cleaned_data["points"]
 
-            if user == "None" and filename.endswith(".zip"):
+            if user is None and filename.endswith(".zip"):
                 path = os.path.join(settings.SUBMIT_PATH, "reviews", "%s_%s.zip" % (int(time()), request.user.pk))
                 save_file(filecontent, path)
 
                 request.session["review_archive"] = path
                 return redirect("admin:review_submit_zip", task.pk)
 
-            filematch = reviews_upload_pattern.match(filename)
-            
-            if filematch:
-                filename = filematch.group("filename")
-
-            try:
-                if user == "None" and filematch:
-                    user = Submit.objects.get(pk=filematch.group("submit_pk")).user.pk
-                user = User.objects.get(pk=user)
-
-            except (User.DoesNotExist, Submit.DoesNotExist):
-                messages.add_message(request, messages.ERROR, _("User %s does not exists") % filematch.group("submit_pk"))
-                return redirect("admin:review_task", task.pk)
 
             submit_review(filecontent, filename, task, user, points)
             messages.add_message(
@@ -68,11 +57,13 @@ def review_task(request, task_pk):
             )
 
             return redirect("admin:review_task", task.pk)
+    else:
+        form = ReviewForm(choices=choices, max_value=max_points)
 
     context = {
         "task": task,
         "users": users,
-        "form" : ReviewForm(choices=choices, max_value=max_points),
+        "form" : form,
     }
 
     return render(

@@ -1,3 +1,4 @@
+import re
 from functools import partial, wraps
 
 from django.forms.formsets import formset_factory, BaseFormSet
@@ -5,6 +6,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms.widgets import HiddenInput
 from django import forms
 
+from trojsten.regal.tasks.models  import Submit
+from trojsten.regal.people.models import User
+
+reviews_upload_pattern = re.compile(r"(?P<lastname>[^_]*)_(?P<submit_pk>[0-9]+)_(?P<filename>.+\.[^.]+)")
 
 class ReviewForm(forms.Form):
     file = forms.FileField(max_length=128)
@@ -17,7 +22,45 @@ class ReviewForm(forms.Form):
         super(ReviewForm, self).__init__(*args, **kwargs)
 
         self.fields["user"].choices = choices
-        self.fields["points"].max_value = max_value
+        self.fields["points"] = forms.IntegerField(min_value=0, max_value=max_value, required=False)
+
+    def clean(self):
+        cleaned_data = super(ReviewForm, self).clean()
+        
+        if "file" not in cleaned_data:
+            return {}
+
+        filename = cleaned_data["file"].name
+        user = cleaned_data["user"]
+        points = cleaned_data["points"]
+
+        if filename.endswith(".zip") and cleaned_data["user"] == "None": 
+            cleaned_data["user"] = None
+            return cleaned_data
+
+        filematch = reviews_upload_pattern.match(filename)
+
+        if filematch: 
+            cleaned_data["file"].name = filematch.group("filename")
+
+        try:
+            submit_id = (filematch.group("submit_pk") if filematch else -1)
+
+            if user == "None":
+                user = Submit.objects.get(pk=submit_id).user.pk
+            cleaned_data["user"] = User.objects.get(pk=user)
+
+        except Submit.DoesNotExist:
+            raise forms.ValidationError (_("Auto could not resolve user from filename %s") % filename)
+
+        except (User.DoesNotExist, ValueError):
+            raise forms.ValidationError (_("User %s does not exists") % user)
+
+        if points is None:
+            raise forms.ValidationError(_("Must have set points"))  
+
+        return cleaned_data
+
 
 
 def get_zip_form_set(choices, max_value, *args, **kwargs):
@@ -38,7 +81,7 @@ class ZipForm(forms.Form):
         super(ZipForm, self).__init__(data, *args, **kwargs)
 
         self.fields["user"].choices = choices
-        if 'initial' in kwargs: 
+        if "initial" in kwargs and "filename" in kwargs["initial"]: 
             self.name = kwargs["initial"]["filename"]
 
         self.fields["points"].max_value = max_value
