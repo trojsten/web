@@ -1,7 +1,5 @@
 import os.path
 import zipfile
-import io
-import re
 from time import time
 
 from django.shortcuts import render, get_object_or_404, redirect
@@ -21,9 +19,7 @@ from trojsten.submit.helpers import save_file, get_path
 from trojsten.reviews.helpers import (submit_review, submit_download_filename, get_latest_submits_by_task,
     get_user_as_choices)
 
-from trojsten.reviews.forms import ReviewForm, get_zip_form_set
-
-reviews_upload_pattern = re.compile(r"(?P<lastname>[^_]*)_(?P<submit_pk>[0-9]+)_(?P<filename>.+\.[^.]+)")
+from trojsten.reviews.forms import ReviewForm, get_zip_form_set, reviews_upload_pattern
 
 def review_task(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
@@ -36,7 +32,8 @@ def review_task(request, task_pk):
         form = ReviewForm(request.POST, request.FILES, choices=choices, max_value=max_points)
 
         if form.is_valid():
-            path_to_zip = form.save(request, task)
+            print request.user
+            path_to_zip = form.save(request.user, task)
             
             if path_to_zip:
                 request.session["review_archive"] = path_to_zip
@@ -100,13 +97,15 @@ def zip_upload(request, task_pk):
 
     try:
         archive = zipfile.ZipFile(name)
-    except (zipfile.BadZipfile, IOdError):
+    except (zipfile.BadZipfile, IOError), e:
         messages.add_message(request, messages.ERROR, _("Problems with uploaded zip"))
         return redirect("admin:review_task", task.pk)
 
-    users = [(None, _("Ignore"))] + get_user_as_choices(task)
+    with archive:
+        filelist = archive.namelist()
 
-    initial = [{"filename": file} for file in archive.namelist()] 
+    users = [(None, _("Ignore"))] + get_user_as_choices(task)
+    initial = [{"filename": file} for file in filelist] 
 
     for form_data in initial:
         match = reviews_upload_pattern.match(form_data["filename"])
@@ -119,44 +118,21 @@ def zip_upload(request, task_pk):
         except Submit.DoesNotExist:
             pass 
 
-    ZipFormSet = get_zip_form_set(users, task.description_points, extra=0)
-    formset = ZipFormSet(initial=initial)
+
+    files = set(filelist)
+    ZipFormSet = get_zip_form_set(choices=users, max_value=task.description_points, files=files, extra=0)
+    
 
     if request.method == "POST":
         formset = ZipFormSet(request.POST)
         
         if formset.is_valid():
-            names = archive.namelist()
-            valid = True
+            formset.save(name, request.user, task)
 
-            for form in formset:
-                if not form.cleaned_data["filename"] in names:
-                    err = _("Invalid filename %(file)s") % {"file": filename}
-                    form._errors["__all__"].append(form.error_class([err]))
-                    
-                    valid = False
-                    continue
-
-            if valid:
-                for form in formset:
-                    user = form.cleaned_data["user"]
-                    filename = form.cleaned_data["filename"]
-                    points = form.cleaned_data["points"]
-
-                    if user == "None": 
-                        continue
-
-                    user = User.objects.get(pk=user)
-                    submit_review(archive.read(filename), os.path.basename(filename), task, user, points)
-
-                archive.close()
-                os.remove(name)
-
-                request.session.pop("review_archive")
-                return redirect("admin:review_task", task.pk)
-        
-        for form in formset:
-            form.name = form.cleaned_data["filename"]
+            request.session.pop("review_archive")
+            return redirect("admin:review_task", task.pk)
+    else:
+        formset = ZipFormSet(initial=initial)    
 
     archive.close()            
 
