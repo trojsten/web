@@ -8,6 +8,7 @@ from django.conf import settings
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.regal.people.models import User
 from trojsten.regal.contests.models import Round
+from trojsten.submit import constants as submit_constants
 
 
 class TaskPoints:
@@ -48,7 +49,7 @@ class UserResult:
 
     def add_task_points(self, task, submit_type, points, submit_status):
         if submit_type == Submit.DESCRIPTION:
-            if submit_status == Submit.STATUS_REVIEWED:
+            if submit_status == submit_constants.STATUS_REVIEWED:
                 self.tasks[task.id].set_description_points(points)
             else:
                 self.tasks[task.id].set_description_pending()
