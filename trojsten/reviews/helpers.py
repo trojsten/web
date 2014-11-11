@@ -6,6 +6,7 @@ from unidecode import unidecode
 
 from trojsten.regal.tasks.models  import Submit
 from trojsten.submit.helpers import save_file, get_path, write_file
+from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 
 
 def submit_review(filecontent, filename, task, user, points):    
@@ -17,23 +18,23 @@ def submit_review(filecontent, filename, task, user, points):
     )
 
     sfiletarget = unidecode(sfiletarget)
-    
+
     if hasattr(filecontent, "chunks"):
         save_file(filecontent, sfiletarget)
     else:
         write_file(filecontent, "", sfiletarget)
 
     sub = Submit(task=task, user=user, points=points, submit_type=Submit.DESCRIPTION,
-                 testing_status=Submit.STATUS_REVIEWED, filepath=sfiletarget)
+                 testing_status=SUBMIT_STATUS_REVIEWED, filepath=sfiletarget)
     sub.save()
 
 def get_latest_submits_by_task(task):
     description_submits = task.submit_set.filter(
             submit_type=Submit.DESCRIPTION, time__lt=task.round.end_time
-        ).exclude(testing_status=Submit.STATUS_REVIEWED).select_related("user", "user__username")
+        ).exclude(testing_status=SUBMIT_STATUS_REVIEWED).select_related("user", "user__username")
     
     review_submits = task.submit_set.filter(
-        submit_type=Submit.DESCRIPTION, testing_status=Submit.STATUS_REVIEWED
+        submit_type=Submit.DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
         ).select_related("user", "user__username")
 
     users = {}
