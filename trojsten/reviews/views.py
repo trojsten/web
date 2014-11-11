@@ -18,7 +18,9 @@ from trojsten.regal.tasks.models  import Task, Submit
 from trojsten.regal.people.models import User
 from trojsten.submit.helpers import save_file, get_path
 
-from trojsten.reviews.helpers import submit_review, submit_download_filename, get_latest_submits_by_task
+from trojsten.reviews.helpers import (submit_review, submit_download_filename, get_latest_submits_by_task,
+    get_user_as_choices)
+
 from trojsten.reviews.forms import ReviewForm, get_zip_form_set
 
 reviews_upload_pattern = re.compile(r"(?P<lastname>[^_]*)_(?P<submit_pk>[0-9]+)_(?P<filename>.+\.[^.]+)")
@@ -26,14 +28,16 @@ reviews_upload_pattern = re.compile(r"(?P<lastname>[^_]*)_(?P<submit_pk>[0-9]+)_
 def review_task(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     max_points = task.description_points
+
     users = get_latest_submits_by_task(task)
-    choices = [(None, "Auto / all")] + [(user.pk, user.username) for user in users]
+    choices = [(None, "Auto / all")] + get_user_as_choices(task)
 
     if request.method == "POST":
         form = ReviewForm(request.POST, request.FILES, choices=choices, max_value=max_points)
 
         if form.is_valid():
             path_to_zip = form.save(request, task)
+            
             if path_to_zip:
                 request.session["review_archive"] = path_to_zip
                 return redirect("admin:review_submit_zip", task.pk)
@@ -100,7 +104,8 @@ def zip_upload(request, task_pk):
         messages.add_message(request, messages.ERROR, _("Problems with uploaded zip"))
         return redirect("admin:review_task", task.pk)
 
-    users = [(None, "")] + [(user.pk, user.username) for user in get_latest_submits_by_task(task)]
+    users = [(None, _("Ignore"))] + get_user_as_choices(task)
+
     initial = [{"filename": file} for file in archive.namelist()] 
 
     for form_data in initial:

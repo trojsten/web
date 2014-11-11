@@ -49,6 +49,8 @@ def get_latest_submits_by_task(task):
 
     return users
 
+def get_user_as_choices (task):
+    return [(user.pk, "%s %s" % (user.first_name, user.last_name)) for user in get_latest_submits_by_task(task)]
 
 def submit_download_filename(submit):
     return "%s_%s_%s" % (submit.user.last_name, submit.pk, submit.filename.split("-", 2)[-1])
