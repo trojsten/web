@@ -62,7 +62,7 @@ class TaskByRoundSubFilter(admin.SimpleListFilter):
 
 
 class TaskAdmin(admin.ModelAdmin):
-    change_form_template = "admin/task_review.html"
+    change_form_template = 'admin/task_review.html'
 
     list_select_related = True
     list_display = ('name', 'number',
@@ -84,7 +84,7 @@ class TaskAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         return task_review_urls + super(TaskAdmin, self).get_urls()
-    
+
     def get_category(self, obj):
         return ', '.join(force_text(x) for x in obj.category.all())
     get_category.short_description = 'kategória'
@@ -110,10 +110,8 @@ class TaskAdmin(admin.ModelAdmin):
                                      boolean=True)
 
 
-
-
 class SubmitAdmin(admin.ModelAdmin):
-    change_form_template = "admin/submit_form.html"
+    change_form_template = 'admin/submit_form.html'
 
     list_select_related = True
     list_display = ('get_task_name', 'get_task_number',

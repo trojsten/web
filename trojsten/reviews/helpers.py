@@ -1,17 +1,16 @@
 import os
-import zipfile
 from time import time
 
 from unidecode import unidecode
 
-from trojsten.regal.tasks.models  import Submit
+from trojsten.regal.tasks.models import Submit
 from trojsten.submit.helpers import save_file, get_path, write_file
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 
 
-def submit_review(filecontent, filename, task, user, points):    
+def submit_review(filecontent, filename, task, user, points):
     submit_id = str(int(time()))
-    
+
     sfiletarget = os.path.join(
         get_path(task, user),
         '%s-%s-%s' % (user.last_name, submit_id, filename),
@@ -28,11 +27,12 @@ def submit_review(filecontent, filename, task, user, points):
                  testing_status=SUBMIT_STATUS_REVIEWED, filepath=sfiletarget)
     sub.save()
 
+
 def get_latest_submits_by_task(task):
     description_submits = task.submit_set.filter(
-            submit_type=Submit.DESCRIPTION, time__lt=task.round.end_time
-        ).exclude(testing_status=SUBMIT_STATUS_REVIEWED).select_related('user', 'user__username')
-    
+        submit_type=Submit.DESCRIPTION, time__lt=task.round.end_time
+    ).exclude(testing_status=SUBMIT_STATUS_REVIEWED).select_related('user', 'user__username')
+
     review_submits = task.submit_set.filter(
         submit_type=Submit.DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
         ).select_related('user', 'user__username')
@@ -54,8 +54,13 @@ def get_latest_submits_by_task(task):
 
     return users
 
-def get_user_as_choices (task):
-    return [(user.pk, '%s %s' % (user.first_name, user.last_name)) for user in get_latest_submits_by_task(task)]
+
+def get_user_as_choices(task):
+    return [
+        (user.pk, '%s %s' % (user.first_name, user.last_name))
+        for user in get_latest_submits_by_task(task)
+    ]
+
 
 def submit_download_filename(submit):
     return '%s_%s_%s' % (submit.user.last_name, submit.pk, submit.filename.split('-', 2)[-1])
