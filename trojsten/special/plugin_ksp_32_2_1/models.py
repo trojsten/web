@@ -13,7 +13,7 @@ class UserLevel(models.Model):
     def add_try(self, input, output):
         self.try_count += 1
         self.save()
-        new_try = Try(userlevel=self, input=str(input), output=str(output))
+        new_try = Try(userlevel=self, input=str(input), output=output)
         new_try.save()
         if self.try_count > UserLevel.MAX_TRY_COUNT:
             self.try_set.order_by('id')[0].delete()
@@ -25,4 +25,4 @@ class UserLevel(models.Model):
 class Try(models.Model):
     userlevel = models.ForeignKey('UserLevel')
     input = models.CharField(max_length=15)
-    output = models.CharField(max_length=40)
+    output = models.CharField(max_length=30)

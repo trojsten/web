@@ -1,10 +1,9 @@
-
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseBadRequest, HttpResponse
+import json
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-import json
+from django.http import HttpResponseBadRequest, HttpResponse
+from django.core.urlresolvers import reverse
 
 from .core import LEVELS
 from .models import UserLevel
@@ -17,7 +16,7 @@ def main(request, level=1):
     user = request.user
     userlevel, _ = UserLevel.objects.get_or_create(level_id=level, user=user)
 
-    target = str(LEVELS[level].TARGET)
+    target = LEVELS[level].TARGET
 
     try_set = []
     for x in userlevel.try_set.order_by('id'):
@@ -27,7 +26,7 @@ def main(request, level=1):
     for x in UserLevel.objects.filter(user=user):
         levels[x.level_id - 1][1] = x.solved
 
-    return render(request, 'plugin_ksp_32_1_1/level.html', {
+    return render(request, 'plugin_ksp_32_2_1/level.html', {
         "level": level,
         "levels": levels,
         "solved": userlevel.solved,
@@ -47,8 +46,11 @@ def run(request, level=1):
 
     try:
         data = json.loads(request.read().decode("utf-8"))
-        _input = str(int(data["input"]))
+        _input = int(data["input"])
     except (KeyError, ValueError):
+        return HttpResponseBadRequest()
+
+    if _input < 0 or _input >= 10**10:
         return HttpResponseBadRequest()
 
     _output = LEVELS[level].run(_input)
@@ -57,7 +59,8 @@ def run(request, level=1):
     solved_right_now = solved and not userlevel.solved
 
     if not userlevel.solved:
-        userlevel.add_try(_input, str(_output))
+        assert isinstance(_output, object)
+        userlevel.add_try(str(_input), _output)
 
     if solved_right_now:
         userlevel.solved = True

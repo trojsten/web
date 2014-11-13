@@ -29,15 +29,15 @@
 
         <div class="masthead clearfix">
           <div class="inner">
-            <h3 class="masthead-brand">Zwarte Doos</h3>
+            <h3 class="masthead-brand">Zwarte Doos 2</h3>
             <ul class="nav masthead-nav">
               {% for lvl, solved in levels %}
                 <li class='{% if lvl == level %}active{% endif %}'>
                   <a href='{% url "plugin_zwarte:main" lvl %}'>
                     {% if solved %}
-                      {{lvl}}&#10003;
+                      {{ lvl }}&#10003;
                     {% else %}
-                      &nbsp;{{lvl}}&nbsp;
+                      &nbsp;{{ lvl }}&nbsp;
                     {% endif %}
                   </a>
                 </li>
@@ -47,22 +47,22 @@
         </div>
 
         <div class="inner cover">
-          <h1 class="cover-heading">Level {{level}}</h1>
+          <h1 class="cover-heading">Level {{ level }}</h1>
           {% if solved %}
               <p class="lead">
                   Gratulujeme!<br/>
-                  Dosiahol si <code class="solved">{{target}}</code>
-                  na <span id="try-count">{{try_count}}</span>
-                  pokus{{try_count_ending}}.
+                  Dosiahol si <code class="solved">{{ target }}</code>
+                  na <span id="try-count">{{ try_count }}</span>
+                  pokus{{ try_count_ending }}.
               </p>
           {% else %}
               <p class="lead">
-                  Dosiahni <code class="solved">{{target}}</code><br/>
-                  Zatiaľ si mal(a) <span id="try-count">{{try_count}}</span>
+                  Dosiahni <code class="solved">{{ target }}</code><br/>
+                  Zatiaľ si mal(a) <span id="try-count">{{ try_count }}</span>
                   pokusov.
               </p>
           {% endif %}
-
+          
           <form class="form-inline" role="form" id="valueForm">
             {% csrf_token %}
             <div class="form-group">
@@ -78,13 +78,13 @@
             </div>
             <button type="submit" class="btn btn-default">Pošli</button>
           </form>
-
-
+          
+          
           <div class="results">
-            <table id = 'resultsTable'>
+            <table id='resultsTable'>
             </table>
           </div>
-
+          
         </div>
 
         <div class="mastfoot">
@@ -109,7 +109,7 @@
   </script>
   <script type="text/javascript">
     {% for input, output, solved in try_set %}
-        window.add_row("{{input}}","{{output}}",{{solved|yesno:"true,false"}});
+        window.add_row("{{ input }}","{{ output }}",{{ solved|yesno:"true,false" }});
     {% endfor %}
   </script>
   <script src='{% static "js/bootstrap.min.js" %}'></script>
