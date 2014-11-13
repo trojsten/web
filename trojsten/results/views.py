@@ -12,7 +12,7 @@ from .helpers import check_round_series
 def view_results(request, round_ids, category_ids=None):
     '''Displays results for specified round_ids and category_ids
     '''
-    rounds = Round.visible_rounds(request.user).filter(
+    rounds = Round.objects.visible(request.user).filter(
         pk__in=round_ids.split(',')
     ).order_by('number').select_related('series')
     if not rounds or not check_round_series(rounds):

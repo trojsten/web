@@ -16,6 +16,17 @@ from django.contrib.auth.models import Group
 from uuidfield import UUIDField
 
 
+class RoundManager(models.Manager):
+    def visible(self, user):
+        if user.is_superuser:
+            return self.get_queryset()
+        else:
+            return self.filter(
+                Q(series__competition__organizers_group__in=user.groups.all())
+                | Q(visible=True)
+            )
+
+
 @python_2_unicode_compatible
 class Repository(models.Model):
     notification_string = UUIDField(
@@ -84,12 +95,20 @@ class Round(models.Model):
     '''
     series = models.ForeignKey(Series, verbose_name='séria')
     number = models.IntegerField(verbose_name='číslo')
-    start_time = models.DateTimeField(verbose_name='začiatok',
-                                      default=datetime.now().replace(hour=0, minute=0, second=0, microsecond=0))
-    end_time = models.DateTimeField(verbose_name='koniec',
-                                    default=datetime.now().replace(hour=23, minute=59, second=59, microsecond=0))
+    start_time = models.DateTimeField(
+        verbose_name='začiatok', default=datetime.now().replace(
+            hour=0, minute=0, second=0, microsecond=0
+        )
+    )
+    end_time = models.DateTimeField(
+        verbose_name='koniec', default=datetime.now().replace(
+            hour=23, minute=59, second=59, microsecond=0
+        )
+    )
     visible = models.BooleanField(verbose_name='viditeľnosť')
     solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov')
+
+    objects = RoundManager()
 
     @property
     def can_submit(self):
@@ -145,18 +164,8 @@ class Round(models.Model):
         return os.path.exists(path)
 
     @staticmethod
-    def visible_rounds(user):
-        if user.is_superuser:
-            return Round.objects
-        else:
-            return Round.objects.filter(
-                Q(series__competition__organizers_group__in=user.groups.all())
-                | Q(visible=True)
-            )
-
-    @staticmethod
     def get_latest_by_competition(user):
-        rounds = Round.visible_rounds(user).order_by(
+        rounds = Round.objects.visible(user).order_by(
             'series__competition', '-end_time'
         ).distinct(
             'series__competition'
