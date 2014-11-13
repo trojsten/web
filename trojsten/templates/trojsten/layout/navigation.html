@@ -12,12 +12,13 @@
         <h2>Aktuálne</h2>
         <li class="{% current 'latest_task_list' %} {% current 'task_list' %} {% current 'task_statement' %} {% current 'solution_statement' %}"><a href="{% url 'latest_task_list' %}">Zadania a riešenia</a></li>
         <li class="{% current 'view_latest_results' %} {% current 'view_results' %}"><a href="{% url 'view_latest_results' %}">Výsledky</a></li>
+        <h2>Akcie</h2>
+        <li><a href="http://klub.trojsten.sk/">Klub</a></li>
+        <li><a href="http://akademia.trojsten.sk">Akadémia</a></li>
         <h2>Ostatné</h2>
         <li class="{% current '^/organizatori/$' %}"><a href="/organizatori/">Organizátori</a></li>
         <li class="{% current '^/sponzori/$' %}"><a href="/sponzori/">Sponzori</a></li>
         <li class="{% current '^/kontakt/$' %}"><a href="/kontakt/">Kontakt</a></li>
-        <li><a href="http://klub.trojsten.sk/">Klub</a></li>
-        <li><a href="http://akademia.trojsten.sk">Akadémia</a></li>
     </ul>
 </div>
 {% endblock %}
