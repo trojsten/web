@@ -78,6 +78,8 @@ def get_tasks(rounds, category=None):
 def get_submits(tasks, show_staff=False):
     '''Returns submits which belong to specified tasks.
     Only one submit per user, submit type and task is returned.
+    Submits made after round.end_time are not counted except review submits,
+    which has testing_status=SUBMIT_STATUS_REVIEWED and are made by organizers.
     '''
     submits = Submit.objects
     if not show_staff and tasks:
@@ -97,7 +99,8 @@ def get_submits(tasks, show_staff=False):
     return submits.filter(
         task__in=tasks,
     ).filter(
-        Q(time__lte=F('task__round__end_time')) | Q(testing_status=Submit.STATUS_REVIEWED)
+        Q(time__lte=F('task__round__end_time'))
+        | Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
     ).order_by(
         'user', 'task', 'submit_type', '-time', '-id',
     ).distinct(
@@ -166,10 +169,8 @@ def format_results_data(results_data):
 def make_result_table(user, round, category=None, single_round=False, show_staff=False):
     ResultsTable = namedtuple('ResultsTable', ['tasks', 'results_data', 'has_previous_results'])
 
-    if not (
-        user.is_authenticated()
-        and user.is_in_group(round.series.competition.organizers_group)
-    ):
+    if not (user.is_authenticated()
+            and user.is_in_group(round.series.competition.organizers_group)):
         show_staff = False
 
     current_tasks = get_tasks([round], category)

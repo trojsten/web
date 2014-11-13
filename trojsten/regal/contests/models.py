@@ -18,6 +18,8 @@ from uuidfield import UUIDField
 
 class RoundManager(models.Manager):
     def visible(self, user):
+        '''Returns only rounds visible for user
+        '''
         if user.is_superuser:
             return self.get_queryset()
         else:
@@ -27,6 +29,8 @@ class RoundManager(models.Manager):
             )
 
     def latest_visible(self, user):
+        '''Returns latest visible round for each competition
+        '''
         return self.visible(user).order_by(
             'series__competition', '-end_time'
         ).distinct(

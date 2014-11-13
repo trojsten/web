@@ -7,7 +7,7 @@ from trojsten.regal.contests.models import Round
 
 
 def is_true(value):
-    '''This function converts GET parameter value to bool
+    '''Converts GET parameter value to bool
     '''
     return bool(value) and value.lower() not in ('false', '0')
 
@@ -32,6 +32,8 @@ def view_results(request, round_id, category_id=None):
 
 
 def view_latest_results(request):
+    '''Displays results for latest rounds for each competition
+    '''
     rounds = Round.objects.latest_visible(request.user)
     rounds_info = zip(
         rounds,

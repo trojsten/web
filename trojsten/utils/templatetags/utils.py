@@ -84,8 +84,4 @@ def exclude(object, key):
 
 @register.assignment_tag
 def exclude_as(object, key):
-    '''
-    Looks up for key in object.
-    Returns None if key is not found.
-    '''
     return exclude(object, key)
