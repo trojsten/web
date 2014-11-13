@@ -37,9 +37,9 @@
             </div>
         </div>
     </form>
-    {% else %}
+{% else %}
     <ul class="list-unstyled">
-     {% for field  in form.visible_fields %}
+    {% for field  in form.visible_fields %}
         <li class="row">
         {% if field.html_name == 'going' %}
             <strong class="col-sm-3">Prihlásený ako {{form.invite.get_type_display}}:</strong>{{form.invite.going|yesno:'Áno,Nie'}}
