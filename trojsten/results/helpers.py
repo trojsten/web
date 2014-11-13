@@ -11,7 +11,7 @@ from trojsten.regal.contests.models import Round
 from trojsten.submit import constants as submit_constants
 
 
-class TaskPoints:
+class TaskPoints(object):
     def __init__(self):
         self.source_points = 0
         self.description_points = 0
@@ -36,7 +36,7 @@ class TaskPoints:
         self.description_points = 0
 
 
-class UserResult:
+class UserResult(object):
     def __init__(self):
         self.previous_rounds_points = 0
         self.tasks = defaultdict(TaskPoints)
@@ -49,7 +49,7 @@ class UserResult:
 
     def add_task_points(self, task, submit_type, points, submit_status):
         if submit_type == Submit.DESCRIPTION:
-            if submit_status == submit_constants.STATUS_REVIEWED:
+            if submit_status == submit_constants.SUBMIT_STATUS_REVIEWED:
                 self.tasks[task.id].set_description_points(points)
             else:
                 self.tasks[task.id].set_description_pending()
@@ -105,7 +105,7 @@ def get_submits(tasks, show_staff=False):
     ).select_related('user__school', 'task')
 
 
-def get_results_data(tasks, submits):
+def get_results_data(submits):
     '''Returns results data for each user who has submitted at least one task
     '''
     res = defaultdict(UserResult)
@@ -168,13 +168,13 @@ def make_result_table(user, round, category=None, single_round=False, show_staff
 
     if not (
         user.is_authenticated()
-        or user.is_in_group(round.series.competition.organizers_group)
+        and user.is_in_group(round.series.competition.organizers_group)
     ):
         show_staff = False
 
     current_tasks = get_tasks([round], category)
     current_submits = get_submits(current_tasks, show_staff)
-    current_results_data = get_results_data(current_tasks, current_submits)
+    current_results_data = get_results_data(current_submits)
 
     previous_results_data = None
     if not single_round:
@@ -185,7 +185,7 @@ def make_result_table(user, round, category=None, single_round=False, show_staff
         if previous_rounds:
             previous_tasks = get_tasks(previous_rounds, category)
             previous_submits = get_submits(previous_tasks, show_staff)
-            previous_results_data = get_results_data(previous_tasks, previous_submits)
+            previous_results_data = get_results_data(previous_submits)
 
     return ResultsTable(
         tasks=current_tasks,

@@ -15,11 +15,20 @@
     {% if categories|length > 1 %}
         {% for category in categories %}
             {% if category != None %}
-                <li {% if forloop.parentloop.counter == 1 and forloop.counter == 2 %}class="active"{%endif%}><a href="#category-tab-{{round.id}}-{{category.id}}" role="tab" data-toggle="tab">{{category}}</a></li>
+                <li {% if forloop.parentloop.counter == 1 and forloop.counter == 2 %}class="active"{% endif %}>
+                    <a href="#category-tab-{{ round.id }}-{{ category.id }}" role="tab"
+                       data-toggle="tab">
+                        {{ category }}
+                    </a>
+                </li>
             {% endif %}
         {% endfor %}
     {% else %}
-        <li {% if forloop.counter == 1 %}class="active"{%endif%}><a href="#category-tab-{{round.id}}" role="tab" data-toggle="tab">{{round.series.competition}}</a></li>
+        <li {% if forloop.counter == 1 %}class="active"{% endif %}>
+            <a href="#category-tab-{{ round.id }}" role="tab" data-toggle="tab">
+                {{ round.series.competition }}
+            </a>
+        </li>
     {% endif %}
 {% endfor %}
 </ul>
@@ -28,7 +37,8 @@
 {% for round, categories in rounds_info %}
     {% if categories|length > 1 %}
         {% for category in categories %}
-            <div class="tab-pane fade{% if forloop.parentloop.counter == 1 and forloop.counter == 2 %} in active{%endif%}" id="category-tab-{{round.id}}-{{category.id}}">
+            <div class="tab-pane fade{% if forloop.parentloop.counter == 1 and forloop.counter == 2 %} in active{% endif %}"
+                 id="category-tab-{{ round.id }}-{{ category.id }}">
                 {% if category != None %}
                     <div class="alert alert-warning">Výsledky sú predbežné.</div>
                     {% show_results_table round=round category=category %}
@@ -36,7 +46,8 @@
             </div>
         {% endfor %}
     {% else %}
-        <div class="tab-pane fade{% if forloop.counter == 1 %} in active{%endif%}" id="category-tab-{{round.id}}">
+        <div class="tab-pane fade{% if forloop.counter == 1 %} in active{% endif %}"
+             id="category-tab-{{ round.id }}">
             <div class="alert alert-warning">Výsledky sú predbežné.</div>
             {% show_results_table round=round %}
         </div>

@@ -6,7 +6,10 @@ from trojsten.regal.tasks.models import Category
 from trojsten.regal.contests.models import Round
 
 
-is_true = lambda value: bool(value) and value.lower() not in ('false', '0')
+def is_true(value):
+    '''This function converts GET parameter value to bool
+    '''
+    return bool(value) and value.lower() not in ('false', '0')
 
 
 def view_results(request, round_id, category_id=None):
@@ -29,7 +32,7 @@ def view_results(request, round_id, category_id=None):
 
 
 def view_latest_results(request):
-    rounds = list(Round.objects.latest_visible(request.user))
+    rounds = Round.objects.latest_visible(request.user)
     rounds_info = zip(
         rounds,
         [
