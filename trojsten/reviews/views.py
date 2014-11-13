@@ -3,8 +3,7 @@ import zipfile
 from time import time
 
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse, Http404
-from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.contrib import messages
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -13,11 +12,10 @@ from django.utils.text import slugify
 from sendfile import sendfile
 
 from trojsten.regal.tasks.models import Task, Submit
-from trojsten.regal.people.models import User
-from trojsten.submit.helpers import save_file, get_path
+from trojsten.submit.helpers import save_file
 
-from trojsten.reviews.helpers import (submit_review, submit_download_filename,
-                                      get_latest_submits_by_task, get_user_as_choices)
+from trojsten.reviews.helpers import (submit_download_filename,
+                                      get_latest_submits_for_task, get_user_as_choices)
 
 from trojsten.reviews.forms import ReviewForm, get_zip_form_set, reviews_upload_pattern
 
@@ -26,7 +24,7 @@ def review_task(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     max_points = task.description_points
 
-    users = get_latest_submits_by_task(task)
+    users = get_latest_submits_for_task(task)
     choices = [(None, 'Auto / all')] + get_user_as_choices(task)
 
     if request.method == 'POST':
@@ -72,7 +70,7 @@ def submit_download(request, submit_pk):
 
 def download_latest_submits(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
-    submits = [data['description'] for data in get_latest_submits_by_task(task).values()]
+    submits = [data['description'] for data in get_latest_submits_for_task(task).values()]
 
     path = os.path.join(settings.SUBMIT_PATH, 'reviews')
     if not os.path.isdir(path):
@@ -127,7 +125,7 @@ def zip_upload(request, task_pk):
         formset = ZipFormSet(request.POST)
 
         if formset.is_valid():
-            formset.save(name, request.user, task)
+            formset.save(name, task)
 
             request.session.pop('review_archive')
             return redirect('admin:review_task', task.pk)

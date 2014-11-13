@@ -28,7 +28,7 @@ def submit_review(filecontent, filename, task, user, points):
     sub.save()
 
 
-def get_latest_submits_by_task(task):
+def get_latest_submits_for_task(task):
     description_submits = task.submit_set.filter(
         submit_type=Submit.DESCRIPTION, time__lt=task.round.end_time
     ).exclude(testing_status=SUBMIT_STATUS_REVIEWED).select_related('user', 'user__username')
@@ -37,28 +37,28 @@ def get_latest_submits_by_task(task):
         submit_type=Submit.DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
         ).select_related('user', 'user__username')
 
-    users = {}
+    submits_by_user = {}
     for submit in description_submits:
-        if submit.user not in users:
-            users[submit.user] = {'description': submit}
-        elif users[submit.user]['description'].time < submit.time:
-            users[submit.user]['description'] = submit
+        if submit.user not in submits_by_user:
+            submits_by_user[submit.user] = {'description': submit}
+        elif submits_by_user[submit.user]['description'].time < submit.time:
+            submits_by_user[submit.user]['description'] = submit
 
     for submit in review_submits:
-        if submit.user not in users:
-            users[submit.user] = {'review': submit}
-        elif 'review' not in users[submit.user]:
-            users[submit.user]['review'] = submit
-        elif users[submit.user]['review'].time < submit.time:
-            users[submit.user]['review'] = submit
+        if submit.user not in submits_by_user:
+            submits_by_user[submit.user] = {'review': submit}
+        elif 'review' not in submits_by_user[submit.user]:
+            submits_by_user[submit.user]['review'] = submit
+        elif submits_by_user[submit.user]['review'].time < submit.time:
+            submits_by_user[submit.user]['review'] = submit
 
-    return users
+    return submits_by_user
 
 
 def get_user_as_choices(task):
     return [
         (user.pk, '%s %s' % (user.first_name, user.last_name))
-        for user in get_latest_submits_by_task(task)
+        for user in get_latest_submits_for_task(task)
     ]
 
 

@@ -45,6 +45,7 @@ class ReviewForm(forms.Form):
         user = cleaned_data['user']
         points = cleaned_data['points']
 
+        # Choice field nevie rozlisit 'None' a None, tak je to (a vsetko ine) string
         if filename.endswith('.zip') and cleaned_data['user'] == 'None':
             cleaned_data['user'] = None
             return cleaned_data
@@ -155,7 +156,7 @@ class BaseZipSet(BaseFormSet):
 
             users.add(user)
 
-    def save(self, archive, req_user, task):
+    def save(self, archive, task):
         with zipfile.ZipFile(archive) as archive:
             for form in self:
                 user = form.cleaned_data['user']
@@ -163,9 +164,9 @@ class BaseZipSet(BaseFormSet):
                 if user is None:
                     continue
 
-                file = form.cleaned_data['filename']
+                fname = form.cleaned_data['filename']
                 points = form.cleaned_data['points']
 
-                submit_review(archive.read(file), os.path.basename(file), task, user, points)
+                submit_review(archive.read(fname), os.path.basename(fname), task, user, points)
 
         os.remove(archive)
