@@ -7,22 +7,26 @@
 <link rel="stylesheet" href="{% static "css/syntax_highlight.css" %}" type="text/css" />
 {% endblock %}
 
-{% block title %}{{task.number}}. {{task.name}} (riešenie){% endblock %}
+{% block title %}{{ task.number }}. {{ task.name }} (riešenie){% endblock %}
 
 {% block page_header %}
 <ul class="nav nav-pills">
   <li class="pull-left" id="article-title-li">
-    <h1 id="article-title" class="task-name">{{task.number}}. {{task.name}}
+    <h1 id="article-title" class="task-name">{{ task.number }}. {{ task.name }}
     <small>
     riešenie
     {% for category in task.category.all %}
-        <span class="label label-default category-{{category}}">{{category}}</span>
+        <span class="label label-default category-{{ category }}">{{ category }}</span>
     {% endfor %}
-    {% if not task.round.solutions_visible %}<span class="label label-danger">skryté</span>{% endif %}
+    {% if not task.round.solutions_visible %}
+      <span class="label label-danger">skryté</span>
+    {% endif %}
     </small></h1>
   </li>
   <li class="pull-right">
-    <a href="{% url 'task_list' round_id=task.round.id %}"><span class="glyphicon glyphicon-list"></span> Všetky úlohy</a>
+    <a href="{% url 'task_list' round_id=task.round.id %}">
+      <span class="glyphicon glyphicon-list"></span> Všetky úlohy
+    </a>
   </li>
 </ul>
 {% endblock %}

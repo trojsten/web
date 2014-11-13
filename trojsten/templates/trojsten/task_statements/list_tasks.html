@@ -4,7 +4,16 @@
 {% block title %}Zadania{% endblock %}
 
 {% block page_header %}
-<h1>Zadania <small>{{round.number}}. kola {{round.series.number}}. série {{round.series.year}}. ročníka {{round.series.competition.name}} {% if not round.visible %}<span class="label label-danger">skryté</span>{% endif %}</small></h1>
+<h1>
+    Zadania
+    <small>
+        {{ round.number }}. kola {{ round.series.number }}. série
+        {{ round.series.year }}. ročníka {{ round.series.competition.name }}
+        {% if not round.visible %}
+            <span class="label label-danger">skryté</span>
+        {% endif %}
+    </small>
+</h1>
 {% endblock %}
 
 {% block page_content %}
@@ -16,13 +25,20 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         {% for competition in competitions %}
-            <li {% if competition == round.series.competition %}class="active"{%endif%}><a href="#competition-tab-{{competition.name}}" role="tab" data-toggle="tab">{{competition.name}}</a></li>
+            <li {% if competition == round.series.competition %}class="active"{% endif %}>
+                <a href="#competition-tab-{{ competition.name }}" role="tab" data-toggle="tab">
+                    {{ competition.name }}
+                </a>
+            </li>
         {% endfor %}
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
         {% for competition in competitions %}
-            <div class="tab-pane fade {% if competition == round.series.competition %}in active{%endif%}" id="competition-tab-{{competition.name}}">{% show_round_list user=request.user competition=competition%}</div>
+            <div class="tab-pane fade {% if competition == round.series.competition %}in active{% endif %}"
+                 id="competition-tab-{{ competition.name }}">
+                {% show_round_list user=request.user competition=competition %}
+            </div>
         {% endfor %}
     </div>
 {% endblock %}
