@@ -31,7 +31,7 @@ class ReviewForm(forms.Form):
         max_val = kwargs.pop('max_value')
         super(ReviewForm, self).__init__(*args, **kwargs)
 
-        #setting max_value doesn't work
+        # setting max_value doesn't work
         self.fields['points'] = forms.IntegerField(min_value=0, max_value=max_val, required=False)
         self.fields['user'].choices = choices
 

@@ -39,15 +39,15 @@ def get_latest_submits_by_task(task):
 
     users = {}
     for submit in description_submits:
-        if not submit.user in users:
+        if submit.user not in users:
             users[submit.user] = {'description': submit}
         elif users[submit.user]['description'].time < submit.time:
             users[submit.user]['description'] = submit
 
     for submit in review_submits:
-        if not submit.user in users:
+        if submit.user not in users:
             users[submit.user] = {'review': submit}
-        elif not 'review' in users[submit.user]:
+        elif 'review' not in users[submit.user]:
             users[submit.user]['review'] = submit
         elif users[submit.user]['review'].time < submit.time:
             users[submit.user]['review'] = submit
