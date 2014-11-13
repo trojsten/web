@@ -16,7 +16,7 @@ def view_results(request, round_id, category_id=None):
     '''Displays results for specified round_ids and category_id
     '''
     round = get_object_or_404(Round.objects.visible(request.user), pk=round_id)
-    category = None if category_id is None else Category.objects.get(pk=category_id)
+    category = None if category_id is None else get_object_or_404(Category, pk=category_id)
 
     context = {
         'round': round,
