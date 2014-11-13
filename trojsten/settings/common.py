@@ -106,12 +106,12 @@ APPEND_SLASH = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -206,7 +206,7 @@ INSTALLED_APPS = (
     # django-wiki and its dependencies
     'django.contrib.humanize',
     'south',
-    'django_notify',
+    'django_nyt',
     'mptt',
     'sekizai',
     'sorl.thumbnail',
@@ -299,6 +299,11 @@ SOCIAL_AUTH_PIPELINE = (
 
 SOUTH_MIGRATION_MODULES = {
     'taggit': 'taggit.south_migrations',
+    'django_nyt': 'django_nyt.south_migrations',
+    'wiki': 'wiki.south_migrations',
+    'images': 'wiki.plugins.images.south_migrations',
+    'notifications': 'wiki.plugins.notifications.south_migrations',
+    'attachments': 'wiki.plugins.attachments.south_migrations',
 }
 
 UPLOADED_FILENAME_MAXLENGTH = 100000

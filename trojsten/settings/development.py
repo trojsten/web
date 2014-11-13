@@ -31,8 +31,6 @@ TASK_STATEMENTS_REPO_PATH = '/tmp/task_statements'
 TASK_STATEMENTS_PATH = '/var/www/zadania'
 FROZEN_RESULTS_PATH = '/var/www/frozen_results'
 
-WIKI_ATTACHMENTS_PATH = os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'media/wiki_attachments/%aid/')
-
 INSTALLED_APPS += (
     'debug_toolbar',
     'kombu.transport.django',
