@@ -63,7 +63,7 @@
     {% endif %}
     </td>
     {% if has_previous_results %}
-        <td class="result-prev">{{result.data.previous_rounds_points}}</td>
+        <td class="result-prev">{{ result.data.previous_rounds_points }}</td>
     {% endif %}
     {% for task in tasks %}
         <td class="result-task{% if task.integer_source_points %} result-task-integer{% endif %}">
