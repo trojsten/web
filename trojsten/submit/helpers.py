@@ -17,7 +17,6 @@ SUBMIT_DIR_PERMISSIONS = stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO
 
 
 def write_chunks_to_file(filepath, chunks):
-    filepath = unidecode(filepath)
     try:
         os.makedirs(os.path.dirname(filepath))
         os.chmod(os.path.dirname(filepath), SUBMIT_DIR_PERMISSIONS)
