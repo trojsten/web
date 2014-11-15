@@ -14,6 +14,7 @@ from django.conf import settings
 from django.utils.html import format_html
 
 from sendfile import sendfile
+from unidecode import unidecode
 
 from trojsten.regal.contests.models import Round
 from trojsten.regal.tasks.models import Task, Submit
@@ -156,8 +157,8 @@ def task_submit_post(request, task_id, submit_type):
                                      "Nepodporovaný formát súboru")
             else:
                 # Source file-name is id.data
-                sfiletarget = os.path.join(get_path(
-                    task, request.user), submit_id + '.data')
+                sfiletarget = unidecode(os.path.join(get_path(
+                    task, request.user), submit_id + '.data'))
                 write_chunks_to_file(sfiletarget, sfile.chunks())
                 sub = Submit(task=task,
                              user=request.user,
@@ -196,10 +197,10 @@ def task_submit_post(request, task_id, submit_type):
             from time import time
             submit_id = str(int(time()))
             # Description file-name should be: surname-id-originalfilename
-            sfiletarget = os.path.join(
+            sfiletarget = unidecode(os.path.join(
                 get_path(task, request.user),
                 "%s-%s-%s" % (request.user.last_name, submit_id, sfile.name),
-            )
+            ))
             write_chunks_to_file(sfiletarget, sfile.chunks())
             sub = Submit(task=task,
                          user=request.user,
