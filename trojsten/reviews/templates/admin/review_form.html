@@ -17,7 +17,7 @@
 <table>
 {% for user, data in users.items %}
     <tr>  
-    <td><a href="{% url 'admin:tasks_submit_changelist' %}?q={{user}}">{{ user.first_name }} {{ user.last_name }}</a></td>
+    <td><a href="{% url 'admin:tasks_submit_changelist' %}?q={{ user }}">{{ user.get_full_name }}</a></td>
     <td>
     {% if data.description %} 
         <a href="{% url 'admin:submit_download' data.description.pk %}">{% trans 'Description' %}</a> 
@@ -34,7 +34,7 @@
 </table>
 
 <br/>
-<form enctype="multipart/form-data" method="post" action="{% url 'admin:review_task' task.pk %}">
+<form enctype="multipart/form-data" method="post" action="">
     {% csrf_token %}
     <table>
     {{ form }}

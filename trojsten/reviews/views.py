@@ -39,10 +39,9 @@ def review_task(request, task_pk):
 
             messages.add_message(
                 request, messages.SUCCESS,
-                _('Uploaded file %(file)s to %(fname)s %(lname)s') % {
+                _('Uploaded file %(file)s to %(name)s') % {
                     'file': form.cleaned_data['file'].name,
-                    'fname': form.cleaned_data['user'].first_name,
-                    'lname': form.cleaned_data['user'].last_name
+                    'name': form.cleaned_data['user'].get_full_name(),
                 }
             )
 
@@ -78,7 +77,7 @@ def download_latest_submits(request, task_pk):
         os.chmod(path, 0777)
 
     path = os.path.join(path, 'Uloha-%s-%s-%s.zip' %
-                        (slugify(task.name), int(time()), request.user.username))
+                        (slugify(task.name), int(time()), slugify(request.user.username)))
 
     with zipfile.ZipFile(path, 'w') as zipper:
         for submit in submits:

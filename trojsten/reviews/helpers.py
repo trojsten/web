@@ -13,7 +13,7 @@ def submit_review(filecontent, filename, task, user, points):
 
     sfiletarget = os.path.join(
         get_path(task, user),
-        '%s-%s-%s' % (user.last_name, submit_id, filename),
+        '%s-%s-%s' % (submit_id, filename),
     )
 
     sfiletarget = unidecode(sfiletarget)
@@ -31,11 +31,11 @@ def submit_review(filecontent, filename, task, user, points):
 def get_latest_submits_for_task(task):
     description_submits = task.submit_set.filter(
         submit_type=Submit.DESCRIPTION, time__lt=task.round.end_time
-    ).exclude(testing_status=SUBMIT_STATUS_REVIEWED).select_related('user', 'user__username')
+    ).exclude(testing_status=SUBMIT_STATUS_REVIEWED).select_related('user')
 
     review_submits = task.submit_set.filter(
         submit_type=Submit.DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
-        ).select_related('user', 'user__username')
+    ).select_related('user')
 
     submits_by_user = {}
     for submit in description_submits:
@@ -57,7 +57,7 @@ def get_latest_submits_for_task(task):
 
 def get_user_as_choices(task):
     return [
-        (user.pk, '%s %s' % (user.first_name, user.last_name))
+        (user.pk, user.get_full_name())
         for user in get_latest_submits_for_task(task)
     ]
 

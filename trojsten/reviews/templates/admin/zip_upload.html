@@ -14,7 +14,7 @@
 
 
 {% block content %}
-<form method="post" action="{% url 'admin:review_submit_zip' task.pk %}">
+<form method="post" action="">
     {% csrf_token %}
     
     {% for form in formset %}
