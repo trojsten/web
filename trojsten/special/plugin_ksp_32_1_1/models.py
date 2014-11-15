@@ -1,9 +1,9 @@
 from django.db import models
-from django.contrib.auth import get_user_model
+from django.conf import settings
 
 
 class UserLevel(models.Model):
-    user = models.ForeignKey(get_user_model())
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+')
     level_id = models.IntegerField()
     try_count = models.IntegerField(default=0)
     solved = models.BooleanField(default=False)
@@ -18,8 +18,11 @@ class UserLevel(models.Model):
         if self.try_count > UserLevel.MAX_TRY_COUNT:
             self.try_set.order_by('id')[0].delete()
 
+    class Meta:
+        unique_together = (("user", "level_id"),)
+
 
 class Try(models.Model):
     userlevel = models.ForeignKey('UserLevel')
     input = models.CharField(max_length=15)
-    output = models.CharField(max_length=30)
+    output = models.CharField(max_length=40)

@@ -129,8 +129,9 @@ class Level9:
 
     @staticmethod
     def run(x):
+        x = int(x) % (24*60)
         d = datetime.datetime.fromtimestamp(
-            time.time() + int(x)*47*60
+            time.time() + x*47*60
         )
         return "%02d:%02d" % (d.hour, d.minute)
 

@@ -4,7 +4,7 @@ from time import time
 from unidecode import unidecode
 
 from trojsten.regal.tasks.models import Submit
-from trojsten.submit.helpers import save_file, get_path, write_file
+from trojsten.submit.helpers import get_path, write_chunks_to_file
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 
 
@@ -13,15 +13,15 @@ def submit_review(filecontent, filename, task, user, points):
 
     sfiletarget = os.path.join(
         get_path(task, user),
-        '%s-%s-%s' % (submit_id, filename),
+        '%s-%s-%s' % (user.last_name, submit_id, filename),
     )
 
     sfiletarget = unidecode(sfiletarget)
 
     if hasattr(filecontent, 'chunks'):
-        save_file(filecontent, sfiletarget)
+        write_chunks_to_file(sfiletarget, filecontent.chunks())
     else:
-        write_file(filecontent, '', sfiletarget)
+        write_chunks_to_file(sfiletarget, [filecontent])
 
     sub = Submit(task=task, user=user, points=points, submit_type=Submit.DESCRIPTION,
                  testing_status=SUBMIT_STATUS_REVIEWED, filepath=sfiletarget)

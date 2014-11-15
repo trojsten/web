@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-from django.utils.encoding import python_2_unicode_compatible
 
-from django.db import models
-from django.contrib.auth import get_user_model
-from django.conf import settings
-from trojsten.regal.contests.models import Round, Competition
-from django.utils.translation import ugettext_lazy as _
+from decimal import Decimal
 import os
+
+from django.utils.encoding import python_2_unicode_compatible
+from django.db import models
+from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
+
+from trojsten.regal.contests.models import Round, Competition
 
 
 @python_2_unicode_compatible
@@ -20,12 +22,16 @@ class Category(models.Model):
     name = models.CharField(max_length=16, verbose_name='názov')
     competition = models.ForeignKey(Competition, verbose_name='súťaž')
 
+    @property
+    def full_name(self):
+        return '%s-%s' % (self.competition.name, self.name)
+
     class Meta:
         verbose_name = 'Kategória'
         verbose_name_plural = 'Kategórie'
 
     def __str__(self):
-        return '%s-%s' % (self.competition.name, self.name)
+        return self.full_name
 
 
 @python_2_unicode_compatible
@@ -35,11 +41,13 @@ class Task(models.Model):
     Task has submits.
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
+    reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, verbose_name='opravovateľ')
     round = models.ForeignKey(Round, verbose_name='kolo')
-    category = models.ManyToManyField(Category, verbose_name='kategória')
+    category = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
     description_points = models.IntegerField(verbose_name='body za popis')
     source_points = models.IntegerField(verbose_name='body za program')
+    integer_source_points = models.BooleanField(default=True, verbose_name='celočíselné body za program')
     has_source = models.BooleanField(verbose_name='odovzáva sa zdroják')
     has_description = models.BooleanField(verbose_name='odovzáva sa popis')
     has_testablezip = models.BooleanField(verbose_name='odovzdáva sa zip na testovač', default=False)
@@ -78,35 +86,23 @@ class Task(models.Model):
             settings.TASK_STATEMENTS_HTML_DIR,
             task_file,
         )
-        if not os.path.exists(path):
-            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     @property
     def task_file_exists(self):
-        try:
-            self.get_path(solution=False)
-            return True
-        except IOError:
-            return False
+        path = self.get_path(solution=False)
+        return os.path.exists(path)
 
     @property
     def solution_file_exists(self):
-        try:
-            self.get_path(solution=True)
-            return True
-        except IOError:
-            return False
+        path = self.get_path(solution=True)
+        return os.path.exists(path)
 
     def visible(self, user):
-        return user.is_superuser\
-            or self.round.series.competition.organizers_group in user.groups.all()\
-            or self.round.visible
+        return self.round.is_visible_for_user(user)
 
-    def solutions_visible(self, user):
-        return user.is_superuser\
-            or self.round.series.competition.organizers_group in user.groups.all()\
-            or self.round.solutions_visible
+    def solution_visible(self, user):
+        return self.round.solutions_are_visible_for_user(user)
 
 
 @python_2_unicode_compatible
@@ -128,24 +124,30 @@ class Submit(models.Model):
         (EXTERNAL, 'external'),
     ]
     task = models.ForeignKey(Task, verbose_name='úloha')
-    time = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(get_user_model(), verbose_name='odovzdávateľ')
+    time = models.DateTimeField(auto_now_add=True, verbose_name='čas')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='odovzdávateľ')
     submit_type = models.IntegerField(verbose_name='typ submitu', choices=SUBMIT_TYPES)
-    points = models.IntegerField(verbose_name='body')
-    filepath = models.CharField(max_length=128, verbose_name='súbor')
+    points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body')
+
+    filepath = models.CharField(max_length=128, verbose_name='súbor', blank=True)
     testing_status = models.CharField(
-        max_length=128, verbose_name='stav testovania')
+        max_length=128, verbose_name='stav testovania', blank=True)
     tester_response = models.CharField(
-        max_length=10, verbose_name='odpoveď testovača')
+        max_length=10, verbose_name='odpoveď testovača', blank=True)
     protocol_id = models.CharField(
-        max_length=128, verbose_name='číslo protokolu')
+        max_length=128, verbose_name='číslo protokolu', blank=True)
 
     class Meta:
         verbose_name = 'Submit'
         verbose_name_plural = 'Submity'
 
     def __str__(self):
-        return '%s - %s <%s> (%s)' % (self.user, self.task, Submit.SUBMIT_TYPES[self.submit_type][1], str(self.time))
+        return '%s - %s <%s> (%s)' % (
+            self.user,
+            self.task,
+            Submit.SUBMIT_TYPES[self.submit_type][1],
+            str(self.time),
+        )
 
     @property
     def filename(self):
@@ -154,3 +156,20 @@ class Submit(models.Model):
     @property
     def tester_response_verbose(self):
         return _(self.tester_response)
+
+    @property
+    def user_points(self):
+        '''
+        Returns points visible to user.
+        Description points is always converted to integer.
+        Source points are converted to integer if self.task.integer_source_points == True
+        '''
+        if self.submit_type == Submit.DESCRIPTION or self.task.integer_source_points:
+            integer_points = True
+        else:
+            integer_points = False
+
+        if integer_points:
+            return self.points.quantize(Decimal(1))
+        else:
+            return self.points.quantize(Decimal('1.00'))

@@ -2,11 +2,24 @@
 
 from __future__ import unicode_literals
 
+from datetime import date
+
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
-from django.contrib.auth.models import AbstractUser
-from datetime import date
+from django.contrib.auth.models import AbstractUser, UserManager as DjangoUserManager
 from django.conf import settings
+
+
+class UserManager(DjangoUserManager):
+    def invited_to(self, event, invitation_type=None, going_only=False):
+        res = self.filter(
+            invitation__event=event
+        )
+        if invitation_type:
+            res = res.filter(invitation__type=invitation_type)
+        if going_only:
+            res = res.filter(invitation__going=True)
+        return res
 
 
 @python_2_unicode_compatible
@@ -64,12 +77,13 @@ class School(models.Model):
         return self.abbreviation.strip() != ''
 
 
+@python_2_unicode_compatible
 class User(AbstractUser):
-
     '''
     Holds, provide access to or manages all informations
     related to a person.
     '''
+
     gender = models.CharField(
         max_length=1,
         choices=[('M', 'Chlapec'), ('F', 'Dievča')],
@@ -101,6 +115,11 @@ class User(AbstractUser):
                                      verbose_name='rok maturity',
                                      help_text='Povinné pre žiakov.')
 
+    objects = UserManager()
+
+    def is_in_group(self, group):
+        return self.is_superuser or self.groups.filter(pk=group.pk).exists()
+
     class Meta:
         verbose_name = 'používateľ'
         verbose_name_plural = 'používatelia'
@@ -112,6 +131,25 @@ class User(AbstractUser):
         )
         return current_year - self.graduation + settings.GRADUATION_SCHOOL_YEAR
 
+    def __str__(self):
+        return '%s (%s)' % (self.username, self.get_full_name())
+
+
+@python_2_unicode_compatible
+class UserPropertyKey(models.Model):
+    '''
+    Type of key for additional user properties.
+    '''
+    key_name = models.CharField(max_length=100,
+                                verbose_name='názov vlastnosti')
+
+    def __str__(self):
+        return self.key_name
+
+    class Meta:
+        verbose_name = 'kľúč dodatočnej vlastnosti'
+        verbose_name_plural = 'kľúče dodatočnej vlastnosti'
+
 
 @python_2_unicode_compatible
 class UserProperty(models.Model):
@@ -120,10 +158,10 @@ class UserProperty(models.Model):
     '''
     user = models.ForeignKey(User,
                              related_name='properties')
-    key = models.CharField(max_length=100,
-                           verbose_name='názov vlastnosti')
-    value = models.CharField(max_length=100,
-                             verbose_name='hodnota vlastnosti')
+    key = models.ForeignKey(UserPropertyKey,
+                            verbose_name='názov vlastnosti',
+                            related_name='properties')
+    value = models.TextField(verbose_name='hodnota vlastnosti')
 
     def __str__(self):
         return '%s: %s' % (self.key, self.value)
@@ -131,3 +169,4 @@ class UserProperty(models.Model):
     class Meta:
         verbose_name = 'dodatočná vlastnosť'
         verbose_name_plural = 'dodatočné vlastnosti'
+        unique_together = ('user', 'key')

@@ -4,6 +4,8 @@ from time import time
 from functools import partial, wraps
 import zipfile
 
+from unidecode import unidecode
+
 from django.forms.formsets import formset_factory, BaseFormSet
 from django.utils.translation import ugettext_lazy as _
 from django.forms.widgets import HiddenInput
@@ -12,9 +14,9 @@ from django.conf import settings
 
 from trojsten.regal.tasks.models import Submit
 from trojsten.regal.people.models import User
+from trojsten.submit.helpers import write_chunks_to_file
 
 from trojsten.reviews.helpers import submit_review
-from trojsten.submit.helpers import save_file
 
 reviews_upload_pattern = re.compile(
     r'(?P<lastname>[^_]*)_(?P<submit_pk>[0-9]+)_(?P<filename>.+\.[^.]+)'
@@ -96,7 +98,8 @@ class ReviewForm(forms.Form):
             path = os.path.join(
                 settings.SUBMIT_PATH, 'reviews', '%s_%s.zip' % (int(time()), req_user.username)
             )
-            save_file(filecontent, path)
+            path = unidecode(path)
+            write_chunks_to_file(path, filecontent.chunks())
             return path
 
         submit_review(filecontent, filename, task, user, points)
@@ -168,8 +171,8 @@ class BaseZipSet(BaseFormSet):
 
             users.add(user)
 
-    def save(self, archive, task):
-        with zipfile.ZipFile(archive) as archive:
+    def save(self, archive_path, task):
+        with zipfile.ZipFile(archive_path) as archive:
             for form in self:
                 user = form.cleaned_data['user']
 
@@ -181,4 +184,4 @@ class BaseZipSet(BaseFormSet):
 
                 submit_review(archive.read(fname), os.path.basename(fname), task, user, points)
 
-        os.remove(archive)
+        os.remove(archive_path)

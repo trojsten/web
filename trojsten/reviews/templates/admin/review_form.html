@@ -17,7 +17,7 @@
 <table>
 {% for user, data in users.items %}
     <tr>  
-    <td><a href="{% url 'admin:tasks_submit_changelist' %}?q={{ user }}">{{ user.get_full_name }}</a></td>
+    <td><a href="{% url 'admin:tasks_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a></td>
     <td>
     {% if data.description %} 
         <a href="{% url 'admin:submit_download' data.description.pk %}">{% trans 'Description' %}</a> 

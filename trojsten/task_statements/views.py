@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
-from .tasks import compile_task_statements
+from django.conf import settings
+
+from sendfile import sendfile
+
 from trojsten.regal.tasks.models import Task
 from trojsten.regal.contests.models import Round, Competition
-from .helpers import get_rounds_by_year
-from sendfile import sendfile
-import os
-from django.conf import settings
+
+from .tasks import compile_task_statements
 
 
 def notify_push(request, uuid):
@@ -18,23 +21,21 @@ def notify_push(request, uuid):
 
 def _statement_view(request, task_id, solution=False):
     task = get_object_or_404(Task, pk=task_id)
-    if not task.visible(request.user) or (solution and not task.solutions_visible(request.user)):
+    if not task.visible(request.user) or (solution and not task.solution_visible(request.user)):
         raise Http404
-    try:
-        path = task.get_path(solution=solution)
-        template_data = {
-            'task': task,
-            'path': path
-        }
-        return render(
-            request,
-            'trojsten/task_statements/view_{}_statement.html'.format(
-                'solution' if solution else 'task'
-            ),
-            template_data,
-        )
-    except IOError:
-        raise Http404
+    template_data = {
+        'task': task,
+        'path': task.get_path(solution=solution),
+    }
+    if solution:
+        template_data['statement_path'] = task.get_path(solution=False)
+    return render(
+        request,
+        'trojsten/task_statements/view_{}_statement.html'.format(
+            'solution' if solution else 'task'
+        ),
+        template_data,
+    )
 
 
 def task_statement(request, task_id):
@@ -46,7 +47,7 @@ def solution_statement(request, task_id):
 
 
 def task_list(request, round_id):
-    round = get_object_or_404(Round.visible_rounds(request.user), pk=round_id)
+    round = get_object_or_404(Round.objects.visible(request.user), pk=round_id)
     competitions = Competition.objects.all()  # Todo: filter by site
     template_data = {
         'round': round,
@@ -73,12 +74,14 @@ def latest_task_list(request):
     )
 
 
-def view_pdf(request, round_id):
-    round = get_object_or_404(Round.visible_rounds(request.user), pk=round_id)
-    try:
-        path = round.get_pdf_path()
+def view_pdf(request, round_id, solution=False):
+    round = get_object_or_404(Round.objects.visible(request.user), pk=round_id)
+    if solution and not round.solutions_are_visible_for_user(request.user):
+        raise Http404
+    path = round.get_pdf_path(solution)
+    if os.path.exists(path):
         return sendfile(request, path)
-    except IOError:
+    else:
         raise Http404
 
 
@@ -89,11 +92,11 @@ def show_picture(request, type, task_id, picture):
     _, ext = os.path.splitext(picture)
     if not ext in settings.ALLOWED_PICTURE_EXT:
         raise Http404
-    try:
-        path = os.path.join(
-            task.round.get_pictures_path(),
-            picture,
-        )
+    path = os.path.join(
+        task.round.get_pictures_path(),
+        picture,
+    )
+    if os.path.exists(path):
         return sendfile(request, path)
-    except IOError:
+    else:
         raise Http404

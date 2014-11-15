@@ -1,22 +1,23 @@
+from collections import defaultdict
+
+from django.db.models import F
+
 from trojsten.regal.contests.models import Round
 from trojsten.regal.tasks.models import Submit
-from django.db.models import F
 
 
 def get_rounds_by_year(user, competition):
-    rounds = Round.visible_rounds(
+    rounds = Round.objects.visible(
         user
     ).filter(
         series__competition=competition
     ).order_by(
         '-series__year', '-number'
     ).select_related('series__year')
-    rounds_dict = dict()
+    rounds_dict = defaultdict(list)
     for round in rounds:
-        if not round.series.year in rounds_dict:
-            rounds_dict[round.series.year] = list()
         rounds_dict[round.series.year].append(round)
-    return rounds_dict
+    return dict(rounds_dict)
 
 
 def get_result_rounds(round):
@@ -49,5 +50,5 @@ def get_points_from_submits(tasks, submits):
         if submit.submit_type == Submit.DESCRIPTION:
             res[submit.task]['description'] = '??'  # Fixme
         else:
-            res[submit.task]['source'] += submit.points
+            res[submit.task]['source'] += submit.user_points
     return res

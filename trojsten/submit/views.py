@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Create your views here.
 
+import os
+import xml.etree.ElementTree as ET
+
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import Http404, HttpResponseBadRequest
@@ -8,25 +11,27 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.utils.html import format_html
+
+from sendfile import sendfile
+from unidecode import unidecode
+
 from trojsten.regal.contests.models import Round
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
-from trojsten.submit.helpers import save_file, process_submit, get_path,\
+from trojsten.submit.helpers import write_chunks_to_file, process_submit, get_path,\
     update_submit
-from sendfile import sendfile
-import os
-import xml.etree.ElementTree as ET
 
 
 @login_required
 def view_submit(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
-    if submit.user != request.user:
-        raise PermissionDenied()  # You shouldn't see other user's submits.
+    if submit.user != request.user and not Submit.objects.filter(pk=submit.pk, task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
+        raise PermissionDenied()  # You shouldn't see other user's submits if you are not an organizer of the competition
 
     # For source submits, display testing results, source code and submit list.
     if submit.submit_type == Submit.SOURCE or submit.submit_type == Submit.TESTABLE_ZIP:
-        if submit.testing_status == 'in queue':
+        if submit.testing_status == settings.SUBMIT_STATUS_IN_QUEUE:
             # check if submit wasn't tested yet
             update_submit(submit)
         template_data = {'submit': submit}
@@ -148,27 +153,32 @@ def task_submit_post(request, task_id, submit_type):
             # Source submit's should be processed by process_submit()
             submit_id = process_submit(sfile, task, language, request.user)
             if not submit_id:
-                messages.add_message(request, messages.ERROR, "Nepodporovaný formát súboru")
+                messages.add_message(request, messages.ERROR,
+                                     "Nepodporovaný formát súboru")
             else:
                 # Source file-name is id.data
-                sfiletarget = os.path.join(get_path(
-                    task, request.user), submit_id + '.data')
-                save_file(sfile, sfiletarget)
+                sfiletarget = unidecode(os.path.join(get_path(
+                    task, request.user), submit_id + '.data'))
+                write_chunks_to_file(sfiletarget, sfile.chunks())
                 sub = Submit(task=task,
                              user=request.user,
                              submit_type=submit_type,
                              points=0,
                              filepath=sfiletarget,
-                             testing_status='in queue',
+                             testing_status=settings.SUBMIT_STATUS_IN_QUEUE,
                              protocol_id=submit_id)
                 sub.save()
-                messages.add_message(request, messages.SUCCESS,
-                                     "Úspešne si submitol program, výsledok testovania nájdeš <a href='%s'>tu</a>" %
-                                     reverse("view_submit", args=[sub.id]))
+                success_message = format_html(
+                    "Úspešne si submitol program, výsledok testovania nájdeš "
+                    "<a href='{}'>tu</a>",
+                    reverse("view_submit", args=[sub.id])
+                )
+                messages.add_message(request, messages.SUCCESS, success_message)
         else:
             for field in form:
                 for error in field.errors:
-                    messages.add_message(request, messages.ERROR, "%s: %s" % (field.label, error))
+                    messages.add_message(request, messages.ERROR,
+                                         "%s: %s" % (field.label, error))
         if 'redirect_to' in request.POST:
             return redirect(request.POST['redirect_to'])
         else:
@@ -187,24 +197,26 @@ def task_submit_post(request, task_id, submit_type):
             from time import time
             submit_id = str(int(time()))
             # Description file-name should be: surname-id-originalfilename
-            sfiletarget = os.path.join(
+            sfiletarget = unidecode(os.path.join(
                 get_path(task, request.user),
                 "%s-%s-%s" % (request.user.last_name, submit_id, sfile.name),
-            )
-            save_file(sfile, sfiletarget)
+            ))
+            write_chunks_to_file(sfiletarget, sfile.chunks())
             sub = Submit(task=task,
                          user=request.user,
                          submit_type=submit_type,
                          points=0,
-                         testing_status='in queue',
+                         testing_status=settings.SUBMIT_STATUS_IN_QUEUE,
                          filepath=sfiletarget)
             sub.save()
             messages.add_message(request, messages.SUCCESS,
-                                 "Úspešne sa ti podarilo submitnúť popis, po skončení kola ti ho vedúci opravia")
+                                 "Úspešne sa ti podarilo submitnúť popis, "
+                                 "po skončení kola ti ho vedúci opravia")
         else:
             for field in form:
                 for error in field.errors:
-                    messages.add_message(request, messages.ERROR, "%s: %s" % (field.label, error))
+                    messages.add_message(request, messages.ERROR,
+                                         "%s: %s" % (field.label, error))
 
         if 'redirect_to' in request.POST:
             return redirect(request.POST['redirect_to'])

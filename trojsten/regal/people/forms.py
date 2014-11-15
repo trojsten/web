@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from trojsten.regal.people.models import User, Address
 from django.utils.translation import string_concat, ugettext_lazy as _
-from social.apps.django_app.utils import setting
+
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
+from social.apps.django_app.utils import setting
+
+from trojsten.regal.people.models import User, Address
 
 
 class TrojstenUserBaseForm(forms.ModelForm):
@@ -16,7 +18,11 @@ class TrojstenUserBaseForm(forms.ModelForm):
         max_length=32, label='Krajina')
 
     has_correspondence_address = forms.BooleanField(
-        label="Korešpondenčná adresa", required=False, help_text="Zaškrtni, ak chceš aby sme ti poštu posielali inde ako domov.(Typicky, ak bývaš na internáte.)")
+        label="Korešpondenčná adresa",
+        required=False,
+        help_text="Zaškrtni, ak chceš aby sme ti poštu posielali "
+        "inde ako domov.(Typicky, ak bývaš na internáte.)"
+    )
 
     corr_street = forms.CharField(max_length=70, label='Ulica', required=False)
     corr_town = forms.CharField(max_length=64, label='Mesto', required=False)

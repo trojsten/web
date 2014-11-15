@@ -2,16 +2,29 @@
 
 from __future__ import unicode_literals
 
+import os
+import pytz
+from datetime import datetime
+
 from django.db import models
 from django.db.models import Q
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.sites.models import Site
 from django.conf import settings
-import os
-from uuidfield import UUIDField
 from django.contrib.auth.models import Group
-from datetime import datetime
-import pytz
+
+from uuidfield import UUIDField
+
+
+class RoundManager(models.Manager):
+    def visible(self, user):
+        if user.is_superuser:
+            return self.get_queryset()
+        else:
+            return self.filter(
+                Q(series__competition__organizers_group__in=user.groups.all())
+                | Q(visible=True)
+            )
 
 
 @python_2_unicode_compatible
@@ -56,7 +69,7 @@ class Series(models.Model):
     Series consists of several rounds.
     '''
     competition = models.ForeignKey(Competition, verbose_name='súťaž')
-    name = models.CharField(max_length=32, verbose_name='názov')
+    name = models.CharField(max_length=32, verbose_name='názov', blank=True)
     number = models.IntegerField(verbose_name='číslo série')
     year = models.IntegerField(verbose_name='ročník')
 
@@ -73,6 +86,7 @@ class Series(models.Model):
             % (self.number, self.name)
     short_str.short_description = 'Séria'
 
+
 @python_2_unicode_compatible
 class Round(models.Model):
     '''
@@ -81,10 +95,20 @@ class Round(models.Model):
     '''
     series = models.ForeignKey(Series, verbose_name='séria')
     number = models.IntegerField(verbose_name='číslo')
-    start_time = models.DateTimeField(verbose_name='začiatok')
-    end_time = models.DateTimeField(verbose_name='koniec')
+    start_time = models.DateTimeField(
+        verbose_name='začiatok', default=datetime.now().replace(
+            hour=0, minute=0, second=0, microsecond=0
+        )
+    )
+    end_time = models.DateTimeField(
+        verbose_name='koniec', default=datetime.now().replace(
+            hour=23, minute=59, second=59, microsecond=0
+        )
+    )
     visible = models.BooleanField(verbose_name='viditeľnosť')
     solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov')
+
+    objects = RoundManager()
 
     @property
     def can_submit(self):
@@ -102,8 +126,6 @@ class Round(models.Model):
             year_dir,
             round_dir,
         )
-        if not os.path.exists(path):
-            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     def get_path(self, solution=False):
@@ -113,8 +135,6 @@ class Round(models.Model):
             self.get_base_path(),
             path_type,
         )
-        if not os.path.exists(path):
-            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     def get_pdf_path(self, solution=False):
@@ -124,8 +144,6 @@ class Round(models.Model):
             self.get_path(solution),
             pdf_file,
         )
-        if not os.path.exists(path):
-            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     def get_pictures_path(self):
@@ -133,39 +151,21 @@ class Round(models.Model):
             self.get_base_path(),
             settings.TASK_STATEMENTS_PICTURES_DIR,
         )
-        if not os.path.exists(path):
-            raise IOError("path '%s' doesn't exist" % path)
         return path
 
     @property
     def tasks_pdf_exists(self):
-        try:
-            self.get_pdf_path(solution=False)
-            return True
-        except IOError:
-            return False
+        path = self.get_pdf_path(solution=False)
+        return os.path.exists(path)
 
     @property
     def solutions_pdf_exists(self):
-        try:
-            self.get_pdf_path(solution=True)
-            return True
-        except IOError:
-            return False
-
-    @staticmethod
-    def visible_rounds(user):
-        if user.is_superuser:
-            return Round.objects
-        else:
-            return Round.objects.filter(
-                Q(series__competition__organizers_group__in=user.groups.all())
-                | Q(visible=True)
-            )
+        path = self.get_pdf_path(solution=True)
+        return os.path.exists(path)
 
     @staticmethod
     def get_latest_by_competition(user):
-        rounds = Round.visible_rounds(user).order_by(
+        rounds = Round.objects.visible(user).order_by(
             'series__competition', '-end_time'
         ).distinct(
             'series__competition'
@@ -174,13 +174,31 @@ class Round(models.Model):
         )
         return {r.series.competition: r for r in rounds}
 
+    def is_visible_for_user(self, user):
+        return (
+            user.is_superuser or
+            self.series.competition.organizers_group in user.groups.all() or
+            self.visible
+        )
+
+    def solutions_are_visible_for_user(self, user):
+        return (
+            user.is_superuser or
+            self.series.competition.organizers_group in user.groups.all() or
+            self.solutions_visible
+        )
+
     class Meta:
         verbose_name = 'Kolo'
         verbose_name_plural = 'Kolá'
 
     def __str__(self):
-        return '%i. kolo, %i. séria, %i. ročník %s'\
-            % (self.number, self.series.number, self.series.year, self.series.competition)
+        return '%i. kolo, %i. séria, %i. ročník %s' % (
+            self.number,
+            self.series.number,
+            self.series.year,
+            self.series.competition,
+        )
 
     def short_str(self):
         return '%i. kolo' % self.number

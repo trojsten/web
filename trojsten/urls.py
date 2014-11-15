@@ -1,18 +1,20 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.contrib import admin
+
+from wiki.urls import get_pattern as get_wiki_pattern
+from django_nyt.urls import get_pattern as get_notify_pattern
+from contact_form.views import ContactFormView
+
 import trojsten.submit.urls
 import trojsten.results.urls
 import trojsten.news.urls
 import trojsten.task_statements.urls
+from trojsten.regal.people.forms import TrojstenUserCreationForm, TrojstenUserChangeForm
 
 admin.autodiscover()
 admin.site.login = login_required(admin.site.login)
-
-from wiki.urls import get_pattern as get_wiki_pattern
-from django_notify.urls import get_pattern as get_notify_pattern
-from trojsten.regal.people.forms import TrojstenUserCreationForm, TrojstenUserChangeForm
-from contact_form.views import ContactFormView
 
 # Override default forms in ksp_login
 urlpatterns = patterns('ksp_login.views',
@@ -42,9 +44,17 @@ urlpatterns += patterns('',
     url(r'^vysledky/', include(trojsten.results.urls)),
     url(r'^novinky/', include(trojsten.news.urls)),
     url(r'^ulohy/', include(trojsten.task_statements.urls)),
+    url(r'^akcie/', include('trojsten.regal.events.urls')),
     url(r'^nahlasit-problem/', include('contact_form.urls')),
     url(r'^specialne/', include('trojsten.special.urls')),
     url(r'^$', 'trojsten.views.home_redirect'),
     url(r'^wiki/notify/', get_notify_pattern()),
     url(r'^', get_wiki_pattern()),
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+   )

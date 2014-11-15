@@ -5,7 +5,10 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from django.utils.encoding import force_text
 
+from easy_select2 import select2_modelform
+
 from trojsten.regal.tasks.models import *
+from trojsten.regal.tasks.forms import TaskValidationForm
 from trojsten.regal.utils import get_related, attribute_format
 from trojsten.reviews.urls import task_review_urls, submit_urls
 
@@ -19,8 +22,8 @@ class TaskByYearSubFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         tasks = Task.objects
-        if 'category__competition__id__exact' in request.GET:
-            tasks = tasks.filter(category__competition__id__exact=request.GET['category__competition__id__exact'])
+        if 'round__series__competition__id__exact' in request.GET:
+            tasks = tasks.filter(round__series__competition__id__exact=request.GET['round__series__competition__id__exact'])
         tasks = tasks.select_related('round__series__year')
         tasks = tasks.distinct('round__series__year').order_by('-round__series__year')
         years = (x.round.series.year for x in tasks.all())
@@ -42,8 +45,8 @@ class TaskByRoundSubFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         tasks = Task.objects
-        if 'category__competition__id__exact' in request.GET:
-            tasks = tasks.filter(category__competition__id__exact=request.GET['category__competition__id__exact'])
+        if 'round__series__competition__id__exact' in request.GET:
+            tasks = tasks.filter(round__series__competition__id__exact=request.GET['round__series__competition__id__exact'])
         if 'year_subfilter' in request.GET:
             tasks = tasks.filter(round__series__year=request.GET['year_subfilter'])
         tasks = tasks.select_related('round__series__competition')
@@ -63,13 +66,14 @@ class TaskByRoundSubFilter(admin.SimpleListFilter):
 
 class TaskAdmin(admin.ModelAdmin):
     change_form_template = 'admin/task_review.html'
+    form = select2_modelform(Task, form_class=TaskValidationForm)
 
     list_select_related = True
     list_display = ('name', 'number',
-                    'get_round', 'get_series', 'get_year', 'get_category',
-                    'submit_type',
+                    'get_round', 'get_series', 'get_year', 'get_competition', 'get_category',
+                    'submit_type', 'integer_source_points', 'reviewer',
                     'tasks_pdf', 'solutions_pdf')
-    list_filter = ('category__competition', TaskByYearSubFilter, TaskByRoundSubFilter)
+    list_filter = ('round__series__competition', TaskByYearSubFilter, TaskByRoundSubFilter)
     search_fields = ('name',)
 
     get_round = get_related(attribute_chain=('round', 'short_str'),
@@ -81,13 +85,17 @@ class TaskAdmin(admin.ModelAdmin):
     get_year = get_related(attribute_chain=('round', 'series', 'year'),
                            description='ročník',
                            order='round__series__year')
+    get_competition = get_related(attribute_chain=('round', 'series', 'competition'),
+                                  description='súťaž',
+                                  order='round__series__competition')
 
     def get_urls(self):
         return task_review_urls + super(TaskAdmin, self).get_urls()
 
     def get_category(self, obj):
-        return ', '.join(force_text(x) for x in obj.category.all())
+        return ', '.join(force_text(x.name) for x in obj.category.all())
     get_category.short_description = 'kategória'
+    get_category.admin_order_field = 'category'
 
     def submit_type(self, obj):
         res = ''
@@ -112,21 +120,26 @@ class TaskAdmin(admin.ModelAdmin):
 
 class SubmitAdmin(admin.ModelAdmin):
     change_form_template = 'admin/submit_form.html'
+    form = select2_modelform(Submit)
 
     list_select_related = True
     list_display = ('get_task_name', 'get_task_number',
-                    'get_round', 'get_series', 'get_year', 'get_category',
-                    'user', 'submit_type', 'testing_status', 'points', 'filepath', 'time')
-    list_filter = ('task__category__competition',)
+                    'get_round', 'get_series', 'get_year', 'get_competition', 'get_category',
+                    'user', 'time', 'get_points', 'submit_type', 'testing_status', 'filepath',)
+    list_filter = ('task__round__series__competition',)
     search_fields = ('user__username', 'task__name',)
+
+    get_points = attribute_format(
+        attribute='user_points',
+        description='body',
+    )
 
     get_task_name = get_related(attribute_chain=('task', 'name'),
                                 description='úloha',
                                 order='task__name')
     get_task_number = get_related(attribute_chain=('task', 'number'),
-                                  description='č. úlohy',
+                                  description='č.ú.',
                                   order='task__number')
-
     get_round = get_related(attribute_chain=('task', 'round', 'short_str'),
                             description='kolo',
                             order='task__round__number')
@@ -136,16 +149,21 @@ class SubmitAdmin(admin.ModelAdmin):
     get_year = get_related(attribute_chain=('task', 'round', 'series', 'year'),
                            description='ročník',
                            order='task__round__series__year')
+    get_competition = get_related(attribute_chain=('task', 'round', 'series', 'competition'),
+                                  description='súťaž',
+                                  order='task__round__series__competition')
 
     def get_urls(self):
         return submit_urls + super(SubmitAdmin, self).get_urls()
 
     def get_category(self, obj):
-        return ', '.join(force_text(x) for x in obj.task.category.all())
+        return ', '.join(force_text(x.name) for x in obj.task.category.all())
     get_category.short_description = 'kategória'
+    get_category.admin_order_field = 'task__category'
 
 
 class CategoryAdmin(admin.ModelAdmin):
+    form = select2_modelform(Category)
     list_filter = ('competition',)
 
 admin.site.register(Task, TaskAdmin)

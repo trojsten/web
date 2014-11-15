@@ -1,41 +1,29 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
 from time import time
 import os
 import random
 import socket
+import stat
 import xml.etree.ElementTree as ET
+from decimal import Decimal
+from unidecode import unidecode
+
+from django.conf import settings
 
 
 RESPONSE_ERROR = 'CERR'
 RESPONSE_OK = 'OK'
+SUBMIT_DIR_PERMISSIONS = stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO
 
 
-def write_file(text, binary, where):
-    '''Vytvorí cieľový adresár a uloží string do súboru.'''
+def write_chunks_to_file(filepath, chunks):
     try:
-        os.makedirs(os.path.split(where)[0])
-        fd = os.open(os.path.split(where)[0], os.O_RDONLY)
-        os.fchmod(fd, 0777)
-        os.close(fd)
+        os.makedirs(os.path.dirname(filepath))
+        os.chmod(os.path.dirname(filepath), SUBMIT_DIR_PERMISSIONS)
     except:
         pass
-    with open(where, 'w+') as destination:
-        destination.write(text)
-        destination.write(binary)
-
-
-def save_file(what, where):
-    '''Vytvorí cieľový adresár a uloží stiahnutý súbor.'''
-    try:
-        os.makedirs(os.path.split(where)[0])
-        fd = os.open(os.path.split(where)[0], os.O_RDONLY)
-        os.fchmod(fd, 0777)
-        os.close(fd)
-    except:
-        pass
-    with open(where, 'wb+') as destination:
-        for chunk in what.chunks():
+    with open(filepath, 'wb+') as destination:
+        for chunk in chunks:
             destination.write(chunk)
 
 
@@ -43,15 +31,15 @@ def get_lang_from_filename(filename):
     ext = os.path.splitext(filename)[1].lower()
     extmapping = {
         ".cpp": ".cc",
-        ".cc":  ".cc",
-        ".pp":  ".pas",
+        ".cc": ".cc",
+        ".pp": ".pas",
         ".pas": ".pas",
         ".dpr": ".pas",
-        ".c":   ".c",
-        ".py":  ".py",
+        ".c": ".c",
+        ".py": ".py",
         ".py3": ".py",
-        ".hs":  ".hs",
-        ".cs":  ".cs",
+        ".hs": ".hs",
+        ".cs": ".cs",
         ".java": ".java",
         ".zip": ".zip"}
 
@@ -75,8 +63,12 @@ def get_path(task, user):
 
     Cesta má tvar: $SUBMIT_PATH/submits/KSP/task_id/user_id
     '''
-    return get_path_raw(task.round.series.competition.name, "%s-%d" % (task.round.series.competition.name, task.id),
-            "%s-%d" % (task.round.series.competition.name, user.id))
+    return get_path_raw(
+        task.round.series.competition.name, "%s-%d" % (
+            task.round.series.competition.name, task.id
+        ),
+        "%s-%d" % (task.round.series.competition.name, user.id)
+    )
 
 
 def post_submit(raw, data):
@@ -105,16 +97,16 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
     # Prepare submit parameters (not entirely sure about this yet).
     user_id = "%s-%d" % (contest_id, user_id)
     task_id = "%s-%d" % (contest_id, task_id)
-    original_name = f.name
+    original_name = unidecode(f.name)
     correct_filename = task_id + language
     data = f.read()
-    
+
     # Determine local directory to store RAW file into
     path = get_path_raw(contest_id, task_id, user_id)
 
     # Prepare RAW from submit parameters
     raw = "%s\n%s\n%s\n%s\n%s\n%s\n" % (
-        contest_id,
+        settings.TESTER_WEB_IDENTIFIER,
         submit_id,
         user_id,
         correct_filename,
@@ -122,7 +114,7 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
         original_name)
 
     # Write RAW to local file
-    write_file(raw, data, os.path.join(path, submit_id + '.raw'))
+    write_chunks_to_file(os.path.join(path, submit_id + '.raw'), [raw, data])
 
     # Send RAW for testing (uncomment when deploying)
     post_submit(raw, data)
@@ -172,10 +164,10 @@ def update_submit(submit):
             # Na konci testovača je v tagu <score> uložené percento získaných
             # bodov.
             try:
-                score = int(float(tree.find("runLog/score").text))
+                score = Decimal(tree.find("runLog/score").text)
             except:
                 score = 0
-            points = (submit.task.source_points * score) // 100
+            points = (submit.task.source_points * score) / Decimal(100)
         submit.points = points
         submit.tester_response = result
         submit.testing_status = 'finished'

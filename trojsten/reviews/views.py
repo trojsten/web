@@ -12,8 +12,6 @@ from django.utils.text import slugify
 from sendfile import sendfile
 
 from trojsten.regal.tasks.models import Task, Submit
-from trojsten.submit.helpers import save_file
-
 from trojsten.reviews.helpers import (submit_download_filename,
                                       get_latest_submits_for_task, get_user_as_choices)
 

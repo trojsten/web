@@ -33,7 +33,7 @@
             <ul class="nav masthead-nav">
               {% for lvl, solved in levels %}
                 <li class='{% if lvl == level %}active{% endif %}'>
-                  <a href='{% url "main" lvl %}'>
+                  <a href='{% url "plugin_zwarte:main" lvl %}'>
                     {% if solved %}
                       {{lvl}}&#10003;
                     {% else %}
@@ -105,7 +105,7 @@
   <script src='{% static "js/jquery-1.11.1.min.js" %}'></script>
   <script src='{% static "plugin_ksp_32_1_1/send.js" %}'></script>
   <script type="text/javascript">
-    window.submit_url="{% url "run" level %}";
+    window.submit_url="{% url "plugin_zwarte:run" level %}";
   </script>
   <script type="text/javascript">
     {% for input, output, solved in try_set %}

@@ -11,5 +11,6 @@ urlpatterns = patterns('trojsten.task_statements.views',
     url(r'^(?P<round_id>\d+)/$', 'task_list', name='task_list'),
     url(r'^$', 'latest_task_list', name='latest_task_list'),
     url(r'^pdf/(?P<round_id>\d+)/', 'view_pdf', name='view_pdf'),
+    url(r'^solutions_pdf/(?P<round_id>\d+)/', 'view_pdf', {'solution': True}, name='view_solutions_pdf'),
     url(r'^(?P<type>(zadania)|(riesenia))/(?P<task_id>\d+)/%s/(?P<picture>.+)$' % settings.TASK_STATEMENTS_PICTURES_DIR, 'show_picture', name='show_picture'),
 )

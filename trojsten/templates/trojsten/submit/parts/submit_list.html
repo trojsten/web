@@ -1,4 +1,5 @@
 {% load utils %}
+{% load submit_parts %}
 {% if task.has_description or task.has_source or task.has_testablezip %}
 <h2>Odovzdané súbory</h2>
 {% endif %}
@@ -14,9 +15,9 @@
         </thead>
         <tbody>
         {% for submit in submits|lookup:Submit.DESCRIPTION %}
-            <tr class="{% cycle 'even' 'odd' %}">
+            <tr>
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
-                {% if submit.testing_status == 'in queue' %}
+                {% if submit.testing_status == IN_QUEUE %}
                 <td>Neopravené</td>
                 <td>..</td>
                 {% else %}
@@ -46,9 +47,9 @@
         <tbody>
         {% if task.has_source %}
         {% for submit in submits|lookup:Submit.SOURCE %}
-            <tr class="{% cycle 'even' 'odd' %}">
+            <tr class="{{ submit|submitcolor }}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
-                {% if submit.testing_status == 'in queue' %}
+                {% if submit.testing_status == IN_QUEUE %}
                 <td>Testuje sa</td>
                 <td>Čaká sa na otestovanie</td>
                 <td>..</td>
@@ -62,9 +63,9 @@
         {% endif %}
         {% if task.has_testablezip %}
         {% for submit in submits|lookup:Submit.TESTABLE_ZIP %}
-            <tr class="{% cycle 'even' 'odd' %}">
+            <tr class="{{ submit|submitcolor }}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
-                {% if submit.testing_status == 'in queue' %}
+                {% if submit.testing_status == IN_QUEUE %}
                 <td>Testuje sa</td>
                 <td>Čaká sa na otestovanie</td>
                 <td>..</td>

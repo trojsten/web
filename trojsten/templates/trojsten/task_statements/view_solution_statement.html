@@ -1,4 +1,11 @@
 {% extends "trojsten/layout/main.html" %}
+{% load disqus_tags %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/syntax_highlight.css" %}" type="text/css" />
+{% endblock %}
 
 {% block title %}{{task.number}}. {{task.name}} (riešenie){% endblock %}
 
@@ -11,7 +18,7 @@
     {% for category in task.category.all %}
         <span class="label label-default category-{{category}}">{{category}}</span>
     {% endfor %}
-    {% if not task.round.visible %}<span class="label label-danger">skryté</span>{% endif %}
+    {% if not task.round.solutions_visible %}<span class="label label-danger">skryté</span>{% endif %}
     </small></h1>
   </li>
   <li class="pull-right">
@@ -21,7 +28,33 @@
 {% endblock %}
 
 {% block page_content %}
+    {% set_disqus_identifier "task-sol" task.id %}
+    {% set_disqus_url "http://" request.META.HTTP_HOST request.path %}
+    {% set_disqus_title task.number ". " task.name " - riešenie" %}
     <div class="task-statement">
+      {% if task.task_file_exists %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+              Zadanie
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse">
+          <div class="panel-body">
+            {% ssi statement_path %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% if task.solution_file_exists %}
         {% ssi path %}
+      {% else %}
+          <div class="alert alert-warning">HTML riešenie nie je k dispozícii.</div>
+      {% endif %}
     </div>
+    <h2>Diskusia</h2>
+    <p>Tu môžte voľne diskutovať o riešení, deliť sa o svoje kusy kódu a podobne.</p>
+    {% disqus_show_comments %}
 {% endblock %}
