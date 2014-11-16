@@ -16,17 +16,23 @@ class SourceSubmitForm(forms.Form):
         (".java", "Java (.java)")
     )
     submit_file = forms.FileField(
-        max_length=settings.UPLOADED_FILENAME_MAXLENGTH)
+        max_length=settings.UPLOADED_FILENAME_MAXLENGTH,
+        allow_empty_file=True,
+    )
     language = forms.ChoiceField(label='Jazyk',
                                  choices=LANGUAGE_CHOICES)
 
 class DescriptionSubmitForm(forms.Form):
     submit_file = forms.FileField(
-        max_length=settings.UPLOADED_FILENAME_MAXLENGTH)
+        max_length=settings.UPLOADED_FILENAME_MAXLENGTH,
+        allow_empty_file=True,
+    )
 
 class TestableZipSubmitForm(forms.Form):
     submit_file = forms.FileField(
-        max_length=settings.UPLOADED_FILENAME_MAXLENGTH)
+        max_length=settings.UPLOADED_FILENAME_MAXLENGTH,
+        allow_empty_file=True,
+    )
 
     def clean_submit_file(self):
         sfile = self.cleaned_data['submit_file']
