@@ -1,9 +1,11 @@
+{% load humanize %}
+
 {% for entry in news_entries %}
   <div class="news-entry{% for tag in entry.tags.all %} news-tag-{{tag}}{% endfor %}">
     <h3>{{ entry.title }}</h3>
     <p class="news-entry-details">
         <span class="news-entry-author">{{ entry.author.username }}</span>,
-        <span class="news-entry-date">{{ entry.pub_date|date:"DATETIME_FORMAT" }}</span>
+        <span class="news-entry-date">{{ entry.pub_date | naturaltime }}</span>
     </p>
     <div class="news-entry-text">
         {{ entry.rendered_text }}
