@@ -5,37 +5,56 @@ import os
 import trojsten
 import trojsten.special.installed_apps
 
+def env(name, default):
+    return os.environ.get(name, default)
 
 #
 # Django settings
 #
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backendds.postgresql_psycopg2',
+        'NAME': env('TROJSTENWEB_DATABSE_NAME', 'trojsten'),
+        'USER': env('USER', 'trojsten'),
+        'PASSWORD': env('TROJSTENWEB_DATABASE_PASSWORD', ''),
+        'HOST': env('TROJSTENWEB_DATABASE_URL', 'localhost'),
+        'PORT': env('TROJSTENWEB_DATABSE_PORT', ''),
+    },
+    'kaspar': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'kaspar',
+        'USER': 'trojsten',
+        'PASSWORD': 'trojsten',
+        'HOST': 'localhost',
+        'PORT': '',
+    },
+}
 
 PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
     os.path.dirname(os.path.realpath(trojsten.__file__))
 )
 
 AUTH_USER_MODEL = 'people.User'
-DEBUG = False
-TEMPLATE_DEBUG = DEBUG
+DEBUG = bool(env('TROJSTENWEB_DEBUG', 'False'))
+TEMPLATE_DEBUG = bool(env('TROJSTENWEB_TEMPLATE_DEBUG', DEBUG))
 
-ADMINS = ()
-
-MANAGERS = ADMINS
+ADMINS = tuple(env('TROJSTENWEB_ADMINS', '').split(';'))
+MANAGERS = tuple(env('TROJSTENWEB_MANAGERS', '').split(';'))
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env('TROJSTENWEB_ALLOWED_HOSTS', 'www.ksp.sk').split(';')
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'Europe/Bratislava'
+TIME_ZONE = env('TROJSTENWEB_TIME_ZONE', 'Europe/Bratislava')
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'sk-SK'
+LANGUAGE_CODE = env('TROJSTENWEB_LANGUAGE_CODE', 'sk-SK')
 
 SITE_ID = 1
 
@@ -82,22 +101,22 @@ APPEND_SLASH = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
+MEDIA_ROOT = env('TROJSTENWEB_MEDIA_ROOT', os.path.join(PROJECT_DIR, 'media'))
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
-MEDIA_URL = '/media/'
+MEDIA_URL = env('TROJSTENWEB_MEDIA_URL', '/media/')
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+STATIC_ROOT = env('TROJSTENWEB_STATIC_ROOT', os.path.join(PROJECT_DIR, 'static'))
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/static/'
+STATIC_URL = env('TROJSTENWEB_STATIC_URL', '/static/')
 
 
 # Additional locations of static files
@@ -112,7 +131,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '*ev5i*d2v+ln+hm=swggoo-+%62y4*r8va@nign_mgq*&%x+z)'
+SECRET_KEY = env('TROJSTENWEB_SECRET_KEY', '*ev5i*d2v+ln+hm=swggoo-+%62y4*r8va@nign_mgq*&%x+z)')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -259,14 +278,12 @@ LOGIN_REDIRECT_URL = "/ucet/"
 
 # KSP-Login settings
 # The list of authentication backends we want to allow.
-AUTHENTICATION_BACKENDS = (
-    #'social.backends.facebook.FacebookOAuth2',
-    'social.backends.google.GoogleOpenId',
-    #'social.backends.github.GithubOAuth2',
-    'ksp_login.backends.LaunchpadAuth',
-    'social.backends.open_id.OpenIdAuth',
-    'django.contrib.auth.backends.ModelBackend',
-)
+AUTHENTICATION_BACKENDS = tuple(env('TROJSTENWEB_AUTHENTICATION_BACKENDS',
+    'social.backends.google.GoogleOpenId;' \
+    'ksp_login.backends.LaunchpadAuth;' \
+    'social.backends.open_id.OpenIdAuth;' \
+    'django.contrib.auth.backends.ModelBackend' \
+).split(';'))
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
@@ -279,9 +296,18 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 # The number of authentication providers to show in the short list.
-AUTHENTICATION_PROVIDERS_BRIEF = 3
+AUTHENTICATION_PROVIDERS_BRIEF = int(env('TROJSTENWEB_AUTHENTICATION_PROVIDERS_BRIEF', '3'))
+SOCIAL_AUTH_FACEBOOK_KEY = env('TROJSTENWEB_FACEBOOK_KEY', '')
+SOCIAL_AUTH_FACEBOOK_SECRET = env('TROJSTENWEB_FACEBOOK_SECRET', '')
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'locale': 'sk_SK'}
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('TROJSTENWEB_GOOGLE_OAUTH2_KEY', '')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('TROJSTENWEB_GOOGLE_OAUTH2_SECRET', '')
+SOCIAL_AUTH_GITHUB_KEY = env('TROJSTENWEB_GITHUB_KEY', '')
+SOCIAL_AUTH_GITHUB_SECRET = env('TROJSTENWEB_GITHUB_SECRET', '')
+SOCIAL_AUTH_GITHUB_SCOPE = ['email']
 
-DISQUS_WEBSITE_SHORTNAME = 'trojsten-ksp'
+DISQUS_WEBSITE_SHORTNAME = env('TROJSTENWEB_DISQUS_WEBSITE_SHORTNAME', 'trojsten-ksp')
 
 SOUTH_MIGRATION_MODULES = {
     'taggit': 'taggit.south_migrations',
@@ -301,7 +327,8 @@ WIKI_MARKDOWN_KWARGS = {
     'safe_mode': False,
 }
 WIKI_EDITOR = 'trojsten.markdown_editors.TrojstenMarkItUp'
-WIKI_ATTACHMENTS_PATH = os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'media/wiki_attachments/%aid/')
+WIKI_ATTACHMENTS_PATH = env('TROJSTENWEB_WIKI_ATTACHMENTS_PATH',
+        os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'media/wiki_attachments/%aid/'))
 
 # Celery settings
 #: Only add pickle to this list if your broker is secured
@@ -310,7 +337,7 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_IMPORTS = ("trojsten.task_statements.handlers", )
-BROKER_URL = 'django://'
+BROKER_URL = env('TROJSTENWEB_CELERY_BROKER_URL',  'django://')
 
 
 #
@@ -319,32 +346,41 @@ BROKER_URL = 'django://'
 
 
 # Task statements settings
-TASK_STATEMENTS_PATH = os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'statements')
-TASK_STATEMENTS_REPO_PATH = os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'statements_repo')
-TASK_STATEMENTS_SUFFIX_YEAR = 'rocnik'
-TASK_STATEMENTS_SUFFIX_ROUND = 'kolo'
-TASK_STATEMENTS_TASKS_DIR = 'zadania'
-TASK_STATEMENTS_PREFIX_TASK = 'prikl'
-TASK_STATEMENTS_SOLUTIONS_DIR = 'vzoraky'
-TASK_STATEMENTS_PICTURES_DIR = 'obrazky'
-TASK_STATEMENTS_HTML_DIR = 'html'
-TASK_STATEMENTS_PDF = 'zadania.pdf'
-TASK_STATEMENTS_SOLUTIONS_PDF = 'vzoraky.pdf'
+TASK_STATEMENTS_PATH = env('TROJSTENWEB_TASK_STATEMENTS_PATH',
+        os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'statements'))
+TASK_STATEMENTS_REPO_PATH = env('TROJSTENWEB_TASK_STATEMENTS_REPO_PATH',
+        os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'statements_repo'))
+TASK_STATEMENTS_SUFFIX_YEAR = env('TROJSTENWEB_TASK_STATEMENTS_SUFFIX_YEAR', 'rocnik')
+TASK_STATEMENTS_SUFFIX_ROUND = env('TROJSTENWEB_TASK_STATEMENTS_SUFFIX_ROUND', 'kolo')
+TASK_STATEMENTS_TASKS_DIR = env('TROJSTENWEB_TASK_STATEMENTS_TASKS_DIR', 'zadania')
+TASK_STATEMENTS_PREFIX_TASK = env('TROJSTENWEB_TASK_STATEMENTS_PREFIX_TASK', 'prikl')
+TASK_STATEMENTS_SOLUTIONS_DIR = env('TROJSTENWEB_TASK_STATEMENTS_SOLUTIONS_DIR', 'vzoraky')
+TASK_STATEMENTS_PICTURES_DIR = env('TROJSTENWEB_TASK_STATEMENTS_PICTURES_DIR', 'obrazky')
+TASK_STATEMENTS_HTML_DIR = env('TROJSTENWEB_TASK_STATEMENTS_HTML_DIR', 'html')
+TASK_STATEMENTS_PDF = env('TROJSTENWEB_TASK_STATEMENTS_PDF', 'zadania.pdf')
+TASK_STATEMENTS_SOLUTIONS_PDF = env('TROJSTENWEB_TASK_STATEMENTS_SOLUTIONS_PDF', 'vzoraky.pdf')
 ALLOWED_PICTURE_EXT = {'.jpg', '.png', '.gif', '.webp', }
 
 # Round progressbar settings
-ROUND_PROGRESS_DEFAULT_CLASS = 'progress-bar-info'
-ROUND_PROGRESS_WARNING_DAYS = 14
-ROUND_PROGRESS_WARNING_CLASS = 'progress-bar-warning'
-ROUND_PROGRESS_DANGER_DAYS = 7
-ROUND_PROGRESS_DANGER_CLASS = 'progress-bar-danger'
-FROZEN_RESULTS_PATH = 'frozen_results'
+ROUND_PROGRESS_DEFAULT_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DEFAULT_CLASS', 'progress-bar-info')
+ROUND_PROGRESS_WARNING_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_WARNING_DAYS', '14'))
+ROUND_PROGRESS_WARNING_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_WARNING_CLASS', 'progress-bar-warning')
+ROUND_PROGRESS_DANGER_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_DANGER_DAYS', '7'))
+ROUND_PROGRESS_DANGER_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DANGER_CLASS', 'progress-bar-danger')
+FROZEN_RESULTS_PATH = env('TROJSTENWEB_FROZEN_RESULTS_PATH', 
+        os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'frozen_results'))
 
 # Submit settings
-SUBMIT_PATH = os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'submits')
+SUBMIT_PATH = env('TROJSTENWEB_SUBMIT_PATH',
+        os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'submits'))
 SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS = ['.pdf', '.txt', '.md', '.rtf', '.doc', '.docx', '.odt']
-UPLOADED_FILENAME_MAXLENGTH = 100000
-PROTOCOL_FILE_EXTENSION = '.protokol'
-TESTER_URL = 'experiment'
-TESTER_PORT = 12347
-TESTER_WEB_IDENTIFIER = 'KSP'
+UPLOADED_FILENAME_MAXLENGTH = int(env('TROJSTENWEB_UPLOADED_FILENAME_MAXLENGTH', '100000'))
+PROTOCOL_FILE_EXTENSION = env('TROJSTENWEB_PROTOCOL_FILE_EXTENSION', '.protokol')
+TESTER_URL = env('TROJSTENWEB_TESTER_URL', 'experiment')
+TESTER_PORT = int(env('TROJSTENWEB_TESTER_PORT', '12347'))
+TESTER_WEB_IDENTIFIER = env('TROJSTENWEB_TESTER_WEB_IDENTIFIER', 'KSP')
+
+
+ALLOWED_INCLUDE_ROOTS += (
+    TASK_STATEMENTS_PATH,
+)

@@ -20,12 +20,3 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Use localhost for first site route
 SITES[SITE_ID]['URL'] = 'http://localhost:8000'
 
-# Load local settings
-try:
-    from trojsten.settings.local import *
-except ImportError:
-    pass
-
-ALLOWED_INCLUDE_ROOTS = (
-    TASK_STATEMENTS_PATH,
-)
