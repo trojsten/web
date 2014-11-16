@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.utils.translation import string_concat, ugettext_lazy as _
+from django.conf import settings
+
+from datetime import date
 
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
@@ -116,6 +119,23 @@ class TrojstenUserBaseForm(forms.ModelForm):
                 )
 
         return self.cleaned_data.get('corr_country')
+
+    def clean_graduation(self):
+        grad = int(self.cleaned_data.get('graduation'))
+
+        if grad < settings.GRADUATION_YEAR_MIN:
+            raise forms.ValidationError(
+                _("Your graduation year is too far in the past."),
+                code="graduation_too_soon",
+            )
+
+        if grad > date.today().year + settings.GRADUATION_YEAR_MAX_AHEAD:
+            raise forms.ValidationError(
+                _("Your graduation year is too far in the future."),
+                code="graduation_too_late",
+            )
+
+        return grad
 
 
 class TrojstenUserChangeForm(TrojstenUserBaseForm):

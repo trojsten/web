@@ -343,3 +343,6 @@ WIKI_MARKDOWN_KWARGS = {
 }
 
 WIKI_EDITOR = 'trojsten.markdown_editors.TrojstenMarkItUp'
+
+GRADUATION_YEAR_MIN = 1957
+GRADUATION_YEAR_MAX_AHEAD = 10
