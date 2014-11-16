@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from django import forms
 from django.conf import settings
 
+import os
+
 
 class SourceSubmitForm(forms.Form):
     LANGUAGE_CHOICES = (
@@ -23,6 +25,13 @@ class SourceSubmitForm(forms.Form):
 class DescriptionSubmitForm(forms.Form):
     submit_file = forms.FileField(
         max_length=settings.UPLOADED_FILENAME_MAXLENGTH)
+
+    def clean_submit_file(self):
+        sfile = self.cleaned_data['submit_file']
+        extension = os.path.splitext(sfile.name)[1]
+        if extension not in settings.SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS:
+            raise forms.ValidationError("Zaslaný súbor má nepodporovanú príponu %s" % extension)
+        return sfile
 
 class TestableZipSubmitForm(forms.Form):
     submit_file = forms.FileField(
