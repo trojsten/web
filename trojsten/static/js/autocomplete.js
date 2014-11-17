@@ -7,7 +7,7 @@
         // Create required helper text inputs for all autocomplete selects.
         $('select.autocomplete').each(function()
         {
-            var new_input = $('<input type="text" class="autocomplete_text"></input>');
+            var new_input = $('<input type="text" class="form-control autocomplete_text"></input>');
             $(this).hide();
             $(this).after(new_input);
             new_input = $(this).next();
