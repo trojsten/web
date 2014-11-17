@@ -1,7 +1,24 @@
 {% extends "trojsten/layout/main.html" %}
-{% load submit_parts %}
+{% load staticfiles submit_parts %}
 
 {% block title %}Detaily submitu{% endblock %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/prettify.css" %}" type="text/css" />
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static "js/prettify/prettify.js" %}" type="text/javascript"></script>
+<script>
+    !function ($) {                                                                                           
+       $(function(){
+           window.prettyPrint && prettyPrint()
+       })
+    }(window.jQuery)
+</script>
+{% endblock %}
 
 {% block page_header %}
 <h1>Detaily submitu <small>{{ submit.protocol_id }}</small></h1>
@@ -43,7 +60,7 @@
     {% endif %}
     <h3>Odovzdaný program</h3>
     {% if fileReady %}
-        <pre>{{ data }}</pre>
+        <pre class="prettyprint">{{ data }}</pre>
     {% else %}
         Zdrojový kód programu nie je dostupný
     {% endif %}
