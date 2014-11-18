@@ -13,13 +13,11 @@ from django.conf import settings
 
 RESPONSE_ERROR = 'CERR'
 RESPONSE_OK = 'OK'
-SUBMIT_DIR_PERMISSIONS = stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO
 
 
 def write_chunks_to_file(filepath, chunks):
     try:
         os.makedirs(os.path.dirname(filepath))
-        os.chmod(os.path.dirname(filepath), SUBMIT_DIR_PERMISSIONS)
     except:
         pass
     with open(filepath, 'wb+') as destination:
