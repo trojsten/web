@@ -10,6 +10,7 @@ from easy_select2 import select2_modelform
 from trojsten.regal.tasks.models import *
 from trojsten.regal.tasks.forms import TaskValidationForm
 from trojsten.regal.utils import get_related, attribute_format
+from trojsten.reviews.urls import task_review_urls, submit_urls
 
 
 class TaskByYearSubFilter(admin.SimpleListFilter):
@@ -64,6 +65,7 @@ class TaskByRoundSubFilter(admin.SimpleListFilter):
 
 
 class TaskAdmin(admin.ModelAdmin):
+    change_form_template = 'admin/task_review.html'
     form = select2_modelform(Task, form_class=TaskValidationForm)
 
     list_select_related = True
@@ -86,6 +88,9 @@ class TaskAdmin(admin.ModelAdmin):
     get_competition = get_related(attribute_chain=('round', 'series', 'competition'),
                                   description='súťaž',
                                   order='round__series__competition')
+
+    def get_urls(self):
+        return task_review_urls + super(TaskAdmin, self).get_urls()
 
     def get_category(self, obj):
         return ', '.join(force_text(x.name) for x in obj.category.all())
@@ -114,7 +119,9 @@ class TaskAdmin(admin.ModelAdmin):
 
 
 class SubmitAdmin(admin.ModelAdmin):
+    change_form_template = 'admin/submit_form.html'
     form = select2_modelform(Submit)
+
     list_select_related = True
     list_display = ('get_task_name', 'get_task_number',
                     'get_round', 'get_series', 'get_year', 'get_competition', 'get_category',
@@ -145,6 +152,9 @@ class SubmitAdmin(admin.ModelAdmin):
     get_competition = get_related(attribute_chain=('task', 'round', 'series', 'competition'),
                                   description='súťaž',
                                   order='task__round__series__competition')
+
+    def get_urls(self):
+        return submit_urls + super(SubmitAdmin, self).get_urls()
 
     def get_category(self, obj):
         return ', '.join(force_text(x.name) for x in obj.task.category.all())

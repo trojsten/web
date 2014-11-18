@@ -1,0 +1,48 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static admin_modify %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='tasks' %}">Tasks</a>
+    &rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}">Tasks</a>
+    &rsaquo; <a href="{% url 'admin:tasks_task_change' task.pk %}">{{ task.name }}</a>
+    &rsaquo; <a href="{% url 'admin:review_task' task.pk %}">{% trans 'Review' %}</a>
+    &rsaquo; {% trans 'Upload Zip' %}
+</div>
+{% endblock %}
+
+
+{% block content %}
+<form method="post" action="">
+    {% csrf_token %}
+    
+    {% for form in formset %}
+        {{ form.non_field_errors }}
+    {% endfor %}
+    
+    {{ formset.non_form_errors }}
+    
+    <div class="results">
+    <table>
+        {{ formset.management_form }}
+        <thead>
+            <td>{% trans 'Filename' %}</td>
+            <td>{% trans 'User' %}</td>
+            <td>{% trans 'Points' %}</td>
+        </thead>
+        
+        {% for form in formset %}
+        <tr>
+            <td style="display:none">{{ form.filename }}</td>
+            <td>{{ form.name }}</td>
+            <td>{{ form.user }}</td>
+            <td>{{ form.points }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </form>
+    
+    <input type="submit" text="Upload"/>
+</form>
+{% endblock %}

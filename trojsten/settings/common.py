@@ -192,6 +192,7 @@ INSTALLED_APPS = (
     'trojsten.regal.events',
     'trojsten.submit',
     'trojsten.results',
+    'trojsten.reviews',
     'trojsten.news',
     'trojsten.task_statements',
 
