@@ -50,7 +50,7 @@
         {% endif %}
     {% endif %}
     </td>
-    <td class="result-name">{{ result.user.first_name }} {{ result.user.last_name }}</td>
+    <td class="result-name">{{ result.user.get_full_name }}</td>
     <td class="result-year">{{ result.user.school_year }}</td>
     <td class="result-school">
     {% if result.user.school.has_abbreviation %}
