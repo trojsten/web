@@ -15,7 +15,7 @@ class UserManager(DjangoUserManager):
         res = self.filter(
             invitation__event=event
         )
-        if invitation_type:
+        if invitation_type is not None:
             res = res.filter(invitation__type=invitation_type)
         if going_only:
             res = res.filter(invitation__going=True)
