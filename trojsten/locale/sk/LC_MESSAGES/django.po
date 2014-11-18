@@ -26,6 +26,12 @@ msgstr "Pokus o narušenie bezpečnosti"
 msgid "Registration"
 msgstr "Registrácia"
 
+msgid "Your graduation year is too far in the past."
+msgstr "Tvoj rok maturity je príliš ďaleko v minulosti."
+
+msgid "Your graduation year is too far in the future."
+msgstr "Tvoj rok maturity je príliš ďaleko v budúcnosti."
+
 # Wiki
 msgid "View"
 msgstr "Pozrieť"
