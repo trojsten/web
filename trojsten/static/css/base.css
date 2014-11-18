@@ -123,6 +123,10 @@ footer a:visited {
   width:4ex;
 }
 
+.result-rank {
+  width: 7ex;
+}
+
 .result-task-integer {
   width: 2ex;
 }
