@@ -62,6 +62,9 @@ def submit_download(request, submit_pk):
     submit = get_object_or_404(Submit, pk=submit_pk)
     name = submit_download_filename(submit)
 
+    if not os.path.isfile(submit.filepath):
+        raise Http404
+
     return sendfile(request, submit.filepath, attachment=True, attachment_filename=name)
 
 
@@ -77,9 +80,17 @@ def download_latest_submits(request, task_pk):
     path = os.path.join(path, 'Uloha-%s-%s-%s.zip' %
                         (slugify(task.name), int(time()), slugify(request.user.username)))
 
+    errors = []
+
     with zipfile.ZipFile(path, 'w') as zipper:
         for submit in submits:
-            zipper.write(submit.filepath, submit_download_filename(submit))
+            if not os.path.isfile(submit.filepath):
+                errors += [_('Missing file of user %s') % submit.user.get_full_name()]
+            else:
+                zipper.write(submit.filepath, submit_download_filename(submit))
+
+        if errors:
+            zipper.writestr("errors.txt", "\n".join(*errors).encode())
 
     return sendfile(request, path, attachment=True)
 
