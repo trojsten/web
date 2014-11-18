@@ -9,33 +9,53 @@
 {% endblock %}
 
 {% block page_content %}
-{% for round, info in rounds_info.items %}
-    <h2>{{round.series.competition}} <small>{{round}}</small></h2>
-    {% if info.categories|length > 1 %}
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-            {% for category in info.categories %}
-                {% if category != None %}
-                    <li {% if forloop.counter == 2 %}class="active"{%endif%}><a href="#category-tab-{{category}}" role="tab" data-toggle="tab">{{category}}</a></li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content">
-            {% for category in info.categories %}
-                {% if category != None %}
-                    <div class="tab-pane fade{% if forloop.counter == 2 %} in active{%endif%}" id="category-tab-{{category}}">
-                        <div class="alert alert-warning">Výsledky sú predbežné.</div>
-                        {% show_results_table rounds=info.all_rounds categories=category|as_list %}
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+{% for round, categories in rounds_info %}
+    {% if categories|length > 1 %}
+        {% for category in categories %}
+            {% if category != None %}
+                <li {% if forloop.parentloop.counter == 1 and forloop.counter == 2 %}class="active"{% endif %}>
+                    <a href="#category-tab-{{ round.id }}-{{ category.id }}" role="tab"
+                       data-toggle="tab">
+                        {{ category }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
     {% else %}
-        {% show_results_table rounds=info.all_rounds %}
+        <li {% if forloop.counter == 1 %}class="active"{% endif %}>
+            <a href="#category-tab-{{ round.id }}" role="tab" data-toggle="tab">
+                {{ round.series.competition }}
+            </a>
+        </li>
     {% endif %}
 {% endfor %}
+</ul>
+<!-- Tab panes -->
+<div class="tab-content">
+{% for round, categories in rounds_info %}
+    {% if categories|length > 1 %}
+        {% for category in categories %}
+            <div class="tab-pane fade{% if forloop.parentloop.counter == 1 and forloop.counter == 2 %} in active{% endif %}"
+                 id="category-tab-{{ round.id }}-{{ category.id }}">
+                {% if category != None %}
+                    <div class="alert alert-warning">Výsledky sú predbežné.</div>
+                    {% show_results_table round=round category=category %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="tab-pane fade{% if forloop.counter == 1 %} in active{% endif %}"
+             id="category-tab-{{ round.id }}">
+            <div class="alert alert-warning">Výsledky sú predbežné.</div>
+            {% show_results_table round=round %}
+        </div>
+    {% endif %}
+{% endfor %}
+</div>
 
+{% include 'trojsten/results/parts/buttons.html' %}
 <h2>Vysvetlivky</h2>
 {% include 'trojsten/results/parts/legend.html' %}
 

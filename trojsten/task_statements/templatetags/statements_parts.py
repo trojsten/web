@@ -6,8 +6,7 @@ from django.conf import settings
 
 from trojsten.regal.tasks.models import Task, Category
 
-from ..helpers import get_result_rounds, get_rounds_by_year,\
-    get_latest_submits_for_user, get_points_from_submits
+from ..helpers import get_rounds_by_year, get_latest_submits_for_user, get_points_from_submits
 
 
 register = template.Library()
@@ -40,7 +39,6 @@ def show_task_list(context, round):
 
 @register.inclusion_tag('trojsten/task_statements/parts/buttons.html', takes_context=True)
 def show_buttons(context, round):
-    result_rounds = get_result_rounds(round)
     categories = Category.objects.filter(
         competition=round.series.competition
     ).select_related(
@@ -48,7 +46,6 @@ def show_buttons(context, round):
     )
     context.update({
         'round': round,
-        'result_rounds': result_rounds,
         'categories': categories,
     })
     return context

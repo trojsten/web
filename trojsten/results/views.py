@@ -1,58 +1,55 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render
-from django.http import HttpResponseBadRequest
+from django.shortcuts import render, get_object_or_404
 
 from trojsten.regal.tasks.models import Category
 from trojsten.regal.contests.models import Round
 
-from .helpers import check_round_series
 
-
-def view_results(request, round_ids, category_ids=None):
-    '''Displays results for specified round_ids and category_ids
+def is_true(value):
+    '''Converts GET parameter value to bool
     '''
-    rounds = Round.objects.visible(request.user).filter(
-        pk__in=round_ids.split(',')
-    ).order_by('number').select_related('series')
-    if not rounds or not check_round_series(rounds):
-        return HttpResponseBadRequest()
-    categories = None if category_ids is None else Category.objects.filter(
-        pk__in=category_ids.split(',')
-    )
+    return bool(value) and value.lower() not in ('false', '0')
 
-    template_data = {
-        'rounds': rounds,
-        'series': rounds[0].series,
-        'categories': categories,
-        'show_staff': request.GET.get('show_staff', False),
-        'force_generate': request.GET.get('force_generate', False),
+
+def view_results(request, round_id, category_id=None):
+    '''Displays results for specified round_ids and category_id
+    '''
+    round = get_object_or_404(Round.objects.visible(request.user), pk=round_id)
+    category = None if category_id is None else get_object_or_404(Category, pk=category_id)
+
+    context = {
+        'round': round,
+        'series': round.series,
+        'category': category,
+        'show_staff': is_true(request.GET.get('show_staff', False)),
+        'single_round': is_true(request.GET.get('single_round', False)),
+        'force_generate': is_true(request.GET.get('force_generate', False)),
     }
     return render(
-        request, 'trojsten/results/view_results.html', template_data
+        request, 'trojsten/results/view_results.html', context
     )
 
 
 def view_latest_results(request):
-    rounds_info = {
-        r: {
-            'all_rounds': list(
-                Round.objects.filter(
-                    visible=True, series=r.series
-                ).order_by('number')
-            ),
-            'categories': [None] + list(
-                Category.objects.filter(competition=c)
-            ),
-        }
-        for c, r in Round.get_latest_by_competition(request.user).items()
-    }
+    '''Displays results for latest rounds for each competition
+    '''
+    rounds = Round.objects.latest_visible(request.user)
+    rounds_info = zip(
+        rounds,
+        [
+            [None] + list(
+                Category.objects.filter(competition=round.series.competition)
+            ) for round in rounds
+        ],
+    )
 
-    template_data = {
+    context = {
         'rounds_info': rounds_info,
-        'show_staff': request.GET.get('show_staff', False),
-        'force_generate': request.GET.get('force_generate', False),
+        'show_staff': is_true(request.GET.get('show_staff', False)),
+        'single_round': is_true(request.GET.get('single_round', False)),
+        'force_generate': is_true(request.GET.get('force_generate', False)),
     }
     return render(
-        request, 'trojsten/results/view_latest_results.html', template_data
+        request, 'trojsten/results/view_latest_results.html', context
     )

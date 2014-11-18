@@ -18,6 +18,8 @@ from uuidfield import UUIDField
 
 class RoundManager(models.Manager):
     def visible(self, user):
+        '''Returns only rounds visible for user
+        '''
         if user.is_superuser:
             return self.get_queryset()
         else:
@@ -25,6 +27,17 @@ class RoundManager(models.Manager):
                 Q(series__competition__organizers_group__in=user.groups.all())
                 | Q(visible=True)
             )
+
+    def latest_visible(self, user):
+        '''Returns latest visible round for each competition
+        '''
+        return self.visible(user).order_by(
+            'series__competition', '-end_time'
+        ).distinct(
+            'series__competition'
+        ).select_related(
+            'series__competition'
+        )
 
 
 @python_2_unicode_compatible
@@ -162,17 +175,6 @@ class Round(models.Model):
     def solutions_pdf_exists(self):
         path = self.get_pdf_path(solution=True)
         return os.path.exists(path)
-
-    @staticmethod
-    def get_latest_by_competition(user):
-        rounds = Round.objects.visible(user).order_by(
-            'series__competition', '-end_time'
-        ).distinct(
-            'series__competition'
-        ).select_related(
-            'series__competition'
-        )
-        return {r.series.competition: r for r in rounds}
 
     def is_visible_for_user(self, user):
         return (

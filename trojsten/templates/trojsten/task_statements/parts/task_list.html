@@ -3,14 +3,24 @@
 
 {% if categories.count > 1 %}
 <ul class="nav nav-tabs" role="tablist">
-    <li class="active"><a href="#category-tab-all" role="tab" data-toggle="tab" onclick="$('#task-list-{{round.id}} tr').show()">Všetky</a></li>
+    <li class="active">
+        <a href="#category-tab-all" role="tab" data-toggle="tab"
+           onclick="$('#task-list-{{ round.id }} tr').show()">
+            Všetky
+        </a>
+    </li>
     {% for category in categories %}
-    <li><a href="#category-tab-{{category}}" role="tab" data-toggle="tab" onclick="$('#task-list-{{round.id}} tr:not(.category-{{category}})').hide();$('#task-list-{{round.id}} tr.category-{{category}}').show();$('#task-list-{{round.id}} thead>tr').show();">{{category}}</a></li>
+    <li>
+        <a href="#category-tab-{{ category }}" role="tab" data-toggle="tab"
+           onclick="$('#task-list-{{ round.id }} tr:not(.category-{{ category }})').hide();$('#task-list-{{ round.id }} tr.category-{{ category }}').show();$('#task-list-{{ round.id }} thead>tr').show();">
+            {{ category }}
+        </a>
+    </li>
     {% endfor %}
 </ul>
 {% endif %}
 
-<table class="table table-condensed" id="task-list-{{round.id}}">
+<table class="table table-condensed" id="task-list-{{ round.id }}">
 <thead>
 <tr>
     <th width="5%">
@@ -21,7 +31,15 @@
     </th>
     {% if solutions_visible %}
     <th width="15%">
-        Riešenie {% if not round.solutions_visible %}<small><span class="label label-danger" title="skryté" data-toggle="tooltip" data-placement="top">skr.</span></small>{% endif %}
+        Riešenie
+        {% if not round.solutions_visible %}
+            <small>
+                <span class="label label-danger" title="skryté"
+                      data-toggle="tooltip" data-placement="top">
+                    skr.
+                </span>
+            </small>
+        {% endif %}
     </th>
     {% endif %}
     <th width="15%">
@@ -38,12 +56,12 @@
 </tr>
 </thead>
 {% for task in tasks %}
-    <tr class="{% for category in task.category.all %} category-{{category}}{% endfor %}">
+    <tr class="{% for category in task.category.all %} category-{{ category }}{% endfor %}">
         <td>
-            {{task.number}}.
+            {{ task.number }}.
         </td>
         <td>
-            <a href="{% url 'task_statement' task_id=task.id %}">{{task.name}}</a>
+            <a href="{% url 'task_statement' task_id=task.id %}">{{ task.name }}</a>
         </td>
         {% if solutions_visible %}
             <td>
@@ -52,26 +70,27 @@
         {% endif %}
         <td>
             {% for category in task.category.all %}
-                <span class="label label-default category-{{category}}">{{category}}</span>
+                <span class="label label-default category-{{ category }}">{{ category }}</span>
             {% endfor %}
         </td>
         <td>
             {% if task.description_points > 0 %}
-                <span class="points-item">popis: {{task.description_points}}</span>
+                <span class="points-item">popis: {{ task.description_points }}</span>
                 {% if task.source_points > 0 %}<br/>{% endif %}
             {% endif %}
             {% if task.source_points > 0 %}
-                <span class="points-item">program: {{task.source_points}}</span>
+                <span class="points-item">program: {{ task.source_points }}</span>
             {% endif %}
         </td>
         {% if user.is_authenticated %}
+        {% lookup_as points.tasks task.id as task_points %}
         <td>
             {% if task.description_points > 0 %}
-                <span class="points-item">popis: {{points|lookup:task|lookup:'description'}}</span>
+                <span class="points-item">popis: {{ task_points.description_points }}</span>
                 {% if task.source_points > 0 %}<br/>{% endif %}
             {% endif %}
             {% if task.source_points > 0 %}
-                <span class="points-item">program: {{points|lookup:task|lookup:'source'}}</span>
+                <span class="points-item">program: {{ task_points.source_points }}</span>
             {% endif %}
         </td>
         {% endif %}

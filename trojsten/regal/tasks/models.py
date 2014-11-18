@@ -123,6 +123,7 @@ class Submit(models.Model):
         (TESTABLE_ZIP, 'testable_zip'),
         (EXTERNAL, 'external'),
     ]
+    STATUS_REVIEWED = "reviewed"
     task = models.ForeignKey(Task, verbose_name='úloha')
     time = models.DateTimeField(auto_now_add=True, verbose_name='čas')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='odovzdávateľ')

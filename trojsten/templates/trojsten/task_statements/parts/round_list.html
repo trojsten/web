@@ -1,11 +1,18 @@
 {% for year, round_list in all_rounds.items %}
     <div class="panel panel-default panel-rounds">
       <div class="panel-heading">
-        <h3 class="panel-title">{{year}}. ročník</h3>
+        <h3 class="panel-title">{{ year }}. ročník</h3>
       </div>
       <ul class="list-group">
       {% for round in round_list %}
-          <li class="list-group-item"><a href="{% url 'task_list' round_id=round.id %}">{{round.number}}. kolo</a> {% if not round.visible %}<span class="label label-danger">skryté</span>{% endif %}</li>
+          <li class="list-group-item">
+            <a href="{% url 'task_list' round_id=round.id %}">
+              {{ round.number }}. kolo
+            </a>
+            {% if not round.visible %}
+              <span class="label label-danger">skryté</span>
+            {% endif %}
+          </li>
       {% endfor %}
       </ul>
     </div>

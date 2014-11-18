@@ -4,6 +4,7 @@ from django.db.models import F
 
 from trojsten.regal.contests.models import Round
 from trojsten.regal.tasks.models import Submit
+from trojsten.results.helpers import UserResult
 
 
 def get_rounds_by_year(user, competition):
@@ -18,13 +19,6 @@ def get_rounds_by_year(user, competition):
     for round in rounds:
         rounds_dict[round.series.year].append(round)
     return dict(rounds_dict)
-
-
-def get_result_rounds(round):
-    rounds = Round.objects.filter(
-        visible=True, series=round.series, number__lte=round.number
-    ).order_by('number')
-    return ','.join(str(r.id) for r in rounds)
 
 
 def get_latest_submits_for_user(tasks, user):
@@ -45,10 +39,10 @@ def get_latest_submits_for_user(tasks, user):
 def get_points_from_submits(tasks, submits):
     '''Returns results data for each task
     '''
-    res = {i: {'description': 0, 'source': 0} for i in tasks}
+    res = UserResult()
     for submit in submits:
-        if submit.submit_type == Submit.DESCRIPTION:
-            res[submit.task]['description'] = '??'  # Fixme
-        else:
-            res[submit.task]['source'] += submit.user_points
+        res.add_task_points(
+            submit.task, submit.submit_type, submit.user_points,
+            submit.testing_status,
+        )
     return res

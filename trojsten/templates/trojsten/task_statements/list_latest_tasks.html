@@ -8,9 +8,17 @@
 {% endblock %}
 
 {% block page_content %}
-    {% for competition, round in rounds.items %}
-        <h2>{{competition}} <small>{{round}} {% if not round.visible %}<span class="label label-danger">skryté</span>{% endif %}</small></h2>
-        {% show_progress round%}
+    {% for round in rounds %}
+        <h2>
+            {{ round.series.competition }}
+            <small>
+                {{ round }}
+                {% if not round.visible %}
+                    <span class="label label-danger">skryté</span>
+                {% endif %}
+            </small>
+        </h2>
+        {% show_progress round %}
         {% show_buttons round %}
         <h3>Zoznam úloh</h3>
         {% show_task_list round %}
@@ -19,13 +27,20 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         {% for competition in competitions %}
-            <li {% if forloop.first %}class="active"{%endif%}><a href="#competition-tab-{{competition.name}}" role="tab" data-toggle="tab">{{competition.name}}</a></li>
+            <li {% if forloop.first %}class="active"{% endif %}>
+                <a href="#competition-tab-{{ competition.name }}" role="tab" data-toggle="tab">
+                    {{ competition.name }}
+                </a>
+            </li>
         {% endfor %}
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
         {% for competition in competitions %}
-            <div class="tab-pane fade {% if forloop.first %}in active{%endif%}" id="competition-tab-{{competition.name}}">{% show_round_list user=request.user competition=competition%}</div>
+            <div class="tab-pane fade {% if forloop.first %}in active{% endif %}"
+                 id="competition-tab-{{ competition.name }}">
+                {% show_round_list user=request.user competition=competition %}
+            </div>
         {% endfor %}
     </div>
 {% endblock %}

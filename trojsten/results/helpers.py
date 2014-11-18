@@ -2,14 +2,16 @@
 
 from collections import defaultdict, namedtuple
 
-from django.db.models import F
+from django.db.models import F, Q
 from django.conf import settings
 
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.regal.people.models import User
+from trojsten.regal.contests.models import Round
+from trojsten.submit import constants as submit_constants
 
 
-class TaskPoints:
+class TaskPoints(object):
     def __init__(self):
         self.source_points = 0
         self.description_points = 0
@@ -34,7 +36,7 @@ class TaskPoints:
         self.description_points = 0
 
 
-class UserResult:
+class UserResult(object):
     def __init__(self):
         self.previous_rounds_points = 0
         self.tasks = defaultdict(TaskPoints)
@@ -45,10 +47,12 @@ class UserResult:
     def sum(self):
         return self.previous_rounds_points + sum(t.sum for t in self.tasks.values())
 
-    def add_task_points(self, task, submit_type, points):
+    def add_task_points(self, task, submit_type, points, submit_status):
         if submit_type == Submit.DESCRIPTION:
-            # Fixme - description points are not currently supported
-            self.tasks[task.id].set_description_pending()
+            if submit_status == submit_constants.SUBMIT_STATUS_REVIEWED:
+                self.tasks[task.id].set_description_points(points)
+            else:
+                self.tasks[task.id].set_description_pending()
         else:
             self.tasks[task.id].add_source_points(points)
 
@@ -56,7 +60,7 @@ class UserResult:
         self.previous_rounds_points = previous_rounds_points
 
 
-def get_tasks(rounds, categories=None):
+def get_tasks(rounds, category=None):
     '''Returns tasks which belong to specified round_ids and category_ids
     '''
     if not rounds:
@@ -64,16 +68,18 @@ def get_tasks(rounds, categories=None):
     tasks = Task.objects.filter(
         round__in=rounds
     )
-    if categories:
+    if category:
         tasks = tasks.filter(
-            category__in=categories
-        ).distinct()
+            category=category
+        )
     return tasks.order_by('round', 'number')
 
 
 def get_submits(tasks, show_staff=False):
     '''Returns submits which belong to specified tasks.
     Only one submit per user, submit type and task is returned.
+    Submits made after round.end_time are not counted except review submits,
+    which has testing_status=SUBMIT_STATUS_REVIEWED and are made by organizers.
     '''
     submits = Submit.objects
     if not show_staff and tasks:
@@ -92,21 +98,23 @@ def get_submits(tasks, show_staff=False):
         )
     return submits.filter(
         task__in=tasks,
-        time__lte=F('task__round__end_time'),
+    ).filter(
+        Q(time__lte=F('task__round__end_time'))
+        | Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
     ).order_by(
         'user', 'task', 'submit_type', '-time', '-id',
     ).distinct(
         'user', 'task', 'submit_type'
-    ).prefetch_related('user', 'task')
+    ).select_related('user__school', 'task')
 
 
-def get_results_data(tasks, submits):
+def get_results_data(submits):
     '''Returns results data for each user who has submitted at least one task
     '''
     res = defaultdict(UserResult)
     for submit in submits:
         res[submit.user].add_task_points(
-            submit.task, submit.submit_type, submit.user_points
+            submit.task, submit.submit_type, submit.user_points, submit.testing_status,
         )
     return res
 
@@ -158,34 +166,32 @@ def format_results_data(results_data):
     return res
 
 
-def check_round_series(rounds):
-    if rounds:
-        return all(r.series == rounds[0].series for r in rounds)
-    else:
-        return True
+def make_result_table(user, round, category=None, single_round=False, show_staff=False):
+    ResultsTable = namedtuple('ResultsTable', ['tasks', 'results_data', 'has_previous_results'])
 
+    if not (user.is_authenticated()
+            and user.is_in_group(round.series.competition.organizers_group)):
+        show_staff = False
 
-def make_result_table(rounds, categories=None, show_staff=False):
-    ResultsTable = namedtuple('ResultsTable', ['tasks', 'results_data'])
-    if not rounds:
-        return ResultsTable(tasks=list(), results_data=list())
-    rounds = list(rounds)
-
-    current_round = rounds[-1]
-    current_tasks = get_tasks([current_round], categories)
+    current_tasks = get_tasks([round], category)
     current_submits = get_submits(current_tasks, show_staff)
-    current_results_data = get_results_data(current_tasks, current_submits)
+    current_results_data = get_results_data(current_submits)
 
     previous_results_data = None
-    previous_rounds = rounds[:-1]
-    if previous_rounds:
-        previous_tasks = get_tasks(previous_rounds, categories)
-        previous_submits = get_submits(previous_tasks, show_staff)
-        previous_results_data = get_results_data(previous_tasks, previous_submits)
+    if not single_round:
+        previous_rounds = Round.objects.visible(user).filter(
+            series=round.series, number__lt=round.number
+        ).order_by('number')
+
+        if previous_rounds:
+            previous_tasks = get_tasks(previous_rounds, category)
+            previous_submits = get_submits(previous_tasks, show_staff)
+            previous_results_data = get_results_data(previous_submits)
 
     return ResultsTable(
         tasks=current_tasks,
         results_data=format_results_data(
             merge_results_data(current_results_data, previous_results_data),
         ),
+        has_previous_results=previous_results_data is not None,
     )

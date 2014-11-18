@@ -9,21 +9,23 @@
 <link rel="stylesheet" href="{% static "css/syntax_highlight.css" %}" type="text/css" />
 {% endblock %}
 
-{% block title %}{{task.number}}. {{task.name}}{% endblock %}
+{% block title %}{{ task.number }}. {{ task.name }}{% endblock %}
 
 {% block page_header %}
 <ul class="nav nav-pills">
   <li class="pull-left" id="article-title-li">
-    <h1 id="article-title" class="task-name">{{task.number}}. {{task.name}}
+    <h1 id="article-title" class="task-name">{{ task.number }}. {{ task.name }}
     <small>
     {% for category in task.category.all %}
-        <span class="label label-default category-{{category}}">{{category}}</span>
+        <span class="label label-default category-{{ category }}">{{ category }}</span>
     {% endfor %}
     {% if not task.round.visible %}<span class="label label-danger">skryté</span>{% endif %}
     </small></h1>
   </li>
   <li class="pull-right">
-    <a href="{% url 'task_list' round_id=task.round.id %}"><span class="glyphicon glyphicon-list"></span> Všetky úlohy</a>
+    <a href="{% url 'task_list' round_id=task.round.id %}">
+        <span class="glyphicon glyphicon-list"></span> Všetky úlohy
+    </a>
   </li>
 </ul>
 {% endblock %}
@@ -32,15 +34,19 @@
     {% set_disqus_identifier "task" task.id %}
     {% set_disqus_url "http://" request.META.HTTP_HOST request.path %}
     {% set_disqus_title task.number ". " task.name %}
-    {% show_progress task.round%}
+    {% show_progress task.round %}
     {% if task.description_points > 0 or task.source_points > 0 %}
     <div class="well pull-right task-points">
         <strong>Počet bodov:</strong>
         {% if task.description_points > 0 %}
-            <div class="points-item points-item-description">Popis:&nbsp; <span class="badge pull-right">{{task.description_points}}b</span></div>
+            <div class="points-item points-item-description">
+                Popis:&nbsp; <span class="badge pull-right">{{ task.description_points }}b</span>
+            </div>
         {% endif %}
         {% if task.source_points > 0 %}
-            <div class="points-item points-item-description">Program:&nbsp; <span class="badge pull-right">{{task.source_points}}b</span></div>
+            <div class="points-item points-item-description">
+                Program:&nbsp; <span class="badge pull-right">{{ task.source_points }}b</span>
+            </div>
         {% endif %}
     </div>
     {% endif %}
@@ -56,7 +62,9 @@
         <h2>Odovzdávanie</h2>
         {% if request.user.is_authenticated %}
         {% if not task.round.can_submit %}
-        <div class="alert alert-warning" role="alert">Kolo už skončilo. Ďalšie submity sa už nerátajú do výsledkovky.</div>
+        <div class="alert alert-warning" role="alert">
+            Kolo už skončilo. Ďalšie submity sa už nerátajú do výsledkovky.
+        </div>
         {% endif %}
         {% show_submit_form task request.path %}
         {% show_submit_list task request.user %}
@@ -68,6 +76,11 @@
     {% endif %}
     </div>
     <h2>Diskusia</h2>
-    <p>Ak mate nejaké otázky k úlohe, môžte sa spýtať tu. Prosím nevkladajte časti riešenia, ani nediskutujte o riešení a to ani po skončení kola (budete mať príležitosť v diskusii pod riešením).</p>
+    <p>
+       Ak máte akékoľvek otázky k úlohe, môžete sa tu opýtať.
+       Prosíme, aby ste nevkladali časti riešení, ani nediskutovali o riešeniach,
+       a to ani po skončení kola (na to budete mať príležitosť v diskusii
+       pod vzorovým riešením).
+    </p>
     {% disqus_show_comments %}
 {% endblock %}
