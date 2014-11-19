@@ -10,7 +10,7 @@ celery==3.1.16
 django-contact-form==1.0
 django-disqus==0.4.3
 Unidecode==0.04.16
-python-social-auth==0.1.26
+python-social-auth==0.2.1
 django-mathfilters==0.3.0
 django-easy-select2==1.2.12
 -e git://github.com/koniiiik/ksp_login@00a1b3d90405434d4f0354d2632b0eeadfdb8a44#egg=ksp_login-master
