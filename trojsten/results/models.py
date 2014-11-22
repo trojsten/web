@@ -33,6 +33,7 @@ class FrozenPoints(models.Model):
 
     class Meta:
         verbose_name = 'Zmrazené body za úlohu'
+        verbose_name_plural = 'Zmrazené body za úlohy'
 
     def __str__(self):
         return '%s: Popis: %s, Program: %s' % (
@@ -61,5 +62,5 @@ class FrozenUserResult(models.Model):
     def __str__(self):
         return '%s %s' % (
             self.frozenresults,
-            self.full_name,
+            self.fullname,
         )
