@@ -4,9 +4,9 @@ import pytz
 from django import template
 from django.conf import settings
 
-from trojsten.regal.tasks.models import Task, Category
+from trojsten.regal.tasks.models import Task, Category, Submit
 
-from ..helpers import get_rounds_by_year, get_latest_submits_for_user, get_points_from_submits
+from ..helpers import get_rounds_by_year, get_points_from_submits
 
 
 register = template.Library()
@@ -30,7 +30,7 @@ def show_task_list(context, round):
         'solutions_visible': round.solutions_are_visible_for_user(context['user']),
     }
     if context['user'].is_authenticated():
-        submits = get_latest_submits_for_user(tasks, context['user'])
+        submits = Submit.objects.latest_for_user(tasks, context['user'])
         results = get_points_from_submits(tasks, submits)
         data['points'] = results
     context.update(data)

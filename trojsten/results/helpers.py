@@ -2,11 +2,8 @@
 
 from collections import defaultdict, namedtuple
 
-from django.db.models import F, Q
-from django.conf import settings
 
 from trojsten.regal.tasks.models import Task, Submit
-from trojsten.regal.people.models import User
 from trojsten.regal.contests.models import Round
 from trojsten.submit import constants as submit_constants
 
@@ -58,54 +55,6 @@ class UserResult(object):
 
     def set_previous_rounds_points(self, previous_rounds_points):
         self.previous_rounds_points = previous_rounds_points
-
-
-def get_tasks(rounds, category=None):
-    '''Returns tasks which belong to specified round_ids and category_ids
-    '''
-    if not rounds:
-        return Task.objects.none()
-    tasks = Task.objects.filter(
-        round__in=rounds
-    )
-    if category:
-        tasks = tasks.filter(
-            category=category
-        )
-    return tasks.order_by('round', 'number')
-
-
-def get_submits(tasks, show_staff=False):
-    '''Returns submits which belong to specified tasks.
-    Only one submit per user, submit type and task is returned.
-    Submits made after round.end_time are not counted except review submits,
-    which has testing_status=SUBMIT_STATUS_REVIEWED and are made by organizers.
-    '''
-    submits = Submit.objects
-    if not show_staff and tasks:
-        submits = submits.exclude(
-            # round ends January 2014 => exclude 2013, 2012,
-            # round ends Jun 2014 => exclude 2013, 2012,
-            # round ends September 2014 => exclude 2014, 2013,
-            # round ends December 2014 => exclude 2014, 2013,
-            user__graduation__lt=tasks[0].round.end_time.year + int(
-                tasks[0].round.end_time.month > settings.SCHOOL_YEAR_END_MONTH
-            )
-        ).exclude(
-            user__in=User.objects.filter(
-                groups=tasks[0].round.series.competition.organizers_group
-            )
-        )
-    return submits.filter(
-        task__in=tasks,
-    ).filter(
-        Q(time__lte=F('task__round__end_time'))
-        | Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
-    ).order_by(
-        'user', 'task', 'submit_type', '-time', '-id',
-    ).distinct(
-        'user', 'task', 'submit_type'
-    ).select_related('user__school', 'task')
 
 
 def get_results_data(submits):
@@ -173,8 +122,8 @@ def make_result_table(user, round, category=None, single_round=False, show_staff
             and user.is_in_group(round.series.competition.organizers_group)):
         show_staff = False
 
-    current_tasks = get_tasks([round], category)
-    current_submits = get_submits(current_tasks, show_staff)
+    current_tasks = Task.objects.for_rounds_and_category([round], category)
+    current_submits = Submit.objects.for_tasks(current_tasks, include_staff=show_staff)
     current_results_data = get_results_data(current_submits)
 
     previous_results_data = None
@@ -184,8 +133,10 @@ def make_result_table(user, round, category=None, single_round=False, show_staff
         ).order_by('number')
 
         if previous_rounds:
-            previous_tasks = get_tasks(previous_rounds, category)
-            previous_submits = get_submits(previous_tasks, show_staff)
+            previous_tasks = Task.objects.for_rounds_and_category(
+                previous_rounds, category
+            )
+            previous_submits = Submit.objects.for_tasks(previous_tasks, include_staff=show_staff)
             previous_results_data = get_results_data(previous_submits)
 
     return ResultsTable(
