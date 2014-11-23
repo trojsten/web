@@ -19,6 +19,10 @@
         <li class="{% current '^/organizatori/$' %}"><a href="/organizatori/">Organizátori</a></li>
         <li class="{% current '^/sponzori/$' %}"><a href="/sponzori/">Sponzori</a></li>
         <li class="{% current '^/kontakt/$' %}"><a href="/kontakt/">Kontakt</a></li>
+        <h2 class="visible-xs">Iné semináre</h2>
+        {%for OTHER_SITE in OTHER_SITES %}
+        <li class="visible-xs"><a href="{{OTHER_SITE.URL}}">{{OTHER_SITE.SHORT_NAME}}</a></li>
+        {% endfor %}
     </ul>
 </div>
 {% endblock %}
