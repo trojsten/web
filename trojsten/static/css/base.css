@@ -5,6 +5,28 @@ html, body {
   max-width: 100%
 }
 
+body {
+  padding-top: 70px;
+}
+
+.nav-menu.in {
+  position: fixed;
+  z-index: 1050;
+  top: 56px;
+  bottom: 0;
+  overflow-y: auto;
+  border-radius: 0;
+  background-color: #222;
+}
+
+.navbar-main {
+  z-index: 1050;
+}
+
+.navbar-main .navbar-toggle:focus{
+  background-color: transparent;
+}
+
 li > h1 {
   margin-top: 0;
 }

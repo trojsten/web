@@ -1,11 +1,12 @@
 $(document).ready(function () {
     $("body").on( "swiperight", function( event ) {
         if(event.swipestart.coords[0] < $('body').width() * .1) {
-            $('.row-offcanvas').addClass('active');
+            $('.nav-menu').offcanvas('show');
         }
     });
 
     $("body").on( "swipeleft", function( event ) {
-        $('.row-offcanvas').removeClass('active');
+        $('.nav-menu').offcanvas('hide');
+        $('body').off('touchmove.bs');
     });
 });

@@ -3,8 +3,8 @@
 {% block page_layout %}
 <header>{% include "trojsten/layout/header.html" %}</header>
 <div class="container">
-  <div class="row row-offcanvas row-offcanvas-left">
-    <nav class="col-md-3 col-sm-3 col-xs-6 sidebar-offcanvas">{% include "trojsten/layout/navigation.html" %}</nav>
+  <div class="row">
+    <nav class="col-md-3 col-sm-3 col-xs-6 offcanvas-xs nav-menu">{% include "trojsten/layout/navigation.html" %}</nav>
     <div class="col-md-9 col-sm-9 col-xs-12 main-content">
     <div class="page-header">
         {% block page_header %}{% endblock %}
