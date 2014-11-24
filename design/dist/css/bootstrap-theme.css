@@ -212,11 +212,11 @@
   background-repeat: repeat-x;
 }
 .navbar-default {
-  background-image: -webkit-linear-gradient(top, #6f6f6f 0%, #555 100%);
-  background-image:      -o-linear-gradient(top, #6f6f6f 0%, #555 100%);
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#6f6f6f), to(#555));
-  background-image:         linear-gradient(to bottom, #6f6f6f 0%, #555 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff6f6f6f', endColorstr='#ff555555', GradientType=0);
+  background-image: -webkit-linear-gradient(top, #8cac28 0%, #6a831e 100%);
+  background-image:      -o-linear-gradient(top, #8cac28 0%, #6a831e 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#8cac28), to(#6a831e));
+  background-image:         linear-gradient(to bottom, #8cac28 0%, #6a831e 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff8cac28', endColorstr='#ff6a831e', GradientType=0);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-repeat: repeat-x;
   border-radius: 4px;
@@ -225,11 +225,11 @@
 }
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .active > a {
-  background-image: -webkit-linear-gradient(top, #494949 0%, #505050 100%);
-  background-image:      -o-linear-gradient(top, #494949 0%, #505050 100%);
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#494949), to(#505050));
-  background-image:         linear-gradient(to bottom, #494949 0%, #505050 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff494949', endColorstr='#ff505050', GradientType=0);
+  background-image: -webkit-linear-gradient(top, #596e19 0%, #637b1c 100%);
+  background-image:      -o-linear-gradient(top, #596e19 0%, #637b1c 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#596e19), to(#637b1c));
+  background-image:         linear-gradient(to bottom, #596e19 0%, #637b1c 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff596e19', endColorstr='#ff637b1c', GradientType=0);
   background-repeat: repeat-x;
   -webkit-box-shadow: inset 0 3px 9px rgba(0, 0, 0, .075);
           box-shadow: inset 0 3px 9px rgba(0, 0, 0, .075);
