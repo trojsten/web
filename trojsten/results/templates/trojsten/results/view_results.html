@@ -1,5 +1,5 @@
 {% extends "trojsten/layout/main.html" %}
-{% load results_parts %}
+{% load results_parts archive_parts %}
 {% load utils %}
 
 {% block title %}Výsledky{% endblock %}
@@ -27,4 +27,6 @@
 {% include 'trojsten/results/parts/buttons.html' %}
 <h2>Vysvetlivky</h2>
 {% include 'trojsten/results/parts/legend.html' %}
+
+{% show_archive active_competition=round.series.competition %}
 {% endblock %}
