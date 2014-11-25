@@ -40,6 +40,12 @@ h2.logo
   margin-top: 0;
 }
 
+h2.logo img
+{
+  width: 160px;
+  max-width:80%;
+}
+
 .simplemodal-container {
   color: black;
 }
