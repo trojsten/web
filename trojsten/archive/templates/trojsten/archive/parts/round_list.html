@@ -1,19 +1,44 @@
 {% for year, round_list in all_rounds.items %}
-    <div class="panel panel-default panel-rounds">
-      <div class="panel-heading">
-        <h3 class="panel-title">{{ year }}. ročník</h3>
-      </div>
-      <ul class="list-group">
+    <div class="table-responsive">
+    <table class="table table-rounds">
+      <thead>
+        <tr>
+          <th colspan="2" class="active">
+            {{ year }}. ročník
+          </th>
+        </tr>
+      </thead>
+      <tbody>
       {% for round in round_list %}
-          <li class="list-group-item">
+          <tr>
+            <td width="160px">
             <a href="{% url 'task_list' round_id=round.id %}">
               {{ round.number }}. kolo
             </a>
             {% if not round.visible %}
               <span class="label label-danger">skryté</span>
             {% endif %}
-          </li>
+            </td>
+            <td>
+            {% if round.categories %}
+                {% for category in round.categories %}
+                <a class="btn btn-danger btn-sm category-{{ category }}"
+                   href="{% url 'view_results' round_id=round.id category_id=category.id %}">
+                    Výsledky
+                    <span class="label label-button category-{{ category }}">{{ category }}</span>
+                </a>
+                {% endfor %}
+            {% else %}
+                <a class="btn btn-danger btn-sm" href="{% url 'view_results' round_id=round.id %}">
+                    Výsledky
+                </a>
+            {% endif %}
+            </td>
+          </tr>
       {% endfor %}
-      </ul>
+    </tbody>
+    </table>
     </div>
 {% endfor %}
+
+

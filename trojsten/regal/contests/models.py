@@ -195,6 +195,10 @@ class Round(models.Model):
             self.solutions_visible
         )
 
+    @property
+    def categories(self):
+        return self.series.competition.category_set.all()
+
     class Meta:
         verbose_name = 'Kolo'
         verbose_name_plural = 'Kolá'

@@ -39,8 +39,13 @@ li > h1 {
   color: black;
 }
 
-.panel-rounds {
+.table-rounds {
   margin-top: 1em;
+  border: 1px solid #ddd;
+}
+
+.table-rounds td {
+  vertical-align: middle !important;
 }
 
 .well.task-points.pull-right {
