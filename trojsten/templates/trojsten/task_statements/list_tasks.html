@@ -22,24 +22,6 @@
     {% show_buttons round %}
     <h2>Zoznam úloh</h2>
     {% show_task_list round %}
-    <h2>Všetky zadania</h2>
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
-        {% for competition in competitions %}
-            <li {% if competition == round.series.competition %}class="active"{% endif %}>
-                <a href="#competition-tab-{{ competition.name }}" role="tab" data-toggle="tab">
-                    {{ competition.name }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-    <!-- Tab panes -->
-    <div class="tab-content">
-        {% for competition in competitions %}
-            <div class="tab-pane fade {% if competition == round.series.competition %}in active{% endif %}"
-                 id="competition-tab-{{ competition.name }}">
-                {% show_round_list user=request.user competition=competition %}
-            </div>
-        {% endfor %}
+    {% show_archive active_competition=round.series.competition %}
     </div>
 {% endblock %}

@@ -3,26 +3,5 @@
 
 {% block wiki_contents_tab %}
 {% wiki_render article %}
-
-<h2>Archív zadaní</h2>
-<!-- Nav tabs -->
-<ul class="nav nav-tabs" role="tablist">
-    {% for competition in competitions %}
-        <li {% if forloop.first %}class="active"{% endif %}>
-            <a href="#competition-tab-{{ competition.name }}" role="tab" data-toggle="tab">
-                {{ competition.name }}
-            </a>
-        </li>
-    {% endfor %}
-</ul>
-<!-- Tab panes -->
-<div class="tab-content">
-    {% for competition in competitions %}
-        <div class="tab-pane fade {% if forloop.first %}in active{% endif %}"
-             id="competition-tab-{{ competition.name }}">
-            {% show_round_list user=request.user competition=competition %}
-        </div>
-    {% endfor %}
-</div>
-
+{% show_archive %}
 {% endblock %}

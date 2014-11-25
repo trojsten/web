@@ -1,5 +1,6 @@
 from django import template
 
+from trojsten.regal.contests.models import Competition
 from ..helpers import get_rounds_by_year
 
 register = template.Library()
@@ -12,3 +13,13 @@ def show_round_list(user, competition):
         'all_rounds': all_rounds,
     }
     return data
+
+
+@register.inclusion_tag('trojsten/archive/parts/archive.html', takes_context=True)
+def show_archive(context, active_competition=None):
+    competitions = Competition.objects.all()  # Todo: filter by site
+    context.update({
+        'competitions': competitions,
+        'active_competition': active_competition,
+    })
+    return context
