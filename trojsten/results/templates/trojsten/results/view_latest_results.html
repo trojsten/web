@@ -40,7 +40,10 @@
             <div class="tab-pane fade{% if forloop.parentloop.counter == 1 and forloop.counter == 2 %} in active{% endif %}"
                  id="category-tab-{{ round.id }}-{{ category.id }}">
                 {% if category != None %}
-                    <div class="alert alert-warning">Výsledky sú predbežné.</div>
+                    {% is_frozen round single_round as results_are_final %}
+                    {% if not results_are_final %}
+                        <div class="alert alert-warning">Výsledky sú predbežné.</div>
+                    {% endif %}
                     {% show_results_table round=round category=category %}
                 {% endif %}
             </div>
