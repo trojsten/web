@@ -7,6 +7,13 @@ $(document).ready(function () {
 
     $("body").on( "swipeleft", function( event ) {
         $('.nav-menu').offcanvas('hide');
-        $('body').off('touchmove.bs');
+    });
+
+    $(".offcanvas-xs").on("show.bs.offcanvas", function(event) {
+        $(".navbar-toggle").addClass("active");
+    });
+
+    $(".offcanvas-xs").on("hidden.bs.offcanvas", function(event) {
+        $(".navbar-toggle").removeClass("active");
     });
 });
