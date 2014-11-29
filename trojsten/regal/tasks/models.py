@@ -11,6 +11,73 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from trojsten.regal.contests.models import Round, Competition
+from trojsten.regal.people.models import User
+from trojsten.submit import constants as submit_constants
+
+
+class TaskManager(models.Manager):
+    def for_rounds_and_category(self, rounds, category=None):
+        '''Returns tasks which belong to specified rounds and category
+        '''
+        if not rounds:
+            return self.none()
+        tasks = self.filter(
+            round__in=rounds
+        )
+        if category is not None:
+            tasks = tasks.filter(
+                category=category
+            )
+        return tasks.order_by('round', 'number')
+
+
+class SubmitManager(models.Manager):
+    def for_tasks(self, tasks, include_staff=False):
+        '''Returns submits which belong to specified tasks.
+        Only one submit per user, submit type and task is returned.
+        Submits made after round.end_time are not counted except review submits,
+        which has testing_status=SUBMIT_STATUS_REVIEWED and are made by organizers.
+        '''
+        submits = self
+        if not include_staff and tasks:
+            submits = submits.exclude(
+                # round ends January 2014 => exclude 2013, 2012,
+                # round ends Jun 2014 => exclude 2013, 2012,
+                # round ends September 2014 => exclude 2014, 2013,
+                # round ends December 2014 => exclude 2014, 2013,
+                user__graduation__lt=tasks[0].round.end_time.year + int(
+                    tasks[0].round.end_time.month > settings.SCHOOL_YEAR_END_MONTH
+                )
+            ).exclude(
+                user__in=User.objects.filter(
+                    groups=tasks[0].round.series.competition.organizers_group
+                )
+            )
+
+        return submits.filter(
+            task__in=tasks,
+        ).filter(
+            models.Q(time__lte=models.F('task__round__end_time'))
+            | models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
+        ).order_by(
+            'user', 'task', 'submit_type', '-time', '-id',
+        ).distinct(
+            'user', 'task', 'submit_type'
+        ).select_related('user__school', 'task')
+
+    def latest_for_user(self, tasks, user):
+        '''Returns latest submits which belong to specified tasks and user.
+        Only one submit per submit type and task is returned.
+        '''
+        return self.filter(
+            user=user,
+            task__in=tasks,
+            time__lte=models.F('task__round__end_time'),
+        ).order_by(
+            'task', 'submit_type', '-time', '-id',
+        ).distinct(
+            'task', 'submit_type'
+        )
 
 
 @python_2_unicode_compatible
@@ -41,17 +108,29 @@ class Task(models.Model):
     Task has submits.
     '''
     name = models.CharField(max_length=128, verbose_name='názov')
-    reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, verbose_name='opravovateľ')
+    reviewer = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True,
+        verbose_name='opravovateľ',
+    )
     round = models.ForeignKey(Round, verbose_name='kolo')
     category = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
     description_points = models.IntegerField(verbose_name='body za popis')
     source_points = models.IntegerField(verbose_name='body za program')
-    integer_source_points = models.BooleanField(default=True, verbose_name='celočíselné body za program')
+    integer_source_points = models.BooleanField(
+        default=True, verbose_name='celočíselné body za program'
+    )
     has_source = models.BooleanField(verbose_name='odovzáva sa zdroják')
     has_description = models.BooleanField(verbose_name='odovzáva sa popis')
-    has_testablezip = models.BooleanField(verbose_name='odovzdáva sa zip na testovač', default=False)
-    external_submit_link = models.CharField(max_length=128, verbose_name='Odkaz na externé odovzdávanie', blank=True, null=True)
+    has_testablezip = models.BooleanField(
+        verbose_name='odovzdáva sa zip na testovač', default=False
+    )
+    external_submit_link = models.CharField(
+        max_length=128, verbose_name='Odkaz na externé odovzdávanie',
+        blank=True, null=True,
+    )
+
+    objects = TaskManager()
 
     class Meta:
         verbose_name = 'Úloha'
@@ -137,6 +216,8 @@ class Submit(models.Model):
         max_length=10, verbose_name='odpoveď testovača', blank=True)
     protocol_id = models.CharField(
         max_length=128, verbose_name='číslo protokolu', blank=True)
+
+    objects = SubmitManager()
 
     class Meta:
         verbose_name = 'Submit'

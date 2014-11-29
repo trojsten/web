@@ -1,9 +1,6 @@
 from collections import defaultdict
 
-from django.db.models import F
-
 from trojsten.regal.contests.models import Round
-from trojsten.regal.tasks.models import Submit
 from trojsten.results.helpers import UserResult
 
 
@@ -19,21 +16,6 @@ def get_rounds_by_year(user, competition):
     for round in rounds:
         rounds_dict[round.series.year].append(round)
     return dict(rounds_dict)
-
-
-def get_latest_submits_for_user(tasks, user):
-    '''Returns latest submits which belong to specified tasks and user.
-    Only one submit per submit type and task is returned.
-    '''
-    return Submit.objects.filter(
-        user=user,
-        task__in=tasks,
-        time__lte=F('task__round__end_time'),
-    ).order_by(
-        'task', 'submit_type', '-time', '-id',
-    ).distinct(
-        'task', 'submit_type'
-    )
 
 
 def get_points_from_submits(tasks, submits):
