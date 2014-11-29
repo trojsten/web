@@ -20,3 +20,8 @@ def show_results_table(context, round, category=None):
         'has_previous_results': has_previous_results
     })
     return context
+
+
+@register.assignment_tag
+def is_frozen(round, single_round=False):
+    return round.frozen_results_exists(single_round)

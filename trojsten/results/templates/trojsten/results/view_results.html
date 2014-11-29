@@ -19,7 +19,10 @@
 {% endblock %}
 
 {% block page_content %}
-<div class="alert alert-warning">Výsledky sú predbežné.</div>
+{% is_frozen round single_round as results_are_final %}
+{% if not results_are_final %}
+    <div class="alert alert-warning">Výsledky sú predbežné.</div>
+{% endif %}
 {% show_results_table round=round category=category %}
 {% include 'trojsten/results/parts/buttons.html' %}
 <h2>Vysvetlivky</h2>

@@ -15,6 +15,8 @@ from django.contrib.auth.models import Group
 
 from uuidfield import UUIDField
 
+from trojsten.results.models import FrozenResults
+
 
 class RoundManager(models.Manager):
     def visible(self, user):
@@ -175,6 +177,9 @@ class Round(models.Model):
     def solutions_pdf_exists(self):
         path = self.get_pdf_path(solution=True)
         return os.path.exists(path)
+
+    def frozen_results_exists(self, single_round=False):
+        return FrozenResults.objects.filter(round=self, is_single_round=single_round).exists()
 
     def is_visible_for_user(self, user):
         return (
