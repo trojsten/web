@@ -1,12 +1,12 @@
 $(document).ready(function () {
     $("body").on( "swiperight", function( event ) {
         if(event.swipestart.coords[0] < $('body').width() * .1) {
-            $('.nav-menu:not(:visible)').offcanvas('show');
+            $('.nav-menu:not(.offcanvas-clone):not(:visible)').offcanvas('show');
         }
     });
 
     $("body").on( "swipeleft", function( event ) {
-        $('.nav-menu').offcanvas('hide');
+        $('.nav-menu:not(.offcanvas-clone)').offcanvas('hide');
     });
 
     $(".offcanvas-xs").on("show.bs.offcanvas", function(event) {

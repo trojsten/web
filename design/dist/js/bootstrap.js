@@ -2207,6 +2207,7 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
     this.placement = null
 
     if (this.options.recalc) {
+      this.calcClone();
       $(window).on('resize', $.proxy(this.recalc, this))
     }
 
@@ -2478,9 +2479,15 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
     }
   }
 
-  OffCanvas.prototype.recalc = function () {
-    if (this.state !== 'slid' && this.state !== 'slide-in') return
+  OffCanvas.prototype.calcClone = function() {
+    this.$calcClone = this.$element.clone()
+      .html('')
+      .addClass('offcanvas-clone').removeClass('in')
+      .appendTo($('body'))
+  }
 
+  OffCanvas.prototype.recalc = function () {
+    if (this.$calcClone.css('display') === 'none' || (this.state !== 'slid' && this.state !== 'slide-in')) return
     this.state = null
     this.placement = null
     var elements = this.getCanvasElements()
