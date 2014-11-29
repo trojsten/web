@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $("body").on( "swiperight", function( event ) {
         if(event.swipestart.coords[0] < $('body').width() * .1) {
-            $('.nav-menu').offcanvas('show');
+            $('.nav-menu:not(:visible)').offcanvas('show');
         }
     });
 
