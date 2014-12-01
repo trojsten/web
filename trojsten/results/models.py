@@ -30,6 +30,7 @@ class FrozenPoints(models.Model):
     task = models.ForeignKey('tasks.Task', verbose_name='úloha')
     description_points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body za popis')
     source_points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body za program')
+    sum = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body')
 
     class Meta:
         verbose_name = 'Zmrazené body za úlohu'
