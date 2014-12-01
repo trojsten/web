@@ -11,7 +11,7 @@ from django.conf import settings
 class FrozenResults(models.Model):
     round = models.ForeignKey('contests.Round', verbose_name='kolo')
     is_single_round = models.BooleanField(verbose_name='vynechať predošlé kolá')
-    category = models.ForeignKey('tasks.Category', verbose_name='kolo')
+    category = models.ForeignKey('tasks.Category', blank=True, null=True, verbose_name='kolo')
 
     class Meta:
         verbose_name = 'Zmrazená výsledkovka'
