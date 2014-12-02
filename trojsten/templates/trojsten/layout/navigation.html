@@ -1,8 +1,8 @@
-{% load utils %}
+{% load utils staticfiles %}
 {% block page_navigation %}
 <div class="sidebar">
     <ul class="nav nav-pills nav-stacked">
-        <h2>KSP</h2>
+        <h2 class="logo"><img id="logo" src="{% static "images/ksp_logo.png" %}" alt="KSP"/></h2>
         <li class="{% current '^/$' %}"><a href="/?home">Domov</a></li>
         <li class="{% current 'news_list' %}" ><a href="{% url 'news_list' page=1 %}">Novinky</a></li>
         <li class="{% current '^/zbierky/$' %}"><a href="/zbierky/">Zbierky</a></li>
