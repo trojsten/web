@@ -3,22 +3,22 @@
 <div class="sidebar">
     <ul class="nav nav-pills nav-stacked">
         <h2 class="logo"><img id="logo" src="{% static "images/ksp_logo.png" %}" alt="KSP"/></h2>
-        <li class="{% current '^/$' %}"><a href="/?home">Domov</a></li>
-        <li class="{% current 'news_list' %}" ><a href="{% url 'news_list' page=1 %}">Novinky</a></li>
-        <li class="{% current '^/archiv/$' %}"><a href="/archiv/">Archív</a></li>
-        <li class="{% current '^/pravidla/$' %}"><a href="/pravidla/">Pravidlá</a></li>
-        <li class="{% current '^/faq/$' %}"><a href="/faq/">FAQ</a></li>
-        <li><a href="https://liahen.ksp.sk/">Liaheň</a></li>
+        <li class="{% current '^/$' %}"><a href="/?home">Domov <span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
+        <li class="{% current 'news_list' %}" ><a href="{% url 'news_list' page=1 %}">Novinky <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a></li>
+        <li class="{% current '^/archiv/$' %}"><a href="/archiv/">Archív <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span></a></li>
+        <li class="{% current '^/pravidla/$' %}"><a href="/pravidla/">Pravidlá <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a></li>
+        <li class="{% current '^/faq/$' %}"><a href="/faq/">FAQ <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a></li>
+        <li><a href="https://liahen.ksp.sk/">Liaheň <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
         <h2>Aktuálne</h2>
-        <li class="{% current 'active_rounds_task_list' %} {% current 'task_list' %} {% current 'task_statement' %} {% current 'solution_statement' %}"><a href="{% url 'active_rounds_task_list' %}">Zadania a riešenia</a></li>
-        <li class="{% current 'view_latest_results' %} {% current 'view_results' %}"><a href="{% url 'view_latest_results' %}">Výsledky</a></li>
+        <li class="{% current 'active_rounds_task_list' %} {% current 'task_list' %} {% current 'task_statement' %} {% current 'solution_statement' %}"><a href="{% url 'active_rounds_task_list' %}">Zadania a riešenia <span class="glyphicon glyphicon-list" aria-hidden="true"></span></a></li>
+        <li class="{% current 'view_latest_results' %} {% current 'view_results' %}"><a href="{% url 'view_latest_results' %}">Výsledky <span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span></a></li>
         <h2>Akcie</h2>
-        <li><a href="http://klub.trojsten.sk/">Klub</a></li>
-        <li><a href="http://akademia.trojsten.sk">Akadémia</a></li>
+        <li><a href="http://klub.trojsten.sk/">Klub <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a></li>
+        <li><a href="http://akademia.trojsten.sk">Akadémia <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span></a></li>
         <h2>Ostatné</h2>
-        <li class="{% current '^/organizatori/$' %}"><a href="/organizatori/">Organizátori</a></li>
-        <li class="{% current '^/sponzori/$' %}"><a href="/sponzori/">Sponzori</a></li>
-        <li class="{% current '^/kontakt/$' %}"><a href="/kontakt/">Kontakt</a></li>
+        <li class="{% current '^/organizatori/$' %}"><a href="/organizatori/">Organizátori <span class="glyphicon glyphicon-star" aria-hidden="true"></span></a></li>
+        <li class="{% current '^/sponzori/$' %}"><a href="/sponzori/">Sponzori <span class="glyphicon glyphicon-euro" aria-hidden="true"></span></a></li>
+        <li class="{% current '^/kontakt/$' %}"><a href="/kontakt/">Kontakt <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></a></li>
         <h2 class="visible-xs">Iné semináre</h2>
         {%for OTHER_SITE in OTHER_SITES %}
         <li class="visible-xs">
