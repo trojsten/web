@@ -6,7 +6,7 @@ from trojsten.results.models import *
 
 
 class FrozenResultsAdmin(admin.ModelAdmin):
-    list_display = ('round', 'category', 'is_single_round')
+    list_display = ('round', 'category', 'is_single_round', 'time')
 
     formfield_overrides = {
         models.ForeignKey: {'widget': Select2()},
