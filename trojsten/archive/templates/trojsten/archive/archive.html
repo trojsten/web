@@ -1,0 +1,7 @@
+{% extends "wiki/article.html" %}
+{% load wiki_tags archive_parts %}
+
+{% block wiki_contents_tab %}
+{% wiki_render article %}
+{% show_archive %}
+{% endblock %}

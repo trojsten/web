@@ -1,0 +1,33 @@
+{% load archive_parts %}
+
+<h2>Archív zadaní</h2>
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+    {% for competition in competitions %}
+        {% if active_competition %}
+        <li {% if competition == active_competition %}class="active"{% endif %}>
+        {% else %}
+        <li {% if forloop.first %}class="active"{% endif %}>
+        {% endif %}
+            <a href="#competition-tab-{{ competition.name }}" role="tab" data-toggle="tab">
+                {{ competition.name }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+<!-- Tab panes -->
+<div class="tab-content">
+    {% for competition in competitions %}
+        {% if active_competition %}
+        <div class="tab-pane fade {% if competition == active_competition %}in active{% endif %}"
+        {% else %}
+        <div class="tab-pane fade {% if forloop.first %}in active{% endif %}"
+        {% endif %}
+             id="competition-tab-{{ competition.name }}">
+            {% show_round_list user=request.user competition=competition %}
+        </div>
+    {% endfor %}
+</div>
+
+
+
