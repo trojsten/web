@@ -9,6 +9,10 @@ body {
   padding-top: 70px;
 }
 
+#main_menu .glyphicon {
+  margin-left:.5em;
+}
+
 .nav-menu.in {
   position: fixed;
   z-index: 1050;
