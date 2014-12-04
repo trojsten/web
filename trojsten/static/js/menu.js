@@ -6,7 +6,7 @@ $(document).ready(function () {
     });
 
     $("body").on( "swipeleft", function( event ) {
-        $('.nav-menu:not(.offcanvas-clone)').offcanvas('hide');
+        $('.nav-menu.in:not(.offcanvas-clone)').offcanvas('hide');
     });
 
     $(".offcanvas-xs").on("show.bs.offcanvas", function(event) {
