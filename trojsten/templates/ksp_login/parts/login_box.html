@@ -1,0 +1,48 @@
+{% load url from future %}
+{% load i18n %}
+{% load ksp_login %}
+
+<ul class="nav navbar-nav navbar-right">
+<li class="dropdown">
+  {% if user.is_authenticated %}
+    <p class="dropdown-toggle btn btn-primary navbar-btn" id="login-dropdown" data-toggle="dropdown">
+      {% trans "Logged in as" %}
+      <a href="{% url "account_settings" %}" class="navbar-link">{{ user.username }}</a>
+      <span class="caret"></span>
+    </p>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="login-dropdown"
+        id="account_links">
+      {% url "admin:index" as admin_url %}
+      {% if user.is_staff and admin_url %}
+        <li role="presentation">
+          <a role="menuitem" tabindex="-1" href="{{ admin_url }}">
+            <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+            {% trans "Site administration" %}
+          </a>
+        </li>
+      {% endif %}
+      <li role="presentation">
+        <a role="menuitem" tabindex="-1" href="{% url "account_settings" %}">
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+        {% trans "Settings" %}
+      </a>
+      </li>
+      <li role="presentation" class="divider"></li>
+      <li role="presentation">
+        <a role="menuitem" tabindex="-1" href="{% url "account_logout" %}?next={% ksp_login_next %}">
+          <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+          {% trans "Log out" %}</a>
+      </li>
+    </ul>
+  {% else %}
+    <p class="dropdown-toggle btn btn-primary navbar-btn" id="login-dropdown" data-toggle="dropdown">
+      {% trans "Log in" %}
+      <span class="caret"></span>
+    </p>
+    <div class="dropdown-menu" aria-labelledby="login-dropdown">
+      {% include "ksp_login/parts/backend_list.html" with login_providers=login_providers_short %}
+      <a class="ksp_login_more" href="{% url "account_login" %}?next={% ksp_login_next %}">{% trans "More login options" %}</a>
+    </div>
+  {% endif %}
+</li>
+</ul>
