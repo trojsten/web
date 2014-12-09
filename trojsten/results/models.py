@@ -11,7 +11,8 @@ from django.conf import settings
 class FrozenResults(models.Model):
     round = models.ForeignKey('contests.Round', verbose_name='kolo')
     is_single_round = models.BooleanField(verbose_name='vynechať predošlé kolá')
-    category = models.ForeignKey('tasks.Category', verbose_name='kolo')
+    category = models.ForeignKey('tasks.Category', blank=True, null=True, verbose_name='kategória')
+    time = models.DateTimeField(auto_now_add=True, verbose_name='čas')
 
     class Meta:
         verbose_name = 'Zmrazená výsledkovka'
@@ -30,6 +31,7 @@ class FrozenPoints(models.Model):
     task = models.ForeignKey('tasks.Task', verbose_name='úloha')
     description_points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body za popis')
     source_points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body za program')
+    sum = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body')
 
     class Meta:
         verbose_name = 'Zmrazené body za úlohu'
