@@ -32,7 +32,7 @@
 
 {% block page_content %}
     {% set_disqus_identifier "task" task.id %}
-    {% set_disqus_url "http://" request.META.HTTP_HOST request.path %}
+    {% set_disqus_url "https://" request.META.HTTP_HOST request.path %}
     {% set_disqus_title task.number ". " task.name %}
     {% show_progress task.round %}
     {% if task.description_points > 0 or task.source_points > 0 %}
