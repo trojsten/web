@@ -60,7 +60,7 @@ def task_list(request, round_id):
     )
 
 
-def latest_task_list(request):
+def actual_task_list(request):
     rounds = Round.objects.latest_visible(request.user)
     competitions = Competition.objects.all()  # Todo: filter by site
     template_data = {
@@ -69,7 +69,7 @@ def latest_task_list(request):
     }
     return render(
         request,
-        'trojsten/task_statements/list_latest_tasks.html',
+        'trojsten/task_statements/list_actual_tasks.html',
         template_data,
     )
 
