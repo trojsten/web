@@ -61,7 +61,7 @@ def task_list(request, round_id):
 
 
 def actual_task_list(request):
-    rounds = Round.objects.latest_visible(request.user)
+    rounds = Round.objects.actual_visible(request.user)
     competitions = Competition.objects.all()  # Todo: filter by site
     template_data = {
         'rounds': rounds,

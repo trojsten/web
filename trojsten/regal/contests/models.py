@@ -34,9 +34,20 @@ class RoundManager(models.Manager):
         '''Returns latest visible round for each competition
         '''
         return self.visible(user).order_by(
-            'series__competition', '-end_time'
+            'series__competition', '-end_time', '-number',
         ).distinct(
             'series__competition'
+        ).select_related(
+            'series__competition'
+        )
+
+    def actual_visible(self, user):
+        '''Returns all visible running rounds for each competition
+        '''
+        return self.visible(user).filter(
+            end_time__gte=datetime.now()
+        ).order_by(
+            '-end_time', '-number',
         ).select_related(
             'series__competition'
         )
