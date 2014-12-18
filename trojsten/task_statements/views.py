@@ -48,7 +48,7 @@ def solution_statement(request, task_id):
 
 def task_list(request, round_id):
     round = get_object_or_404(Round.objects.visible(request.user), pk=round_id)
-    competitions = Competition.objects.all()  # Todo: filter by site
+    competitions = Competition.objects.current_site_only()
     template_data = {
         'round': round,
         'competitions': competitions,
@@ -62,7 +62,7 @@ def task_list(request, round_id):
 
 def actual_task_list(request):
     rounds = Round.objects.actual_visible(request.user)
-    competitions = Competition.objects.all()  # Todo: filter by site
+    competitions = Competition.objects.current_site_only()
     template_data = {
         'rounds': rounds,
         'competitions': competitions,
