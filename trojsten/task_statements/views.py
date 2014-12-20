@@ -60,8 +60,8 @@ def task_list(request, round_id):
     )
 
 
-def actual_task_list(request):
-    rounds = Round.objects.actual_visible(request.user)
+def active_rounds_task_list(request):
+    rounds = Round.objects.active_visible(request.user)
     competitions = Competition.objects.current_site_only()
     template_data = {
         'rounds': rounds,
@@ -69,7 +69,7 @@ def actual_task_list(request):
     }
     return render(
         request,
-        'trojsten/task_statements/list_actual_tasks.html',
+        'trojsten/task_statements/list_active_rounds_tasks.html',
         template_data,
     )
 

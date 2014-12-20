@@ -46,7 +46,7 @@ class RoundManager(models.Manager):
             'series__competition'
         )
 
-    def actual_visible(self, user, all_sites=False):
+    def active_visible(self, user, all_sites=False):
         '''Returns all visible running rounds for each competition
         '''
         return self.visible(user, all_sites).filter(
