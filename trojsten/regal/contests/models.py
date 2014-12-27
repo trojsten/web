@@ -19,27 +19,50 @@ from trojsten.results.models import FrozenResults
 
 
 class RoundManager(models.Manager):
-    def visible(self, user):
+    def visible(self, user, all_sites=False):
         '''Returns only rounds visible for user
         '''
-        if user.is_superuser:
-            return self.get_queryset()
+        if all_sites:
+            competitions = Competition.objects.all()
         else:
-            return self.filter(
+            competitions = Competition.objects.current_site_only()
+
+        res = self.filter(series__competition__in=competitions)
+        if not user.is_superuser:
+            res = res.filter(
                 Q(series__competition__organizers_group__in=user.groups.all())
                 | Q(visible=True)
             )
+        return res
 
-    def latest_visible(self, user):
+    def latest_visible(self, user, all_sites=False):
         '''Returns latest visible round for each competition
         '''
-        return self.visible(user).order_by(
-            'series__competition', '-end_time'
+        return self.visible(user, all_sites).order_by(
+            'series__competition', '-end_time', '-number',
         ).distinct(
             'series__competition'
         ).select_related(
             'series__competition'
         )
+
+    def active_visible(self, user, all_sites=False):
+        '''Returns all visible running rounds for each competition
+        '''
+        return self.visible(user, all_sites).filter(
+            end_time__gte=datetime.now()
+        ).order_by(
+            '-end_time', '-number',
+        ).select_related(
+            'series__competition'
+        )
+
+
+class CompetitionManager(models.Manager):
+    def current_site_only(self):
+        '''Returns only competitions belonging to current site
+        '''
+        return Site.objects.get(pk=settings.SITE_ID).competition_set.all()
 
 
 @python_2_unicode_compatible
@@ -69,6 +92,8 @@ class Competition(models.Model):
         max_length=128, verbose_name='adresa foldra súťaže v repozitári'
     )
     organizers_group = models.ForeignKey(Group, null=True, verbose_name='skupina vedúcich')
+
+    objects = CompetitionManager()
 
     class Meta:
         verbose_name = 'Súťaž'

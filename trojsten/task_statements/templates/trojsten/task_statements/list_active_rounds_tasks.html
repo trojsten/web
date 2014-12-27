@@ -23,6 +23,9 @@
         {% show_buttons round %}
         <h3>Zoznam úloh</h3>
         {% show_task_list round %}
+    {% empty %}
+    <div class="alert alert-info">Aktuálne nebeží žiadne kolo.
+    Môžte si pozrieť úlohy niektorého z predošlých kôl v archíve.</div>
     {% endfor %}
     {% show_archive %}
 {% endblock %}

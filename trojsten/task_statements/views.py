@@ -48,7 +48,7 @@ def solution_statement(request, task_id):
 
 def task_list(request, round_id):
     round = get_object_or_404(Round.objects.visible(request.user), pk=round_id)
-    competitions = Competition.objects.all()  # Todo: filter by site
+    competitions = Competition.objects.current_site_only()
     template_data = {
         'round': round,
         'competitions': competitions,
@@ -60,16 +60,16 @@ def task_list(request, round_id):
     )
 
 
-def latest_task_list(request):
-    rounds = Round.objects.latest_visible(request.user)
-    competitions = Competition.objects.all()  # Todo: filter by site
+def active_rounds_task_list(request):
+    rounds = Round.objects.active_visible(request.user)
+    competitions = Competition.objects.current_site_only()
     template_data = {
         'rounds': rounds,
         'competitions': competitions,
     }
     return render(
         request,
-        'trojsten/task_statements/list_latest_tasks.html',
+        'trojsten/task_statements/list_active_rounds_tasks.html',
         template_data,
     )
 
