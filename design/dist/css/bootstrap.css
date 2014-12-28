@@ -4020,7 +4020,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   line-height: 20px;
 }
 @media (max-width: 739px) {
-  .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu {
+  .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu {
     position: static;
     float: none;
     width: auto;
@@ -4030,15 +4030,15 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     -webkit-box-shadow: none;
             box-shadow: none;
   }
-  .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > li > a,
-  .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu .dropdown-header {
+  .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > li > a,
+  .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu .dropdown-header {
     padding: 5px 15px 5px 25px;
   }
-  .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > li > a {
+  .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > li > a {
     line-height: 20px;
   }
-  .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > li > a:hover,
-  .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > li > a:focus {
+  .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > li > a:hover,
+  .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > li > a:focus {
     background-image: none;
   }
 }
@@ -4117,7 +4117,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 @media (max-width: 739px) {
-  .navbar-form not(.navbar-nonresponsive) .form-group {
+  .navbar-form :not(.navbar-nonresponsive) .form-group {
     margin-bottom: 5px;
   }
 }
@@ -4233,23 +4233,23 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   background-color: #485a14;
 }
 @media (max-width: 739px) {
-  .navbar-default .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > li > a {
+  .navbar-default .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > li > a {
     color: #fff;
   }
-  .navbar-default .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > li > a:hover,
-  .navbar-default .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > li > a:focus {
+  .navbar-default .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > li > a:hover,
+  .navbar-default .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > li > a:focus {
     color: #27300b;
     background-color: transparent;
   }
-  .navbar-default .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > .active > a,
-  .navbar-default .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > .active > a:hover,
-  .navbar-default .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > .active > a:focus {
+  .navbar-default .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > .active > a,
+  .navbar-default .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > .active > a:hover,
+  .navbar-default .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > .active > a:focus {
     color: #fff;
     background-color: #485a14;
   }
-  .navbar-default .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > .disabled > a,
-  .navbar-default .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > .disabled > a:hover,
-  .navbar-default .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > .disabled > a:focus {
+  .navbar-default .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > .disabled > a,
+  .navbar-default .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > .disabled > a:hover,
+  .navbar-default .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > .disabled > a:focus {
     color: #ccc;
     background-color: transparent;
   }
@@ -4329,29 +4329,29 @@ fieldset[disabled] .navbar-default .btn-link:focus {
   background-color: #080808;
 }
 @media (max-width: 739px) {
-  .navbar-inverse .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > .dropdown-header {
+  .navbar-inverse .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > .dropdown-header {
     border-color: #080808;
   }
-  .navbar-inverse .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu .divider {
+  .navbar-inverse .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu .divider {
     background-color: #080808;
   }
-  .navbar-inverse .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > li > a {
+  .navbar-inverse .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > li > a {
     color: #777;
   }
-  .navbar-inverse .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > li > a:hover,
-  .navbar-inverse .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > li > a:focus {
+  .navbar-inverse .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > li > a:hover,
+  .navbar-inverse .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > li > a:focus {
     color: #fff;
     background-color: transparent;
   }
-  .navbar-inverse .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > .active > a,
-  .navbar-inverse .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > .active > a:hover,
-  .navbar-inverse .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > .active > a:focus {
+  .navbar-inverse .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > .active > a,
+  .navbar-inverse .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > .active > a:hover,
+  .navbar-inverse .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > .active > a:focus {
     color: #fff;
     background-color: #080808;
   }
-  .navbar-inverse .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > .disabled > a,
-  .navbar-inverse .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > .disabled > a:hover,
-  .navbar-inverse .navbar-nav not(.navbar-nonresponsive) .open .dropdown-menu > .disabled > a:focus {
+  .navbar-inverse .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > .disabled > a,
+  .navbar-inverse .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > .disabled > a:hover,
+  .navbar-inverse .navbar-nav :not(.navbar-nonresponsive) .open .dropdown-menu > .disabled > a:focus {
     color: #444;
     background-color: transparent;
   }
