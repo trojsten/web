@@ -278,12 +278,12 @@ LOGIN_REDIRECT_URL = "/ucet/"
 
 # KSP-Login settings
 # The list of authentication backends we want to allow.
-AUTHENTICATION_BACKENDS = tuple(env('TROJSTENWEB_AUTHENTICATION_BACKENDS',
-    'social.backends.google.GoogleOpenId;' \
-    'ksp_login.backends.LaunchpadAuth;' \
-    'social.backends.open_id.OpenIdAuth;' \
-    'django.contrib.auth.backends.ModelBackend' \
-).split(';'))
+AUTHENTICATION_BACKENDS = tuple(env('TROJSTENWEB_AUTHENTICATION_BACKENDS', ';'.join((
+    'social.backends.google.GoogleOpenId',
+    'ksp_login.backends.LaunchpadAuth',
+    'social.backends.open_id.OpenIdAuth',
+    'django.contrib.auth.backends.ModelBackend',
+)).split(';'))
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
@@ -297,15 +297,6 @@ SOCIAL_AUTH_PIPELINE = (
 
 # The number of authentication providers to show in the short list.
 AUTHENTICATION_PROVIDERS_BRIEF = int(env('TROJSTENWEB_AUTHENTICATION_PROVIDERS_BRIEF', '3'))
-SOCIAL_AUTH_FACEBOOK_KEY = env('TROJSTENWEB_FACEBOOK_KEY', '')
-SOCIAL_AUTH_FACEBOOK_SECRET = env('TROJSTENWEB_FACEBOOK_SECRET', '')
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'locale': 'sk_SK'}
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('TROJSTENWEB_GOOGLE_OAUTH2_KEY', '')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('TROJSTENWEB_GOOGLE_OAUTH2_SECRET', '')
-SOCIAL_AUTH_GITHUB_KEY = env('TROJSTENWEB_GITHUB_KEY', '')
-SOCIAL_AUTH_GITHUB_SECRET = env('TROJSTENWEB_GITHUB_SECRET', '')
-SOCIAL_AUTH_GITHUB_SCOPE = ['email']
 
 DISQUS_WEBSITE_SHORTNAME = env('TROJSTENWEB_DISQUS_WEBSITE_SHORTNAME', 'trojsten-ksp')
 
