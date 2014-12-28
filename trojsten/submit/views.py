@@ -23,6 +23,8 @@ from trojsten.submit.helpers import write_chunks_to_file, process_submit, get_pa
     update_submit
 from .constants import VIEWABLE_EXTENSIONS
 
+from . import constants
+
 
 @login_required
 def view_submit(request, submit_id):
@@ -32,7 +34,7 @@ def view_submit(request, submit_id):
 
     # For source submits, display testing results, source code and submit list.
     if submit.submit_type == Submit.SOURCE or submit.submit_type == Submit.TESTABLE_ZIP:
-        if submit.testing_status == settings.SUBMIT_STATUS_IN_QUEUE:
+        if submit.testing_status == constants.SUBMIT_STATUS_IN_QUEUE:
             # check if submit wasn't tested yet
             update_submit(submit)
         template_data = {'submit': submit}
@@ -163,14 +165,14 @@ def task_submit_post(request, task_id, submit_type):
             else:
                 # Source file-name is id.data
                 sfiletarget = unidecode(os.path.join(get_path(
-                    task, request.user), submit_id + '.data'))
+                    task, request.user), submit_id + constants.SUBMIT_SOURCE_FILE_EXTENSION))
                 write_chunks_to_file(sfiletarget, sfile.chunks())
                 sub = Submit(task=task,
                              user=request.user,
                              submit_type=submit_type,
                              points=0,
                              filepath=sfiletarget,
-                             testing_status=settings.SUBMIT_STATUS_IN_QUEUE,
+                             testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
                              protocol_id=submit_id)
                 sub.save()
                 success_message = format_html(
@@ -211,7 +213,7 @@ def task_submit_post(request, task_id, submit_type):
                          user=request.user,
                          submit_type=submit_type,
                          points=0,
-                         testing_status=settings.SUBMIT_STATUS_IN_QUEUE,
+                         testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
                          filepath=sfiletarget)
             sub.save()
             messages.add_message(request, messages.SUCCESS,

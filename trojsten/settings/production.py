@@ -1,19 +1,24 @@
 from __future__ import absolute_import
 from trojsten.settings.common import *
+from django.core.exceptions import ImproperlyConfigured
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'trojsten',
-        'USER': 'trojsten',
-    }
-}
+def requiredenv(name):
+    if name not in os.environ:
+        raise ImproperlyConfigured("Value %s missing in environment configuration" % name)
+    return os.environ.get(name)
 
-STATIC_ROOT = '/var/www/trojsten/static/'
-MEDIA_ROOT = '/var/www/trojsten/media/'
-MEDIA_URL = '/media/'
+DEBUG = False
+TEMPLATE_DEBUG = False
 
-try:
-    from trojsten.settings.local import *
-except ImportError:
-    pass
+SENDFILE_BACKEND = 'sendfile.backends.xsendfile'
+
+# Top secret keys for production settings
+SOCIAL_AUTH_FACEBOOK_KEY = requiredenv('TROJSTENWEB_FACEBOOK_KEY')
+SOCIAL_AUTH_FACEBOOK_SECRET = requiredenv('TROJSTENWEB_FACEBOOK_SECRET')
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'locale': 'sk_SK'}
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = requiredenv('TROJSTENWEB_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = requiredenv('TROJSTENWEB_GOOGLE_OAUTH2_SECRET')
+SOCIAL_AUTH_GITHUB_KEY = requiredenv('TROJSTENWEB_GITHUB_KEY')
+SOCIAL_AUTH_GITHUB_SECRET = requiredenv('TROJSTENWEB_GITHUB_SECRET')
+SOCIAL_AUTH_GITHUB_SCOPE = ['email']

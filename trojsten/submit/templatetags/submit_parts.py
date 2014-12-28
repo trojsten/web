@@ -2,8 +2,8 @@ from django import template
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
 from trojsten.regal.tasks.models import Submit
 from trojsten.submit.views import update_submit
-from trojsten.submit.helpers import RESPONSE_OK
 from django.conf import settings
+from .. import constants
 
 register = template.Library()
 
@@ -27,7 +27,7 @@ def show_submit_form(task, redirect):
 @register.inclusion_tag('trojsten/submit/parts/submit_list.html')
 def show_submit_list(task, user):
     '''Renders submit list for specified task and user'''
-    data = {'IN_QUEUE': settings.SUBMIT_STATUS_IN_QUEUE}
+    data = {'IN_QUEUE': constants.SUBMIT_STATUS_IN_QUEUE}
     data['task'] = task
     data['Submit'] = Submit
     submits = Submit.objects.filter(task=task, user=user)
@@ -37,18 +37,18 @@ def show_submit_list(task, user):
     }
 
     # Update submits which are not updated yet!
-    for submit in data['submits'][Submit.SOURCE].filter(testing_status=settings.SUBMIT_STATUS_IN_QUEUE):
+    for submit in data['submits'][Submit.SOURCE].filter(testing_status=constants.SUBMIT_STATUS_IN_QUEUE):
         update_submit(submit)
-    for submit in data['submits'][Submit.TESTABLE_ZIP].filter(testing_status=settings.SUBMIT_STATUS_IN_QUEUE):
+    for submit in data['submits'][Submit.TESTABLE_ZIP].filter(testing_status=constants.SUBMIT_STATUS_IN_QUEUE):
         update_submit(submit)
     return data
 
 
 @register.filter
 def submitcolor(submit):
-    if submit.testing_status == settings.SUBMIT_STATUS_IN_QUEUE:
+    if submit.testing_status == constants.SUBMIT_STATUS_IN_QUEUE:
         return 'info'
-    elif submit.tester_response == RESPONSE_OK:
+    elif submit.tester_response == constants.SUBMIT_RESPONSE_OK:
         return 'success'
     elif submit.points > 0:
         return 'warning'

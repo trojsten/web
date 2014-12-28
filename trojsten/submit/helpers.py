@@ -10,10 +10,7 @@ from unidecode import unidecode
 
 from django.conf import settings
 
-
-RESPONSE_ERROR = 'CERR'
-RESPONSE_OK = 'OK'
-
+from . import constants
 
 def write_chunks_to_file(filepath, chunks):
     try:
@@ -112,7 +109,7 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
         original_name)
 
     # Write RAW to local file
-    write_chunks_to_file(os.path.join(path, submit_id + '.raw'), [raw, data])
+    write_chunks_to_file(os.path.join(path, submit_id + constants.SUBMIT_RAW_FILE_EXTENSION), [raw, data])
 
     # Send RAW for testing (uncomment when deploying)
     post_submit(raw, data)
@@ -144,19 +141,19 @@ def update_submit(submit):
         # Ak takýto tag existuje, výsledok je chyba pri testovaní a 0 bodov.
         clog = tree.find("compileLog")
         if clog is not None:
-            result = RESPONSE_ERROR
+            result = constants.SUBMIT_RESPONSE_ERROR
             points = 0
         else:
             # Pre každý vstup kompilátor vyprodukuje tag <test>, všetky <test>-y
             # sú v tag-u <runLog>. Výsledok je buď OK, alebo prvý nájdený druh
             # chyby.
             runlog = tree.find("runLog")
-            result = RESPONSE_OK
+            result = constants.SUBMIT_RESPONSE_OK
             for test in runlog:
                 if test.tag != 'test':
                     continue
                 test_result = test[2].text
-                if test_result != RESPONSE_OK:
+                if test_result != constants.SUBMIT_RESPONSE_OK:
                     result = test_result
                     break
             # Na konci testovača je v tagu <score> uložené percento získaných
