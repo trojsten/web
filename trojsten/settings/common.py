@@ -15,11 +15,11 @@ def env(name, default):
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backendds.postgresql_psycopg2',
-        'NAME': env('TROJSTENWEB_DATABSE_NAME', 'trojsten'),
+        'NAME': env('TROJSTENWEB_DATABASE_NAME', 'trojsten'),
         'USER': env('USER', 'trojsten'),
         'PASSWORD': env('TROJSTENWEB_DATABASE_PASSWORD', ''),
         'HOST': env('TROJSTENWEB_DATABASE_URL', 'localhost'),
-        'PORT': env('TROJSTENWEB_DATABSE_PORT', ''),
+        'PORT': env('TROJSTENWEB_DATABASE_PORT', ''),
     },
     'kaspar': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
