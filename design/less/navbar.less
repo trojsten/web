@@ -241,7 +241,7 @@
 
   @media (max-width: @grid-float-breakpoint-max) {
     // Dropdowns get custom display when collapsed
-    not(.navbar-nonresponsive) .open .dropdown-menu {
+    :not(.navbar-nonresponsive) .open .dropdown-menu {
       position: static;
       float: none;
       width: auto;
@@ -296,7 +296,7 @@
   // Mixin behavior for optimum display
   .form-inline();
 
-  not(.navbar-nonresponsive) .form-group {
+  :not(.navbar-nonresponsive) .form-group {
     @media (max-width: @grid-float-breakpoint-max) {
       margin-bottom: 5px;
     }
@@ -462,7 +462,7 @@
 
     @media (max-width: @grid-float-breakpoint-max) {
       // Dropdowns get custom display when collapsed
-      not(.navbar-nonresponsive) .open .dropdown-menu {
+      :not(.navbar-nonresponsive) .open .dropdown-menu {
         > li > a {
           color: @navbar-default-link-color;
           &:hover,
@@ -596,7 +596,7 @@
 
     @media (max-width: @grid-float-breakpoint-max) {
       // Dropdowns get custom display
-      not(.navbar-nonresponsive) .open .dropdown-menu {
+      :not(.navbar-nonresponsive) .open .dropdown-menu {
         > .dropdown-header {
           border-color: @navbar-inverse-border;
         }
