@@ -21,6 +21,7 @@ from trojsten.regal.tasks.models import Task, Submit
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
 from trojsten.submit.helpers import write_chunks_to_file, process_submit, get_path,\
     update_submit
+from .constants import VIEWABLE_EXTENSIONS
 
 
 @login_required
@@ -88,7 +89,7 @@ def view_submit(request, submit_id):
     if submit.submit_type == Submit.DESCRIPTION:
         extension = os.path.splitext(submit.filepath)[1]
         # display .txt and .pdf files in browser, offer download for other files
-        send_attachment = not extension.lower() in ['.pdf', '.txt']
+        send_attachment = extension.lower() not in VIEWABLE_EXTENSIONS
         if os.path.exists(submit.filepath):
             return sendfile(
                 request,
