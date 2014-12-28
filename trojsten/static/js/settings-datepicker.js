@@ -7,6 +7,7 @@
             language: 'sk',
             pickTime: false,
         });
+        $(elem).attr("autocomplete", "off");
     });
 
 })(jQuery);
