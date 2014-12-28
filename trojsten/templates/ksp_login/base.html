@@ -14,10 +14,13 @@
 <script src="{{ STATIC_URL }}js/autocomplete.js"></script>
 <script src="{{ STATIC_URL }}js/correspondence-address.js"></script>
 <script src="{{ STATIC_URL }}js/settings-datepicker.js"></script>
+<script src="{{ STATIC_URL }}js/moment.min.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap-datetimepicker.js"></script>
 {% endblock javascript %}
 
 {% block stylesheets %}
 {{ block.super }}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-base.css" type="text/css">
 <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-smoothness.css" type="text/css">
+<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css" type="text/css">
 {% endblock stylesheets %}
