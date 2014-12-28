@@ -183,7 +183,6 @@ INSTALLED_APPS = (
     #'south',
     #'social_auth',
     #'ksp_login',
-    'django.contrib.admin',
     'trojsten',
     'trojsten.utils',
     'trojsten.regal.people',
@@ -198,6 +197,7 @@ INSTALLED_APPS = (
     'trojsten.task_statements',
 
     # Keep this under trojsten to let trojsten override templates.
+    'django.contrib.admin',
     'social.apps.django_app.default',
     'ksp_login',
     'bootstrapform',
