@@ -9,9 +9,9 @@
 
 {% block nav-global %}
 <div id="site-linkback" style="padding: 0 10px; margin: 8px 0;">
-    <a href="{{SITE.URL}}">{{SITE.SHORT_NAME}}</a>
+    <a href="{{ SITE.URL }}">{{ SITE.SHORT_NAME }}</a>
     {% for OTHER_SITE in OTHER_SITES %}
-        / <a href="{{OTHER_SITE.URL}}">{{OTHER_SITE.SHORT_NAME}}</a>
+        | <a href="{{ OTHER_SITE.URL }}">{{ OTHER_SITE.SHORT_NAME }}</a>
     {% endfor %}
 </div>
 {% endblock %}
