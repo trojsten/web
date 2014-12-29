@@ -39,10 +39,31 @@
       {% trans "Log in" %}
       <span class="caret"></span>
     </p>
-    <div class="dropdown-menu" aria-labelledby="login-dropdown">
-      {% include "ksp_login/parts/backend_list.html" with login_providers=login_providers_short %}
-      <a class="ksp_login_more" href="{% url "account_login" %}?next={% ksp_login_next %}">{% trans "More login options" %}</a>
-    </div>
+    <ul class="dropdown-menu ksp_login_provider_list" role="menu" aria-labelledby="login-dropdown"
+        id="account_links">
+      {% for provider in login_providers_short %}
+      <li role="presentation">
+        <a href="#">
+          <img src="{{ STATIC_URL }}ksp_login/img/{{ provider.name }}.png" title="{{ provider.name }}" alt="{{ provider.name }}" />
+          {{ provider.name | title }}
+        </a>
+        <form action="{% url "social:begin" provider.name %}" method="get">
+          {% csrf_token %}
+          {% if provider.required_field %}
+            <label>{{ provider.required_field_verbose }}
+              <input type="text" name="{{ provider.required_field }}" />
+            </label>
+          {% endif %}
+          <input type="hidden" name="next" value="{% ksp_login_next %}" />
+          <input type="submit" value="{% trans "Log in" %}" />
+        </form>
+      </li>
+      {% endfor %}
+      <li role="presentation" class="divider"></li>
+      <li role="presentation">
+        <a class="ksp_login_more" href="{% url "account_login" %}?next={% ksp_login_next %}"><span class="glyphicon glyphicon-log-in"></span> {% trans "More login options" %}</a>
+      </li>
+    </ul>
   {% endif %}
 </li>
 </ul>

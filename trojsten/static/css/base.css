@@ -55,6 +55,14 @@ h2.logo img
   height: 1em;
 }
 
+#account_links > li img {
+  width: auto;
+  height: 1em;
+}
+
+#account_links > li {
+  display:list-item;
+}
 
 .simplemodal-container {
   color: black;
