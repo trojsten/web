@@ -14,11 +14,11 @@ def env(name, default):
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backendds.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': env('TROJSTENWEB_DATABASE_NAME', 'trojsten'),
         'USER': env('USER', 'trojsten'),
         'PASSWORD': env('TROJSTENWEB_DATABASE_PASSWORD', ''),
-        'HOST': env('TROJSTENWEB_DATABASE_URL', 'localhost'),
+        'HOST': env('TROJSTENWEB_DATABASE_URL', ''),
         'PORT': env('TROJSTENWEB_DATABASE_PORT', ''),
     },
     'kaspar': {
@@ -39,8 +39,15 @@ AUTH_USER_MODEL = 'people.User'
 DEBUG = bool(env('TROJSTENWEB_DEBUG', 'False'))
 TEMPLATE_DEBUG = bool(env('TROJSTENWEB_TEMPLATE_DEBUG', DEBUG))
 
-ADMINS = tuple(env('TROJSTENWEB_ADMINS', '').split(';'))
-MANAGERS = tuple(env('TROJSTENWEB_MANAGERS', '').split(';'))
+if 'TROJSTENWEB_ADMINS' in os.environ:
+    ADMINS = tuple([tuple(admin.split(':')) for admin in env('TROJSTENWEB_ADMINS', '').split(';')])
+else:
+    ADMINS = ()
+
+if 'TROJSTENWEB_MANAGERS' in os.environ:
+    MANAGERS = tuple([tuple(manager.split(':')) for manager in env('TROJSTENWEB_MANAGERS', '').split(';')])
+else:
+    MANAGERS = ()
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
