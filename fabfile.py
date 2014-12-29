@@ -13,7 +13,7 @@ def prod():
     env.user = 'trojstenweb'
     env.hosts = ['archiv.ksp.sk']
 
-def local(venvname='trojstenweb'):
+def local(venvname=VIRTUALENV_NAME):
     global PROJECT_PATH
     global LOCAL
     global VIRTUALENV_NAME
