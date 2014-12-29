@@ -42,6 +42,8 @@ def install_requirements():
     with cd(PROJECT_PATH):
         with prefix('workon %s' % VIRTUALENV_NAME):
             run('pip install -r requirements.txt')
+            if LOCAL:
+                run('pip install -r requirements.devel.txt')
 
 def manage(*args):
     with cd(PROJECT_PATH):
@@ -66,4 +68,4 @@ def update():
     if not LOCAL:
         collectstatic()
         restart_wsgi()
-        write_version_txt()
+    write_version_txt()
