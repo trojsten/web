@@ -4,6 +4,7 @@
 *.py[co]
 local_settings.py
 media/*
+version.txt
 
 #nodejs
 */node_modules/*
