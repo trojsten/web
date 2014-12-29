@@ -50,6 +50,12 @@ h2.logo img
   max-width:80%;
 }
 
+#trojsten_logo
+{
+  height: 1em;
+}
+
+
 .simplemodal-container {
   color: black;
 }
