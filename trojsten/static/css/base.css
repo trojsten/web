@@ -9,6 +9,10 @@ body {
   padding-top: 70px;
 }
 
+#main_menu .glyphicon {
+  margin-left:.5em;
+}
+
 .nav-menu.in {
   position: fixed;
   z-index: 1050;
@@ -45,6 +49,12 @@ h2.logo img
   width: 160px;
   max-width:80%;
 }
+
+#trojsten_logo
+{
+  height: 1em;
+}
+
 
 .simplemodal-container {
   color: black;

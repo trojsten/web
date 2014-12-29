@@ -21,6 +21,7 @@
         {% trans "If you want to associate other services to your account, feel free to pick any from the list below." %}
     </p>
     {% include "ksp_login/parts/backend_list.html" %}
+    <h3>{% trans "Password change" %}</h3>
     <p>
         {% url "account_password" as passwd_url %}
         {% blocktrans %}
