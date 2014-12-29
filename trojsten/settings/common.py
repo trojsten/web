@@ -283,7 +283,7 @@ AUTHENTICATION_BACKENDS = tuple(env('TROJSTENWEB_AUTHENTICATION_BACKENDS', ';'.j
     'ksp_login.backends.LaunchpadAuth',
     'social.backends.open_id.OpenIdAuth',
     'django.contrib.auth.backends.ModelBackend',
-)).split(';'))
+)).split(';')))
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
