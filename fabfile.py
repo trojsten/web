@@ -17,7 +17,6 @@ def local(venvname='trojstenweb'):
     global PROJECT_PATH
     global LOCAL
     global VIRTUALENV_NAME
-    env.user = 'roman'
     env.hosts = ['localhost']
     PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
     LOCAL = True
