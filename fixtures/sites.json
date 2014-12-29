@@ -1,0 +1,42 @@
+[
+    {
+        "fields": {
+            "domain": "ksp.sk",
+            "name": "KSP"
+        },
+        "model": "sites.site",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "domain": "prask.ksp.sk",
+            "name": "Prask"
+        },
+        "model": "sites.site",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "domain": "fks.sk",
+            "name": "FKS"
+        },
+        "model": "sites.site",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "domain": "kms.sk",
+            "name": "KMS"
+        },
+        "model": "sites.site",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "domain": "trojsten.sk",
+            "name": "Trojsten"
+        },
+        "model": "sites.site",
+        "pk": 5
+    }
+]
