@@ -42,7 +42,7 @@
     <ul class="dropdown-menu ksp_login_provider_list" role="menu" aria-labelledby="login-dropdown"
         id="account_links">
       {% for provider in login_providers_short %}
-      <li role="presentation">
+      <li role="presentation" class="provider_{% if provider.required_field %}with_input{% else %}simple{% endif %}">
         <a href="#">
           <img src="{{ STATIC_URL }}ksp_login/img/{{ provider.name }}.png" title="{{ provider.name }}" alt="{{ provider.name }}" />
           {{ provider.name | title }}
