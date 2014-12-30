@@ -16,6 +16,7 @@
   <body>
     {% block page_layout %}
     {% endblock %}
+    {% render_block "js" %}
     {% block javascript %}
       <script src="{% static "js/jquery-1.11.1.min.js" %}" type="text/javascript"></script>
       <script src="{% static "js/jquery.mobile.custom.min.js" %}" type="text/javascript"></script>
@@ -37,6 +38,5 @@
       <script src="{% static "js/analytics.js" %}" type="text/javascript"></script>
       {% include "ksp_login/parts/include_javascript.html" %}
     {% endblock %}
-    {% render_block "js" %}
   </body>
 </html>

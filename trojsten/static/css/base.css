@@ -55,7 +55,7 @@ h2.logo img
   height: 1em;
 }
 
-#account_links > li img {
+.ksp_login_provider_list img {
   width: auto;
   height: 1em;
 }

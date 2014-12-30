@@ -1,0 +1,49 @@
+{% load url from future %}
+{% load i18n %}
+{% load ksp_login %}
+{% load bootstrap %}
+
+<div class="row">
+  <div class="ksp_login_provider_list col-md-6">
+  <h4>Prihlásenie pomocou OpenID</h4>
+    {% for provider in login_providers %}
+        <div class="form-group provider_{% if provider.required_field %}with_input{% else %}simple{% endif %}">
+        <a href="#" class="btn btn-default btn-block">
+          <img src="{{ STATIC_URL }}ksp_login/img/{{ provider.name }}.png" title="{{ provider.name }}" alt="{{ provider.name }}" />
+          {{ provider.name | title }}
+        </a>
+        <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline">
+            {% csrf_token %}
+            {% if provider.required_field %}
+              <input class="form-control input-sm col-md-3" type="text" name="{{ provider.required_field }}" placeholder="{{ provider.required_field_verbose }}" />
+            {% endif %}
+            <input type="hidden" name="next" value="{% ksp_login_next %}" />
+            <input class="btn btn-default btn-sm" type="submit" value="{% trans "Log in" %}" />
+          </form>
+        </div>
+    {% endfor %}
+  </div>
+
+  <div class="col-md-6">
+  <h4>Prihlásenie pomocou hesla</h4>
+  <form action="{% url "account_login" %}" method="post">
+      <input type="hidden" name="next" value="{% ksp_login_next %}" />
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id }}" name="{{ field.name }}" placeholder="{{ field.label }}" maxlength="{{ field.field.max_length }}" />
+      </div>
+      {% endfor %}
+      <div class="form-group">
+          <input class="btn btn-primary btn-block" type="submit" value="{% trans "Log in" %}" />
+      </div>
+  </form>
+  </div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+<hr/>
+<a class="btn btn-info btn-block"  href="{% url "account_register" %}">{% trans "Registration" %}</a>
+</div>
+</div>
