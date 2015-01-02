@@ -3,8 +3,13 @@ div#account_links {
 }
 
 #ksp_login_association_list img {
-    height: 25px;
+    height: 1em;
 }
+
+#ksp_login_association_list .provider-logo {
+    width: 1em;
+}
+
 
 /* The following section contains JavaScript-only styles. */
 
