@@ -167,6 +167,8 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
                 user.mailing_address.postal_code = corr_postal_code
                 user.mailing_address.country = corr_country
 
+        ## Note: Only case when user does not have home address is when that user has been created by
+        ## django management commands (manage.py)
         if not user.home_address:
             home_address = Address(
                 street=street, town=town, postal_code=postal_code, country=country)
@@ -177,6 +179,8 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
             user.home_address.country = country
 
         if commit:
+            ## Warning: if commit==False, home address object for user is not created and assigned if user
+            ## does not already have one (although such users should be extremely rare)..
             if not user.home_address:
                 home_address.save()
                 user.home_address = home_address
