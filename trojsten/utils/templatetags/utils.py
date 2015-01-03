@@ -2,6 +2,7 @@ import re
 
 from django import template
 from django.core import urlresolvers
+from django.conf import settings
 
 register = template.Library()
 
@@ -85,3 +86,15 @@ def exclude(object, key):
 @register.assignment_tag
 def exclude_as(object, key):
     return exclude(object, key)
+
+
+@register.filter
+def provider_name(key):
+    try:
+        provider_dict = settings.PROVIDER_OVERRIDE_DICT
+    except AttributeError:
+        provider_dict = dict()
+    if key in provider_dict:
+        return provider_dict[key]
+    else:
+        return key.title()
