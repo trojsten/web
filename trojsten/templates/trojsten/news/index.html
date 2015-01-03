@@ -9,6 +9,10 @@
 {% endblock %}
 
 {% block page_content %}
+    {% if user.is_staff %}
+        <a href="{% url 'admin:news_entry_add' %}" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Pridať novinku</a>
+    {% endif %}
+
     {% include "trojsten/news/parts/news_list.html" %}
 
     {% if is_paginated %}

@@ -17,6 +17,10 @@
         <li class="{% current '^/pravidla/$' %}"><a href="/pravidla/">Pravidlá <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a></li>
         <li class="{% current '^/organizatori/$' %}"><a href="/organizatori/">Organizátori <span class="glyphicon glyphicon-star" aria-hidden="true"></span></a></li>
         <li><a href="https://liahen.ksp.sk/">Liaheň <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
+        {% if user.is_staff %}
+        <h2>Vedúci</h2>
+        <li class="{% current '^/veduci/.*$' %}"><a href="/veduci/">Vedúcovská wiki <span class="glyphicon glyphicon-book" aria-hidden="true"></span></a></li>
+        {% endif %}
         <h2 class="visible-xs">Iné semináre</h2>
         {%for OTHER_SITE in OTHER_SITES %}
         <li class="visible-xs">
