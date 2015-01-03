@@ -2,7 +2,9 @@
 {% block page_navigation %}
 <div class="sidebar">
     <ul class="nav nav-pills nav-stacked" id="main_menu">
-        <h2 class="logo"><a href="{{ SITE.URL }}"><img id="logo" src="{% static "images/ksp_logo.png" %}" alt="KSP"/></a></h2>
+        {% if SITE_ID == 1 %}
+            <h2 class="logo"><a href="{{ SITE.URL }}"><img id="logo" src="{% static "images/ksp_logo.png" %}" alt="KSP"/></a></h2>
+        {% endif %}
         <li class="{% current '^/$' %}"><a href="/?home">Domov <span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
         <li class="{% current 'news_list' %}" ><a href="{% url 'news_list' page=1 %}">Novinky <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a></li>
         <li class="{% current '^/archiv/$' %}"><a href="/archiv/">Archív <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span></a></li>
