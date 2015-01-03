@@ -3,6 +3,7 @@
 {% load statements_parts %}
 {% load disqus_tags %}
 {% load staticfiles %}
+{% load utils %}
 
 {% block stylesheets %}
 {{ block.super }}
@@ -27,6 +28,14 @@
         <span class="glyphicon glyphicon-list"></span> Všetky úlohy
     </a>
   </li>
+  {% is_organizer competition=task.round.series.competition as is_organizer %}
+  {% if is_organizer %}
+      <li class="pull-right">
+        <a href="{% url 'admin:review_task' task_pk=task.id %}">
+            <span class="glyphicon glyphicon-check"></span> Opravovanie
+        </a>
+      </li>
+  {% endif %}
 </ul>
 {% endblock %}
 
@@ -54,7 +63,7 @@
         {% if task.task_file_exists %}
             {% ssi path %}
         {% else %}
-        <div class="alert alert-warning">HTML zadanie nie je k dispozícii.</div>
+            <p class="lead">HTML zadanie nie je k dispozícii.</p>
         {% endif %}
     </div>
     <div class="task-submit">
