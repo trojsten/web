@@ -1,4 +1,4 @@
-from fabric.api import *
+from fabric.api import run, cd, prefix, env
 import os
 
 PROJECT_PATH = '~/web'
@@ -13,14 +13,15 @@ def prod():
     env.user = 'trojstenweb'
     env.hosts = ['archiv.ksp.sk']
 
-def local(venvname=VIRTUALENV_NAME):
+def local(venvname=None):
     global PROJECT_PATH
     global LOCAL
     global VIRTUALENV_NAME
     env.hosts = ['localhost']
     PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
     LOCAL = True
-    VIRTUALENV_NAME = venvname
+    if venvname is not None:
+        VIRTUALENV_NAME = venvname
 
 def pull():
     with cd(PROJECT_PATH):
