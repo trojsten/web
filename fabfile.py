@@ -78,7 +78,6 @@ def update():
     install_requirements()
     syncdb()
     migrate()
-    load_fixtures()
     if not LOCAL:
         collectstatic()
         restart_wsgi()
