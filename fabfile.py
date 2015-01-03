@@ -3,25 +3,38 @@ import os
 
 PROJECT_PATH = '~/web'
 LOCAL = False
+DEFAULT_VIRTUALENV_NAME = 'trojstenweb'
 VIRTUALENV_NAME = 'trojstenweb'
 
 def beta():
+    global PROJECT_PATH
+    global LOCAL
+    global VIRTUALENV_NAME
+    LOCAL = False
+    PROJECT_PATH = '~/web'
+    VIRTUALENV_NAME = DEFAULT_VIRTUALENV_NAME
     env.user = 'betakspweb'
     env.hosts = ['archiv.ksp.sk']
 
 def prod():
-    env.user = 'trojstenweb'
-    env.hosts = ['archiv.ksp.sk']
-
-def local(venvname=None):
     global PROJECT_PATH
     global LOCAL
     global VIRTUALENV_NAME
+    LOCAL = False
+    PROJECT_PATH = '~/web'
+    VIRTUALENV_NAME = DEFAULT_VIRTUALENV_NAME
+    env.user = 'trojstenweb'
+    env.hosts = ['archiv.ksp.sk']
+
+def local(venvname=DEFAULT_VIRTUALENV_NAME):
+    global PROJECT_PATH
+    global LOCAL
+    global VIRTUALENV_NAME
+    env.user = os.environ.get('USER')
     env.hosts = ['localhost']
     PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
     LOCAL = True
-    if venvname is not None:
-        VIRTUALENV_NAME = venvname
+    VIRTUALENV_NAME = venvname
 
 def pull():
     with cd(PROJECT_PATH):
@@ -70,3 +83,7 @@ def update():
         collectstatic()
         restart_wsgi()
     write_version_txt()
+
+def version():
+    with cd(PROJECT_PATH):
+        run('cat version.txt')
