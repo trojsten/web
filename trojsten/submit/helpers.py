@@ -68,7 +68,7 @@ def get_path(task, user):
 
 def post_submit(raw, data):
     '''Pošle RAW na otestovanie'''
-    if settings.SUBMIT_DEBUG:
+    if not settings.SUBMIT_DEBUG:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((settings.TESTER_URL, settings.TESTER_PORT))
         sock.send(raw)
