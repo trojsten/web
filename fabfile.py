@@ -71,7 +71,15 @@ def write_version_txt():
         run('git log --pretty=format:"%h %cd" -n 1 --date=short > version.txt')
         run('echo >> version.txt')
 
+def enable_maintenance_mode():
+    run('touch ~/maintenance')
+
+def disable_maintenance_mode():
+    run('rm -f ~/maintenance')
+
 def update():
+    if not LOCAL:
+        enable_maintenance_mode()
     pull()
     install_requirements()
     syncdb()
@@ -79,6 +87,7 @@ def update():
     if not LOCAL:
         collectstatic()
         restart_wsgi()
+        disable_maintenance_mode()
     write_version_txt()
 
 def version():
