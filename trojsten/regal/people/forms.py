@@ -145,12 +145,13 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
         self.user = user
         if user:
             kwargs['instance'] = self.user
-            kwargs['initial'] = {
-                'street': user.home_address.street,
-                'town': user.home_address.town,
-                'postal_code': user.home_address.postal_code,
-                'country': user.home_address.country,
-            }
+            if self.user.home_address:
+                kwargs['initial'] = {
+                    'street': user.home_address.street,
+                    'town': user.home_address.town,
+                    'postal_code': user.home_address.postal_code,
+                    'country': user.home_address.country,
+                }
             if user.mailing_address:
                 kwargs['initial']['corr_street'] = user.mailing_address.street
                 kwargs['initial']['corr_town'] = user.mailing_address.town
@@ -186,13 +187,25 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
                 user.mailing_address.postal_code = corr_postal_code
                 user.mailing_address.country = corr_country
 
-        user.home_address.street = street
-        user.home_address.town = town
-        user.home_address.postal_code = postal_code
-        user.home_address.country = country
+        ## Note: Only case when user does not have home address is when that user has been created by
+        ## django management commands (manage.py)
+        if not user.home_address:
+            home_address = Address(
+                street=street, town=town, postal_code=postal_code, country=country)
+        else:
+            user.home_address.street = street
+            user.home_address.town = town
+            user.home_address.postal_code = postal_code
+            user.home_address.country = country
 
         if commit:
-            user.home_address.save()
+            ## Warning: if commit==False, home address object for user is not created and assigned if user
+            ## does not already have one (although such users should be extremely rare)..
+            if not user.home_address:
+                home_address.save()
+                user.home_address = home_address
+            else:
+                user.home_address.save()
             if user.mailing_address and not has_correspondence_address:
                 user.mailing_address = None
             if has_correspondence_address and not user.mailing_address:
