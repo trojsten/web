@@ -377,6 +377,7 @@ FROZEN_RESULTS_PATH = env('TROJSTENWEB_FROZEN_RESULTS_PATH',
         os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'frozen_results'))
 
 # Submit settings
+SUBMIT_DEBUG = bool(int(env('TROJSTENWEB_SUBMIT_DEBUG', '0')))
 SUBMIT_PATH = env('TROJSTENWEB_SUBMIT_PATH',
         os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'submits'))
 SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS = ['.pdf', '.txt', '.md', '.rtf', '.doc', '.docx', '.odt']
