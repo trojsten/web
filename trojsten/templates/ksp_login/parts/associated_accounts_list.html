@@ -1,5 +1,6 @@
 {% load url from future %}
 {% load i18n %}
+{% load utils %}
 
 {% if account_associations %}
   <table id="ksp_login_association_list" class="table">
@@ -17,7 +18,7 @@
             <img src="{{ STATIC_URL }}ksp_login/img/{{ association.provider }}.png" alt="{{ association.provider }}" />
           </td>
           <td>
-            {{ association.provider | title }}
+            {{ association.provider | provider_name }}
           </td>
           <td>
             <span>{{ association.uid }}</span>

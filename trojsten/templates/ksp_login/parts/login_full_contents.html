@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load ksp_login %}
 {% load bootstrap %}
+{% load utils %}
 
 <div class="row">
   <div class="ksp_login_provider_list col-md-6">
@@ -10,7 +11,7 @@
         <div class="form-group provider_{% if provider.required_field %}with_input{% else %}simple{% endif %}">
         <a href="#" class="btn btn-default btn-block">
           <img src="{{ STATIC_URL }}ksp_login/img/{{ provider.name }}.png" title="{{ provider.name }}" alt="{{ provider.name }}" />
-          {{ provider.name | title }}
+          {{ provider.name | provider_name }}
         </a>
         <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline">
             {% csrf_token %}
