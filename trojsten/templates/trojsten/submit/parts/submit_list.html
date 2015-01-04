@@ -47,7 +47,7 @@
         <tbody>
         {% if task.has_source %}
         {% for submit in submits|lookup:Submit.SOURCE %}
-            <tr class="{{ submit|submitcolor }}">
+        <tr class="{{ submit|submitclass }}" data-id="{{ submit.id }}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == IN_QUEUE %}
                 <td>Testuje sa</td>
@@ -63,7 +63,7 @@
         {% endif %}
         {% if task.has_testablezip %}
         {% for submit in submits|lookup:Submit.TESTABLE_ZIP %}
-            <tr class="{{ submit|submitcolor }}">
+            <tr class="{{ submit|submitclass }}" data-id="{{ submit.id }}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == IN_QUEUE %}
                 <td>Testuje sa</td>

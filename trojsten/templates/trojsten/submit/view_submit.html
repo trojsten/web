@@ -42,40 +42,9 @@
 {% endblock %}
 
 {% block page_content %}
-    {% if source %}
-        {% if protocolReady %}
-        {% if compileLogPresent %}
-            <h4>Výstup z kompilátora</h4>
-            <pre>{{ compileLog }}</pre>
-        {% endif %}
-        {% if have_tests %}
-            <table>
-                <thead>
-                <tr>
-                    <th>Vstup</th>
-                    <th>Výsledok</th>
-                    <th>Čas</th>
-                </tr>
-            </thead>
-                <tbody>
-            {% for test in tests %}
-                <tr>
-                    <td>{{ test.name }}</td>
-                    <td>{{ test.result }}</td>
-                    <td>{{ test.time }} ms</td>
-                </tr>
-                    {% if test.showDetails %}
-                    <tr>
-                        <td><pre>{{ test.details }}</pre></td>
-                    </tr>
-                    {% endif %}
-                </tbody>
-            {% endfor %}
-        {% endif %}
-    </table>
-    {% else %}
-        Program ešte nebol otestovaný
-    {% endif %}
+    <div class="submit-protocol" data-id="{{ submit.id }}" data-ready="{{ protocolReady }}">
+        {% include "trojsten/submit/protocol.html" %}
+    </div>
     <h3>Odovzdaný program</h3>
     {% if fileReady %}
         <pre class="prettyprint">{{ data }}</pre>
