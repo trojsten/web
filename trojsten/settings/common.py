@@ -70,6 +70,7 @@ SITES = {
         'NAME': 'Korešpondenčný seminár z programovania',
         'SHORT_NAME': 'KSP',
         'URL': 'http://ksp.sk',
+        'HAS_LOGO': True,
     },
     2: {
         'NAME': 'Prask',
@@ -370,7 +371,7 @@ ROUND_PROGRESS_WARNING_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_WARNING_DAYS',
 ROUND_PROGRESS_WARNING_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_WARNING_CLASS', 'progress-bar-warning')
 ROUND_PROGRESS_DANGER_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_DANGER_DAYS', '7'))
 ROUND_PROGRESS_DANGER_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DANGER_CLASS', 'progress-bar-danger')
-FROZEN_RESULTS_PATH = env('TROJSTENWEB_FROZEN_RESULTS_PATH', 
+FROZEN_RESULTS_PATH = env('TROJSTENWEB_FROZEN_RESULTS_PATH',
         os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'frozen_results'))
 
 # Submit settings
