@@ -2,6 +2,7 @@
 
 # Common settings for trojsten.
 import os
+import json
 import trojsten
 import trojsten.special.installed_apps
 
@@ -307,6 +308,8 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.load_extra_data',
 )
 
+PROVIDER_OVERRIDE_DICT = json.loads(env('TROJSTENWEB_AUTHENTICATION_PROVIDER_OVERRIDE_DICT', '{}'))
+
 # The number of authentication providers to show in the short list.
 AUTHENTICATION_PROVIDERS_BRIEF = int(env('TROJSTENWEB_AUTHENTICATION_PROVIDERS_BRIEF', '3'))
 
@@ -370,7 +373,7 @@ ROUND_PROGRESS_WARNING_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_WARNING_DAYS',
 ROUND_PROGRESS_WARNING_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_WARNING_CLASS', 'progress-bar-warning')
 ROUND_PROGRESS_DANGER_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_DANGER_DAYS', '7'))
 ROUND_PROGRESS_DANGER_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DANGER_CLASS', 'progress-bar-danger')
-FROZEN_RESULTS_PATH = env('TROJSTENWEB_FROZEN_RESULTS_PATH', 
+FROZEN_RESULTS_PATH = env('TROJSTENWEB_FROZEN_RESULTS_PATH',
         os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'frozen_results'))
 
 # Submit settings
