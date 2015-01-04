@@ -6,23 +6,21 @@ LOCAL = False
 DEFAULT_VIRTUALENV_NAME = 'trojstenweb'
 VIRTUALENV_NAME = 'trojstenweb'
 
-def beta():
+def _reset_env():
     global PROJECT_PATH
     global LOCAL
     global VIRTUALENV_NAME
     LOCAL = False
     PROJECT_PATH = '~/web'
     VIRTUALENV_NAME = DEFAULT_VIRTUALENV_NAME
+
+def beta():
+    _reset_env()
     env.user = 'betakspweb'
     env.hosts = ['archiv.ksp.sk']
 
 def prod():
-    global PROJECT_PATH
-    global LOCAL
-    global VIRTUALENV_NAME
-    LOCAL = False
-    PROJECT_PATH = '~/web'
-    VIRTUALENV_NAME = DEFAULT_VIRTUALENV_NAME
+    _reset_env()
     env.user = 'trojstenweb'
     env.hosts = ['archiv.ksp.sk']
 
