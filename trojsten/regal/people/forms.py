@@ -9,6 +9,7 @@ from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
 
 from trojsten.regal.people.models import User, Address
+from . import constants
 
 
 class TrojstenUserBaseForm(forms.ModelForm):
@@ -47,6 +48,10 @@ class TrojstenUserBaseForm(forms.ModelForm):
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
         self.fields['email'].required = True
+        self.fields['gender'] = forms.ChoiceField(widget=forms.RadioSelect,
+                label='Pohlavie',
+                choices=User.GENDER_CHOICES,
+                )
 
     def get_initial_from_pipeline(self, pipeline_state):
         return None if not pipeline_state else {
@@ -123,13 +128,13 @@ class TrojstenUserBaseForm(forms.ModelForm):
     def clean_graduation(self):
         grad = int(self.cleaned_data.get('graduation'))
 
-        if grad < settings.GRADUATION_YEAR_MIN:
+        if grad < constants.GRADUATION_YEAR_MIN:
             raise forms.ValidationError(
                 _("Your graduation year is too far in the past."),
                 code="graduation_too_soon",
             )
 
-        if grad > date.today().year + settings.GRADUATION_YEAR_MAX_AHEAD:
+        if grad > date.today().year + constants.GRADUATION_YEAR_MAX_AHEAD:
             raise forms.ValidationError(
                 _("Your graduation year is too far in the future."),
                 code="graduation_too_late",

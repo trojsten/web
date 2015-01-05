@@ -85,10 +85,10 @@ class User(AbstractUser):
     Holds, provide access to or manages all informations
     related to a person.
     '''
-
+    GENDER_CHOICES=[('M', 'Chlapec'), ('F', 'Dievča')]
     gender = models.CharField(
         max_length=1,
-        choices=[('M', 'Chlapec'), ('F', 'Dievča')],
+        choices=GENDER_CHOICES,
         default='M',
         verbose_name='pohlavie',
     )
