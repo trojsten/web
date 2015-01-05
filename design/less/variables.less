@@ -13,7 +13,11 @@
 @gray-light:             lighten(#000, 46.7%); // #777
 @gray-lighter:           lighten(#000, 93.5%); // #eee
 
+// KSP
 @brand-primary:         #6a831e;
+// FKS
+// @brand-primary:         #fa9200;
+
 @brand-success:         #9da827;
 @brand-info:            #3498db;
 @brand-warning:         #f39c12;
@@ -26,11 +30,15 @@
 
 //** Background color for `<body>`.
 @body-bg:               @gray-darker;
+@main-bg:               #fff;
 //** Global text color on `<body>`.
 @text-color:            @gray-darker;
+@text-color-sidebar:    #fff;
 
 //** Global textual link color.
 @link-color:            @brand-primary;
+//** Sidebar and footer link colors
+@link-color-sidebar:    lighten(@brand-primary, 7%);
 //** Link hover color set via `darken()` function.
 @link-hover-color:      darken(@link-color, 10%);
 

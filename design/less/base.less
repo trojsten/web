@@ -20,7 +20,7 @@ body {
   bottom: 0;
   overflow-y: auto;
   border-radius: 0;
-  background-color: #222;
+  background-color: @body-bg;
 }
 
 .navbar-main {
@@ -32,7 +32,7 @@ body {
 }
 
 .navbar-main .navbar-toggle.active {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: darken(@brand-primary, 10%);
 }
 
 li > h1 {
@@ -70,7 +70,7 @@ h2.logo img
 
 .table-rounds {
   margin-top: 1em;
-  border: 1px solid #ddd;
+  border: 1px solid @table-border-color;
 }
 
 .table-rounds td {
@@ -97,7 +97,7 @@ label.required:after {
 
 .main-content {
   text-align: justify;
-  background-color: #fff;
+  background-color: @main-bg;
   padding-left: 5%;
   padding-right: 5%;
   padding-bottom: 3em;
@@ -115,7 +115,7 @@ label.required:after {
 .main-content .news-entry {
   padding-bottom: 3em;
   margin-bottom: 1em;
-  border-bottom: 1px dotted #455905;
+  border-bottom: 1px dotted darken(@brand-primary, 13%);
 }
 
 .main-content .news-entry > .news-entry-details {
@@ -137,7 +137,7 @@ label.required:after {
 }
 
 .page-header {
-  border-bottom: 1px dotted #455905;
+  border-bottom: 1px dotted darken(@brand-primary, 13%);
 }
 
 .sidebar {
@@ -148,17 +148,17 @@ label.required:after {
 .sidebar a:visited,
 footer a:link,
 footer a:visited {
-  color: #86a525;
+  color: @link-color-sidebar;
 }
 
 .sidebar li a:hover {
-  background-color: #333;
+  background-color: @gray-dark;
 }
 
 .sidebar h2 {
   font-size: 1.5em;
   padding: 10px 25px 0 0;
-  color: #fff;
+  color: @text-color-sidebar;
 }
 
 .sidebar .nav>li>a {
@@ -190,15 +190,15 @@ footer a:visited {
 /* Login Button */
 
 #login-dropdown {
-  border: 1px solid #2A3800;
-  background-color: #475C06;
+  border: 1px solid darken(@brand-primary, 20%);
+  background-color: darken(@brand-primary, 10%);
   -webkit-box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.4);
   -moz-box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.4);
   box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.4);
 }
 
 #login-dropdown:hover {
-  background-color: #2A3800;
+  background-color: darken(@brand-primary, 20%);
 }
 
 /* Results table */
@@ -239,7 +239,7 @@ footer {
   width: 100%;
   /* Set the fixed height of the footer here */
   height: 60px;
-  background-color: #111;
+  background-color: darken(@body-bg, 7%);
 }
 
 footer ul {
