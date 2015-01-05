@@ -3,24 +3,11 @@ ksp_login.jQuery(function($)
     // Apply js-dependent CSS.
     $('.ksp_login_provider_list').addClass('ksp_login_provider_list_js');
 
-    var update_modal_size = function()
-    {
-        $(this).closest('.simplemodal-container').each(function()
-        {
-            var modal_box_div = $(this).find('#ksp_login_modal_box');
-            var height = modal_box_div.height();
-            var width = modal_box_div.width();
-            $.modal.update(height, width);
-            $('.simplemodal-wrap').css({overflow: 'hidden'});
-        });
-    }
-
     var show_element = function(elem, callback)
     {
         $(elem).slideDown({
             duration: 'fast',
             complete: callback,
-            progress: update_modal_size,
         });
     };
 
@@ -29,7 +16,6 @@ ksp_login.jQuery(function($)
         $(elem).slideUp({
             duration: 'fast',
             complete: callback,
-            progress: update_modal_size,
         });
     };
 
@@ -72,10 +58,8 @@ ksp_login.jQuery(function($)
 
     var more_options_click = function()
     {
-        $('#ksp_login_modal_box').modal({
-            overlayClose: true,
-            autoResize: true,
-        })
+        // We have to use global JQuery here, because bootsrap adds .modal method to it
+        jQuery('#ksp_login_modal_box').modal('show');
         return false;
     }
 

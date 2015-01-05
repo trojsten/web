@@ -1,0 +1,12 @@
+{% extends "ksp_login/base.html" %}
+{% load i18n %}
+
+{% block ksp_login_title %}{% trans "Log in" %}{% endblock ksp_login_title %}
+
+{% block page_header %}
+<h1>{% trans "Log in" %}</h1>
+{% endblock %}
+
+{% block ksp_login_content %}
+  {% include "ksp_login/parts/login_full_contents.html" %}
+{% endblock ksp_login_content %}

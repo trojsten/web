@@ -1,0 +1,40 @@
+{% load url from future %}
+{% load i18n %}
+{% load utils %}
+
+{% if account_associations %}
+  <table id="ksp_login_association_list" class="table">
+    <thead>
+      <tr>
+        <th colspan="2">{% trans "Provider" %}</th>
+        <th>{% trans "Account" %}</th>
+        <td></td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for association in account_associations %}
+        <tr>
+          <td class="provider-logo">
+            <img src="{{ STATIC_URL }}ksp_login/img/{{ association.provider }}.png" alt="{{ association.provider }}" />
+          </td>
+          <td>
+            {{ association.provider | provider_name }}
+          </td>
+          <td>
+            <span>{{ association.uid }}</span>
+          </td>
+          <td>
+            <form action="{% url "social:disconnect_individual" association.provider association.id %}" method="post">
+              {% csrf_token %}
+              <input class="btn btn-default" type="submit" value="{% trans "Disconnect" %}" />
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>
+    {% trans "You don't have any services associated with your account." %}
+  </p>
+{% endif %}

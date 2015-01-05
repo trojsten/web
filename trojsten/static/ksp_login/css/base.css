@@ -1,0 +1,18 @@
+div#account_links {
+    float: right;
+}
+
+#ksp_login_association_list img {
+    height: 1em;
+}
+
+#ksp_login_association_list .provider-logo {
+    width: 1em;
+}
+
+
+/* The following section contains JavaScript-only styles. */
+
+.ksp_login_provider_list_js form {
+    display: none;
+}

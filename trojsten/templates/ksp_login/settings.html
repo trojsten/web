@@ -2,6 +2,8 @@
 
 {% load url from future %}
 {% load i18n %}
+{% load ksp_login %}
+
 
 {% block ksp_login_title %}{% trans "Account settings" %}{% endblock ksp_login_title %}
 
@@ -17,10 +19,30 @@
         {% trans "You can use any of the following services to log in to your account." %}
     </p>
     {% include "ksp_login/parts/associated_accounts_list.html" %}
-    <p>
-        {% trans "If you want to associate other services to your account, feel free to pick any from the list below." %}
-    </p>
-    {% include "ksp_login/parts/backend_list.html" %}
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        Pridať nové konto<span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu ksp_login_provider_list" role="menu" aria-labelledby="login-dropdown"
+        id="account_links">
+      {% for provider in login_providers %}
+      <li role="presentation" class="provider_{% if provider.required_field %}with_input{% else %}simple{% endif %}">
+        <a href="javascript:void;">
+          <img src="{{ STATIC_URL }}ksp_login/img/{{ provider.name }}.png" title="{{ provider.name }}" alt="{{ provider.name }}" />
+          {{ provider.name | title }}
+        </a>
+        <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline">
+          {% csrf_token %}
+          {% if provider.required_field %}
+            <input class="form-control input-sm col-md-3" type="text" name="{{ provider.required_field }}" placeholder="{{ provider.required_field_verbose }}" />
+          {% endif %}
+          <input type="hidden" name="next" value="{% ksp_login_next %}" />
+          <input class="btn btn-default btn-sm" type="submit" value="{% trans "Log in" %}" />
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+    </div>
     <h3>{% trans "Password change" %}</h3>
     <p>
         {% url "account_password" as passwd_url %}
