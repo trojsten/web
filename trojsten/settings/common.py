@@ -162,6 +162,7 @@ MIDDLEWARE_CLASSES = (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'trojsten.middleware.multihostname.MultiHostnameMiddleware',
+    'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
 )
 
 ALLOWED_INCLUDE_ROOTS = ()
@@ -281,6 +282,7 @@ MESSAGE_TAGS = {
 
 # The URL to which Django redirects as soon as login is required.
 LOGIN_URL = "/ucet/login/"
+LOGIN_ERROR_URL = "/ucet/login/"
 LOGIN_REDIRECT_URL = "/ucet/"
 
 
