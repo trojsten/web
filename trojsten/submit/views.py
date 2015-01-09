@@ -37,7 +37,10 @@ def view_submit(request, submit_id):
         if submit.testing_status == constants.SUBMIT_STATUS_IN_QUEUE:
             # check if submit wasn't tested yet
             update_submit(submit)
-        template_data = {'submit': submit}
+        template_data = {
+            'submit': submit,
+            'source': True,
+        }
         protocol_path = submit.filepath.rsplit(
             '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
         if os.path.exists(protocol_path):
@@ -88,7 +91,7 @@ def view_submit(request, submit_id):
         )
 
     # For description submits, return submitted file.
-    if submit.submit_type == Submit.DESCRIPTION:
+    elif submit.submit_type == Submit.DESCRIPTION:
         extension = os.path.splitext(submit.filepath)[1]
         # display .txt and .pdf files in browser, offer download for other files
         send_attachment = extension.lower() not in VIEWABLE_EXTENSIONS
@@ -100,6 +103,14 @@ def view_submit(request, submit_id):
             )
         else:
             raise Http404  # File does not exists, can't be returned
+
+    else:
+        return render(
+            request, 'trojsten/submit/view_submit.html', {
+                'submit': submit,
+                'source': False,
+            }
+        )
 
 
 @login_required
