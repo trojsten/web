@@ -1,5 +1,6 @@
 {% extends "trojsten/layout/main.html" %}
 {% load staticfiles submit_parts %}
+{% load utils %}
 
 {% block title %}Detaily submitu{% endblock %}
 
@@ -21,7 +22,23 @@
 {% endblock %}
 
 {% block page_header %}
-<h1>Detaily submitu <small>{{ submit.protocol_id }}</small></h1>
+<ul class="nav nav-pills">
+    <li class="pull-left" id="submit-title-li">
+        <h1>Detaily submitu <small>{{ submit.protocol_id }}</small></h1>
+    </li>
+    <li class="pull-right">
+        <a href="{% url 'task_statement' task_id=submit.task.id %}">
+            <span class="glyphicon glyphicon-list"></span> Zadanie
+        </a>
+    </li>
+    {% is_organizer competition=submit.task.round.series.competition as is_organizer %}
+    {% if is_organizer %}
+        <li class="pull-right">
+            <a href="{% url 'admin:tasks_submit_change' submit.id %}">
+                <span class="glyphicon glyphicon-pencil"></span> Upraviť
+            </a>
+        </li>
+    {% endif %}
 {% endblock %}
 
 {% block page_content %}

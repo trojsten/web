@@ -3,6 +3,9 @@
 
 {% block object-tools-items %}
     <li>
+    <a href="{% url 'view_submit' submit_id=original.pk %}" class="historylink">{% trans 'View' %}</a>
+    </li>
+    <li>
     <a href="{% url 'admin:submit_download' original.pk %}" class="historylink">{% trans 'Download' %}</a>
     </li>
     {{ block.super}}
