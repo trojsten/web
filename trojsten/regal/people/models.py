@@ -7,7 +7,6 @@ from datetime import date
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import AbstractUser, UserManager as DjangoUserManager
-from django.conf import settings
 
 from . import constants
 
@@ -85,10 +84,10 @@ class User(AbstractUser):
     Holds, provide access to or manages all informations
     related to a person.
     '''
-
+    GENDER_CHOICES = [('M', 'Chlapec'), ('F', 'Dievča')]
     gender = models.CharField(
         max_length=1,
-        choices=[('M', 'Chlapec'), ('F', 'Dievča')],
+        choices=GENDER_CHOICES,
         default='M',
         verbose_name='pohlavie',
     )
