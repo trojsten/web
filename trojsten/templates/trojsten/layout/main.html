@@ -1,4 +1,5 @@
 {% extends "trojsten/layout/base.html" %}
+{% load utils %}
 
 {% block page_layout %}
 <header>{% include "trojsten/layout/header.html" %}</header>
@@ -12,11 +13,13 @@
         {% if messages %}
         <!-- Messages for this instance -->
         {% for message in messages %}
+            {% with message.tags|split:" " as tags %}
             {# TODO: after bump to Django>=1.7, use level_tag here #}
-            <div class="alert alert-{{ message.tags }}" role="alert">
+            <div class="alert {% for tag in tags %} alert-{{ tag }} {% endfor %}" role="alert">
                 <a class="close" data-dismiss="alert" href="#">&times;</a>
                 {{ message }}
             </div>
+            {% endwith %}
         {% endfor %}
         {% endif %}
     {% block page_content %}{% endblock %}
