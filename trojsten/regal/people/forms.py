@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.utils.translation import string_concat, ugettext_lazy as _
-from django.conf import settings
 
 from datetime import date
 
@@ -48,10 +47,11 @@ class TrojstenUserBaseForm(forms.ModelForm):
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
         self.fields['email'].required = True
-        self.fields['gender'] = forms.ChoiceField(widget=forms.RadioSelect,
-                label='Pohlavie',
-                choices=User.GENDER_CHOICES,
-                )
+        self.fields['gender'] = forms.ChoiceField(
+            widget=forms.RadioSelect,
+            label='Pohlavie',
+            choices=User.GENDER_CHOICES,
+        )
 
     def get_initial_from_pipeline(self, pipeline_state):
         return None if not pipeline_state else {
