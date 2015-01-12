@@ -22,7 +22,7 @@
             <td>
             {% if round.categories %}
                 <a href="{% url 'task_list' round_id=round.id %}"  class="btn btn-primary btn-sm">
-                  Zadania a riešenia
+                  Zadania a vzoráky
                 </a>
                 {% for category in round.categories %}
                 <a class="btn btn-danger btn-sm category-{{ category }}"

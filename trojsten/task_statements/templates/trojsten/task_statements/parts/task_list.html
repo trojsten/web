@@ -31,7 +31,7 @@
     </th>
     {% if solutions_visible %}
     <th width="15%">
-        Riešenie
+        Vzoráky
         {% if not round.solutions_visible %}
             <small>
                 <span class="label label-danger" title="skryté"
@@ -65,7 +65,7 @@
         </td>
         {% if solutions_visible %}
             <td>
-                <a href="{% url 'solution_statement' task_id=task.id %}">riešenie</a>
+                <a href="{% url 'solution_statement' task_id=task.id %}">vzorák</a>
             </td>
         {% endif %}
         <td>
