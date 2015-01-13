@@ -42,6 +42,7 @@
 {% endblock %}
 
 {% block page_content %}
+    {% if source %}
         {% if protocolReady %}
         {% if compileLogPresent %}
             <h4>Výstup z kompilátora</h4>
@@ -80,6 +81,9 @@
         <pre class="prettyprint">{{ data }}</pre>
     {% else %}
         Zdrojový kód programu nie je dostupný
+    {% endif %}
+    {% else %}
+        K tomuto submitu nie sú k dispozícii žiadne dáta
     {% endif %}
     {% show_submit_list submit.task submit.user %}
 {% endblock %}
