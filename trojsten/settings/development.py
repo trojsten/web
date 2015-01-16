@@ -3,6 +3,7 @@ from trojsten.settings.common import *
 
 DEBUG = True
 TEMPLATE_DEBUG = True
+SUBMIT_DEBUG = True
 SENDFILE_BACKEND = 'sendfile.backends.development'
 
 # Django debug toolbar set-up

@@ -68,12 +68,16 @@ def get_path(task, user):
 
 def post_submit(raw, data):
     '''Pošle RAW na otestovanie'''
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect((settings.TESTER_URL, settings.TESTER_PORT))
-    sock.send(raw)
-    sock.send(data)
-    sock.close()
-
+    if settings.SUBMIT_DEBUG:
+        print("Submit RAW: ")
+        print(raw)
+        print(data)
+    else:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((settings.TESTER_URL, settings.TESTER_PORT))
+        sock.send(raw)
+        sock.send(data)
+        sock.close()
 
 def process_submit_raw(f, contest_id, task_id, language, user_id):
     '''Spracuje submit bez dotknutia databázy'''
