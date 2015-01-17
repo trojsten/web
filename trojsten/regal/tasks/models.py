@@ -73,7 +73,9 @@ class SubmitManager(models.Manager):
         return self.filter(
             user=user,
             task__in=tasks,
-            time__lte=models.F('task__round__end_time'),
+        ).filter(
+            models.Q(time__lte=models.F('task__round__end_time'))
+            | models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
         ).order_by(
             'task', 'submit_type', '-time', '-id',
         ).distinct(
