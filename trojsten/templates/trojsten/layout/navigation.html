@@ -3,7 +3,7 @@
 <div class="sidebar">
     <ul class="nav nav-pills nav-stacked" id="main_menu">
         {% if SITE.HAS_LOGO %}
-            <h2 class="logo"><a href="{{ SITE.URL }}"><img id="logo" src="{% static "images/"|add:SITE.SHORT_NAME|add:"/logo.png" %}" alt="KSP"/></a></h2>
+            <h2 class="logo"><a href="{{ SITE.URL }}"><img id="logo" src="{% static "images/"|add:SITE.FOLDER|add:"/logo.png" %}" alt="KSP"/></a></h2>
         {% endif %}
         <li class="{% current '^/$' %}"><a href="/?home">Domov <span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
         <li class="{% current 'news_list' %}" ><a href="{% url 'news_list' page=1 %}">Novinky <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a></li>
