@@ -6,7 +6,7 @@
          * replies that the data is tested, calls callback with the
          * returned data */
         function poll_submit(id, callback) {
-            $.get('/odovzdavanie/submit/' + id + '/info/', function(data) {
+            $.get('/odovzdavanie/ajax/submit/' + id + '/info.json', function(data) {
                 if (data.tested) {
                     callback(data);
                 } else {
@@ -31,7 +31,7 @@
         if ($('.submit-protocol').data('ready') == 'False') {
             var current_id = $('.submit-protocol').data('id');
             poll_submit(current_id, function() {
-                $.get('/odovzdavanie/submit/' + current_id + '/protokol/', function(data) {
+                $.get('/odovzdavanie/ajax/submit/' + current_id + '/protokol/', function(data) {
                     $('.submit-protocol').html(data);
                 });
             });
