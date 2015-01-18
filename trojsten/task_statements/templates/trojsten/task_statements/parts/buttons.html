@@ -1,11 +1,12 @@
 {% load utils %}
+<div class="clearfix">
 {% if round.tasks_pdf_exists %}
-<a class="btn btn-info" href="{% url 'view_pdf' round_id=round.id %}">PDF zadania</a>
+<a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-info" href="{% url 'view_pdf' round_id=round.id %}">PDF zadania</a>
 {% endif %}
 {% if round.solutions_pdf_exists %}
     {% is_organizer round.series.competition as organizer %}
     {% if organizer or round.solutions_visible %}
-        <a class="btn btn-info" href="{% url 'view_solutions_pdf' round_id=round.id %}">
+        <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-info" href="{% url 'view_solutions_pdf' round_id=round.id %}">
             PDF vzoráky
             {% if not round.solutions_visible %}
                 <span class="label label-danger" title="skryté"
@@ -16,21 +17,21 @@
         </a>
     {% endif %}
 {% endif %}
-<a class="btn btn-success" href="{% url 'round_submit_page' round_id=round.id %}">
+<a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-success" href="{% url 'round_submit_page' round_id=round.id %}">
     Odovzdaj riešenia
 </a>
 
 {% if categories %}
     {% for category in categories %}
-    <a class="btn btn-danger category-{{ category }}"
+    <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-danger category-{{ category }}"
        href="{% url 'view_results' round_id=round.id category_id=category.id %}">
         Výsledky
         <span class="label label-button category-{{ category }}">{{ category }}</span>
     </a>
     {% endfor %}
 {% else %}
-    <a class="btn btn-danger" href="{% url 'view_results' round_id=round.id %}">
+    <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-danger" href="{% url 'view_results' round_id=round.id %}">
         Výsledky
     </a>
 {% endif %}
-
+</div>
