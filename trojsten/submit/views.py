@@ -65,8 +65,7 @@ def protocol_data(protocol_path):
 @login_required
 def view_protocol(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
-    if submit.user != request.user and
-        not Submit.objects.filter(
+    if submit.user != request.user and not Submit.objects.filter(
                 pk=submit.pk,
                 task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
         raise PermissionDenied()
@@ -87,8 +86,7 @@ def view_protocol(request, submit_id):
 @login_required
 def view_submit(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
-    if submit.user != request.user and
-        not Submit.objects.filter(
+    if submit.user != request.user and not Submit.objects.filter(
                 pk=submit.pk,
                 task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
         raise PermissionDenied()
@@ -168,8 +166,10 @@ def round_submit_page(request, round_id):
 #@login_required
 def poll_submit_info(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
-#    if submit.user != request.user and not Submit.objects.filter(pk=submit.pk, task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
-#        raise PermissionDenied()  # You shouldn't see other user's submits if you are not an organizer of the competition
+    if submit.user != request.user and not Submit.objects.filter(
+            pk=submit.pk,
+            task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
+        raise PermissionDenied()  # You shouldn't see other user's submits if you are not an organizer of the competition
     return HttpResponse(simplejson.dumps({
         'tested': submit.tested,
         'response_verbose': unicode(submit.tester_response_verbose),
