@@ -71,26 +71,32 @@ SITES = {
         'NAME': 'Korešpondenčný seminár z programovania',
         'SHORT_NAME': 'KSP',
         'URL': 'http://ksp.sk',
+        'HAS_LOGO': True,
+        'FOLDER': 'ksp',
     },
     2: {
         'NAME': 'Prask',
         'SHORT_NAME': 'Prask',
         'URL': 'http://prask.ksp.sk',
+        'FOLDER': 'prask',
     },
     3: {
         'NAME': 'Fyzikálny korešpondenčný seminár',
         'SHORT_NAME': 'FKS',
         'URL': 'http://fks.sk',
+        'FOLDER': 'fks',
     },
     4: {
         'NAME': 'Korešpondenčný matematický seminár',
         'SHORT_NAME': 'KMS',
         'URL': 'http://kms.sk',
+        'FOLDER': 'kms',
     },
     5: {
         'NAME': 'Trojsten',
         'SHORT_NAME': 'Trojsten',
         'URL': 'http://trojsten.sk',
+        'FOLDER': 'trojsten',
     },
 }
 
