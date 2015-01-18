@@ -42,6 +42,7 @@
 {% endblock %}
 
 {% block page_content %}
+    {% if source %}
     <div class="submit-protocol" data-id="{{ submit.id }}" data-ready="{{ protocolReady }}">
         {% include "trojsten/submit/protocol.html" %}
     </div>

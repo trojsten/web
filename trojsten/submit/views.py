@@ -77,6 +77,7 @@ def view_protocol(request, submit_id):
         protocol_path = submit.filepath.rsplit(
             '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
         template_data = protocol_data(protocol_path)
+        template_data['submit'] = submit
         return render(
             request, 'trojsten/submit/protocol.html', template_data
         )

@@ -50,7 +50,7 @@
         <tr class="{{ submit|submitclass }}" data-id="{{ submit.id }}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == IN_QUEUE %}
-                <td>Testuje sa</td>
+                <td><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Testuje sa</td>
                 <td>Čaká sa na otestovanie</td>
                 <td>..</td>
                 {% else %}
