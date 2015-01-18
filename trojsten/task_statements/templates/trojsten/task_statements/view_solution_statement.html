@@ -7,14 +7,14 @@
 <link rel="stylesheet" href="{% static "css/syntax_highlight.css" %}" type="text/css" />
 {% endblock %}
 
-{% block title %}{{ task.number }}. {{ task.name }} (riešenie){% endblock %}
+{% block title %}{{ task.number }}. {{ task.name }} (vzorové riešenie){% endblock %}
 
 {% block page_header %}
 <ul class="nav nav-pills">
   <li class="pull-left" id="article-title-li">
     <h1 id="article-title" class="task-name">{{ task.number }}. {{ task.name }}
     <small>
-    riešenie
+    vzorové riešenie
     {% for category in task.category.all %}
         <span class="label label-default category-{{ category }}">{{ category }}</span>
     {% endfor %}
@@ -34,7 +34,7 @@
 {% block page_content %}
     {% set_disqus_identifier "task-sol" task.id %}
     {% set_disqus_url "https://" request.META.HTTP_HOST request.path %}
-    {% set_disqus_title task.number ". " task.name " - riešenie" %}
+    {% set_disqus_title task.number ". " task.name " - vzorové riešenie" %}
     <div class="task-statement">
       {% if task.task_file_exists %}
       <div class="panel panel-default">
@@ -55,7 +55,7 @@
       {% if task.solution_file_exists %}
         {% ssi path %}
       {% else %}
-          <p class="lead">HTML riešenie nie je k dispozícii.</p>
+          <p class="lead">HTML vzorák nie je k dispozícii.</p>
       {% endif %}
     </div>
     <h2>Diskusia</h2>

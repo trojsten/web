@@ -1,12 +1,12 @@
 {% load utils %}
 {% if round.tasks_pdf_exists %}
-<a class="btn btn-info" href="{% url 'view_pdf' round_id=round.id %}">Stiahnuť pdf</a>
+<a class="btn btn-info" href="{% url 'view_pdf' round_id=round.id %}">PDF zadania</a>
 {% endif %}
 {% if round.solutions_pdf_exists %}
     {% is_organizer round.series.competition as organizer %}
     {% if organizer or round.solutions_visible %}
         <a class="btn btn-info" href="{% url 'view_solutions_pdf' round_id=round.id %}">
-            Stiahnuť riešenia
+            PDF vzoráky
             {% if not round.solutions_visible %}
                 <span class="label label-danger" title="skryté"
                       data-toggle="tooltip" data-placement="top">

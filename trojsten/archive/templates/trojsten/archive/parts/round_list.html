@@ -19,8 +19,11 @@
               <span class="label label-danger">skryté</span>
             {% endif %}
             </td>
-            <td>
+            <td style="text-align:right;">
             {% if round.categories %}
+                <a href="{% url 'task_list' round_id=round.id %}"  class="btn btn-primary btn-sm">
+                  Zadania a vzoráky
+                </a>
                 {% for category in round.categories %}
                 <a class="btn btn-danger btn-sm category-{{ category }}"
                    href="{% url 'view_results' round_id=round.id category_id=category.id %}">
