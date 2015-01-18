@@ -76,22 +76,22 @@
         </td>
         <td>
             {% if task.description_points > 0 %}
-                <span class="points-item">popis: {{ task.description_points }}</span>
+                <span class="points-item">popis:&nbsp;{{ task.description_points }}</span>
                 {% if task.source_points > 0 %}<br/>{% endif %}
             {% endif %}
             {% if task.source_points > 0 %}
-                <span class="points-item">program: {{ task.source_points }}</span>
+                <span class="points-item">program:&nbsp;{{ task.source_points }}</span>
             {% endif %}
         </td>
         {% if user.is_authenticated %}
         {% lookup_as points.tasks task.id as task_points %}
         <td>
             {% if task.description_points > 0 %}
-                <span class="points-item">popis: {% if task_points.description_pending %}??{% else %}{{ task_points.description_points }}{% endif %}</span>
+                <span class="points-item">popis:&nbsp;{% if task_points.description_pending %}??{% else %}{{ task_points.description_points }}{% endif %}</span>
                 {% if task.source_points > 0 %}<br/>{% endif %}
             {% endif %}
             {% if task.source_points > 0 %}
-                <span class="points-item">program: {{ task_points.source_points }}</span>
+                <span class="points-item">program:&nbsp;{{ task_points.source_points }}</span>
             {% endif %}
         </td>
         {% endif %}
