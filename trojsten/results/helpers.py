@@ -176,7 +176,7 @@ def make_result_table(
             and user.is_in_group(round.series.competition.organizers_group)):
         show_staff = False
 
-    current_tasks = Task.objects.for_rounds_and_category([round], category)
+    current_tasks = Task.objects.for_rounds_and_category([round], category).prefetch_related('category')
 
     if force_generate or not round.frozen_results_exists(single_round):
         current_submits = Submit.objects.for_tasks(current_tasks, include_staff=show_staff)
