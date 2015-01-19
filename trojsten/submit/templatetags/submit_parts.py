@@ -46,7 +46,6 @@ def show_submit_list(task, user):
 
 @register.filter
 def submitclass(submit):
-    print submit.testing_status
     if submit.testing_status == constants.SUBMIT_STATUS_IN_QUEUE:
         return 'info submit-untested'
     elif submit.tester_response == constants.SUBMIT_RESPONSE_OK:
