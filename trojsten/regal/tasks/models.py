@@ -251,6 +251,13 @@ class Submit(models.Model):
     def tester_response_verbose(self):
         return _(self.tester_response)
 
+    @staticmethod
+    def display_decimal_value(value, is_integer):
+        if is_integer:
+            return value.quantize(Decimal(1))
+        else:
+            return value.quantize(Decimal('1.00'))
+
     @property
     def tested(self):
         return self.testing_status == submit_constants.SUBMIT_STATUS_FINISHED
@@ -262,12 +269,7 @@ class Submit(models.Model):
         Description points is always converted to integer.
         Source points are converted to integer if self.task.integer_source_points == True
         '''
-        if self.submit_type == Submit.DESCRIPTION or self.task.integer_source_points:
-            integer_points = True
-        else:
-            integer_points = False
-
-        if integer_points:
-            return self.points.quantize(Decimal(1))
-        else:
-            return self.points.quantize(Decimal('1.00'))
+        return Submit.display_decimal_value(
+            self.points,
+            self.submit_type == Submit.DESCRIPTION or self.task.integer_source_points,
+        )

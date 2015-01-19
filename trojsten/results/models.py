@@ -11,6 +11,7 @@ from django.conf import settings
 class FrozenResults(models.Model):
     round = models.ForeignKey('contests.Round', verbose_name='kolo')
     is_single_round = models.BooleanField(verbose_name='vynechať predošlé kolá')
+    has_previous_results = models.BooleanField(default=False, verbose_name='vynechať predošlé kolá')
     category = models.ForeignKey('tasks.Category', blank=True, null=True, verbose_name='kategória')
     time = models.DateTimeField(auto_now_add=True, verbose_name='čas')
 
@@ -29,9 +30,9 @@ class FrozenResults(models.Model):
 @python_2_unicode_compatible
 class FrozenPoints(models.Model):
     task = models.ForeignKey('tasks.Task', verbose_name='úloha')
-    description_points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body za popis')
-    source_points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body za program')
-    sum = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body')
+    description_points = models.CharField(max_length=10, verbose_name='body za popis')
+    source_points = models.CharField(max_length=10, verbose_name='body za program')
+    sum = models.CharField(max_length=10, verbose_name='body')
 
     class Meta:
         verbose_name = 'Zmrazené body za úlohu'
@@ -50,11 +51,12 @@ class FrozenUserResult(models.Model):
     frozenresults = models.ForeignKey('FrozenResults', verbose_name='výsledkovka')
     original_user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='pôvodný používateľ')
     rank = models.IntegerField(verbose_name='poradie')
+    prev_rank = models.IntegerField(verbose_name='poradie', blank=True, null=True)
     fullname = models.CharField(max_length=500, verbose_name='plné meno')
     school_year = models.IntegerField(verbose_name='ročník')
     school = models.ForeignKey('people.School', verbose_name='škola')
-    previous_points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body z predošlých kôl')
-    sum = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='suma')
+    previous_points = models.CharField(max_length=10, verbose_name='body z predošlých kôl')
+    sum = models.CharField(max_length=10, verbose_name='suma')
     task_points = models.ManyToManyField(FrozenPoints, verbose_name='body za úlohy')
 
     class Meta:

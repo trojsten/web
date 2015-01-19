@@ -96,7 +96,7 @@ def merge_results_data(results_data, previous_results_data=None):
     return results_data
 
 
-def format_results_data(results_data):
+def format_results_data(results_data, compute_rank=True):
     '''Formats results_data as sorted list of rows so it can be easily displayed as results_table
     Appends user and ranks.
     Side effect: This function modifies objects (i.e. individual results)
@@ -105,13 +105,16 @@ def format_results_data(results_data):
     Result = namedtuple('Result', ['user', 'data'])
     res = [Result(user=user, data=data) for user, data in results_data.items()]
 
-    res.sort(key=lambda x: -x.data.previous_rounds_points)
-    for rank, r in zip(get_ranks(res), res):
-        r.data.prev_rank = rank
+    if compute_rank:
+        res.sort(key=lambda x: -x.data.previous_rounds_points)
+        for rank, r in zip(get_ranks(res), res):
+            r.data.prev_rank = rank
 
-    res.sort(key=lambda x: -x.data.sum)
-    for rank, r in zip(get_ranks(res), res):
-        r.data.rank = rank
+        res.sort(key=lambda x: -x.data.sum)
+        for rank, r in zip(get_ranks(res), res):
+            r.data.rank = rank
+    else:
+        res.sort(key=lambda x: x.data.rank)
 
     return res
 
@@ -137,7 +140,9 @@ def get_frozen_results(round, category=None, single_round=False):
         round=round, category=category, is_single_round=single_round
     ).order_by(
         '-time'
-    )[0].frozenuserresult_set.all().prefetch_related(
+    )[0]
+
+    frozen_user_results = frozen_results.frozenuserresult_set.all().prefetch_related(
         'task_points__task',
     ).select_related(
         'original_user',
@@ -145,7 +150,7 @@ def get_frozen_results(round, category=None, single_round=False):
     ).order_by('rank')
 
     results = defaultdict(UserResult)
-    for res in frozen_results:
+    for res in frozen_user_results:
         user = create_frozen_user(res)
         results[user].previous_rounds_points = res.previous_points
         results[user].rank = res.rank
@@ -159,7 +164,7 @@ def get_frozen_results(round, category=None, single_round=False):
             freeze_property(tp, 'sum', task_p.sum)
             results[user].tasks[task_p.task.id] = tp
 
-    return results
+    return (results, frozen_results.has_previous_results)
 
 
 def make_result_table(
@@ -176,7 +181,9 @@ def make_result_table(
             and user.is_in_group(round.series.competition.organizers_group)):
         show_staff = False
 
-    current_tasks = Task.objects.for_rounds_and_category([round], category).prefetch_related('category')
+    current_tasks = Task.objects.for_rounds_and_category(
+        [round], category
+    ).prefetch_related('category')
 
     if force_generate or not round.frozen_results_exists(single_round):
         current_submits = Submit.objects.for_tasks(current_tasks, include_staff=show_staff)
@@ -200,14 +207,16 @@ def make_result_table(
         final_results = format_results_data(
             merge_results_data(current_results_data, previous_results_data),
         )
+        has_previous_results = previous_results_data is not None
     else:
+        results, has_previous_results = get_frozen_results(round, category, single_round)
         final_results = format_results_data(
-            get_frozen_results(round, category, single_round)
+            results,
+            compute_rank=False,
         )
-        previous_results_data = None
 
     return ResultsTable(
         tasks=current_tasks,
         results_data=final_results,
-        has_previous_results=previous_results_data is not None,
+        has_previous_results=has_previous_results,
     )
