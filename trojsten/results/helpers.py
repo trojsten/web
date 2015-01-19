@@ -34,6 +34,20 @@ class TaskPoints(object):
         self.description_points = 0
 
 
+class FrozenTaskPoints(TaskPoints):
+    '''frozen version of TaskPoints'''
+    def __init__(self, description_points=0, source_points=0, sum=0):
+        super(FrozenTaskPoints, self).__init__()
+        self.submitted = True
+        self.description_points = description_points
+        self.source_points = source_points
+        self._sum = sum
+
+    @property
+    def sum(self):
+        return self._sum
+
+
 class UserResult(object):
     def __init__(self):
         self.previous_rounds_points = 0
@@ -56,6 +70,23 @@ class UserResult(object):
 
     def set_previous_rounds_points(self, previous_rounds_points):
         self.previous_rounds_points = previous_rounds_points
+
+
+class FrozenUserResult(TaskPoints):
+    '''frozen version of UserResult'''
+    def __init__(self, sum=0, previous_rounds_points=0, rank=None, prev_rank=None):
+        super(FrozenUserResult, self).__init__()
+        self._sum = sum
+        self.previous_rounds_points = previous_rounds_points
+        self.rank = rank
+        self.prev_rank = prev_rank
+
+    @property
+    def sum(self):
+        return self._sum
+
+    def add_task(self, task, frozen_task_points):
+        self.tasks[task.id] = frozen_task_points
 
 
 def get_results_data(submits):
@@ -149,20 +180,22 @@ def get_frozen_results(round, category=None, single_round=False):
         'school',
     ).order_by('rank')
 
-    results = defaultdict(UserResult)
+    results = defaultdict(FrozenUserResult)
     for res in frozen_user_results:
         user = create_frozen_user(res)
-        results[user].previous_rounds_points = res.previous_points
-        results[user].rank = res.rank
-        freeze_property(results[user], 'sum', res.sum)
+        results[user] = FrozenUserResult(
+            sum=res.sum,
+            previous_rounds_points=res.previous_points,
+            rank=res.rank,
+            prev_rank=res.prev_rank,
+        )
 
-        for task_p in res.task_points.all():
-            tp = TaskPoints()
-            tp.submitted = True
-            tp.source_points = task_p.source_points
-            tp.description_points = task_p.description_points
-            freeze_property(tp, 'sum', task_p.sum)
-            results[user].tasks[task_p.task.id] = tp
+        for tp in res.task_points.all():
+            results[user].add_task(tp.task, FrozenTaskPoints(
+                description_points=tp.description_points,
+                source_points=tp.source_points,
+                sum=tp.sum,
+            ))
 
     return (results, frozen_results.has_previous_results)
 
