@@ -78,6 +78,7 @@ SITES = {
         'NAME': 'Prask',
         'SHORT_NAME': 'Prask',
         'URL': 'http://prask.ksp.sk',
+        'HAS_LOGO': True,
         'FOLDER': 'prask',
     },
     3: {
