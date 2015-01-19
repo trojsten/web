@@ -6,6 +6,7 @@ from collections import defaultdict, namedtuple
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.regal.contests.models import Round
 from trojsten.submit import constants as submit_constants
+from .models import FrozenResults
 
 
 class TaskPoints(object):
@@ -115,7 +116,60 @@ def format_results_data(results_data):
     return res
 
 
-def make_result_table(user, round, category=None, single_round=False, show_staff=False):
+def get_frozen_results(round, category=None, single_round=False):
+    def freeze_property(obj, propname, val):
+        frozen_prop = '__frozen__%s' % propname
+        setattr(obj, frozen_prop, val)
+        setattr(
+            obj.__class__,
+            propname,
+            property(lambda self: getattr(self, frozen_prop)),
+        )
+
+    def create_frozen_user(frozen_result):
+        u = frozen_result.original_user
+        u.get_full_name = lambda: frozen_result.fullname
+        freeze_property(u, 'school_year', frozen_result.school_year)
+        u.school = frozen_result.school
+        return u
+
+    frozen_results = FrozenResults.objects.filter(
+        round=round, category=category, is_single_round=single_round
+    ).order_by(
+        '-time'
+    )[0].frozenuserresult_set.all().prefetch_related(
+        'task_points__task',
+    ).select_related(
+        'original_user',
+        'school',
+    ).order_by('rank')
+
+    results = defaultdict(UserResult)
+    for res in frozen_results:
+        user = create_frozen_user(res)
+        results[user].previous_rounds_points = res.previous_points
+        results[user].rank = res.rank
+        freeze_property(results[user], 'sum', res.sum)
+
+        for task_p in res.task_points.all():
+            tp = TaskPoints()
+            tp.submitted = True
+            tp.source_points = task_p.source_points
+            tp.description_points = task_p.description_points
+            freeze_property(tp, 'sum', task_p.sum)
+            results[user].tasks[task_p.task.id] = tp
+
+    return results
+
+
+def make_result_table(
+    user,
+    round,
+    category=None,
+    single_round=False,
+    show_staff=False,
+    force_generate=False,
+):
     ResultsTable = namedtuple('ResultsTable', ['tasks', 'results_data', 'has_previous_results'])
 
     if not (user.is_authenticated()
@@ -123,26 +177,37 @@ def make_result_table(user, round, category=None, single_round=False, show_staff
         show_staff = False
 
     current_tasks = Task.objects.for_rounds_and_category([round], category)
-    current_submits = Submit.objects.for_tasks(current_tasks, include_staff=show_staff)
-    current_results_data = get_results_data(current_submits)
 
-    previous_results_data = None
-    if not single_round:
-        previous_rounds = Round.objects.visible(user).filter(
-            series=round.series, number__lt=round.number
-        ).order_by('number')
+    if force_generate or not round.frozen_results_exists(single_round):
+        current_submits = Submit.objects.for_tasks(current_tasks, include_staff=show_staff)
+        current_results_data = get_results_data(current_submits)
 
-        if previous_rounds:
-            previous_tasks = Task.objects.for_rounds_and_category(
-                previous_rounds, category
-            )
-            previous_submits = Submit.objects.for_tasks(previous_tasks, include_staff=show_staff)
-            previous_results_data = get_results_data(previous_submits)
+        previous_results_data = None
+        if not single_round:
+            previous_rounds = Round.objects.visible(user).filter(
+                series=round.series, number__lt=round.number
+            ).order_by('number')
+
+            if previous_rounds:
+                previous_tasks = Task.objects.for_rounds_and_category(
+                    previous_rounds, category
+                )
+                previous_submits = Submit.objects.for_tasks(
+                    previous_tasks, include_staff=show_staff
+                )
+                previous_results_data = get_results_data(previous_submits)
+
+        final_results = format_results_data(
+            merge_results_data(current_results_data, previous_results_data),
+        )
+    else:
+        final_results = format_results_data(
+            get_frozen_results(round, category, single_round)
+        )
+        previous_results_data = None
 
     return ResultsTable(
         tasks=current_tasks,
-        results_data=format_results_data(
-            merge_results_data(current_results_data, previous_results_data),
-        ),
+        results_data=final_results,
         has_previous_results=previous_results_data is not None,
     )

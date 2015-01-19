@@ -38,7 +38,9 @@ class Command(BaseCommand):
             category=category
         )
 
-        results_table = make_result_table(AnonymousUser(), round, category, single_round)
+        results_table = make_result_table(
+            AnonymousUser(), round, category, single_round, force_generate=True
+        )
 
         for result in results_table.results_data:
             tasks = filter(
