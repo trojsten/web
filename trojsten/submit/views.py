@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import Http404, HttpResponseBadRequest
+from django.http import Http404, HttpResponseBadRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
@@ -34,9 +34,6 @@ def view_submit(request, submit_id):
 
     # For source submits, display testing results, source code and submit list.
     if submit.submit_type == Submit.SOURCE or submit.submit_type == Submit.TESTABLE_ZIP:
-        if submit.testing_status == constants.SUBMIT_STATUS_IN_QUEUE:
-            # check if submit wasn't tested yet
-            update_submit(submit)
         template_data = {
             'submit': submit,
             'source': True,
@@ -130,6 +127,11 @@ def round_submit_page(request, round_id):
     tasks = Task.objects.filter(round=round).order_by('number')
     template_data = {'round': round, 'tasks': tasks}
     return render(request, 'trojsten/submit/round_submit.html', template_data)
+
+def receive_protocol(request, protocol_id):
+    submit = get_object_or_404(Submit, protocol_id=protocol_id)
+    update_submit(submit)
+    return HttpResponse('')
 
 
 @login_required
