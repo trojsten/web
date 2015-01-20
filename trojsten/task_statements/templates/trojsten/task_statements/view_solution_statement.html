@@ -38,13 +38,13 @@
     <div class="task-statement">
       {% if task.task_file_exists %}
       <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-              Zadanie
-            </a>
-          </h4>
-        </div>
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+                Zadanie
+            </h4>
+          </div>
+        </a>
         <div id="collapseOne" class="panel-collapse collapse">
           <div class="panel-body">
             {% ssi statement_path %}
