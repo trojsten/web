@@ -15,7 +15,11 @@
         </thead>
         <tbody>
         {% for submit in submits|lookup:Submit.DESCRIPTION %}
+            {% if submit.testing_status == IN_QUEUE %}
             <tr>
+            {% else %}
+            <tr class="success">
+            {% endif %}
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == IN_QUEUE %}
                 <td>Neopravené</td>
