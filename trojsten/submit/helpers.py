@@ -169,5 +169,5 @@ def update_submit(submit):
             points = (submit.task.source_points * score) / Decimal(100)
         submit.points = points
         submit.tester_response = result
-        submit.testing_status = 'finished'
+        submit.testing_status = constants.SUBMIT_STATUS_FINISHED
         submit.save()

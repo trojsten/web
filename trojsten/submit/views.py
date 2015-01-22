@@ -12,6 +12,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.html import format_html
+from django.utils import simplejson
 
 from sendfile import sendfile
 from unidecode import unidecode
@@ -21,16 +22,77 @@ from trojsten.regal.tasks.models import Task, Submit
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
 from trojsten.submit.helpers import write_chunks_to_file, process_submit, get_path,\
     update_submit
+from trojsten.submit.templatetags.submit_parts import submitclass
 from .constants import VIEWABLE_EXTENSIONS
 
 from . import constants
 
+def protocol_data(protocol_path):
+    template_data = {}
+    if os.path.exists(protocol_path):
+        template_data['protocolReady'] = True  # Tested, show the protocol
+        tree = ET.parse(protocol_path)  # Protocol is in XML format
+        clog = tree.find("compileLog")
+        # Show compilation log if present
+        template_data['compileLogPresent'] = clog is not None
+        if clog is None:
+            clog = ""
+        else:
+            clog = clog.text
+        template_data['compileLog'] = clog
+        tests = []
+        runlog = tree.find("runLog")
+        if runlog is not None:
+            for runtest in runlog:
+                # Test log format in protocol is:
+                # name, resultCode, resultMsg, time, details
+                if runtest.tag != 'test':
+                    continue
+                test = {}
+                test['name'] = runtest[0].text
+                test['result'] = runtest[2].text
+                test['time'] = runtest[3].text
+                details = runtest[4].text if len(runtest) > 4 else None
+                test['details'] = details
+                test['showDetails'] = details is not None and ('sample' in test['name'] or submit.submit_type == Submit.TESTABLE_ZIP)
+                tests.append(test)
+        template_data['tests'] = tests
+        template_data['have_tests'] = len(tests) > 0
+    else:
+        template_data['protocolReady'] = False  # Not tested yet!
+    return template_data
+
+@login_required
+def view_protocol(request, submit_id):
+    submit = get_object_or_404(Submit, pk=submit_id)
+    if submit.user != request.user and not Submit.objects.filter(
+                pk=submit.pk,
+                task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
+        raise PermissionDenied()
+        # You shouldn't see other user's submits if you are not an organizer
+        # of the competition
+
+    # For source submits, display testing results, source code and submit list.
+    if submit.submit_type == Submit.SOURCE or submit.submit_type == Submit.TESTABLE_ZIP:
+        protocol_path = submit.filepath.rsplit(
+            '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
+        template_data = protocol_data(protocol_path)
+        template_data['submit'] = submit
+        return render(
+            request, 'trojsten/submit/protocol.html', template_data
+        )
+    else:
+        raise Http404
 
 @login_required
 def view_submit(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
-    if submit.user != request.user and not Submit.objects.filter(pk=submit.pk, task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
-        raise PermissionDenied()  # You shouldn't see other user's submits if you are not an organizer of the competition
+    if submit.user != request.user and not Submit.objects.filter(
+                pk=submit.pk,
+                task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
+        raise PermissionDenied()
+        # You shouldn't see other user's submits if you are not an organizer
+        # of the competition
 
     # For source submits, display testing results, source code and submit list.
     if submit.submit_type == Submit.SOURCE or submit.submit_type == Submit.TESTABLE_ZIP:
@@ -40,37 +102,7 @@ def view_submit(request, submit_id):
         }
         protocol_path = submit.filepath.rsplit(
             '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
-        if os.path.exists(protocol_path):
-            template_data['protocolReady'] = True  # Tested, show the protocol
-            tree = ET.parse(protocol_path)  # Protocol is in XML format
-            clog = tree.find("compileLog")
-            # Show compilation log if present
-            template_data['compileLogPresent'] = clog is not None
-            if clog is None:
-                clog = ""
-            else:
-                clog = clog.text
-            template_data['compileLog'] = clog
-            tests = []
-            runlog = tree.find("runLog")
-            if runlog is not None:
-                for runtest in runlog:
-                    # Test log format in protocol is:
-                    # name, resultCode, resultMsg, time, details
-                    if runtest.tag != 'test':
-                        continue
-                    test = {}
-                    test['name'] = runtest[0].text
-                    test['result'] = runtest[2].text
-                    test['time'] = runtest[3].text
-                    details = runtest[4].text if len(runtest) > 4 else None
-                    test['details'] = details
-                    test['showDetails'] = details is not None and ('sample' in test['name'] or submit.submit_type == Submit.TESTABLE_ZIP)
-                    tests.append(test)
-            template_data['tests'] = tests
-            template_data['have_tests'] = len(tests) > 0
-        else:
-            template_data['protocolReady'] = False  # Not tested yet!
+        template_data.update(protocol_data(protocol_path))
         if os.path.exists(submit.filepath):
             # Source code available, display it!
             if submit.submit_type == Submit.SOURCE:
@@ -133,6 +165,21 @@ def receive_protocol(request, protocol_id):
     update_submit(submit)
     return HttpResponse('')
 
+
+#@login_required
+def poll_submit_info(request, submit_id):
+    submit = get_object_or_404(Submit, pk=submit_id)
+    if submit.user != request.user and not Submit.objects.filter(
+            pk=submit.pk,
+            task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
+        raise PermissionDenied()  # You shouldn't see other user's submits if you are not an organizer of the competition
+    return HttpResponse(simplejson.dumps({
+        'tested': submit.tested,
+        'response_verbose': unicode(submit.tester_response_verbose),
+        'response': submit.tester_response,
+        'points': float(submit.points),
+        'class': submitclass(submit),
+    }), mimetype='application/json; charset=utf-8')
 
 @login_required
 def task_submit_post(request, task_id, submit_type):

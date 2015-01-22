@@ -39,13 +39,13 @@ def show_submit_list(task, user):
 
 
 @register.filter
-def submitcolor(submit):
+def submitclass(submit):
     if submit.testing_status == constants.SUBMIT_STATUS_IN_QUEUE:
-        return 'info'
+        return 'info submit-untested'
     elif submit.tester_response == constants.SUBMIT_RESPONSE_OK:
-        return 'success'
+        return 'success submit-tested'
     elif submit.points > 0:
-        return 'warning'
+        return 'warning submit-tested'
     else:
-        return 'danger'
+        return 'danger submit-tested'
 

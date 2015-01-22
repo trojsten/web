@@ -243,6 +243,10 @@ class Submit(models.Model):
         return _(self.tester_response)
 
     @property
+    def tested(self):
+        return self.testing_status == submit_constants.SUBMIT_STATUS_FINISHED
+
+    @property
     def user_points(self):
         '''
         Returns points visible to user.

@@ -1,0 +1,39 @@
+{% if not submit.tested %}
+<div class="alert alert-info">
+    <span class="glyphicon glyphicon-refresh glyphicon-animate-rotate"></span>
+    Tento program čaká na otestovanie
+</div>
+{% endif %}
+{% if protocolReady %}
+{% if compileLogPresent %}
+    <h4>Výstup z kompilátora</h4>
+    <pre>{{ compileLog }}</pre>
+{% endif %}
+{% if have_tests %}
+<table>
+    <thead>
+        <tr>
+            <th>Vstup</th>
+            <th>Výsledok</th>
+            <th>Čas</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for test in tests %}
+        <tr>
+            <td>{{ test.name }}</td>
+            <td>{{ test.result }}</td>
+            <td>{{ test.time }} ms</td>
+        </tr>
+        {% if test.showDetails %}
+        <tr>
+            <td><pre>{{ test.details }}</pre></td>
+        </tr>
+        {% endif %}
+    </tbody>
+    {% endfor %}
+{% endif %}
+</table>
+{% else %}
+    Protokol testovania nie je dostupný
+{% endif %}
