@@ -5,7 +5,7 @@
             "addr_name": "", 
             "city": "", 
             "street": "", 
-            "verbose_name": "Gymn\u00e1zium in\u00e9", 
+            "verbose_name": "In\u00e1 \u0161kola", 
             "zip_code": ""
         }, 
         "model": "people.school", 
