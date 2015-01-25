@@ -7,6 +7,7 @@ from subprocess import Popen, PIPE
 from trojsten.regal.people.models import User
 from trojsten.regal.tasks.models import Submit
 from trojsten.regal.tasks.models import Task
+from trojsten.submit.constants import SUBMIT_STATUS_FINISHED, SUBMIT_RESPONSE_OK
 
 from celery import shared_task
 
@@ -24,16 +25,14 @@ def process_submit(uid, sid, lid, submit_id, taskpoints, program, level_path):
         level = json.load(f)
 
     test_script = os.path.join(DATA_ROOT, "tester.sh")
-    data = json.dumps({"program":program, "level":level })
-    result, _ = Popen(
-        ["/bin/bash", test_script],
-        stdin=PIPE, stdout=PIPE).communicate(data)
+    data = json.dumps({"program": program, "level": level})
+    p = Popen( ["/bin/bash", test_script], stdin=PIPE, stdout=PIPE)
+    p.communicate(data)
 
-    if result == "OK\n":
+    if p.returncode == 0:
         submit.status = "OK"
 
         LevelSolved.objects.get_or_create(user=user, series=sid, level=lid)
-
         points = LevelSolved.objects.filter(user=user, series=sid).count()
 
         for (task_id, multiple) in taskpoints:
@@ -44,8 +43,8 @@ def process_submit(uid, sid, lid, submit_id, taskpoints, program, level_path):
                 points=points*multiple,
                 submit_type=Submit.EXTERNAL,
                 filepath="",
-                testing_status="OK",
-                tester_response="",
+                testing_status=SUBMIT_STATUS_FINISHED,
+                tester_response=SUBMIT_RESPONSE_OK,
                 protocol_id="",
             )
             real_submit.save()

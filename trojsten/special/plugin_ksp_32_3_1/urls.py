@@ -4,6 +4,7 @@ from django.conf.urls import patterns, url, handler404
 
 from .views import *
 
+
 urlpatterns = patterns(
     '',
     url(r'^$', index),

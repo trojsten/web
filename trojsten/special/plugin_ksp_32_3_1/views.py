@@ -4,10 +4,8 @@ import json
 import os
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseNotAllowed, Http404
+from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
-from django.views.generic import View
 
 from sendfile import sendfile
 
@@ -43,14 +41,14 @@ def levels(request):
             with open(os.path.join(DATA_ROOT, path)) as f:
                 level = json.load(f)
             serie["levels"].append({
-                "id": "s%dl%d" % (sid,lid),
+                "id": "s%dl%d" % (sid, lid),
                 "name": level["name"],
                 "description": level["briefing"],
                 "solved": LevelSolved.objects.filter(
                     user=user, series=sid, level=lid).exists()
             })
-            lid+=1
-        sid+=1
+            lid += 1
+        sid += 1
 
     data["player"] = "%s %s" % (user.first_name, user.last_name)
 
@@ -82,7 +80,7 @@ def level(request, sid, lid):
             taskpoints.append((task_ids_map["ksp"], 2))
         if is_task_rated(task_ids_map["prask"], user, True):
             taskpoints.append((task_ids_map["prask"], 3))
-        if len(taskpoints)==0:
+        if len(taskpoints) == 0:
             return HttpResponse(status=406)
 
         if LevelSolved.objects.filter(user=user, series=sid, level=lid).exists():
@@ -97,7 +95,7 @@ def level(request, sid, lid):
             user.pk, sid, lid, submit.pk, taskpoints, body['program'], path)
 
         return HttpResponse(
-            json.dumps({"id":submit.pk}),
+            json.dumps({"id": submit.pk}),
             content_type="application/json",
             status=202)
 
