@@ -1,4 +1,5 @@
 {% extends "trojsten/layout/main.html" %}
+{% load utils %}
 
 {% block title %}Zoznam účastníkov{% endblock %}
 
@@ -20,7 +21,7 @@
 {% for participant in event.participants %}
 <tr {% if user == participant %}class="active"{% endif %}>
     <td>{{ participant.get_full_name }}</td>
-    <td>{{ participant.school_year }}</td>
+    <td>{{ participant.school_year | school_year }}</td>
     <td>
     {% if participant.school.has_abbreviation %}
         <abbr title="{{ participant.school.verbose_name }}"
