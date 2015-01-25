@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
 import re
 
 from django import template
@@ -98,3 +101,12 @@ def provider_name(key):
         return provider_dict[key]
     else:
         return key.title()
+
+
+@register.filter
+def school_year(school_year):
+    is_elementary = False
+    if school_year < 1:
+        school_year += 9
+        is_elementary = True
+    return '%d%s' % (school_year, 'zš' if is_elementary else '')
