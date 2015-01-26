@@ -26,7 +26,7 @@ def process_submit(uid, sid, lid, l_submit_id, taskpoints, program, level_path):
 
     test_script = os.path.join(DATA_ROOT, "tester.sh")
     data = json.dumps({"program": program, "level": level})
-    p = Popen( ["/bin/bash", test_script], stdin=PIPE, stdout=PIPE)
+    p = Popen( ["/usr/bin/env", "bash", test_script], stdin=PIPE, stdout=PIPE)
     p.communicate(data)
 
     if p.returncode == 0:
