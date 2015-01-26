@@ -27,7 +27,7 @@ from .constants import VIEWABLE_EXTENSIONS
 
 from . import constants
 
-def protocol_data(protocol_path):
+def protocol_data(protocol_path, forceShowDetails=False):
     template_data = {}
     if os.path.exists(protocol_path):
         template_data['protocolReady'] = True  # Tested, show the protocol
@@ -54,7 +54,7 @@ def protocol_data(protocol_path):
                 test['time'] = runtest[3].text
                 details = runtest[4].text if len(runtest) > 4 else None
                 test['details'] = details
-                test['showDetails'] = details is not None and ('sample' in test['name'] or submit.submit_type == Submit.TESTABLE_ZIP)
+                test['showDetails'] = details is not None and ('sample' in test['name'] or forceShowDetails)
                 tests.append(test)
         template_data['tests'] = tests
         template_data['have_tests'] = len(tests) > 0
@@ -76,7 +76,7 @@ def view_protocol(request, submit_id):
     if submit.submit_type == Submit.SOURCE or submit.submit_type == Submit.TESTABLE_ZIP:
         protocol_path = submit.filepath.rsplit(
             '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
-        template_data = protocol_data(protocol_path)
+        template_data = protocol_data(protocol_path, submit.submit_type == Submit.TESTABLE_ZIP)
         template_data['submit'] = submit
         return render(
             request, 'trojsten/submit/protocol.html', template_data
@@ -102,7 +102,7 @@ def view_submit(request, submit_id):
         }
         protocol_path = submit.filepath.rsplit(
             '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
-        template_data.update(protocol_data(protocol_path))
+        template_data.update(protocol_data(protocol_path, submit.submit_type == Submit.TESTABLE_ZIP))
         if os.path.exists(submit.filepath):
             # Source code available, display it!
             if submit.submit_type == Submit.SOURCE:
