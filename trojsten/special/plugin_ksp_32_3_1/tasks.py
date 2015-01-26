@@ -37,7 +37,7 @@ def process_submit(uid, sid, lid, l_submit_id, taskpoints, program, level_path):
 
         for (task_id, multiple) in taskpoints:
 
-            submit = level_Submit(
+            submit = Submit(
                 task=Task.objects.get(pk=task_id),
                 user=user,
                 points=points*multiple,
