@@ -20,22 +20,22 @@
             {% endif %}
             </td>
             <td style="text-align:right;">
-            {% if round.categories %}
-                <a href="{% url 'task_list' round_id=round.id %}"  class="btn btn-primary btn-sm">
-                  Zadania a vzoráky
-                </a>
-                {% for category in round.categories %}
-                <a class="btn btn-danger btn-sm category-{{ category }}"
-                   href="{% url 'view_results' round_id=round.id category_id=category.id %}">
-                    Výsledky
-                    <span class="label label-button category-{{ category }}">{{ category }}</span>
-                </a>
-                {% endfor %}
-            {% else %}
-                <a class="btn btn-danger btn-sm" href="{% url 'view_results' round_id=round.id %}">
-                    Výsledky
-                </a>
-            {% endif %}
+              <a href="{% url 'task_list' round_id=round.id %}"  class="btn btn-primary btn-sm">
+                Zadania a vzoráky
+              </a>
+              {% if round.categories %}
+                  {% for category in round.categories %}
+                  <a class="btn btn-danger btn-sm category-{{ category }}"
+                     href="{% url 'view_results' round_id=round.id category_id=category.id %}">
+                      Výsledky
+                      <span class="label label-button category-{{ category }}">{{ category }}</span>
+                  </a>
+                  {% endfor %}
+              {% else %}
+                  <a class="btn btn-danger btn-sm" href="{% url 'view_results' round_id=round.id %}">
+                      Výsledky
+                  </a>
+              {% endif %}
             </td>
           </tr>
       {% endfor %}
