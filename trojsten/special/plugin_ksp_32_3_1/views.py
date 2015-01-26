@@ -88,14 +88,15 @@ def level(request, sid, lid):
 
         body = json.loads(request.body)
 
-        submit = LevelSubmit(status="RUN")
-        submit.save()
+        level_submit = LevelSubmit(status="RUN")
+        level_submit.save()
 
         process_submit.delay(
-            user.pk, sid, lid, submit.pk, taskpoints, body['program'], path)
+            user.pk, sid, lid, level_submit.pk,
+            taskpoints, body['program'], path)
 
         return HttpResponse(
-            json.dumps({"id": submit.pk}),
+            json.dumps({"id": level_submit.pk}),
             content_type="application/json",
             status=202)
 
