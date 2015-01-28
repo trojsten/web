@@ -29,9 +29,7 @@ def levels(request):
     sid = 0
     for serie in data["series"]:
         # Set whether serie is rated
-        serie["rated"] = (
-            is_task_rated(serie["task_ids"]["ksp"], user, False) or
-            is_task_rated(serie["task_ids"]["prask"], user, True))
+        serie["rated"] = is_rated(serie["task_ids"], user)
         del serie["task_ids"]
         # Set headers for all levels
         level_paths = serie["levels"]
@@ -44,8 +42,7 @@ def levels(request):
                 "id": "s%dl%d" % (sid, lid),
                 "name": level["name"],
                 "description": level["briefing"],
-                "solved": LevelSolved.objects.filter(
-                    user=user, series=sid, level=lid).exists()
+                "solved": is_level_solved(sid, lid, user)
             })
             lid += 1
         sid += 1
@@ -62,7 +59,7 @@ def level(request, sid, lid):
     sid = int(sid)
     lid = int(lid)
     data = load_level_index()
-    
+
     try:
         path = data["series"][sid]["levels"][lid]
         task_ids_map = data["series"][sid]["task_ids"]
@@ -75,15 +72,8 @@ def level(request, sid, lid):
 
     if request.method == 'POST':
         user = request.user
-        taskpoints = []
-        if is_task_rated(task_ids_map["ksp"], user, False):
-            taskpoints.append((task_ids_map["ksp"], 2))
-        if is_task_rated(task_ids_map["prask"], user, True):
-            taskpoints.append((task_ids_map["prask"], 3))
-        if len(taskpoints) == 0:
-            return HttpResponse(status=406)
 
-        if LevelSolved.objects.filter(user=user, series=sid, level=lid).exists():
+        if is_level_solved(sid, lid, user):
             return HttpResponse(status=406)
 
         body = json.loads(request.body)
@@ -93,7 +83,7 @@ def level(request, sid, lid):
 
         process_submit.delay(
             user.pk, sid, lid, level_submit.pk,
-            taskpoints, body['program'], path)
+            get_taskpoints(task_ids_map, user), body['program'], path)
 
         return HttpResponse(
             json.dumps({"id": level_submit.pk}),
@@ -101,6 +91,26 @@ def level(request, sid, lid):
             status=202)
 
 
+@login_required
+def solution(request, sid, lid):
+    sid = int(sid)
+    lid = int(lid)
+    data = load_level_index()
+
+    try:
+        path = data["series"][sid]["solutions"][lid]
+        rated = is_rated(data["series"][sid]["task_ids"], request.user)
+    except (KeyError, IndexError):
+        raise Http404()
+
+    if rated or not is_level_solved(sid, lid, request.user):
+        raise Http404()
+
+    return sendfile(
+        request, os.path.join(DATA_ROOT, path), encoding="utf-8")
+
+
+@login_required
 def submit_status(request, pk):
     submit = get_object_or_404(LevelSubmit, pk=pk)
     return HttpResponse(
@@ -118,9 +128,28 @@ def load_level_index():
         return json.load(f)
 
 
-def is_task_rated(task_id, user, prask_only):
-    if task_id == 0:
-        return False
-    if prask_only and user.school_year > 0:
-        return False
-    return Task.objects.get(pk=task_id).round.can_submit
+def is_level_solved(sid, lid, user):
+    return LevelSolved.objects.filter(
+        user=user, series=sid, level=lid).exists()
+
+
+def is_rated(task_ids_map, user):
+    return (len(get_taskpoints(task_ids_map, user)) > 0)
+
+
+def get_taskpoints(task_ids_map, user):
+
+    def is_task_rated(task_id, user, prask_only):
+        if task_id == 0:
+            return False
+        if prask_only and user.school_year > 0:
+            return False
+        return Task.objects.get(pk=task_id).round.can_submit
+
+    taskpoints = []
+    if is_task_rated(task_ids_map["ksp"], user, False):
+        taskpoints.append((task_ids_map["ksp"], 2))
+    if is_task_rated(task_ids_map["prask"], user, True):
+        taskpoints.append((task_ids_map["prask"], 3))
+
+    return taskpoints
