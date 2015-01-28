@@ -59,6 +59,7 @@ def level(request, sid, lid):
     sid = int(sid)
     lid = int(lid)
     data = load_level_index()
+    user = request.user
 
     try:
         path = data["series"][sid]["levels"][lid]
@@ -67,12 +68,22 @@ def level(request, sid, lid):
         raise Http404()
 
     if request.method == 'GET':
-        return sendfile(
-            request, os.path.join(DATA_ROOT, path), encoding="utf-8")
+        path = os.path.join(DATA_ROOT, path)
+
+        if not os.path.exists(path):
+            raise Http404()
+
+        with open(path) as f:
+            level_data = json.load(f)
+
+        level_data['rated'] = is_rated(task_ids_map, user)
+        level_data['solved'] = is_level_solved(sid, lid, user)
+
+        return HttpResponse(
+            json.dumps(level_data),
+            content_type="application/json")
 
     if request.method == 'POST':
-        user = request.user
-
         if is_level_solved(sid, lid, user):
             return HttpResponse(status=406)
 
