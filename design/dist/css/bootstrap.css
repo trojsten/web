@@ -6958,6 +6958,13 @@ footer a:visited {
   width: 1ex;
   text-align: center;
 }
+/* task statements */
+.btn-statements {
+  min-width: 20%;
+}
+.task-list td {
+  vertical-align: middle !important;
+}
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
