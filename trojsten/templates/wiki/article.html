@@ -5,7 +5,9 @@
 {% block wiki_pagetitle %}{{ article.current_revision.title }}{% endblock %}
 
 {% block wiki_breadcrumbs %}
+{% if article|can_write:user %}
 {% include "wiki/includes/breadcrumbs.html" %}
+{% endif %}
 {% endblock %}
 
 {% block page_header %}
@@ -33,6 +35,8 @@
 {% endblock %}
 
 {% block wiki_footer_prepend %}
+  {% if article|can_write:user %}
   <ul class="list-inline pull-right">{% include "wiki/includes/article_menu.html" %}</ul>
+  {% endif %}
   <p style="margin-bottom: 10px;"><em>{% trans "This article was last modified:" %} {{ article.current_revision.modified }}</em></p>
 {% endblock %}
