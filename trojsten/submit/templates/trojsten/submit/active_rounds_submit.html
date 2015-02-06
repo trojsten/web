@@ -1,0 +1,31 @@
+{% extends "trojsten/layout/main.html" %}
+{% load submit_parts %}
+{% load statements_parts %}
+
+{% block title %}Odovzdávanie{% endblock %}
+
+{% block page_header %}
+<h1>Odovzdávanie</h1>
+{% endblock %}
+
+{% block page_content %}
+    {% for round in rounds %}
+        <h2>
+            {{ round.series.competition }}
+            <small>
+                <a href="{% url 'task_list' round_id=round.id %}">{{ round }}</a>
+                {% if not round.visible %}
+                    <span class="label label-danger">skryté</span>
+                {% endif %}
+            </small>
+        </h2>
+        {% round_submit_form round=round %}
+    {% empty %}
+        <div class="alert alert-info">
+            Aktuálne nebeží žiadne kolo.
+            Môžte si pozrieť úlohy niektorého z predošlých kôl v <a href="{% url 'archive' %}" class="alert-link">archíve</a>.
+        </div>
+    {% endfor %}
+
+{% endblock %}
+

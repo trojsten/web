@@ -17,7 +17,7 @@ from django.utils import simplejson
 from sendfile import sendfile
 from unidecode import unidecode
 
-from trojsten.regal.contests.models import Round
+from trojsten.regal.contests.models import Round, Competition
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
 from trojsten.submit.helpers import write_chunks_to_file, process_submit, get_path,\
@@ -62,12 +62,13 @@ def protocol_data(protocol_path, forceShowDetails=False):
         template_data['protocolReady'] = False  # Not tested yet!
     return template_data
 
+
 @login_required
 def view_protocol(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
     if submit.user != request.user and not Submit.objects.filter(
-                pk=submit.pk,
-                task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
+            pk=submit.pk,
+            task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
         raise PermissionDenied()
         # You shouldn't see other user's submits if you are not an organizer
         # of the competition
@@ -84,12 +85,13 @@ def view_protocol(request, submit_id):
     else:
         raise Http404
 
+
 @login_required
 def view_submit(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
     if submit.user != request.user and not Submit.objects.filter(
-                pk=submit.pk,
-                task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
+            pk=submit.pk,
+            task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
         raise PermissionDenied()
         # You shouldn't see other user's submits if you are not an organizer
         # of the competition
@@ -156,9 +158,24 @@ def round_submit_page(request, round_id):
     '''View, ktorý zobrazí formuláre pre odovzdanie pre všetky úlohy
     z daného kola'''
     round = get_object_or_404(Round, pk=round_id)
-    tasks = Task.objects.filter(round=round).order_by('number')
-    template_data = {'round': round, 'tasks': tasks}
+    template_data = {'round': round}
     return render(request, 'trojsten/submit/round_submit.html', template_data)
+
+
+@login_required
+def active_rounds_submit_page(request):
+    rounds = Round.objects.active_visible(request.user)
+    competitions = Competition.objects.current_site_only()
+    template_data = {
+        'rounds': rounds,
+        'competitions': competitions,
+    }
+    return render(
+        request,
+        'trojsten/submit/active_rounds_submit.html',
+        template_data,
+    )
+
 
 def receive_protocol(request, protocol_id):
     submit = get_object_or_404(Submit, protocol_id=protocol_id)
@@ -172,7 +189,8 @@ def poll_submit_info(request, submit_id):
     if submit.user != request.user and not Submit.objects.filter(
             pk=submit.pk,
             task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
-        raise PermissionDenied()  # You shouldn't see other user's submits if you are not an organizer of the competition
+        # You shouldn't see other user's submits if you are not an organizer of the competition
+        raise PermissionDenied()
     return HttpResponse(simplejson.dumps({
         'tested': submit.tested,
         'response_verbose': unicode(submit.tester_response_verbose),
@@ -180,6 +198,7 @@ def poll_submit_info(request, submit_id):
         'points': float(submit.points),
         'class': submitclass(submit),
     }), mimetype='application/json; charset=utf-8')
+
 
 @login_required
 def task_submit_post(request, task_id, submit_type):
@@ -254,7 +273,6 @@ def task_submit_post(request, task_id, submit_type):
                     'task_submit_page', kwargs={'task_id': int(task_id)}
                 )
             )
-
 
     # File won't be sent to tester
     elif submit_type == Submit.DESCRIPTION:

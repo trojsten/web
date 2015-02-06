@@ -1,7 +1,6 @@
 from django import template
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
-from trojsten.regal.tasks.models import Submit
-from django.conf import settings
+from trojsten.regal.tasks.models import Submit, Task
 from .. import constants
 
 register = template.Library()
@@ -49,3 +48,11 @@ def submitclass(submit):
     else:
         return 'danger submit-tested'
 
+
+@register.inclusion_tag('trojsten/submit/parts/round_submit_form.html')
+def round_submit_form(round):
+    '''View, showing submit form for all tasks from round
+    '''
+    tasks = Task.objects.filter(round=round).order_by('number')
+    template_data = {'round': round, 'tasks': tasks}
+    return template_data
