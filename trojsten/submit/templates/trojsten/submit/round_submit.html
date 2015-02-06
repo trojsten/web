@@ -5,7 +5,7 @@
 {% block title %}Odovzdávanie{% endblock %}
 
 {% block page_header %}
-<h1>Odovzdávanie <small>{{round}}</small></h1>
+<h1>Odovzdávanie <small><a href="{% url 'task_list' round_id=round.id %}">{{round}}</a></small></h1>
 {% endblock %}
 
 {% block page_content %}
@@ -13,6 +13,11 @@
     {% for task in tasks %}
         <h2><a href="{% url 'task_statement' task_id=task.id %}">{{ task.number }}. {{task.name}}</a></h2>
         {% show_submit_form task request.path %}
+        {% if task.has_submit_list %}
+            <div>
+                <a href="{% url 'task_submit_page' task_id=task.id %}">Zoznam submitov</a>
+            </div>
+        {% endif %}
         {% if task.get_submit_types|length == 0 %}
             <p class="text-danger">Tento príklad momentálne nemá možnosť odovzdávania.</p>
         {% endif %}
