@@ -5,7 +5,7 @@
         <div class="form-group" style="min-width:50px;"><label>Popis</label></div>
         {{ description_form | bootstrap_inline }}
         <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
-        <input class="btn btn-primary" type="submit" value="Submit" />
+        <input class="btn btn-primary" type="submit" value="Odovzdaj" />
     </form>
 {% endif %}
 {% if task.has_source %}
@@ -14,7 +14,7 @@
         <div class="form-group" style="min-width:50px;"><label>Kód</label></div>
         {{ source_form | bootstrap_inline }}
         <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
-        <input class="btn btn-primary" type="submit" value="Submit" />
+        <input class="btn btn-primary" type="submit" value="Odovzdaj" />
     </form>
 {% endif %}
 {% if task.has_testablezip %}
@@ -23,7 +23,7 @@
         <div class="form-group" style="min-width:50px;"><label>Zip</label></div>
         {{ testablezip_form | bootstrap_inline }}
         <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
-        <input class="btn btn-primary" type="submit" value="Submit" />
+        <input class="btn btn-primary" type="submit" value="Odovzdaj" />
     </form>
 {% endif %}
 
