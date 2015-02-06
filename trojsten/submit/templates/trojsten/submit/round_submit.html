@@ -11,7 +11,7 @@
 {% block page_content %}
     {% show_progress round%}
     {% for task in tasks %}
-        <h2>{{ task.number }}. {{task.name}}</h2>
+        <h2><a href="{% url 'task_statement' task_id=task.id %}">{{ task.number }}. {{task.name}}</a></h2>
         {% show_submit_form task request.path %}
         {% if task.get_submit_types|length == 0 %}
             <p class="text-danger">Tento príklad momentálne nemá možnosť odovzdávania.</p>
