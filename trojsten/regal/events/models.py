@@ -91,6 +91,9 @@ class Event(models.Model):
     place = models.ForeignKey(Place, verbose_name='miesto')
     start_time = models.DateTimeField(verbose_name='čas začiatku')
     end_time = models.DateTimeField(verbose_name='čas konca')
+    text = models.TextField(help_text='Obsah bude prehnaný <a '
+                            'href="http://en.wikipedia.org/wiki/Markdown">'
+                            'Markdownom</a>.', default='')
     links = models.ManyToManyField(
         Link, blank=True, verbose_name='zoznam odkazov'
     )
@@ -113,6 +116,10 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def rendered_text(self):
+        return mark_safe(markdown(self.text, safe_mode=False))
 
 
 @python_2_unicode_compatible
