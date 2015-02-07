@@ -105,6 +105,6 @@ class EventListView(ListView):
     template_name = "trojsten/regal/events/event_list.html"
     model = EventType
     context_object_name = 'event_types'
-    query_set = EventType.objects.current_site_only()
+    query_set = EventType.objects.current_site_only().prefetch_related('event_set')
 
 event_list = EventListView.as_view()

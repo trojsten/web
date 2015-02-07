@@ -102,7 +102,7 @@ class Event(models.Model):
     end_time = models.DateTimeField(verbose_name='čas konca')
     text = models.TextField(help_text='Obsah bude prehnaný <a '
                             'href="http://en.wikipedia.org/wiki/Markdown">'
-                            'Markdownom</a>.', default='')
+                            'Markdownom</a>.', default='', blank=True)
     links = models.ManyToManyField(
         Link, blank=True, verbose_name='zoznam odkazov'
     )
@@ -122,6 +122,7 @@ class Event(models.Model):
     class Meta:
         verbose_name = 'akcia'
         verbose_name_plural = 'akcie'
+        ordering = ['-end_time', '-start_time']
 
     def __str__(self):
         return self.name
