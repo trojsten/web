@@ -1,0 +1,19 @@
+{% extends "trojsten/layout/main.html" %}
+{% load utils %}
+
+{% block title %}{{ event }}{% endblock %}
+
+{% block page_header %}
+<h1>{{ event }} <small>{{ event.place.name }}, {{ event.start_time|date:'d.m.Y' }} - {{ event.end_time|date:'d.m.Y' }}</small></h1>
+{% endblock %}
+
+{% block page_content %}
+{{ event.rendered_text }}
+
+<div>
+{% for link in event.links.all %}
+<a href="{{ link.url }}" class="btn btn-default">{{ link.title }}</a>
+{% endfor %}
+</div>
+
+{% endblock %}

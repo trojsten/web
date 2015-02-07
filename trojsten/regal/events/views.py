@@ -89,3 +89,12 @@ class RegistrationView(FormView):
         return super(RegistrationView, self).form_valid(form)
 
 registration = RegistrationView.as_view()
+
+
+class EventView(DetailView):
+    template_name = "trojsten/regal/events/event.html"
+    model = Event
+    context_object_name = 'event'
+    pk_url_kwarg = 'event_id'
+
+event_detail = EventView.as_view()
