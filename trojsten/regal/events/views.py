@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 from django.shortcuts import get_object_or_404, redirect
 from django.http import Http404
@@ -13,7 +14,7 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.contrib import messages
 
-from .models import Event, Invitation
+from .models import Event, Invitation, EventType
 from .forms import RegistrationForm
 
 
@@ -98,3 +99,12 @@ class EventView(DetailView):
     pk_url_kwarg = 'event_id'
 
 event_detail = EventView.as_view()
+
+
+class EventListView(ListView):
+    template_name = "trojsten/regal/events/event_list.html"
+    model = EventType
+    context_object_name = 'event_types'
+    query_set = EventType.objects.current_site_only()
+
+event_list = EventListView.as_view()

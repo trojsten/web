@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('trojsten.regal.events.views',
+    url(r'^$', 'event_list', name='event_list'),
     url(r'^(?P<event_id>(\d+))$',
         'event_detail', name='event_detail'),
     url(r'^(?P<event_id>(\d+))/zoznam_ucastnikov/$',

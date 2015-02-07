@@ -1,0 +1,36 @@
+{% extends "trojsten/layout/main.html" %}
+{% load utils %}
+
+{% block title %}Akcie{% endblock %}
+
+{% block page_header %}
+<h1>Akcie</h1>
+{% endblock %}
+
+{% block page_content %}
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+    {% for event_type in event_types %}
+        <li {% if forloop.first %}class="active"{% endif %}>
+            <a href="#eventtype-tab-{{ event_type.id }}" role="tab" data-toggle="tab">
+                {{ event_type.name }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+{% for event_type in event_types %}
+    <div class="tab-pane fade {% if forloop.first %}in active{% endif %}"
+         id="competition-tab-{{ competition.name }}">
+        <div class="list-group">
+        {% for event in event_type.event_set.all %}
+        <a href="{% url 'event_detail' event_id=event.id %}" class="list-group-item">{{ event }} <small>{{ event.place.name }}, {{ event.start_time|date:'d.m.Y' }} - {{ event.end_time|date:'d.m.Y' }}</small></a>
+        {% endfor %}
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

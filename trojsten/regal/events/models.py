@@ -13,6 +13,13 @@ from django.contrib.auth import get_user_model
 from django.utils.html import mark_safe
 
 
+class EventTypeManager(models.Manager):
+    def current_site_only(self):
+        '''Returns only event types belonging to current site
+        '''
+        return Site.objects.get(pk=settings.SITE_ID).eventtype_set.all()
+
+
 @python_2_unicode_compatible
 class EventType(models.Model):
     '''
@@ -23,6 +30,8 @@ class EventType(models.Model):
     organizers_group = models.ForeignKey(
         Group, verbose_name='skupina vedúcich'
     )
+
+    objects = EventTypeManager()
 
     class Meta:
         verbose_name = 'typ akcie'
