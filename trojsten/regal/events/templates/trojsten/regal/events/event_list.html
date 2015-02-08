@@ -9,6 +9,7 @@
 
 {% block page_content %}
 
+{% if 1 < event_types|length %}
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
     {% for event_type in event_types %}
@@ -19,15 +20,18 @@
         </li>
     {% endfor %}
 </ul>
+{% endif %}
 
 <!-- Tab panes -->
 <div class="tab-content">
 {% for event_type in event_types %}
     <div class="tab-pane fade {% if forloop.first %}in active{% endif %}"
-         id="competition-tab-{{ competition.name }}">
+         id="eventtype-tab-{{ event_type.id }}">
         <div class="list-group">
         {% for event in event_type.event_set.all %}
         <a href="{% url 'event_detail' event_id=event.id %}" class="list-group-item">{{ event }} <small>{{ event.place.name }}, {{ event.start_time|date:'d.m.Y' }} - {{ event.end_time|date:'d.m.Y' }}</small></a>
+        {% empty %}
+        <span class="list-group-item">Žiadne akcie</span>
         {% endfor %}
         </div>
     </div>
