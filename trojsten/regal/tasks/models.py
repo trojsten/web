@@ -12,6 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from trojsten.regal.contests.models import Round, Competition
 from trojsten.regal.people.models import User
+from trojsten.regal.people.constants import GRADUATION_SCHOOL_YEAR
 from trojsten.regal.people.constants import SCHOOL_YEAR_END_MONTH
 from trojsten.submit import constants as submit_constants
 
@@ -41,14 +42,17 @@ class SubmitManager(models.Manager):
         '''
         submits = self
         if not include_staff and tasks:
+            # round ends January 2014 => exclude 2013, 2012,
+            # round ends Jun 2014 => exclude 2013, 2012,
+            # round ends September 2014 => exclude 2014, 2013,
+            # round ends December 2014 => exclude 2014, 2013,
+            minimal_year_of_graduation = tasks[0].round.end_time.year + int(
+                tasks[0].round.end_time.month > SCHOOL_YEAR_END_MONTH
+            )
+            if tasks[0].round.series.competition.primary_school_only:
+                minimal_year_of_graduation += GRADUATION_SCHOOL_YEAR
             submits = submits.exclude(
-                # round ends January 2014 => exclude 2013, 2012,
-                # round ends Jun 2014 => exclude 2013, 2012,
-                # round ends September 2014 => exclude 2014, 2013,
-                # round ends December 2014 => exclude 2014, 2013,
-                user__graduation__lt=tasks[0].round.end_time.year + int(
-                    tasks[0].round.end_time.month > SCHOOL_YEAR_END_MONTH
-                )
+                user__graduation__lt=minimal_year_of_graduation
             ).exclude(
                 user__in=User.objects.filter(
                     groups=tasks[0].round.series.competition.organizers_group

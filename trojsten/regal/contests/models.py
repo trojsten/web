@@ -92,6 +92,9 @@ class Competition(models.Model):
         max_length=128, verbose_name='adresa foldra súťaže v repozitári'
     )
     organizers_group = models.ForeignKey(Group, null=True, verbose_name='skupina vedúcich')
+    primary_school_only = models.BooleanField(
+        default=False, verbose_name='súťaž je iba pre základoškolákov'
+    )
 
     objects = CompetitionManager()
 
