@@ -419,6 +419,8 @@ TESTER_URL = env('TROJSTENWEB_TESTER_URL', 'experiment')
 TESTER_PORT = int(env('TROJSTENWEB_TESTER_PORT', '12347'))
 TESTER_WEB_IDENTIFIER = env('TROJSTENWEB_TESTER_WEB_IDENTIFIER', 'KSP')
 
+# Event settings
+CAMP_EVENT_IDS = tuple(filter(lambda x: x != '', env('CAMP_EVENT_IDS', '').split(';')))
 
 ALLOWED_INCLUDE_ROOTS += (
     TASK_STATEMENTS_PATH,
