@@ -29,8 +29,8 @@ def levels(request):
     sid = 0
     for serie in data["series"]:
         # Set whether serie is rated
-        serie["rated"] = is_rated(serie["task_ids"], user)
-        del serie["task_ids"]
+        serie["rated"] = len(serie["taskpoints"]) > 0
+        del serie["taskpoints"]
         # Set headers for all levels
         level_paths = serie["levels"]
         serie["levels"] = []
@@ -63,7 +63,7 @@ def level(request, sid, lid):
 
     try:
         path = data["series"][sid]["levels"][lid]
-        task_ids_map = data["series"][sid]["task_ids"]
+        taskpoints = data["series"][sid]["taskpoints"]
     except (KeyError, IndexError):
         raise Http404()
 
@@ -76,7 +76,7 @@ def level(request, sid, lid):
         with open(path) as f:
             level_data = json.load(f)
 
-        level_data['rated'] = is_rated(task_ids_map, user)
+        level_data['rated'] = len(taskpoints) > 0
         level_data['solved'] = is_level_solved(sid, lid, user)
 
         return HttpResponse(
@@ -94,7 +94,7 @@ def level(request, sid, lid):
 
         process_submit.delay(
             user.pk, sid, lid, level_submit.pk,
-            get_taskpoints(task_ids_map, user), body['program'], path)
+            taskpoints, body['program'], path)
 
         return HttpResponse(
             json.dumps({"id": level_submit.pk}),
@@ -110,7 +110,7 @@ def solution(request, sid, lid):
 
     try:
         path = data["series"][sid]["solutions"][lid]
-        rated = is_rated(data["series"][sid]["task_ids"], request.user)
+        rated = len(data["series"][sid]["taskpoints"]) > 0
     except (KeyError, IndexError):
         raise Http404()
 
@@ -142,25 +142,3 @@ def load_level_index():
 def is_level_solved(sid, lid, user):
     return LevelSolved.objects.filter(
         user=user, series=sid, level=lid).exists()
-
-
-def is_rated(task_ids_map, user):
-    return (len(get_taskpoints(task_ids_map, user)) > 0)
-
-
-def get_taskpoints(task_ids_map, user):
-
-    def is_task_rated(task_id, user, prask_only):
-        if task_id == 0:
-            return False
-        if prask_only and user.school_year > 0:
-            return False
-        return Task.objects.get(pk=task_id).round.can_submit
-
-    taskpoints = []
-    if is_task_rated(task_ids_map["ksp"], user, False):
-        taskpoints.append((task_ids_map["ksp"], 2))
-    if is_task_rated(task_ids_map["prask"], user, True):
-        taskpoints.append((task_ids_map["prask"], 3))
-
-    return taskpoints
