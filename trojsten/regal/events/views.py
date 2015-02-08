@@ -106,7 +106,7 @@ class EventListView(ListView):
     template_name = "trojsten/regal/events/event_list.html"
     model = EventType
     context_object_name = 'event_types'
-    query_set = EventType.objects.current_site_only().prefetch_related('event_set')
+    queryset = EventType.objects.current_site_only().prefetch_related('event_set')
     title = 'Akcie'
 
     def get_context_data(self, **kwargs):
@@ -118,7 +118,7 @@ event_list = EventListView.as_view()
 
 
 class CampEventListView(EventListView):
-    query_set = EventType.objects.current_site_only().filter(
+    queryset = EventType.objects.current_site_only().filter(
         pk__in=settings.CAMP_EVENT_IDS
     ).prefetch_related('event_set')
     title = 'Sústredenia'
