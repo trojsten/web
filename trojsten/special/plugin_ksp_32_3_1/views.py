@@ -29,7 +29,7 @@ def levels(request):
     sid = 0
     for serie in data["series"]:
         # Set whether serie is rated
-        serie["rated"] = len(serie["taskpoints"]) > 0
+        serie["rated"] = bool(serie["taskpoints"])
         del serie["taskpoints"]
         # Set headers for all levels
         level_paths = serie["levels"]
@@ -76,7 +76,7 @@ def level(request, sid, lid):
         with open(path) as f:
             level_data = json.load(f)
 
-        level_data['rated'] = len(taskpoints) > 0
+        level_data['rated'] = bool(taskpoints)
         level_data['solved'] = is_level_solved(sid, lid, user)
 
         return HttpResponse(
@@ -110,7 +110,7 @@ def solution(request, sid, lid):
 
     try:
         path = data["series"][sid]["solutions"][lid]
-        rated = len(data["series"][sid]["taskpoints"]) > 0
+        rated = bool(data["series"][sid]["taskpoints"])
     except (KeyError, IndexError):
         raise Http404()
 
