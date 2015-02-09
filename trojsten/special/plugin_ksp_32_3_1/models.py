@@ -10,7 +10,7 @@ class LevelSolved(models.Model):
     level = models.IntegerField()
 
     class Meta:
-        unique_together = ("user", "series", "level")
+        unique_together = ('user', 'series', 'level')
 
 
 class LevelSubmit(models.Model):

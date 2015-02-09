@@ -7,7 +7,8 @@ from subprocess import Popen, PIPE
 from trojsten.regal.people.models import User
 from trojsten.regal.tasks.models import Submit
 from trojsten.regal.tasks.models import Task
-from trojsten.submit.constants import SUBMIT_STATUS_FINISHED, SUBMIT_RESPONSE_OK
+from trojsten.submit.constants import SUBMIT_STATUS_FINISHED
+from trojsten.submit.constants import SUBMIT_RESPONSE_OK
 
 from celery import shared_task
 
@@ -24,31 +25,44 @@ def process_submit(uid, sid, lid, l_submit_id, taskpoints, program, level_path):
     with open(os.path.join(DATA_ROOT, level_path)) as f:
         level = json.load(f)
 
-    test_script = os.path.join(DATA_ROOT, "tester.sh")
-    data = json.dumps({"program": program, "level": level})
-    p = Popen( ["/usr/bin/env", "bash", test_script], stdin=PIPE, stdout=PIPE)
+    test_script = os.path.join(DATA_ROOT, 'tester.sh')
+    data = json.dumps({'program': program, 'level': level})
+    p = Popen(['/usr/bin/env', 'bash', test_script], stdin=PIPE, stdout=PIPE)
     p.communicate(data)
 
     if p.returncode == 0:
-        level_submit.status = "OK"
+
+        from .views import load_level_index
+        index_data = load_level_index()
+
+        level_submit.status = 'OK'
 
         LevelSolved.objects.get_or_create(user=user, series=sid, level=lid)
-        points = LevelSolved.objects.filter(user=user, series=sid).count()
 
-        for (task_id, multiple) in taskpoints:
+        for (task_id, _) in taskpoints:
+
+            # Look if there are another series with same task_id and sum points
+            points = 0
+            _sid = 0
+            for serie in index_data['series']:
+                for (other_task_id, multiple) in serie['taskpoints']:
+                    if task_id == other_task_id:
+                        points += multiple * LevelSolved.objects.filter(
+                            user=user, series=_sid).count()
+                _sid += 1
 
             submit = Submit(
                 task=Task.objects.get(pk=task_id),
                 user=user,
-                points=points*multiple,
+                points=points,
                 submit_type=Submit.EXTERNAL,
-                filepath="",
+                filepath='',
                 testing_status=SUBMIT_STATUS_FINISHED,
                 tester_response=SUBMIT_RESPONSE_OK,
-                protocol_id="",
+                protocol_id='',
             )
             submit.save()
     else:
-        level_submit.status = "WA"
+        level_submit.status = 'WA'
 
     level_submit.save()
