@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from collections import defaultdict
+
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count
 
@@ -17,6 +19,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         data = load_level_index()
+        points = defaultdict(lambda: defaultdict(lambda: 0))
         series_id = 0
         for serie in data['series']:
             solved_series = LevelSolved.objects.filter(
@@ -25,16 +28,22 @@ class Command(BaseCommand):
 
             for solved_serie in solved_series:
                 for (task_id, multiple) in serie['taskpoints']:
-                    submit = Submit(
-                        task=Task.objects.get(pk=task_id),
-                        user=User.objects.get(pk=solved_serie['user']),
-                        points=solved_serie['count'] * multiple,
-                        submit_type=Submit.EXTERNAL,
-                        filepath='',
-                        testing_status=SUBMIT_STATUS_FINISHED,
-                        tester_response=SUBMIT_RESPONSE_OK,
-                        protocol_id='',
+                    points[solved_serie['user']][task_id] += (
+                        solved_serie['count'] * multiple
                     )
-                    submit.save()
 
             series_id += 1
+
+        for uid in points:
+            for task_id in points[uid]:
+                submit = Submit(
+                    task=Task.objects.get(pk=task_id),
+                    user=User.objects.get(pk=uid),
+                    points=points[uid][task_id],
+                    submit_type=Submit.EXTERNAL,
+                    filepath='',
+                    testing_status=SUBMIT_STATUS_FINISHED,
+                    tester_response=SUBMIT_RESPONSE_OK,
+                    protocol_id='',
+                )
+                submit.save()
