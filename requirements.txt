@@ -1,4 +1,4 @@
-Django==1.6.8
+Django==1.6.10
 South==1.0
 django-autoslug==1.7.2
 django-uuidfield==0.5.0
@@ -14,6 +14,6 @@ python-social-auth==0.2.1
 django-mathfilters==0.3.0
 django-easy-select2==1.2.12
 django-dotenv==1.3.0
+wiki==0.0.24.2
+django-nyt==0.9.6.post1
 -e git://github.com/koniiiik/ksp_login@00a1b3d90405434d4f0354d2632b0eeadfdb8a44#egg=ksp_login-master
--e git+https://github.com/django-wiki/django-wiki@62d67c068f8e74ce0c306289b60d72c49b403fc6#egg=wiki-master
--e git+https://github.com/benjaoming/django-nyt@8ea5f4e6bec655f11bdcf81d9dffc2a9e86c77bc#egg=django_nyt-master
