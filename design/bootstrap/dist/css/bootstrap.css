@@ -7353,8 +7353,8 @@ textarea.form-vertical .wiki-control textarea {
   font-style: normal;
   font-weight: normal;
 
-  src: url('../../font-awesome/font/fontawesome-webfont.eot?v=4.2.0');
-  src: url('../../font-awesome/font/fontawesome-webfont.eot?#iefix&v=4.2.0') format('embedded-opentype'), url('../../font-awesome/font/fontawesome-webfont.woff?v=4.2.0') format('woff'), url('../../font-awesome/font/fontawesome-webfont.ttf?v=4.2.0') format('truetype'), url('../../font-awesome/font/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular') format('svg');
+  src: url('../fonts/fontawesome-webfont.eot?v=4.2.0');
+  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.2.0') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff?v=4.2.0') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.2.0') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular') format('svg');
 }
 .fa {
   display: inline-block;
