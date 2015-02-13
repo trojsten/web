@@ -13,12 +13,16 @@
 </div>
 </div>
 {% else %}
-<div class="alert alert-info" role="alert">
-    Kolo už skončilo.
-    {% if task and task.round.solutions_visible %}
-        <a href="{% url 'solution_statement' task_id=task.id %}" class="alert-link">
-            Pozrieť vzorové riešenie.
-        </a>
-    {% endif %}
-</div>
+  {% if results %}
+      <div class="alert alert-warning">Výsledky sú predbežné.</div>
+  {% else %}
+  <div class="alert alert-info" role="alert">
+      Kolo už skončilo.
+      {% if task and task.round.solutions_visible %}
+          <a href="{% url 'solution_statement' task_id=task.id %}" class="alert-link">
+              Pozrieť vzorové riešenie.
+          </a>
+      {% endif %}
+  </div>
+  {% endif %}
 {% endif %}

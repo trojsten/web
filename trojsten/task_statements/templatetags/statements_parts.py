@@ -61,7 +61,7 @@ def show_round_list(user, competition):
 
 
 @register.inclusion_tag('trojsten/task_statements/parts/progress.html', takes_context=True)
-def show_progress(context, round):
+def show_progress(context, round, results=False):
     start = round.start_time
     end = round.end_time
     full = end - start
