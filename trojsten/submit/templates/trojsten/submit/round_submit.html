@@ -1,0 +1,13 @@
+{% extends "trojsten/layout/main.html" %}
+{% load submit_parts %}
+{% load statements_parts %}
+
+{% block title %}Odovzdávanie{% endblock %}
+
+{% block page_header %}
+<h1>Odovzdávanie <small><a href="{% url 'task_list' round_id=round.id %}">{{round}}</a></small></h1>
+{% endblock %}
+
+{% block page_content %}
+    {% round_submit_form round=round %}
+{% endblock %}

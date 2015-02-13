@@ -155,6 +155,11 @@ class Task(models.Model):
         }
         return check_field[submit_type]
 
+    @property
+    def has_submit_list(self):
+        submit_list_types = set(st for st, _ in Submit.SUBMIT_TYPES) - {Submit.EXTERNAL}
+        return bool(submit_list_types & set(self.get_submit_types()))
+
     def get_submit_types(self):
         return [
             submit_type
