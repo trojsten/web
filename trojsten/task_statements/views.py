@@ -90,7 +90,7 @@ def show_picture(request, type, task_id, picture):
     if not task.visible(request.user):
         raise Http404
     _, ext = os.path.splitext(picture)
-    if not ext in settings.ALLOWED_PICTURE_EXT:
+    if ext not in settings.ALLOWED_PICTURE_EXT:
         raise Http404
     path = os.path.join(
         task.round.get_pictures_path(),
@@ -100,3 +100,15 @@ def show_picture(request, type, task_id, picture):
         return sendfile(request, path)
     else:
         raise Http404
+
+
+def ajax_progressbar(request, round_id):
+    round = get_object_or_404(Round.objects.visible(request.user), pk=round_id)
+    template_data = {
+        'round': round,
+    }
+    return render(
+        request,
+        'trojsten/task_statements/ajax/progress.html',
+        template_data,
+    )
