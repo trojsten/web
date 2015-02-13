@@ -110,3 +110,24 @@ def school_year(school_year):
         school_year += 9
         is_elementary = True
     return '{}{}'.format(school_year, 'zš' if is_elementary else '')
+
+
+@register.filter
+def progress_time(delta):
+    def text(count, what):
+        index =  0 if count == 1 else 1 if 2 <= count <= 4 else 2
+        return what[index]
+
+    def render(count, what):
+        return '%d %s' % (count, text(count, what))
+
+    days_text = ('deň', 'dni', 'dní')
+    hours_text = ('hodina', 'hodiny', 'hodín')
+    minutes_text = ('minúta', 'minúty', 'minút')
+
+    if delta.days >= 1:
+        return render(delta.days, days_text)
+    elif delta.seconds // 3600 >= 1:
+        return render(delta.seconds // 3600, hours_text)
+    elif delta.seconds // 60 >= 1:
+        return render(delta.seconds // 60, minutes_text)
