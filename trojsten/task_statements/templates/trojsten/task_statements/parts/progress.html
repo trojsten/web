@@ -1,28 +1,28 @@
 {% load utils %}
 {% if remaining.days >= 0 %}
-<div class="row">
-<div class="col-md-5"><em>Koniec kola: {{ end }}</em></div>
-<div class="col-md-7">
-<div class="progress">
-  <div class="progress-bar {{ progressbar_class }}" role="progressbar"
-       aria-valuenow="{{ elapsed.days }}" aria-valuemin="0"
-       aria-valuemax="{{ full.days }}" style="width: {{ percent }}%;">
-    {{ remaining|progress_time }}
+<div class="row roundend-progressbar" id="progressbar-{{ round.id }}">
+  <div class="col-md-5"><em>Koniec kola: {{ end }}</em></div>
+  <div class="col-md-7">
+    <div class="progress">
+      <div class="progress-bar {{ progressbar_class }}" role="progressbar"
+           aria-valuenow="{{ elapsed.days }}" aria-valuemin="0"
+           aria-valuemax="{{ full.days }}" style="width: {{ percent }}%;">
+        {{ remaining|progress_time }}
+      </div>
+    </div>
   </div>
-</div>
-</div>
 </div>
 {% else %}
   {% if results %}
-      <div class="alert alert-warning">Výsledky sú predbežné.</div>
+    <div class="alert alert-warning">Výsledky sú predbežné.</div>
   {% else %}
   <div class="alert alert-info" role="alert">
-      Kolo už skončilo.
-      {% if task and task.round.solutions_visible %}
-          <a href="{% url 'solution_statement' task_id=task.id %}" class="alert-link">
-              Pozrieť vzorové riešenie.
-          </a>
-      {% endif %}
+    Kolo už skončilo.
+    {% if task and task.round.solutions_visible %}
+        <a href="{% url 'solution_statement' task_id=task.id %}" class="alert-link">
+            Pozrieť vzorové riešenie.
+        </a>
+    {% endif %}
   </div>
   {% endif %}
 {% endif %}
