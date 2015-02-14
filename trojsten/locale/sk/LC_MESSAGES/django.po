@@ -51,9 +51,29 @@ msgstr "Pozrieť zdroják"
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
 
-#task statements
-msgid "%(days)s day"
-msgid_plural "%(days)s days"
-msgstr[0] "%(days)s deň"
-msgstr[1] "%(days)s dni"
-msgstr[2] "%(days)s dní"
+# Task Statements
+#: task_statements/templatetags/statements_parts.py:96
+#, python-format
+msgid "%(count)d day"
+msgid_plural "%(count)s days"
+msgstr[0] "%(count)s deň"
+msgstr[1] "%(count)s dni"
+msgstr[2] "%(count)s dní"
+
+
+#: task_statements/templatetags/statements_parts.py:99
+#, python-format
+msgid "%(count)d hour"
+msgid_plural "%(count)s hours"
+msgstr[0] "%(count)s hodina"
+msgstr[1] "%(count)s hodiny"
+msgstr[2] "%(count)s hodín"
+
+
+#: task_statements/templatetags/statements_parts.py:102
+#, python-format
+msgid "%(count)d minute"
+msgid_plural "%(count)s minutes"
+msgstr[0] "%(count)s minúta"
+msgstr[1] "%(count)s minúty"
+msgstr[2] "%(count)s minút"

@@ -1,6 +1,6 @@
-{% load utils %}
+{% load statements_parts %}
 {% if remaining.days >= 0 %}
-<div class="row roundend-progressbar" id="progressbar-{{ round.id }}">
+<div class="row roundend-progressbar" id="progressbar-{{ round.id }}" data-id="{{ round.id }}" data-remaining="{{ remaining|progress_time_precision }}">
   <div class="col-md-5"><em>Koniec kola: {{ end }}</em></div>
   <div class="col-md-7">
     <div class="progress">
