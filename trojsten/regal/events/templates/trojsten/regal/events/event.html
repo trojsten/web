@@ -4,7 +4,7 @@
 {% block title %}{{ event }}{% endblock %}
 
 {% block page_header %}
-<h1>{{ event }} <small>{{ event.place.name }}, {{ event.start_time|date:'d.m.Y' }} - {{ event.end_time|date:'d.m.Y' }}</small></h1>
+<h1>{{ event.name }} <small>{{ event.place.name }}, {{ event.start_time|date:'d.m.Y' }} - {{ event.end_time|date:'d.m.Y' }}</small></h1>
 {% endblock %}
 
 {% block page_content %}

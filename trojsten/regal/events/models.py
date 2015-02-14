@@ -17,7 +17,7 @@ class EventTypeManager(models.Manager):
     def current_site_only(self):
         '''Returns only event types belonging to current site
         '''
-        return Site.objects.get(pk=settings.SITE_ID).eventtype_set.all()
+        return Site.objects.get_current().eventtype_set.all()
 
 
 @python_2_unicode_compatible
