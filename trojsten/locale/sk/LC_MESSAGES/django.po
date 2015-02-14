@@ -77,3 +77,12 @@ msgid_plural "%(count)s minutes"
 msgstr[0] "%(count)s minúta"
 msgstr[1] "%(count)s minúty"
 msgstr[2] "%(count)s minút"
+
+
+#: task_statements/templatetags/statements_parts.py:105
+#, python-format
+msgid "%(count)d second"
+msgid_plural "%(count)s seconds"
+msgstr[0] "%(count)s sekunda"
+msgstr[1] "%(count)s sekundy"
+msgstr[2] "%(count)s sekúnd"

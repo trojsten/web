@@ -100,6 +100,9 @@ def progress_time(delta):
     elif delta.seconds // 60 >= 1:
         count = delta.seconds // 60
         return _('%(count)d minute', '%(count)d minutes', count) % {'count': count}
+    else:
+        count = delta.seconds
+        return _('%(count)d second', '%(count)d seconds', count) % {'count': count}
 
 
 @register.filter
@@ -110,3 +113,5 @@ def progress_time_precision(delta):
         return 'HOUR'
     elif delta.seconds // 60 >= 1:
         return 'MINUTE'
+    else:
+        return 'SECOND'
