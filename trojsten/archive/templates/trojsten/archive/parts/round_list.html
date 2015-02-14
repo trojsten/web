@@ -3,7 +3,7 @@
     <table class="table table-rounds">
       <thead>
         <tr>
-          <th colspan="2" class="active">
+          <th colspan="3" class="active">
             {{ year }}. ročník
           </th>
         </tr>
@@ -11,13 +11,16 @@
       <tbody>
       {% for round in round_list %}
           <tr>
-            <td width="160px">
-            <a href="{% url 'task_list' round_id=round.id %}">
-              {{ round.number }}. kolo
-            </a>
-            {% if not round.visible %}
-              <span class="label label-danger">skryté</span>
-            {% endif %}
+            <td>
+              <a href="{% url 'task_list' round_id=round.id %}">
+                {{ round.number }}. kolo
+              </a>
+              {% if not round.visible %}
+                <span class="label label-danger">skryté</span>
+              {% endif %}
+            </td>
+            <td>
+              {{ round.series.number }}. séria
             </td>
             <td style="text-align:right;">
               <a href="{% url 'task_list' round_id=round.id %}"  class="btn btn-primary btn-sm">
