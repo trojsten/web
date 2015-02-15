@@ -344,9 +344,10 @@ WIKI_MARKDOWN_KWARGS = {
 WIKI_EDITOR = 'trojsten.markdown_editors.TrojstenMarkItUp'
 WIKI_ATTACHMENTS_PATH = env(
     'TROJSTENWEB_WIKI_ATTACHMENTS_PATH',
-    os.path.join(PROJECT_DIR, 'media/wiki_attachments/%aid/')
+    os.path.join(MEDIA_ROOT, 'wiki_attachments/%aid/')
 )
 WIKI_ATTACHMENTS_EXTENSIONS = ['pdf', 'doc', 'odt', 'docx', 'txt', 'jpg', 'png', 'gif']
+WIKI_CHECK_SLUG_URL_AVAILABLE = False
 
 # Celery settings
 #: Only add pickle to this list if your broker is secured
