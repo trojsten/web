@@ -32,7 +32,7 @@
       {% csrf_token %}
       {% for field in form %}
       <div class="form-group">
-        <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id }}" name="{{ field.name }}" placeholder="{{ field.label }}" maxlength="{{ field.field.max_length }}" />
+        <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.auto_id }}" name="{{ field.name }}" placeholder="{{ field.label }}" {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %} />
       </div>
       {% endfor %}
       <div class="form-group">
