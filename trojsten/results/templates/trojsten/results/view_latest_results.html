@@ -10,6 +10,7 @@
 
 {% block page_content %}
 <!-- Nav tabs -->
+{% if rounds_info|length %}
 <ul class="nav nav-tabs" role="tablist">
 {% for round, categories in rounds_info %}
     {% if categories|length > 1 %}
@@ -32,6 +33,7 @@
     {% endif %}
 {% endfor %}
 </ul>
+{% endif %}
 <!-- Tab panes -->
 <div class="tab-content">
 {% for round, categories in rounds_info %}
@@ -58,6 +60,8 @@
             {% show_results_table round=round %}
         </div>
     {% endif %}
+{% empty %}
+    <div class="alert alert-warning">Ešte nebeží žiadne kolo.</div>
 {% endfor %}
 </div>
 
