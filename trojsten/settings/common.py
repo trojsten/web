@@ -279,6 +279,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "sekizai.context_processors.sekizai",
     "ksp_login.context_processors.login_providers_both",
     "trojsten.context_processors.current_site",
+    "trojsten.context_processors.version_string",
 )
 
 # Override message tags for bootstrap 3 compatibility.

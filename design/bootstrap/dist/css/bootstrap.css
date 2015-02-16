@@ -9476,7 +9476,7 @@ label.required:after {
   padding-right: 5%;
   padding-bottom: 3em;
   padding-left: 5%;
-  margin-bottom: 1em;
+  margin-bottom: 3em;
   text-align: justify;
   background-color: #fff;
   -webkit-box-shadow: 4px 4px 5px 0 rgba(0, 0, 0, .5);
@@ -9594,7 +9594,7 @@ footer {
   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
-  height: 60px;
+  height: 80px;
   background-color: #111;
 }
 footer ul {
