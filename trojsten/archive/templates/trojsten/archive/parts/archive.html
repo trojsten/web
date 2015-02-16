@@ -1,7 +1,10 @@
 {% load archive_parts %}
 
+<div class="wiki-article">
 <h2>Archív zadaní</h2>
+</div>
 <!-- Nav tabs -->
+{% if competition|length %}
 <ul class="nav nav-tabs" role="tablist">
     {% for competition in competitions %}
         {% if active_competition %}
@@ -15,6 +18,7 @@
         </li>
     {% endfor %}
 </ul>
+{% endif %}
 <!-- Tab panes -->
 <div class="tab-content">
     {% for competition in competitions %}
@@ -26,6 +30,8 @@
              id="competition-tab-{{ competition.name }}">
             {% show_round_list user=request.user competition=competition %}
         </div>
+    {% empty %}
+        <div class="alert alert-warning">Ešte nie sú žiadne súťaže.</div>
     {% endfor %}
 </div>
 
