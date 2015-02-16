@@ -10,6 +10,7 @@ from sendfile import sendfile
 
 from trojsten.regal.tasks.models import Task
 from trojsten.regal.contests.models import Round, Competition
+from trojsten.utils.utils import is_true
 
 from .tasks import compile_task_statements
 
@@ -106,6 +107,7 @@ def ajax_progressbar(request, round_id):
     round = get_object_or_404(Round.objects.visible(request.user), pk=round_id)
     template_data = {
         'round': round,
+        'results': is_true(request.GET.get('results', False)),
     }
     return render(
         request,

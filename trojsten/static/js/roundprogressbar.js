@@ -1,7 +1,8 @@
 function refresh_progressbar(element) {
     id = $(element).data('id');
     if (typeof id !== 'undefined') {
-        url = "/ulohy/ajax/" + id + "/progressbar.html";
+        is_results = $(element).data('isresults');
+        url = "/ulohy/ajax/" + id + "/progressbar.html?results=" + is_results;
         $.get(url, function(data) {
             elem_id = '#' + $(element).attr('id');
             $(element).replaceWith($(data.trim()));

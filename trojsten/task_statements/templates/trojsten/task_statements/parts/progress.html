@@ -4,7 +4,7 @@
     <script type="text/javascript" src="{% static "js/roundprogressbar.js" %}">
     </script>
 {% endaddtoblock %}
-<div class="row roundprogressbar" id="progressbar-{{ round.id }}" data-id="{{ round.id }}" data-precision="{{ remaining|progress_time_precision }}">
+<div class="row roundprogressbar" id="progressbar-{{ round.id }}" data-id="{{ round.id }}" data-precision="{{ remaining|progress_time_precision }}" data-isresults={{ results }}>
   <div class="col-md-5"><em>Koniec kola: {{ end }}</em></div>
   <div class="col-md-7">
     <div class="progress">

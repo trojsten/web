@@ -78,6 +78,7 @@ def show_progress(context, round, results=False):
         progressbar_class = settings.ROUND_PROGRESS_DEFAULT_CLASS
     context.update({
         'round': round,
+        'results': results,
         'start': start,
         'end': end,
         'full': full,
