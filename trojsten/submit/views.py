@@ -265,7 +265,7 @@ def task_submit_post(request, task_id, submit_type):
                 for error in field.errors:
                     messages.add_message(request, messages.ERROR,
                                          "%s: %s" % (field.label, error))
-        if 'redirect_to' in request.POST:
+        if 'redirect_to' in request.POST and request.POST['redirect_to']:
             return redirect(request.POST['redirect_to'])
         else:
             return redirect(
@@ -303,7 +303,7 @@ def task_submit_post(request, task_id, submit_type):
                     messages.add_message(request, messages.ERROR,
                                          "%s: %s" % (field.label, error))
 
-        if 'redirect_to' in request.POST:
+        if 'redirect_to' in request.POST and request.POST['redirect_to']:
             return redirect(request.POST['redirect_to'])
         else:
             return redirect(
