@@ -6,6 +6,7 @@ import json
 import trojsten
 import trojsten.special.installed_apps
 
+
 def env(name, default):
     return os.environ.get(name, default)
 
@@ -46,7 +47,10 @@ else:
     ADMINS = ()
 
 if 'TROJSTENWEB_MANAGERS' in os.environ:
-    MANAGERS = tuple([tuple(manager.split(':')) for manager in env('TROJSTENWEB_MANAGERS', '').split(';')])
+    MANAGERS = tuple([
+        tuple(manager.split(':'))
+        for manager in env('TROJSTENWEB_MANAGERS', '').split(';')
+    ])
 else:
     MANAGERS = ()
 
@@ -193,10 +197,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'django.contrib.flatpages',
-    #'south',
-    #'social_auth',
-    #'ksp_login',
     'trojsten',
     'trojsten.utils',
     'trojsten.regal.people',
@@ -343,8 +343,12 @@ WIKI_MARKDOWN_KWARGS = {
     'safe_mode': False,
 }
 WIKI_EDITOR = 'trojsten.markdown_editors.TrojstenMarkItUp'
-WIKI_ATTACHMENTS_PATH = env('TROJSTENWEB_WIKI_ATTACHMENTS_PATH',
-        os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'media/wiki_attachments/%aid/'))
+WIKI_ATTACHMENTS_PATH = env(
+    'TROJSTENWEB_WIKI_ATTACHMENTS_PATH',
+    os.path.join(MEDIA_ROOT, 'wiki_attachments/%aid/')
+)
+WIKI_ATTACHMENTS_EXTENSIONS = ['pdf', 'doc', 'odt', 'docx', 'txt', 'jpg', 'png', 'gif']
+WIKI_CHECK_SLUG_URL_AVAILABLE = False
 
 # Celery settings
 #: Only add pickle to this list if your broker is secured
@@ -353,19 +357,20 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_IMPORTS = ("trojsten.task_statements.handlers", )
-BROKER_URL = env('TROJSTENWEB_CELERY_BROKER_URL',  'django://')
-
+BROKER_URL = env('TROJSTENWEB_CELERY_BROKER_URL', 'django://')
 
 #
 # Trojstenweb Settings
 #
 
-
 # Task statements settings
-TASK_STATEMENTS_PATH = env('TROJSTENWEB_TASK_STATEMENTS_PATH',
-        os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'statements'))
-TASK_STATEMENTS_REPO_PATH = env('TROJSTENWEB_TASK_STATEMENTS_REPO_PATH',
-        os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'statements_repo'))
+TASK_STATEMENTS_PATH = env('TROJSTENWEB_TASK_STATEMENTS_PATH', os.path.join(
+    PROJECT_DIR, PROJECT_MODULE_NAME, 'statements')
+)
+TASK_STATEMENTS_REPO_PATH = env(
+    'TROJSTENWEB_TASK_STATEMENTS_REPO_PATH',
+    os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'statements_repo')
+)
 TASK_STATEMENTS_SUFFIX_YEAR = env('TROJSTENWEB_TASK_STATEMENTS_SUFFIX_YEAR', 'rocnik')
 TASK_STATEMENTS_SUFFIX_ROUND = env('TROJSTENWEB_TASK_STATEMENTS_SUFFIX_ROUND', 'kolo')
 TASK_STATEMENTS_TASKS_DIR = env('TROJSTENWEB_TASK_STATEMENTS_TASKS_DIR', 'zadania')
@@ -380,16 +385,21 @@ ALLOWED_PICTURE_EXT = {'.jpg', '.png', '.gif', '.webp', }
 # Round progressbar settings
 ROUND_PROGRESS_DEFAULT_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DEFAULT_CLASS', 'progress-bar-info')
 ROUND_PROGRESS_WARNING_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_WARNING_DAYS', '14'))
-ROUND_PROGRESS_WARNING_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_WARNING_CLASS', 'progress-bar-warning')
+ROUND_PROGRESS_WARNING_CLASS = env(
+    'TROJSTENWEB_ROUND_PROGRESS_WARNING_CLASS', 'progress-bar-warning'
+)
 ROUND_PROGRESS_DANGER_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_DANGER_DAYS', '7'))
 ROUND_PROGRESS_DANGER_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DANGER_CLASS', 'progress-bar-danger')
-FROZEN_RESULTS_PATH = env('TROJSTENWEB_FROZEN_RESULTS_PATH',
-        os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'frozen_results'))
+FROZEN_RESULTS_PATH = env(
+    'TROJSTENWEB_FROZEN_RESULTS_PATH',
+    os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'frozen_results')
+)
 
 # Submit settings
 SUBMIT_DEBUG = bool(int(env('TROJSTENWEB_SUBMIT_DEBUG', '0')))
-SUBMIT_PATH = env('TROJSTENWEB_SUBMIT_PATH',
-        os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'submits'))
+SUBMIT_PATH = env('TROJSTENWEB_SUBMIT_PATH', os.path.join(
+    PROJECT_DIR, PROJECT_MODULE_NAME, 'submits')
+)
 SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS = ['.pdf', '.txt', '.md', '.rtf', '.doc', '.docx', '.odt']
 UPLOADED_FILENAME_MAXLENGTH = int(env('TROJSTENWEB_UPLOADED_FILENAME_MAXLENGTH', '100000'))
 PROTOCOL_FILE_EXTENSION = env('TROJSTENWEB_PROTOCOL_FILE_EXTENSION', '.protokol')
