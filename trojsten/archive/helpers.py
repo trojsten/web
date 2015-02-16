@@ -9,7 +9,7 @@ def get_rounds_by_year(user, competition):
     ).filter(
         series__competition=competition
     ).order_by(
-        '-series__year', '-number'
+        '-series__year', '-series__number', '-number'
     ).select_related('series__year')
     rounds_dict = defaultdict(list)
     for round in rounds:
