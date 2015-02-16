@@ -109,4 +109,4 @@ def school_year(school_year):
     if school_year < 1:
         school_year += 9
         is_elementary = True
-    return '%d%s' % (school_year, 'zš' if is_elementary else '')
+    return '{}{}'.format(school_year, 'zš' if is_elementary else '')
