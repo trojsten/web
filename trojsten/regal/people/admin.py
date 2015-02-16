@@ -67,7 +67,7 @@ class UserAdmin(DefaultUserAdmin):
         (_('Address'), {'fields': ('home_address', 'mailing_address')}),
         (_('School'), {'fields': ('school', 'graduation')}),
     )
-    superuseronly_fieldsets = (
+    superuser_fieldsets = fieldsets + (
         (_('Permissions'), {'fields': (
             'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'
         )}),
@@ -83,9 +83,10 @@ class UserAdmin(DefaultUserAdmin):
         )
 
     def get_fieldsets(self, request, obj=None):
-        if request.user.is_superuser:
-            self.fieldsets += self.superuseronly_fieldsets
-        return super(UserAdmin, self).get_fieldsets(request, obj)
+        if obj is None or not request.user.is_superuser:
+            return super(UserAdmin, self).get_fieldsets(request, obj)
+        else:
+            return self.superuser_fieldsets
 
     def get_groups(self, obj):
         return ', '.join(force_text(x) for x in obj.groups.all())
