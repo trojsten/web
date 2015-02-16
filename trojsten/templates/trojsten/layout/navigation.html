@@ -1,33 +1,101 @@
 {% load utils staticfiles %}
 {% block page_navigation %}
 <div class="sidebar">
+    {% if SITE.HAS_LOGO %}
+        <h2 class="logo">
+            <a href="{{ SITE.URL }}">
+                <img id="logo" src="{% static "images/"|add:SITE.FOLDER|add:"/logo.png" %}" alt="KSP"/>
+            </a>
+        </h2>
+    {% endif %}
     <ul class="nav nav-pills nav-stacked" id="main_menu">
-        {% if SITE.HAS_LOGO %}
-            <h2 class="logo"><a href="{{ SITE.URL }}"><img id="logo" src="{% static "images/"|add:SITE.FOLDER|add:"/logo.png" %}" alt="KSP"/></a></h2>
-        {% endif %}
-        <li class="{% current '^/$' %}"><a href="/?home">Domov <span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-        <li class="{% current 'news_list' %}" ><a href="{% url 'news_list' page=1 %}">Novinky <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a></li>
-        <li class="{% current '^/archiv/$' %}"><a href="/archiv/">Archív <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span></a></li>
-        <h2>Aktuálne</h2>
-        <li class="{% current 'active_rounds_task_list' %} {% current 'task_list' %} {% current 'task_statement' %} {% current 'solution_statement' %}"><a href="{% url 'active_rounds_task_list' %}">Zadania a vzoráky <span class="glyphicon glyphicon-list" aria-hidden="true"></span></a></li>
-        <li class="{% current 'view_latest_results' %} {% current 'view_results' %}"><a href="{% url 'view_latest_results' %}">Výsledky <span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span></a></li>
-        <li class="{% current 'active_rounds_submit_page' %} {% current 'task_submit_page' %} {% current 'round_submit_page' %}"><a href="{% url 'active_rounds_submit_page' %}">Odovzdávanie <span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a></li>
-        <h2>Akcie</h2>
-        <li><a href="http://klub.trojsten.sk/">Klub <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a></li>
-        <li><a href="http://akademia.trojsten.sk">Akadémia <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span></a></li>
-        <h2>Ostatné</h2>
-        <li class="{% current '^/faq/$' %}"><a href="/faq/">FAQ <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a></li>
-        <li class="{% current '^/pravidla/$' %}"><a href="/pravidla/">Pravidlá <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a></li>
-        <li class="{% current '^/organizatori/$' %}"><a href="/organizatori/">Organizátori <span class="glyphicon glyphicon-star" aria-hidden="true"></span></a></li>
-        <li><a href="https://liahen.ksp.sk/">Liaheň <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
+        <li class="{% current '^/$' %}">
+            <a href="/?home">
+                Domov <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li class="{% current 'news_list' %}" >
+            <a href="{% url 'news_list' page=1 %}">
+                Novinky <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li class="{% current '^/archiv/$' %}">
+            <a href="/archiv/">
+                Archív <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li>
+            <h2>Aktuálne</h2>
+        </li>
+        <li class="{% current 'active_rounds_task_list' %} {% current 'task_list' %} {% current 'task_statement' %} {% current 'solution_statement' %}">
+            <a href="{% url 'active_rounds_task_list' %}">
+                Zadania a vzoráky <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li class="{% current 'view_latest_results' %} {% current 'view_results' %}">
+            <a href="{% url 'view_latest_results' %}">
+                Výsledky <span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li class="{% current 'active_rounds_submit_page' %} {% current 'task_submit_page' %} {% current 'round_submit_page' %}">
+            <a href="{% url 'active_rounds_submit_page' %}">
+                Odovzdávanie <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li>
+            <h2>Akcie</h2>
+        </li>
+        <li>
+            <a href="http://klub.trojsten.sk/">
+                Klub <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li>
+            <a href="http://akademia.trojsten.sk">
+                Akadémia <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li>
+            <h2>Ostatné</h2>
+        </li>
+        <li class="{% current '^/faq/$' %}">
+            <a href="/faq/">
+                FAQ <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li class="{% current '^/pravidla/$' %}">
+            <a href="/pravidla/">
+                Pravidlá <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li class="{% current '^/organizatori/$' %}">
+            <a href="/organizatori/">
+                Organizátori <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li>
+            <a href="https://liahen.ksp.sk/">
+                Liaheň <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
+            </a>
+        </li>
         {% if user.is_staff %}
-        <h2>Vedúci</h2>
-        <li class="{% current '^/veduci/.*$' %}"><a href="/veduci/">Vedúcovská wiki <span class="glyphicon glyphicon-book" aria-hidden="true"></span></a></li>
+        <li>
+            <h2>Vedúci</h2>
+        </li>
+        <li class="{% current '^/veduci/.*$' %}">
+            <a href="/veduci/">
+                Vedúcovská wiki <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
+            </a>
+        </li>
         {% endif %}
-        <h2 class="visible-xs">Iné semináre</h2>
+        <li class="visible-xs">
+            <h2>Iné semináre</h2>
+        </li>
         {%for OTHER_SITE in OTHER_SITES %}
         <li class="visible-xs">
-            <a href="{{ OTHER_SITE.URL }}">{{ OTHER_SITE.SHORT_NAME }}</a>
+            <a href="{{ OTHER_SITE.URL }}">
+                {{ OTHER_SITE.SHORT_NAME }}
+            </a>
         </li>
         {% endfor %}
     </ul>
