@@ -1,10 +1,12 @@
-from fabric.api import run, cd, prefix, env
+from fabric.api import run, cd, prefix, env, get
 import os
+import time
 
 PROJECT_PATH = '~/web'
 LOCAL = False
 DEFAULT_VIRTUALENV_NAME = 'trojstenweb'
 VIRTUALENV_NAME = 'trojstenweb'
+DB_NAME = 'trojsten'
 
 def _reset_env():
     global PROJECT_PATH
@@ -15,24 +17,30 @@ def _reset_env():
     VIRTUALENV_NAME = DEFAULT_VIRTUALENV_NAME
 
 def beta():
+    global DB_NAME
     _reset_env()
     env.user = 'betakspweb'
     env.hosts = ['archiv.ksp.sk']
+    DB_NAME = 'betakspweb'
 
 def prod():
+    global DB_NAME
     _reset_env()
     env.user = 'trojstenweb'
     env.hosts = ['archiv.ksp.sk']
+    DB_NAME = 'trojstenweb'
 
 def local(venvname=DEFAULT_VIRTUALENV_NAME):
     global PROJECT_PATH
     global LOCAL
     global VIRTUALENV_NAME
+    global DB_NAME
     env.user = os.environ.get('USER')
     env.hosts = ['localhost']
     PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
     LOCAL = True
     VIRTUALENV_NAME = venvname
+    DB_NAME = 'trojsten'
 
 def pull():
     with cd(PROJECT_PATH):
@@ -68,7 +76,7 @@ def restart_wsgi():
 
 def write_version_txt():
     with cd(PROJECT_PATH):
-        run('git log --pretty=format:"%h %cd" -n 1 --date=short > version.txt')
+        run('git log --no-merges --pretty=format:"%h %cd" -n 1 --date=short > version.txt')
         run('echo >> version.txt')
 
 def enable_maintenance_mode():
@@ -76,6 +84,29 @@ def enable_maintenance_mode():
 
 def disable_maintenance_mode():
     run('rm -f ~/maintenance')
+
+def dump_sql():
+    run('mkdir -p db-dumps')
+    filename = str(int(time.time()))
+    with cd('db-dumps'):
+        run('pg_dump -c %s > %s.sql' % (DB_NAME, filename))
+        run('rm -f latest.sql')
+        run('ln -s %s.sql latest.sql' % filename)
+
+def get_latest_dump():
+    run('mkdir -p db-dumps')
+    with cd('db-dumps'):
+        get('latest.sql')
+
+def freeze_results(*args):
+    with cd(PROJECT_PATH):
+        with prefix('workon %s' % VIRTUALENV_NAME):
+            run('python manage.py freeze_results ' + ' '.join(args))
+
+def branch(name):
+    with cd(PROJECT_PATH):
+        run('git fetch')
+        run('git checkout %s' % name)
 
 def update():
     if not LOCAL:
