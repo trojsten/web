@@ -103,6 +103,11 @@ def freeze_results(*args):
         with prefix('workon %s' % VIRTUALENV_NAME):
             run('python manage.py freeze_results ' + ' '.join(args))
 
+def branch(name):
+    with cd(PROJECT_PATH):
+        run('git fetch')
+        run('git checkout %s' % name)
+
 def update():
     if not LOCAL:
         enable_maintenance_mode()
