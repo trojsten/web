@@ -68,7 +68,7 @@ def restart_wsgi():
 
 def write_version_txt():
     with cd(PROJECT_PATH):
-        run('git log --pretty=format:"%h %cd" -n 1 --date=short > version.txt')
+        run('git log --no-merges --pretty=format:"%h %cd" -n 1 --date=short > version.txt')
         run('echo >> version.txt')
 
 def enable_maintenance_mode():
