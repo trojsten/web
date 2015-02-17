@@ -98,6 +98,11 @@ def get_latest_dump():
     with cd('db-dumps'):
         get('latest.sql')
 
+def freeze_results(*args):
+    with cd(PROJECT_PATH):
+        with prefix('workon %s' % VIRTUALENV_NAME):
+            run('python manage.py freeze_results ' + ' '.join(args))
+
 def update():
     if not LOCAL:
         enable_maintenance_mode()
