@@ -89,7 +89,7 @@ def dump_sql():
     run('mkdir -p db-dumps')
     filename = str(int(time.time()))
     with cd('db-dumps'):
-        run('pg_dump %s > %s.sql' % (DB_NAME, filename))
+        run('pg_dump -c %s > %s.sql' % (DB_NAME, filename))
         run('rm -f latest.sql')
         run('ln -s %s.sql latest.sql' % filename)
 
