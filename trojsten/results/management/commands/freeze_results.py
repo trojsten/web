@@ -15,6 +15,7 @@ class Command(BaseCommand):
             frozenresults=frozen_results,
             original_user=result.user,
             rank=result.data.rank,
+            prev_rank=result.data.prev_rank,
             fullname=result.user.get_full_name(),
             school_year=result.user.school_year,
             school=result.user.school,
@@ -32,13 +33,16 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def freeze_round(self, round, category, single_round):
+        results_table = make_result_table(
+            AnonymousUser(), round, category, single_round, force_generate=True
+        )
+
         frozen_results = FrozenResults.objects.create(
             round=round,
             is_single_round=single_round,
-            category=category
+            category=category,
+            has_previous_results=results_table.has_previous_results,
         )
-
-        results_table = make_result_table(AnonymousUser(), round, category, single_round)
 
         for result in results_table.results_data:
             tasks = filter(
