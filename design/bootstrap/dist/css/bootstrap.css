@@ -9530,8 +9530,11 @@ footer {
   height: 80px;
   background-color: #111;
 }
+footer .container {
+  padding-top: 20px;
+}
 footer ul {
-  margin: 20px 0;
+  margin-bottom: 0;
 }
 .glyphicon-animate-rotate {
   -webkit-animation: spin2 .7s infinite linear;
