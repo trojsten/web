@@ -6,6 +6,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from django.utils.encoding import force_text
 from django.utils.html import escape
+from django.utils.translation import ugettext_lazy as _
 
 from easy_select2.widgets import Select2
 
@@ -58,17 +59,34 @@ class UserAdmin(DefaultUserAdmin):
         models.ForeignKey: {'widget': Select2()}
     }
 
-    def __init__(self, *args, **kwargs):
-        super(UserAdmin, self).__init__(*args, **kwargs)
-        self.fieldsets += (('Extra', {'fields': ('gender', 'birth_date', 'home_address',
-                                                 'mailing_address', 'school', 'graduation')}),)
-        self.inlines = (UserPropertyInLine,)
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        (_('Personal info'), {'fields': (
+            'first_name', 'last_name', 'email', 'gender', 'birth_date'
+        )}),
+        (_('Address'), {'fields': ('home_address', 'mailing_address')}),
+        (_('School'), {'fields': ('school', 'graduation')}),
+    )
+    superuser_fieldsets = fieldsets + (
+        (_('Permissions'), {'fields': (
+            'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'
+        )}),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+    )
+
+    inlines = (UserPropertyInLine,)
 
     def get_queryset(self, request):
         qs = super(UserAdmin, self).get_queryset(request)
         return qs.select_related('school').prefetch_related(
             'groups', 'properties__key'
         )
+
+    def get_fieldsets(self, request, obj=None):
+        if obj is None or not request.user.is_superuser:
+            return super(UserAdmin, self).get_fieldsets(request, obj)
+        else:
+            return self.superuser_fieldsets
 
     def get_groups(self, obj):
         return ', '.join(force_text(x) for x in obj.groups.all())
@@ -81,7 +99,9 @@ class UserAdmin(DefaultUserAdmin):
             show = obj.school.abbreviation
         else:
             show = obj.school.verbose_name
-        return '<span title="%s">%s</span>' % (escape(force_text(obj.school)), escape(force_text(show)))
+        return '<span title="%s">%s</span>' % (
+            escape(force_text(obj.school)), escape(force_text(show))
+        )
     get_school.short_description = 'škola'
     get_school.admin_order_field = 'school'
     get_school.allow_tags = True
