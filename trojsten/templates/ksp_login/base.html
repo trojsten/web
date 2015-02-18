@@ -9,11 +9,11 @@
 
 {% block javascript %}
 {{ block.super }}
-<script src="{{ STATIC_URL }}js/jquery-ui.min.js"></script>
 <script src="{{ STATIC_URL }}js/correspondence-address.js"></script>
 <script src="{{ STATIC_URL }}js/settings-datepicker.js"></script>
 <script src="{{ STATIC_URL }}js/moment.min.js"></script>
 <script src="{{ STATIC_URL }}js/bootstrap-datetimepicker.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap.min.js"</script>
 <script type="text/javascript" src="{{ STATIC_URL }}easy_select2/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}easy_select2/js/init.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}easy_select2/js/easy_select2.js"></script>
@@ -23,8 +23,6 @@
 
 {% block stylesheets %}
 {{ block.super }}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-base.css" type="text/css">
-<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui-smoothness.css" type="text/css">
 <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css" type="text/css">
 <link rel="stylesheet" href="{{ STATIC_URL }}easy_select2/vendor/select2/select2.min.css" type="text/css">
 <link rel="stylesheet" href="{{ STATIC_URL }}css/select2-bootstrap.css" type="text/css">
