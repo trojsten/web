@@ -72,7 +72,7 @@ class UserResult(object):
         self.previous_rounds_points = previous_rounds_points
 
 
-class FrozenUserResult(TaskPoints):
+class FrozenUserResult(UserResult):
     '''frozen version of UserResult'''
     def __init__(self, sum=0, previous_rounds_points=0, rank=None, prev_rank=None):
         super(FrozenUserResult, self).__init__()
