@@ -4,12 +4,7 @@ from django.shortcuts import render, get_object_or_404
 
 from trojsten.regal.tasks.models import Category
 from trojsten.regal.contests.models import Round
-
-
-def is_true(value):
-    '''Converts GET parameter value to bool
-    '''
-    return bool(value) and value.lower() not in ('false', '0')
+from trojsten.utils.utils import is_true
 
 
 def view_results(request, round_id, category_id=None):

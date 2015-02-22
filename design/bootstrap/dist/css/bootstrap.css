@@ -9505,6 +9505,9 @@ footer a:visited {
   width: 1ex;
   text-align: center;
 }
+.tab-pane > .roundprogressbar {
+  margin-top: 1em;
+}
 /* task statements */
 .btn-statements {
   min-width: 20%;

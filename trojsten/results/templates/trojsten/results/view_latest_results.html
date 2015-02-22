@@ -1,5 +1,5 @@
 {% extends "trojsten/layout/main.html" %}
-{% load results_parts archive_parts%}
+{% load results_parts archive_parts statements_parts %}
 {% load utils %}
 
 {% block title %}Aktuálne výsledky{% endblock %}
@@ -44,7 +44,7 @@
                 {% if category != None %}
                     {% is_frozen round single_round as results_are_final %}
                     {% if not results_are_final %}
-                        <div class="alert alert-warning">Výsledky sú predbežné.</div>
+                        {% show_progress round results=True %}
                     {% endif %}
                     {% show_results_table round=round category=category %}
                 {% endif %}
@@ -55,7 +55,7 @@
              id="category-tab-{{ round.id }}">
             {% is_frozen round single_round as results_are_final %}
             {% if not results_are_final %}
-                <div class="alert alert-warning">Výsledky sú predbežné.</div>
+                {% show_progress round results=True %}
             {% endif %}
             {% show_results_table round=round %}
         </div>

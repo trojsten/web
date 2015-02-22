@@ -10,6 +10,7 @@ from sendfile import sendfile
 
 from trojsten.regal.tasks.models import Task
 from trojsten.regal.contests.models import Round, Competition
+from trojsten.utils.utils import is_true
 
 from .tasks import compile_task_statements
 
@@ -90,7 +91,7 @@ def show_picture(request, type, task_id, picture):
     if not task.visible(request.user):
         raise Http404
     _, ext = os.path.splitext(picture)
-    if not ext in settings.ALLOWED_PICTURE_EXT:
+    if ext not in settings.ALLOWED_PICTURE_EXT:
         raise Http404
     path = os.path.join(
         task.round.get_pictures_path(),
@@ -100,3 +101,16 @@ def show_picture(request, type, task_id, picture):
         return sendfile(request, path)
     else:
         raise Http404
+
+
+def ajax_progressbar(request, round_id):
+    round = get_object_or_404(Round.objects.visible(request.user), pk=round_id)
+    template_data = {
+        'round': round,
+        'results': is_true(request.GET.get('results', False)),
+    }
+    return render(
+        request,
+        'trojsten/task_statements/ajax/progress.html',
+        template_data,
+    )
