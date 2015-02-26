@@ -30,6 +30,7 @@ class EventType(models.Model):
     organizers_group = models.ForeignKey(
         Group, verbose_name='skupina vedúcich'
     )
+    is_camp = models.BooleanField(verbose_name='sústredko')
 
     objects = EventTypeManager()
 
@@ -100,6 +101,7 @@ class Event(models.Model):
     place = models.ForeignKey(Place, verbose_name='miesto')
     start_time = models.DateTimeField(verbose_name='čas začiatku')
     end_time = models.DateTimeField(verbose_name='čas konca')
+    registration_deadline = models.DateTimeField(verbose_name='deadline pre registráciu')
     text = models.TextField(help_text='Obsah bude prehnaný <a '
                             'href="http://en.wikipedia.org/wiki/Markdown">'
                             'Markdownom</a>.', default='', blank=True)

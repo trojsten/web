@@ -13,7 +13,6 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.contrib import messages
-from django.conf import settings
 
 from .models import Event, Invitation, EventType
 from .forms import RegistrationForm
@@ -119,8 +118,7 @@ event_list = EventListView.as_view()
 
 class CampEventListView(EventListView):
     queryset = EventType.objects.current_site_only().filter(
-        pk__in=settings.CAMP_EVENT_IDS
+        is_camp=True
     ).prefetch_related('event_set')
     title = 'Sústredenia'
-
 camp_event_list = CampEventListView.as_view()
