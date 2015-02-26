@@ -2,6 +2,9 @@
 
 from __future__ import unicode_literals
 
+from datetime import datetime
+import pytz
+
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
@@ -44,6 +47,8 @@ class RegistrationView(FormView):
     def get_context_data(self, **kwargs):
         context = super(RegistrationView, self).get_context_data(**kwargs)
         context['show_form'] = context['form'].invite.going is None
+        context['after_deadline'] =\
+            context['form'].invite.event.registration_deadline < datetime.now(pytz.utc)
         return context
 
     def get_form_kwargs(self):

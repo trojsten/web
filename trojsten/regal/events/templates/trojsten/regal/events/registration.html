@@ -15,28 +15,35 @@
 
 {% block page_content %}
 {% if show_form %}
-    {{ form.invite.event.registration.rendered_text }}
-    <form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
-        {% csrf_token %}
-        {% for field in form.hidden_fields %}
-            {{ field }}
-        {% endfor %}
-        {% for field  in form.visible_fields %}
-            {% if field.html_name != 'going' %}
-                <div class="hidable_field">
-                    {{ field | bootstrap_horizontal }}
-                </div>
-            {% else %}
-                {{ field | bootstrap_horizontal }}
-            {% endif %}
-        {% endfor %}
-
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <input class="btn btn-primary" type="submit" value="Submit" />
-            </div>
+    {% if after_deadline %}
+        <div class="alert alert-warning" role="alert">
+            Už je po deadline na prihlasovanie. Ak sa chceš prihlásiť, môžeš skúsiť napísať vedúcemu.
         </div>
-    </form>
+    {% else %}
+        {{ form.invite.event.registration.rendered_text }}
+        <form class="form-horizontal" enctype="multipart/form-data" method="post" action="">
+            {% csrf_token %}
+            {% for field in form.hidden_fields %}
+                {{ field }}
+            {% endfor %}
+            {% for field  in form.visible_fields %}
+                {% if field.html_name != 'going' %}
+                    <div class="hidable_field">
+                        {{ field | bootstrap_horizontal }}
+                    </div>
+                {% else %}
+                    {{ field | bootstrap_horizontal }}
+                {% endif %}
+            {% endfor %}
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <input class="btn btn-primary" type="submit" value="Submit" />
+                </div>
+            </div>
+        </form>
+
+    {% endif %}
 {% else %}
     <ul class="list-unstyled">
     {% for field  in form.visible_fields %}
