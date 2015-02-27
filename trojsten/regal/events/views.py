@@ -103,6 +103,16 @@ class EventView(DetailView):
     context_object_name = 'event'
     pk_url_kwarg = 'event_id'
 
+    def get_context_data(self, **kwargs):
+        context = super(EventView, self).get_context_data(**kwargs)
+        context['invited'] = (
+            context['event'].registration
+            and Invitation.objects.select_related(
+                'event__registration', 'user'
+            ).filter(user=self.request.user, event=context['event']).exists()
+        )
+        return context
+
 event_detail = EventView.as_view()
 
 
