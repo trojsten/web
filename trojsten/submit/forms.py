@@ -12,7 +12,7 @@ class SourceSubmitForm(forms.Form):
         (".cc", "C++ (.cpp/.cc)"),
         (".pas", "Pascal (.pas/.dpr)"),
         (".c", "C (.c)"),
-        (".py", "Python 3.2 (.py/.py3)"),
+        (".py", "Python 3.4 (.py/.py3)"),
         (".hs", "Haskell (.hs)"),
         (".cs", "C# (.cs)"),
         (".java", "Java (.java)")
