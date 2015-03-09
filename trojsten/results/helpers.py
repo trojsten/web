@@ -89,6 +89,20 @@ class FrozenUserResult(UserResult):
         self.tasks[task.id] = frozen_task_points
 
 
+class FrozenUser(object):
+    def __init__(self, user, full_name, school_year, school):
+        self._user = user
+        self._full_name = full_name
+        self.school_year = school_year
+        self.school = school
+
+    def get_full_name(self):
+        return self._full_name
+
+    def __getattr__(self, name):
+        return getattr(self._user, name)
+
+
 def get_results_data(submits):
     '''Returns results data for each user who has submitted at least one task
     '''
@@ -151,20 +165,13 @@ def format_results_data(results_data, compute_rank=True):
 
 
 def get_frozen_results(round, category=None, single_round=False):
-    def freeze_property(obj, propname, val):
-        frozen_prop = '__frozen__%s' % propname
-        setattr(obj, frozen_prop, val)
-        setattr(
-            obj.__class__,
-            propname,
-            property(lambda self: getattr(self, frozen_prop)),
-        )
-
     def create_frozen_user(frozen_result):
-        u = frozen_result.original_user
-        u.get_full_name = lambda: frozen_result.fullname
-        freeze_property(u, 'school_year', frozen_result.school_year)
-        u.school = frozen_result.school
+        u = FrozenUser(
+            frozen_result.original_user,
+            frozen_result.fullname,
+            frozen_result.school_year,
+            frozen_result.school,
+        )
         return u
 
     frozen_results = FrozenResults.objects.filter(
