@@ -44,7 +44,7 @@ class EventType(models.Model):
 
 @python_2_unicode_compatible
 class Link(models.Model):
-    title = models.CharField(max_length=100, verbose_name='názov')
+    title = models.CharField(max_length=100, verbose_name='titulok')
     name = models.CharField(max_length=300, verbose_name='meno')
     url = models.URLField(max_length=300)
 
