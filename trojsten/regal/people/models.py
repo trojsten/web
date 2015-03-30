@@ -13,14 +13,15 @@ from . import constants
 
 class UserManager(DjangoUserManager):
     def invited_to(self, event, invitation_type=None, going_only=False):
-        res = self.filter(
-            invitation__event=event
-        )
+        filters = {
+            'invitation__event': event
+        }
         if invitation_type is not None:
-            res = res.filter(invitation__type=invitation_type)
+            filters['invitation__type'] = invitation_type
         if going_only:
-            res = res.filter(invitation__going=True)
-        return res.distinct()
+            filters['invitation__going'] = True
+
+        return self.filter(**filters)
 
 
 @python_2_unicode_compatible
