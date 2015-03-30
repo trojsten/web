@@ -4,7 +4,25 @@
 {% block title %}{{ event }}{% endblock %}
 
 {% block page_header %}
-<h1>{{ event.name }} <small>{{ event.place.name }}, {{ event.start_time|date:'d.m.Y' }} - {{ event.end_time|date:'d.m.Y' }}</small></h1>
+
+<ul class="nav nav-pills">
+  <li class="pull-left" id="article-title-li">
+    <h1>
+        {{ event.name }}<br/>
+        <small>
+            {{ event.place.name }}, {{ event.start_time|date:'d.m.Y' }} - {{ event.end_time|date:'d.m.Y' }}
+        </small>
+    </h1>
+  </li>
+  {% is_organizer competition=event.type as is_organizer %}
+  {% if is_organizer %}
+      <li class="pull-right">
+        <a href="{% url 'admin:events_event_change' event.id %}">
+            <span class="glyphicon glyphicon-edit"></span> Upraviť akciu
+        </a>
+      </li>
+  {% endif %}
+</ul>
 {% endblock %}
 
 {% block page_content %}
