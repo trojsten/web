@@ -45,6 +45,7 @@ class EventType(models.Model):
 @python_2_unicode_compatible
 class Link(models.Model):
     title = models.CharField(max_length=100, verbose_name='názov')
+    name = models.CharField(max_length=300, verbose_name='meno')
     url = models.URLField(max_length=300)
 
     class Meta:
@@ -52,7 +53,7 @@ class Link(models.Model):
         verbose_name_plural = 'odkazy'
 
     def __str__(self):
-        return '%s(%s)' % (self.title, self.url)
+        return '%s(%s)' % (self.name, self.url)
 
 
 @python_2_unicode_compatible
@@ -101,7 +102,9 @@ class Event(models.Model):
     place = models.ForeignKey(Place, verbose_name='miesto')
     start_time = models.DateTimeField(verbose_name='čas začiatku')
     end_time = models.DateTimeField(verbose_name='čas konca')
-    registration_deadline = models.DateTimeField(verbose_name='deadline pre registráciu')
+    registration_deadline = models.DateTimeField(
+        verbose_name='deadline pre registráciu', blank=True, null=True
+    )
     text = models.TextField(help_text='Obsah bude prehnaný <a '
                             'href="http://en.wikipedia.org/wiki/Markdown">'
                             'Markdownom</a>.', default='', blank=True)

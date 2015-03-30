@@ -20,7 +20,7 @@ class UserManager(DjangoUserManager):
             res = res.filter(invitation__type=invitation_type)
         if going_only:
             res = res.filter(invitation__going=True)
-        return res
+        return res.distinct()
 
 
 @python_2_unicode_compatible

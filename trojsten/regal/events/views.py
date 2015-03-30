@@ -106,7 +106,8 @@ class EventView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(EventView, self).get_context_data(**kwargs)
         context['invited'] = (
-            context['event'].registration
+            self.request.user.is_authenticated()
+            and context['event'].registration
             and Invitation.objects.select_related(
                 'event__registration', 'user'
             ).filter(user=self.request.user, event=context['event']).exists()

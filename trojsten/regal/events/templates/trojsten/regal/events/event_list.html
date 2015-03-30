@@ -29,9 +29,9 @@
          id="eventtype-tab-{{ event_type.id }}">
         <div class="list-group">
         {% for event in event_type.event_set.all %}
-        <a href="{% url 'event_detail' event_id=event.id %}" class="list-group-item">{{ event }} <small>{{ event.place.name }}, {{ event.start_time|date:'d.m.Y' }} - {{ event.end_time|date:'d.m.Y' }}</small></a>
+            <a href="{% url 'event_detail' event_id=event.id %}" class="list-group-item">{{ event }} <small>{{ event.place.name }}, {{ event.start_time|date:'d.m.Y' }} - {{ event.end_time|date:'d.m.Y' }}</small></a>
         {% empty %}
-        <span class="list-group-item">Žiadne akcie</span>
+            <span class="list-group-item">Žiadne akcie</span>
         {% endfor %}
         </div>
     </div>
