@@ -1,0 +1,33 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% block title %}Kocúrkovo{% endblock %}
+
+{% block page_header %}
+  <h1>{{ street }} {{ number }}, Kocúrkovo</h1>
+{% endblock %}
+
+{% block page_content %}
+
+  <div class="text-center">
+    <h2>
+      Na tejto ulici máš už navštívených 100 domoch.
+      Neukážeme ti kocúra. Choď do iného vesmíru!
+    </h2>
+  </div>
+
+  <h3>Portál do paralelného vesmíru</h3>
+  <p>
+    Čo takto skúsiť ulicu reštartovať?
+    <a
+      href="{% url 'plugin_prask_1_2_1_reset' category=category %}"
+      class="btn btn-default"
+    > Reštartuj ulicu </a>
+  <p>
+
+  <h3>Rázcestie</h3>
+  <p>Alebo ju zmeňiť?</p>
+  {% include 'plugin_prask_1_2_1/_streets.html'%}
+
+{% endblock %}
+
+

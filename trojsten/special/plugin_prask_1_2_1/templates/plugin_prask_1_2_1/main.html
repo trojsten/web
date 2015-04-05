@@ -1,0 +1,82 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% block title %}Kocúrkovo{% endblock %}
+
+{% block page_header %}
+  {% if number %}
+    <h1>{{ street }} {{ number }}, Kocúrkovo</h1>
+  {% else %}
+    <h1>Ulica {{ street }}, Kocúrkovo</h1>
+  {% endif %}
+{% endblock %}
+
+{% block page_content %}
+
+  <div class="text-center">
+    {% if number%}
+
+      <img
+        src="http://thecatapi.com/api/images/get?format=src&type=gif&size=med"
+        alt="Kocúr"
+        class="img-responsive center-block"
+      />
+      <h2> {{ response }} <h2>
+    {% endif %}
+    {% if points %}
+      <h2>Za túto ulicu máš zatiaľ {{ points }} body.<h2>
+    {% else %}
+      <h2>Za túto ulicu zatiaľ nemáš žiadne body.<h2>
+    {% endif %}
+  </div>
+
+
+  <h3>Nová návšteva</h3>
+  <form
+    class="form-inline"
+    method="POST"
+    action="{% url 'plugin_prask_1_2_1_post' category=category %}"
+  >
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="number">Číslo domu: </label>
+      <input
+        type="number"
+        min="1"
+        max="1000"
+        class="form-control"
+        name="number"
+        autofocus
+      />
+    </div>
+    <button type="submit" class="btn btn-default">Navštív</button>
+  </form>
+
+  {% if previous %}
+    <h3>Predošlé návštevy</h3>
+    <table class="table">
+      <tbody>
+        {% for visit in previous %}
+          <tr><td>
+            V dome číslo {{ visit.number }} povedali: „{{ visit.formatted_response }}.“
+          </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  <h3>Portál do paralelného vesmíru</h3>
+  <p>
+    Nepáčia sa Ti tvoje výsledky?
+    <a
+      href="{% url 'plugin_prask_1_2_1_reset' category=category %}"
+      class="btn btn-default"
+    > Reštartuj ulicu </a>
+  <p>
+
+  <h3>Rázcestie</h3>
+  <p>Alebo chceš zmenu?</p>
+  {% include 'plugin_prask_1_2_1/_streets.html'%}
+
+{% endblock %}
+
+

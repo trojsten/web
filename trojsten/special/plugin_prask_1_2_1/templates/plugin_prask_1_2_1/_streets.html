@@ -1,0 +1,10 @@
+<ul>
+  {% for category, street in streets %}
+    <li>
+      <a
+        href="{% url 'plugin_prask_1_2_1_main' category=category %}"
+        class="btn btn-default"
+      > {{ street}} </a>
+    </li>
+  {% endfor %}
+</ul>
