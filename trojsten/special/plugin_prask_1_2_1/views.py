@@ -116,7 +116,7 @@ def reset(request, category):
 def post(request, category):
     try:
         number = request.POST['number']
-    except ValueError:
+    except MultiValueDictKeyError:
         number = 0
 
     return redirect(reverse(
