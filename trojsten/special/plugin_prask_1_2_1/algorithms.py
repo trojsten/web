@@ -25,9 +25,9 @@ class A(object):
             return A.LESS, state, False
 
         if maxi == mini:
-            if len(previous) < 10:
+            if len(previous) < 12:
                 return 3, state, True
-            if len(previous) < 20:
+            if len(previous) < 24:
                 return 2, state, True
             return 1, state, True
 
@@ -142,9 +142,9 @@ class C(object):
             return C._answer(number, state)
 
         if maxi == mini:
-            if len(previous) < 11:
+            if len(previous) < 15:
                 return 3, state, True
-            if len(previous) < 25:
+            if len(previous) < 30:
                 return 2, state, True
             return 1, state, True
 
