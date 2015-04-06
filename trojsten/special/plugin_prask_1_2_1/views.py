@@ -53,7 +53,7 @@ def main(request, category, number=0):
             if solved:
                 if inst.points < response:
                     inst.points = response
-                    #update_points(request.user)
+                    update_points(request.user)
                 response = GRATULATION % (len(previous) + 1)
             else:
                 visit = Visit(
@@ -82,7 +82,7 @@ def main(request, category, number=0):
             "category": category,
             "number": number,
             "response": response,
-            "previous": previous,
+            "previous": reversed(previous),
             "points": inst.points
         })
 
@@ -122,4 +122,4 @@ def post(request, category):
 
 
 def _streets():
-    return {(key, ALL[key].NAME) for key in ALL}
+    return [(key, ALL[key].NAME) for key in ['A', 'B', 'C']]

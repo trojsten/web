@@ -31,7 +31,7 @@ class A(object):
                 return 2, state, True
             return 1, state, True
 
-        if number - mini > maxi - number:
+        if number - mini + random.randint(0, 1) > maxi - number:
             return A.LESS, (mini, number-1), False
         else:
             return A.MORE, (number+1, maxi), False
@@ -106,7 +106,11 @@ class B(object):
 
     @staticmethod
     def format(response):
-        return 'Prefíkanosť nášho kocúra je %00.3f %%' % (response / 1000.0)
+        if response < 5000:
+            scaled = (response * 180) + 5000
+        else:
+            scaled = response + 900000
+        return 'Prefíkanosť nášho kocúra je %.4f %%' % (scaled / 10000.0)
 
     @staticmethod
     def _check(result, mini, midi, maxi, base):
@@ -123,15 +127,53 @@ class C(object):
 
     @staticmethod
     def get_initial_state():
-        border = (random.randint(21, 79) + 100*random.randint(0, 1))*1000
-        return [border]
+        reverse = bool(random.randint(0, 1))
+        border = (random.randint(21, 79))*100
+        return [2, 999, 0, border, reverse]
 
     @staticmethod
     def response(number, state, previous):
-        return 0, [], True
+        mini, maxi, split, border, reverse = state
+
+        if reverse:
+            number = 1001 - number
+
+        if mini > number or number > maxi:
+            return C._answer(number, state)
+
+        if maxi == mini:
+            if len(previous) < 11:
+                return 3, state, True
+            if len(previous) < 25:
+                return 2, state, True
+            return 1, state, True
+
+        if number - mini + random.randint(0, 1) > maxi - number:
+            if random.randint(0, 9) == 0:
+                split = number
+            return C._answer(number, (mini, number-1, split, border, reverse))
+        else:
+            return C._answer(number, (number+1, maxi, split, border, reverse))
 
     @staticmethod
     def format(response):
-        return 'Prefíkanosť nášho kocúra je %.3f %%' % (response / 1000.0)
+        return 'Prefíkanosť nášho kocúra je %.2f %%' % (response / 100.0)
+
+    @staticmethod
+    def _answer(number, state):
+        mini, maxi, split, border, reverse = state
+
+        if number < mini:
+            result = border + number
+        if number > maxi:
+            if number <= split:
+                result = (2000 - (split-number)) * 10
+            else:
+                result = border - (1001-number)
+
+        if reverse:
+            result = 20000-result
+
+        return result, state, False
 
 ALL = {'A': A, 'B': B, 'C': C}

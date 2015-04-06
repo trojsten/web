@@ -14,7 +14,6 @@
 
   <div class="text-center">
     {% if number%}
-
       <img
         src="http://thecatapi.com/api/images/get?format=src&type=gif&size=med"
         alt="Kocúr"
@@ -22,11 +21,7 @@
       />
       <h2> {{ response }} <h2>
     {% endif %}
-    {% if points %}
-      <h2>Za túto ulicu máš zatiaľ {{ points }} body.<h2>
-    {% else %}
-      <h2>Za túto ulicu zatiaľ nemáš žiadne body.<h2>
-    {% endif %}
+    <h2>Počet bodov, ktoré si zatiaľ na tejto ulici získal je {{ points }}.</h2>
   </div>
 
 
