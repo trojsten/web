@@ -33,6 +33,8 @@ def main(request, category, number=0):
 
     algorithm = ALL[category]
 
+    should_update = False
+
     with transaction.atomic():
         inst, created = UserCategory.objects.get_or_create(
             category=category,
@@ -53,7 +55,7 @@ def main(request, category, number=0):
             if solved:
                 if inst.points < response:
                     inst.points = response
-                    update_points(request.user)
+                    should_update = True
                 response = GRATULATION % (len(previous) + 1)
             else:
                 visit = Visit(
@@ -68,6 +70,9 @@ def main(request, category, number=0):
 
         inst.state = json.dumps(state)
         inst.save()
+
+    if should_update:
+        update_points(request.user)
 
     if len(previous) >= 100:
         return render(request, 'plugin_prask_1_2_1/out.html', {
