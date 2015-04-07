@@ -39,9 +39,9 @@ class A(object):
     @staticmethod
     def format(response):
         if response == A.MORE:
-            return 'Prefíkaný kocúr býva vyššie'
+            return 'Prefíkaný kocúr býva v dome s vyšším číslom.'
         else:
-            return 'Prefíkaný kocúr býva nižšie'
+            return 'Prefíkaný kocúr býva v dome s nižším číslom.'
 
 
 class B(object):
