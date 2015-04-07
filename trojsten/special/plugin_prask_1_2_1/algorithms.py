@@ -149,7 +149,7 @@ class C(object):
             return 1, state, True
 
         if number - mini + random.randint(0, 1) > maxi - number:
-            if random.randint(0, 9) == 0:
+            if split == 0 and random.randint(0, 9) == 0:
                 split = number
             return C._answer(number, (mini, number-1, split, border, reverse))
         else:
