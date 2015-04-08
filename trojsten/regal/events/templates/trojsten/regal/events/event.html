@@ -1,0 +1,41 @@
+{% extends "trojsten/layout/main.html" %}
+{% load utils %}
+
+{% block title %}{{ event }}{% endblock %}
+
+{% block page_header %}
+
+<ul class="nav nav-pills">
+  <li class="pull-left" id="article-title-li">
+    <h1>
+        {{ event.name }}<br/>
+        <small>
+            {{ event.place.name }}, {{ event.start_time|date:'d.m.Y' }} - {{ event.end_time|date:'d.m.Y' }}
+        </small>
+    </h1>
+  </li>
+  {% is_organizer competition=event.type as is_organizer %}
+  {% if is_organizer %}
+      <li class="pull-right">
+        <a href="{% url 'admin:events_event_change' event.id %}">
+            <span class="glyphicon glyphicon-edit"></span> Upraviť akciu
+        </a>
+      </li>
+  {% endif %}
+</ul>
+{% endblock %}
+
+{% block page_content %}
+{{ event.rendered_text }}
+
+<div>
+{% if invited %}
+    <a href="{% url 'event_registration' event.id %}" class="btn btn-primary col-md-2 col-sm-3 col-xs-12">Prihláška</a>
+{% endif %}
+<a href="{% url 'participants_list' event.id %}" class="btn btn-default col-md-3 col-sm-4 col-xs-12">Zoznam účastníkov</a>
+{% for link in event.links.all %}
+    <a href="{{ link.url }}" class="btn btn-default col-md-2 col-sm-3 col-xs-12">{{ link.title }}</a>
+{% endfor %}
+</div>
+
+{% endblock %}

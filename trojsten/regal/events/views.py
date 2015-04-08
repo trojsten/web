@@ -2,7 +2,11 @@
 
 from __future__ import unicode_literals
 
+from datetime import datetime
+import pytz
+
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 from django.shortcuts import get_object_or_404, redirect
 from django.http import Http404
@@ -13,7 +17,7 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.contrib import messages
 
-from .models import Event, Invitation
+from .models import Event, Invitation, EventType
 from .forms import RegistrationForm
 
 
@@ -43,6 +47,8 @@ class RegistrationView(FormView):
     def get_context_data(self, **kwargs):
         context = super(RegistrationView, self).get_context_data(**kwargs)
         context['show_form'] = context['form'].invite.going is None
+        context['after_deadline'] =\
+            context['form'].invite.event.registration_deadline < datetime.now(pytz.utc)
         return context
 
     def get_form_kwargs(self):
@@ -89,3 +95,46 @@ class RegistrationView(FormView):
         return super(RegistrationView, self).form_valid(form)
 
 registration = RegistrationView.as_view()
+
+
+class EventView(DetailView):
+    template_name = "trojsten/regal/events/event.html"
+    model = Event
+    context_object_name = 'event'
+    pk_url_kwarg = 'event_id'
+
+    def get_context_data(self, **kwargs):
+        context = super(EventView, self).get_context_data(**kwargs)
+        context['invited'] = (
+            self.request.user.is_authenticated()
+            and context['event'].registration
+            and Invitation.objects.select_related(
+                'event__registration', 'user'
+            ).filter(user=self.request.user, event=context['event']).exists()
+        )
+        return context
+
+event_detail = EventView.as_view()
+
+
+class EventListView(ListView):
+    template_name = "trojsten/regal/events/event_list.html"
+    model = EventType
+    context_object_name = 'event_types'
+    queryset = EventType.objects.current_site_only().prefetch_related('event_set')
+    title = 'Akcie'
+
+    def get_context_data(self, **kwargs):
+        context = super(EventListView, self).get_context_data(**kwargs)
+        context['title'] = self.title
+        return context
+
+event_list = EventListView.as_view()
+
+
+class CampEventListView(EventListView):
+    queryset = EventType.objects.current_site_only().filter(
+        is_camp=True
+    ).prefetch_related('event_set')
+    title = 'Sústredenia'
+camp_event_list = CampEventListView.as_view()

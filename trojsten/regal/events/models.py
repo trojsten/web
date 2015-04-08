@@ -13,6 +13,13 @@ from django.contrib.auth import get_user_model
 from django.utils.html import mark_safe
 
 
+class EventTypeManager(models.Manager):
+    def current_site_only(self):
+        '''Returns only event types belonging to current site
+        '''
+        return Site.objects.get_current().eventtype_set.all()
+
+
 @python_2_unicode_compatible
 class EventType(models.Model):
     '''
@@ -23,6 +30,9 @@ class EventType(models.Model):
     organizers_group = models.ForeignKey(
         Group, verbose_name='skupina vedúcich'
     )
+    is_camp = models.BooleanField(verbose_name='sústredko')
+
+    objects = EventTypeManager()
 
     class Meta:
         verbose_name = 'typ akcie'
@@ -34,7 +44,8 @@ class EventType(models.Model):
 
 @python_2_unicode_compatible
 class Link(models.Model):
-    title = models.CharField(max_length=100, verbose_name='názov')
+    title = models.CharField(max_length=100, verbose_name='titulok')
+    name = models.CharField(max_length=300, verbose_name='meno')
     url = models.URLField(max_length=300)
 
     class Meta:
@@ -42,7 +53,7 @@ class Link(models.Model):
         verbose_name_plural = 'odkazy'
 
     def __str__(self):
-        return '%s(%s)' % (self.title, self.url)
+        return '%s(%s)' % (self.name, self.url)
 
 
 @python_2_unicode_compatible
@@ -91,6 +102,12 @@ class Event(models.Model):
     place = models.ForeignKey(Place, verbose_name='miesto')
     start_time = models.DateTimeField(verbose_name='čas začiatku')
     end_time = models.DateTimeField(verbose_name='čas konca')
+    registration_deadline = models.DateTimeField(
+        verbose_name='deadline pre registráciu', blank=True, null=True
+    )
+    text = models.TextField(help_text='Obsah bude prehnaný <a '
+                            'href="http://en.wikipedia.org/wiki/Markdown">'
+                            'Markdownom</a>.', default='', blank=True)
     links = models.ManyToManyField(
         Link, blank=True, verbose_name='zoznam odkazov'
     )
@@ -110,9 +127,14 @@ class Event(models.Model):
     class Meta:
         verbose_name = 'akcia'
         verbose_name_plural = 'akcie'
+        ordering = ['-end_time', '-start_time']
 
     def __str__(self):
         return self.name
+
+    @property
+    def rendered_text(self):
+        return mark_safe(markdown(self.text, safe_mode=False))
 
 
 @python_2_unicode_compatible

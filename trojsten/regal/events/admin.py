@@ -12,7 +12,7 @@ from .models import *
 
 class EventTypeAdmin(admin.ModelAdmin):
     form = select2_modelform(EventType)
-    list_display = ('name', 'organizers_group', 'get_sites')
+    list_display = ('name', 'organizers_group', 'get_sites', 'is_camp')
 
     def get_sites(self, obj):
         return ', '.join(force_text(x) for x in obj.sites.all())
@@ -55,7 +55,7 @@ class OrganizerInvitationInline(admin.TabularInline):
 
 class EventAdmin(admin.ModelAdmin):
     form = select2_modelform(Event)
-    list_display = ('name', 'type', 'place', 'start_time', 'end_time')
+    list_display = ('name', 'type', 'place', 'start_time', 'end_time', 'registration_deadline')
     inlines = [
         ParticipantInvitationInline, OrganizerInvitationInline
     ]
