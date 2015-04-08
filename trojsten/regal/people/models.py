@@ -21,7 +21,7 @@ class UserManager(DjangoUserManager):
         if going_only:
             filters['invitation__going'] = True
 
-        return self.filter(**filters)
+        return self.filter(**filters).select_related('school')
 
 
 @python_2_unicode_compatible
