@@ -11,9 +11,12 @@ from django.core.urlresolvers import reverse
 from .algorithms import ALL
 from .models import UserCategory, Visit
 from .submit import update_points
+from .getcat import getcat
 
 
 GRATULATION = 'Gratulujeme! Prefíkaný kocúr je tvoj. Stačilo ti %d návštev.'
+
+urlky = []
 
 
 @login_required
@@ -88,7 +91,8 @@ def main(request, category, number=0):
             "number": number,
             "response": response,
             "previous": reversed(previous),
-            "points": inst.points
+            "points": inst.points,
+            "cat_url": getcat(),
         })
 
 
@@ -114,10 +118,7 @@ def reset(request, category):
 
 
 def post(request, category):
-    try:
-        number = request.POST['number']
-    except MultiValueDictKeyError:
-        number = 0
+    number = request.POST.get('number', 0)
 
     return redirect(reverse(
         'plugin_prask_1_2_1_visit',
