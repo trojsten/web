@@ -52,6 +52,8 @@
       <tbody>
         {% for visit in previous %}
           <tr><td>
+            {{ forloop.revcounter }}
+          </td><td>
             V dome číslo {{ visit.number }} povedali: „{{ visit.formatted_response }}.“
           </td></tr>
         {% endfor %}

@@ -46,7 +46,7 @@ def main(request, category, number=0):
         else:
             state = json.loads(inst.state)
 
-        previous = list(inst.visits.all())
+        previous = list(inst.visits.order_by('pk'))
 
         if number > 0 and len(previous) < 100:
             response, state, solved = algorithm.response(
