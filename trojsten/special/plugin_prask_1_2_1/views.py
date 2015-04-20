@@ -120,6 +120,15 @@ def reset(request, category):
 def post(request, category):
     number = request.POST.get('number', 0)
 
+    try:
+        number = int(number)
+        if number < 0:
+            number = 0
+        if number > 1000:
+            number = 0
+    except ValueError:
+        number = 0
+
     return redirect(reverse(
         'plugin_prask_1_2_1_visit',
         kwargs={
