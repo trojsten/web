@@ -19,7 +19,7 @@ from trojsten.submit.helpers import write_chunks_to_file
 from trojsten.reviews.helpers import submit_review
 
 reviews_upload_pattern = re.compile(
-    r'(?P<lastname>[^_]*)_(?P<submit_pk>[0-9]+)_(?P<filename>.+\.[^.]+)'
+    r'(?P<lastname>[^_]*)/(?P<submit_pk>[0-9]+)_(?P<filename>.+\.[^.]+)'
 )
 
 

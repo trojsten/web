@@ -63,4 +63,4 @@ def get_user_as_choices(task):
 
 
 def submit_download_filename(submit):
-    return '%s_%s_%s' % (submit.user.last_name, submit.pk, submit.filename.split('-', 2)[-1])
+    return '%s/%s_%s' % (submit.user.last_name, submit.pk, submit.filename.split('-', 2)[-1])
