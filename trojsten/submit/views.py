@@ -81,8 +81,7 @@ def view_protocol(request, submit_id):
 
     # For source submits, display testing results, source code and submit list.
     if submit.submit_type == Submit.SOURCE or submit.submit_type == Submit.TESTABLE_ZIP:
-        protocol_path = submit.filepath.rsplit(
-            '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
+        protocol_path = submit.protocol_path
         template_data = protocol_data(protocol_path, submit.submit_type == Submit.TESTABLE_ZIP)
         template_data['submit'] = submit
         return render(
@@ -108,8 +107,7 @@ def view_submit(request, submit_id):
             'submit': submit,
             'source': True,
         }
-        protocol_path = submit.filepath.rsplit(
-            '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
+        protocol_path = submit.protocol_path
         template_data.update(protocol_data(protocol_path, submit.submit_type == Submit.TESTABLE_ZIP))
         if os.path.exists(submit.filepath):
             # Source code available, display it!

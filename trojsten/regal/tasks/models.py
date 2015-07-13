@@ -249,6 +249,10 @@ class Submit(models.Model):
         )
 
     @property
+    def protocol_path(self):
+        return self.filepath.rsplit('.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
+
+    @property
     def filename(self):
         return os.path.basename(self.filepath)
 
