@@ -1,3 +1,4 @@
+from collections import defaultdict
 import os.path
 import zipfile
 from time import time
@@ -12,6 +13,7 @@ from django.utils.text import slugify
 from sendfile import sendfile
 
 from trojsten.regal.tasks.models import Task, Submit
+from trojsten.reviews.constants import REVIEW_POINTS_FILENAME
 from trojsten.reviews.helpers import (submit_download_filename,
                                       get_latest_submits_for_task, get_user_as_choices,
                                       submit_protocol_download_filename,
@@ -126,21 +128,31 @@ def zip_upload(request, task_pk):
     with archive:
         filelist = archive.namelist()
 
-    users = [(None, _('Ignore'))] + get_user_as_choices(task)
-    initial = [{'filename': file} for file in filelist]
+        users = [(None, _('Ignore'))] + get_user_as_choices(task)
+        initial = [{'filename': file} for file in filelist]
+        user_data = defaultdict(dict)
 
-    for form_data in initial:
-        match = reviews_upload_pattern.match(form_data['filename'])
-        if not match:
-            continue
+        for form_data in initial:
+            match = reviews_upload_pattern.match(form_data['filename'])
+            if not match:
+                continue
 
-        pk = match.group('submit_pk')
-        try:
-            form_data['user'] = Submit.objects.get(pk=pk).user.pk
-        except Submit.DoesNotExist:
-            pass
+            pk = match.group('submit_pk')
+            if Submit.objects.filter(pk=pk).exists():
+                user_pk = Submit.objects.get(pk=pk).user.pk
+                user_data[user_pk]['user'] = user_pk
+                if match.group('filename') == REVIEW_POINTS_FILENAME:
+                    try:
+                        text = archive.read(form_data['filename'])
+                        points_num = int(text)
+                        user_data[user_pk]['points'] = points_num
+                    except:
+                        pass
+                # TODO: komentar od opravovatela
+                else:
+                    user_data[user_pk]['filename'] = form_data['filename']
 
-    initial = [f for f in initial if 'user' in f]
+    initial = [user_data[user] for user in user_data]
     files = set([f['filename'] for f in initial])
     ZipFormSet = get_zip_form_set(
         choices=users, max_value=task.description_points, files=files, extra=0)
