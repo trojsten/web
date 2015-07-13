@@ -1,0 +1,42 @@
+{% load utils staticfiles navigation_tags%}
+
+{% block page_navigation %}
+<div class="sidebar">
+    {% if SITE.HAS_LOGO %}
+        <h2 class="logo">
+            <a href="{{ SITE.URL }}">
+                <img id="logo" src="{% static "images/"|add:SITE.FOLDER|add:"/logo.png" %}" alt="KSP"/>
+            </a>
+        </h2>
+    {% endif %}
+    <ul class="nav nav-pills nav-stacked" id="main_menu">
+        {% for group in menu_groups %}
+            {% if user.is_staff or not group.staff_only %}
+                {% if group.position != 0 %}
+                    <li>
+                        <h2>{{ group.name }}</h2>
+                    </li>
+                {% endif %}
+                {% for item in group.items.all %}
+                    <li class="{% current item.active_url_pattern %}" >
+                        <a href="{{ item.url }}">
+                            {{ item.name }} <span class="glyphicon {{ item.glyphicon }}" aria-hidden="true"></span>
+                        </a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        <li class="visible-xs">
+            <h2>Iné semináre</h2>
+        </li>
+        {%for OTHER_SITE in OTHER_SITES %}
+        <li class="visible-xs">
+            <a href="{{ OTHER_SITE.URL }}">
+                {{ OTHER_SITE.SHORT_NAME }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
