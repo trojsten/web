@@ -33,6 +33,10 @@ def get_latest_submits_for_task(task):
         submit_type=Submit.DESCRIPTION, time__lt=task.round.end_time
     ).exclude(testing_status=SUBMIT_STATUS_REVIEWED).select_related('user')
 
+    source_submits = task.submit_set.filter(
+        submit_type=Submit.SOURCE, time__lt=task.round.end_time
+    ).exclude(testing_status=SUBMIT_STATUS_REVIEWED).select_related('user')
+
     review_submits = task.submit_set.filter(
         submit_type=Submit.DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
     ).select_related('user')
@@ -43,6 +47,13 @@ def get_latest_submits_for_task(task):
             submits_by_user[submit.user] = {'description': submit}
         elif submits_by_user[submit.user]['description'].time < submit.time:
             submits_by_user[submit.user]['description'] = submit
+
+    for submit in source_submits:
+        if submit.user in submits_by_user:
+            if 'sources' not in submits_by_user[submit.user]:
+                submits_by_user[submit.user]['sources'] = [submit]
+            else:
+                submits_by_user[submit.user]['sources'].append(submit)
 
     for submit in review_submits:
         if submit.user not in submits_by_user:
@@ -64,3 +75,9 @@ def get_user_as_choices(task):
 
 def submit_download_filename(submit):
     return '%s/%s_%s' % (submit.user.last_name, submit.pk, submit.filename.split('-', 2)[-1])
+
+def submit_source_download_filename(submit):
+    return '%s/source/%s' % (submit.user.last_name, submit.filename)
+
+def submit_protocol_download_filename(submit):
+    return '%s/source/%s' % (submit.user.last_name, os.path.basename(submit.protocol_path))

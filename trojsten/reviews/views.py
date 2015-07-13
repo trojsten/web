@@ -13,7 +13,9 @@ from sendfile import sendfile
 
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.reviews.helpers import (submit_download_filename,
-                                      get_latest_submits_for_task, get_user_as_choices)
+                                      get_latest_submits_for_task, get_user_as_choices,
+                                      submit_protocol_download_filename,
+                                      submit_source_download_filename)
 
 from trojsten.reviews.forms import ReviewForm, get_zip_form_set, reviews_upload_pattern
 
@@ -70,7 +72,9 @@ def submit_download(request, submit_pk):
 
 def download_latest_submits(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
-    submits = [data['description'] for data in get_latest_submits_for_task(task).values()]
+    _submits = get_latest_submits_for_task(task).values()
+    description_submits = [data['description'] for data in _submits]
+    source_submits = [data['sources'] for data in _submits]
 
     path = os.path.join(settings.SUBMIT_PATH, 'reviews')
     if not os.path.isdir(path):
@@ -83,11 +87,22 @@ def download_latest_submits(request, task_pk):
     errors = []
 
     with zipfile.ZipFile(path, 'w') as zipper:
-        for submit in submits:
+        for submit in description_submits:
             if not os.path.isfile(submit.filepath):
                 errors += [_('Missing file of user %s') % submit.user.get_full_name()]
             else:
                 zipper.write(submit.filepath, submit_download_filename(submit))
+
+        for user_submits in source_submits:
+            for submit in user_submits:
+                if not os.path.isfile(submit.filepath):
+                    errors += [_('Missing source file of user %s') % submit.user.get_full_name()]
+                else:
+                    zipper.write(submit.filepath, submit_source_download_filename(submit))
+                if not os.path.isfile(submit.protocol_path):
+                    errors += [_('Missing protocol file of user %s') % submit.user.get_full_name()]
+                else:
+                    zipper.write(submit.protocol_path, submit_protocol_download_filename(submit))
 
         if errors:
             zipper.writestr("errors.txt", "\n".join(errors).encode())
@@ -125,7 +140,8 @@ def zip_upload(request, task_pk):
         except Submit.DoesNotExist:
             pass
 
-    files = set(filelist)
+    initial = [f for f in initial if 'user' in f]
+    files = set([f['filename'] for f in initial])
     ZipFormSet = get_zip_form_set(
         choices=users, max_value=task.description_points, files=files, extra=0)
 
