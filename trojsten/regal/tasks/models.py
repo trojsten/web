@@ -3,6 +3,8 @@
 from __future__ import unicode_literals
 
 from decimal import Decimal
+from django.utils.safestring import mark_safe
+from markdown import markdown
 import os
 
 from django.utils.encoding import python_2_unicode_compatible
@@ -257,6 +259,10 @@ class Submit(models.Model):
     @property
     def filename(self):
         return os.path.basename(self.filepath)
+
+    @property
+    def rendered_comment(self):
+        return mark_safe(markdown(self.reviewer_comment, safe_mode=False))
 
     @property
     def tester_response_verbose(self):
