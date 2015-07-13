@@ -74,10 +74,10 @@ def get_user_as_choices(task):
 
 
 def submit_download_filename(submit):
-    return '%s/%s_%s' % (submit.user.last_name, submit.pk, submit.filename.split('-', 2)[-1])
+    return '%s_%s/%s' % (submit.user.last_name, submit.pk, submit.filename.split('-', 2)[-1])
 
-def submit_source_download_filename(submit):
-    return '%s/source/%s' % (submit.user.last_name, submit.filename)
+def submit_source_download_filename(submit, description_submit_id):
+    return '%s_%s/source/%s' % (submit.user.last_name, description_submit_id, submit.filename)
 
-def submit_protocol_download_filename(submit):
-    return '%s/source/%s' % (submit.user.last_name, os.path.basename(submit.protocol_path))
+def submit_protocol_download_filename(submit, description_submit_id):
+    return '%s_%s/source/%s' % (submit.user.last_name, description_submit_id, os.path.basename(submit.protocol_path))
