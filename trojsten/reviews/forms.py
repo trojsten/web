@@ -119,6 +119,7 @@ class ZipForm(forms.Form):
     filename = forms.CharField(widget=HiddenInput())
     user = forms.ChoiceField()
     points = forms.IntegerField(min_value=0, required=False)
+    comment = forms.CharField(required=False)
 
     def __init__(self, data=None, *args, **kwargs):
         choices = kwargs.pop('choices')
@@ -181,7 +182,8 @@ class BaseZipSet(BaseFormSet):
 
                 fname = form.cleaned_data['filename']
                 points = form.cleaned_data['points']
+                comment = form.cleaned_data['comment']
 
-                submit_review(archive.read(fname), os.path.basename(fname), task, user, points)
+                submit_review(archive.read(fname), os.path.basename(fname), task, user, points, comment)
 
         os.remove(archive_path)

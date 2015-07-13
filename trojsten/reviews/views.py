@@ -13,7 +13,8 @@ from django.utils.text import slugify
 from sendfile import sendfile
 
 from trojsten.regal.tasks.models import Task, Submit
-from trojsten.reviews.constants import REVIEW_POINTS_FILENAME
+from trojsten.reviews.constants import REVIEW_POINTS_FILENAME, \
+    REVIEW_COMMENT_FILENAME
 from trojsten.reviews.helpers import (submit_download_filename,
                                       get_latest_submits_for_task, get_user_as_choices,
                                       submit_protocol_download_filename,
@@ -148,7 +149,11 @@ def zip_upload(request, task_pk):
                         user_data[user_pk]['points'] = points_num
                     except:
                         pass
-                # TODO: komentar od opravovatela
+                elif match.group('filename') == REVIEW_COMMENT_FILENAME:
+                    try:
+                        user_data[user_pk]['comment'] = archive.read(form_data['filename'])
+                    except:
+                        pass
                 else:
                     user_data[user_pk]['filename'] = form_data['filename']
 

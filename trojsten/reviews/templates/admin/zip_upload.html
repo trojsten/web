@@ -30,6 +30,7 @@
             <td>{% trans 'Filename' %}</td>
             <td>{% trans 'User' %}</td>
             <td>{% trans 'Points' %}</td>
+            <td>{% trans 'Comment' %}</td>
         </thead>
         
         {% for form in formset %}
@@ -38,6 +39,7 @@
             <td>{{ form.name }}</td>
             <td>{{ form.user }}</td>
             <td>{{ form.points }}</td>
+            <td>{{ form.comment }}</td>
         </tr>
         {% endfor %}
     </table>

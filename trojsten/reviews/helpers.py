@@ -8,7 +8,7 @@ from trojsten.submit.helpers import get_path, write_chunks_to_file
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 
 
-def submit_review(filecontent, filename, task, user, points):
+def submit_review(filecontent, filename, task, user, points, comment=''):
     submit_id = str(int(time()))
 
     sfiletarget = os.path.join(
@@ -24,7 +24,7 @@ def submit_review(filecontent, filename, task, user, points):
         write_chunks_to_file(sfiletarget, [filecontent])
 
     sub = Submit(task=task, user=user, points=points, submit_type=Submit.DESCRIPTION,
-                 testing_status=SUBMIT_STATUS_REVIEWED, filepath=sfiletarget)
+                 testing_status=SUBMIT_STATUS_REVIEWED, filepath=sfiletarget, reviewer_comment=comment)
     sub.save()
 
 
