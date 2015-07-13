@@ -234,6 +234,8 @@ class Submit(models.Model):
     protocol_id = models.CharField(
         max_length=128, verbose_name='číslo protokolu', blank=True)
 
+    reviewer_comment = models.TextField(verbose_name='komentár od opravovateľa', blank=True)
+
     objects = SubmitManager()
 
     class Meta:
