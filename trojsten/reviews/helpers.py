@@ -36,9 +36,11 @@ def submit_review(filecontent, filename, task, user, points, comment='', submit=
 
 def edit_review(filecontent, filename, submit, user, points, comment=''):
     if filecontent is not None:
+        submit_id = str(int(time()))
+
         sfiletarget = unidecode(os.path.join(
             get_path(submit.task, user),
-            '%s-%s-%s' % (user.last_name, submit.id, filename),
+            '%s-%s-%s' % (user.last_name, submit_id, filename),
         ))
 
         if hasattr(filecontent, 'chunks'):
