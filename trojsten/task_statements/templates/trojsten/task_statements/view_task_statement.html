@@ -1,7 +1,6 @@
 {% extends "trojsten/layout/main.html" %}
 {% load submit_parts %}
 {% load statements_parts %}
-{% load disqus_tags %}
 {% load staticfiles %}
 {% load utils %}
 
@@ -40,9 +39,6 @@
 {% endblock %}
 
 {% block page_content %}
-    {% set_disqus_identifier "task" task.id %}
-    {% set_disqus_url "https://" request.META.HTTP_HOST request.path %}
-    {% set_disqus_title task.number ". " task.name %}
     {% show_progress task.round %}
     {% if task.description_points > 0 or task.source_points > 0 %}
     <div class="well pull-right task-points">
@@ -91,5 +87,4 @@
        a to ani po skončení kola (na to budete mať príležitosť v diskusii
        pod vzorovým riešením).
     </p>
-    {% disqus_show_comments %}
 {% endblock %}

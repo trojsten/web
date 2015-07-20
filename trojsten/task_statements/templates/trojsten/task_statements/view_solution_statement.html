@@ -1,5 +1,4 @@
 {% extends "trojsten/layout/main.html" %}
-{% load disqus_tags %}
 {% load staticfiles %}
 
 {% block stylesheets %}
@@ -32,9 +31,6 @@
 {% endblock %}
 
 {% block page_content %}
-    {% set_disqus_identifier "task-sol" task.id %}
-    {% set_disqus_url "https://" request.META.HTTP_HOST request.path %}
-    {% set_disqus_title task.number ". " task.name " - vzorové riešenie" %}
     <div class="task-statement">
       {% if task.task_file_exists %}
       <div class="panel panel-default">
@@ -60,5 +56,4 @@
     </div>
     <h2>Diskusia</h2>
     <p>Tu môžte voľne diskutovať o riešení, deliť sa o svoje kusy kódu a podobne.</p>
-    {% disqus_show_comments %}
 {% endblock %}

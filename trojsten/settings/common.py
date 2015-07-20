@@ -280,7 +280,6 @@ INSTALLED_APPS = (
     'wiki.plugins.images',
     'wiki.plugins.macros',
     'taggit',
-    'disqus',
     'kombu.transport.django',
 )
 
@@ -374,8 +373,6 @@ PROVIDER_OVERRIDE_DICT = json.loads(env('TROJSTENWEB_AUTHENTICATION_PROVIDER_OVE
 
 # The number of authentication providers to show in the short list.
 AUTHENTICATION_PROVIDERS_BRIEF = int(env('TROJSTENWEB_AUTHENTICATION_PROVIDERS_BRIEF', '3'))
-
-DISQUS_WEBSITE_SHORTNAME = env('TROJSTENWEB_DISQUS_WEBSITE_SHORTNAME', 'trojsten-ksp')
 
 SOUTH_MIGRATION_MODULES = {
     'taggit': 'taggit.south_migrations',
