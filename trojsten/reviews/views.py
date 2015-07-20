@@ -12,6 +12,7 @@ from django.utils.text import slugify
 
 from sendfile import sendfile
 
+from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.reviews.constants import REVIEW_POINTS_FILENAME, \
     REVIEW_COMMENT_FILENAME
@@ -27,10 +28,7 @@ from trojsten.reviews.forms import ReviewForm, get_zip_form_set, reviews_upload_
 
 def review_task(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
-    max_points = task.description_points
-
     users = get_latest_submits_for_task(task)
-    choices = [("None", 'Auto / all')] + get_user_as_choices(task)
 
     if request.method == 'POST':
         form = UploadZipForm(request.POST, request.FILES)
@@ -52,6 +50,44 @@ def review_task(request, task_pk):
 
     return render(
         request, 'admin/review_form.html', context
+    )
+
+
+def edit_review(request, task_pk, submit_pk):
+    task = get_object_or_404(Task, pk=task_pk)
+    submit = get_object_or_404(Submit, pk=submit_pk)
+    choices = get_user_as_choices(task)
+    create = submit.testing_status != SUBMIT_STATUS_REVIEWED
+    max_points = task.description_points
+
+    if submit.task != task:
+        raise Http404
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST,
+                          request.FILES,
+                          choices=choices,
+                          max_value=max_points)
+
+        if form.is_valid():
+            form.save(submit, create)
+            return redirect('admin:review_task', task.pk)
+    else:
+        form = ReviewForm(choices=choices, max_value=max_points, initial={
+            'points': int(submit.points),
+            'comment': submit.reviewer_comment,
+            'user': submit.user_id
+        })
+
+    context = {
+        'task': task,
+        'submit': submit,
+        'form': form,
+        'create': create,
+    }
+
+    return render(
+        request, 'admin/review_edit.html', context
     )
 
 

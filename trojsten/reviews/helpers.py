@@ -8,25 +8,50 @@ from trojsten.submit.helpers import get_path, write_chunks_to_file
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 
 
-def submit_review(filecontent, filename, task, user, points, comment=''):
-    submit_id = str(int(time()))
+def submit_review(filecontent, filename, task, user, points, comment='', submit=None):
+    if filecontent is None and submit is None:
+        raise Exception('You should upload a file or specify parent submit.')
 
-    sfiletarget = os.path.join(
-        get_path(task, user),
-        '%s-%s-%s' % (user.last_name, submit_id, filename),
-    )
+    if filecontent is not None:
+        submit_id = str(int(time()))
 
-    sfiletarget = unidecode(sfiletarget)
+        sfiletarget = os.path.join(
+            get_path(task, user),
+            '%s-%s-%s' % (user.last_name, submit_id, filename),
+        )
 
-    if hasattr(filecontent, 'chunks'):
-        write_chunks_to_file(sfiletarget, filecontent.chunks())
+        sfiletarget = unidecode(sfiletarget)
+
+        if hasattr(filecontent, 'chunks'):
+            write_chunks_to_file(sfiletarget, filecontent.chunks())
+        else:
+            write_chunks_to_file(sfiletarget, [filecontent])
     else:
-        write_chunks_to_file(sfiletarget, [filecontent])
+        sfiletarget = submit.filepath
 
     sub = Submit(task=task, user=user, points=points, submit_type=Submit.DESCRIPTION,
                  testing_status=SUBMIT_STATUS_REVIEWED, filepath=sfiletarget, reviewer_comment=comment)
     sub.save()
 
+
+def edit_review(filecontent, filename, submit, user, points, comment=''):
+    if filecontent is not None:
+        sfiletarget = unidecode(os.path.join(
+            get_path(submit.task, user),
+            '%s-%s-%s' % (user.last_name, submit.id, filename),
+        ))
+
+        if hasattr(filecontent, 'chunks'):
+            write_chunks_to_file(sfiletarget, filecontent.chunks())
+        else:
+            write_chunks_to_file(sfiletarget, [filecontent])
+
+        submit.filepath = sfiletarget
+
+    submit.user = user
+    submit.points = points
+    submit.reviewer_comment = comment
+    submit.save()
 
 def get_latest_submits_for_task(task):
     description_submits = task.submit_set.filter(

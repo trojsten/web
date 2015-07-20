@@ -48,7 +48,9 @@
     <td>
     {% if data.review %}
         <a href="{% url 'admin:tasks_submit_change' data.review.pk %}">{% trans 'Pozrieť' %}</a>
+        <a href="{% url 'admin:review_edit' task.pk data.review.pk %}">{% trans 'Upraviť' %}</a>
     {% endif %}
+        <a href="{% url 'admin:review_edit' task.pk data.description.pk %}">{% trans 'Pridať nový review' %}</a>
     </td>
         <td>
             {% if data.review %}

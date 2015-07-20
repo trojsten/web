@@ -19,7 +19,7 @@ from trojsten.regal.tasks.models import Submit
 from trojsten.regal.people.models import User
 from trojsten.submit.helpers import write_chunks_to_file
 
-from trojsten.reviews.helpers import submit_review
+from trojsten.reviews.helpers import submit_review, edit_review
 
 reviews_upload_pattern = re.compile(
     r'(?P<lastname>.*)_(?P<submit_pk>[0-9]+)/(?!source/)(?P<filename>.+\.[^.]+)'
@@ -52,86 +52,61 @@ class UploadZipForm(forms.Form):
 
 
 class ReviewForm(forms.Form):
-    file = forms.FileField(max_length=128)
-    user = forms.ChoiceField()
-    points = forms.IntegerField(min_value=0, required=False)
+    file = forms.FileField(max_length=128, required=False)
+    user = forms.ChoiceField(widget=Select2)
+    points = forms.IntegerField(min_value=0, required=True)
+    comment = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
         choices = kwargs.pop('choices')
         max_val = kwargs.pop('max_value')
+        comment_widget = kwargs.pop('comment_widget', forms.Textarea)
         super(ReviewForm, self).__init__(*args, **kwargs)
+        self.fields['comment'].widget = comment_widget()
 
         # setting max_value doesn't work
-        self.fields['points'] = forms.IntegerField(min_value=0, max_value=max_val, required=False)
+        self.fields['points'] = forms.IntegerField(min_value=0, max_value=max_val, required=True)
         self.fields['user'].choices = choices
 
     def clean(self):
         cleaned_data = super(ReviewForm, self).clean()
-
-        if 'file' not in cleaned_data:
-            return {}
-
-        # Choice field nevie rozlisit 'None' a None, tak je to (a vsetko ine) string
-        if cleaned_data['user'] == 'None':
-            cleaned_data['user'] = None
-
-        filename = cleaned_data['file'].name
-        user_id = cleaned_data['user']
+        
+        if 'points' not in cleaned_data or cleaned_data['points'] is None:
+            raise forms.ValidationError(_('Points are required'))
         points = cleaned_data['points']
 
-        # It's zip upload ==> valid
-        if filename.endswith('.zip') and cleaned_data['user'] is None:
-            return cleaned_data
-
-        # Try to parse user form filename
-        filematch = reviews_upload_pattern.match(filename)
-
-        if filematch:
-            cleaned_data['file'].name = filematch.group('filename')
-
+        if 'user' not in cleaned_data or cleaned_data['user'] is None:
+            raise forms.ValidationError(_('User is required'))
+        user_id = cleaned_data['user']
         try:
-            if user_id is None:
-                # needs to resolve user
-                if not filematch:
-                    raise forms.ValidationError(_('Could not resolve user from %s') % filename)
-
-                # user (probably) resolvable
-                submit_id = filematch.group('submit_pk')
-                user_id = Submit.objects.get(pk=submit_id).user.pk
-
             cleaned_data['user'] = User.objects.get(pk=user_id)
-
-        except Submit.DoesNotExist:
-            # file name id was wrong
-            raise forms.ValidationError(_('Could not resolve user from %s') % filename)
-
-        except (User.DoesNotExist, ValueError):
+        except:
             raise forms.ValidationError(_('User %s does not exists') % user_id)
 
-        if points is None:
-            raise forms.ValidationError(_('Points are required'))
+        if 'file' in cleaned_data:
+            file = cleaned_data['file']
+            filename = cleaned_data['file'].name if file is not None else ''
 
         return cleaned_data
 
-    def save(self, req_user, task):
-        """Vrati path k zipu alebo None (ak sa zip neuplodoval)"""
-
+    def save(self, submit, create=False):
+        """if creating a new submit, point to user's submit.
+        if not, point to existing reviewed submit."""
         user = self.cleaned_data['user']
-        filecontent = self.cleaned_data['file']
 
-        filename = self.cleaned_data['file'].name
+        if 'file' in self.cleaned_data and self.cleaned_data['file'] is not None:
+            filecontent = self.cleaned_data['file']
+            filename = self.cleaned_data['file'].name
+        else:
+            filecontent = None
+            filename = None
         points = self.cleaned_data['points']
+        comment = self.cleaned_data['comment']
 
-        if user is None and filename.endswith('.zip'):
-            path = os.path.join(
-                settings.SUBMIT_PATH, 'reviews', '%s_%s.zip' % (int(time()), req_user.username)
-            )
-            path = unidecode(path)
-            write_chunks_to_file(path, filecontent.chunks())
-            return path
-
-        submit_review(filecontent, filename, task, user, points)
-        return None
+        if create:
+            submit_review(filecontent, filename, submit.task, user, points, comment, submit)
+        else:
+            edit_review(filecontent, filename, submit, user, points, comment)
 
 
 def get_zip_form_set(choices, max_value, files, *args, **kwargs):
