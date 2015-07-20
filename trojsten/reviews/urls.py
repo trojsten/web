@@ -8,7 +8,7 @@ task_review_urls = [
         admin.site.admin_view(download_latest_submits), name='download_latest_submits'),
     url(r'^(?P<task_pk>[0-9]+)/review/$',
         admin.site.admin_view(review_task), name='review_task'),
-    url(r'^(?P<task_pk>[0-9]+)/zip_upload/$',
+    url(r'^(?P<task_pk>[0-9]+)/review/zip_upload/$',
         admin.site.admin_view(zip_upload), name='review_submit_zip'),
 ]
 
