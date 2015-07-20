@@ -16,22 +16,53 @@
 <h2>Riešitelia úlohy</h2>
 <a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Stiahnuť všetky riešenia' %}</a><br/><br/>
 <table>
+    <thead>
+        <tr>
+            <th>
+                Riešiteľ
+            </th>
+            <th>
+                Odovzdané riešenie
+            </th>
+            <th>
+                Opravené riešenie
+            </th>
+            <th>
+                Body
+            </th>
+            <th>
+                Komentár
+            </th>
+        </tr>
+    </thead>
+    <tbody>
 {% for user, data in users.items %}
     <tr>  
     <td><a href="{% url 'admin:tasks_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a></td>
     <td>
-    {% if data.description %} 
-        <a href="{% url 'admin:submit_download' data.description.pk %}">{% trans 'Description' %}</a> 
+    {% if data.description %}
+        <a href="{% url 'admin:submit_download' data.description.pk %}">{% trans 'Stiahnuť' %}</a>
     {% endif %}
     </td>
 
     <td>
     {% if data.review %}
-        <a href="{% url 'admin:tasks_submit_change' data.review.pk %}">{% trans 'Reviewed' %}</a>
+        <a href="{% url 'admin:tasks_submit_change' data.review.pk %}">{% trans 'Pozrieť' %}</a>
     {% endif %}
     </td>
-    </tr>  
+        <td>
+            {% if data.review %}
+            {{ data.review.points }}
+            {% endif %}
+        </td>
+        <td>
+            {% if data.review %}
+            {{ data.review.reviewer_comment }}
+            {% endif %}
+        </td>
+    </tr>
 {% endfor %}
+    </tbody>
 </table>
 
 <br/>
