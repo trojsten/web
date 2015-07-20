@@ -1,3 +1,4 @@
+from easy_select2 import Select2
 import re
 import os
 from time import time
@@ -117,7 +118,7 @@ def get_zip_form_set(choices, max_value, files, *args, **kwargs):
 
 class ZipForm(forms.Form):
     filename = forms.CharField(widget=HiddenInput())
-    user = forms.ChoiceField()
+    user = forms.ChoiceField(widget=Select2)
     points = forms.IntegerField(min_value=0, required=False)
     comment = forms.CharField(required=False)
 

@@ -1,6 +1,20 @@
 {% extends "admin/base_site.html" %}
 {% load i18n admin_urls admin_static admin_modify %}
 
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'easy_select2/vendor/select2/select2.min.css' %}" />
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="{% static 'easy_select2/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'easy_select2/vendor/select2/select2.min.js' %}"></script>
+<script src="{% static 'easy_select2/js/easy_select2.js' %}"></script>
+<script src="{% static 'easy_select2/js/init.js' %}"></script>
+<script src="{% static 'easy_select2/js/lookup_override.js' %}"></script>
+{% endblock %}
+
 {% block breadcrumbs %}
 <div class="breadcrumbs">
     <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
