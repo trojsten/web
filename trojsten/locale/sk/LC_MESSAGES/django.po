@@ -86,3 +86,150 @@ msgid_plural "%(count)s seconds"
 msgstr[0] "%(count)s sekunda"
 msgstr[1] "%(count)s sekundy"
 msgstr[2] "%(count)s sekúnd"
+
+
+# Django Fluent Comments
+
+#: admin.py:35
+msgid "Content"
+msgstr "Obsah"
+
+#: admin.py:38
+msgid "Account information"
+msgstr "Informácie o účte"
+
+#: admin.py:41
+msgid "Moderation"
+msgstr "Moderácia"
+
+#: admin.py:52
+msgid "Hierarchy"
+msgstr "Hierarchia"
+
+#: admin.py:61
+msgid "Page"
+msgstr "Stránka"
+
+#: templates/comments/comment.html:21 templates/comments/preview.html:12
+msgid "Preview of your comment"
+msgstr "Náhľad komentára"
+
+#: templates/comments/comment.html:25
+msgid "Anonymous"
+msgstr "Anonym"
+
+#: templates/comments/comment.html:28
+#, python-format
+msgid "on %(submit_date)s"
+msgstr "%(submit_date)s"
+
+#: templates/comments/comment.html:29
+msgid "moderated"
+msgstr "moderované"
+
+#: templates/comments/deleted.html:4
+msgid "Thanks for removing"
+msgstr "Ďakujeme za odstránenie"
+
+#: templates/comments/deleted.html:12
+msgid "Thanks for removing the comment"
+msgstr "Ďakujeme za odstránenie komentára"
+
+#: templates/comments/deleted.html:14 templates/comments/flagged.html:14
+msgid ""
+"\n"
+"      Thanks for taking the time to improve the quality of discussion on our "
+"site.<br/>\n"
+"      You will be sent back to the article...\n"
+"    "
+msgstr ""
+"\n"
+"      Vďaka, že ste si našli čas na zlepšenie kvality diskusie na našom "
+"webe.<br/>\n"
+"      Budete presmerovaný späť na diskusiu...\n"
+"    "
+
+#: templates/comments/deleted.html:20 templates/comments/flagged.html:20
+#: templates/comments/posted.html:24
+msgid "Back to the article"
+msgstr "Naspäť k diskusii"
+
+#: templates/comments/flagged.html:4
+msgid "Thanks for flagging"
+msgstr "Vďaka za flagovanie"
+
+#: templates/comments/flagged.html:12
+msgid "Thanks for flagging the comment"
+msgstr "Vďaka za flagovanie komentára"
+
+#: templates/comments/form.html:4
+msgid "Comments are closed."
+msgstr "Diskusia je uzavretá."
+
+#: templates/comments/form.html:13 templates/comments/preview.html:26
+msgid "Post"
+msgstr "Odoslať"
+
+#: templates/comments/form.html:14 templates/comments/preview.html:27
+msgid "Preview"
+msgstr "Náhľad"
+
+#: templates/comments/posted.html:3
+msgid "Thanks for commenting"
+msgstr "Vďaka za komentár"
+
+#: templates/comments/posted.html:11
+msgid "Thanks for posting your comment"
+msgstr "Vďaka za komentár"
+
+#: templates/comments/posted.html:13
+msgid ""
+"\n"
+"      We have received your comment, and posted it on the web site.<br/>\n"
+"      You will be sent back to the article...\n"
+"      "
+msgstr ""
+"\n"
+"      Dostali sme váš komentár a zobrazili sme ho na stránke.<br/>\n"
+"      Budete presmerovaný späť na diskusiu...\n"
+"      "
+
+#: templates/comments/preview.html:3
+msgid "Preview your comment"
+msgstr "Náhľad na komentár"
+
+#: templates/comments/preview.html:10
+msgid "Please correct the error below"
+msgid_plural "Please correct the errors below"
+msgstr[0] "Prosím opravte nasledujúcu chybu"
+msgstr[1] "Prosím opravte nasledujúce chyby"
+
+#: templates/comments/preview.html:17
+msgid "Post your comment"
+msgstr "Odoslať komentár"
+
+#: templates/comments/preview.html:20
+msgid "Or make changes"
+msgstr "Alebo spravte zmeny"
+
+#: templates/fluent_comments/templatetags/ajax_comment_tags.html:3
+msgid "Please wait . . ."
+msgstr "Počkajte, prosím . . ."
+
+#: templates/fluent_comments/templatetags/ajax_comment_tags.html:5
+msgid "Your comment has been posted!"
+msgstr "Komentár je zverejnený!"
+
+#: templates/fluent_comments/templatetags/ajax_comment_tags.html:6
+msgid ""
+"Your comment has been posted, it will be visible for other users after "
+"approval."
+msgstr ""
+"Komentár bol odoslaný, pre ostatných užívateľov bude viditeľný po súhlase "
+"moderátora."
+
+msgid "reply"
+msgstr "reagovať"
+
+msgid "cancel reply"
+msgstr "zrušiť reakciu"
