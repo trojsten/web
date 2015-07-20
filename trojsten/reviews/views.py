@@ -21,7 +21,8 @@ from trojsten.reviews.helpers import (submit_download_filename,
                                       submit_source_download_filename,
                                       submit_directory)
 
-from trojsten.reviews.forms import ReviewForm, get_zip_form_set, reviews_upload_pattern
+from trojsten.reviews.forms import ReviewForm, get_zip_form_set, reviews_upload_pattern, \
+    UploadZipForm
 
 
 def review_task(request, task_pk):
@@ -32,7 +33,7 @@ def review_task(request, task_pk):
     choices = [("None", 'Auto / all')] + get_user_as_choices(task)
 
     if request.method == 'POST':
-        form = ReviewForm(request.POST, request.FILES, choices=choices, max_value=max_points)
+        form = UploadZipForm(request.POST, request.FILES)
 
         if form.is_valid():
             path_to_zip = form.save(request.user, task)
@@ -40,18 +41,8 @@ def review_task(request, task_pk):
             if path_to_zip:
                 request.session['review_archive'] = path_to_zip
                 return redirect('admin:review_submit_zip', task.pk)
-
-            messages.add_message(
-                request, messages.SUCCESS,
-                _('Uploaded file %(file)s to %(name)s') % {
-                    'file': form.cleaned_data['file'].name,
-                    'name': form.cleaned_data['user'].get_full_name(),
-                }
-            )
-
-            return redirect('admin:review_task', task.pk)
     else:
-        form = ReviewForm(choices=choices, max_value=max_points)
+        form = UploadZipForm()
 
     context = {
         'task': task,

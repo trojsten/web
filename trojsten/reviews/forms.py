@@ -1,3 +1,5 @@
+# coding: utf8
+
 from easy_select2 import Select2
 import re
 import os
@@ -22,6 +24,31 @@ from trojsten.reviews.helpers import submit_review
 reviews_upload_pattern = re.compile(
     r'(?P<lastname>.*)_(?P<submit_pk>[0-9]+)/(?!source/)(?P<filename>.+\.[^.]+)'
 )
+
+
+class UploadZipForm(forms.Form):
+    file = forms.FileField(max_length=128, label='Zip súbor')
+
+    def clean(self):
+        cleaned_data = super(UploadZipForm, self).clean()
+
+        filename = cleaned_data['file'].name
+        if filename.endswith('.zip'):
+            return cleaned_data
+        else:
+            raise forms.ValidationError(_('Súbor musí byť ZIP archív: %s')
+                                        % filename)
+
+    def save(self, req_user, task):
+        filecontent = self.cleaned_data['file']
+        filename = self.cleaned_data['file'].name
+
+        path = os.path.join(
+            settings.SUBMIT_PATH, 'reviews', '%s_%s.zip' % (int(time()), req_user.username)
+        )
+        path = unidecode(path)
+        write_chunks_to_file(path, filecontent.chunks())
+        return path
 
 
 class ReviewForm(forms.Form):

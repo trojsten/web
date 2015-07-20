@@ -12,8 +12,9 @@
 {% endblock %}
 
 {% block content %}
-
-<a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Download all' %}</a><br/><br/>
+<h1>Opravovanie úlohy: {{ task }}</h1>
+<h2>Riešitelia úlohy</h2>
+<a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Stiahnuť všetky riešenia' %}</a><br/><br/>
 <table>
 {% for user, data in users.items %}
     <tr>  
@@ -34,6 +35,18 @@
 </table>
 
 <br/>
+<h2>Nahrať opravené riešenia v ZIP archíve</h2>
+<a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Stiahnuť všetky riešenia' %}</a><br/><br/>
+<p>
+    Kliknutím na odkaz nad týmto textom si môžeš stiahnuť riešenia všetkých
+    riešiteľov zabalené do ZIP archívu. Po rozbalení môžeš priamo upravovať
+    odovzdané riešenia (úpravou odovzdaného súboru), alebo napísať komentár
+    k riešeniu do súboru komentar.txt. Body riešeniu môžeš priradiť tak, že
+    k nemu napíšeš číslo do súboru body.txt. Takto ohodnotené súbory potom
+    môžeš opätovne zbaliť do .zip archívu, ktorý sem nahráš. Po odoslaní tohto
+    formulára budeš ešte mať šancu skontrolovať, či sa z neho úspešne
+    načítali body a komentáre pre každého riešiteľa.
+</p>
 <form enctype="multipart/form-data" method="post" action="">
     {% csrf_token %}
     <table>
