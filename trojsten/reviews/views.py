@@ -18,7 +18,8 @@ from trojsten.reviews.constants import REVIEW_POINTS_FILENAME, \
 from trojsten.reviews.helpers import (submit_download_filename,
                                       get_latest_submits_for_task, get_user_as_choices,
                                       submit_protocol_download_filename,
-                                      submit_source_download_filename)
+                                      submit_source_download_filename,
+                                      submit_directory)
 
 from trojsten.reviews.forms import ReviewForm, get_zip_form_set, reviews_upload_pattern
 
@@ -95,6 +96,8 @@ def download_latest_submits(request, task_pk):
                 errors += [_('Missing file of user %s') % submit.user.get_full_name()]
             else:
                 zipper.write(submit.filepath, submit_download_filename(submit))
+            zipper.writestr(submit_directory(submit) + REVIEW_POINTS_FILENAME, '')
+            zipper.writestr(submit_directory(submit) + REVIEW_COMMENT_FILENAME, '')
 
             if 'sources' in user:
                 for submit in user['sources']:

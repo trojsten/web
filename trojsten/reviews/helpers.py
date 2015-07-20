@@ -73,6 +73,9 @@ def get_user_as_choices(task):
     ]
 
 
+def submit_directory(submit):
+    return '%s_%s/' % (submit.user.last_name, submit.pk)
+
 def submit_download_filename(submit):
     return '%s_%s/%s' % (submit.user.last_name, submit.pk, submit.filename.split('-', 2)[-1])
 
