@@ -179,6 +179,9 @@ class Task(models.Model):
         )
         return path
 
+    def get_absolute_url(self):
+        return ''
+
     @property
     def task_file_exists(self):
         path = self.get_path(solution=False)

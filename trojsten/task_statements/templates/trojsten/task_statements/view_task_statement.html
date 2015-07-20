@@ -3,11 +3,19 @@
 {% load statements_parts %}
 {% load staticfiles %}
 {% load utils %}
+{% load comments %}
 
 {% block stylesheets %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static "css/syntax_highlight.css" %}" type="text/css" />
+<link rel="stylesheet" href="{% static "fluent_comments/css/ajaxcomments.css" %}" type="text/css" />
 {% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "fluent_comments/js/ajaxcomments.js" %}"></script>
+{% endblock %}
+
 
 {% block title %}{{ task.number }}. {{ task.name }}{% endblock %}
 
@@ -87,4 +95,7 @@
        a to ani po skončení kola (na to budete mať príležitosť v diskusii
        pod vzorovým riešením).
     </p>
+
+    {% render_comment_list for task %}
+    {% render_comment_form for task %}
 {% endblock %}

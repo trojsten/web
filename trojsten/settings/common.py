@@ -281,6 +281,12 @@ INSTALLED_APPS = (
     'wiki.plugins.macros',
     'taggit',
     'kombu.transport.django',
+
+    # django-fluent-comments and its dependencies
+    'fluent_comments',
+    'crispy_forms',
+    'django_comments',
+    'threadedcomments',
 )
 
 INSTALLED_APPS += trojsten.special.installed_apps.INSTALLED_APPS
@@ -467,3 +473,7 @@ COMPETITION_RULES = {
     4: 'trojsten.rules.prask.PraskRules',
 }
 DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'
+
+# Comments settings
+COMMENTS_APP = 'fluent_comments'
+FLUENT_COMMENTS_EXCLUDE_FIELDS = ('url', 'title', )
