@@ -92,3 +92,11 @@ li.comment-wrapper li.comment-wrapper {
 textarea{
     margin-bottom: 10px;
 }
+
+.comments-form{
+    margin-bottom: 10px;
+}
+
+.comment-cancel-reply-link, .comment-waiting, .comment-added-message, .comment-moderated-message{
+    margin-left: 1em;
+}

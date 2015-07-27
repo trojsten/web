@@ -22,7 +22,6 @@
 
       <div class="form-actions row">
         <input type="submit" name="post" class="btn btn-primary" value="{% trans "Post" %}" />
-        <!-- <input type="submit" name="preview" class="btn" value="{% trans "Preview" %}" /> -->
         {% ajax_comment_tags for form.target_object %}
       </div>
     </form>

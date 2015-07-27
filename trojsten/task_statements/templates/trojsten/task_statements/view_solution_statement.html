@@ -1,9 +1,17 @@
 {% extends "trojsten/layout/main.html" %}
 {% load staticfiles %}
+{% load comments %}
 
 {% block stylesheets %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static "css/syntax_highlight.css" %}" type="text/css" />
+<link rel="stylesheet" href="{% static "fluent_comments/css/ajaxcomments.css" %}" type="text/css" />
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "fluent_comments/js/ajaxcomments.js" %}"></script>
+<script type="text/javascript" src="{% static "fluent_comments/js/custom.js" %}"></script>
 {% endblock %}
 
 {% block title %}{{ task.number }}. {{ task.name }} (vzorové riešenie){% endblock %}
@@ -56,4 +64,7 @@
     </div>
     <h2>Diskusia</h2>
     <p>Tu môžte voľne diskutovať o riešení, deliť sa o svoje kusy kódu a podobne.</p>
+
+    {% render_comment_form for task %}
+    {% render_comment_list for task %}
 {% endblock %}

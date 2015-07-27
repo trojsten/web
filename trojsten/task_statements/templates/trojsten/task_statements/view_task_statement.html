@@ -3,19 +3,11 @@
 {% load statements_parts %}
 {% load staticfiles %}
 {% load utils %}
-{% load comments %}
 
 {% block stylesheets %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static "css/syntax_highlight.css" %}" type="text/css" />
-<link rel="stylesheet" href="{% static "fluent_comments/css/ajaxcomments.css" %}" type="text/css" />
 {% endblock %}
-
-{% block javascript %}
-{{ block.super }}
-<script type="text/javascript" src="{% static "fluent_comments/js/ajaxcomments.js" %}"></script>
-{% endblock %}
-
 
 {% block title %}{{ task.number }}. {{ task.name }}{% endblock %}
 
@@ -88,14 +80,13 @@
         <p class="text-danger">Tento príklad momentálne nemá možnosť odovzdávania.</p>
     {% endif %}
     </div>
-    <h2>Diskusia</h2>
-    <p>
-       Ak máte akékoľvek otázky k úlohe, môžete sa tu opýtať.
-       Prosíme, aby ste nevkladali časti riešení, ani nediskutovali o riešeniach,
-       a to ani po skončení kola (na to budete mať príležitosť v diskusii
-       pod vzorovým riešením).
-    </p>
 
-    {% render_comment_list for task %}
-    {% render_comment_form for task %}
+    <h2>Otázky a diskusia</h2>
+    <p>
+       Ak máte akékoľvek otázky k úlohe, môžete sa spýtať na TODO.
+    </p>
+    <p>
+       Po skončení kola budete mať príležitosť na diskutovanie o riešeniach
+       v diskusii pod vzorovým riešením.
+    </p>
 {% endblock %}
