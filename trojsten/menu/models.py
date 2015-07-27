@@ -77,6 +77,9 @@ class MenuItem(models.Model):
             return reverse(self.url[1:])
         return self.url
 
+    def is_external(self):
+        return self.url[:1] not in '@/'
+
     def is_active(self, url):
         for pattern in self.active_url_pattern.split():
             resolved = False
