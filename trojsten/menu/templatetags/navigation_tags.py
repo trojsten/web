@@ -1,5 +1,3 @@
-import re
-
 from django import template
 from django.conf import settings
 
@@ -16,14 +14,7 @@ def navigation(context):
     return {
         'menu_groups': menu_groups,
         'request': context.get('request'),
+        'user': context.get('user'),
         'SITE': context.get('SITE'),
         'OTHER_SITES': context.get('OTHER_SITES'),
     }
-
-
-@register.simple_tag(takes_context=True)
-def current(context, pattern, return_value='active', **kwargs):
-    if not pattern:
-        return ''
-    matches = re.search(pattern, context.get('request').path)
-    return return_value if matches else ''
