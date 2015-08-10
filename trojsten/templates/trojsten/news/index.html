@@ -1,11 +1,22 @@
 {% extends "trojsten/layout/main.html" %}
 
 {% load url from future %}
+{% load staticfiles %}
 
 {% block title %}Novinky{% endblock title %}
 
 {% block page_header%}
-<h1>Novinky</h1>
+<ul class="nav nav-pills">
+    <li class="pull-left">
+        <h1>Novinky</h1>
+    </li>
+    <li class="pull-right">
+        <a href="{% url 'news_feed' %}">
+            <img src="{% static 'images/rss.png' %}">
+        </a>
+    </li>
+</ul>
+
 {% endblock %}
 
 {% block page_content %}
