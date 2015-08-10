@@ -34,20 +34,32 @@
     margin-bottom: 0.3em;
 }
 
+.comment-header {
+    margin-bottom: 0.5em;
+}
+
 .comment-header h1, h2, h3, h4 {
-    margin-top: 0.3em;
-    margin-bottom: 0.3em;
+    margin: 0;
 }
 
 .comment-date {
     text-align: center;
-    margin: 0.3em 0 0.3em 0;
+    margin: 0;
     padding: 0;
     color: gray;
 }
 
-.comment-reply {
+.comment-options {
     text-align: right;
+    padding-left: 0;
+}
+
+.comment-options a{
+    display: inline-block;
+}
+
+.comment-icon {
+    margin-left: 10px;
 }
 
 /* ---- threaded comments ---- */
