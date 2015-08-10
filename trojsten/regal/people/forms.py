@@ -6,6 +6,7 @@ from datetime import date
 
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
+from easy_select2.widgets import Select2
 
 from trojsten.regal.people.models import User, Address
 from . import constants
@@ -39,7 +40,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         fields = ('first_name', 'last_name', 'email',
                   'birth_date', 'gender', 'school', 'graduation',)
         widgets = {
-            'school': forms.Select(attrs={'class': 'autocomplete'}),
+            'school': Select2(),
         }
 
     def __init__(self, *args, **kwargs):
