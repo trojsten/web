@@ -1,0 +1,29 @@
+{% extends "trojsten/layout/main.html" %}
+{% load comments %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static "fluent_comments/css/ajaxcomments.css" %}" type="text/css" />
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static "fluent_comments/js/ajaxcomments.js" %}"></script>
+    <script type="text/javascript" src="{% static "fluent_comments/js/custom.js" %}"></script>
+{% endblock %}
+
+{% block title %}{{ thread.title }}{% endblock %}
+
+{% block page_header %}
+<ul class="nav nav-pills">
+  <li class="pull-left">
+    <h1>{{ thread.title }}</h1>
+  </li>
+</ul>
+{% endblock %}
+
+{% block page_content %}
+    {% render_comment_form for thread %}
+    {% render_comment_list for thread %}
+{% endblock %}

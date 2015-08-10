@@ -256,6 +256,7 @@ INSTALLED_APPS = (
     'trojsten.archive',
     'trojsten.task_statements',
     'trojsten.menu',
+    'trojsten.threads',
 
     # Keep this under trojsten to let trojsten override templates.
     'django.contrib.admin',
