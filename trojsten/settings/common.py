@@ -217,6 +217,7 @@ INSTALLED_APPS = (
     'trojsten.news',
     'trojsten.archive',
     'trojsten.task_statements',
+    'trojsten.menu',
 
     # Keep this under trojsten to let trojsten override templates.
     'django.contrib.admin',
@@ -226,6 +227,7 @@ INSTALLED_APPS = (
     'contact_form',
     'easy_select2',
     'mathfilters',
+    'sortedm2m',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',

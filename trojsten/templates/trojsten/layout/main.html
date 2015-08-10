@@ -1,11 +1,11 @@
 {% extends "trojsten/layout/base.html" %}
-{% load utils %}
+{% load utils navigation_tags %}
 
 {% block page_layout %}
 <header>{% include "trojsten/layout/header.html" %}</header>
 <div class="container">
   <div class="row">
-    <nav class="col-md-3 col-sm-3 col-xs-6 offcanvas-xs nav-menu">{% include "trojsten/layout/navigation.html" %}</nav>
+    <nav class="col-md-3 col-sm-3 col-xs-6 offcanvas-xs nav-menu">{% navigation %}</nav>
     <div class="col-md-9 col-sm-9 col-xs-12 main-content">
     <div class="page-header">
         {% block page_header %}{% endblock %}
