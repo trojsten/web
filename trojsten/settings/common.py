@@ -111,6 +111,12 @@ SITES = {
         'URL': 'http://trojsten.sk',
         'FOLDER': 'trojsten',
     },
+    6: {
+        'NAME': 'Trojstenová Wikipédia',
+        'SHORT_NAME': 'Wiki',
+        'URL': 'http://wiki.trojsten.sk',
+        'FOLDER': 'wiki',
+    },
 }
 
 
