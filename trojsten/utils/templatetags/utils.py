@@ -7,6 +7,8 @@ from django import template
 from django.core import urlresolvers
 from django.conf import settings
 
+from trojsten.regal.contests.models import Competition
+
 register = template.Library()
 
 
@@ -50,6 +52,14 @@ def is_organizer(context, competition):
         context['user'].is_superuser or
         competition.organizers_group in context['user'].groups.all()
     )
+
+
+@register.assignment_tag(takes_context=True)
+def is_site_organizer(context):
+    return any(map(
+        lambda competition: is_organizer(context, competition),
+        Competition.objects.current_site_only()
+    ))
 
 
 @register.filter

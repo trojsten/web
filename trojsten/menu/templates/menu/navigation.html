@@ -10,8 +10,9 @@
         </h2>
     {% endif %}
     <ul class="nav nav-pills nav-stacked" id="main_menu">
+        {% is_site_organizer as is_organizer %}
         {% for group in menu_groups %}
-            {% if user.is_staff or not group.staff_only %}
+            {% if is_organizer or not group.staff_only %}
                 {% if not forloop.first %}
                     <li>
                         <h2>{{ group.name }}</h2>
