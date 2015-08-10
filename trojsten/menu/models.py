@@ -91,7 +91,7 @@ class MenuItem(models.Model):
             matches = resolved and resolved.url_name == pattern
 
             if not matches:
-                return re.search(pattern, url)
+                matches = bool(re.search(pattern, url))
 
             if matches:
                 return True

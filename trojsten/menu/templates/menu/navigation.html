@@ -19,7 +19,7 @@
                     </li>
                 {% endif %}
                 {% for item in group.items.all %}
-                    <li class="{% item_class item %}" >
+                    <li class="{% item_active_class item %}" >
                         <a href="{{ item.get_url }}" {% if item.is_external %} target="_blank" {% endif %}>
                             {{ item.name }} <span class="glyphicon {{ item.glyphicon }}" aria-hidden="true"></span>
                         </a>
