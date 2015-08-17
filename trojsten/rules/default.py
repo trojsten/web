@@ -1,0 +1,2 @@
+class CompetitionRules(object):
+    pass
