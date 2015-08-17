@@ -432,5 +432,9 @@ ALLOWED_INCLUDE_ROOTS += (
 )
 
 # Rules settings
-COMPETITION_RULES = {}
+COMPETITION_RULES = {
+    2: 'trojsten.rules.ksp.KSPRules',
+    3: 'trojsten.rules.kspt.KSPTRules',
+    4: 'trojsten.rules.prask.PraskRules',
+}
 DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'
