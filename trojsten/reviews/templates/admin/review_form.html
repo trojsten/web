@@ -4,8 +4,8 @@
 {% block breadcrumbs %}
 <div class="breadcrumbs">
     <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-    &rsaquo; <a href="{% url 'admin:app_list' app_label='tasks' %}">Tasks</a>
-    &rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}">Task</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='tasks' %}">{% trans "Tasks" %}</a>
+    &rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}">{% trans "Task" %}</a>
     &rsaquo; <a href="{% url 'admin:tasks_task_change' task.pk %}">{{ task }}</a>
     &rsaquo; {% trans 'Review' %}
 </div>
@@ -14,7 +14,7 @@
 {% block content %}
 <h1>Opravovanie úlohy: {{ task }}</h1>
 <h2>Riešitelia úlohy</h2>
-<a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Stiahnuť všetky riešenia' %}</a><br/><br/>
+<a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Download all solutions' %}</a><br/><br/>
 <table>
     <thead>
         <tr>
@@ -41,16 +41,16 @@
     <td><a href="{% url 'admin:tasks_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a></td>
     <td>
     {% if data.description %}
-        <a href="{% url 'admin:submit_download' data.description.pk %}">{% trans 'Stiahnuť' %}</a>
+        <a href="{% url 'admin:submit_download' data.description.pk %}">{% trans 'Download' %}</a>
     {% endif %}
     </td>
 
     <td>
     {% if data.review %}
-        <a href="{% url 'admin:tasks_submit_change' data.review.pk %}">{% trans 'Pozrieť' %}</a>
-        <a href="{% url 'admin:review_edit' task.pk data.review.pk %}">{% trans 'Upraviť' %}</a>
+        <a href="{% url 'admin:tasks_submit_change' data.review.pk %}">{% trans 'View' %}</a>
+        <a href="{% url 'admin:review_edit' task.pk data.review.pk %}">{% trans 'Edit' %}</a>
     {% endif %}
-        <a href="{% url 'admin:review_edit' task.pk data.description.pk %}">{% trans 'Pridať nový review' %}</a>
+        <a href="{% url 'admin:review_edit' task.pk data.description.pk %}">{% trans 'Add new review' %}</a>
     </td>
         <td>
             {% if data.review %}
@@ -69,7 +69,7 @@
 
 <br/>
 <h2>Nahrať opravené riešenia v ZIP archíve</h2>
-<a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Stiahnuť všetky riešenia' %}</a><br/><br/>
+<a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Download all solutions' %}</a><br/><br/>
 <p>
     Kliknutím na odkaz nad týmto textom si môžeš stiahnuť riešenia všetkých
     riešiteľov zabalené do ZIP archívu. Po rozbalení môžeš priamo upravovať

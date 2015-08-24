@@ -81,7 +81,7 @@ class ReviewForm(forms.Form):
         try:
             cleaned_data['user'] = User.objects.get(pk=user_id)
         except:
-            raise forms.ValidationError(_('User %s does not exists') % user_id)
+            raise forms.ValidationError(_('User %s does not exist') % user_id)
 
         if 'file' in cleaned_data:
             file = cleaned_data['file']
@@ -90,11 +90,11 @@ class ReviewForm(forms.Form):
         return cleaned_data
 
     def save(self, submit, create=False):
-        """if creating a new submit, point to user's submit.
+        """If creating a new submit, point to user's submit.
         if not, point to existing reviewed submit."""
         user = self.cleaned_data['user']
 
-        if 'file' in self.cleaned_data and self.cleaned_data['file'] is not None:
+        if self.cleaned_data.get('file'):
             filecontent = self.cleaned_data['file']
             filename = self.cleaned_data['file'].name
         else:
