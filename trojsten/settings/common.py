@@ -430,3 +430,11 @@ TESTER_WEB_IDENTIFIER = env('TROJSTENWEB_TESTER_WEB_IDENTIFIER', 'KSP')
 ALLOWED_INCLUDE_ROOTS += (
     TASK_STATEMENTS_PATH,
 )
+
+# Rules settings
+COMPETITION_RULES = {
+    2: 'trojsten.rules.ksp.KSPRules',
+    3: 'trojsten.rules.kspt.KSPTRules',
+    4: 'trojsten.rules.prask.PraskRules',
+}
+DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'

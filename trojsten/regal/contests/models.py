@@ -16,6 +16,7 @@ from django.contrib.auth.models import Group
 from uuidfield import UUIDField
 
 from trojsten.results.models import FrozenResults
+from trojsten.rules import get_rules_for_competition
 
 
 class RoundManager(models.Manager):
@@ -95,6 +96,10 @@ class Competition(models.Model):
     primary_school_only = models.BooleanField(
         default=False, verbose_name='súťaž je iba pre základoškolákov'
     )
+
+    @property
+    def rules(self):
+        return get_rules_for_competition(self)
 
     objects = CompetitionManager()
 
