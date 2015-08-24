@@ -57,6 +57,7 @@
                     $(row).after('<tr><td colspan="4">' + data + '</td></tr>');
                     $(that).addClass('comment-shown');
                     $(that).text('Schovaj komentár')
+                    MathJax.Hub.Typeset();
                 });
             } else if ($(this).hasClass('comment-shown')) {
                 $(this).removeClass('comment-shown');
