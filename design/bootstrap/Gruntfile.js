@@ -155,17 +155,6 @@ module.exports = function (grunt) {
     },
 
     less: {
-      compileCore: {
-        options: {
-          strictMath: true,
-          sourceMap: true,
-          outputSourceFiles: true,
-          sourceMapURL: '<%= pkg.name %>.css.map',
-          sourceMapFilename: 'dist/css/<%= pkg.name %>.css.map'
-        },
-        src: 'less/bootstrap.less',
-        dest: 'dist/css/<%= pkg.name %>.css'
-      },
       compileKSP: {
         options: {
           strictMath: true,
@@ -188,17 +177,6 @@ module.exports = function (grunt) {
         src: 'less/fks.less',
         dest: 'dist/css/fks/<%= pkg.name %>.css'
       },
-      compileTheme: {
-        options: {
-          strictMath: true,
-          sourceMap: true,
-          outputSourceFiles: true,
-          sourceMapURL: '<%= pkg.name %>-theme.css.map',
-          sourceMapFilename: 'dist/css/<%= pkg.name %>-theme.css.map'
-        },
-        src: 'less/theme.less',
-        dest: 'dist/css/<%= pkg.name %>-theme.css'
-      }
     },
 
     autoprefixer: {
@@ -214,17 +192,17 @@ module.exports = function (grunt) {
           'Safari >= 6'
         ]
       },
-      core: {
+      fks: {
         options: {
           map: true
         },
-        src: 'dist/css/<%= pkg.name %>.css'
+        src: 'dist/css/fks/<%= pkg.name %>.css'
       },
-      theme: {
+      ksp: {
         options: {
           map: true
         },
-        src: 'dist/css/<%= pkg.name %>-theme.css'
+        src: 'dist/css/ksp/<%= pkg.name %>.css'
       },
       docs: {
         src: 'docs/assets/css/src/docs.css'
@@ -263,10 +241,6 @@ module.exports = function (grunt) {
         keepSpecialComments: '*',
         noAdvanced: true
       },
-      minifyCore: {
-        src: 'dist/css/<%= pkg.name %>.css',
-        dest: 'dist/css/<%= pkg.name %>.min.css'
-      },
       minifyKSP: {
         src: 'dist/css/ksp/<%= pkg.name %>.css',
         dest: 'dist/css/ksp/<%= pkg.name %>.min.css'
@@ -274,10 +248,6 @@ module.exports = function (grunt) {
       minifyFKS: {
         src: 'dist/css/fks/<%= pkg.name %>.css',
         dest: 'dist/css/fks/<%= pkg.name %>.min.css'
-      },
-      minifyTheme: {
-        src: 'dist/css/<%= pkg.name %>-theme.css',
-        dest: 'dist/css/<%= pkg.name %>-theme.min.css'
       },
       docs: {
         src: [
@@ -464,8 +434,8 @@ module.exports = function (grunt) {
   grunt.registerTask('dist-js', ['concat', 'uglify:core']);
 
   // CSS distribution task.
-  grunt.registerTask('less-compile', ['less:compileCore', 'less:compileTheme', 'less:compileFKS', 'less:compileKSP']);
-  grunt.registerTask('dist-css', ['less-compile', 'autoprefixer:core', 'autoprefixer:theme', 'usebanner', 'csscomb:dist', 'cssmin:minifyCore', 'cssmin:minifyTheme', 'cssmin:minifyKSP', 'cssmin:minifyFKS']);
+  grunt.registerTask('less-compile', ['less:compileFKS', 'less:compileKSP']);
+  grunt.registerTask('dist-css', ['less-compile', 'autoprefixer:ksp', 'autoprefixer:fks', 'usebanner', 'csscomb:dist', 'cssmin:minifyKSP', 'cssmin:minifyFKS']);
 
   // Full distribution task.
   grunt.registerTask('dist', ['clean:dist', 'dist-css', 'copy:fonts', 'dist-js']);
