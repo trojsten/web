@@ -1,4 +1,5 @@
 from collections import defaultdict
+from django.core.exceptions import PermissionDenied
 import os.path
 import zipfile
 from time import time
@@ -29,6 +30,10 @@ from trojsten.reviews.forms import ReviewForm, get_zip_form_set, reviews_upload_
 def review_task(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     users = get_latest_submits_for_task(task)
+
+    if not request.user.is_superuser and not \
+            task.competition.organizers_group in request.user.groups.all():
+        raise PermissionDenied
 
     if request.method == 'POST':
         form = UploadZipForm(request.POST, request.FILES)
@@ -61,6 +66,11 @@ def review_task(request, task_pk):
 def edit_review(request, task_pk, submit_pk):
     task = get_object_or_404(Task, pk=task_pk)
     submit = get_object_or_404(Submit, pk=submit_pk)
+
+    if not request.user.is_superuser and not \
+            task.competition.organizers_group in request.user.groups.all():
+        raise PermissionDenied
+
     choices = get_user_as_choices(task)
     create = submit.testing_status != SUBMIT_STATUS_REVIEWED
     max_points = task.description_points
@@ -105,6 +115,11 @@ def submit_download(request, submit_pk):
     submit = get_object_or_404(Submit, pk=submit_pk)
     name = submit_download_filename(submit)
 
+    if not request.user.is_superuser and not \
+            submit.task.competition.organizers_group \
+                    in request.user.groups.all():
+        raise PermissionDenied
+
     if not os.path.isfile(submit.filepath):
         raise Http404
 
@@ -114,6 +129,10 @@ def submit_download(request, submit_pk):
 def download_latest_submits(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     submits = get_latest_submits_for_task(task).values()
+
+    if not request.user.is_superuser and not \
+            task.competition.organizers_group in request.user.groups.all():
+        raise PermissionDenied
 
     path = os.path.join(settings.SUBMIT_PATH, 'reviews')
     if not os.path.isdir(path):
@@ -159,6 +178,10 @@ def zip_upload(request, task_pk):
 
     if name is None:
         raise Http404
+
+    if not request.user.is_superuser and not \
+            task.competition.organizers_group in request.user.groups.all():
+        raise PermissionDenied
 
     try:
         archive = zipfile.ZipFile(name)
