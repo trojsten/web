@@ -38,6 +38,11 @@ def review_task(request, task_pk):
 
             if path_to_zip:
                 request.session['review_archive'] = path_to_zip
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    _('Successfully uploaded a zip file.')
+                )
                 return redirect('admin:review_submit_zip', task.pk)
     else:
         form = UploadZipForm()
@@ -71,6 +76,11 @@ def edit_review(request, task_pk, submit_pk):
 
         if form.is_valid():
             form.save(submit, create)
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                _('Successfully saved the review'),
+            )
             return redirect('admin:review_task', task.pk)
     else:
         form = ReviewForm(choices=choices, max_value=max_points, initial={
@@ -199,6 +209,11 @@ def zip_upload(request, task_pk):
             formset.save(name, task)
 
             request.session.pop('review_archive')
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                _("Successfully finished reviewing this task!")
+            )
             return redirect('admin:review_task', task.pk)
     else:
         formset = ZipFormSet(initial=initial)
