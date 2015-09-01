@@ -46,5 +46,21 @@
         },
         "model": "sites.site",
         "pk": 6
+    },
+    {
+        "fields": {
+            "domain": "ufo.fks.sk",
+            "name": "UFO"
+        },
+        "model": "sites.site",
+        "pk": 7
+    },
+    {
+        "fields": {
+            "domain": "fx.fks.sk",
+            "name": "FX"
+        },
+        "model": "sites.site",
+        "pk": 8
     }
 ]

@@ -101,6 +101,7 @@ SITES = {
         'NAME': 'Fyzikálny korešpondenčný seminár',
         'SHORT_NAME': 'FKS',
         'URL': 'http://fks.sk',
+        'HAS_LOGO': True,
         'FOLDER': 'fks',
         'FACEBOOK_PAGE': 'http://fks.sk',
         'GOOGLEPLUS_PAGE': 'http://fks.sk',
@@ -128,6 +129,23 @@ SITES = {
         'FOLDER': 'wiki',
         'FACEBOOK_PAGE': 'https://www.facebook.com/Trojsten',
         'GOOGLEPLUS_PAGE': 'http://trojsten.sk',
+    },
+    7: {
+        'NAME': 'Korešpondenčný seminár UFO',
+        'SHORT_NAME': 'UFO',
+        'URL': 'http://ufo.fks.sk',
+        'HAS_LOGO': True,
+        'FOLDER': 'ufo',
+        'FACEBOOK_PAGE': 'http://ufo.fks.sk',
+        'GOOGLEPLUS_PAGE': 'http://ufo.fks.sk',
+    },
+    8: {
+        'NAME': 'Korešpondenčný seminár FX',
+        'SHORT_NAME': 'FX',
+        'URL': 'http://fx.fks.sk',
+        'FOLDER': 'fx',
+        'FACEBOOK_PAGE': 'http://fx.fks.sk',
+        'GOOGLEPLUS_PAGE': 'http://fx.fks.sk',
     },
 }
 
