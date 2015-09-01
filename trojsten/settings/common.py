@@ -206,7 +206,7 @@ MIDDLEWARE_CLASSES = (
 
 ALLOWED_INCLUDE_ROOTS = ()
 
-ROOT_URLCONF = 'trojsten.urls'
+ROOT_URLCONF = 'trojsten.urls.default'
 HOST_MIDDLEWARE_URLCONF_MAP = {}
 
 # Python dotted path to the WSGI application used by Django's runserver.
