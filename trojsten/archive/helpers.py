@@ -21,8 +21,4 @@ def get_rounds_by_year(user, competition):
     for round in rounds:
         rounds_dict[round.series.year].append(round)
 
-    ordered_rounds = OrderedDict()
-    for key in sorted(rounds_dict.keys())[::-1]:
-        ordered_rounds[key] = rounds_dict[key]
-
-    return ordered_rounds
+    return OrderedDict(sorted(rounds_dict.items(), key=lambda t: t[0], reverse=True))
