@@ -170,7 +170,7 @@ def round_submit_page(request, round_id):
 
 @login_required
 def active_rounds_submit_page(request):
-    rounds = Round.objects.active_visible(request.user)
+    rounds = Round.objects.active_visible(request.user).order_by('end_time')
     competitions = Competition.objects.current_site_only()
     template_data = {
         'rounds': rounds,

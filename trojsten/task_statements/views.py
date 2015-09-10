@@ -62,7 +62,7 @@ def task_list(request, round_id):
 
 
 def active_rounds_task_list(request):
-    rounds = Round.objects.active_visible(request.user)
+    rounds = Round.objects.active_visible(request.user).order_by('end_time')
     competitions = Competition.objects.current_site_only()
     template_data = {
         'rounds': rounds,
