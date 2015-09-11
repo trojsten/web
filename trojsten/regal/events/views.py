@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 from datetime import datetime
 import pytz
 
+from wiki.decorators import get_article
+
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
@@ -122,12 +124,18 @@ class EventListView(ListView):
     model = EventType
     context_object_name = 'event_types'
     queryset = EventType.objects.current_site_only().prefetch_related('event_set')
-    title = 'Akcie'
+    article = None  # Hodnota sa prida v dispatch()
+
+    @method_decorator(get_article(can_read=True))
+    def dispatch(self, *args, **kwargs):
+        self.article = args[1]
+        return super(EventListView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(EventListView, self).get_context_data(**kwargs)
-        context['title'] = self.title
-        return context
+        kwargs.update({
+            'article': self.article
+        })
+        return kwargs
 
 event_list = EventListView.as_view()
 
@@ -136,5 +144,5 @@ class CampEventListView(EventListView):
     queryset = EventType.objects.current_site_only().filter(
         is_camp=True
     ).prefetch_related('event_set')
-    title = 'Sústredenia'
+
 camp_event_list = CampEventListView.as_view()

@@ -1,40 +1,7 @@
-{% extends "trojsten/layout/main.html" %}
-{% load utils %}
+{% extends "wiki/article.html" %}
+{% load wiki_tags event_parts %}
 
-{% block title %}{{ title }}{% endblock %}
-
-{% block page_header %}
-<h1>{{ title }}</h1>
-{% endblock %}
-
-{% block page_content %}
-
-{% if 1 < event_types|length %}
-<!-- Nav tabs -->
-<ul class="nav nav-tabs" role="tablist">
-    {% for event_type in event_types %}
-        <li {% if forloop.first %}class="active"{% endif %}>
-            <a href="#eventtype-tab-{{ event_type.id }}" role="tab" data-toggle="tab">
-                {{ event_type.name }}
-            </a>
-        </li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-<!-- Tab panes -->
-<div class="tab-content">
-{% for event_type in event_types %}
-    <div class="tab-pane fade {% if forloop.first %}in active{% endif %}"
-         id="eventtype-tab-{{ event_type.id }}">
-        <div class="list-group">
-        {% for event in event_type.event_set.all %}
-            <a href="{% url 'event_detail' event_id=event.id %}" class="list-group-item">{{ event }} <small>{{ event.place.name }}, {{ event.start_time|date:'d.m.Y' }} - {{ event.end_time|date:'d.m.Y' }}</small></a>
-        {% empty %}
-            <span class="list-group-item">Žiadne akcie</span>
-        {% endfor %}
-        </div>
-    </div>
-{% endfor %}
-</div>
+{% block wiki_contents_tab %}
+{% wiki_render article %}
+{% show_events %}
 {% endblock %}
