@@ -127,15 +127,16 @@ class EventListView(ListView):
     article = None  # Hodnota sa prida v dispatch()
 
     @method_decorator(get_article(can_read=True))
-    def dispatch(self, *args, **kwargs):
-        self.article = args[1]
-        return super(EventListView, self).dispatch(*args, **kwargs)
+    def dispatch(self, request, article, *args, **kwargs):
+        self.article = article
+        return super(EventListView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        kwargs.update({
+        context = super(EventListView, self).get_context_data(**kwargs)
+        context.update({
             'article': self.article
         })
-        return kwargs
+        return context
 
 event_list = EventListView.as_view()
 
