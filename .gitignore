@@ -20,3 +20,7 @@ Session.vim
 
 # PyLint
 .pylintrc
+
+# IntelliJ editors
+*.idea
+*.iml
