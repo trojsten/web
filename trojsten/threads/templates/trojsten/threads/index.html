@@ -1,10 +1,15 @@
 {% extends "trojsten/layout/main.html" %}
 {% load utils %}
+{% load i18n %}
 
-{% block title %}Diskusie{% endblock %}
+{% block title %}
+    {% comment %}Translators: original: Diskusie{% endcomment %}
+    {% trans "Discussions" %}
+{% endblock %}
 
 {% block page_header %}
-<h1>Diskusie</h1>
+    {% comment %}Translators: original: Diskusie{% endcomment %}
+    <h1>{% trans "Discussions" %}</h1>
 {% endblock %}
 
 {% block page_content %}
@@ -12,7 +17,10 @@
     {% for thread in threads.all %}
         <a href="{% url 'thread' thread_id=thread.id %}" class="list-group-item">{{ thread }}</a>
     {% empty %}
-        <span class="list-group-item">Žiadne diskusie</span>
+        <span class="list-group-item">
+            {% comment %}Translators: original: Žiadne diskusie{% endcomment %}
+            {% trans "No discussions" %}
+        </span>
     {% endfor %}
 </div>
 {% endblock %}

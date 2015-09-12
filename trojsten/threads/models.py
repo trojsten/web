@@ -2,6 +2,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy
 from django.contrib.sites.models import Site
 
 
@@ -15,8 +16,10 @@ class Thread(models.Model):
     sites = models.ManyToManyField(Site)
 
     class Meta:
-        verbose_name = 'diskusné vlákno'
-        verbose_name_plural = 'diskusné vlákna'
+        # Translator: original: diskusné vlákno
+        verbose_name = ugettext_lazy('discussion thread')
+        # Translator: original: diskusné vlákna
+        verbose_name_plural = ugettext_lazy('discussion threads')
 
     def __str__(self):
         return self.title

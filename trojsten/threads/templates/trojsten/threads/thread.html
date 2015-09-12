@@ -2,6 +2,7 @@
 {% load comments %}
 {% load staticfiles %}
 {% load utils %}
+{% load i18n %}
 
 {% block stylesheets %}
     {{ block.super }}
@@ -25,7 +26,9 @@
   {% if is_organizer %}
     <li class="pull-right">
       <a href="{% url 'admin:threads_thread_change' thread.id %}">
-        <span class="glyphicon glyphicon-edit"></span> Upraviť
+        <span class="glyphicon glyphicon-edit"></span>
+          {% comment %}Translator: original: Upraviť{% endcomment %}
+          {% trans "Edit" %}
       </a>
     </li>
   {% endif %}
