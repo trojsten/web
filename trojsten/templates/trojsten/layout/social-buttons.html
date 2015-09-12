@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <ul id="social-buttons" class="nav navbar-nav navbar-right">
   <li class="social-button">
       <div id="fb-root"></div>
@@ -17,7 +19,8 @@
       <div class="g-plusone" data-size="medium" data-href="{{ SITE.GOOGLEPLUS_PAGE }}"></div>
       <!-- Umiestnite túto značku za poslednú značku tlačidlo +1. -->
       <script type="text/javascript">
-        window.___gcfg = {lang: 'sk'};
+        {% get_current_language as LANGUAGE_CODE %}
+        window.___gcfg = {lang: '{{ LANGUAGE_CODE }}'};
 
         (function() {
           var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
