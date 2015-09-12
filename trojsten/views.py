@@ -2,11 +2,15 @@
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
+
 from wiki.views import article
 
 
 def contact_form_sent_redirect(request):
-    messages.success(request, 'Vaša správa bola odoslaná. Ďakujeme za spätnú väzbu.')
+    # Translators: original: Vaša správa bola odoslaná. Ďakujeme za spätnú väzbu.
+    msg = _('Your message has been sent. Thank you for your feedback.')
+    messages.success(request, msg)
     return redirect('/')
 
 
