@@ -152,12 +152,12 @@ def download_latest_submits(request, task_pk):
                 errors += [_('Missing file of user %s') % submit.user.get_full_name()]
             else:
                 zipper.write(submit.filepath, submit_download_filename(submit))
-            last_review_points = user['review'].points if 'review' in user else 0
+            last_review_points = str(int(user['review'].points)) if 'review' in user else ''
             last_review_comment = user['review'].reviewer_comment if 'review' in user else ''
             zipper.writestr(submit_directory(submit) + REVIEW_POINTS_FILENAME,
-                            str(last_review_points))
+                            last_review_points)
             zipper.writestr(submit_directory(submit) + REVIEW_COMMENT_FILENAME,
-                            str(last_review_comment))
+                            last_review_comment)
 
             if 'sources' in user:
                 for submit in user['sources']:
@@ -171,7 +171,7 @@ def download_latest_submits(request, task_pk):
                         zipper.write(submit.protocol_path, submit_protocol_download_filename(submit, description_submit_id))
 
         if errors:
-            zipper.writestr("errors.txt", "\n".join(errors).encode())
+            zipper.writestr("errors.txt", u"\n".join(errors).encode('utf8'))
 
     return sendfile(request, path, attachment=True)
 
