@@ -9618,4 +9618,12 @@ footer ul {
             transform: scale(1) rotate(360deg);
   }
 }
+/* Statements markdown specific
+-------------------------------------------------- */
+.task-table th,
+.task-table td {
+  border: 1px solid #945600;
+  border-collapse: collapse;
+  padding: 2px 5px;
+}
 /*# sourceMappingURL=bootstrap.css.map */
