@@ -1,0 +1,18 @@
+{% extends "trojsten/layout/main.html" %}
+{% load utils %}
+
+{% block title %}Diskusie{% endblock %}
+
+{% block page_header %}
+<h1>Diskusie</h1>
+{% endblock %}
+
+{% block page_content %}
+<div class="list-group">
+    {% for thread in threads.all %}
+        <a href="{% url 'thread' thread_id=thread.id %}" class="list-group-item">{{ thread }}</a>
+    {% empty %}
+        <span class="list-group-item">Žiadne diskusie</span>
+    {% endfor %}
+</div>
+{% endblock %}

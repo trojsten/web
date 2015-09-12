@@ -1,0 +1,38 @@
+{% extends "trojsten/layout/main.html" %}
+{% load comments %}
+{% load staticfiles %}
+{% load utils %}
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static "fluent_comments/css/ajaxcomments.css" %}" type="text/css" />
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static "fluent_comments/js/ajaxcomments.js" %}"></script>
+    <script type="text/javascript" src="{% static "fluent_comments/js/custom.js" %}"></script>
+{% endblock %}
+
+{% block title %}{{ thread.title }}{% endblock %}
+
+{% block page_header %}
+<ul class="nav nav-pills">
+  <li class="pull-left">
+    <h1>{{ thread.title }}</h1>
+  </li>
+  {% is_site_organizer as is_organizer%}
+  {% if is_organizer %}
+    <li class="pull-right">
+      <a href="{% url 'admin:threads_thread_change' thread.id %}">
+        <span class="glyphicon glyphicon-edit"></span> Upraviť
+      </a>
+    </li>
+  {% endif %}
+</ul>
+{% endblock %}
+
+{% block page_content %}
+    {% render_comment_form for thread %}
+    {% render_comment_list for thread %}
+{% endblock %}

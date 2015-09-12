@@ -8,7 +8,6 @@ django-bootstrap-form==3.1
 django-sendfile==0.3.6
 celery==3.1.16
 django-contact-form==1.0
-django-disqus==0.4.3
 Unidecode==0.04.16
 python-social-auth==0.2.1
 django-mathfilters==0.3.0
@@ -18,3 +17,5 @@ wiki==0.0.24.2
 django-nyt==0.9.6.post1
 django-sortedm2m==0.8.1
 -e git://github.com/koniiiik/ksp_login@00a1b3d90405434d4f0354d2632b0eeadfdb8a44#egg=ksp_login-master
+django-fluent-comments
+django-threadedcomments==1.0b1

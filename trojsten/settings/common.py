@@ -256,6 +256,7 @@ INSTALLED_APPS = (
     'trojsten.archive',
     'trojsten.task_statements',
     'trojsten.menu',
+    'trojsten.threads',
 
     # Keep this under trojsten to let trojsten override templates.
     'django.contrib.admin',
@@ -280,8 +281,13 @@ INSTALLED_APPS = (
     'wiki.plugins.images',
     'wiki.plugins.macros',
     'taggit',
-    'disqus',
     'kombu.transport.django',
+
+    # django-fluent-comments and its dependencies
+    'fluent_comments',
+    'crispy_forms',
+    'django_comments',
+    'threadedcomments',
 )
 
 INSTALLED_APPS += trojsten.special.installed_apps.INSTALLED_APPS
@@ -374,8 +380,6 @@ PROVIDER_OVERRIDE_DICT = json.loads(env('TROJSTENWEB_AUTHENTICATION_PROVIDER_OVE
 
 # The number of authentication providers to show in the short list.
 AUTHENTICATION_PROVIDERS_BRIEF = int(env('TROJSTENWEB_AUTHENTICATION_PROVIDERS_BRIEF', '3'))
-
-DISQUS_WEBSITE_SHORTNAME = env('TROJSTENWEB_DISQUS_WEBSITE_SHORTNAME', 'trojsten-ksp')
 
 SOUTH_MIGRATION_MODULES = {
     'taggit': 'taggit.south_migrations',
@@ -470,3 +474,8 @@ COMPETITION_RULES = {
     4: 'trojsten.rules.prask.PraskRules',
 }
 DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'
+
+# Comments settings
+COMMENTS_APP = 'fluent_comments'
+FLUENT_COMMENTS_EXCLUDE_FIELDS = ('url', 'title', 'email')
+CRISPY_TEMPLATE_PACK = 'bootstrap3'

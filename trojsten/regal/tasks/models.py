@@ -9,6 +9,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
 
 from trojsten.regal.contests.models import Round, Competition
 from trojsten.regal.people.models import User
@@ -178,6 +179,9 @@ class Task(models.Model):
             task_file,
         )
         return path
+
+    def get_absolute_url(self):
+        return reverse('solution_statement', kwargs={'task_id': self.id})
 
     @property
     def task_file_exists(self):

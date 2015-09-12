@@ -1,0 +1,114 @@
+#comment-waiting {
+  line-height: 16px;
+}
+
+#comment-waiting img {
+  vertical-align: middle;
+  padding: 0 4px 0 10px;
+}
+
+#comment-added-message,
+#comment-thanks {
+  padding-left: 10px;
+}
+
+.comment-moderated-flag {
+  font-variant: small-caps;
+  margin-left: 5px;
+}
+
+#div_id_honeypot {
+  /* Hide the honeypot from django_comments by default */
+  display: none;
+}
+
+/* ---- comment item ---- */
+
+.comment-item {
+    padding: 0 1em 0 1em;
+    margin-bottom: 10px;
+}
+
+.comment-preview{
+    margin-top: 0.6em;
+    margin-bottom: 0.3em;
+}
+
+.comment-header {
+    margin-bottom: 0.5em;
+}
+
+.comment-header h1, h2, h3, h4 {
+    margin: 0;
+}
+
+.comment-date {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    color: gray;
+}
+
+.comment-options {
+    text-align: right;
+    padding-left: 0;
+}
+
+.comment-options a{
+    display: inline-block;
+}
+
+.comment-icon {
+    margin-left: 10px;
+}
+
+/* ---- threaded comments ---- */
+
+ul.comment-list-wrapper {
+  /* to avoid touching our own "ul" tags, our tags are explicitly decorated with a class selector */
+  margin-left: 0;
+  padding-left: 0;
+}
+
+ul.comment-list-wrapper ul.comment-list-wrapper {
+  margin-left: 0;
+  padding-left: 0;
+  border-left: 1px #ddd solid;
+}
+
+li.comment-wrapper {
+  list-style: none;
+}
+
+li.comment-wrapper li.comment-wrapper {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 1.3em;
+  padding-top: 0em;
+}
+
+.js-comments-form-orig-position .comment-cancel-reply-link {
+  display: none;
+}
+
+/* ---- form ---- */
+
+.form-actions{
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border: none;
+    background-color: transparent;
+}
+
+textarea{
+    margin-bottom: 10px;
+}
+
+.comments-form{
+    margin-bottom: 10px;
+}
+
+.comment-cancel-reply-link, .comment-waiting, .comment-added-message, .comment-moderated-message{
+    margin-left: 1em;
+}
