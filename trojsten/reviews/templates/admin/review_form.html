@@ -4,8 +4,8 @@
 {% block breadcrumbs %}
 <div class="breadcrumbs">
     <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-    &rsaquo; <a href="{% url 'admin:app_list' app_label='tasks' %}">Tasks</a>
-    &rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}">Tasks</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='tasks' %}">{% trans "Tasks" %}</a>
+    &rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}">{% trans "Tasks" %}</a>
     &rsaquo; <a href="{% url 'admin:tasks_task_change' task.pk %}">{{ task.name }}</a>
     &rsaquo; {% trans 'Review' %}
 </div>
@@ -39,7 +39,7 @@
     <table>
     {{ form }}
     </table>
-    <input type="submit" text="Upload"/> 
+    <input type="submit" text="{% trans 'Upload' %}"/>
 </form>
 
 {% endblock %}
