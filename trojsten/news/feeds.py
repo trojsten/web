@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.contrib.syndication.views import Feed
 from django.contrib.sites.models import get_current_site
 from django.utils import feedgenerator
+from django.utils.translation import ugettext_lazy
 
 from trojsten.news.models import Entry
 
@@ -15,7 +16,8 @@ class NewsFeed(Feed):
         return get_current_site(request)
 
     def title(self, obj):
-        return "%s: Novinky" % (obj.name,)
+        # Translators: original: %s: Novinky
+        return ugettext_lazy("%s: News") % (obj.name,)
 
     def items(self, obj):
         return Entry.objects.filter(sites__id__exact=obj.pk)[:10]
