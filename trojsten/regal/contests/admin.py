@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 from django.utils.encoding import force_text
+from django.utils.translation import ugettext_lazy
 
 from easy_select2 import select2_modelform
 
@@ -37,26 +38,33 @@ class RoundAdmin(admin.ModelAdmin):
     list_filter = ('series__competition', 'series__year')
 
     get_series_number = get_related(attribute_chain=('series', 'number'),
-                                    description='séria',
+                                    # Translators: original: časť
+                                    description=ugettext_lazy('semester'),
                                     order='series__number')
     get_series_name = get_related(attribute_chain=('series', 'name'),
-                                  description='názov série',
+                                  # Translators: original: názov časti
+                                  description=ugettext_lazy('semester name'),
                                   order='series__name')
     get_year = get_related(attribute_chain=('series', 'year'),
-                           description='ročník',
+                           # Translators: original: ročník
+                           description=ugettext_lazy('year'),
                            order='series__year')
     get_competition = get_related(attribute_chain=('series', 'competition'),
-                                  description='súťaž',
+                                  # Translators: original: súťaž
+                                  description=ugettext_lazy('competition'),
                                   order='series__competition')
 
     tasks_pdf = attribute_format(attribute='tasks_pdf_exists',
-                                 description='zadania v pdf',
+                                 # Translators: original: zadania v pdf
+                                 description=ugettext_lazy('pdf statements'),
                                  boolean=True)
     solutions_pdf = attribute_format(attribute='solutions_pdf_exists',
-                                     description='vzoráky v pdf',
+                                     # Translators: original: vzoráky v pdf
+                                     description=ugettext_lazy('pdf solutions'),
                                      boolean=True)
     can_submit = attribute_format(attribute='can_submit',
-                                  description='prebieha',
+                                  # Translators: original: prebieha
+                                  description=ugettext_lazy('running'),
                                   boolean=True)
 
     def get_queryset(self, request):

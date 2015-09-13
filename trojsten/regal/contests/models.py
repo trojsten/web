@@ -12,6 +12,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.sites.models import Site
 from django.conf import settings
 from django.contrib.auth.models import Group
+from django.utils.translation import ugettext_lazy
 
 from uuidfield import UUIDField
 
@@ -70,13 +71,20 @@ class CompetitionManager(models.Manager):
 @python_2_unicode_compatible
 class Repository(models.Model):
     notification_string = UUIDField(
-        auto=True, primary_key=True, version=4, verbose_name='string pre push notifikáciu'
+        auto=True, primary_key=True, version=4,
+        # Translators: original: string pre push notifikáciu
+        verbose_name=ugettext_lazy('push notification string')
     )
-    url = models.CharField(max_length=128, verbose_name='url git repozitára')
-
+    # Translators: original: url git repozitára
+    url = models.CharField(
+        max_length=128,
+        # Translators: original: url git repozitára
+        verbose_name=ugettext_lazy('git repository URL'))
     class Meta:
-        verbose_name = 'Repozitár'
-        verbose_name_plural = 'Repozitáre'
+        # Translators: original: Repozitár
+        verbose_name = ugettext_lazy('Repository')
+        # Translators: original: Repozitáre
+        verbose_name_plural = ugettext_lazy('Repositories')
 
     def __str__(self):
         return self.url
@@ -87,15 +95,32 @@ class Competition(models.Model):
     '''
     Consists of series.
     '''
-    name = models.CharField(max_length=128, verbose_name='názov')
-    sites = models.ManyToManyField(Site)
-    repo = models.ForeignKey(Repository, null=True, blank=True, verbose_name='git repozitár')
-    repo_root = models.CharField(
-        max_length=128, verbose_name='adresa foldra súťaže v repozitári'
+    name = models.CharField(
+        max_length=128,
+        # Translators: original: názov
+        verbose_name=ugettext_lazy('name')
     )
-    organizers_group = models.ForeignKey(Group, null=True, verbose_name='skupina vedúcich')
+    sites = models.ManyToManyField(Site)
+    repo = models.ForeignKey(
+        Repository, null=True, blank=True,
+        # Translators: original: git repozitár
+        verbose_name=ugettext_lazy('git repository')
+    )
+    repo_root = models.CharField(
+        max_length=128,
+        # Translators: original: adresa foldra súťaže v repozitári
+        verbose_name=ugettext_lazy('folder path in repository')
+    )
+    organizers_group = models.ForeignKey(
+        Group,
+        null=True,
+        # Translators: original: skupina vedúcich
+        verbose_name=ugettext_lazy('organizers group')
+    )
     primary_school_only = models.BooleanField(
-        default=False, verbose_name='súťaž je iba pre základoškolákov'
+        default=False,
+        # Translators: original: súťaž je iba pre základoškolákov
+        verbose_name=ugettext_lazy('elementary school only')
     )
 
     @property
@@ -105,8 +130,10 @@ class Competition(models.Model):
     objects = CompetitionManager()
 
     class Meta:
-        verbose_name = 'Súťaž'
-        verbose_name_plural = 'Súťaže'
+        # Translators: original: Súťaž
+        verbose_name = ugettext_lazy('Competition')
+        # Translators: original: Súťaže
+        verbose_name_plural = ugettext_lazy('Competitions')
 
     def __str__(self):
         return self.name
@@ -117,23 +144,36 @@ class Series(models.Model):
     '''
     Series consists of several rounds.
     '''
-    competition = models.ForeignKey(Competition, verbose_name='súťaž')
-    name = models.CharField(max_length=32, verbose_name='názov', blank=True)
-    number = models.IntegerField(verbose_name='číslo série')
-    year = models.IntegerField(verbose_name='ročník')
+    # Translators: original: súťaž
+    competition = models.ForeignKey(Competition, verbose_name=ugettext_lazy('competition'))
+    name = models.CharField(
+        max_length=32,
+        # Translators: original: názov
+        verbose_name=ugettext_lazy('name'),
+        blank=True
+    )
+    # Translators: original: číslo časti
+    number = models.IntegerField(verbose_name=ugettext_lazy('semester number'))
+    # Translators: original: ročník
+    year = models.IntegerField(verbose_name=ugettext_lazy('year'))
 
     class Meta:
-        verbose_name = 'Séria'
-        verbose_name_plural = 'Série'
+        # Translators: original: Časť
+        verbose_name = ugettext_lazy('Semester')
+        # Translators: original: Časti
+        verbose_name_plural = ugettext_lazy('Semesters')
 
     def __str__(self):
-        return '%i. (%s) séria, %i. ročník %s'\
+        # Translators: original: %i. (%s) časť, %i. ročník %s
+        return ugettext_lazy('semester: %i (%s), year %i, %s')\
             % (self.number, self.name, self.year, self.competition)
 
     def short_str(self):
-        return '%i. (%s) séria'\
+        # Translators: original: %i. (%s) časť
+        return ugettext_lazy('semester: %i (%s)')\
             % (self.number, self.name)
-    short_str.short_description = 'Séria'
+    # Translators: original: Časť
+    short_str.short_description = ugettext_lazy('Semester')
 
 
 @python_2_unicode_compatible
@@ -142,16 +182,28 @@ class Round(models.Model):
     Round has tasks.
     Holds information about deadline and such things
     '''
-    series = models.ForeignKey(Series, verbose_name='séria')
-    number = models.IntegerField(verbose_name='číslo')
+    # Translators: original: časť
+    series = models.ForeignKey(Series, verbose_name=ugettext_lazy('semester'))
+    # Translators: original: číslo
+    number = models.IntegerField(verbose_name=ugettext_lazy('number'))
     start_time = models.DateTimeField(
-        verbose_name='začiatok', default=utils.default_start_time
+        # Translators: original: začiatok
+        verbose_name=ugettext_lazy('start time'),
+        default=utils.default_start_time
     )
     end_time = models.DateTimeField(
-        verbose_name='koniec', default=utils.default_end_time
+        # Translators: original: koniec
+        verbose_name=ugettext_lazy('end time'),
+        default=utils.default_end_time
     )
-    visible = models.BooleanField(verbose_name='viditeľnosť')
-    solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov')
+    visible = models.BooleanField(
+        # Translators: original: viditeľnosť
+        verbose_name=ugettext_lazy('visible')
+    )
+    solutions_visible = models.BooleanField(
+        # Translators: original: viditeľnosť vzorákov
+        verbose_name=ugettext_lazy('visible solutions')
+    )
 
     objects = RoundManager()
 
@@ -230,11 +282,14 @@ class Round(models.Model):
         return self.series.competition.category_set.all()
 
     class Meta:
-        verbose_name = 'Kolo'
-        verbose_name_plural = 'Kolá'
+        # Translators: original: Séria
+        verbose_name = ugettext_lazy('Round')
+        # Translators: original: Série
+        verbose_name_plural = ugettext_lazy('Rounds')
 
     def __str__(self):
-        return '%i. kolo, %i. séria, %i. ročník %s' % (
+        # Translators: original: %i. séria, %i. časť, %i. ročník %s
+        return ugettext_lazy('round: %i, semester: %i, year: %i, %s') % (
             self.number,
             self.series.number,
             self.series.year,
@@ -242,5 +297,7 @@ class Round(models.Model):
         )
 
     def short_str(self):
-        return '%i. kolo' % self.number
-    short_str.short_description = 'kolo'
+        # Translators: original: %i. séria
+        return ugettext_lazy('round: %i') % self.number
+    # Translators: original: séria
+    short_str.short_description = ugettext_lazy('round')
