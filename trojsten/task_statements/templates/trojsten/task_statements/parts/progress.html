@@ -1,11 +1,16 @@
 {% load statements_parts sekizai_tags staticfiles %}
+{% load i18n %}
+
 {% if remaining.days >= 0 %}
 {% addtoblock "js" %}
     <script type="text/javascript" src="{% static "js/roundprogressbar.js" %}">
     </script>
 {% endaddtoblock %}
 <div class="row roundprogressbar" id="progressbar-{{ round.id }}" data-id="{{ round.id }}" data-precision="{{ remaining|progress_time_precision }}" data-isresults={{ results }}>
-  <div class="col-md-5"><em>Koniec kola: {{ end }}</em></div>
+  <div class="col-md-5">
+    {% comment %}Translators: original: Koniec kola{% endcomment %}
+    <em>{% trans "End of the round" %}: {{ end }}</em>
+  </div>
   <div class="col-md-7">
     <div class="progress">
       <div class="progress-bar {{ progressbar_class }}" role="progressbar"
@@ -18,13 +23,18 @@
 </div>
 {% else %}
   {% if results %}
-    <div class="alert alert-warning">Výsledky sú predbežné.</div>
+    <div class="alert alert-warning">
+      {% comment %}Translators: original: Výsledky sú predbežné.{% endcomment %}
+      {% trans "Results are not final." %}
+    </div>
   {% else %}
   <div class="alert alert-info" role="alert">
-    Kolo už skončilo.
+      {% comment %}Translators: original: Kolo už skončilo.{% endcomment %}
+      {% trans "The round has ended." %}
     {% if task and task.round.solutions_visible %}
         <a href="{% url 'solution_statement' task_id=task.id %}" class="alert-link">
-            Pozrieť vzorové riešenie.
+            {% comment %}Translators: original: Pozrieť vzorové riešenie.{% endcomment %}
+            {% trans "See solutions." %}
         </a>
     {% endif %}
   </div>

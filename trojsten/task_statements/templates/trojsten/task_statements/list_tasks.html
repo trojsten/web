@@ -1,17 +1,27 @@
 {% extends "trojsten/layout/main.html" %}
 {% load statements_parts %}
 {% load archive_parts %}
+{% load i18n %}
 
-{% block title %}Zadania{% endblock %}
+{% block title %}
+    {% comment %}Translators: original: Zadania{% endcomment %}
+    {% trans "Problem statements" %}
+{% endblock %}
 
 {% block page_header %}
 <h1>
-    Zadania
+    {% comment %}Translators: original: Zadania{% endcomment %}
+    {% trans "Problem statements" %}
     <small>
-        {{ round.number }}. kola {{ round.series.number }}. série
-        {{ round.series.year }}. ročníka {{ round.series.competition.name }}
+        {% comment %}Translators: original: {{ round_num }}. kola {{ series_num }}. série {{ series_y }}. ročníka {{ series_name }}{% endcomment %}
+        {% blocktrans with round_num=round.number series_num=round.series.number series_y=round.series.year series_name=round.series.competition.name %}
+            round: {{ round_num }}, semester: {{ series_num }}, year: {{ series_y }} - {{ series_name }}
+        {% endblocktrans %}
         {% if not round.visible %}
-            <span class="label label-danger">skryté</span>
+            <span class="label label-danger">
+                {% comment %}Translators: original: skryté{% endcomment %}
+                {% trans "hidden" %}
+            </span>
         {% endif %}
     </small>
 </h1>
@@ -20,7 +30,8 @@
 {% block page_content %}
     {% show_progress round %}
     {% show_buttons round %}
-    <h2>Zoznam úloh</h2>
+    {% comment %}Translators: original: Zoznam úloh{% endcomment %}
+    <h2>{% trans "Tasks" %}</h2>
     {% show_task_list round %}
     {% show_archive active_competition=round.series.competition %}
     </div>
