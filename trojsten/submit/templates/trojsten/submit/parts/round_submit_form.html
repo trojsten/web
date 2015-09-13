@@ -1,5 +1,6 @@
 {% load submit_parts %}
 {% load statements_parts %}
+{% load i18n %}
 
 {% show_progress round%}
 {% for task in tasks %}
@@ -7,10 +8,12 @@
     {% show_submit_form task request.path %}
     {% if task.has_submit_list %}
         <div>
-            <a href="{% url 'task_submit_page' task_id=task.id %}">Zoznam submitov</a>
+            {% comment %}Translators: original: Zoznam submitov{% endcomment %}
+            <a href="{% url 'task_submit_page' task_id=task.id %}">{% trans "List of submits" %}</a>
         </div>
     {% endif %}
     {% if task.get_submit_types|length == 0 %}
-        <p class="text-danger">Tento príklad momentálne nemá možnosť odovzdávania.</p>
+        {% comment %}Translators: original: Tento príklad momentálne nemá možnosť odovzdávania{% endcomment %}
+        <p class="text-danger">{% trans "You can not submit the solution for this task yet." %}</p>
     {% endif %}
 {% endfor %}

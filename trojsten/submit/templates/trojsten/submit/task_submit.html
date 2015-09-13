@@ -1,11 +1,16 @@
 {% extends "trojsten/layout/main.html" %}
 {% load submit_parts %}
 {% load statements_parts %}
+{% load i18n %}
 
-{% block title %}Odovzdávanie{% endblock %}
+{% block title %}
+    {% comment %}Translators: original: Odovzdávanie{% endcomment %}
+    {% trans "Submitting" %}
+{% endblock %}
 
 {% block page_header %}
-<h1>Odovzdávanie <small><a href="{% url 'task_statement' task_id=task.id %}">{{ task }}</a></small></h1>
+    {% comment %}Translators: original: Odovzdávanie{% endcomment %}
+    <h1>{% trans "Submitting" %} <small><a href="{% url 'task_statement' task_id=task.id %}">{{ task }}</a></small></h1>
 {% endblock %}
 
 {% block page_content %}

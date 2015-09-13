@@ -1,20 +1,31 @@
 {% load bootstrap %}
+{% load i18n %}
+
+{% comment %}Translators: original: Odovzdaj{% endcomment %}
+{% trans "Submit" as submit_text %}
+
 {% if task.has_description %}
     <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.DESCRIPTION %}">
         {% csrf_token %}
-        <div class="form-group" style="min-width:50px;"><label>Popis</label></div>
+        <div class="form-group" style="min-width:50px;">
+            {% comment %}Translators: original: Popis{% endcomment %}
+            <label>{% trans "Description" %}</label>
+        </div>
         {{ description_form | bootstrap_inline }}
         <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
-        <input class="btn btn-primary" type="submit" value="Odovzdaj" />
+        <input class="btn btn-primary" type="submit" value="{{ submit_text }}" />
     </form>
 {% endif %}
 {% if task.has_source %}
     <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.SOURCE %}">
         {% csrf_token %}
-        <div class="form-group" style="min-width:50px;"><label>Kód</label></div>
+        <div class="form-group" style="min-width:50px;">
+            {% comment %}Translators: original: Kód{% endcomment %}
+            <label>{% trans "Code" %}</label>
+        </div>
         {{ source_form | bootstrap_inline }}
         <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
-        <input class="btn btn-primary" type="submit" value="Odovzdaj" />
+        <input class="btn btn-primary" type="submit" value="{{ submit_text }}" />
     </form>
 {% endif %}
 {% if task.has_testablezip %}
@@ -23,11 +34,14 @@
         <div class="form-group" style="min-width:50px;"><label>Zip</label></div>
         {{ testablezip_form | bootstrap_inline }}
         <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
-        <input class="btn btn-primary" type="submit" value="Odovzdaj" />
+        <input class="btn btn-primary" type="submit" value="{{ submit_text }}" />
     </form>
 {% endif %}
 
 {% if task.external_submit_link %}
-    <p>Tento príklad sa odovzdáva na zvlášť stránke. </p>
-    <a class="btn btn-primary" href="{{task.external_submit_link}}">Stránka s odovzdávaním</a>
+    {% comment %}Translators: original: Tento príklad sa odovzdáva na zvlášť stránke.{% endcomment %}
+    <p>{% trans "You need to submit the solution for this task on another website." %}</p>
+
+    {% comment %}Translators: original: >Stránka s odovzdávaním{% endcomment %}
+    <a class="btn btn-primary" href="{{task.external_submit_link}}">{% trans "Submit website" %}</a>
 {% endif %}

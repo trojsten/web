@@ -245,8 +245,9 @@ def task_submit_post(request, task_id, submit_type):
             # Source submit's should be processed by process_submit()
             submit_id = process_submit(sfile, task, language, request.user)
             if not submit_id:
-                messages.add_message(request, messages.ERROR,
-                                     "Nepodporovaný formát súboru")
+                # Translators: original: Nepodporovaný formát súboru
+                msg = _("File format is not supported")
+                messages.add_message(request, messages.ERROR, msg)
             else:
                 # Source file-name is id.data
                 sfiletarget = unidecode(os.path.join(get_path(
@@ -260,11 +261,9 @@ def task_submit_post(request, task_id, submit_type):
                              testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
                              protocol_id=submit_id)
                 sub.save()
-                success_message = format_html(
-                    "Úspešne si submitol program, výsledok testovania nájdeš "
-                    "<a href='{}'>tu</a>",
-                    reverse("view_submit", args=[sub.id])
-                )
+                # Translators: original: Úspešne si submitol program, výsledok testovania nájdeš <a href='{}'>tu</a>
+                msg = _("You've successfully submitted the program, you can see the result <a href='{}'>here</a>")
+                success_message = format_html(msg, reverse("view_submit", args=[sub.id]))
                 messages.add_message(request, messages.SUCCESS, success_message)
         else:
             for field in form:
@@ -300,9 +299,9 @@ def task_submit_post(request, task_id, submit_type):
                          testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
                          filepath=sfiletarget)
             sub.save()
-            messages.add_message(request, messages.SUCCESS,
-                                 "Úspešne sa ti podarilo submitnúť popis, "
-                                 "po skončení kola ti ho vedúci opravia")
+            # Translators: original: Úspešne sa ti podarilo submitnúť popis, po skončení kola ti ho vedúci opravia
+            msg = _("You've successfully submitted the description, it will be corrected when the round ends.")
+            messages.add_message(request, messages.SUCCESS, msg)
         else:
             for field in form:
                 for error in field.errors:

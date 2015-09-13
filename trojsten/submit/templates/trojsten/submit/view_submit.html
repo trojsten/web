@@ -1,8 +1,12 @@
 {% extends "trojsten/layout/main.html" %}
 {% load staticfiles submit_parts %}
 {% load utils %}
+{% laod i18n %}
 
-{% block title %}Detaily submitu{% endblock %}
+{% block title %}
+    {% comment %}Translators: original: Detaily submitu{% endcomment %}
+    {% trans "Submit details" %}
+{% endblock %}
 
 {% block stylesheets %}
 {{ block.super }}
@@ -24,18 +28,23 @@
 {% block page_header %}
 <ul class="nav nav-pills">
     <li class="pull-left" id="submit-title-li">
-        <h1>Detaily submitu <small>{{ submit.protocol_id }}</small></h1>
+        {% comment %}Translators: original: Detaily submitu{% endcomment %}
+        <h1>{% trans "Submit details" %} <small>{{ submit.protocol_id }}</small></h1>
     </li>
     <li class="pull-right">
         <a href="{% url 'task_statement' task_id=submit.task.id %}">
-            <span class="glyphicon glyphicon-list"></span> Zadanie
+            <span class="glyphicon glyphicon-list"></span>
+            {% comment %}Translators: original: Zadanie{% endcomment %}
+            {% trans "Task" %}
         </a>
     </li>
     {% is_organizer competition=submit.task.round.series.competition as is_organizer %}
     {% if is_organizer %}
         <li class="pull-right">
             <a href="{% url 'admin:tasks_submit_change' submit.id %}">
-                <span class="glyphicon glyphicon-pencil"></span> Upraviť
+                <span class="glyphicon glyphicon-pencil"></span>
+                {% comment %}Translators: original: Upraviť{% endcomment %}
+                {% trans "Edit" %}
             </a>
         </li>
     {% endif %}
@@ -46,14 +55,17 @@
     <div class="submit-protocol" data-id="{{ submit.id }}" data-ready="{{ protocolReady }}">
         {% include "trojsten/submit/protocol.html" %}
     </div>
-    <h3>Odovzdaný program</h3>
+    {% comment %}Translators: original: Odovzdaný program{% endcomment %}
+    <h3>{% trans "Submitted program" %}</h3>
     {% if fileReady %}
         <pre class="prettyprint">{{ data }}</pre>
     {% else %}
-        Zdrojový kód programu nie je dostupný
+        {% comment %}Translators: original: Zdrojový kód programu nie je dostupný{% endcomment %}
+        {% trans "Source code is not available" %}
     {% endif %}
     {% else %}
-        K tomuto submitu nie sú k dispozícii žiadne dáta
+        {% comment %}Translators: original: K tomuto submitu nie sú k dispozícii žiadne dáta{% endcomment %}
+        {% trans "There is not data available to this submit" %}
     {% endif %}
     {% show_submit_list submit.task submit.user %}
 {% endblock %}

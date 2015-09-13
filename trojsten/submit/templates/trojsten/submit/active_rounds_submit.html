@@ -1,11 +1,16 @@
 {% extends "trojsten/layout/main.html" %}
 {% load submit_parts %}
 {% load statements_parts %}
+{% load i18n %}
 
-{% block title %}Odovzdávanie{% endblock %}
+{% block title %}
+    {% comment %}Translators: original: Odovzdávanie{% endcomment %}
+    {% trans "Submitting" %}
+{% endblock %}
 
 {% block page_header %}
-<h1>Odovzdávanie</h1>
+    {% comment %}Translators: original: Odovzdávanie{% endcomment %}
+    <h1>{% trans "Submitting" %}</h1>
 {% endblock %}
 
 {% block page_content %}
@@ -15,15 +20,22 @@
             <small>
                 <a href="{% url 'task_list' round_id=round.id %}">{{ round }}</a>
                 {% if not round.visible %}
-                    <span class="label label-danger">skryté</span>
+                    <span class="label label-danger">
+                        {% comment %}Translators: original: skryté{% endcomment %}
+                        {% trans "hidden" %}
+                    </span>
                 {% endif %}
             </small>
         </h2>
         {% round_submit_form round=round %}
     {% empty %}
         <div class="alert alert-info">
-            Aktuálne nebeží žiadne kolo.
-            Môžte si pozrieť úlohy niektorého z predošlých kôl v <a href="{% url 'archive' %}" class="alert-link">archíve</a>.
+            {% url 'archive' as url_archive %}
+            {% comment %}Translators: original: Aktuálne nebeží žiadne kolo. Môžte si pozrieť úlohy niektorého z predošlých kôl v <a href="{{ url_archive }}" class="alert-link">archíve</a>.{% endcomment %}
+            {% blocktrans %}
+                There is no active contest now.
+                You may see the previous problem statements in the <a href="{{ url_archive }}" class="alert-link">archives.</a>
+            {% endblocktrans %}
         </div>
     {% endfor %}
 
