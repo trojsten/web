@@ -3,7 +3,13 @@
 {% if not form.target_object|comments_are_open %}
     <p>{% trans "Comments are closed." %}</p>
 {% elif not request.user.id %}
-    <p class="text-danger">Pre pridávanie komentárov sa musíš <a href="{% url "account_login" %}?next={{ request.path }}">prihlásiť.</a></p>
+    {% url "account_login" as account_login_url %}
+    {% comment %}Translators: original: Pre pridávanie komentárov sa musíš <a href="{{ account_login_url }}?next={{ request.path }}">prihlásiť.</a>{% endcomment %}
+    <p class="text-danger">
+        {% blocktrans %}
+            You must be <a href="{{ account_login_url }}?next={{ request.path }}">logged in</a> to post a comment.
+        {% endblocktrans %}
+    </p>
 {% else %}
     <form id="comment-form-{{ form.target_object.pk }}" data-object-id="{{ form.target_object.pk }}" action="{% comment_form_target %}" method="post" class="js-comments-form comments-form form-horizontal"
           data-ajax-action="{% url 'comments-post-comment-ajax' %}">{% csrf_token %}
@@ -18,7 +24,8 @@
 
       <input type="hidden" name="name" value="{{ request.user.username }}" />
 
-      <textarea class="form-control" rows="3" name="comment" placeholder="Komentár"></textarea>
+      {% comment %}Translators: original: Komentár{% endcomment %}
+      <textarea class="form-control" rows="3" name="comment" placeholder="{% trans "Comment" %}"></textarea>
 
       <div class="form-actions row">
         <input type="submit" name="post" class="btn btn-primary" value="{% trans "Post" %}" />
