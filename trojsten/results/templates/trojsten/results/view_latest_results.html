@@ -1,11 +1,16 @@
 {% extends "trojsten/layout/main.html" %}
 {% load results_parts archive_parts statements_parts %}
 {% load utils %}
+{% load i18n %}
 
-{% block title %}Aktuálne výsledky{% endblock %}
+{% block title %}
+    {% comment %}Translators: original: Aktuálne výsledky{% endcomment %}
+    {% trans "Current results" %}
+{% endblock %}
 
 {% block page_header %}
-<h1>Aktuálne výsledky</h1>
+    {% comment %}Translators: original: Aktuálne výsledky{% endcomment %}
+    <h1>{% trans "Current results" %}</h1>
 {% endblock %}
 
 {% block page_content %}
@@ -61,12 +66,16 @@
         </div>
     {% endif %}
 {% empty %}
-    <div class="alert alert-warning">Ešte nebeží žiadne kolo.</div>
+    <div class="alert alert-warning">
+        {% comment %}Translators: original: Ešte nebeží žiadna séria.{% endcomment %}
+        {% trans "There is no active round" %}
+    </div>
 {% endfor %}
 </div>
 
 {% include 'trojsten/results/parts/buttons.html' %}
-<h2>Vysvetlivky</h2>
+{% comment %}Translators: original: Vysvetlivky{% endcomment %}
+<h2>{% trans "Explanatory notes" %}</h2>
 {% include 'trojsten/results/parts/legend.html' %}
 
 {% show_archive %}

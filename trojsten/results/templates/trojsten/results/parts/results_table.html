@@ -1,19 +1,31 @@
 {% load utils %}
 {% load mathfilters %}
+{% load i18n %}
 
 <div class="table-responsive">
 <table class="table table-hover table-condensed results-table">
 <thead>
 <tr>
     <th class="text-right result-header result-rank">#</th>
-    <th class="result-header result-name">Meno:</th>
+
+    {% comment %}Translators: original: Meno{% endcomment %}
+    <th class="result-header result-name">{% trans "Name" %}:</th>
+
     <th class="result-header result-year">
-        <abbr title="Ročník" data-toggle="tooltip" data-placement="top">R.</abbr>
+        {% comment %}Translators: original: Ročník{% endcomment %}
+        {% trans 'Year' as text_year %}
+        <abbr title="{{ text_year }}" data-toggle="tooltip" data-placement="top">{{ text_year.0|upper }}</abbr>
     </th>
-    <th class="result-header result-school">Škola</th>
+
+    {% comment %}Translators: original: Škola{% endcomment %}
+    <th class="result-header result-school">{% trans "School" %}</th>
+
     {% if has_previous_results %}
         <th class="result-header result-prev">
-            <abbr title="Predchádzajúce kolá" data-toggle="tooltip" data-placement="top">P.</abbr>
+
+            {% comment %}Translators: original: Predchádzajúce série{% endcomment %}
+            {% trans 'Previous rounds' as text_prev_rounds %}
+            <abbr title="{{ text_prev_rounds }}" data-toggle="tooltip" data-placement="top">{{ text_prev_rounds.0|upper }}</abbr>
         </th>
     {% endif %}
     {% for task in tasks %}
@@ -85,7 +97,10 @@
 </tr>
 {% endspaceless %}
 {% empty %}
-<tr><td colspan="{{ tasks | length | add:5 }}">Žiadne submity</td></tr>
+<tr>
+    {% comment %}Translators: original: Žiadne submity{% endcomment %}
+    <td colspan="{{ tasks | length | add:5 }}">{% trans "No submits" %}</td>
+</tr>
 {% endfor %}
 </table>
 </div>

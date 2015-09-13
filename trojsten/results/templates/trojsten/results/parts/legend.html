@@ -1,22 +1,39 @@
+{% load i18n %}
+
 <ul>
-<li>detaily bodov zistíte, ak podržíte kurzor nad číslom s bodmi</li>
-<li>R - ročník</li>
-<li>P - body z predchádzajúcich kôl série</li>
-<li>(4) - body sú v zátvorkách, ak odovzdaný popis ešte nebol obodovaný</li>
-<li>
-    <span class="text-info glyphicon glyphicon-asterisk"></span>
-     - riešiteľ v tomto kole riešil prvý krát
-</li>
-<li>
-    <span class="text-success glyphicon glyphicon-chevron-up"></span>
-     - riešiteľ postúpil oproti minulému kolu (počet miest po podržaní kurzoru nad ikonou)
-</li>
-<li>
-    <span class="text-danger glyphicon glyphicon-chevron-down"></span>
-     - riešiteľ klesol oproti minulému kolu (počet miest po podržaní kurzoru nad ikonou)
-</li>
-<li>
-    <span class="text-muted glyphicon glyphicon-pushpin"></span>
-     - riešiteľ ostal na rovnakom mieste ako v minulom kole
-</li>
+    {% comment %}Translators: original: detaily bodov zistíte, ak podržíte kurzor nad číslom s bodmi{% endcomment %}
+    <li>{% trans "to find out the details about points hover over them" %}</li>
+
+    {% comment %}Translators: original: R - ročník{% endcomment %}
+    <li>{% trans "Y - year" %}</li>
+
+    {% comment %}Translators: original: P - body z predchádzajúcich sérií{% endcomment %}
+    <li>{% trans "P - points from the previous round" %}</li>
+
+    {% comment %}Translators: original: (4) - body sú v zátvorkách, ak odovzdaný popis ešte nebol obodovaný{% endcomment %}
+    <li>{% trans "(4) - points are in parentheses, if the submitted description was not reviewed yet" %}</li>
+
+    <li>
+        <span class="text-info glyphicon glyphicon-asterisk"></span>
+        {% comment %}Translators: original: - riešiteľ v tejto sérii riešil prvý krát{% endcomment %}
+        {% trans "- participant participated for the first time in this round" %}
+    </li>
+
+    <li>
+        <span class="text-success glyphicon glyphicon-chevron-up"></span>
+        {% comment %}Translators: original: - riešiteľ postúpil oproti minulej sérii (počet miest po podržaní kurzoru nad ikonou){% endcomment %}
+        {% trans "- participant increased compared to past round (hover over the icon to see the number of places)" %}
+    </li>
+
+    <li>
+        <span class="text-danger glyphicon glyphicon-chevron-down"></span>
+        {% comment %}Translators: original: - riešiteľ klesol oproti minulej sérii (počet miest po podržaní kurzoru nad ikonou){% endcomment %}
+        {% trans "- participant decreased compared to past round (hover over the icon to see the number of places)" %}
+    </li>
+
+    <li>
+        <span class="text-muted glyphicon glyphicon-pushpin"></span>
+        {% comment %}Translators: original: - riešiteľ ostal na rovnakom mieste ako v minulej sérii{% endcomment %}
+        {% trans "- participant remained in the same place as in past round" %}
+    </li>
 </ul>

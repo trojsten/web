@@ -1,15 +1,19 @@
 {% load utils %}
+{% load i18n %}
+
 <div class="btn-group pull-right">
     {% exclude_as request.GET 'single_round' as single_round_params %}
     {% if single_round %}
         <a href="?{% if single_round_params %}{{ single_round_params.urlencode }}{% endif %}"
            class="btn btn-default btn-sm">
-            Aj predošlé kolá
+            {% comment %}Translators: original: Aj predošlé série{% endcomment %}
+            {% trans "Include previous rounds" %}
         </a>
     {% else %}
         <a href="?single_round=True{% if single_round_params %}&amp;{{ single_round_params.urlencode }}{% endif %}"
            class="btn btn-default btn-sm">
-            Iba toto kolo
+            {% comment %}Translators: original: Iba toto kolo{% endcomment %}
+            {% trans "Just this round" %}
         </a>
     {% endif %}
     {% if user.is_staff %}
@@ -17,12 +21,14 @@
         {% if show_staff %}
             <a href="?{% if show_staff_params %}{{ show_staff_params.urlencode }}{% endif %}"
                class="btn btn-default btn-sm">
-                Skryť vedúcich
+                {% comment %}Translators: original: Skryť vedúcich{% endcomment %}
+                {% trans "Hide organisers" %}
             </a>
         {% else %}
             <a href="?show_staff=True{% if show_staff_params %}&amp;{{ show_staff_params.urlencode }}{% endif %}"
                class="btn btn-default btn-sm">
-                Zobraziť vedúcich
+                {% comment %}Translators: original: Zobraziť vedúcich{% endcomment %}
+                {% trans "Show organisers" %}
             </a>
         {% endif %}
     {% endif %}
