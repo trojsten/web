@@ -1,10 +1,15 @@
+{% load i18n %}
+
 {% for year, round_list in all_rounds.items %}
     <div class="table-responsive">
     <table class="table table-rounds">
       <thead>
         <tr>
           <th colspan="3" class="active">
-            {{ year }}. ročník
+            {% comment %}Translators: original: {{ year }}. ročník{% endcomment %}
+            {% blocktrans with year=year %}
+              Year {{ year }}
+            {% endblocktrans %}
           </th>
         </tr>
       </thead>
@@ -13,30 +18,39 @@
           <tr>
             <td>
               <a href="{% url 'task_list' round_id=round.id %}">
-                {{ round.number }}. kolo
+                {% comment %}Translators: original: {{ round }}. kolo{% endcomment %}
+                {% blocktrans with round=round.number %}
+                  Round {{ round }}
+                {% endblocktrans %}
               </a>
               {% if not round.visible %}
-                <span class="label label-danger">skryté</span>
+                {% comment %}Translators: original: skryté{% endcomment %}
+                <span class="label label-danger">{% trans "hidden" %}</span>
               {% endif %}
             </td>
             <td>
-              {{ round.series.number }}. séria
+              {% comment %}Translators: original: {{ semester }}. séria{% endcomment %}
+              {% blocktrans with semester=round.series.number %}
+                Semester {{ semester }}
+              {% endblocktrans %}
             </td>
             <td style="text-align:right;">
               <a href="{% url 'task_list' round_id=round.id %}"  class="btn btn-primary btn-sm">
-                Zadania a vzoráky
+                {% comment %}Translators: original: Zadania a vzoráky{% endcomment %}
+                {% trans "Statements and solutions" %}
               </a>
               {% if round.categories %}
                   {% for category in round.categories %}
                   <a class="btn btn-danger btn-sm category-{{ category }}"
                      href="{% url 'view_results' round_id=round.id category_id=category.id %}">
-                      Výsledky
-                      <span class="label label-button category-{{ category }}">{{ category }}</span>
+                      {% comment %}Translators: original: Výsledky{% endcomment %}
+                      {% trans "Results" %}
                   </a>
                   {% endfor %}
               {% else %}
                   <a class="btn btn-danger btn-sm" href="{% url 'view_results' round_id=round.id %}">
-                      Výsledky
+                      {% comment %}Translators: original: Výsledky{% endcomment %}
+                      {% trans "Results" %}
                   </a>
               {% endif %}
             </td>
@@ -46,7 +60,8 @@
     </table>
     </div>
 {% empty %}
-    <p>Ešte nie sú žiadne kolá.</p>
+    {% comment %}Translators: original: Ešte nie sú žiadne kolá.{% endcomment %}
+    <p>{% trans "There are no rounds." %}</p>
 {% endfor %}
 
 

@@ -1,7 +1,8 @@
-{% load archive_parts %}
+{% load archive_parts i18n %}
 
 <div class="wiki-article">
-<h2>Archív zadaní</h2>
+{% comment %}Translators: original: Archív zadaní.{% endcomment %}
+<h2>{% trans "Statement archive." %}</h2>
 </div>
 <!-- Nav tabs -->
 {% if 1 < competitions|length %}
@@ -31,7 +32,8 @@
             {% show_round_list user=request.user competition=competition %}
         </div>
     {% empty %}
-        <div class="alert alert-warning">Ešte nie sú žiadne súťaže.</div>
+        {% comment %}Translators: original: Ešte nie sú žiadne súťaže.{% endcomment %}
+        <div class="alert alert-warning">{% trans "There are no competitions." %}</div>
     {% endfor %}
 </div>
 
