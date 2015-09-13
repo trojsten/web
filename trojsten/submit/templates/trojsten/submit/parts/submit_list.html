@@ -1,16 +1,23 @@
 {% load utils %}
 {% load submit_parts %}
+{% load i18n %}
+
 {% if task.has_description or task.has_source or task.has_testablezip %}
-<h2>Odovzdané súbory</h2>
+{% comment %}Translators: original: Odovzdané súbory{% endcomment %}
+<h2>{% trans "Submitted files" %}</h2>
 {% endif %}
 {% if task.has_description %}
-    <h3>Popis</h3>
+    {% comment %}Translators: original: Popis{% endcomment %}
+    <h3>{% trans "Description" %}</h3>
     <table class="table table-hover">
         <thead>
             <tr>
-                <th>Čas</th>
-                <th>Stav</th>
-                <th>Body</th>
+                {% comment %}Translators: original: Čas{% endcomment %}
+                <th>{% trans "Time" %}</th>
+                {% comment %}Translators: original: Stav{% endcomment %}
+                <th>{% trans "Status" %}</th>
+                {% comment %}Translators: original: Body{% endcomment %}
+                <th>{% trans "Points" %}</th>
             </tr>
         </thead>
         <tbody>
@@ -22,10 +29,12 @@
             {% endif %}
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == IN_QUEUE %}
-                <td>Neopravené</td>
+                {% comment %}Translators: original: Neopravené{% endcomment %}
+                <td>{% trans "Uncorrected" %}</td>
                 <td>..</td>
                 {% else %}
-                <td>Opravené</td>
+                {% comment %}Translators: original: Opravené{% endcomment %}
+                <td>{% trans "Corrected" %}</td>
                 <td>{{ submit.points }}</td>
                 {% endif %}
             </tr>
@@ -35,17 +44,22 @@
 {% endif %}
 {% if task.has_source or task.has_testablezip %}
     {% if task.has_source %}
-        <h3>Kód</h3>
+        {% comment %}Translators: original: Kód{% endcomment %}
+        <h3>{% trans "Code" %}</h3>
     {% else %}
         <h3>Zip</h3>
     {% endif %}
     <table class="table table-hover">
         <thead>
             <tr>
-                <th>Čas</th>
-                <th>Stav</th>
-                <th>Správa z testovača</th>
-                <th>Body</th>
+                {% comment %}Translators: original: Time{% endcomment %}
+                <th>{% trans "Čas" %}</th>
+                {% comment %}Translators: original: Stav{% endcomment %}
+                <th>{% trans "Status" %}</th>
+                {% comment %}Translators: original: Správa z testovača{% endcomment %}
+                <th>{% trans "Message from online judge" %}</th>
+                {% comment %}Translators: original: Body{% endcomment %}
+                <th>{% trans "Points" %}</th>
             </tr>
         </thead>
         <tbody>
@@ -54,11 +68,21 @@
         <tr class="{{ submit|submitclass }}" data-id="{{ submit.id }}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == IN_QUEUE %}
-                <td><span class="glyphicon glyphicon-refresh glyphicon-animate-rotate"></span> Testuje sa</td>
-                <td>Čaká sa na otestovanie</td>
+                <td>
+                    <span class="glyphicon glyphicon-refresh glyphicon-animate-rotate"></span>
+                    {% comment %}Translators: original: Testuje sa{% endcomment %}
+                    {% trans "Testing" %}
+                </td>
+                <td>
+                    {% comment %}Translators: original: Čaká sa na otestovanie{% endcomment %}
+                    {% trans "Waiting for testing" %}
+                </td>
                 <td>..</td>
                 {% else %}
-                <td>Dotestované</td>
+                <td>
+                    {% comment %}Translators: original: Dotestované{% endcomment %}
+                    {% trans "Tested" %}
+                </td>
                 <td>{{ submit.tester_response_verbose }}</td>
                 <td>{{ submit.points }}</td>
                 {% endif %}
@@ -70,11 +94,20 @@
             <tr class="{{ submit|submitclass }}" data-id="{{ submit.id }}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == IN_QUEUE %}
-                <td>Testuje sa</td>
-                <td>Čaká sa na otestovanie</td>
+                <td>
+                    {% comment %}Translators: original: Testuje sa{% endcomment %}
+                    {% trans "Testing" %}
+                </td>
+                <td>
+                    {% comment %}Translators: original: Čaká sa na otestovanie{% endcomment %}
+                    {% trans "Waiting for testing" %}
+                </td>
                 <td>..</td>
                 {% else %}
-                <td>Dotestované</td>
+                <td>
+                    {% comment %}Translators: original: Dotestované{% endcomment %}
+                    {% trans "Tested" %}
+                </td>
                 <td>{{ submit.tester_response_verbose }}</td>
                 <td>{{ submit.points }}</td>
                 {% endif %}

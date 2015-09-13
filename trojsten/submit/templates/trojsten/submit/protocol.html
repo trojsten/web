@@ -1,21 +1,28 @@
+{% load i18n %}
+
 {% if not submit.tested %}
 <div class="alert alert-info">
     <span class="glyphicon glyphicon-refresh glyphicon-animate-rotate"></span>
-    Tento program čaká na otestovanie
+    {% comment %}Translators: original: Tento program čaká na otestovanie{% endcomment %}
+    {% trans "This program is waiting for testing" %}
 </div>
 {% endif %}
 {% if protocolReady %}
 {% if compileLogPresent %}
-    <h4>Výstup z kompilátora</h4>
+    {% comment %}Translators: original: Výstup z kompilátora{% endcomment %}
+    <h4>{% trans "Output from compiler" %}</h4>
     <pre>{{ compileLog }}</pre>
 {% endif %}
 {% if have_tests %}
 <table>
     <thead>
         <tr>
-            <th>Vstup</th>
-            <th>Výsledok</th>
-            <th>Čas</th>
+            {% comment %}Translators: original: Vstup{% endcomment %}
+            <th>{% trans "Input" %}</th>
+            {% comment %}Translators: original: Výsledok{% endcomment %}
+            <th>{% trans "Result" %}</th>
+            {% comment %}Translators: original: Čas{% endcomment %}
+            <th>{% trans "Time" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -35,5 +42,6 @@
 {% endif %}
 </table>
 {% else %}
-    Protokol testovania nie je dostupný
+    {% comment %}Translators: original: Protokol testovania nie je dostupný{% endcomment %}
+    {% trans "Protocol of testing is not available" %}
 {% endif %}
