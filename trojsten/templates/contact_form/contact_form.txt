@@ -1,4 +1,7 @@
-Od:      {% if request.user.id %}{{ request.user.first_name }} {{ request.user.last_name }} {% endif %}<{{ email }}>
-Predmet: {{ name }}
+{% load i18n %}
+{% comment %}Translators: original: Od{% endcomment %}
+{% trans "From" %}: {% if request.user.id %}{{ request.user.first_name }} {{ request.user.last_name }} {% endif %}<{{ email }}>
+{% comment %}Translators: original: Predmet{% endcomment %}
+{% trans "Subject" %}: {{ name }}
 
 {{ body }}
