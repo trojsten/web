@@ -1,37 +1,47 @@
 {% load utils %}
+{% load i18n %}
+
 <div class="clearfix">
 {% if round.tasks_pdf_exists %}
-<a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-info" href="{% url 'view_pdf' round_id=round.id %}">PDF zadania</a>
+    {% comment %}Translators: original: PDF zadania{% endcomment %}
+    <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-info" href="{% url 'view_pdf' round_id=round.id %}">{% trans "PDF problem statements" %}</a>
 {% endif %}
 {% if round.solutions_pdf_exists %}
     {% is_organizer round.series.competition as organizer %}
     {% if organizer or round.solutions_visible %}
         <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-info" href="{% url 'view_solutions_pdf' round_id=round.id %}">
-            PDF vzoráky
+            {% comment %}Translators: original: PDF vzoráky{% endcomment %}
+            {% trans "PDF solutions" %}:
             {% if not round.solutions_visible %}
-                <span class="label label-danger" title="skryté"
+                {% comment %}Translators: original: skryté{% endcomment %}
+                <span class="label label-danger" title="{% trans "hidden" %}"
                       data-toggle="tooltip" data-placement="top">
-                    skr.
+                    {% comment %}Translators: original: skr.{% endcomment %}
+                    {% trans "hid." %}
                 </span>
             {% endif %}
         </a>
     {% endif %}
 {% endif %}
 <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-success" href="{% url 'round_submit_page' round_id=round.id %}">
-    Odovzdaj riešenia
+    {% comment %}Translators: original: Odovzdaj riešenia{% endcomment %}
+    {% trans "Submit solutions" %}
 </a>
+
+{% comment %}Translators: original: Výsledky{% endcomment %}
+{% trans "Results" as results %}
 
 {% if categories %}
     {% for category in categories %}
     <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-danger category-{{ category }}"
        href="{% url 'view_results' round_id=round.id category_id=category.id %}">
-        Výsledky
+        {{ results }}
         <span class="label label-button category-{{ category }}">{{ category }}</span>
     </a>
     {% endfor %}
 {% else %}
     <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-danger" href="{% url 'view_results' round_id=round.id %}">
-        Výsledky
+        {{ results }}
     </a>
 {% endif %}
 </div>

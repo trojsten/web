@@ -1,11 +1,16 @@
 {% extends "trojsten/layout/main.html" %}
 {% load statements_parts %}
 {% load archive_parts %}
+{% load i18n %}
 
-{% block title %}Aktuálne zadania{% endblock %}
+{% block title %}
+    {% comment %}Translators: original: Aktuálne zadania{% endcomment %}
+    {% trans "Active problem statements" %}
+{% endblock %}
 
 {% block page_header %}
-<h1>Aktuálne zadania</h1>
+    {% comment %}Translators: original: Aktuálne zadania{% endcomment %}
+    <h1>{% trans "Active problem statements" %}</h1>
 {% endblock %}
 
 {% block page_content %}
@@ -15,17 +20,23 @@
             <small>
                 {{ round }}
                 {% if not round.visible %}
-                    <span class="label label-danger">skryté</span>
+                    <span class="label label-danger">
+                        {% comment %}Translators: original: skryté{% endcomment %}
+                        {% trans "hidden" %}
+                    </span>
                 {% endif %}
             </small>
         </h2>
         {% show_progress round %}
         {% show_buttons round %}
-        <h3>Zoznam úloh</h3>
+        {% comment %}Translators: original: Zoznam úloh{% endcomment %}
+        <h3>{% trans "Tasks" %}</h3>
         {% show_task_list round %}
     {% empty %}
-    <div class="alert alert-info">Aktuálne nebeží žiadne kolo.
-    Môžte si pozrieť úlohy niektorého z predošlých kôl v archíve.</div>
+    <div class="alert alert-info">
+        {% comment %}Translators: original: Aktuálne nebeží žiadne kolo. Môžte si pozrieť úlohy niektorého z predošlých kôl v archíve.{% endcomment %}
+        {% trans "There is no active contest now. You may see the previous problem statements in the archives." %}
+    </div>
     {% endfor %}
     {% show_archive %}
 {% endblock %}

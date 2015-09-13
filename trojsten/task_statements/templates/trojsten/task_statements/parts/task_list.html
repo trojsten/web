@@ -1,4 +1,5 @@
 {% load utils %}
+{% load i18n %}
 <!-- Nav tabs -->
 
 {% if categories.count > 1 %}
@@ -6,7 +7,8 @@
     <li class="active">
         <a href="#category-tab-all" role="tab" data-toggle="tab"
            onclick="$('#task-list-{{ round.id }} tr').show()">
-            Všetky
+            {% comment %}Translators: original: Všetky{% endcomment %}
+            {% trans "All" %}
         </a>
     </li>
     {% for category in categories %}
@@ -28,28 +30,37 @@
         #
     </th>
     <th>
-        Úloha
+        {% comment %}Translators: original: Úloha{% endcomment %}
+        {% trans "Task" %}
     </th>
     {% if solutions_visible %}
     <th width="15%">
-        Vzoráky
+        {% comment %}Translators: original: Vzoráky{% endcomment %}
+        {% trans "Solutions" %}
         {% if not round.solutions_visible %}
             <small>
-                <span class="label label-danger" title="skryté"
-                      data-toggle="tooltip" data-placement="top">skr.</span>
+                {% comment %}Translators: original: skryté{% endcomment %}
+                <span class="label label-danger" title="{% trans "hidden" %}"
+                      data-toggle="tooltip" data-placement="top">
+                    {% comment %}Translators: original: skr.{% endcomment %}
+                    {% trans "hid." %}
+                </span>
             </small>
         {% endif %}
     </th>
     {% endif %}
     <th width="15%">
-        Kategória
+        {% comment %}Translators: original: Kategória{% endcomment %}
+        {% trans "Category" %}
     </th>
     <th width="15%">
-        Max. body
+        {% comment %}Translators: original: Max. body{% endcomment %}
+        {% trans "Max. points" %}
     </th>
     {% if user.is_authenticated %}
     <th width="15%">
-        Tvoje body
+        {% comment %}Translators: original: Tvoje body{% endcomment %}
+        {% trans "Your points" %}
     </th>
     {% endif %}
 </tr>
@@ -64,7 +75,8 @@
         </td>
         {% if solutions_visible %}
             <td>
-                <a href="{% url 'solution_statement' task_id=task.id %}">vzorák</a>
+                {% comment %}Translators: original: vzorák{% endcomment %}
+                <a href="{% url 'solution_statement' task_id=task.id %}">{% trans "solution" %}</a>
             </td>
         {% endif %}
         <td>
@@ -72,31 +84,39 @@
                 <span class="label label-default category-{{ category }}">{{ category }}</span>
             {% endfor %}
         </td>
+
+        {% comment %}Translators: original: popis{% endcomment %}
+        {% trans "description" as description %}
+
+        {% comment %}Translators: original: program{% endcomment %}
+        {% trans "program" as program %}
+
         <td>
             {% if task.description_points > 0 %}
-                <span class="points-item">popis:&nbsp;{{ task.description_points }}</span>
+                <span class="points-item">{{ description }}:&nbsp;{{ task.description_points }}</span>
                 {% if task.source_points > 0 %}<br/>{% endif %}
             {% endif %}
             {% if task.source_points > 0 %}
-                <span class="points-item">program:&nbsp;{{ task.source_points }}</span>
+                <span class="points-item">{{ program }}:&nbsp;{{ task.source_points }}</span>
             {% endif %}
         </td>
         {% if user.is_authenticated %}
         {% lookup_as points.tasks task.id as task_points %}
         <td>
             {% if task.description_points > 0 %}
-                <span class="points-item">popis:&nbsp;{% if task_points.description_pending %}??{% else %}{{ task_points.description_points }}{% endif %}</span>
+                <span class="points-item">{{ description }}:&nbsp;{% if task_points.description_pending %}??{% else %}{{ task_points.description_points }}{% endif %}</span>
                 {% if task.source_points > 0 %}<br/>{% endif %}
             {% endif %}
             {% if task.source_points > 0 %}
-                <span class="points-item">program:&nbsp;{{ task_points.source_points }}</span>
+                <span class="points-item">{{ program }}:&nbsp;{{ task_points.source_points }}</span>
             {% endif %}
         </td>
         {% endif %}
     </tr>
 {% empty %}
     <tr>
-        <td colspan="4">Žiadne úlohy</td>
+        {% comment %}Translators: original: Žiadne úlohy{% endcomment %}
+        <td colspan="4">{% trans "There is no task" %}</td>
     </tr>
 {% endfor %}
 </table>

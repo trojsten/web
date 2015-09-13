@@ -3,6 +3,7 @@
 {% load statements_parts %}
 {% load staticfiles %}
 {% load utils %}
+{% load i18n %}
 
 {% block stylesheets %}
 {{ block.super }}
@@ -15,23 +16,33 @@
 <ul class="nav nav-pills">
   <li class="pull-left" id="article-title-li">
     <h1 id="article-title" class="task-name">{{ task.number }}. {{ task.name }}
-    <small>
-    {% for category in task.category.all %}
-        <span class="label label-default category-{{ category }}">{{ category }}</span>
-    {% endfor %}
-    {% if not task.round.visible %}<span class="label label-danger">skryté</span>{% endif %}
-    </small></h1>
+        <small>
+        {% for category in task.category.all %}
+            <span class="label label-default category-{{ category }}">{{ category }}</span>
+        {% endfor %}
+        {% if not task.round.visible %}
+            <span class="label label-danger">
+                {% comment %}Translators: original: skryté{% endcomment %}
+                {% trans "hidden" %}
+            </span>
+        {% endif %}
+        </small>
+    </h1>
   </li>
   <li class="pull-right">
     <a href="{% url 'task_list' round_id=task.round.id %}">
-        <span class="glyphicon glyphicon-list"></span> Všetky úlohy
+        <span class="glyphicon glyphicon-list"></span>
+        {% comment %}Translators: original: Všetky úlohy{% endcomment %}
+        {% trans "All tasks" as tasks %}
     </a>
   </li>
   {% is_organizer competition=task.round.series.competition as is_organizer %}
   {% if is_organizer %}
       <li class="pull-right">
         <a href="{% url 'admin:review_task' task_pk=task.id %}">
-            <span class="glyphicon glyphicon-check"></span> Opravovanie
+            <span class="glyphicon glyphicon-check"></span>
+            {% comment %}Translators: original: Opravovanie{% endcomment %}
+            {% trans "Correction" %}
         </a>
       </li>
   {% endif %}
@@ -42,15 +53,22 @@
     {% show_progress task.round %}
     {% if task.description_points > 0 or task.source_points > 0 %}
     <div class="well pull-right task-points">
-        <strong>Počet bodov:</strong>
+        {% comment %}Translators: original: Počet bodov{% endcomment %}
+        <strong>{% trans "Points" %}:</strong>
+
+        {% comment %}Translators: original: b{% endcomment %}
+        {% trans "p" as points_acr %}
+
         {% if task.description_points > 0 %}
             <div class="points-item points-item-description">
-                Popis:&nbsp; <span class="badge pull-right">{{ task.description_points }}b</span>
+                {% comment %}Translators: original: Popis{% endcomment %}
+                {% trans "Description" %}:&nbsp; <span class="badge pull-right">{{ task.description_points }}{{ points_acr }}</span>
             </div>
         {% endif %}
         {% if task.source_points > 0 %}
             <div class="points-item points-item-description">
-                Program:&nbsp; <span class="badge pull-right">{{ task.source_points }}b</span>
+                {% comment %}Translators: original: Program{% endcomment %}
+                {% trans "Program" %}:&nbsp; <span class="badge pull-right">{{ task.source_points }}{{ points_acr }}</span>
             </div>
         {% endif %}
     </div>
@@ -59,31 +77,38 @@
         {% if task.task_file_exists %}
             {% ssi path %}
         {% else %}
-            <p class="lead">HTML zadanie nie je k dispozícii.</p>
+            {% comment %}Translators: original: HTML zadanie nie je k dispozícii.{% endcomment %}
+            <p class="lead">{% trans "Problem statement in HTML is not available." %}</p>
         {% endif %}
     </div>
     <div class="task-submit">
     {% if task.get_submit_types|length > 0 %}
-        <h2>Odovzdávanie</h2>
+        {% comment %}Translators: original: Odovzdávanie{% endcomment %}
+        <h2>{% trans "Submit" %}</h2>
+
         {% if request.user.is_authenticated %}
         {% if not task.round.can_submit %}
         <div class="alert alert-warning" role="alert">
-            Kolo už skončilo. Ďalšie submity sa už nerátajú do výsledkovky.
+            {% comment %}Translators: original: Kolo už skončilo. Ďalšie submity sa už nerátajú do výsledkovky.{% endcomment %}
+            {% trans "Round has ended. Further submits do not count to standings." %}
         </div>
         {% endif %}
         {% show_submit_form task request.path %}
         {% show_submit_list task request.user %}
         {% else %}
-        <p class="text-danger">Na odovzdávanie sa musíš prihlásiť</p>
+            {% comment %}Translators: original: Na odovzdávanie sa musíš prihlásiť{% endcomment %}
+            <p class="text-danger">{% trans "You have to be logged in to submit the solution." %}</p>
         {% endif %}
     {% else %}
-        <p class="text-danger">Tento príklad momentálne nemá možnosť odovzdávania.</p>
+        {% comment %}Translators: original: Tento príklad momentálne nemá možnosť odovzdávania.{% endcomment %}
+        <p class="text-danger">{% trans "You can not submit your solution for this task yet." %}</p>
     {% endif %}
     </div>
 
-    <h2>Otázky a diskusia</h2>
+    {% comment %}Translators: original: Otázky a diskusia{% endcomment %}
+    <h2>{% trans "Questions and discussions" %}</h2>
     <p>
-       Po skončení kola budete mať príležitosť na diskutovanie o riešeniach
-       v diskusii pod vzorovým riešením.
+        {% comment %}Translators: original: Po skončení kola budete mať príležitosť na diskutovanie o riešeniach v diskusii pod vzorovým riešením.{% endcomment %}
+        {% trans "When the round ends, you will have the opportunity to discuss your solutions under solutions." %}
     </p>
 {% endblock %}

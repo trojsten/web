@@ -1,6 +1,7 @@
 {% extends "trojsten/layout/main.html" %}
 {% load staticfiles %}
 {% load comments %}
+{% load i18n %}
 
 {% block stylesheets %}
 {{ block.super }}
@@ -14,25 +15,35 @@
 <script type="text/javascript" src="{% static "fluent_comments/js/custom.js" %}"></script>
 {% endblock %}
 
-{% block title %}{{ task.number }}. {{ task.name }} (vzorové riešenie){% endblock %}
+{% block title %}
+    {% comment %}Translators: original: vzorové riešenie{% endcomment %}
+    {{ task.number }}. {{ task.name }} ({% trans "solution" %})
+{% endblock %}
 
 {% block page_header %}
 <ul class="nav nav-pills">
   <li class="pull-left" id="article-title-li">
     <h1 id="article-title" class="task-name">{{ task.number }}. {{ task.name }}
-    <small>
-    vzorové riešenie
-    {% for category in task.category.all %}
-        <span class="label label-default category-{{ category }}">{{ category }}</span>
-    {% endfor %}
-    {% if not task.round.solutions_visible %}
-      <span class="label label-danger">skryté</span>
-    {% endif %}
-    </small></h1>
+      <small>
+        {% comment %}Translators: original: vzorové riešenie{% endcomment %}
+        {% trans "solution" %}
+        {% for category in task.category.all %}
+            <span class="label label-default category-{{ category }}">{{ category }}</span>
+        {% endfor %}
+        {% if not task.round.solutions_visible %}
+          <span class="label label-danger">
+            {% comment %}Translators: original: skryté{% endcomment %}
+            {% trans "hidden" %}
+          </span>
+        {% endif %}
+      </small>
+    </h1>
   </li>
   <li class="pull-right">
     <a href="{% url 'task_list' round_id=task.round.id %}">
-      <span class="glyphicon glyphicon-list"></span> Všetky úlohy
+      <span class="glyphicon glyphicon-list"></span>
+      {% comment %}Translators: original: Všetky úlohy{% endcomment %}
+      {% trans "All tasks" %}
     </a>
   </li>
 </ul>
@@ -45,7 +56,8 @@
         <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
           <div class="panel-heading">
             <h4 class="panel-title">
-                Zadanie
+              {% comment %}Translators: original: Zadanie{% endcomment %}
+              {% trans "Problem statement" %}
             </h4>
           </div>
         </a>
@@ -59,11 +71,14 @@
       {% if task.solution_file_exists %}
         {% ssi path %}
       {% else %}
-          <p class="lead">HTML vzorák nie je k dispozícii.</p>
+        {% comment %}Translators: original: HTML vzorák nie je k dispozícii.{% endcomment %}
+        <p class="lead">{% trans "Solution in HTML is not available." %}</p>
       {% endif %}
     </div>
-    <h2>Diskusia</h2>
-    <p>Tu môžte voľne diskutovať o riešení, deliť sa o svoje kusy kódu a podobne.</p>
+    {% comment %}Translators: original: Diskusia{% endcomment %}
+    <h2>{% trans "Discussion" %}</h2>
+    {% comment %}Translators: original: Tu môžte voľne diskutovať o riešení, deliť sa o svoje kusy kódu a podobne.{% endcomment %}
+    <p>{% trans "Here you can discuss your solutions, share your code, etc." %}</p>
 
     {% render_comment_form for task %}
     {% render_comment_list for task %}
