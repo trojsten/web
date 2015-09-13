@@ -1,42 +1,55 @@
 {% extends "trojsten/layout/main.html" %}
 {% load bootstrap %}
+{% load i18n %}
 
-{% block title %}Nahlásiť problém{% endblock title %}
+{% block title %}
+    {% comment %}Translators: original: Nahlásiť problém{% endcomment %}
+    {% trans "Report a problem" %}
+{% endblock title %}
 
 {% block page_header %}
-<h1>Nahlásiť problém</h1>
+    {% comment %}Translators: original: Nahlásiť problém{% endcomment %}
+    <h1>{% trans "Report a problem" %}</h1>
 {% endblock %}
 
 {% block page_content %}
-<p class="lead">Ak ste objavili chybu na stránke, budeme vďační, ak nám dáte vedieť.</p>
+{% comment %}Translators: original: Ak ste objavili chybu na stránke, budeme vďační, ak nám dáte vedieť.{% endcomment %}
+<p class="lead">{% trans "If you find an error on the website, we will be grateful if you let us know." %}</p>
+
 <form class="form-horizontal" method="post" role="form">
     {% csrf_token %}
     <div class="form-group">
-        <label class="col-sm-2 control-label">E-mail</label>
+        {% comment %}Translators: original: E-mail{% endcomment %}
+        <label class="col-sm-2 control-label">{% trans "E-mail" %}</label>
         <div class="col-sm-10">
+            {% comment %}Translators: original: vasa@adresa.sk{% endcomment %}
+            {% trans "your@email.com" as your_email %}
             {% if request.user.id %}
-                <input type="text" class="form-control" placeholder="vasa@adresa.sk" name="email"
+                <input type="text" class="form-control" placeholder="{{ your_email }}" name="email"
                        value="{{ request.user.email }}">
             {% else %}
-                <input type="text" class="form-control" placeholder="vasa@adresa.sk" name="email">
+                <input type="text" class="form-control" placeholder="{{ your_email }}" name="email">
             {% endif %}
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label">Predmet</label>
+        {% comment %}Translators: original: Predmet{% endcomment %}
+        <label class="col-sm-2 control-label">{% trans "Subject" %}</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" placeholder="" name="name">
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label">Správa</label>
+        {% comment %}Translators: original: Správa{% endcomment %}
+        <label class="col-sm-2 control-label">{% trans "Message" %}</label>
         <div class="col-sm-10">
             <textarea name="body" class="form-control" rows="7"></textarea>
         </div>
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <input class="btn btn-primary" type="submit" value="Pošli" />
+            {% comment %}Translators: original: Pošli{% endcomment %}
+            <input class="btn btn-primary" type="submit" value="{% trans "Submit" %}" />
         </div>
     </div>
 </form>
