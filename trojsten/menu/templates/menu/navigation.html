@@ -1,4 +1,4 @@
-{% load utils staticfiles navigation_internal_tags%}
+{% load utils staticfiles navigation_internal_tags i18n %}
 
 {% block page_navigation %}
 <div class="sidebar">
@@ -29,7 +29,8 @@
         {% endfor %}
 
         <li class="visible-xs">
-            <h2>Iné semináre</h2>
+            {% comment %}Translators: original: Iné stránky{% endcomment %}
+            <h2>{% trans "Other sites" %}</h2>
         </li>
         {% for OTHER_SITE in OTHER_SITES %}
         <li class="visible-xs">

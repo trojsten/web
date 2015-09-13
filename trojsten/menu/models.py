@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse, resolve
 from django.core.validators import URLValidator
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy
 from sortedm2m.fields import SortedManyToManyField
 
 
@@ -36,41 +37,49 @@ def validate_url(value):
     if value[:1] == '@':
         return
 
-    raise ValidationError(
-        'Hodnota by mala byť externá URL, absolútna cesta' +
-        ' alebo urlname začínajúce znakom "@"!'
-    )
+    # Translators: original: Hodnota by mala byť externá URL, absolútna cesta alebo urlname začínajúce znakom "@"!
+    raise ValidationError(ugettext_lazy(
+        'The value should be an external URL, an absolute path' +
+        ' or an urlname prefixed with "@"!'
+    ))
 
 
 @python_2_unicode_compatible
 class MenuItem(models.Model):
-    name = models.CharField(max_length=64, verbose_name='názov')
+    # Translators: original: názov
+    name = models.CharField(max_length=64, verbose_name=ugettext_lazy('name'))
     url = models.CharField(
         max_length=196,
-        verbose_name='adresa',
+        # Translators: original: adresa
+        verbose_name=ugettext_lazy('address'),
         validators=[validate_url],
-        help_text=(
-            'Povolené tvary sú "http(s)://domain.com/path", ' +
-            '"/absolute/path" a "@urlname".'
-        ),
+        # Translators: original: Povolené tvary sú "http(s)://domain.com/path", "/absolute/path" a "@urlname".
+        help_text=(ugettext_lazy(
+            'Should be in a form of "http(s)://domain.com/path", ' +
+            '"/absolute/path" or "@urlname".'
+        )),
     )
     glyphicon = models.CharField(
         max_length=64, verbose_name='glyphicon')
     active_url_pattern = models.CharField(
         max_length=196, blank=True,
-        verbose_name='regulárne výrazy pre zvýraznenie',
-        help_text=(
-            'Medzerou oddelené urlnames a regulárne výrazy,' +
-            'ktoré pri zhode s cestou zvýraznia aktuálnu položku.'
-        ),
+        # Translators: original: regulárne výrazy pre zvýraznenie
+        verbose_name=ugettext_lazy('regular expressions for active item'),
+        # Translators: original: Medzerou oddelené urlnames a regulárne výrazy, ktoré pri zhode s cestou zvýraznia aktuálnu položku.
+        help_text=(ugettext_lazy(
+            'Space separated regular expressions or urlnames' +
+            'that matches all urlpaths of this menu item'
+        )),
     )
 
     def __str__(self):
         return '%s [%s]' % (self.name, self.url)
 
     class Meta:
-        verbose_name = 'Položka v menu'
-        verbose_name_plural = 'Položky v menu'
+        # Translators: original: Položka v menu
+        verbose_name = ugettext_lazy('Menu item')
+        # Translators: original: Položky v menu
+        verbose_name_plural = ugettext_lazy('Menu items')
 
     def get_url(self):
         if self.url[:1] == '@':
@@ -101,26 +110,39 @@ class MenuItem(models.Model):
 class MenuGroup(models.Model):
     name = models.CharField(
         max_length=64,
-        verbose_name='názov',
-        help_text='Zobrazí sa v menu pre všetky skupiny okrem prvej.',
+        # Translators: original: názov
+        verbose_name=ugettext_lazy('name'),
+        # Translators: original: Zobrazí sa v menu pre všetky skupiny okrem prvej.
+        help_text=ugettext_lazy(
+            'The name of the first group will not be displayed.'),
     )
     staff_only = models.BooleanField(
-        default=False, verbose_name='iba pre vedúcich')
-    position = models.IntegerField(verbose_name='pozícia')
+        default=False,
+        # Translators: original: iba pre vedúcich
+        verbose_name=ugettext_lazy('organizers only')
+    )
+    # Translators: original: pozícia
+    position = models.IntegerField(verbose_name=ugettext_lazy('position'))
     site = models.ForeignKey(
         Site,
         related_name='menu_groups',
         db_index=True,
-        verbose_name='stránka')
+        # Translators: original: stránka
+        verbose_name=ugettext_lazy('site')
+    )
     items = SortedManyToManyField(
         MenuItem,
         related_name='groups',
-        verbose_name='položky')
+        # Translators: original: položky
+        verbose_name=ugettext_lazy('items')
+    )
 
     def __str__(self):
         return '%s #%d: %s' % (str(self.site), self.position, self.name)
 
     class Meta:
-        verbose_name = 'Skupina v menu'
-        verbose_name_plural = 'Skupina v menu'
+        # Translators: original: Skupina v menu
+        verbose_name = ugettext_lazy('Menu group')
+        # Translators: original: Skupiny v menu
+        verbose_name_plural = ugettext_lazy('Menu groups')
         unique_together = ("position", "site")
