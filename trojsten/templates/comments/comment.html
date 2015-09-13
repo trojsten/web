@@ -49,7 +49,9 @@
                 {% is_site_organizer as is_organizer %}
                 {% if is_organizer and not preview %}
                     <a href="{% url 'admin:threadedcomments_threadedcomment_change' comment.id %}">
-                        <span class="glyphicon glyphicon-edit comment-icon"></span> moderovať
+                        <span class="glyphicon glyphicon-edit comment-icon"></span>
+                        {% comment %}Translators: original: moderovať{% endcomment %}
+                        {% trans "moderate" %}
                     </a>
                 {% endif %}
 
