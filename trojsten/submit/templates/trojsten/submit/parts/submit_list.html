@@ -30,11 +30,11 @@
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == IN_QUEUE %}
                 {% comment %}Translators: original: Neopravené{% endcomment %}
-                <td>{% trans "Uncorrected" %}</td>
+                <td>{% trans "Unreviewed" %}</td>
                 <td>..</td>
                 {% else %}
                 {% comment %}Translators: original: Opravené{% endcomment %}
-                <td>{% trans "Corrected" %}</td>
+                <td>{% trans "Reviewed" %}</td>
                 <td>{{ submit.points }}</td>
                 {% endif %}
             </tr>
@@ -52,8 +52,8 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                {% comment %}Translators: original: Time{% endcomment %}
-                <th>{% trans "Čas" %}</th>
+                {% comment %}Translators: original: Čas{% endcomment %}
+                <th>{% trans "Time" %}</th>
                 {% comment %}Translators: original: Stav{% endcomment %}
                 <th>{% trans "Status" %}</th>
                 {% comment %}Translators: original: Správa z testovača{% endcomment %}

@@ -29,7 +29,7 @@
 <ul class="nav nav-pills">
     <li class="pull-left" id="submit-title-li">
         {% comment %}Translators: original: Detaily submitu{% endcomment %}
-        <h1>{% trans "Submit details" %} <small>{{ submit.protocol_id }}</small></h1>
+        <h1>{% trans "Details of submit" %} <small>{{ submit.protocol_id }}</small></h1>
     </li>
     <li class="pull-right">
         <a href="{% url 'task_statement' task_id=submit.task.id %}">
