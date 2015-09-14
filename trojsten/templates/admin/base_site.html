@@ -1,10 +1,14 @@
 {% extends "admin/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ title }} | Trojstenweb admin{% endblock %}
+{% block title %}
+    {% comment %}Translators: original: Trojstenweb admin{% endcomment %}
+    {{ title }} | {% trans "Trojstenweb admin" %}
+{% endblock %}
 
 {% block branding %}
-<h1 id="site-name">Trojstenweb administration</h1>
+    {% comment %}Translators: original: Trojstenweb administration{% endcomment %}
+    <h1 id="site-name">{% trans "Trojstenweb administration" %}</h1>
 {% endblock %}
 
 {% block nav-global %}

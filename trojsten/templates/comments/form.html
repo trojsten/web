@@ -3,9 +3,9 @@
 {% if not form.target_object|comments_are_open %}
     <p>{% trans "Comments are closed." %}</p>
 {% elif not request.user.id %}
-    {% url "account_login" as account_login_url %}
-    {% comment %}Translators: original: Pre pridávanie komentárov sa musíš <a href="{{ account_login_url }}?next={{ request.path }}">prihlásiť.</a>{% endcomment %}
     <p class="text-danger">
+        {% url "account_login" as account_login_url %}
+        {% comment %}Translators: original: Pre pridávanie komentárov sa musíš <a href="{{ account_login_url }}?next={{ request.path }}">prihlásiť.</a>{% endcomment %}
         {% blocktrans %}
             You must be <a href="{{ account_login_url }}?next={{ request.path }}">logged in</a> to post a comment.
         {% endblocktrans %}
