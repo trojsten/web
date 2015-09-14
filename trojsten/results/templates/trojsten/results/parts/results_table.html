@@ -13,7 +13,7 @@
 
     <th class="result-header result-year">
         {% comment %}Translators: original: Ročník{% endcomment %}
-        {% trans 'Year' as text_year %}
+        {% trans 'Grade' as text_year %}
         <abbr title="{{ text_year }}" data-toggle="tooltip" data-placement="top">{{ text_year.0|upper }}</abbr>
     </th>
 
@@ -82,7 +82,11 @@
         {% lookup_as result.data.tasks task.id as task_points %}
         {% if task_points.submitted %}
             <span data-toggle="tooltip" data-placement="top"
-                  title="{% if task.description_points > 0 %}popis: {% if task_points.description_pending %}??{% else %}{{ task_points.description_points }}{% endif %}{% if task.source_points > 0 %} {% endif %}{% endif %}{% if task.source_points > 0 %}program: {{ task_points.source_points }}{% endif %}">
+                  {% comment %}Translators: original: popis{% endcomment %}
+                  {% trans 'description' as text_description %}
+                  {% comment %}Translators: original: program{% endcomment %}
+                  {% trans "program" as text_program" %}
+                  title="{% if task.description_points > 0 %}{{ text_description }}: {% if task_points.description_pending %}??{% else %}{{ task_points.description_points }}{% endif %}{% if task.source_points > 0 %} {% endif %}{% endif %}{% if task.source_points > 0 %}{{ text_program }}: {{ task_points.source_points }}{% endif %}">
                 {% if task_points.description_pending %}
                     ({{ task_points.sum }})
                 {% else %}
