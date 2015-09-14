@@ -42,7 +42,7 @@
         <a href="{% url 'admin:review_task' task_pk=task.id %}">
             <span class="glyphicon glyphicon-check"></span>
             {% comment %}Translators: original: Opravovanie{% endcomment %}
-            {% trans "Correction" %}
+            {% trans "Review" %}
         </a>
       </li>
   {% endif %}
@@ -54,21 +54,20 @@
     {% if task.description_points > 0 or task.source_points > 0 %}
     <div class="well pull-right task-points">
         {% comment %}Translators: original: Počet bodov{% endcomment %}
-        <strong>{% trans "Points" %}:</strong>
+        {% trans "Points" as text_points %}
+        <strong>{{ text_points }}</strong>
 
-        {% comment %}Translators: original: b{% endcomment %}
-        {% trans "p" as points_acr %}
 
         {% if task.description_points > 0 %}
             <div class="points-item points-item-description">
                 {% comment %}Translators: original: Popis{% endcomment %}
-                {% trans "Description" %}:&nbsp; <span class="badge pull-right">{{ task.description_points }}{{ points_acr }}</span>
+                {% trans "Description" %}:&nbsp; <span class="badge pull-right">{{ task.description_points }}{{ text_points.0|upper }}</span>
             </div>
         {% endif %}
         {% if task.source_points > 0 %}
             <div class="points-item points-item-description">
                 {% comment %}Translators: original: Program{% endcomment %}
-                {% trans "Program" %}:&nbsp; <span class="badge pull-right">{{ task.source_points }}{{ points_acr }}</span>
+                {% trans "Program" %}:&nbsp; <span class="badge pull-right">{{ task.source_points }}{{ text_points.0|upper }}</span>
             </div>
         {% endif %}
     </div>
@@ -89,7 +88,7 @@
         {% if request.user.is_authenticated %}
         {% if not task.round.can_submit %}
         <div class="alert alert-warning" role="alert">
-            {% comment %}Translators: original: Kolo už skončilo. Ďalšie submity sa už nerátajú do výsledkovky.{% endcomment %}
+            {% comment %}Translators: original: Séria už skončila. Ďalšie submity sa už nerátajú do výsledkovky.{% endcomment %}
             {% trans "Round has ended. Further submits do not count to standings." %}
         </div>
         {% endif %}
@@ -108,7 +107,7 @@
     {% comment %}Translators: original: Otázky a diskusia{% endcomment %}
     <h2>{% trans "Questions and discussions" %}</h2>
     <p>
-        {% comment %}Translators: original: Po skončení kola budete mať príležitosť na diskutovanie o riešeniach v diskusii pod vzorovým riešením.{% endcomment %}
+        {% comment %}Translators: original: Po skončení série budete mať príležitosť na diskutovanie o riešeniach v diskusii pod vzorovým riešením.{% endcomment %}
         {% trans "When the round ends, you will have the opportunity to discuss your solutions under solutions." %}
     </p>
 {% endblock %}
