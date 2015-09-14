@@ -31,7 +31,7 @@
     {% empty %}
         <div class="alert alert-info">
             {% url 'archive' as url_archive %}
-            {% comment %}Translators: original: Aktuálne nebeží žiadne kolo. Môžte si pozrieť úlohy niektorého z predošlých kôl v <a href="{{ url_archive }}" class="alert-link">archíve</a>.{% endcomment %}
+            {% comment %}Translators: original: Aktuálne nebeží žiadna séria. Môžte si pozrieť úlohy z predošlých sérií v <a href="{{ url_archive }}" class="alert-link">archíve</a>.{% endcomment %}
             {% blocktrans %}
                 There is no active contest now.
                 You may see the previous problem statements in the <a href="{{ url_archive }}" class="alert-link">archives.</a>
