@@ -124,17 +124,22 @@ class EventListView(ListView):
     model = EventType
     context_object_name = 'event_types'
     queryset = EventType.objects.current_site_only().prefetch_related('event_set')
-    article = None  # Hodnota sa prida v dispatch()
+
+    # Hodnoty sa pridaju v dispatch()
+    article = None
+    urlpath = None
 
     @method_decorator(get_article(can_read=True))
     def dispatch(self, request, article, *args, **kwargs):
         self.article = article
+        self.urlpath = kwargs.get('urlpath', None)
         return super(EventListView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(EventListView, self).get_context_data(**kwargs)
         context.update({
-            'article': self.article
+            'article': self.article,
+            'urlpath': self.urlpath,
         })
         return context
 
