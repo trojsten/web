@@ -33,7 +33,7 @@ class DescriptionSubmitForm(forms.Form):
     def clean_submit_file(self):
         sfile = self.cleaned_data['submit_file']
         extension = os.path.splitext(sfile.name)[1]
-        if extension not in settings.SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS:
+        if extension.lower() not in settings.SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS:
             raise forms.ValidationError("Zaslaný súbor má nepodporovanú príponu %s" % extension)
         return sfile
 
