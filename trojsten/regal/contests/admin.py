@@ -59,6 +59,14 @@ class RoundAdmin(admin.ModelAdmin):
                                   description='prebieha',
                                   boolean=True)
 
+    def get_queryset(self, request):
+        user_groups = request.user.groups.all()
+        competition_lst = Competition.objects.filter(organizers_group__in=user_groups)
+        series_lst = Series.objects.filter(competition__in=competition_lst)
+        return super(RoundAdmin, self).get_queryset(request).filter(
+            series__in=series_lst
+        )
+
 
 class RepositoryAdmin(admin.ModelAdmin):
     readonly_fields = ('notification_string',)
