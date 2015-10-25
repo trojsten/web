@@ -72,7 +72,6 @@ class InvitationAdmin(admin.ModelAdmin):
     form = select2_modelform(Invitation)
     list_display = ('event', 'user', 'type', 'going')
 
-    # Pre vsetko ostatne ako KSP hadze web 403, takze zatial zbytocne,...
     def get_queryset(self, request):
         user_groups = request.user.groups.all()
         events_type_lst = EventType.objects.filter(organizers_group__in=user_groups)
