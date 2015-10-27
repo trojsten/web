@@ -117,6 +117,13 @@ class TaskAdmin(admin.ModelAdmin):
                                      description='vzorák',
                                      boolean=True)
 
+    def get_queryset(self, request):
+        user_groups = request.user.groups.all()
+        cat_lst = Category.objects.filter(competition__in=user_groups)
+        return super(TaskAdmin, self).get_queryset(request).filter(
+            category__in=cat_lst
+        )
+
 
 class SubmitAdmin(admin.ModelAdmin):
     change_form_template = 'admin/submit_form.html'
@@ -161,10 +168,25 @@ class SubmitAdmin(admin.ModelAdmin):
     get_category.short_description = 'kategória'
     get_category.admin_order_field = 'task__category'
 
+    def get_queryset(self, request):
+        user_groups = request.user.groups.all()
+        cat_lst = Category.objects.filter(competition__in=user_groups)
+        task_lst = Task.objects.filter(category__in=cat_lst)
+        return super(SubmitAdmin, self).get_queryset(request).filter(
+            task__in=task_lst
+        )
+
 
 class CategoryAdmin(admin.ModelAdmin):
     form = select2_modelform(Category)
     list_filter = ('competition',)
+
+    def get_queryset(self, request):
+        user_groups = request.user.groups.all()
+        return super(CategoryAdmin, self).get_queryset(request).filter(
+            competition__in=user_groups
+        )
+
 
 admin.site.register(Task, TaskAdmin)
 admin.site.register(Submit, SubmitAdmin)
