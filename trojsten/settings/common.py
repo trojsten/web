@@ -143,10 +143,16 @@ SITES = {
         'NAME': 'Korešpondenčný seminár FX',
         'SHORT_NAME': 'FX',
         'URL': 'http://fx.fks.sk',
+        'HAS_LOGO': True,
         'FOLDER': 'fx',
         'FACEBOOK_PAGE': 'http://fx.fks.sk',
         'GOOGLEPLUS_PAGE': 'http://fx.fks.sk',
     },
+    9: {
+        'NAME': 'Korešpondenčný seminár iKS',
+        'SHORT_NAME': 'iKS',
+        'URL': 'http://iksko.org',
+    }
 }
 
 NAVBAR_SITES = []
