@@ -90,7 +90,7 @@ def download_latest_submits(request, task_pk):
                 zipper.write(submit.filepath, submit_download_filename(submit))
 
         if errors:
-            zipper.writestr("errors.txt", "\n".join(*errors).encode())
+            zipper.writestr("errors.txt", "\n".join(errors).encode())
 
     return sendfile(request, path, attachment=True)
 
