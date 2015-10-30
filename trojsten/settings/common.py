@@ -161,6 +161,7 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'trojsten.middleware.multihostname.MultiHostnameMiddleware',
     'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 ALLOWED_INCLUDE_ROOTS = ()
@@ -210,6 +211,8 @@ INSTALLED_APPS = (
     'sortedm2m',
     'favicon',
     'import_export',
+    'oauth2_provider',
+    'corsheaders',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
