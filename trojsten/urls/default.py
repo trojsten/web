@@ -54,6 +54,7 @@ urlpatterns += patterns('',
     url(r'^diskusie/', include('trojsten.threads.urls')),
     url(r'^$', 'trojsten.views.home_redirect'),
     url(r'^wiki/notify/', get_notify_pattern()),
+    url(r'^', include('favicon.urls')),
     url(r'^', get_wiki_pattern()),
 )
 

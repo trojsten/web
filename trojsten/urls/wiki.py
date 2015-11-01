@@ -40,6 +40,7 @@ urlpatterns += patterns('',
     url(r'^ucet/', include('ksp_login.urls')),
     url(r'^nahlasit-problem/', include('contact_form.urls')),
     url(r'^wiki/notify/', get_notify_pattern()),
+    url(r'^', include('favicon.urls')),
     url(r'^', get_wiki_pattern()),
 )
 
