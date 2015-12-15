@@ -8,8 +8,10 @@ import trojsten.special.installed_apps
 
 from django.http import UnreadablePostError
 
+
 def env(name, default):
     return os.environ.get(name, default)
+
 
 def skip_unreadable_post(record):
     if record.exc_info:
@@ -273,6 +275,7 @@ INSTALLED_APPS = (
     'easy_select2',
     'mathfilters',
     'sortedm2m',
+    'favicon',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
@@ -361,7 +364,7 @@ LOGIN_REDIRECT_URL = "/ucet/"
 #
 # Included packages settings
 #
-
+FAVICON_PATH = STATIC_URL + 'images/favicon.ico'
 
 # KSP-Login settings
 # The list of authentication backends we want to allow.

@@ -19,3 +19,4 @@ django-sortedm2m==0.8.1
 -e git://github.com/koniiiik/ksp_login@00a1b3d90405434d4f0354d2632b0eeadfdb8a44#egg=ksp_login-master
 django-fluent-comments
 django-threadedcomments==1.0b1
+django-favicon==0.1.2
