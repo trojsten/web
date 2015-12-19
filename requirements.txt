@@ -15,9 +15,9 @@ django-taggit==0.17.3
 django-threadedcomments==1.0.1
 django-uuidfield==0.5.0
 Django==1.6.11
-ksp-login==0.3.0
+ksp-login==0.3.2
 psycopg2==2.5.3
-python-social-auth==0.2.1
+python-social-auth==0.2.13
 South==1.0
 Unidecode==0.04.18
 wiki==0.0.24.2
