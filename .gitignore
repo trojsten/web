@@ -24,3 +24,6 @@ Session.vim
 # IntelliJ editors
 *.idea
 *.iml
+
+# db dump
+archiv.ksp.sk/*

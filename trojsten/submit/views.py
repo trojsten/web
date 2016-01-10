@@ -12,7 +12,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.html import format_html
-from django.utils import simplejson
+import json
 
 from sendfile import sendfile
 from unidecode import unidecode

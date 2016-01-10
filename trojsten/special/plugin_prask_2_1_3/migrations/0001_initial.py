@@ -2,26 +2,29 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('sites', '0001_initial'),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Thread',
+            name='UserLevel',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('title', models.CharField(max_length=100)),
-                ('sites', models.ManyToManyField(to='sites.Site')),
+                ('level', models.IntegerField()),
+                ('user', models.ForeignKey(related_name='+', to=settings.AUTH_USER_MODEL)),
             ],
             options={
-                'verbose_name': 'diskusn\xe9 vl\xe1kno',
-                'verbose_name_plural': 'diskusn\xe9 vl\xe1kna',
             },
             bases=(models.Model,),
+        ),
+        migrations.AlterUniqueTogether(
+            name='userlevel',
+            unique_together=set([('user', 'level')]),
         ),
     ]
