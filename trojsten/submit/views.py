@@ -2,6 +2,7 @@
 # Create your views here.
 
 import os
+import json
 import xml.etree.ElementTree as ET
 
 from django.contrib.auth.decorators import login_required
@@ -12,7 +13,6 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.html import format_html
-import json
 
 from sendfile import sendfile
 from unidecode import unidecode
@@ -197,7 +197,7 @@ def poll_submit_info(request, submit_id):
             task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
         # You shouldn't see other user's submits if you are not an organizer of the competition
         raise PermissionDenied()
-    return HttpResponse(simplejson.dumps({
+    return HttpResponse(json.dumps({
         'tested': submit.tested,
         'response_verbose': unicode(submit.tester_response_verbose),
         'response': submit.tester_response,
