@@ -203,7 +203,7 @@ def poll_submit_info(request, submit_id):
         'response': submit.tester_response,
         'points': float(submit.points),
         'class': submitclass(submit),
-    }), mimetype='application/json; charset=utf-8')
+    }), content_type='application/json; charset=utf-8')
 
 
 @login_required
