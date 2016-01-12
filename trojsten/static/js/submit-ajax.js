@@ -23,7 +23,7 @@
             poll_submit(id, function(data) {
                 $($(that).children()[1]).text('Dotestované');
                 $($(that).children()[2]).text(data.response_verbose);
-                $($(that).children()[3]).text(data.points);
+                $($(that).children()[3]).text(data.points.toFixed(2));
                 $(that).removeClass('info submit-untested').addClass(data.class);
             });
         });
