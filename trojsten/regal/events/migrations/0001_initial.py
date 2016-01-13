@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -25,7 +25,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'akcia',
                 'verbose_name_plural': 'akcie',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='EventType',
@@ -38,7 +37,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'typ akcie',
                 'verbose_name_plural': 'typy akci\xed',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Invitation',
@@ -51,7 +49,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'pozv\xe1nka',
                 'verbose_name_plural': 'pozv\xe1nky',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Link',
@@ -65,7 +62,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'odkaz',
                 'verbose_name_plural': 'odkazy',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Place',
@@ -77,7 +73,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'miesto akcie',
                 'verbose_name_plural': 'miesta akci\xed',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Registration',
@@ -90,6 +85,5 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Prihl\xe1\u0161ka',
                 'verbose_name_plural': 'Prihl\xe1\u0161ky',
             },
-            bases=(models.Model,),
         ),
     ]

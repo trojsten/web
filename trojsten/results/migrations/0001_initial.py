@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 from django.conf import settings
 
 
@@ -28,7 +28,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Zmrazen\xe9 body za \xfalohu',
                 'verbose_name_plural': 'Zmrazen\xe9 body za \xfalohy',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='FrozenResults',
@@ -44,7 +43,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Zmrazen\xe1 v\xfdsledkovka',
                 'verbose_name_plural': 'Zmrazen\xe9 v\xfdsledkovky',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='FrozenUserResult',
@@ -65,6 +63,5 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Zmrazen\xfd v\xfdsledok',
                 'verbose_name_plural': 'Zmrazen\xe9 v\xfdsledky',
             },
-            bases=(models.Model,),
         ),
     ]

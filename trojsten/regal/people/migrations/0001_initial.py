@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
-import django.utils.timezone
+from django.db import migrations, models
 from django.conf import settings
+import django.utils.timezone
+import trojsten.regal.people.models
 import django.core.validators
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0001_initial'),
+        ('auth', '0006_require_contenttypes_0002'),
     ]
 
     operations = [
@@ -19,25 +20,27 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(default=django.utils.timezone.now, verbose_name='last login')),
+                ('last_login', models.DateTimeField(null=True, verbose_name='last login', blank=True)),
                 ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
-                ('username', models.CharField(help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True, max_length=30, verbose_name='username', validators=[django.core.validators.RegexValidator('^[\\w.@+-]+$', 'Enter a valid username.', 'invalid')])),
+                ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, max_length=30, validators=[django.core.validators.RegexValidator('^[\\w.@+-]+$', 'Enter a valid username. This value may contain only letters, numbers and @/./+/-/_ characters.', 'invalid')], help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True, verbose_name='username')),
                 ('first_name', models.CharField(max_length=30, verbose_name='first name', blank=True)),
                 ('last_name', models.CharField(max_length=30, verbose_name='last name', blank=True)),
-                ('email', models.EmailField(max_length=75, verbose_name='email address', blank=True)),
+                ('email', models.EmailField(max_length=254, verbose_name='email address', blank=True)),
                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
                 ('gender', models.CharField(default='M', max_length=1, verbose_name='pohlavie', choices=[('M', 'Chlapec'), ('F', 'Diev\u010da')])),
                 ('birth_date', models.DateField(null=True, verbose_name='d\xe1tum narodenia', db_index=True)),
                 ('graduation', models.IntegerField(help_text='Povinn\xe9 pre \u017eiakov.', null=True, verbose_name='rok maturity')),
-                ('groups', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Group', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of his/her group.', verbose_name='groups')),
+                ('groups', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Group', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', verbose_name='groups')),
             ],
             options={
                 'verbose_name': 'pou\u017e\xedvate\u013e',
                 'verbose_name_plural': 'pou\u017e\xedvatelia',
             },
-            bases=(models.Model,),
+            managers=[
+                ('objects', trojsten.regal.people.models.UserManager()),
+            ],
         ),
         migrations.CreateModel(
             name='Address',
@@ -52,7 +55,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Adresa',
                 'verbose_name_plural': 'Adresy',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='School',
@@ -70,7 +72,6 @@ class Migration(migrations.Migration):
                 'verbose_name': '\u0161kola',
                 'verbose_name_plural': '\u0161koly',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='UserProperty',
@@ -82,7 +83,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'dodato\u010dn\xe1 vlastnos\u0165',
                 'verbose_name_plural': 'dodato\u010dn\xe9 vlastnosti',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='UserPropertyKey',
@@ -94,46 +94,39 @@ class Migration(migrations.Migration):
                 'verbose_name': 'k\u013e\xfa\u010d dodato\u010dnej vlastnosti',
                 'verbose_name_plural': 'k\u013e\xfa\u010de dodato\u010dnej vlastnosti',
             },
-            bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='userproperty',
             name='key',
             field=models.ForeignKey(related_name='properties', verbose_name='n\xe1zov vlastnosti', to='people.UserPropertyKey'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='userproperty',
             name='user',
             field=models.ForeignKey(related_name='properties', to=settings.AUTH_USER_MODEL),
-            preserve_default=True,
-        ),
-        migrations.AlterUniqueTogether(
-            name='userproperty',
-            unique_together=set([('user', 'key')]),
         ),
         migrations.AddField(
             model_name='user',
             name='home_address',
             field=models.ForeignKey(related_name='lives_here', verbose_name='dom\xe1ca adresa', to='people.Address', null=True),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='user',
             name='mailing_address',
             field=models.ForeignKey(related_name='accepting_mails_here', verbose_name='adresa kore\u0161pondencie', blank=True, to='people.Address', null=True),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='user',
             name='school',
             field=models.ForeignKey(default=1, to='people.School', help_text='Do pol\xed\u010dka nap\xed\u0161te skratku, \u010das\u0165 n\xe1zvu alebo adresy \u0161koly a n\xe1sledne vyberte spr\xe1vnu mo\u017enos\u0165 zo zoznamu. Pokia\u013e va\u0161a \u0161kola nie je v&nbsp;zozname, vyberte "Gymn\xe1zium in\xe9" a&nbsp;po\u0161lite n\xe1m e-mail.', null=True, verbose_name='\u0161kola'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='user',
             name='user_permissions',
             field=models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Permission', blank=True, help_text='Specific permissions for this user.', verbose_name='user permissions'),
-            preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='userproperty',
+            unique_together=set([('user', 'key')]),
         ),
     ]

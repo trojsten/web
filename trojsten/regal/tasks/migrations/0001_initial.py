@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 from django.conf import settings
 
 
@@ -24,7 +24,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Kateg\xf3ria',
                 'verbose_name_plural': 'Kateg\xf3rie',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Submit',
@@ -42,7 +41,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Submit',
                 'verbose_name_plural': 'Submity',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Task',
@@ -65,18 +63,15 @@ class Migration(migrations.Migration):
                 'verbose_name': '\xdaloha',
                 'verbose_name_plural': '\xdalohy',
             },
-            bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='submit',
             name='task',
             field=models.ForeignKey(verbose_name='\xfaloha', to='tasks.Task'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='submit',
             name='user',
             field=models.ForeignKey(verbose_name='odovzd\xe1vate\u013e', to=settings.AUTH_USER_MODEL),
-            preserve_default=True,
         ),
     ]

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 import datetime
 import uuidfield.fields
 
@@ -9,8 +9,8 @@ import uuidfield.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0001_initial'),
         ('sites', '0001_initial'),
+        ('auth', '0006_require_contenttypes_0002'),
     ]
 
     operations = [
@@ -27,7 +27,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'S\xfa\u0165a\u017e',
                 'verbose_name_plural': 'S\xfa\u0165a\u017ee',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Repository',
@@ -39,15 +38,14 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Repozit\xe1r',
                 'verbose_name_plural': 'Repozit\xe1re',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Round',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('number', models.IntegerField(verbose_name='\u010d\xedslo')),
-                ('start_time', models.DateTimeField(default=datetime.datetime(2016, 1, 10, 0, 0), verbose_name='za\u010diatok')),
-                ('end_time', models.DateTimeField(default=datetime.datetime(2016, 1, 10, 23, 59, 59), verbose_name='koniec')),
+                ('start_time', models.DateTimeField(default=datetime.datetime(2016, 1, 13, 0, 0), verbose_name='za\u010diatok')),
+                ('end_time', models.DateTimeField(default=datetime.datetime(2016, 1, 13, 23, 59, 59), verbose_name='koniec')),
                 ('visible', models.BooleanField(verbose_name='vidite\u013enos\u0165')),
                 ('solutions_visible', models.BooleanField(verbose_name='vidite\u013enos\u0165 vzor\xe1kov')),
             ],
@@ -55,7 +53,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Kolo',
                 'verbose_name_plural': 'Kol\xe1',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Series',
@@ -70,24 +67,20 @@ class Migration(migrations.Migration):
                 'verbose_name': 'S\xe9ria',
                 'verbose_name_plural': 'S\xe9rie',
             },
-            bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='round',
             name='series',
             field=models.ForeignKey(verbose_name='s\xe9ria', to='contests.Series'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='competition',
             name='repo',
             field=models.ForeignKey(verbose_name='git repozit\xe1r', blank=True, to='contests.Repository', null=True),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='competition',
             name='sites',
             field=models.ManyToManyField(to='sites.Site'),
-            preserve_default=True,
         ),
     ]

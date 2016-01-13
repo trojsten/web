@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 import sortedm2m.fields
 import trojsten.menu.models
 
@@ -25,7 +25,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Skupina v menu',
                 'verbose_name_plural': 'Skupina v menu',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='MenuItem',
@@ -40,19 +39,16 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Polo\u017eka v menu',
                 'verbose_name_plural': 'Polo\u017eky v menu',
             },
-            bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='menugroup',
             name='items',
             field=sortedm2m.fields.SortedManyToManyField(help_text=None, related_name='groups', verbose_name='polo\u017eky', to='menu.MenuItem'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='menugroup',
             name='site',
             field=models.ForeignKey(related_name='menu_groups', verbose_name='str\xe1nka', to='sites.Site'),
-            preserve_default=True,
         ),
         migrations.AlterUniqueTogether(
             name='menugroup',
