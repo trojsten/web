@@ -19,11 +19,14 @@
 
         $('.submit-untested').each(function() {
             var id = $(this).data('id');
-            var that = this
+            var that = this;
+            var current_lang = $('body').data('language-code');
             poll_submit(id, function(data) {
                 $($(that).children()[1]).text('Dotestované');
                 $($(that).children()[2]).text(data.response_verbose);
-                $($(that).children()[3]).text(data.points);
+                $($(that).children()[3]).text(data.points.toLocaleString(current_lang, {
+                    minimumFractionDigits: 2,
+                }));
                 $(that).removeClass('info submit-untested').addClass(data.class);
             });
         });
