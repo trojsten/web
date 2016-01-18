@@ -5,9 +5,11 @@ import os
 from celery import Celery
 
 from django.conf import settings
+import dotenv
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "trojsten.settings.development")
+dotenv.read_dotenv()
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "trojsten.settings.production")
 
 app = Celery('trojsten')
 
