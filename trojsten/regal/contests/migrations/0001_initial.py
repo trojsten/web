@@ -1,112 +1,86 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import migrations, models
+import datetime
+import uuidfield.fields
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Repository'
-        db.create_table(u'contests_repository', (
-            ('notification_string', self.gf('uuidfield.fields.UUIDField')(unique=True, max_length=32, primary_key=True)),
-            ('url', self.gf('django.db.models.fields.CharField')(max_length=128)),
-        ))
-        db.send_create_signal(u'contests', ['Repository'])
+    dependencies = [
+        ('sites', '0001_initial'),
+        ('auth', '0006_require_contenttypes_0002'),
+    ]
 
-        # Adding model 'Competition'
-        db.create_table(u'contests_competition', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=128)),
-            ('repo', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contests.Repository'], null=True)),
-            ('repo_root', self.gf('django.db.models.fields.CharField')(max_length=128)),
-        ))
-        db.send_create_signal(u'contests', ['Competition'])
-
-        # Adding M2M table for field sites on 'Competition'
-        m2m_table_name = db.shorten_name(u'contests_competition_sites')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('competition', models.ForeignKey(orm[u'contests.competition'], null=False)),
-            ('site', models.ForeignKey(orm[u'sites.site'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['competition_id', 'site_id'])
-
-        # Adding model 'Series'
-        db.create_table(u'contests_series', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('competition', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contests.Competition'])),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=32)),
-            ('number', self.gf('django.db.models.fields.IntegerField')()),
-            ('year', self.gf('django.db.models.fields.IntegerField')()),
-        ))
-        db.send_create_signal(u'contests', ['Series'])
-
-        # Adding model 'Round'
-        db.create_table(u'contests_round', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('series', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contests.Series'])),
-            ('number', self.gf('django.db.models.fields.IntegerField')()),
-            ('end_time', self.gf('django.db.models.fields.DateTimeField')()),
-            ('visible', self.gf('django.db.models.fields.BooleanField')()),
-        ))
-        db.send_create_signal(u'contests', ['Round'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'Repository'
-        db.delete_table(u'contests_repository')
-
-        # Deleting model 'Competition'
-        db.delete_table(u'contests_competition')
-
-        # Removing M2M table for field sites on 'Competition'
-        db.delete_table(db.shorten_name(u'contests_competition_sites'))
-
-        # Deleting model 'Series'
-        db.delete_table(u'contests_series')
-
-        # Deleting model 'Round'
-        db.delete_table(u'contests_round')
-
-
-    models = {
-        u'contests.competition': {
-            'Meta': {'object_name': 'Competition'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'repo': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contests.Repository']", 'null': 'True'}),
-            'repo_root': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'sites': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['sites.Site']", 'symmetrical': 'False'})
-        },
-        u'contests.repository': {
-            'Meta': {'object_name': 'Repository'},
-            'notification_string': ('uuidfield.fields.UUIDField', [], {'unique': 'True', 'max_length': '32', 'primary_key': 'True'}),
-            'url': ('django.db.models.fields.CharField', [], {'max_length': '128'})
-        },
-        u'contests.round': {
-            'Meta': {'object_name': 'Round'},
-            'end_time': ('django.db.models.fields.DateTimeField', [], {}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'number': ('django.db.models.fields.IntegerField', [], {}),
-            'series': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contests.Series']"}),
-            'visible': ('django.db.models.fields.BooleanField', [], {})
-        },
-        u'contests.series': {
-            'Meta': {'object_name': 'Series'},
-            'competition': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contests.Competition']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
-            'number': ('django.db.models.fields.IntegerField', [], {}),
-            'year': ('django.db.models.fields.IntegerField', [], {})
-        },
-        u'sites.site': {
-            'Meta': {'ordering': "(u'domain',)", 'object_name': 'Site', 'db_table': "u'django_site'"},
-            'domain': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        }
-    }
-
-    complete_apps = ['contests']
+    operations = [
+        migrations.CreateModel(
+            name='Competition',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=128, verbose_name='n\xe1zov')),
+                ('repo_root', models.CharField(max_length=128, verbose_name='adresa foldra s\xfa\u0165a\u017ee v repozit\xe1ri')),
+                ('primary_school_only', models.BooleanField(default=False, verbose_name='s\xfa\u0165a\u017e je iba pre z\xe1klado\u0161kol\xe1kov')),
+                ('organizers_group', models.ForeignKey(verbose_name='skupina ved\xfacich', to='auth.Group', null=True)),
+            ],
+            options={
+                'verbose_name': 'S\xfa\u0165a\u017e',
+                'verbose_name_plural': 'S\xfa\u0165a\u017ee',
+            },
+        ),
+        migrations.CreateModel(
+            name='Repository',
+            fields=[
+                ('notification_string', uuidfield.fields.UUIDField(primary_key=True, serialize=False, editable=False, max_length=32, blank=True, unique=True, verbose_name='string pre push notifik\xe1ciu')),
+                ('url', models.CharField(max_length=128, verbose_name='url git repozit\xe1ra')),
+            ],
+            options={
+                'verbose_name': 'Repozit\xe1r',
+                'verbose_name_plural': 'Repozit\xe1re',
+            },
+        ),
+        migrations.CreateModel(
+            name='Round',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('number', models.IntegerField(verbose_name='\u010d\xedslo')),
+                ('start_time', models.DateTimeField(default=datetime.datetime(2016, 1, 18, 0, 0), verbose_name='za\u010diatok')),
+                ('end_time', models.DateTimeField(default=datetime.datetime(2016, 1, 18, 23, 59, 59), verbose_name='koniec')),
+                ('visible', models.BooleanField(verbose_name='vidite\u013enos\u0165')),
+                ('solutions_visible', models.BooleanField(verbose_name='vidite\u013enos\u0165 vzor\xe1kov')),
+            ],
+            options={
+                'verbose_name': 'Kolo',
+                'verbose_name_plural': 'Kol\xe1',
+            },
+        ),
+        migrations.CreateModel(
+            name='Series',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=32, verbose_name='n\xe1zov', blank=True)),
+                ('number', models.IntegerField(verbose_name='\u010d\xedslo s\xe9rie')),
+                ('year', models.IntegerField(verbose_name='ro\u010dn\xedk')),
+                ('competition', models.ForeignKey(verbose_name='s\xfa\u0165a\u017e', to='contests.Competition')),
+            ],
+            options={
+                'verbose_name': 'S\xe9ria',
+                'verbose_name_plural': 'S\xe9rie',
+            },
+        ),
+        migrations.AddField(
+            model_name='round',
+            name='series',
+            field=models.ForeignKey(verbose_name='s\xe9ria', to='contests.Series'),
+        ),
+        migrations.AddField(
+            model_name='competition',
+            name='repo',
+            field=models.ForeignKey(verbose_name='git repozit\xe1r', blank=True, to='contests.Repository', null=True),
+        ),
+        migrations.AddField(
+            model_name='competition',
+            name='sites',
+            field=models.ManyToManyField(to='sites.Site'),
+        ),
+    ]

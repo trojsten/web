@@ -13,30 +13,26 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Try',
+            name='UserCategory',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('input', models.CharField(max_length=15)),
-                ('output', models.CharField(max_length=40)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='UserLevel',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('level_id', models.IntegerField()),
-                ('try_count', models.IntegerField(default=0)),
-                ('solved', models.BooleanField(default=False)),
+                ('category', models.CharField(max_length=1)),
+                ('points', models.IntegerField(default=0)),
+                ('state', models.CharField(default=b'', max_length=256)),
                 ('user', models.ForeignKey(related_name='+', to=settings.AUTH_USER_MODEL)),
             ],
         ),
-        migrations.AddField(
-            model_name='try',
-            name='userlevel',
-            field=models.ForeignKey(to='plugin_ksp_32_1_1.UserLevel'),
+        migrations.CreateModel(
+            name='Visit',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('number', models.IntegerField()),
+                ('response', models.IntegerField()),
+                ('user_category', models.ForeignKey(related_name='visits', to='plugin_prask_1_2_1.UserCategory')),
+            ],
         ),
         migrations.AlterUniqueTogether(
-            name='userlevel',
-            unique_together=set([('user', 'level_id')]),
+            name='usercategory',
+            unique_together=set([('user', 'category')]),
         ),
     ]

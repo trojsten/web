@@ -13,30 +13,23 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Try',
+            name='LevelSolved',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('input', models.CharField(max_length=15)),
-                ('output', models.CharField(max_length=40)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='UserLevel',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('level_id', models.IntegerField()),
-                ('try_count', models.IntegerField(default=0)),
-                ('solved', models.BooleanField(default=False)),
+                ('series', models.IntegerField()),
+                ('level', models.IntegerField()),
                 ('user', models.ForeignKey(related_name='+', to=settings.AUTH_USER_MODEL)),
             ],
         ),
-        migrations.AddField(
-            model_name='try',
-            name='userlevel',
-            field=models.ForeignKey(to='plugin_ksp_32_1_1.UserLevel'),
+        migrations.CreateModel(
+            name='LevelSubmit',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('status', models.CharField(max_length=3)),
+            ],
         ),
         migrations.AlterUniqueTogether(
-            name='userlevel',
-            unique_together=set([('user', 'level_id')]),
+            name='levelsolved',
+            unique_together=set([('user', 'series', 'level')]),
         ),
     ]

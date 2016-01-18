@@ -1,154 +1,132 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import migrations, models
+from django.conf import settings
+import django.utils.timezone
+import trojsten.regal.people.models
+import django.core.validators
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Address'
-        db.create_table(u'people_address', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('street', self.gf('django.db.models.fields.CharField')(max_length=70)),
-            ('town', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
-            ('postal_code', self.gf('django.db.models.fields.CharField')(max_length=16, db_index=True)),
-            ('country', self.gf('django.db.models.fields.CharField')(max_length=32, db_index=True)),
-        ))
-        db.send_create_signal(u'people', ['Address'])
+    dependencies = [
+        ('auth', '0006_require_contenttypes_0002'),
+    ]
 
-        # Adding model 'School'
-        db.create_table(u'people_school', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('abbreviation', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
-            ('verbose_name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('addr_name', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
-            ('street', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
-            ('city', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
-            ('zip_code', self.gf('django.db.models.fields.CharField')(max_length=10, blank=True)),
-        ))
-        db.send_create_signal(u'people', ['School'])
-
-        # Adding model 'User'
-        db.create_table(u'people_user', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('password', self.gf('django.db.models.fields.CharField')(max_length=128)),
-            ('last_login', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('is_superuser', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('username', self.gf('django.db.models.fields.CharField')(unique=True, max_length=30)),
-            ('first_name', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
-            ('last_name', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
-            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75, blank=True)),
-            ('is_staff', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('is_active', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('date_joined', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('gender', self.gf('django.db.models.fields.CharField')(default=u'M', max_length=2)),
-            ('birth_date', self.gf('django.db.models.fields.DateField')(null=True, db_index=True)),
-            ('home_address', self.gf('django.db.models.fields.related.ForeignKey')(related_name=u'lives_here', null=True, to=orm['people.Address'])),
-            ('mailing_address', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'accepting_mails_here', null=True, to=orm['people.Address'])),
-            ('school', self.gf('django.db.models.fields.related.ForeignKey')(default=1, to=orm['people.School'], null=True)),
-            ('graduation', self.gf('django.db.models.fields.IntegerField')(null=True)),
-        ))
-        db.send_create_signal(u'people', ['User'])
-
-        # Adding M2M table for field groups on 'User'
-        m2m_table_name = db.shorten_name(u'people_user_groups')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('user', models.ForeignKey(orm[u'people.user'], null=False)),
-            ('group', models.ForeignKey(orm[u'auth.group'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['user_id', 'group_id'])
-
-        # Adding M2M table for field user_permissions on 'User'
-        m2m_table_name = db.shorten_name(u'people_user_user_permissions')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('user', models.ForeignKey(orm[u'people.user'], null=False)),
-            ('permission', models.ForeignKey(orm[u'auth.permission'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['user_id', 'permission_id'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'Address'
-        db.delete_table(u'people_address')
-
-        # Deleting model 'School'
-        db.delete_table(u'people_school')
-
-        # Deleting model 'User'
-        db.delete_table(u'people_user')
-
-        # Removing M2M table for field groups on 'User'
-        db.delete_table(db.shorten_name(u'people_user_groups'))
-
-        # Removing M2M table for field user_permissions on 'User'
-        db.delete_table(db.shorten_name(u'people_user_user_permissions'))
-
-
-    models = {
-        u'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        u'auth.permission': {
-            'Meta': {'ordering': "(u'content_type__app_label', u'content_type__model', u'codename')", 'unique_together': "((u'content_type', u'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        u'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        u'people.address': {
-            'Meta': {'object_name': 'Address'},
-            'country': ('django.db.models.fields.CharField', [], {'max_length': '32', 'db_index': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'postal_code': ('django.db.models.fields.CharField', [], {'max_length': '16', 'db_index': 'True'}),
-            'street': ('django.db.models.fields.CharField', [], {'max_length': '70'}),
-            'town': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
-        },
-        u'people.school': {
-            'Meta': {'ordering': "(u'city', u'street', u'verbose_name')", 'object_name': 'School'},
-            'abbreviation': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            'addr_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            'city': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'street': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            'verbose_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10', 'blank': 'True'})
-        },
-        u'people.user': {
-            'Meta': {'object_name': 'User'},
-            'birth_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_index': 'True'}),
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'gender': ('django.db.models.fields.CharField', [], {'default': "u'M'", 'max_length': '2'}),
-            'graduation': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
-            'home_address': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'lives_here'", 'null': 'True', 'to': u"orm['people.Address']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'mailing_address': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'accepting_mails_here'", 'null': 'True', 'to': u"orm['people.Address']"}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'school': ('django.db.models.fields.related.ForeignKey', [], {'default': '1', 'to': u"orm['people.School']", 'null': 'True'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        }
-    }
-
-    complete_apps = ['people']
+    operations = [
+        migrations.CreateModel(
+            name='User',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('password', models.CharField(max_length=128, verbose_name='password')),
+                ('last_login', models.DateTimeField(verbose_name='last login')),
+                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
+                ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, max_length=30, validators=[django.core.validators.RegexValidator('^[\\w.@+-]+$', 'Enter a valid username. This value may contain only letters, numbers and @/./+/-/_ characters.', 'invalid')], help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True, verbose_name='username')),
+                ('first_name', models.CharField(max_length=30, verbose_name='first name', blank=True)),
+                ('last_name', models.CharField(max_length=30, verbose_name='last name', blank=True)),
+                ('email', models.EmailField(max_length=254, verbose_name='email address', blank=True)),
+                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
+                ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
+                ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
+                ('gender', models.CharField(default='M', max_length=1, verbose_name='pohlavie', choices=[('M', 'Chlapec'), ('F', 'Diev\u010da')])),
+                ('birth_date', models.DateField(null=True, verbose_name='d\xe1tum narodenia', db_index=True)),
+                ('graduation', models.IntegerField(help_text='Povinn\xe9 pre \u017eiakov.', null=True, verbose_name='rok maturity')),
+                ('groups', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Group', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', verbose_name='groups')),
+            ],
+            options={
+                'verbose_name': 'pou\u017e\xedvate\u013e',
+                'verbose_name_plural': 'pou\u017e\xedvatelia',
+            },
+            managers=[
+                ('objects', trojsten.regal.people.models.UserManager()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Address',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('street', models.CharField(max_length=70, verbose_name='ulica')),
+                ('town', models.CharField(max_length=64, verbose_name='mesto', db_index=True)),
+                ('postal_code', models.CharField(max_length=16, verbose_name='PS\u010c', db_index=True)),
+                ('country', models.CharField(max_length=32, verbose_name='krajina', db_index=True)),
+            ],
+            options={
+                'verbose_name': 'Adresa',
+                'verbose_name_plural': 'Adresy',
+            },
+        ),
+        migrations.CreateModel(
+            name='School',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('abbreviation', models.CharField(help_text='Sktatka n\xe1zvu \u0161koly.', max_length=100, verbose_name='skratka', blank=True)),
+                ('verbose_name', models.CharField(max_length=100, verbose_name='cel\xfd n\xe1zov')),
+                ('addr_name', models.CharField(max_length=100, verbose_name='n\xe1zov v adrese', blank=True)),
+                ('street', models.CharField(max_length=100, verbose_name='ulica', blank=True)),
+                ('city', models.CharField(max_length=100, verbose_name='mesto', blank=True)),
+                ('zip_code', models.CharField(max_length=10, verbose_name='PS\u010c', blank=True)),
+            ],
+            options={
+                'ordering': ('city', 'street', 'verbose_name'),
+                'verbose_name': '\u0161kola',
+                'verbose_name_plural': '\u0161koly',
+            },
+        ),
+        migrations.CreateModel(
+            name='UserProperty',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('value', models.TextField(verbose_name='hodnota vlastnosti')),
+            ],
+            options={
+                'verbose_name': 'dodato\u010dn\xe1 vlastnos\u0165',
+                'verbose_name_plural': 'dodato\u010dn\xe9 vlastnosti',
+            },
+        ),
+        migrations.CreateModel(
+            name='UserPropertyKey',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('key_name', models.CharField(max_length=100, verbose_name='n\xe1zov vlastnosti')),
+            ],
+            options={
+                'verbose_name': 'k\u013e\xfa\u010d dodato\u010dnej vlastnosti',
+                'verbose_name_plural': 'k\u013e\xfa\u010de dodato\u010dnej vlastnosti',
+            },
+        ),
+        migrations.AddField(
+            model_name='userproperty',
+            name='key',
+            field=models.ForeignKey(related_name='properties', verbose_name='n\xe1zov vlastnosti', to='people.UserPropertyKey'),
+        ),
+        migrations.AddField(
+            model_name='userproperty',
+            name='user',
+            field=models.ForeignKey(related_name='properties', to=settings.AUTH_USER_MODEL),
+        ),
+        migrations.AddField(
+            model_name='user',
+            name='home_address',
+            field=models.ForeignKey(related_name='lives_here', verbose_name='dom\xe1ca adresa', to='people.Address', null=True),
+        ),
+        migrations.AddField(
+            model_name='user',
+            name='mailing_address',
+            field=models.ForeignKey(related_name='accepting_mails_here', verbose_name='adresa kore\u0161pondencie', blank=True, to='people.Address', null=True),
+        ),
+        migrations.AddField(
+            model_name='user',
+            name='school',
+            field=models.ForeignKey(default=1, to='people.School', help_text='Do pol\xed\u010dka nap\xed\u0161te skratku, \u010das\u0165 n\xe1zvu alebo adresy \u0161koly a n\xe1sledne vyberte spr\xe1vnu mo\u017enos\u0165 zo zoznamu. Pokia\u013e va\u0161a \u0161kola nie je v&nbsp;zozname, vyberte "Gymn\xe1zium in\xe9" a&nbsp;po\u0161lite n\xe1m e-mail.', null=True, verbose_name='\u0161kola'),
+        ),
+        migrations.AddField(
+            model_name='user',
+            name='user_permissions',
+            field=models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Permission', blank=True, help_text='Specific permissions for this user.', verbose_name='user permissions'),
+        ),
+        migrations.AlterUniqueTogether(
+            name='userproperty',
+            unique_together=set([('user', 'key')]),
+        ),
+    ]

@@ -23,7 +23,7 @@ django-tag-parser==2.1
 django-taggit==0.17.6
 django-threadedcomments==1.0.1
 django-uuidfield==0.5.0
-Django==1.6.11
+Django==1.8.8
 ecdsa==0.13
 importlib==1.0.3
 kombu==3.0.33
@@ -42,7 +42,6 @@ requests-oauthlib==0.6.0
 requests==2.9.1
 six==1.10.0
 sorl-thumbnail==12.3
-South==1.0.2
 sqlparse==0.1.18
 Unidecode==0.4.18
-wiki==0.0.24.4
+-e git+https://github.com/django-wiki/django-wiki.git@8eea99013e297fe8e0b423adeade33c1b1d20e8c#egg=wiki-master

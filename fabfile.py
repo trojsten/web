@@ -49,9 +49,6 @@ def pull():
 def collectstatic():
     manage('collectstatic', '--noinput')
 
-def syncdb():
-    manage('syncdb', '--noinput')
-
 def migrate():
     manage('migrate', '--noinput')
 
@@ -113,7 +110,6 @@ def update():
         enable_maintenance_mode()
     pull()
     install_requirements()
-    syncdb()
     migrate()
     if not LOCAL:
         collectstatic()

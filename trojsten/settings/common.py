@@ -279,7 +279,7 @@ INSTALLED_APPS = (
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
-    'south',
+    # 'south',
     'django_nyt',
     'mptt',
     'sekizai',
@@ -389,15 +389,6 @@ PROVIDER_OVERRIDE_DICT = json.loads(env('TROJSTENWEB_AUTHENTICATION_PROVIDER_OVE
 
 # The number of authentication providers to show in the short list.
 AUTHENTICATION_PROVIDERS_BRIEF = int(env('TROJSTENWEB_AUTHENTICATION_PROVIDERS_BRIEF', '3'))
-
-SOUTH_MIGRATION_MODULES = {
-    'taggit': 'taggit.south_migrations',
-    'django_nyt': 'django_nyt.south_migrations',
-    'wiki': 'wiki.south_migrations',
-    'images': 'wiki.plugins.images.south_migrations',
-    'notifications': 'wiki.plugins.notifications.south_migrations',
-    'attachments': 'wiki.plugins.attachments.south_migrations',
-}
 
 # WIKI SETTINGS
 # We use ksp_login to handle accounts.
