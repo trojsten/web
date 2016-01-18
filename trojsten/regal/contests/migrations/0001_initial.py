@@ -44,8 +44,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('number', models.IntegerField(verbose_name='\u010d\xedslo')),
-                ('start_time', models.DateTimeField(default=datetime.datetime(2016, 1, 13, 0, 0), verbose_name='za\u010diatok')),
-                ('end_time', models.DateTimeField(default=datetime.datetime(2016, 1, 13, 23, 59, 59), verbose_name='koniec')),
+                ('start_time', models.DateTimeField(default=datetime.datetime(2016, 1, 18, 0, 0), verbose_name='za\u010diatok')),
+                ('end_time', models.DateTimeField(default=datetime.datetime(2016, 1, 18, 23, 59, 59), verbose_name='koniec')),
                 ('visible', models.BooleanField(verbose_name='vidite\u013enos\u0165')),
                 ('solutions_visible', models.BooleanField(verbose_name='vidite\u013enos\u0165 vzor\xe1kov')),
             ],
