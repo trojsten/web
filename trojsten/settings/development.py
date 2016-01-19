@@ -5,6 +5,7 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 SUBMIT_DEBUG = True
 SENDFILE_BACKEND = 'sendfile.backends.development'
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 # Django debug toolbar set-up
 INSTALLED_APPS += (
