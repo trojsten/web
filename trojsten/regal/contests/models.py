@@ -17,6 +17,7 @@ from uuidfield import UUIDField
 
 from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
+from trojsten.utils import utils
 
 
 class RoundManager(models.Manager):
@@ -144,14 +145,10 @@ class Round(models.Model):
     series = models.ForeignKey(Series, verbose_name='séria')
     number = models.IntegerField(verbose_name='číslo')
     start_time = models.DateTimeField(
-        verbose_name='začiatok', default=datetime.now().replace(
-            hour=0, minute=0, second=0, microsecond=0
-        )
+        verbose_name='začiatok', default=utils.default_start_time
     )
     end_time = models.DateTimeField(
-        verbose_name='koniec', default=datetime.now().replace(
-            hour=23, minute=59, second=59, microsecond=0
-        )
+        verbose_name='koniec', default=utils.default_end_time
     )
     visible = models.BooleanField(verbose_name='viditeľnosť')
     solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov')
