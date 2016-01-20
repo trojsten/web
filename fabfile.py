@@ -58,7 +58,7 @@ def load_fixtures():
 def install_requirements():
     with cd(PROJECT_PATH):
         with prefix('workon %s' % VIRTUALENV_NAME):
-            run('pip install -r requirements.txt --exists-action wipe')
+            run('pip install -r requirements.txt --exists-action w')
             if LOCAL:
                 run('pip install -r requirements.devel.txt')
 
