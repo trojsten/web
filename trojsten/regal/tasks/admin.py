@@ -122,7 +122,7 @@ class TaskAdmin(admin.ModelAdmin):
         cat_lst = Category.objects.filter(competition__organizers_group__in=user_groups)
         return super(TaskAdmin, self).get_queryset(request).filter(
             category__in=cat_lst
-        )
+        ).distinct()
 
 
 class SubmitAdmin(admin.ModelAdmin):
@@ -171,7 +171,7 @@ class SubmitAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         user_groups = request.user.groups.all()
         cat_lst = Category.objects.filter(competition__organizers_group__in=user_groups)
-        task_lst = Task.objects.filter(category__in=cat_lst)
+        task_lst = Task.objects.filter(category__in=cat_lst).distinct()
         return super(SubmitAdmin, self).get_queryset(request).filter(
             task__in=task_lst
         )
