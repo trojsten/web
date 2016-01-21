@@ -119,10 +119,10 @@ class TaskAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         user_groups = request.user.groups.all()
-        cat_lst = Category.objects.filter(competition__organizers_group__in=user_groups)
+        round_lst = Round.objects.filter(series__competition__organizers_group__in=user_groups)
         return super(TaskAdmin, self).get_queryset(request).filter(
-            category__in=cat_lst
-        ).distinct()
+            round__in=round_lst
+        ).distinct().prefetch_related('category').select_related('reviewer', 'round__series__competition')
 
 
 class SubmitAdmin(admin.ModelAdmin):
@@ -170,11 +170,11 @@ class SubmitAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         user_groups = request.user.groups.all()
-        cat_lst = Category.objects.filter(competition__organizers_group__in=user_groups)
-        task_lst = Task.objects.filter(category__in=cat_lst)
+        round_lst = Round.objects.filter(series__competition__organizers_group__in=user_groups)
+        task_lst = Task.objects.filter(round__in=round_lst)
         return super(SubmitAdmin, self).get_queryset(request).filter(
             task__in=task_lst
-        )
+        ).prefetch_related('task__category')
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -185,7 +185,7 @@ class CategoryAdmin(admin.ModelAdmin):
         user_groups = request.user.groups.all()
         return super(CategoryAdmin, self).get_queryset(request).filter(
             competition__organizers_group__in=user_groups
-        )
+        ).select_related('competition')
 
 
 admin.site.register(Task, TaskAdmin)
