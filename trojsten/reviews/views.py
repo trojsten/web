@@ -23,7 +23,7 @@ def review_task(request, task_pk):
     max_points = task.description_points
 
     users = get_latest_submits_for_task(task)
-    choices = [(None, 'Auto / all')] + get_user_as_choices(task)
+    choices = [("None", 'Auto / all')] + get_user_as_choices(task)
 
     if request.method == 'POST':
         form = ReviewForm(request.POST, request.FILES, choices=choices, max_value=max_points)
