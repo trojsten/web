@@ -224,7 +224,7 @@ def zip_upload(request, task_pk):
                 else:
                     user_data[user_pk]['filename'] = form_data['filename']
 
-    initial = [user_data[user] for user in user_data]
+    initial = [user_data[user] for user in user_data if 'filename' in user_data[user]]
     files = set([f['filename'] for f in initial])
     ZipFormSet = get_zip_form_set(
         choices=users, max_value=task.description_points, files=files, extra=0)

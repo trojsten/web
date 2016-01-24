@@ -50,7 +50,9 @@
         <a href="{% url 'admin:tasks_submit_change' data.review.pk %}">{% trans 'View' %}</a>
         <a href="{% url 'admin:review_edit' task.pk data.review.pk %}">{% trans 'Edit' %}</a>
     {% endif %}
+    {% if data.description %}
         <a href="{% url 'admin:review_edit' task.pk data.description.pk %}">{% trans 'Add new review' %}</a>
+    {% endif %}
     </td>
         <td>
             {% if data.review %}
