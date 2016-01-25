@@ -71,6 +71,11 @@ def restart_wsgi():
     with cd(PROJECT_PATH):
         run('touch trojsten/*.wsgi')
 
+def compile_translations():
+    with prefix('workon %s' % VIRTUALENV_NAME):
+        with cd(PROJECT_PATH):
+            run('cd trojsten && python ../manage.py compilemessages')
+
 def write_version_txt():
     with cd(PROJECT_PATH):
         run('git log --no-merges --pretty=format:"%h %cd" -n 1 --date=short > version.txt')
@@ -111,6 +116,7 @@ def update():
     pull()
     install_requirements()
     migrate()
+    compile_translations()
     if not LOCAL:
         collectstatic()
         restart_wsgi()
