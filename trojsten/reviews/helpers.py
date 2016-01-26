@@ -1,6 +1,8 @@
 import os
 from time import time
 
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
 from unidecode import unidecode
 
 from trojsten.regal.tasks.models import Submit
@@ -10,7 +12,7 @@ from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 
 def submit_review(filecontent, filename, task, user, points, comment='', submit=None):
     if filecontent is None and submit is None:
-        raise Exception('You should upload a file or specify parent submit.')
+        raise ValidationError(_("You should upload a file or specify parent submit."))
 
     if filecontent is not None:
         submit_id = str(int(time()))
