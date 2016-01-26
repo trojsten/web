@@ -200,7 +200,7 @@ def zip_upload(request, task_pk):
     with archive:
         filelist = archive.namelist()
 
-        users = [(None, _('Ignore'))] + get_user_as_choices(task)
+        users = [("None", _('Ignore'))] + get_user_as_choices(task)
         initial = [{'filename': file} for file in filelist]
         user_data = defaultdict(dict)
 
