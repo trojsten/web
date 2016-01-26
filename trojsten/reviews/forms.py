@@ -1,30 +1,31 @@
 # coding: utf8
 
-from easy_select2 import Select2
 import re
-import os
-from time import time
-from functools import partial, wraps
 import zipfile
+from functools import partial, wraps
+from time import time
 
-from unidecode import unidecode
-
-from django.forms.formsets import formset_factory, BaseFormSet
-from django.utils.translation import ugettext_lazy as _
-from django.forms.widgets import HiddenInput
+import os
 from django import forms
 from django.conf import settings
+from django.forms.formsets import formset_factory, BaseFormSet
+from django.forms.widgets import HiddenInput
+from django.utils.translation import ugettext_lazy as _
+from easy_select2 import Select2
+from unidecode import unidecode
 
-from trojsten.regal.tasks.models import Submit
 from trojsten.regal.people.models import User
+from trojsten.reviews.constants import RE_LAST_NAME, RE_SUBMIT_PK, RE_FILENAME
+from trojsten.reviews.helpers import submit_review, edit_review
 from trojsten.submit.helpers import write_chunks_to_file
 
-from trojsten.reviews.helpers import submit_review, edit_review
-
 reviews_upload_pattern = re.compile(
-    r'(?P<lastname>.*)_(?P<submit_pk>[0-9]+)/(?!source/)(?P<filename>.+\.[^.]+)'
+    r'(?P<%s>.*)_(?P<%s>[0-9]+)/(?!source/)(?P<%s>.+\.[^.]+)' % (
+        RE_LAST_NAME,
+        RE_SUBMIT_PK,
+        RE_FILENAME,
+    )
 )
-
 
 class UploadZipForm(forms.Form):
     file = forms.FileField(max_length=128, label='Zip súbor')

@@ -16,7 +16,7 @@ from sendfile import sendfile
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 from trojsten.regal.tasks.models import Task, Submit
 from trojsten.reviews.constants import REVIEW_POINTS_FILENAME, \
-    REVIEW_COMMENT_FILENAME
+    REVIEW_COMMENT_FILENAME, RE_FILENAME, RE_SUBMIT_PK
 from trojsten.reviews.helpers import (submit_download_filename,
                                       get_latest_submits_for_task, get_user_as_choices,
                                       submit_protocol_download_filename,
@@ -209,18 +209,18 @@ def zip_upload(request, task_pk):
             if not match:
                 continue
 
-            pk = match.group('submit_pk')
+            pk = match.group(RE_SUBMIT_PK)
             if Submit.objects.filter(pk=pk).exists():
                 user_pk = Submit.objects.get(pk=pk).user.pk
                 user_data[user_pk]['user'] = user_pk
-                if match.group('filename') == REVIEW_POINTS_FILENAME:
+                if match.group(RE_FILENAME) == REVIEW_POINTS_FILENAME:
                     try:
                         text = archive.read(form_data['filename'])
                         points_num = int(text)
                         user_data[user_pk]['points'] = points_num
                     except:
                         pass
-                elif match.group('filename') == REVIEW_COMMENT_FILENAME:
+                elif match.group(RE_FILENAME) == REVIEW_COMMENT_FILENAME:
                     try:
                         user_data[user_pk]['comment'] = archive.read(form_data['filename'])
                     except:
