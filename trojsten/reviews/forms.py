@@ -91,7 +91,8 @@ class ReviewForm(forms.Form):
 
     def save(self, submit, create=False):
         """If creating a new submit, point to user's submit.
-        if not, point to existing reviewed submit."""
+        if not, point to existing reviewed submit.
+        """
         user = self.cleaned_data['user']
 
         if self.cleaned_data.get('file'):
