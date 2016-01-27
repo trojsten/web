@@ -30,6 +30,16 @@ urlpatterns += patterns('trojsten.views',
     url(r'^nahlasit-problem/sent/$', 'contact_form_sent_redirect',),
 )
 
+# Include django debug toolbar views
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += patterns('',
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    )
+
 urlpatterns += patterns('',
     # Examples:
     # url(r'^$', 'trojsten.views.home', name='home'),
@@ -57,12 +67,3 @@ urlpatterns += patterns('',
     url(r'^', include('favicon.urls')),
     url(r'^', get_wiki_pattern()),
 )
-
-if settings.DEBUG:
-   import debug_toolbar
-   urlpatterns += patterns('',
-      url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-         'document_root': settings.MEDIA_ROOT,
-      }),
-      url(r'^__debug__/', include(debug_toolbar.urls)),   
-   )
