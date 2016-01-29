@@ -89,6 +89,7 @@ SITES = {
         'FOLDER': 'ksp',
         'FACEBOOK_PAGE': 'https://www.facebook.com/KSPsk',
         'GOOGLEPLUS_PAGE': 'http://www.ksp.sk',
+        'THEME_COLOR': '#6a831e',
     },
     2: {
         'NAME': 'Prask',
@@ -98,6 +99,7 @@ SITES = {
         'FOLDER': 'prask',
         'FACEBOOK_PAGE': 'https://www.facebook.com/prask.ksp',
         'GOOGLEPLUS_PAGE': 'https://prask.ksp.sk',
+        'THEME_COLOR': '#6a831e',
     },
     3: {
         'NAME': 'Fyzikálny korešpondenčný seminár',
@@ -107,6 +109,7 @@ SITES = {
         'FOLDER': 'fks',
         'FACEBOOK_PAGE': 'http://fks.sk',
         'GOOGLEPLUS_PAGE': 'http://fks.sk',
+        'THEME_COLOR': '#fa9200',
     },
     4: {
         'NAME': 'Korešpondenčný matematický seminár',
@@ -140,6 +143,7 @@ SITES = {
         'FOLDER': 'ufo',
         'FACEBOOK_PAGE': 'http://ufo.fks.sk',
         'GOOGLEPLUS_PAGE': 'http://ufo.fks.sk',
+        'THEME_COLOR': '#fa9200',
     },
     8: {
         'NAME': 'Korešpondenčný seminár FX',
@@ -149,6 +153,7 @@ SITES = {
         'FOLDER': 'fx',
         'FACEBOOK_PAGE': 'http://fx.fks.sk',
         'GOOGLEPLUS_PAGE': 'http://fx.fks.sk',
+        'THEME_COLOR': '#fa9200',
     },
     9: {
         'NAME': 'Korešpondenčný seminár iKS',

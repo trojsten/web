@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}{% if request.path != '/' %} - {{ SITE.NAME }}{% endif %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if SITE.THEME_COLOR %}<meta name="theme-color" content="{{ SITE.THEME_COLOR }}">{% endif %}
     <link rel="icon" type="image/png" href="{% static "images/favicon.ico" %}"/>
     {% render_block "css" %}
     {% block stylesheets %}
