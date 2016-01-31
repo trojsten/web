@@ -8,7 +8,6 @@ import os
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 
 from trojsten.regal.contests.models import Round, Competition
@@ -253,7 +252,7 @@ class Submit(models.Model):
 
     @property
     def tester_response_verbose(self):
-        return _(self.tester_response)
+        return submit_constants.SUBMIT_VERBOSE_RESPONSE[self.tester_response]
 
     @staticmethod
     def display_decimal_value(value, is_integer):
