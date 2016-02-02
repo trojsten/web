@@ -276,6 +276,7 @@ INSTALLED_APPS = (
     'mathfilters',
     'sortedm2m',
     'favicon',
+    'import_export',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',

@@ -45,3 +45,5 @@ sorl-thumbnail==12.3
 sqlparse==0.1.18
 Unidecode==0.4.18
 -e git+https://github.com/django-wiki/django-wiki.git@8eea99013e297fe8e0b423adeade33c1b1d20e8c#egg=wiki-master
+tablib==0.9.11
+django-import-export==0.4.2

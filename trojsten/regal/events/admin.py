@@ -6,6 +6,8 @@ from django.contrib import admin
 from django.utils.encoding import force_text
 
 from easy_select2 import select2_modelform
+from import_export.admin import ExportMixin
+from import_export import resources, fields
 
 from .models import *
 
@@ -68,9 +70,44 @@ class EventAdmin(admin.ModelAdmin):
         )
 
 
-class InvitationAdmin(admin.ModelAdmin):
+class InvitedUsersExport(resources.ModelResource):
+    type = fields.Field()
+
+    street = fields.Field()
+    town = fields.Field()
+    postal_code = fields.Field()
+    country = fields.Field()
+
+    class Meta:
+        model = Invitation
+        export_order = fields = (
+            'user__first_name', 'user__last_name', 'user__birth_date', 'user__email',
+            'street', 'town', 'postal_code', 'country',
+            'user__school__verbose_name', 'type', 'going'
+        )
+        widgets = {'user__birth_date': {'format': '%d.%m.%Y'}}
+
+    def dehydrate_type(self, obj):
+        return obj.get_type_display()
+
+    def dehydrate_street(self, obj):
+        return obj.user.get_mailing_address().street
+
+    def dehydrate_town(self, obj):
+        return obj.user.get_mailing_address().town
+
+    def dehydrate_postal_code(self, obj):
+        return obj.user.get_mailing_address().postal_code
+
+    def dehydrate_country(self, obj):
+        return obj.user.get_mailing_address().country
+
+
+class InvitationAdmin(ExportMixin, admin.ModelAdmin):
     form = select2_modelform(Invitation)
     list_display = ('event', 'user', 'type', 'going')
+    resource_class = InvitedUsersExport
+    list_filter = ('event', 'going')
 
     def get_queryset(self, request):
         user_groups = request.user.groups.all()
