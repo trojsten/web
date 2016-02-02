@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 from django.utils.encoding import force_text
+from django.core.exceptions import ObjectDoesNotExist
 
 from easy_select2 import select2_modelform
 from import_export.admin import ExportMixin
@@ -80,11 +81,11 @@ class InvitedUsersExport(resources.ModelResource):
 
     class Meta:
         model = Invitation
-        export_order = fields = (
+        export_order = fields = [
             'user__first_name', 'user__last_name', 'user__birth_date', 'user__email',
             'street', 'town', 'postal_code', 'country',
             'user__school__verbose_name', 'type', 'going'
-        )
+        ]
         widgets = {'user__birth_date': {'format': '%d.%m.%Y'}}
 
     def dehydrate_type(self, obj):
@@ -101,6 +102,29 @@ class InvitedUsersExport(resources.ModelResource):
 
     def dehydrate_country(self, obj):
         return obj.user.get_mailing_address().country
+
+    def export(self, queryset=None):
+        '''
+        Overrides export to add columns with additional user properties
+        required in event registration form.
+        '''
+        def create_access_method(prop_key):
+            def returned_method(obj):
+                try:
+                    return obj.user.properties.get(key=prop_key).value
+                except ObjectDoesNotExist:
+                    return ""
+            return returned_method
+
+        if queryset and not (queryset.first().event.registration is None):
+            property_keys = queryset.first().event.registration.required_user_properties.all()
+            for property_key in property_keys:
+                access_method_name = 'property_%i' % property_key.id
+                self._meta.export_order.append(access_method_name)
+                self.fields[access_method_name] = fields.Field(column_name=property_key.key_name)
+                setattr(self, 'dehydrate_%s' % access_method_name, create_access_method(property_key))
+
+        return super(InvitedUsersExport, self).export(queryset)
 
 
 class InvitationAdmin(ExportMixin, admin.ModelAdmin):
