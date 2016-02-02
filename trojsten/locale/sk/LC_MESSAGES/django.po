@@ -4,22 +4,22 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;"
 
 # Submit
-msgid "WA"
+msgid "Wrong answer"
 msgstr "Zlá odpoveď"
 
-msgid "CERR"
+msgid "Compilation error"
 msgstr "Chyba počas kompilácie"
 
-msgid "TLE"
+msgid "Time limit exceeded"
 msgstr "Prekročený časový limit"
 
 msgid "OK"
 msgstr "OK"
 
-msgid "EXC"
+msgid "Runtime exception"
 msgstr "Chyba počas behu programu"
 
-msgid "SEC"
+msgid "Security exception"
 msgstr "Pokus o narušenie bezpečnosti"
 
 # Login
