@@ -122,6 +122,9 @@ class User(AbstractUser):
     def is_in_group(self, group):
         return self.is_superuser or self.groups.filter(pk=group.pk).exists()
 
+    def get_mailing_address(self):
+        return self.home_address if self.mailing_address is None else self.mailing_address
+
     class Meta:
         verbose_name = 'používateľ'
         verbose_name_plural = 'používatelia'

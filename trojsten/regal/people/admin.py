@@ -9,8 +9,12 @@ from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
 from easy_select2.widgets import Select2
+from import_export.admin import ExportMixin
+from import_export import resources, fields
 
 from trojsten.regal.people.models import *
+from trojsten.regal.contests.models import Series, Competition
+from trojsten.regal.tasks.models import Submit
 from trojsten.regal.utils import attribute_format
 
 
@@ -48,11 +52,80 @@ class StaffFilter(admin.SimpleListFilter):
             return queryset
 
 
-class UserAdmin(DefaultUserAdmin):
+class ActiveInCompetitionFilter(admin.SimpleListFilter):
+    title = 'účasti v súťaži'
+    parameter_name = 'competition'
+
+    def lookups(self, request, model_admin):
+        return ((c.id, force_text(c)) for c in Competition.objects.all())
+
+    def queryset(self, request, queryset):
+        if self.value():
+            active_users = Submit.objects.filter(
+                task__round__series__competition__id=self.value()
+            ).values_list('user', flat=True)
+            return queryset.filter(id__in=active_users)
+        else:
+            return queryset
+
+
+class ActiveInSeriesSubFilter(admin.SimpleListFilter):
+    title = 'účasti v sérii'
+    parameter_name = 'series'
+
+    def lookups(self, request, model_admin):
+        series = Series.objects
+        if 'competition' in request.GET:
+            series = series.filter(competition__id=request.GET['competition'])
+        return ((s.id, force_text(s)) for s in series.all())
+
+    def queryset(self, request, queryset):
+        if self.value():
+            active_users = Submit.objects.filter(
+                task__round__series__id=self.value()
+            ).values_list('user', flat=True)
+            return queryset.filter(id__in=active_users)
+        else:
+            return queryset
+
+
+class UsersExport(resources.ModelResource):
+    street = fields.Field()
+    town = fields.Field()
+    postal_code = fields.Field()
+    country = fields.Field()
+
+    class Meta:
+        model = User
+        export_order = fields = (
+            'first_name', 'last_name', 'birth_date', 'email', 'graduation',
+            'street', 'town', 'postal_code', 'country',
+            'school__verbose_name', 'school__addr_name', 'school__street', 'school__city', 'school__zip_code'
+        )
+        widgets = {'birth_date': {'format': '%d.%m.%Y'}}
+
+    def dehydrate_street(self, obj):
+        address = obj.get_mailing_address()
+        return '' if address is None else address.street
+
+    def dehydrate_town(self, obj):
+        address = obj.get_mailing_address()
+        return '' if address is None else address.town
+
+    def dehydrate_postal_code(self, obj):
+        address = obj.get_mailing_address()
+        return '' if address is None else address.postal_code
+
+    def dehydrate_country(self, obj):
+        address = obj.get_mailing_address()
+        return '' if address is None else address.country
+
+
+class UserAdmin(ExportMixin, DefaultUserAdmin):
     list_display = ('username', 'first_name', 'last_name', 'email',
                     'get_school', 'graduation', 'get_is_staff', 'get_groups',
                     'is_active', 'get_properties')
-    list_filter = ('groups', StaffFilter)
+    list_filter = ('groups', StaffFilter, ActiveInCompetitionFilter, ActiveInSeriesSubFilter)
     search_fields = ('username', 'first_name', 'last_name')
 
     formfield_overrides = {
@@ -75,6 +148,8 @@ class UserAdmin(DefaultUserAdmin):
     )
 
     inlines = (UserPropertyInLine,)
+
+    resource_class = UsersExport
 
     def get_queryset(self, request):
         qs = super(UserAdmin, self).get_queryset(request)
