@@ -92,16 +92,20 @@ class InvitedUsersExport(resources.ModelResource):
         return obj.get_type_display()
 
     def dehydrate_street(self, obj):
-        return obj.user.get_mailing_address().street
+        address = obj.user.get_mailing_address()
+        return '' if address is None else address.street
 
     def dehydrate_town(self, obj):
-        return obj.user.get_mailing_address().town
+        address = obj.user.get_mailing_address()
+        return '' if address is None else address.town
 
     def dehydrate_postal_code(self, obj):
-        return obj.user.get_mailing_address().postal_code
+        address = obj.user.get_mailing_address()
+        return '' if address is None else address.postal_code
 
     def dehydrate_country(self, obj):
-        return obj.user.get_mailing_address().country
+        address = obj.user.get_mailing_address()
+        return '' if address is None else address.country
 
     def export(self, queryset=None):
         '''
@@ -113,7 +117,7 @@ class InvitedUsersExport(resources.ModelResource):
                 try:
                     return obj.user.properties.get(key=prop_key).value
                 except ObjectDoesNotExist:
-                    return ""
+                    return ''
             return returned_method
 
         if queryset and not (queryset.first().event.registration is None):

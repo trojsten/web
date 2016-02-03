@@ -105,16 +105,20 @@ class UsersExport(resources.ModelResource):
         widgets = {'birth_date': {'format': '%d.%m.%Y'}}
 
     def dehydrate_street(self, obj):
-        return obj.get_mailing_address().street
+        address = obj.get_mailing_address()
+        return '' if address is None else address.street
 
     def dehydrate_town(self, obj):
-        return obj.get_mailing_address().town
+        address = obj.get_mailing_address()
+        return '' if address is None else address.town
 
     def dehydrate_postal_code(self, obj):
-        return obj.get_mailing_address().postal_code
+        address = obj.get_mailing_address()
+        return '' if address is None else address.postal_code
 
     def dehydrate_country(self, obj):
-        return obj.get_mailing_address().country
+        address = obj.get_mailing_address()
+        return '' if address is None else address.country
 
 
 class UserAdmin(ExportMixin, DefaultUserAdmin):
