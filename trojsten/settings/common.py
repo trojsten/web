@@ -480,3 +480,4 @@ DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'
 COMMENTS_APP = 'fluent_comments'
 FLUENT_COMMENTS_EXCLUDE_FIELDS = ('url', 'title', 'email')
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+FLUENT_COMMENTS_USE_EMAIL_NOTIFICATION = False
