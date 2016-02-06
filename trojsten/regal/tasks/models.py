@@ -254,10 +254,7 @@ class Submit(models.Model):
 
     @property
     def tester_response_verbose(self):
-        if self.tester_response in submit_constants.SUBMIT_VERBOSE_RESPONSE:
-            return submit_constants.SUBMIT_VERBOSE_RESPONSE[self.tester_response]
-        else:
-            return self.tester_response
+        return submit_constants.SUBMIT_VERBOSE_RESPONSE.get(self.tester_response, self.tester_response)
 
     @staticmethod
     def display_decimal_value(value, is_integer):
