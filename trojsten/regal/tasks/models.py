@@ -229,7 +229,7 @@ class Submit(models.Model):
         max_length=128, verbose_name='stav testovania', blank=True)
     tester_response = models.CharField(
         max_length=10, verbose_name='odpoveď testovača', blank=True,
-        help_text='Očakávané odpovede sú %s' % (', '. join(submit_constants.SUBMIT_VERBOSE_RESPONSE.keys()))
+        help_text='Očakávané odpovede sú %s' % (', '.join(submit_constants.SUBMIT_VERBOSE_RESPONSE.keys()), )
     )
     protocol_id = models.CharField(
         max_length=128, verbose_name='číslo protokolu', blank=True)
