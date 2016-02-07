@@ -228,7 +228,9 @@ class Submit(models.Model):
     testing_status = models.CharField(
         max_length=128, verbose_name='stav testovania', blank=True)
     tester_response = models.CharField(
-        max_length=10, verbose_name='odpoveď testovača', blank=True)
+        max_length=10, verbose_name='odpoveď testovača', blank=True,
+        help_text='Očakávané odpovede sú %s' % (', '.join(submit_constants.SUBMIT_VERBOSE_RESPONSE.keys()), )
+    )
     protocol_id = models.CharField(
         max_length=128, verbose_name='číslo protokolu', blank=True)
 
@@ -252,7 +254,7 @@ class Submit(models.Model):
 
     @property
     def tester_response_verbose(self):
-        return submit_constants.SUBMIT_VERBOSE_RESPONSE[self.tester_response]
+        return submit_constants.SUBMIT_VERBOSE_RESPONSE.get(self.tester_response, self.tester_response)
 
     @staticmethod
     def display_decimal_value(value, is_integer):
