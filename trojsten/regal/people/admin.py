@@ -9,6 +9,7 @@ from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
 from easy_select2.widgets import Select2
+from easy_select2 import select2_modelform
 from import_export.admin import ExportMixin
 from import_export import resources, fields
 
@@ -187,7 +188,13 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
     get_properties.allow_tags = True
 
 
+class DuplicateUserAdmin(admin.ModelAdmin):
+    form = select2_modelform(DuplicateUser)
+    list_display = ('user', 'status')
+
+
 admin.site.register(Address, AddressAdmin)
 admin.site.register(School, SchoolAdmin)
 admin.site.register(User, UserAdmin)
+admin.site.register(DuplicateUser, DuplicateUserAdmin)
 admin.site.register(UserPropertyKey)

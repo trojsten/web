@@ -7,7 +7,8 @@ from datetime import date
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
 
-from trojsten.regal.people.models import User, Address
+from trojsten.regal.people.models import User, Address, DuplicateUser
+from .helpers import get_similar_users
 from . import constants
 
 
@@ -217,6 +218,10 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
                 corr_address.save()
                 user.mailing_address = corr_address
             user.save()
+            if not DuplicateUser.objects.filter(user=user).exists():
+                similar_users = get_similar_users(user)
+                if len(similar_users):
+                    DuplicateUser.objects.create(user=user)
 
         return self
 
@@ -319,4 +324,7 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
                 corr_address.save()
                 user.mailing_address = corr_address
             user.save()
+            similar_users = get_similar_users(user)
+            if len(similar_users):
+                DuplicateUser.objects.create(user=user)
         return user

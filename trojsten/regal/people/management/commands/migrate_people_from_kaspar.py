@@ -8,8 +8,9 @@ from django.db import connections, transaction
 from django.db.models import Q
 
 from trojsten.regal.people.models import (User, UserPropertyKey, Address,
-    School)
+    School, DuplicateUser)
 
+from trojsten.regal.people.helpers import get_similar_users
 
 # Kaspar property IDs
 EMAIL_PROP = 1
@@ -79,7 +80,7 @@ class Command(NoArgsCommand):
             ))
             try:
                 choice = int(input("Choice (empty or invalid to create new): "))
-                self.school_id_map[kaspar_id] = choices[choice]
+                self.school_id_map[kaspar_id] = candidates[choice]
             except (ValueError, KeyError):
                 self.school_id_map[kaspar_id] = self.create_school(*row)
         else:
@@ -146,6 +147,11 @@ class Command(NoArgsCommand):
         new_user.properties.create(key=self.kaspar_id_key, value=man_id)
         if note:
             new_user.properties.create(key=self.kaspar_note_key, value=note)
+        similar_users = get_similar_users(new_user)
+        if len(similar_users):
+            if self.verbosity >= 2:
+                self.stdout.write('Similar users: %s' % str(similar_users))
+            DuplicateUser.objects.create(user=new_user)
 
     def parse_date(self, date_string):
         # Remove any whitespace inside the string.

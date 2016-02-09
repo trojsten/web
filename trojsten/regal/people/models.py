@@ -175,3 +175,24 @@ class UserProperty(models.Model):
         verbose_name = 'dodatočná vlastnosť'
         verbose_name_plural = 'dodatočné vlastnosti'
         unique_together = ('user', 'key')
+
+
+@python_2_unicode_compatible
+class DuplicateUser(models.Model):
+    '''
+    Merge candidate users - users with duplicit name or other properties.
+    '''
+    MERGE_STATUS_CHOICES = [(0, 'Nevyriešené'), (1, 'Nie je duplikát'), (2, 'Vyriešený duplikát')]
+    user = models.OneToOneField(User)
+    status = models.IntegerField(
+        choices=MERGE_STATUS_CHOICES,
+        default=0,
+        verbose_name='stav',
+    )
+
+    def __str__(self):
+        return '%s: %s' % (self.user, self.status)
+
+    class Meta:
+        verbose_name = 'duplicitný používateľ'
+        verbose_name_plural = 'duplicitní používatelia'
