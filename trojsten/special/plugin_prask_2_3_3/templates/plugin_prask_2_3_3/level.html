@@ -1,0 +1,15 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% block title %}Prísne tajná správa{% endblock %}
+
+{% block page_header %}
+  <h1>Prísne tajná správa</h1>
+{% endblock %}
+
+{% block page_content %}
+  {% if created %}
+    <p>Vašu správu ste dekódovali úspešne. Odmenu si vyzdvihnite vo výsledkovke.</p>
+  {% else %}
+    <p>Túto správu ste už dekódovali v minulosti.</p>
+  {% endif %}
+{% endblock %}
