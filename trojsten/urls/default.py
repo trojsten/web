@@ -13,6 +13,7 @@ import trojsten.submit.urls
 import trojsten.results.urls
 import trojsten.news.urls
 import trojsten.task_statements.urls
+import trojsten.regal.people.urls
 from trojsten.regal.people.forms import TrojstenUserCreationForm, TrojstenUserChangeForm
 
 admin.autodiscover()
@@ -49,7 +50,7 @@ urlpatterns += patterns('',
     # url(r'^admin/doc/',
     # include('django.contrib.admindocs.urls')),
 
-    # Uncomment the next line to enable the admin:
+    url(r'^admin/people/duplicate_users', include(trojsten.regal.people.urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^ucet/', include('ksp_login.urls')),
     url(r'^odovzdavanie/', include(trojsten.submit.urls)),

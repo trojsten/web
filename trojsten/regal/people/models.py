@@ -182,7 +182,14 @@ class DuplicateUser(models.Model):
     """
     Merge candidate users - users with duplicit name or other properties.
     """
-    MERGE_STATUS_CHOICES = [(0, 'Nevyriešené'), (1, 'Nie je duplikát'), (2, 'Vyriešený duplikát')]
+    MERGE_STATUS_UNRESOLVED = 0
+    MERGE_STATUS_NOT_DUPOLICATE = 1
+    MERGE_STATUS_RESOLVED = 2
+    MERGE_STATUS_CHOICES = [
+        (MERGE_STATUS_UNRESOLVED, 'Nevyriešené'),
+        (MERGE_STATUS_NOT_DUPOLICATE, 'Nie je duplikát'),
+        (MERGE_STATUS_RESOLVED, 'Vyriešený duplikát'),
+    ]
     user = models.OneToOneField(User)
     status = models.IntegerField(
         choices=MERGE_STATUS_CHOICES,
