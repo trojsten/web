@@ -4,7 +4,7 @@ import subprocess
 
 
 class GitCommandError(Exception):
-    ''' Thrown if execution of the git command fails with non-zero status code. '''
+    """ Thrown if execution of the git command fails with non-zero status code. """
     def __init__(self, command, status, stderr=None):
         self.stderr = stderr
         self.status = status

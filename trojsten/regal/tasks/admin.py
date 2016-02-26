@@ -14,9 +14,9 @@ from trojsten.reviews.urls import task_review_urls, submit_urls
 
 
 class TaskByYearSubFilter(admin.SimpleListFilter):
-    '''
+    """
     Shows only lookups of years for chosen competition.
-    '''
+    """
     title = 'ročník'
     parameter_name = 'year_subfilter'
 
@@ -37,9 +37,9 @@ class TaskByYearSubFilter(admin.SimpleListFilter):
 
 
 class TaskByRoundSubFilter(admin.SimpleListFilter):
-    '''
+    """
     Shows only lookups of rounds for chosen competition and year.
-    '''
+    """
     title = 'kolo'
     parameter_name = 'round_subfilter'
 

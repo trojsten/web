@@ -15,16 +15,16 @@ from django.utils.html import mark_safe
 
 class EventTypeManager(models.Manager):
     def current_site_only(self):
-        '''Returns only event types belonging to current site
-        '''
+        """Returns only event types belonging to current site
+        """
         return Site.objects.get_current().eventtype_set.all()
 
 
 @python_2_unicode_compatible
 class EventType(models.Model):
-    '''
+    """
     Type of event e.g. camp
-    '''
+    """
     name = models.CharField(max_length=100, verbose_name='názov')
     sites = models.ManyToManyField(Site)
     organizers_group = models.ForeignKey(

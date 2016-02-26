@@ -152,8 +152,8 @@ def view_submit(request, submit_id):
 
 @login_required
 def task_submit_page(request, task_id):
-    '''View, ktory zobrazi formular na odovzdanie a zoznam submitov
-    prave prihlaseneho cloveka pre danu ulohu'''
+    """View, ktory zobrazi formular na odovzdanie a zoznam submitov
+    prave prihlaseneho cloveka pre danu ulohu"""
     task = get_object_or_404(Task, pk=task_id)
     template_data = {'task': task}
     return render(request, 'trojsten/submit/task_submit.html', template_data)
@@ -161,8 +161,8 @@ def task_submit_page(request, task_id):
 
 @login_required
 def round_submit_page(request, round_id):
-    '''View, ktorý zobrazí formuláre pre odovzdanie pre všetky úlohy
-    z daného kola'''
+    """View, ktorý zobrazí formuláre pre odovzdanie pre všetky úlohy
+    z daného kola"""
     round = get_object_or_404(Round, pk=round_id)
     template_data = {'round': round}
     return render(request, 'trojsten/submit/round_submit.html', template_data)
@@ -208,7 +208,7 @@ def poll_submit_info(request, submit_id):
 
 @login_required
 def task_submit_post(request, task_id, submit_type):
-    '''Spracovanie uploadnuteho submitu'''
+    """Spracovanie uploadnuteho submitu"""
     try:
         submit_type = int(submit_type)
     except ValueError:

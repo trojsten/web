@@ -7,9 +7,9 @@ from django.contrib.sites.models import Site
 
 @python_2_unicode_compatible
 class Thread(models.Model):
-    '''
+    """
     Placeholder model for conversation.
-    '''
+    """
 
     title = models.CharField(max_length=100)
     sites = models.ManyToManyField(Site)

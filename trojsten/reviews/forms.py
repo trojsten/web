@@ -86,7 +86,7 @@ class ReviewForm(forms.Form):
         return cleaned_data
 
     def save(self, req_user, task):
-        '''Vrati path k zipu alebo None (ak sa zip neuplodoval)'''
+        """Vrati path k zipu alebo None (ak sa zip neuplodoval)"""
 
         user = self.cleaned_data['user']
         filecontent = self.cleaned_data['file']
@@ -107,7 +107,7 @@ class ReviewForm(forms.Form):
 
 
 def get_zip_form_set(choices, max_value, files, *args, **kwargs):
-    '''Creates ZipFormSet which has forms with filled-in choices'''
+    """Creates ZipFormSet which has forms with filled-in choices"""
 
     ZipFormWithChoices = wraps(ZipForm)(
         partial(ZipForm, choices=choices, max_value=max_value, valid_files=files)

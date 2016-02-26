@@ -108,10 +108,10 @@ class InvitedUsersExport(resources.ModelResource):
         return '' if address is None else address.country
 
     def export(self, queryset=None):
-        '''
+        """
         Overrides export to add columns with additional user properties
         required in event registration form.
-        '''
+        """
         def create_access_method(prop_key):
             def returned_method(obj):
                 try:

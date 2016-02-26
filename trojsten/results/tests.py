@@ -190,8 +190,8 @@ class ResultsTestCase(TestCase):
             last = t
 
     def test_response(self):
-        '''Tests whether view returns status code 200 for all type of parameters
-        '''
+        """Tests whether view returns status code 200 for all type of parameters
+        """
         client = Client(HTTP_HOST='ksp.sk')
         response = client.get(
             reverse('view_results', kwargs={'round_ids': '%s' % self.rounds[0].id})

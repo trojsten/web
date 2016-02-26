@@ -8,7 +8,7 @@ register = template.Library()
 
 @register.inclusion_tag('trojsten/submit/parts/submit_form.html')
 def show_submit_form(task, redirect):
-    '''Renders submit form for specified task'''
+    """Renders submit form for specified task"""
     data = {}
     data['task'] = task
     data['Submit'] = Submit
@@ -24,7 +24,7 @@ def show_submit_form(task, redirect):
 
 @register.inclusion_tag('trojsten/submit/parts/submit_list.html')
 def show_submit_list(task, user):
-    '''Renders submit list for specified task and user'''
+    """Renders submit list for specified task and user"""
     data = {'IN_QUEUE': constants.SUBMIT_STATUS_IN_QUEUE}
     data['task'] = task
     data['Submit'] = Submit
@@ -51,8 +51,8 @@ def submitclass(submit):
 
 @register.inclusion_tag('trojsten/submit/parts/round_submit_form.html', takes_context=True)
 def round_submit_form(context, round):
-    '''View, showing submit form for all tasks from round
-    '''
+    """View, showing submit form for all tasks from round
+    """
     tasks = Task.objects.filter(round=round).order_by('number')
     template_data = {'round': round, 'tasks': tasks}
     context.update(template_data)

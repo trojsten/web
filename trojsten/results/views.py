@@ -8,8 +8,8 @@ from trojsten.utils.utils import is_true
 
 
 def view_results(request, round_id, category_id=None):
-    '''Displays results for specified round_ids and category_id
-    '''
+    """Displays results for specified round_ids and category_id
+    """
     round = get_object_or_404(
         Round.objects.visible(request.user).select_related('series__competition'),
         pk=round_id,
@@ -30,8 +30,8 @@ def view_results(request, round_id, category_id=None):
 
 
 def view_latest_results(request):
-    '''Displays results for latest rounds for each competition
-    '''
+    """Displays results for latest rounds for each competition
+    """
     rounds = Round.objects.latest_visible(
         request.user
     ).select_related('series__competition')

@@ -19,8 +19,8 @@ from trojsten.submit import constants as submit_constants
 
 class TaskManager(models.Manager):
     def for_rounds_and_category(self, rounds, category=None):
-        '''Returns tasks which belong to specified rounds and category
-        '''
+        """Returns tasks which belong to specified rounds and category
+        """
         if not rounds:
             return self.none()
         tasks = self.filter(
@@ -35,11 +35,11 @@ class TaskManager(models.Manager):
 
 class SubmitManager(models.Manager):
     def for_tasks(self, tasks, include_staff=False):
-        '''Returns submits which belong to specified tasks.
+        """Returns submits which belong to specified tasks.
         Only one submit per user, submit type and task is returned.
         Submits made after round.end_time are not counted except review submits,
         which has testing_status=SUBMIT_STATUS_REVIEWED and are made by organizers.
-        '''
+        """
         submits = self
         if not include_staff and tasks:
             # round ends January 2014 => exclude 2013, 2012,
@@ -71,9 +71,9 @@ class SubmitManager(models.Manager):
         ).select_related('user__school', 'task')
 
     def latest_for_user(self, tasks, user):
-        '''Returns latest submits which belong to specified tasks and user.
+        """Returns latest submits which belong to specified tasks and user.
         Only one submit per submit type and task is returned.
-        '''
+        """
         return self.filter(
             user=user,
             task__in=tasks,
@@ -89,10 +89,10 @@ class SubmitManager(models.Manager):
 
 @python_2_unicode_compatible
 class Category(models.Model):
-    '''
+    """
     Competition consists of a few categories. Each task belongs to one or more
     categories.
-    '''
+    """
     name = models.CharField(max_length=16, verbose_name='názov')
     competition = models.ForeignKey(Competition, verbose_name='súťaž')
 
@@ -110,10 +110,10 @@ class Category(models.Model):
 
 @python_2_unicode_compatible
 class Task(models.Model):
-    '''
+    """
     Task has its number, name, type and points value.
     Task has submits.
-    '''
+    """
     name = models.CharField(max_length=128, verbose_name='názov')
     reviewer = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, blank=True,
@@ -201,12 +201,12 @@ class Task(models.Model):
 
 @python_2_unicode_compatible
 class Submit(models.Model):
-    '''
+    """
     Submit holds information about its task and person who submitted it.
     There are 2 types of submits. Description submit and source submit.
     Description submit has points and filename, Source submit has also
     tester response and protocol ID assigned.
-    '''
+    """
     SOURCE = 0
     DESCRIPTION = 1
     TESTABLE_ZIP = 2
@@ -269,11 +269,11 @@ class Submit(models.Model):
 
     @property
     def user_points(self):
-        '''
+        """
         Returns points visible to user.
         Description points is always converted to integer.
         Source points are converted to integer if self.task.integer_source_points == True
-        '''
+        """
         return Submit.display_decimal_value(
             self.points,
             self.submit_type == Submit.DESCRIPTION or self.task.integer_source_points,

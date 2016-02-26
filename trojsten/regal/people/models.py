@@ -81,10 +81,10 @@ class School(models.Model):
 
 @python_2_unicode_compatible
 class User(AbstractUser):
-    '''
+    """
     Holds, provide access to or manages all informations
     related to a person.
-    '''
+    """
     GENDER_CHOICES = [('M', 'Chlapec'), ('F', 'Dievča')]
     gender = models.CharField(
         max_length=1,
@@ -142,9 +142,9 @@ class User(AbstractUser):
 
 @python_2_unicode_compatible
 class UserPropertyKey(models.Model):
-    '''
+    """
     Type of key for additional user properties.
-    '''
+    """
     key_name = models.CharField(max_length=100,
                                 verbose_name='názov vlastnosti')
 
@@ -158,9 +158,9 @@ class UserPropertyKey(models.Model):
 
 @python_2_unicode_compatible
 class UserProperty(models.Model):
-    '''
+    """
     Additional user properties, can be called as related_name in QuerySet of User.
-    '''
+    """
     user = models.ForeignKey(User,
                              related_name='properties')
     key = models.ForeignKey(UserPropertyKey,
@@ -179,9 +179,9 @@ class UserProperty(models.Model):
 
 @python_2_unicode_compatible
 class DuplicateUser(models.Model):
-    '''
+    """
     Merge candidate users - users with duplicit name or other properties.
-    '''
+    """
     MERGE_STATUS_CHOICES = [(0, 'Nevyriešené'), (1, 'Nie je duplikát'), (2, 'Vyriešený duplikát')]
     user = models.OneToOneField(User)
     status = models.IntegerField(

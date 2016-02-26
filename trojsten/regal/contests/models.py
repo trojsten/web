@@ -22,8 +22,8 @@ from trojsten.utils import utils
 
 class RoundManager(models.Manager):
     def visible(self, user, all_sites=False):
-        '''Returns only rounds visible for user
-        '''
+        """Returns only rounds visible for user
+        """
         if all_sites:
             competitions = Competition.objects.all()
         else:
@@ -38,8 +38,8 @@ class RoundManager(models.Manager):
         return res
 
     def latest_visible(self, user, all_sites=False):
-        '''Returns latest visible round for each competition
-        '''
+        """Returns latest visible round for each competition
+        """
         return self.visible(user, all_sites).order_by(
             'series__competition', '-end_time', '-number',
         ).distinct(
@@ -49,8 +49,8 @@ class RoundManager(models.Manager):
         )
 
     def active_visible(self, user, all_sites=False):
-        '''Returns all visible running rounds for each competition
-        '''
+        """Returns all visible running rounds for each competition
+        """
         return self.visible(user, all_sites).filter(
             end_time__gte=datetime.now()
         ).order_by(
@@ -62,8 +62,8 @@ class RoundManager(models.Manager):
 
 class CompetitionManager(models.Manager):
     def current_site_only(self):
-        '''Returns only competitions belonging to current site
-        '''
+        """Returns only competitions belonging to current site
+        """
         return Site.objects.get(pk=settings.SITE_ID).competition_set.all()
 
 
@@ -84,9 +84,9 @@ class Repository(models.Model):
 
 @python_2_unicode_compatible
 class Competition(models.Model):
-    '''
+    """
     Consists of series.
-    '''
+    """
     name = models.CharField(max_length=128, verbose_name='názov')
     sites = models.ManyToManyField(Site)
     repo = models.ForeignKey(Repository, null=True, blank=True, verbose_name='git repozitár')
@@ -114,9 +114,9 @@ class Competition(models.Model):
 
 @python_2_unicode_compatible
 class Series(models.Model):
-    '''
+    """
     Series consists of several rounds.
-    '''
+    """
     competition = models.ForeignKey(Competition, verbose_name='súťaž')
     name = models.CharField(max_length=32, verbose_name='názov', blank=True)
     number = models.IntegerField(verbose_name='číslo série')
@@ -138,10 +138,10 @@ class Series(models.Model):
 
 @python_2_unicode_compatible
 class Round(models.Model):
-    '''
+    """
     Round has tasks.
     Holds information about deadline and such things
-    '''
+    """
     series = models.ForeignKey(Series, verbose_name='séria')
     number = models.IntegerField(verbose_name='číslo')
     start_time = models.DateTimeField(

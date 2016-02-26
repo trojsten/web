@@ -14,10 +14,10 @@ register = template.Library()
 
 @register.filter
 def lookup(object, key):
-    '''
+    """
     Looks up for key in object.
     Returns None if key is not found.
-    '''
+    """
     try:
         return object[key]
     except (KeyError, IndexError, TypeError):
@@ -26,10 +26,10 @@ def lookup(object, key):
 
 @register.assignment_tag
 def lookup_as(object, key):
-    '''
+    """
     Looks up for key in object.
     Returns None if key is not found.
-    '''
+    """
     try:
         return object[key]
     except (KeyError, IndexError, TypeError):

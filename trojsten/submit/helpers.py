@@ -44,20 +44,20 @@ def get_lang_from_filename(filename):
 
 
 def get_path_raw(contest_id, task_id, user_id):
-    '''Vypočíta cestu, kam uložiť súbory submitu bez dotknutia databázy.
+    """Vypočíta cestu, kam uložiť súbory submitu bez dotknutia databázy.
 
     Cesta má tvar: $SUBMIT_PATH/submits/KSP/task_id/user_id
-    '''
+    """
 
     return os.path.join(settings.SUBMIT_PATH, 'submits',
                         str(user_id), str(task_id))
 
 
 def get_path(task, user):
-    '''Vypočíta cestu, kam uložiť súbory submitu.
+    """Vypočíta cestu, kam uložiť súbory submitu.
 
     Cesta má tvar: $SUBMIT_PATH/submits/KSP/task_id/user_id
-    '''
+    """
     return get_path_raw(
         task.round.series.competition.name, "%s-%d" % (
             task.round.series.competition.name, task.id
@@ -67,7 +67,7 @@ def get_path(task, user):
 
 
 def post_submit(raw, data):
-    '''Pošle RAW na otestovanie'''
+    """Pošle RAW na otestovanie"""
     if settings.SUBMIT_DEBUG:
         print("Submit RAW: ")
         print(raw)
@@ -80,7 +80,7 @@ def post_submit(raw, data):
         sock.close()
 
 def process_submit_raw(f, contest_id, task_id, language, user_id):
-    '''Spracuje submit bez dotknutia databázy'''
+    """Spracuje submit bez dotknutia databázy"""
     # Determine language from filename if language not entered
     if language == '.':
         lang = get_lang_from_filename(f.name)
@@ -123,20 +123,20 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
 
 
 def process_submit(f, task, language, user):
-    '''Načíta všetko potrebné z databázy a spracuje submit'''
+    """Načíta všetko potrebné z databázy a spracuje submit"""
     contest_id = task.round.series.competition.name
     return process_submit_raw(f, contest_id, task.id, language, user.id)
 
 
 def update_submit(submit):
-    '''Zistí, či už je dotestované, ak hej, tak updatne databázu.
+    """Zistí, či už je dotestované, ak hej, tak updatne databázu.
 
     Ak je dotestované, tak do zložky so submitmi testovač nahral súbor
     s rovnakým názvom ako má submit len s príponou .protokol
     (nastaviteľné v settings/common.py)
 
     Tento súbor obsahuje výstup testovača (v XML) a treba ho parse-núť
-    '''
+    """
     protocol_path = submit.filepath.rsplit(
         '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
     if os.path.exists(protocol_path):

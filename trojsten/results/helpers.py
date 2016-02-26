@@ -35,7 +35,7 @@ class TaskPoints(object):
 
 
 class FrozenTaskPoints(TaskPoints):
-    '''frozen version of TaskPoints'''
+    """frozen version of TaskPoints"""
     def __init__(self, description_points=0, source_points=0, sum=0):
         super(FrozenTaskPoints, self).__init__()
         self.submitted = True
@@ -73,7 +73,7 @@ class UserResult(object):
 
 
 class FrozenUserResult(UserResult):
-    '''frozen version of UserResult'''
+    """frozen version of UserResult"""
     def __init__(self, sum=0, previous_rounds_points=0, rank=None, prev_rank=None):
         super(FrozenUserResult, self).__init__()
         self._sum = sum
@@ -104,8 +104,8 @@ class FrozenUser(object):
 
 
 def get_results_data(submits):
-    '''Returns results data for each user who has submitted at least one task
-    '''
+    """Returns results data for each user who has submitted at least one task
+    """
     res = defaultdict(UserResult)
     for submit in submits:
         res[submit.user].add_task_points(
@@ -115,10 +115,10 @@ def get_results_data(submits):
 
 
 def get_ranks(score_list):
-    '''
+    """
     Get ranks for score_list
     score_list must be sorted
-    '''
+    """
     last_score = None
     last_rank = 1
     for i, score in enumerate(score_list):
@@ -128,11 +128,11 @@ def get_ranks(score_list):
 
 
 def merge_results_data(results_data, previous_results_data=None):
-    '''
+    """
     Adds previous_rounds_points from previous_results_data to results_data
     Side effect: This function modifies objects (i.e. individual results)
     contained in results_data
-    '''
+    """
     if previous_results_data:
         for user, data in previous_results_data.items():
             if user not in results_data:
@@ -142,11 +142,11 @@ def merge_results_data(results_data, previous_results_data=None):
 
 
 def format_results_data(results_data, compute_rank=True):
-    '''Formats results_data as sorted list of rows so it can be easily displayed as results_table
+    """Formats results_data as sorted list of rows so it can be easily displayed as results_table
     Appends user and ranks.
     Side effect: This function modifies objects (i.e. individual results)
     contained in results_data
-    '''
+    """
     Result = namedtuple('Result', ['user', 'data'])
     res = [Result(user=user, data=data) for user, data in results_data.items()]
 
