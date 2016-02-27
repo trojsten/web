@@ -136,6 +136,9 @@ class User(AbstractUser):
         )
         return current_year - self.graduation + constants.GRADUATION_SCHOOL_YEAR
 
+    def get_properties(self):
+        return {prop.key: prop.value for prop in self.properties.all()}
+
     def __str__(self):
         return '%s (%s)' % (self.username, self.get_full_name())
 

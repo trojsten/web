@@ -32,9 +32,11 @@ def merge_candidates(request, user_id):
 def merge_users(request, user_id, candidate_id):
     user = get_object_or_404(User, pk=user_id)
     candidate = get_object_or_404(User, pk=candidate_id)
+    prop_keys = set(user.get_properties().keys()) | set(candidate.get_properties().keys())
     context = {
         'user': user,
         'candidate': candidate,
+        'prop_keys': prop_keys,
     }
     return render(
         request, 'admin/merge_duplicate_users.html', context
