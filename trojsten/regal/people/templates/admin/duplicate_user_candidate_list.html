@@ -8,11 +8,14 @@
 {% endblock %}
 
 {% block content %}
+
+<h1>{{user.get_full_name}}</h1>
+
 <table>
-{% for user in users_to_merge %}
+{% for candidate in merge_candidates %}
     <tr>
-    <td>{{ user.id }}</td>
-    <td>{{ user.get_full_name }}</td>
+        <td>{{ candidate.pk }}</td>
+        <td>{{ candidate.get_full_name }}</td>
     </tr>
 {% endfor %}
 </table>
