@@ -13,76 +13,15 @@
 
 <form  method="post">
 {% csrf_token %}
-<input type="hidden" name="user_id" value="{{ user.pk }}">
-<input type="hidden" name="candidate_id" value="{{ candidate.pk }}">
 <table>
-    <tr>
-        <td>{% trans 'Id' %}:</td>
-        <td><input type="radio" name="id" value="{{ user.id }}">{{ user.id }}</td>
-        <td><input type="radio" name="id" value="{{ candidate.id }}" checked>{{ candidate.id }}</td>
-    </tr>
-    <tr>
-        <td>{% trans 'Username' %}:</td>
-        <td><input type="radio" name="username" value="{{ user.username }}">{{ user.username }}</td>
-        <td><input type="radio" name="username" value="{{ candidate.username }}" checked>{{ candidate.username }}</td>
-    </tr>
-    <tr>
-        <td>{% trans 'First name' %}:</td>
-        <td><input type="radio" name="first_name" value="{{ user.first_name }}">{{ user.first_name }}</td>
-        <td><input type="radio" name="first_name" value="{{ candidate.first_name }}" checked>{{ candidate.first_name }}</td>
-    </tr>
-    <tr>
-        <td>{% trans 'Last name' %}:</td>
-        <td><input type="radio" name="last_name" value="{{ user.last_name }}">{{ user.last_name }}</td>
-        <td><input type="radio" name="last_name" value="{{ candidate.last_name }}" checked>{{ candidate.last_name }}</td>
-    </tr>
-    <tr>
-        <td>{% trans 'Email' %}:</td>
-        <td><input type="radio" name="email" value="{{ user.email }}">{{ user.email }}</td>
-        <td><input type="radio" name="email" value="{{ candidate.email }}" checked>{{ candidate.email }}</td>
-    </tr>
-    <tr>
-        <td>{% trans 'Gender' %}:</td>
-        <td><input type="radio" name="gender" value="{{ user.gender }}">{{ user.get_gender_display }}</td>
-        <td><input type="radio" name="gender" value="{{ candidate.gender }}" checked>{{ candidate.get_gender_display }}</td>
-    </tr>
-    <tr>
-        <td>{% trans 'Date of birth' %}:</td>
-        <td><input type="radio" name="birth_date" value="{{ user.birth_date }}">{{ user.birth_date }}</td>
-        <td><input type="radio" name="birth_date" value="{{ candidate.birth_date }}" checked>{{ candidate.birth_date }}</td>
-    </tr>
-    <tr>
-        <td>{% trans 'Home address' %}:</td>
-        <td><input type="radio" name="home_address" value="{{ user.home_address }}">{{ user.home_address }}</td>
-        <td><input type="radio" name="home_address" value="{{ candidate.home_address }}" checked>{{ candidate.home_address }}</td>
-    </tr>
-    <tr>
-        <td>{% trans 'Mailing address' %}:</td>
-        <td><input type="radio" name="mailing_address" value="{{ user.mailing_address }}">{{ user.mailing_address }}</td>
-        <td><input type="radio" name="mailing_address" value="{{ candidate.mailing_address }}" checked>{{ candidate.mailing_address }}</td>
-    </tr>
-    <tr>
-        <td>{% trans 'School' %}:</td>
-        <td><input type="radio" name="school" value="{{ user.school }}">{{ user.school }}</td>
-        <td><input type="radio" name="school" value="{{ candidate.school }}" checked>{{ candidate.school }}</td>
-    </tr>
-    <tr>
-        <td>{% trans 'Graduation year' %}:</td>
-        <td><input type="radio" name="graduation" value="{{ user.graduation }}">{{ user.graduation }}</td>
-        <td><input type="radio" name="graduation" value="{{ candidate.graduation }}" checked>{{ candidate.graduation }}</td>
-    </tr>
-    <tr>
-        <th colspan="3">
-            {% trans 'User properties' %}
-        </th>
-    </tr>
-    {% for key in prop_keys %}
-    <tr>
-        <td>{{ key }}</td>
-        <td><input type="radio" name="{{ key }}" value="{{ user.get_properties | lookup:key }}">{{ user.get_properties | lookup:key }}</td>
-        <td><input type="radio" name="{{ key }}" value="{{ candidate.get_properties | lookup:key }}" checked>{{ candidate.get_properties | lookup:key }}</td>
-    </tr>
+{% for field in form %}
+<tr>
+    <td>{{ field.label }}:</td>
+    {% for choice in field.field.choices %}
+    <td><input type="radio" name="{{ field.name }}" value="{{ choice|lookup:0 }}" {% if forloop.last %} checked{% endif %}>{{ choice|lookup:1 }}</td>
     {% endfor %}
+</tr>
+{% endfor %}
 </table>
 <button type="submit" name="submit">{% trans 'Submit' %}</button>
 <button type="reset" name="reset">{% trans 'Reset' %}</button>

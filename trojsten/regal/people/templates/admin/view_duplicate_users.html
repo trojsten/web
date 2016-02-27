@@ -3,16 +3,19 @@
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
-    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>    
 </div>
 {% endblock %}
 
 {% block content %}
+<h1>{% trans 'List of unresolved duplicate users' %}</h1>
+
 <table>
 {% for user in users_to_merge %}
     <tr>
     <td>{{ user.id }}</td>
-    <td>{{ user.get_full_name }}</td>
+    <td>{{ user }}</td>
+    <td><a href="{% url 'duplicate_user_candidate_list' user_id=user.id %}">{% trans 'Manage' %}</a></td>
     </tr>
 {% endfor %}
 </table>

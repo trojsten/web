@@ -9,13 +9,20 @@
 
 {% block content %}
 
-<h1>{{user.get_full_name}}</h1>
+<h1>{% blocktrans %}Merging {{user}}{% endblocktrans %}</h1>
 
 <table>
+    <tr>
+        <th colspan="3">
+            {% trans 'Merge candidates' %}:
+        </th>
+    </tr>
 {% for candidate in merge_candidates %}
     <tr>
         <td>{{ candidate.pk }}</td>
-        <td>{{ candidate.get_full_name }}</td>
+        <td>{{ candidate }}</td>
+        <td><a href="{% url 'duplicate_user_merge' user_id=user.pk candidate_id=candidate.pk %}">{% trans 'Merge' %}</a></td>
+
     </tr>
 {% endfor %}
 </table>

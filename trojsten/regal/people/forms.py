@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
-from django import forms
-from django.utils.translation import string_concat, ugettext_lazy as _
-
+from collections import OrderedDict
 from datetime import date
+
+from django import forms
+from django.db.models.fields.related import (ForeignKey, ManyToManyField,
+                                             ManyToOneRel, OneToOneRel)
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import string_concat
 
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
+from trojsten.regal.people.models import Address, DuplicateUser, User
 
-from trojsten.regal.people.models import User, Address, DuplicateUser
-from .helpers import get_similar_users
 from . import constants
+from .helpers import get_similar_users
 
 
 class TrojstenUserBaseForm(forms.ModelForm):
@@ -328,3 +332,59 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
             if len(similar_users):
                 DuplicateUser.objects.create(user=user)
         return user
+
+
+class MergeFieldFactory:
+    def __init__(self, user, candidate):
+        self.user = user
+        self.candidate = candidate
+        self.user_props = self.user.get_properties()
+        self.candidate_props = self.candidate.get_properties()
+
+    def get_field(self, key, display=False):
+        return forms.ChoiceField(
+            choices=[
+                (
+                    getattr(self.user, key),
+                    getattr(self.user, 'get_%s_display' % (key,))() if display
+                    else getattr(self.user, key)
+                ),
+                (
+                    getattr(self.candidate, key),
+                    getattr(self.candidate, 'get_%s_display' % (key,))() if display
+                    else getattr(self.candidate, key)
+                ),
+            ],
+            widget=forms.RadioSelect,
+        )
+
+    def get_prop_field(self, key):
+        return forms.ChoiceField(
+            choices=[
+                (
+                    self.user_props.get(key, None),
+                    self.user_props.get(key, None),
+                ),
+                (
+                    self.candidate_props.get(key, None),
+                    self.candidate_props.get(key, None),
+                ),
+            ],
+            widget=forms.RadioSelect,
+        )
+
+
+class MergeForm(forms.Form):
+    def __init__(self, user, candidate, *args, **kwargs):
+        super(MergeForm, self).__init__(*args, **kwargs)
+        self.user = user
+        self.candidate = candidate
+        field_factory = MergeFieldFactory(user, candidate)
+        user_fields = [field.name for field in User._meta.get_fields() if not field.is_relation]
+        display = set(['gender'])
+        prop_keys = set(user.get_properties().keys()) | set(candidate.get_properties().keys())
+        self.fields.update(OrderedDict([
+            (attr, field_factory.get_field(attr, display=attr in display)) for attr in user_fields
+        ] + [
+            (attr, field_factory.get_prop_field(attr)) for attr in prop_keys
+        ]))
