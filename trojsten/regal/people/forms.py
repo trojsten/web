@@ -3,8 +3,6 @@ from collections import OrderedDict
 from datetime import date
 
 from django import forms
-from django.db.models.fields.related import (ForeignKey, ManyToManyField,
-                                             ManyToOneRel, OneToOneRel)
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import string_concat
 
@@ -190,15 +188,19 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
         if has_correspondence_address:
             if not user.mailing_address:
                 corr_address = Address(
-                    street=corr_street, town=corr_town, postal_code=corr_postal_code, country=corr_country)
+                    street=corr_street,
+                    town=corr_town,
+                    postal_code=corr_postal_code,
+                    country=corr_country,
+                )
             else:
                 user.mailing_address.street = corr_street
                 user.mailing_address.town = corr_town
                 user.mailing_address.postal_code = corr_postal_code
                 user.mailing_address.country = corr_country
 
-        ## Note: Only case when user does not have home address is when that user has been created by
-        ## django management commands (manage.py)
+        # Note: Only case when user does not have home address is when that user has been created by
+        # django management commands (manage.py)
         if not user.home_address:
             home_address = Address(
                 street=street, town=town, postal_code=postal_code, country=country)
@@ -209,8 +211,8 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
             user.home_address.country = country
 
         if commit:
-            ## Warning: if commit==False, home address object for user is not created and assigned if user
-            ## does not already have one (although such users should be extremely rare)..
+            # Warning: if commit==False, home address object for user is not created and assigned
+            # if user does not already have one (although such users should be extremely rare)..
             if not user.home_address:
                 home_address.save()
                 user.home_address = home_address
@@ -235,7 +237,8 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
         label=_("Password"), widget=forms.PasswordInput)
     password2 = forms.CharField(
         label=_("Password confirmation"), widget=forms.PasswordInput,
-                                help_text=_("Enter the same password as above, for verification."))
+        help_text=_("Enter the same password as above, for verification.")
+    )
 
     class Meta:
         model = User
@@ -254,7 +257,8 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
         try:
             pipeline_state = request.session[setting(
                 'SOCIAL_AUTH_PARTIAL_PIPELINE_KEY',
-                                                     SOCIAL_AUTH_PARTIAL_PIPELINE_KEY)]
+                SOCIAL_AUTH_PARTIAL_PIPELINE_KEY,
+            )]
             pipeline_state = pipeline_state['kwargs']
             self.password_required = False
         except KeyError:
@@ -319,7 +323,11 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
 
         if has_correspondence_address:
             corr_address = Address(
-                street=corr_street, town=corr_town, postal_code=corr_postal_code, country=corr_country)
+                street=corr_street,
+                town=corr_town,
+                postal_code=corr_postal_code,
+                country=corr_country,
+            )
 
         if commit:
             main_address.save()
@@ -338,38 +346,35 @@ class MergeFieldFactory:
     def __init__(self, user, candidate):
         self.user = user
         self.candidate = candidate
-        self.user_props = self.user.get_properties()
-        self.candidate_props = self.candidate.get_properties()
+        self.props = {
+            self.user: self.user.get_properties(),
+            self.candidate: self.candidate.get_properties(),
+        }
 
-    def get_field(self, key, display=False):
+    def get_field(self, key, display=False, use_datetime=False):
+        def get_choice(user):
+            return (
+                user.pk,
+                getattr(user, 'get_%s_display' % (key,))() if display
+                else getattr(user, key)
+            )
+
         return forms.ChoiceField(
-            choices=[
-                (
-                    getattr(self.user, key),
-                    getattr(self.user, 'get_%s_display' % (key,))() if display
-                    else getattr(self.user, key)
-                ),
-                (
-                    getattr(self.candidate, key),
-                    getattr(self.candidate, 'get_%s_display' % (key,))() if display
-                    else getattr(self.candidate, key)
-                ),
-            ],
+            label=_(key),
+            choices=[get_choice(self.user), get_choice(self.candidate)],
             widget=forms.RadioSelect,
         )
 
     def get_prop_field(self, key):
+        def get_choice(user):
+            return (
+                user.pk,
+                self.props[user].get(key, None),
+            )
+
         return forms.ChoiceField(
-            choices=[
-                (
-                    self.user_props.get(key, None),
-                    self.user_props.get(key, None),
-                ),
-                (
-                    self.candidate_props.get(key, None),
-                    self.candidate_props.get(key, None),
-                ),
-            ],
+            label=key.key_name,
+            choices=[get_choice(self.user), get_choice(self.candidate)],
             widget=forms.RadioSelect,
         )
 
@@ -379,12 +384,21 @@ class MergeForm(forms.Form):
         super(MergeForm, self).__init__(*args, **kwargs)
         self.user = user
         self.candidate = candidate
+
         field_factory = MergeFieldFactory(user, candidate)
         user_fields = [field.name for field in User._meta.get_fields() if not field.is_relation]
         display = set(['gender'])
+        use_datetime = set(['last_login', 'date_joined', 'birth_date'])
         prop_keys = set(user.get_properties().keys()) | set(candidate.get_properties().keys())
+
         self.fields.update(OrderedDict([
-            (attr, field_factory.get_field(attr, display=attr in display)) for attr in user_fields
+            (
+                f,
+                field_factory.get_field(f, display=f in display, use_datetime=f in use_datetime)
+            ) for f in user_fields
         ] + [
-            (attr, field_factory.get_prop_field(attr)) for attr in prop_keys
+            (
+                'user_prop_%s' % prop_key.pk,
+                field_factory.get_prop_field(prop_key)
+            ) for prop_key in prop_keys
         ]))

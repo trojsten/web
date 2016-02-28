@@ -13,10 +13,11 @@
 
 <form  method="post">
 {% csrf_token %}
+{{ form.non_field_errors }}
 <table>
 {% for field in form %}
 <tr>
-    <td>{{ field.label }}:</td>
+    <td><label>{{ field.label }}:</label>{{ field.errors }}</td>
     {% for choice in field.field.choices %}
     <td><input type="radio" name="{{ field.name }}" value="{{ choice|lookup:0 }}" {% if forloop.last %} checked{% endif %}>{{ choice|lookup:1 }}</td>
     {% endfor %}
@@ -25,7 +26,6 @@
 </table>
 <button type="submit" name="submit">{% trans 'Submit' %}</button>
 <button type="reset" name="reset">{% trans 'Reset' %}</button>
-
 </form>
 
 {% endblock %}
