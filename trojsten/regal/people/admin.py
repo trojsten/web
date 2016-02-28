@@ -4,17 +4,19 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
+from django.core.urlresolvers import reverse
+from django.db import models
 from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
-from easy_select2.widgets import Select2
 from easy_select2 import select2_modelform
+from easy_select2.widgets import Select2
+from import_export import fields, resources
 from import_export.admin import ExportMixin
-from import_export import resources, fields
-
-from trojsten.regal.people.models import *
-from trojsten.regal.contests.models import Series, Competition
+from trojsten.regal.contests.models import Competition, Series
+from trojsten.regal.people.models import (Address, DuplicateUser, School, User,
+                                          UserProperty, UserPropertyKey)
 from trojsten.regal.tasks.models import Submit
 from trojsten.regal.utils import attribute_format
 
@@ -101,7 +103,8 @@ class UsersExport(resources.ModelResource):
         export_order = fields = (
             'first_name', 'last_name', 'birth_date', 'email', 'graduation',
             'street', 'town', 'postal_code', 'country',
-            'school__verbose_name', 'school__addr_name', 'school__street', 'school__city', 'school__zip_code'
+            'school__verbose_name', 'school__addr_name', 'school__street',
+            'school__city', 'school__zip_code'
         )
         widgets = {'birth_date': {'format': '%d.%m.%Y'}}
 
@@ -190,7 +193,20 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
 
 class DuplicateUserAdmin(admin.ModelAdmin):
     form = select2_modelform(DuplicateUser)
-    list_display = ('user', 'status')
+    list_display = ('user', 'status', 'actions_field')
+    ordering = ('status', 'user')
+    list_filter = ('status',)
+
+    def actions_field(self, obj):
+        return '<a href="%s">%s</a>' % (
+            reverse(
+                'duplicate_user_candidate_list',
+                kwargs={'user_id': '%s' % obj.user.id}
+            ),
+            _('Candidate list'),
+        )
+    actions_field.allow_tags = True
+    actions_field.short_description = _('Actions')
 
 
 admin.site.register(Address, AddressAdmin)

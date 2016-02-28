@@ -3,19 +3,7 @@ from django.shortcuts import get_object_or_404, render
 
 from .forms import MergeForm
 from .helpers import get_similar_users
-from .models import DuplicateUser, User
-
-
-def duplicate_list(request):
-    users = User.objects.filter(
-        duplicateuser__status=DuplicateUser.MERGE_STATUS_UNRESOLVED,
-    )
-    context = {
-        'users_to_merge': users,
-    }
-    return render(
-        request, 'admin/view_duplicate_users.html', context
-    )
+from .models import User
 
 
 def merge_candidates(request, user_id):
