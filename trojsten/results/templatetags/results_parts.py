@@ -10,7 +10,12 @@ def show_results_table(context, round, category=None):
     """Displays results for specified tasks and category
     """
     current_tasks, results, has_previous_results = make_result_table(
-        context['user'], round, category, context['single_round'], context['show_staff']
+        context['user'],
+        round,
+        category,
+        single_round=context['single_round'],
+        show_staff=context['show_staff'],
+        force_generate=context['force_generate'],
     )
 
     context.update({

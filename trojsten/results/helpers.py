@@ -231,7 +231,7 @@ def make_result_table(
 
         previous_results_data = None
         if not single_round:
-            previous_rounds = Round.objects.visible(user).filter(
+            previous_rounds = Round.objects.visible(user, all_sites=True).filter(
                 series=round.series, number__lt=round.number
             ).order_by('number')
 
