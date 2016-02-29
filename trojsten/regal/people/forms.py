@@ -398,7 +398,7 @@ class MergeForm(forms.Form):
             ) for f in user_fields
         ] + [
             (
-                'user_prop_%s' % prop_key.pk,
+                '%s%s' % (constants.USER_PROP_PREFIX, prop_key.pk),
                 field_factory.get_prop_field(prop_key)
             ) for prop_key in prop_keys
         ]))
