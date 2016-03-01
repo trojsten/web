@@ -2,7 +2,7 @@
 
 import os
 
-from django.http import HttpResponse, Http404
+from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from django.conf import settings
 
@@ -11,13 +11,6 @@ from sendfile import sendfile
 from trojsten.regal.tasks.models import Task
 from trojsten.regal.contests.models import Round, Competition
 from trojsten.utils.utils import is_true
-
-from .tasks import compile_task_statements
-
-
-def notify_push(request, uuid):
-    compile_task_statements.delay(uuid)
-    return HttpResponse('')
 
 
 def _statement_view(request, task_id, solution=False):

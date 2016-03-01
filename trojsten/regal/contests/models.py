@@ -13,8 +13,6 @@ from django.contrib.sites.models import Site
 from django.conf import settings
 from django.contrib.auth.models import Group
 
-from uuidfield import UUIDField
-
 from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
 from trojsten.utils import utils
@@ -68,31 +66,12 @@ class CompetitionManager(models.Manager):
 
 
 @python_2_unicode_compatible
-class Repository(models.Model):
-    notification_string = UUIDField(
-        auto=True, primary_key=True, version=4, verbose_name='string pre push notifikáciu'
-    )
-    url = models.CharField(max_length=128, verbose_name='url git repozitára')
-
-    class Meta:
-        verbose_name = 'Repozitár'
-        verbose_name_plural = 'Repozitáre'
-
-    def __str__(self):
-        return self.url
-
-
-@python_2_unicode_compatible
 class Competition(models.Model):
     """
     Consists of series.
     """
     name = models.CharField(max_length=128, verbose_name='názov')
     sites = models.ManyToManyField(Site)
-    repo = models.ForeignKey(Repository, null=True, blank=True, verbose_name='git repozitár')
-    repo_root = models.CharField(
-        max_length=128, verbose_name='adresa foldra súťaže v repozitári'
-    )
     organizers_group = models.ForeignKey(Group, null=True, verbose_name='skupina vedúcich')
     primary_school_only = models.BooleanField(
         default=False, verbose_name='súťaž je iba pre základoškolákov'
