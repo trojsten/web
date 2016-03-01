@@ -21,7 +21,6 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=128, verbose_name='n\xe1zov')),
-                ('repo_root', models.CharField(max_length=128, verbose_name='adresa foldra s\xfa\u0165a\u017ee v repozit\xe1ri')),
                 ('primary_school_only', models.BooleanField(default=False, verbose_name='s\xfa\u0165a\u017e je iba pre z\xe1klado\u0161kol\xe1kov')),
                 ('organizers_group', models.ForeignKey(verbose_name='skupina ved\xfacich', to='auth.Group', null=True)),
             ],
@@ -78,9 +77,5 @@ class Migration(migrations.Migration):
             model_name='round',
             name='start_time',
             field=models.DateTimeField(default=trojsten.utils.utils.default_start_time, verbose_name='za\u010diatok'),
-        ),
-        migrations.RemoveField(
-            model_name='competition',
-            name='repo_root',
         ),
     ]
