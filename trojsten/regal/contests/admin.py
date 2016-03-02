@@ -13,7 +13,7 @@ from trojsten.regal.utils import get_related, attribute_format
 
 class CompetitionAdmin(admin.ModelAdmin):
     form = select2_modelform(Competition)
-    list_display = ('name', 'organizers_group', 'get_sites', 'repo', 'repo_root')
+    list_display = ('name', 'organizers_group', 'get_sites')
 
     def get_sites(self, obj):
         return ', '.join(force_text(x) for x in obj.sites.all())
@@ -68,10 +68,6 @@ class RoundAdmin(admin.ModelAdmin):
         )
 
 
-class RepositoryAdmin(admin.ModelAdmin):
-    readonly_fields = ('notification_string',)
-
 admin.site.register(Competition, CompetitionAdmin)
 admin.site.register(Series, SeriesAdmin)
 admin.site.register(Round, RoundAdmin)
-admin.site.register(Repository, RepositoryAdmin)
