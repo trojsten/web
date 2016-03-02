@@ -5,6 +5,8 @@
 local_settings.py
 media/*
 version.txt
+.venv
+.coverage
 
 #nodejs
 */node_modules/*
