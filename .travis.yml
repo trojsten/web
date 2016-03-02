@@ -2,7 +2,8 @@ language: python
 python:
   - "2.7"
 env:
-  - DJANGO_SETTINGS_MODULE=trojsten.settings.production
+  - DJANGO_SETTINGS_MODULE=trojsten.settings.production TROJSTENWEB_FACEBOOK_KEY='' TROJSTENWEB_FACEBOOK_SECRET='' TROJSTENWEB_GOOGLE_OAUTH2_KEY='' TROJSTENWEB_GOOGLE_OAUTH2_SECRET='' TROJSTENWEB_GITHUB_KEY='' TROJSTENWEB_GITHUB_SECRET=''
+
 # command to install dependencies
 install:
   - pip install -r requirements.txt
