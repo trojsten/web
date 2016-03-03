@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-
 # Common settings for trojsten.
-import os
+
 import json
+import os
+
+from django.contrib.messages import constants as messages
+from django.http import UnreadablePostError
+
 import trojsten
 import trojsten.special.installed_apps
-
-from django.http import UnreadablePostError
 
 
 def env(name, default):
@@ -35,11 +37,11 @@ DATABASES = {
     },
     'kaspar': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'kaspar',
-        'USER': 'trojsten',
-        'PASSWORD': 'trojsten',
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': env('TROJSTENWEB_KASPAR_DATABASE_NAME', 'kaspar'),
+        'USER': env('TROJSTENWEB_KASPAR_DATABASE_USER', 'trojsten'),
+        'PASSWORD': env('TROJSTENWEB_KASPAR_DATABASE_PASSWORD', ''),
+        'HOST': env('TROJSTENWEB_KASPAR_DATABASE_URL', ''),
+        'PORT': env('TROJSTENWEB_KASPAR_DATABASE_PORT', ''),
     },
 }
 
@@ -356,7 +358,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 # Override message tags for bootstrap 3 compatibility.
-from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
