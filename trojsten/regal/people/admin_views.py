@@ -43,12 +43,9 @@ def merge_users_view(request, user_id, candidate_id):
                 ) if int(val) == source_user.pk
             ]
 
-            try:
-                merge_users(target_user, source_user, src_fields, src_user_props)
-                messages.add_message(request, messages.SUCCESS, _('Users merged succesfully.'))
-                return redirect('duplicate_user_candidate_list', user_id=target_user.pk)
-            except:
-                messages.add_message(request, messages.ERROR, _('Error when merging users.'))
+            merge_users(target_user, source_user, src_fields, src_user_props)
+            messages.add_message(request, messages.SUCCESS, _('Users merged succesfully.'))
+            return redirect('duplicate_user_candidate_list', user_id=target_user.pk)
         else:
             print form.cleaned_data
             messages.add_message(request, messages.ERROR, _('Error when merging users.'))
