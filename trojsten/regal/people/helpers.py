@@ -3,8 +3,7 @@ from django.db import transaction
 
 
 def get_similar_users(user):
-    """Returns a list of users similar to the specified user.
-    """
+    """Returns a list of users similar to the specified user."""
     return User.objects.exclude(pk=user.pk).filter(
         first_name=user.first_name,
         last_name=user.last_name,
@@ -13,6 +12,11 @@ def get_similar_users(user):
 
 @transaction.atomic
 def merge_users(target_user, source_user, src_selected_fields, src_selected_user_prop_ids):
+    """
+    Merges source_user into target_user, replacing target_user's fields
+    specified in src_selected_fields, and target_user's user_properties
+    specified in src_selected_user_prop_ids.
+    """
     for field in src_selected_fields:
         setattr(target_user, field, getattr(source_user, field))
     src_properties = source_user.get_properties()
