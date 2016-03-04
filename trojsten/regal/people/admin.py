@@ -2,23 +2,28 @@
 
 from __future__ import unicode_literals
 
-from django.contrib import admin
+from django.conf.urls import url
+from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
-
 from easy_select2 import select2_modelform
 from easy_select2.widgets import Select2
 from import_export import fields, resources
 from import_export.admin import ExportMixin
+
 from trojsten.regal.contests.models import Competition, Series
-from trojsten.regal.people.models import (Address, DuplicateUser, School, User,
-                                          UserProperty, UserPropertyKey)
 from trojsten.regal.tasks.models import Submit
 from trojsten.regal.utils import attribute_format
+
+from . import constants
+from .forms import MergeForm
+from .helpers import get_similar_users, merge_users
+from .models import (Address, DuplicateUser, School, User, UserProperty,
+                     UserPropertyKey)
 
 
 class AddressAdmin(admin.ModelAdmin):
@@ -193,20 +198,65 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
 
 class DuplicateUserAdmin(admin.ModelAdmin):
     form = select2_modelform(DuplicateUser)
-    list_display = ('user', 'status', 'actions_field')
+    list_display = ('user', 'status')
     ordering = ('status', 'user')
     list_filter = ('status',)
 
-    def actions_field(self, obj):
-        return '<a href="%s">%s</a>' % (
-            reverse(
-                'duplicate_user_candidate_list',
-                kwargs={'user_id': '%s' % obj.user.id}
-            ),
-            _('Candidate list'),
+    def get_urls(self):
+        urls = super(DuplicateUserAdmin, self).get_urls()
+        my_urls = [
+            url(r'^merge/(?P<target_user_id>[0-9]+)/(?P<candidate_id>[0-9]+)$',
+                admin.site.admin_view(self.merge_users_view), name='duplicate_user_merge'),
+        ]
+        return my_urls + urls
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        target_user = DuplicateUser.objects.get(pk=object_id).user
+        merge_candidates = get_similar_users(target_user)
+        extra_context = extra_context or {}
+        extra_context['target_user'] = target_user
+        extra_context['merge_candidates'] = merge_candidates
+        return super(DuplicateUserAdmin, self).change_view(
+            request, object_id, form_url, extra_context=extra_context
         )
-    actions_field.allow_tags = True
-    actions_field.short_description = _('Actions')
+
+    def merge_users_view(self, request, target_user_id, candidate_id, *args, **kwargs):
+        user = get_object_or_404(User, pk=target_user_id)
+        candidate = get_object_or_404(User, pk=candidate_id)
+        if request.method == 'POST':
+            form = MergeForm(user, candidate, request.POST)
+            if form.is_valid():
+                target_user, source_user = (user, candidate)\
+                    if form.cleaned_data['id'] == user.id else (candidate, user)
+
+                src_fields = [
+                    key for key, val in filter(
+                        lambda (k, _): k != 'id' and not k.startswith(constants.USER_PROP_PREFIX),
+                        form.cleaned_data.items()
+                    ) if int(val) == source_user.pk
+                ]
+                src_user_props = [
+                    int(key[len(constants.USER_PROP_PREFIX):]) for key, val in filter(
+                        lambda (k, _): k.startswith(constants.USER_PROP_PREFIX),
+                        form.cleaned_data.items()
+                    ) if int(val) == source_user.pk
+                ]
+
+                merge_users(target_user, source_user, src_fields, src_user_props)
+                messages.add_message(request, messages.SUCCESS, _('Users merged succesfully.'))
+                return redirect(
+                    'admin:people_duplicateuser_change', target_user.duplicateuser.pk
+                )
+        else:
+            form = MergeForm(user, candidate)
+        context = {
+            'user': user,
+            'candidate': candidate,
+            'form': form,
+        }
+        return render(
+            request, 'admin/people/duplicateuser/merge_duplicate_users.html', context
+        )
 
 
 admin.site.register(Address, AddressAdmin)
