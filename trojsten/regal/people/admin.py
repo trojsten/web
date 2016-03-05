@@ -253,6 +253,8 @@ class DuplicateUserAdmin(admin.ModelAdmin):
             'user': user,
             'candidate': candidate,
             'form': form,
+            'opts': self.model._meta,
+            'has_change_permission': self.has_change_permission(request, user.duplicateuser),
         }
         return render(
             request, 'admin/people/duplicateuser/merge_duplicate_users.html', context
