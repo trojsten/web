@@ -201,7 +201,7 @@ class DuplicateUser(models.Model):
     )
 
     def __str__(self):
-        return '%s: %s' % (self.user, self.status)
+        return '%s' % (self.user,)
 
     class Meta:
         verbose_name = 'duplicitný používateľ'
