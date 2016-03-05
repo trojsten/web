@@ -80,6 +80,10 @@ class UserMergeTests(TestCase):
             UserProperty.DoesNotExist, 'UserProperty matching query does not exist.'
         ):
             target_user.properties.get(key=op)
+        with self.assertRaisesMessage(
+            User.DoesNotExist, 'User matching query does not exist.'
+        ):
+            User.objects.get(pk=source_user.pk)
 
         # Test merging fields, user props, and deleting user props
         target_user, source_user = create_users_to_merge()
@@ -97,6 +101,10 @@ class UserMergeTests(TestCase):
             UserProperty.DoesNotExist, 'UserProperty matching query does not exist.'
         ):
             target_user.properties.get(key=telefon)
+        with self.assertRaisesMessage(
+            User.DoesNotExist, 'User matching query does not exist.'
+        ):
+            User.objects.get(pk=source_user.pk)
 
         # Test merging related fields
         g1 = Group.objects.create(name='grp1')
@@ -114,5 +122,7 @@ class UserMergeTests(TestCase):
             target_user.groups.all(), [g1.pk, g2.pk, g3.pk], transform=lambda obj: obj.pk,
             ordered=False,
         )
-
-        # Test the source user is deleted
+        with self.assertRaisesMessage(
+            User.DoesNotExist, 'User matching query does not exist.'
+        ):
+            User.objects.get(pk=source_user.pk)
