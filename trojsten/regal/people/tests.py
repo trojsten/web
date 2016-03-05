@@ -4,8 +4,10 @@ import random
 from django.test import TestCase
 from django.contrib.auth.models import Group
 
+from trojsten.regal.contests.models import Competition, Round, Series
+from trojsten.regal.tasks.models import Task
 from .helpers import get_similar_users, merge_users
-from .models import DuplicateUser, User, UserProperty, UserPropertyKey
+from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
 
 
 class UserMergeTests(TestCase):
@@ -48,6 +50,22 @@ class UserMergeTests(TestCase):
         mobil = UserPropertyKey.objects.create(key_name=u'Mobil')
         telefon = UserPropertyKey.objects.create(key_name=u'Telefon')
         op = UserPropertyKey.objects.create(key_name=u'OP')
+        address = Address.objects.create(
+            street=u'Jablková 47', town=u'Dolný Kubín', postal_code=u'94742', country=u'Slovensko'
+        )
+        rnd = Round.objects.create(
+            series=Series.objects.create(
+                competition=Competition.objects.create(
+                    name='Test competition'
+                ),
+                name='test',
+                number=74,
+                year=2024,
+            ),
+            number=2,
+            visible=False,
+            solutions_visible=False,
+        )
 
         def create_users_to_merge():
             target_user = self.create_random_user(
@@ -56,7 +74,7 @@ class UserMergeTests(TestCase):
             )
             source_user = self.create_random_user(
                 first_name='Jozef', last_name='Novak', email='jozef.novak@gmail.com', gender='M',
-                graduation=2015,
+                graduation=2015, home_address=address,
             )
             UserProperty.objects.create(user=target_user, key=tricko, value='L')
             UserProperty.objects.create(user=target_user, key=topanka, value='47')
@@ -65,14 +83,21 @@ class UserMergeTests(TestCase):
             UserProperty.objects.create(user=source_user, key=topanka, value='42')
             UserProperty.objects.create(user=source_user, key=telefon, value='+421212345678')
             UserProperty.objects.create(user=source_user, key=op, value='EA000444')
+            Task.objects.create(
+                name='Test task', reviewer=source_user, round=rnd, number=3, description_points=0,
+                source_points=0, has_source=False, has_description=False,
+            )
             return target_user, source_user
 
         # Test merging fields and user props
         target_user, source_user = create_users_to_merge()
-        merge_users(target_user, source_user, ['graduation'], [tricko.pk, telefon.pk])
+        merge_users(
+            target_user, source_user, ['graduation', 'home_address'], [tricko.pk, telefon.pk]
+        )
         self.assertEqual(target_user.last_name, 'Novak')
         self.assertEqual(target_user.email, 'jozef@novak.sk')
         self.assertEqual(target_user.graduation, 2015)
+        self.assertEqual(target_user.home_address, address)
         self.assertEqual(target_user.properties.get(key=topanka).value, '47')
         self.assertEqual(target_user.properties.get(key=mobil).value, '+421908123456')
         self.assertEqual(target_user.properties.get(key=tricko).value, 'M')
