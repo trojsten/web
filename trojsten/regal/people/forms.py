@@ -363,6 +363,7 @@ class MergeFieldFactory:
             label=_(key),
             choices=[get_choice(self.user), get_choice(self.candidate)],
             widget=forms.RadioSelect,
+            initial=self.candidate.pk,
         )
 
     def get_prop_field(self, key):
@@ -376,6 +377,7 @@ class MergeFieldFactory:
             label=key.key_name,
             choices=[get_choice(self.user), get_choice(self.candidate)],
             widget=forms.RadioSelect,
+            initial=self.candidate.pk,
         )
 
 

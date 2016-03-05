@@ -19,7 +19,7 @@
 <tr>
     <td><label>{{ field.label }}:</label>{{ field.errors }}</td>
     {% for choice in field.field.choices %}
-    <td><input type="radio" name="{{ field.name }}" value="{{ choice|lookup:0 }}" {% if forloop.last %} checked{% endif %}>{{ choice|lookup:1 }}</td>
+    <td><input type="radio" name="{{ field.name }}" value="{{ choice.0 }}" {% ifequal field.field.initial choice.0 %}checked{% endifequal %}/>{{ choice.1 }}</td>
     {% endfor %}
 </tr>
 {% endfor %}
