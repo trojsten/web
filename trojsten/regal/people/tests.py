@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import random
 
 from django.test import TestCase
@@ -48,13 +50,13 @@ class GetSimilarUsersTests(TestCase):
 
 class MergeUsersTests(TestCase):
     def setUp(self):
-        self.tricko = UserPropertyKey.objects.create(key_name=u'Veľkosť trička')
-        self.topanka = UserPropertyKey.objects.create(key_name=u'Veľkosť topánky')
-        self.mobil = UserPropertyKey.objects.create(key_name=u'Mobil')
-        self.telefon = UserPropertyKey.objects.create(key_name=u'Telefon')
-        self.op = UserPropertyKey.objects.create(key_name=u'OP')
+        self.tricko = UserPropertyKey.objects.create(key_name='Veľkosť trička')
+        self.topanka = UserPropertyKey.objects.create(key_name='Veľkosť topánky')
+        self.mobil = UserPropertyKey.objects.create(key_name='Mobil')
+        self.telefon = UserPropertyKey.objects.create(key_name='Telefon')
+        self.op = UserPropertyKey.objects.create(key_name='OP')
         self.address = Address.objects.create(
-            street=u'Jablková 47', town=u'Dolný Kubín', postal_code=u'94742', country=u'Slovensko'
+            street='Jablková 47', town='Dolný Kubín', postal_code='94742', country='Slovensko'
         )
         rnd = Round.objects.create(
             series=Series.objects.create(
