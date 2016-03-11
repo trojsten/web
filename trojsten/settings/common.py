@@ -10,6 +10,8 @@ from django.http import UnreadablePostError
 import trojsten
 import trojsten.special.installed_apps
 
+from . import site_config
+
 
 def env(name, default):
     return os.environ.get(name, default)
@@ -82,87 +84,7 @@ LANGUAGE_CODE = env('TROJSTENWEB_LANGUAGE_CODE', 'sk-SK')
 
 SITE_ID = 1
 
-SITES = {
-    1: {
-        'NAME': 'Korešpondenčný seminár z programovania',
-        'SHORT_NAME': 'KSP',
-        'URL': 'http://ksp.sk',
-        'HAS_LOGO': True,
-        'FOLDER': 'ksp',
-        'FACEBOOK_PAGE': 'https://www.facebook.com/KSPsk',
-        'GOOGLEPLUS_PAGE': 'http://www.ksp.sk',
-        'THEME_COLOR': '#6a831e',
-    },
-    2: {
-        'NAME': 'Prask',
-        'SHORT_NAME': 'Prask',
-        'URL': 'http://prask.ksp.sk',
-        'HAS_LOGO': True,
-        'FOLDER': 'prask',
-        'FACEBOOK_PAGE': 'https://www.facebook.com/prask.ksp',
-        'GOOGLEPLUS_PAGE': 'https://prask.ksp.sk',
-        'THEME_COLOR': '#6a831e',
-    },
-    3: {
-        'NAME': 'Fyzikálny korešpondenčný seminár',
-        'SHORT_NAME': 'FKS',
-        'URL': 'http://fks.sk',
-        'HAS_LOGO': True,
-        'FOLDER': 'fks',
-        'FACEBOOK_PAGE': 'http://fks.sk',
-        'GOOGLEPLUS_PAGE': 'http://fks.sk',
-        'THEME_COLOR': '#fa9200',
-    },
-    4: {
-        'NAME': 'Korešpondenčný matematický seminár',
-        'SHORT_NAME': 'KMS',
-        'URL': 'http://kms.sk',
-        'FOLDER': 'kms',
-        'FACEBOOK_PAGE': 'https://www.facebook.com/pages/KMS/144730632208936',
-        'GOOGLEPLUS_PAGE': 'http://kms.sk',
-    },
-    5: {
-        'NAME': 'Trojsten',
-        'SHORT_NAME': 'Trojsten',
-        'URL': 'http://trojsten.sk',
-        'FOLDER': 'trojsten',
-        'FACEBOOK_PAGE': 'https://www.facebook.com/Trojsten',
-        'GOOGLEPLUS_PAGE': 'http://trojsten.sk',
-    },
-    6: {
-        'NAME': 'Trojstenová Wikipédia',
-        'SHORT_NAME': 'Wiki',
-        'URL': 'http://wiki.trojsten.sk',
-        'FOLDER': 'wiki',
-        'FACEBOOK_PAGE': 'https://www.facebook.com/Trojsten',
-        'GOOGLEPLUS_PAGE': 'http://trojsten.sk',
-    },
-    7: {
-        'NAME': 'Korešpondenčný seminár UFO',
-        'SHORT_NAME': 'UFO',
-        'URL': 'http://ufo.fks.sk',
-        'HAS_LOGO': True,
-        'FOLDER': 'ufo',
-        'FACEBOOK_PAGE': 'http://ufo.fks.sk',
-        'GOOGLEPLUS_PAGE': 'http://ufo.fks.sk',
-        'THEME_COLOR': '#fa9200',
-    },
-    8: {
-        'NAME': 'Korešpondenčný seminár FX',
-        'SHORT_NAME': 'FX',
-        'URL': 'http://fx.fks.sk',
-        'HAS_LOGO': True,
-        'FOLDER': 'fx',
-        'FACEBOOK_PAGE': 'http://fx.fks.sk',
-        'GOOGLEPLUS_PAGE': 'http://fx.fks.sk',
-        'THEME_COLOR': '#fa9200',
-    },
-    9: {
-        'NAME': 'Korešpondenčný seminár iKS',
-        'SHORT_NAME': 'iKS',
-        'URL': 'http://iksko.org',
-    }
-}
+SITES = site_config.SITES
 
 NAVBAR_SITES = []
 

@@ -2,10 +2,10 @@
 
 {% block page_navigation %}
 <div class="sidebar">
-    {% if SITE.HAS_LOGO %}
+    {% if SITE.has_logo %}
         <h2 class="logo">
-            <a href="{{ SITE.URL }}">
-                <img id="logo" src="{% static "images/"|add:SITE.FOLDER|add:"/logo.png" %}" alt="KSP"/>
+            <a href="{{ SITE.url }}">
+                <img id="logo" src="{% static "images/"|add:SITE.folder|add:"/logo.png" %}" alt="KSP"/>
             </a>
         </h2>
     {% endif %}
@@ -33,8 +33,8 @@
         </li>
         {% for OTHER_SITE in OTHER_SITES %}
         <li class="visible-xs">
-            <a href="{{ OTHER_SITE.URL }}">
-                {{ OTHER_SITE.SHORT_NAME }}
+            <a href="{{ OTHER_SITE.url }}">
+                {{ OTHER_SITE.short_name }}
             </a>
         </li>
         {% endfor %}

@@ -8,14 +8,14 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span></button>
-      <a class="navbar-brand" href="{{ SITE.URL }}">{{ SITE.SHORT_NAME }}</a>
+      <a class="navbar-brand" href="{{ SITE.url }}">{{ SITE.short_name }}</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="navbar-collapse">
       <ul class="nav navbar-nav hidden-xs">
         {% for OTHER_SITE in OTHER_SITES %}
-        <li><a href="{{ OTHER_SITE.URL }}">{{ OTHER_SITE.SHORT_NAME }}</a></li>
+        <li><a href="{{ OTHER_SITE.url }}">{{ OTHER_SITE.short_name }}</a></li>
         {% endfor %}
       </ul>
       {% include "ksp_login/parts/login_box.html" %}
