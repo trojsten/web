@@ -5,13 +5,13 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}{% if request.path != '/' %} - {{ SITE.NAME }}{% endif %}</title>
+    <title>{% block title %}{% endblock %}{% if request.path != '/' %} - {{ SITE.name }}{% endif %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% if SITE.THEME_COLOR %}<meta name="theme-color" content="{{ SITE.THEME_COLOR }}">{% endif %}
+    {% if SITE.theme_color %}<meta name="theme-color" content="{{ SITE.theme_color }}">{% endif %}
     <link rel="icon" type="image/png" href="{% static "images/favicon.ico" %}"/>
     {% render_block "css" %}
     {% block stylesheets %}
-      <link rel="stylesheet" href="{% static "css/"|add:SITE.FOLDER|add:"/bootstrap.min.css" %}" type="text/css" />
+      <link rel="stylesheet" href="{% static "css/"|add:SITE.folder|add:"/bootstrap.min.css" %}" type="text/css" />
       <link rel="stylesheet" href="{% static "ksp_login/css/base.css" %}" type="text/css" />
     {% endblock %}
     {% block extra_head %}{% endblock %}
@@ -39,7 +39,7 @@
       <script type="text/javascript"
         src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
       </script>
-      <script src="{% static "js/"|add:SITE.FOLDER|add:"/analytics.js" %}" type="text/javascript"></script>
+      <script src="{% static "js/"|add:SITE.folder|add:"/analytics.js" %}" type="text/javascript"></script>
       {% include "ksp_login/parts/include_javascript.html" %}
     {% endblock %}
     {% render_block "js" %}

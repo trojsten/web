@@ -22,7 +22,7 @@ INTERNAL_IPS = ('127.0.0.1',)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Use localhost for first site route
-SITES[SITE_ID]['URL'] = 'http://localhost:8000'
+SITES[SITE_ID].url = 'http://localhost:8000'
 
 LOGGING = {
     'version': 1,
