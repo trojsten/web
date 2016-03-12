@@ -9,47 +9,47 @@ from trojsten.regal.tasks.models import Task
 
 
 class BaseFieldSnatizer(object):
-    def santize(self, data):
+    def sanitize(self, data):
         return data
 
 
-class GeneratorSantizer(BaseFieldSnatizer):
+class GeneratorSanitizer(BaseFieldSnatizer):
     def generate(self):
         return None
 
-    def santize(self, data):
+    def sanitize(self, data):
         return self.generate()
 
 
-class TaskNameSantizer(GeneratorSantizer):
+class TaskNameSanitizer(GeneratorSanitizer):
     def generate(self):
         alphabet = 'qwertyuiopasdfghjklzxcvbnm'*3 + 'äřéŕťýúíóôášďěüöůĺľžčň' + '     '
         return ''.join(random.choice(alphabet) for _ in range(random.randrange(5, 20)))
 
 
-class BaseModelSantizer(object):
+class BaseModelSanitizer(object):
     model = None
-    field_santizers = dict()
+    field_sanitizers = dict()
 
     def get_objects(self):
         return self.model.objects.all()
 
-    def santize_single_object(self, obj, save=False):
-        for field, field_santizer in self.field_santizers.items():
-            setattr(obj, field, field_santizer.santize(getattr(obj, field)))
+    def sanitize_single_object(self, obj, save=False):
+        for field, field_sanitizer in self.field_sanitizers.items():
+            setattr(obj, field, field_sanitizer.sanitize(getattr(obj, field)))
         if save:
             obj.save()
         return obj
 
-    def santize(self):
+    def sanitize(self):
         objects = self.get_objects()
         for obj in objects:
-            self.santize_single_object(obj)
-        bulk_update(objects, update_fields=self.field_santizers.keys())
+            self.sanitize_single_object(obj)
+        bulk_update(objects, update_fields=self.field_sanitizers.keys())
 
 
-class TaskSantizer(BaseModelSantizer):
+class TaskSanitizer(BaseModelSanitizer):
     model = Task
-    field_santizers = {
-        'name': TaskNameSantizer(),
+    field_sanitizers = {
+        'name': TaskNameSanitizer(),
     }
