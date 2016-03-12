@@ -8,23 +8,36 @@ from bulk_update.helper import bulk_update
 from trojsten.regal.tasks.models import Task
 
 
-class BaseFieldSnatizer(object):
+class BaseFieldSantizer(object):
     def sanitize(self, data):
         return data
 
 
-class GeneratorSanitizer(BaseFieldSnatizer):
-    def generate(self):
-        return None
+class GeneratorFieldSanitizer(BaseFieldSantizer):
+    def __init__(self, generator):
+        self.generator = generator
 
     def sanitize(self, data):
-        return self.generate()
+        return self.generator.generate()
 
 
-class TaskNameSanitizer(GeneratorSanitizer):
+class TaskNameGenerator(object):
     def generate(self):
         alphabet = 'qwertyuiopasdfghjklzxcvbnm'*3 + 'äřéŕťýúíóôášďěüöůĺľžčň' + '     '
         return ''.join(random.choice(alphabet) for _ in range(random.randrange(5, 20)))
+
+
+class ModelSanitizerManager(object):
+    _sanitizers = list()
+
+    @classmethod
+    def run(cls):
+        for sanitizer in cls._sanitizers:
+            sanitizer.sanitize()
+
+    @classmethod
+    def register(cls, sanitizer):
+        cls._sanitizers.append(sanitizer)
 
 
 class BaseModelSanitizer(object):
@@ -51,5 +64,7 @@ class BaseModelSanitizer(object):
 class TaskSanitizer(BaseModelSanitizer):
     model = Task
     field_sanitizers = {
-        'name': TaskNameSanitizer(),
+        'name': GeneratorFieldSanitizer(TaskNameGenerator()),
     }
+
+ModelSanitizerManager.register(TaskSanitizer())
