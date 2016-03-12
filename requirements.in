@@ -22,6 +22,7 @@ django-threadedcomments
 django-uuidfield
 Django==1.8.12
 ecdsa
+fake-factory
 ksp-login
 importlib
 Markdown
