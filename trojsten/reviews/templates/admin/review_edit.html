@@ -1,0 +1,41 @@
+{% extends "admin/review_base.html" %}
+{% load i18n admin_urls admin_static admin_modify %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='tasks' %}">Tasks</a>
+    &rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}">Task</a>
+    &rsaquo; <a href="{% url 'admin:tasks_task_change' task.pk %}">{{ task }}</a>
+    &rsaquo; <a href="{% url 'admin:review_task' task.pk %}">{% trans 'Review' %}</a>
+    &rsaquo; {% trans 'Edit' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<h1>Opravovanie úlohy: {{ task }}</h1>
+    {% if create %}
+        <h2>Opravovanie riešenia</h2>
+        <p>
+            Ak nenahráš súbor, bude k opravenému riešeniu pridaný pôvodný
+            súbor, ktorý riešiteľ odovzdal.
+        </p>
+    {% else %}
+        <h2>Úprava opraveného riešenia</h2>
+        <p>
+            Toto je záznam opraveného príkladu pre nejakého riešiteľa.
+            Ak si sa pri opravovaní pomýlil(a), môžeš tu svoju chybu opraviť.
+            Body treba nechať vyplnené, komentár môžeš zmazať a súbor môžeš
+            nechať tak, alebo nahrať nový. Nahratím nového súboru pôvodný
+            prepíšeš.
+        </p>
+    {% endif %}
+<form enctype="multipart/form-data" method="post" action="">
+    {% csrf_token %}
+    <table>
+    {{ form }}
+    </table>
+    <input type="submit" text="Upload"/>
+</form>
+
+{% endblock %}

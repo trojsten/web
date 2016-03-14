@@ -137,8 +137,7 @@ def update_submit(submit):
 
     Tento súbor obsahuje výstup testovača (v XML) a treba ho parse-núť
     """
-    protocol_path = submit.filepath.rsplit(
-        '.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
+    protocol_path = submit.protocol_path
     if os.path.exists(protocol_path):
         tree = ET.parse(protocol_path)
         # Ak kompilátor vyhlási chyby, testovač ich vráti v tagu <compileLog>

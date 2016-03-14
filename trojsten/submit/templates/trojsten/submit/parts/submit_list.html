@@ -1,5 +1,6 @@
 {% load utils %}
 {% load submit_parts %}
+{% load i18n %}
 {% if task.has_description or task.has_source or task.has_testablezip %}
 <h2>Odovzdané súbory</h2>
 {% endif %}
@@ -11,6 +12,7 @@
                 <th>Čas</th>
                 <th>Stav</th>
                 <th>Body</th>
+                <th>Akcie</th>
             </tr>
         </thead>
         <tbody>
@@ -20,13 +22,20 @@
             {% else %}
             <tr class="success">
             {% endif %}
-                <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
+                <td>{{ submit.time }}</a></td>
                 {% if submit.testing_status == IN_QUEUE %}
                 <td>Neopravené</td>
                 <td>..</td>
+                <td>
+                    <a class="btn btn-primary btn-xs" href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Stiahni' %}</a>
+                </td>
                 {% else %}
                 <td>Opravené</td>
                 <td>{{ submit.points }}</td>
+                <td>
+                    <a class="btn btn-primary btn-xs" href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Stiahni' %}</a>
+                    <a class="btn btn-primary btn-xs comment-button comment-hidden" href="#" data-id="{{ submit.id }}">{% trans 'Pozri komentár' %}</a>
+                </td>
                 {% endif %}
             </tr>
         {% endfor %}
@@ -46,13 +55,14 @@
                 <th>Stav</th>
                 <th>Správa z testovača</th>
                 <th>Body</th>
+                <th>Akcie</th>
             </tr>
         </thead>
         <tbody>
         {% if task.has_source %}
         {% for submit in submits|lookup:Submit.SOURCE %}
         <tr class="{{ submit|submitclass }}" data-id="{{ submit.id }}">
-                <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
+                <td>{{ submit.time }}</td>
                 {% if submit.testing_status == IN_QUEUE %}
                 <td><span class="glyphicon glyphicon-refresh glyphicon-animate-rotate"></span> Testuje sa</td>
                 <td>Čaká sa na otestovanie</td>
@@ -62,6 +72,7 @@
                 <td>{{ submit.tester_response_verbose }}</td>
                 <td>{{ submit.points }}</td>
                 {% endif %}
+                <td><a class="btn btn-primary btn-xs" href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Detaily' %}</a></td>
             </tr>
         {% endfor %}
         {% endif %}
@@ -78,6 +89,7 @@
                 <td>{{ submit.tester_response_verbose }}</td>
                 <td>{{ submit.points }}</td>
                 {% endif %}
+                <td><a class="btn btn-primary btn-xs" href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Detaily' %}</a></td>
             </tr>
         {% endfor %}
         {% endif %}

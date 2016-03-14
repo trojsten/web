@@ -3,6 +3,8 @@
 from __future__ import unicode_literals
 
 from decimal import Decimal
+from django.utils.safestring import mark_safe
+from markdown import markdown
 import os
 
 from django.utils.encoding import python_2_unicode_compatible
@@ -234,6 +236,8 @@ class Submit(models.Model):
     protocol_id = models.CharField(
         max_length=128, verbose_name='číslo protokolu', blank=True)
 
+    reviewer_comment = models.TextField(verbose_name='komentár od opravovateľa', blank=True)
+
     objects = SubmitManager()
 
     class Meta:
@@ -249,8 +253,16 @@ class Submit(models.Model):
         )
 
     @property
+    def protocol_path(self):
+        return self.filepath.rsplit('.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
+
+    @property
     def filename(self):
         return os.path.basename(self.filepath)
+
+    @property
+    def rendered_comment(self):
+        return mark_safe(markdown(self.reviewer_comment, safe_mode=False))
 
     @property
     def tester_response_verbose(self):

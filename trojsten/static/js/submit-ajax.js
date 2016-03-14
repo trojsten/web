@@ -39,5 +39,33 @@
                 });
             });
         }
+
+        function download_reviewer_comment(id, callback) {
+            $.get('/odovzdavanie/ajax/submit/' + id + '/komentar/', function(data) {
+                callback(data);
+            });
+        }
+
+        $('.comment-button').click(function(e) {
+            e.preventDefault();
+            var row = $(this).parent().parent()[0];
+            var submit_id = $(this).data('id');
+            if ($(this).hasClass('comment-hidden')) {
+                $(this).removeClass('comment-hidden');
+                var that = this;
+                download_reviewer_comment(submit_id, function (data) {
+                    $(row).after('<tr><td colspan="4">' + data + '</td></tr>');
+                    $(that).addClass('comment-shown');
+                    $(that).text('Schovaj komentár')
+                    MathJax.Hub.Typeset();
+                });
+            } else if ($(this).hasClass('comment-shown')) {
+                $(this).removeClass('comment-shown');
+                $(row).next().remove();
+                $(this).addClass('comment-hidden');
+                $(this).text('Pozri komentár')
+            }
+        });
+
     });
 })(jQuery);

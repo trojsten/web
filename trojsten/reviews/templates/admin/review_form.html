@@ -1,39 +1,87 @@
-{% extends "admin/base_site.html" %}
+{% extends "admin/review_base.html" %}
 {% load i18n admin_urls admin_static admin_modify %}
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
     <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-    &rsaquo; <a href="{% url 'admin:app_list' app_label='tasks' %}">Tasks</a>
-    &rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}">Tasks</a>
-    &rsaquo; <a href="{% url 'admin:tasks_task_change' task.pk %}">{{ task.name }}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='tasks' %}">{% trans "Tasks" %}</a>
+    &rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}">{% trans "Task" %}</a>
+    &rsaquo; <a href="{% url 'admin:tasks_task_change' task.pk %}">{{ task }}</a>
     &rsaquo; {% trans 'Review' %}
 </div>
 {% endblock %}
 
 {% block content %}
-
-<a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Download all' %}</a><br/><br/>
+<h1>Opravovanie úlohy: {{ task }}</h1>
+<h2>Riešitelia úlohy</h2>
+<a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Download all solutions' %}</a><br/><br/>
 <table>
+    <thead>
+        <tr>
+            <th>
+                Riešiteľ
+            </th>
+            <th>
+                Odovzdané riešenie
+            </th>
+            <th>
+                Opravené riešenie
+            </th>
+            <th>
+                Body
+            </th>
+            <th>
+                Komentár
+            </th>
+        </tr>
+    </thead>
+    <tbody>
 {% for user, data in users.items %}
     <tr>  
     <td><a href="{% url 'admin:tasks_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a></td>
     <td>
-    {% if data.description %} 
-        <a href="{% url 'admin:submit_download' data.description.pk %}">{% trans 'Description' %}</a> 
+    {% if data.description %}
+        <a href="{% url 'admin:submit_download' data.description.pk %}">{% trans 'Download' %}</a>
     {% endif %}
     </td>
 
     <td>
     {% if data.review %}
-        <a href="{% url 'admin:tasks_submit_change' data.review.pk %}">{% trans 'Reviewed' %}</a>
+        <a href="{% url 'admin:tasks_submit_change' data.review.pk %}">{% trans 'View' %}</a>
+        <a href="{% url 'admin:review_edit' task.pk data.review.pk %}">{% trans 'Edit' %}</a>
+    {% endif %}
+    {% if data.description %}
+        <a href="{% url 'admin:review_edit' task.pk data.description.pk %}">{% trans 'Add new review' %}</a>
     {% endif %}
     </td>
-    </tr>  
+        <td>
+            {% if data.review %}
+            {{ data.review.points }}
+            {% endif %}
+        </td>
+        <td>
+            {% if data.review %}
+            {{ data.review.reviewer_comment }}
+            {% endif %}
+        </td>
+    </tr>
 {% endfor %}
+    </tbody>
 </table>
 
 <br/>
+<h2>Nahrať opravené riešenia v ZIP archíve</h2>
+<a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Download all solutions' %}</a><br/><br/>
+<p>
+    Kliknutím na odkaz nad týmto textom si môžeš stiahnuť riešenia všetkých
+    riešiteľov zabalené do ZIP archívu. Po rozbalení môžeš priamo upravovať
+    odovzdané riešenia (úpravou odovzdaného súboru), alebo napísať komentár
+    k riešeniu do súboru komentar.txt. Body riešeniu môžeš priradiť tak, že
+    k nemu napíšeš číslo do súboru body.txt. Takto ohodnotené súbory potom
+    môžeš opätovne zbaliť do .zip archívu, ktorý sem nahráš. Po odoslaní tohto
+    formulára budeš ešte mať šancu skontrolovať, či sa z neho úspešne
+    načítali body a komentáre pre každého riešiteľa.
+</p>
 <form enctype="multipart/form-data" method="post" action="">
     {% csrf_token %}
     <table>

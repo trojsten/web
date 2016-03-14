@@ -9,4 +9,5 @@ urlpatterns = patterns('trojsten.submit.views',
     url(r'^ajax/submit/(?P<submit_id>\d+)/protokol/$', 'view_protocol', name='view_protocol'),
     url(r'^submit/(?P<submit_id>\d+)/$', 'view_submit', name='view_submit'),
     url(r'^protokol/(?P<protocol_id>\d+-\d+)/$', 'receive_protocol', name='receive_protocol'),
+    url(r'^ajax/submit/(?P<submit_id>\d+)/komentar/$', 'view_reviewer_comment', name='view_reviewer_comment'),
 )
