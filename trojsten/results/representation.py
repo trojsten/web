@@ -2,21 +2,25 @@
 
 from collections import namedtuple
 
+ResultsTag = namedtuple('ResultsTag', ['key', 'name'])
+
 
 class ResultsCell(object):
 
     def __init__(self, points=None, manual_points=None, auto_points=None, active=True):
-        self.points=points
-        self.manual_points=manual_points
-        self.auto_points=auto_points
-        self.active=active
+        self.points = points
+        self.manual_points = manual_points
+        self.auto_points = auto_points
+        self.active = active
+
 
 class ResultsCol(object):
 
     def __init__(self, key=None, name=None, task=None):
-        self.key=key
-        self.name=name
-        self.task=task
+        self.key = key
+        self.name = name
+        self.task = task
+
 
 class ResultsRow(object):
 
@@ -52,12 +56,12 @@ class ResultsRow(object):
 
 class Results(object):
 
-    def __init__(self, round, name='', single_round=True):
+    def __init__(self, round, tag=None, single_round=True):
         self.cols = []
         self.rows = []
 
         self.round = round
-        self.name = name
+        self.tag = tag
         self.single_round = single_round
 
     def calculate_cell_lists(self):
@@ -70,7 +74,7 @@ class Results(object):
 
 class ResultsRequest(object):
 
-    def __init__(self, round, single_round, previous_rows):
+    def __init__(self, round, single_round=True, previous_rows=None):
         self.round = round
         self.single_round = single_round
 

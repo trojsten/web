@@ -20,7 +20,6 @@ class ResultsGenerator(object):
     Function call tree is following:
       - run
         - create_empty_results
-          - get_results_name
           - create_results_cols
             - get_task_queryset
         - add_rows_to_results
@@ -46,6 +45,9 @@ class ResultsGenerator(object):
     UNKNOWN_POINTS_SYMBOL = '?'
     PARTLY_UNKNOWN_FORMAT = '%s?'
 
+    def __init__(self, tag):
+        self.tag = tag
+
     def run(self, request):
         """
         The main function of ResultsGenerator. Takes a ResultsRequest object
@@ -66,17 +68,11 @@ class ResultsGenerator(object):
         """
         results = Results(
             round=request.round,
-            name=self.get_results_name(),
+            tag=self.tag,
             single_round=request.single_round,
         )
         results.cols = list(self.create_results_cols(request))
         return results
-
-    def get_results_name(self):
-        """
-        Returns the name of the Results instance.
-        """
-        return ''
 
     def create_results_cols(self, request):
         """

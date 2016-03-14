@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from trojsten.regal.contests.models import Round
 from trojsten.results.manager import get_results
+from trojsten.results.manager import get_results_tags_for_rounds
 
 
 class Command(BaseCommand):
@@ -17,7 +18,11 @@ class Command(BaseCommand):
         except Round.DoesNotExist:
             raise CommandError('Round "%s" does not exist' % round_id)
 
-        results = get_results("", round, bool(single_round))
+        (_, tags), = get_results_tags_for_rounds((round,))
+        for tag in tags:
+            results = get_results(tag.key, round, bool(single_round))
 
-        for row in results.iterrows():
-            self.stdout.write('%s: %s\n' % (row.name, str(row.total)))
+            self.stdout.write('Vysledky %s:\n' % (results.tag.name))
+            for row in results.iterrows():
+                self.stdout.write('%s: %s\n' % (row.name, str(row.total)))
+            self.stdout.write('---\n\n')
