@@ -138,10 +138,10 @@ class SmartStringSanitizer(BaseFieldSantizer):
     def transform_char(self, c):
         keep_chars = string.punctuation + string.whitespace
         alphabet = ''
-        if 'A' <= c <= 'Z' or c in accent_chars_uppercase:
-            alphabet = string.ascii_uppercase + accent_chars_uppercase
-        elif 'a' <= c <= 'a' or c in accent_chars_lowercase:
-            alphabet = string.ascii_lowercase + accent_chars_lowercase
+        if ('A' <= c <= 'Z') or (c in accent_chars_uppercase):
+            alphabet = string.ascii_uppercase*3 + accent_chars_uppercase
+        elif ('a' <= c <= 'z') or (c in accent_chars_lowercase):
+            alphabet = string.ascii_lowercase*3 + accent_chars_lowercase
         elif '0' <= c <= '9':
             alphabet = string.digits
         elif c in keep_chars:
