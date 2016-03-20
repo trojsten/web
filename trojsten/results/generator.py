@@ -3,7 +3,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from trojsten.regal.people.constants import SCHOOL_YEAR_END_MONTH
+from trojsten.regal.people.constants import (GRADUATION_SCHOOL_YEAR,
+                                             SCHOOL_YEAR_END_MONTH)
 from trojsten.regal.tasks.models import Submit, Task
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 
@@ -208,8 +209,8 @@ class ResultsGenerator(object):
         self.deactivate_row_cells(request, row, cols)
         self.calculate_row_round_total(request, row, cols)
         self.calculate_row_total(request, row, cols)
-        self.add_special_row_cells(request, row, cols)
         self.format_row_cells(request, row, cols)
+        self.add_special_row_cells(request, row, cols)
 
     def deactivate_row_cells(self, requset, row, cols):
         """
@@ -328,3 +329,35 @@ class ResultsGenerator(object):
                 last_key = actual_key
             next_rank += 1
             row.rank = actual_rank
+
+
+class BonusColumnGeneratorMixin(object):
+
+    def create_results_cols(self, request):
+        if not request.single_round:
+            yield ResultsCol(key='prev', name='P')
+
+        for task in self.get_task_queryset(request):
+            yield ResultsCol(
+                key=task.number, name=str(task.number), task=task
+            )
+
+        yield ResultsCol(key='bonus', name='B')
+        yield ResultsCol(key='sum', name=u'∑')
+
+
+class PrimarySchoolGeneratorMixin(object):
+
+    def get_minimal_year_of_graduation(self, request, user):
+        return request.round.end_time.year + GRADUATION_SCHOOL_YEAR + int(
+            request.round.end_time.month > SCHOOL_YEAR_END_MONTH
+        )
+
+
+class CategoryTagKeyGeneratorMixin(object):
+
+    def get_task_queryset(self, request):
+        return Task.objects.filter(
+            round=request.round,
+            category__name=self.tag.key,
+        )

@@ -5,8 +5,7 @@
 from django.core.management.base import BaseCommand, CommandError
 
 from trojsten.regal.contests.models import Round
-from trojsten.results.manager import get_results
-from trojsten.results.manager import get_results_tags_for_rounds
+from trojsten.results.manager import get_results, get_results_tags_for_rounds
 
 
 class Command(BaseCommand):
@@ -24,5 +23,5 @@ class Command(BaseCommand):
 
             self.stdout.write('Vysledky %s:\n' % (results.tag.name))
             for row in results.iterrows():
-                self.stdout.write('%s: %s\n' % (row.name, str(row.total)))
+                self.stdout.write('%s: %s\n' % (row.name, row.cells_by_key['sum'].points))
             self.stdout.write('---\n\n')

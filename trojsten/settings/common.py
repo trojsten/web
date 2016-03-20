@@ -401,6 +401,9 @@ COMPETITION_RULES = {
     2: 'trojsten.rules.ksp.KSPRules',
     3: 'trojsten.rules.kspt.KSPTRules',
     4: 'trojsten.rules.prask.PraskRules',
+    5: 'trojsten.rules.fks.FKSRules',
+    6: 'trojsten.rules.ufo.UFORules',
+    8: 'trojsten.rules.fx.FXRules',
 }
 DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'
 
