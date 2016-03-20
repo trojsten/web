@@ -1,7 +1,6 @@
 from datetime import timedelta
 
-from trojsten.results.generator import (BonusColumnGeneratorMixin,
-                                        CategoryTagKeyGeneratorMixin,
+from trojsten.results.generator import (CategoryTagKeyGeneratorMixin,
                                         ResultsGenerator)
 from trojsten.results.representation import ResultsTag
 
@@ -9,7 +8,7 @@ from .default import CompetitionRules
 
 
 class FKSResultsGenerator(
-    CategoryTagKeyGeneratorMixin, BonusColumnGeneratorMixin, ResultsGenerator
+    CategoryTagKeyGeneratorMixin, ResultsGenerator
 ):
 
     def is_user_active(self, request, user):

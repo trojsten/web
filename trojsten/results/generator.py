@@ -71,6 +71,7 @@ class ResultsGenerator(object):
             round=request.round,
             tag=self.tag,
             single_round=request.single_round,
+            has_previous=bool(not request.single_round and request.previous_rows_dict)
         )
         results.cols = list(self.create_results_cols(request))
         return results
@@ -80,7 +81,7 @@ class ResultsGenerator(object):
         Creates ResultsCol instances for the table and returns them
         as iterable in the correct order.
         """
-        if not request.single_round:
+        if not request.single_round and request.previous_rows_dict:
             yield ResultsCol(key='prev', name='P')
 
         for task in self.get_task_queryset(request):
@@ -94,7 +95,7 @@ class ResultsGenerator(object):
         """
         Returns queryset of Tasks that should be included in the table.
         """
-        return Task.objects.filter(round=request.round)
+        return Task.objects.filter(round=request.round).order_by('number')
 
     def add_rows_to_results(self, request, results):
         """
@@ -334,7 +335,7 @@ class ResultsGenerator(object):
 class BonusColumnGeneratorMixin(object):
 
     def create_results_cols(self, request):
-        if not request.single_round:
+        if not request.single_round and request.previous_rows_dict:
             yield ResultsCol(key='prev', name='P')
 
         for task in self.get_task_queryset(request):
@@ -360,4 +361,4 @@ class CategoryTagKeyGeneratorMixin(object):
         return Task.objects.filter(
             round=request.round,
             category__name=self.tag.key,
-        )
+        ).order_by('number')

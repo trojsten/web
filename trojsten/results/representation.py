@@ -34,7 +34,7 @@ class ResultsRow(object):
             year = year if year is not None else user.school_year
 
         if school is not None:
-            school_name = school_name or school.abbreviation
+            school_name = school_name or school.abbreviation or school.verbose_name
 
         self.cells_by_key = {}
         self.previous = previous
@@ -56,13 +56,14 @@ class ResultsRow(object):
 
 class Results(object):
 
-    def __init__(self, round, tag=None, single_round=True):
+    def __init__(self, round, tag=None, single_round=True, has_previous=False):
         self.cols = []
         self.rows = []
 
         self.round = round
         self.tag = tag
         self.single_round = single_round
+        self.has_previous = has_previous
 
     def calculate_cell_lists(self):
         for row in self.rows:

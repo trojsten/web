@@ -1,28 +1,22 @@
 from django import template
-from ..helpers import make_result_table
+
 from trojsten.regal.tasks.models import Submit
+
+from ..helpers import make_result_table
 
 register = template.Library()
 
 
 @register.inclusion_tag('trojsten/results/parts/results_table.html', takes_context=True)
-def show_results_table(context, round, category=None):
+def show_results_table(context, table, show_staff=False):
     """Displays results for specified tasks and category
     """
-    current_tasks, results, has_previous_results = make_result_table(
-        context['user'],
-        round,
-        category,
-        single_round=context['single_round'],
-        show_staff=context['show_staff'],
-        force_generate=context['force_generate'],
-    )
+
+    table.calculate_cell_lists()
 
     context.update({
-        'Submit': Submit,
-        'tasks': list(current_tasks),
-        'results': results,
-        'has_previous_results': has_previous_results
+        'table': table,
+        'show_staff': show_staff
     })
     return context
 

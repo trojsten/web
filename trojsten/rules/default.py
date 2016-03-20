@@ -2,6 +2,7 @@
 
 from django.db import models
 
+from trojsten.results.constants import DEFAULT_TAG_KEY
 from trojsten.results.generator import ResultsGenerator
 from trojsten.results.representation import ResultsTag
 from trojsten.submit import constants as submit_constants
@@ -10,7 +11,7 @@ from trojsten.submit import constants as submit_constants
 class CompetitionRules(object):
 
     RESULTS_TAGS = {
-        '_': ResultsTag(key='_', name='')
+        DEFAULT_TAG_KEY: ResultsTag(key=DEFAULT_TAG_KEY, name='')
     }
 
     RESULTS_GENERATOR_CLASS = ResultsGenerator

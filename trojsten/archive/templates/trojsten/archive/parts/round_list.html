@@ -9,7 +9,7 @@
         </tr>
       </thead>
       <tbody>
-      {% for round in round_list %}
+      {% for round, result_tags in round_list %}
           <tr>
             <td>
               <a href="{% url 'task_list' round_id=round.id %}">
@@ -26,19 +26,12 @@
               <a href="{% url 'task_list' round_id=round.id %}"  class="btn btn-primary btn-sm">
                 Zadania a vzoráky
               </a>
-              {% if round.categories %}
-                  {% for category in round.categories %}
-                  <a class="btn btn-danger btn-sm category-{{ category }}"
-                     href="{% url 'view_results' round_id=round.id category_id=category.id %}">
-                      Výsledky
-                      <span class="label label-button category-{{ category }}">{{ category }}</span>
-                  </a>
-                  {% endfor %}
-              {% else %}
-                  <a class="btn btn-danger btn-sm" href="{% url 'view_results' round_id=round.id %}">
-                      Výsledky
-                  </a>
-              {% endif %}
+              {% for tag in result_tags %}
+                <a class="btn btn-danger btn-sm"
+                   href="{% url 'view_results' round_id=round.id tag_key=tag.key %}">
+                    Výsledky {{ tag.name }}
+                </a>
+              {% endfor %}
             </td>
           </tr>
       {% endfor %}
@@ -48,5 +41,3 @@
 {% empty %}
     <p>Ešte nie sú žiadne kolá.</p>
 {% endfor %}
-
-

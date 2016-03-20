@@ -3,6 +3,10 @@
 from .representation import ResultsRequest
 
 
+class TagKeyError(Exception):
+    pass
+
+
 def get_results(tag_key, round, single_round):
     """
     Given a round and a results tag key returns the Results instance.
@@ -25,10 +29,12 @@ def get_results_tags_for_rounds(rounds):
         (r, r.series.competition.rules.get_results_tags()) for r in rounds
     )
 
-
 def _generate_results(tag_key, round, single_round):
     rules = round.series.competition.rules
-    generator = rules.get_results_generator(tag_key)
+    try:
+        generator = rules.get_results_generator(tag_key)
+    except KeyError:
+        raise TagKeyError(tag_key)
     previous_rows = None
     if not single_round:
         previous_round = rules.get_previous_round(round)
