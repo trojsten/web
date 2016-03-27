@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from trojsten.results.generator import (CategoryTagKeyGeneratorMixin,
                                         ResultsGenerator)
 from trojsten.results.representation import ResultsTag

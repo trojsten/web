@@ -4,7 +4,6 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 
 from trojsten.regal.contests.models import Round
-from trojsten.regal.tasks.models import Category
 from trojsten.utils.utils import is_true
 
 from .constants import DEFAULT_TAG_KEY

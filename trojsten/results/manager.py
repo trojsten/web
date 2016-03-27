@@ -29,6 +29,7 @@ def get_results_tags_for_rounds(rounds):
         (r, r.series.competition.rules.get_results_tags()) for r in rounds
     )
 
+
 def _generate_results(tag_key, round, single_round):
     rules = round.series.competition.rules
     try:

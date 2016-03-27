@@ -13,6 +13,7 @@
     <th class="result-header result-school">Škola</th>
     {% for col in table.cols %}
         {% if col.task %}
+            {# @FIXME(css): Class `result-task` is used also for total and previous columns. Rename? #}
             <th class="result-header result-task">
                 <a href="{% url 'task_statement' task_id=col.task.id %}" title="{{ col.task.name }}"
                    data-toggle="tooltip" data-placement="top">
@@ -33,7 +34,7 @@
 {% if row.active or show_staff %}
 <tr
     {% if user == row.user %}class="active"{% endif %}
-    {% comment %} @FIXME: Hack until css`s are rewritten {% endcomment %}
+    {# @FIXME(css): Hack until css`s are rewritten #}
     {% if not row.active %}style="opacity: 0.5"{% endif %}
 >
     <td class="text-right result-rank">
@@ -75,7 +76,7 @@
     {% for cell in row.cell_list %}
         <td class="result-task">
             <span data-toggle="tooltip" data-placement="top"
-                  {% comment %} @FIXME: Hack until css`s are rewritten {% endcomment %}
+                  {# @FIXME(css): Hack until css`s are rewritten #}
                   {% if not cell.active %}style="opacity: 0.5"{% endif %}
                   title="{% if cell.manual_points %}popis: {{ cell.manual_points }}{% endif %}
                     {% if cell.auto_points %}testovanie: {{ cell.auto_points }}{% endif %}">

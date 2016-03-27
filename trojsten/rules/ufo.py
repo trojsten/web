@@ -5,8 +5,6 @@ from django.db.models import Sum
 from trojsten.results.generator import (BonusColumnGeneratorMixin,
                                         PrimarySchoolGeneratorMixin,
                                         ResultsGenerator)
-from trojsten.results.representation import ResultsCell
-
 from .default import CompetitionRules
 
 

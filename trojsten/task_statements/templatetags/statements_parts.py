@@ -3,10 +3,10 @@
 from datetime import datetime
 
 import pytz
+
 from django import template
 from django.conf import settings
 from django.utils.translation import ungettext as _
-
 from trojsten.regal.tasks.models import Category, Submit, Task
 from trojsten.results.manager import get_results_tags_for_rounds
 
@@ -42,7 +42,7 @@ def show_task_list(context, round):
 
 @register.inclusion_tag('trojsten/task_statements/parts/buttons.html', takes_context=True)
 def show_buttons(context, round):
-    (round, results_tags), =get_results_tags_for_rounds((round,))
+    (round, results_tags), = get_results_tags_for_rounds((round,))
 
     context.update({
         'round': round,

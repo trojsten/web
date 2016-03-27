@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth import get_user_model
-from django.db import models
-
 from trojsten.regal.people.constants import (GRADUATION_SCHOOL_YEAR,
                                              SCHOOL_YEAR_END_MONTH)
 from trojsten.regal.tasks.models import Submit, Task
@@ -18,39 +16,12 @@ class ResultsGenerator(object):
     The structure of calls is designed in a way that it should be easy to
     override some functionality. However, you can also override whole `run`
     function.
-
-    Function call tree is following:
-      - run
-        - create_empty_results
-          - create_results_cols
-            - get_task_queryset
-        - add_rows_to_results
-          - get_submit_queryset
-            - get_task_queryset
-          - create_row
-            - is_user_active
-          - add_submit_to_row
-          - completize_row
-            - deactivate_row_cells
-            - calculate_row_round_total
-              - get_cell_total
-            - calculate_row_total
-            - format_row_cells
-              - format_row_cell
-            - add_special_row_cells
-        - sort_results
-          - get_sort_key
-        - calculate_row_ranks
-          - get_sort_key
     """
-
-    UNKNOWN_POINTS_SYMBOL = '?'
-    PARTLY_UNKNOWN_FORMAT = '%s?'
 
     def __init__(self, tag):
         self.tag = tag
 
-    def run(self, request):
+    def run(self, res_request):
         """
         The main function of ResultsGenerator. Takes a ResultsRequest object
         and creates corresponding Results object.
@@ -58,76 +29,76 @@ class ResultsGenerator(object):
         Can modify ResultsRequest, however, should not modify ResultsGenerator
         instance itself.
         """
-        results = self.create_empty_results(request)
-        self.add_rows_to_results(request, results)
-        self.sort_results(request, results)
-        self.calculate_row_ranks(request, results)
+        results = self.create_empty_results(res_request)
+        self.add_rows_to_results(res_request, results)
+        self.sort_results(res_request, results)
+        self.calculate_row_ranks(res_request, results)
         return results
 
-    def create_empty_results(self, request):
+    def create_empty_results(self, res_request):
         """
         Creates and returns Results instance with columns but no rows.
         """
         results = Results(
-            round=request.round,
+            round=res_request.round,
             tag=self.tag,
-            single_round=request.single_round,
-            has_previous=bool(not request.single_round and request.previous_rows_dict)
+            single_round=res_request.single_round,
+            has_previous=bool(not res_request.single_round and res_request.previous_rows_dict)
         )
-        results.cols = list(self.create_results_cols(request))
+        results.cols = list(self.create_results_cols(res_request))
         return results
 
-    def create_results_cols(self, request):
+    def create_results_cols(self, res_request):
         """
         Creates ResultsCol instances for the table and returns them
         as iterable in the correct order.
         """
-        if not request.single_round and request.previous_rows_dict:
+        if not res_request.single_round and res_request.previous_rows_dict:
             yield ResultsCol(key=c.PREVIOUS_POINTS_COLUMN_KEY, name=c.PREVIOUS_POINTS_COLUMN_NAME)
 
-        for task in self.get_task_queryset(request):
+        for task in self.get_task_queryset(res_request):
             yield ResultsCol(
                 key=task.number, name=str(task.number), task=task
             )
 
         yield ResultsCol(key=c.TOTAL_POINTS_COLUMN_KEY, name=c.TOTAL_POINTS_COLUMN_NAME)
 
-    def get_task_queryset(self, request):
+    def get_task_queryset(self, res_request):
         """
         Returns queryset of Tasks that should be included in the table.
         """
-        return Task.objects.filter(round=request.round).order_by('number')
+        return Task.objects.filter(round=res_request.round).order_by('number')
 
-    def add_rows_to_results(self, request, results):
+    def add_rows_to_results(self, res_request, results):
         """
         Adds complete and formated ResultsRow instances to the
         Results instance. The rows are not sorted yet.
         """
         row_dict = {}
 
-        for uid in request.previous_rows_dict:
+        for uid in res_request.previous_rows_dict:
             row_dict[uid] = self.create_row(
-                request, request.previous_rows_dict[uid].user, results.cols
+                res_request, res_request.previous_rows_dict[uid].user, results.cols
             )
 
-        for submit in self.get_submit_queryset(request):
+        for submit in self.get_submit_queryset(res_request):
             if submit.user.pk not in row_dict:
-                row_dict[submit.user.pk] = self.create_row(request, submit.user, results.cols)
-            self.add_submit_to_row(request, submit, row_dict[submit.user.pk])
+                row_dict[submit.user.pk] = self.create_row(res_request, submit.user, results.cols)
+            self.add_submit_to_row(res_request, submit, row_dict[submit.user.pk])
 
-        results.rows = [row_dict[uid] for uid in row_dict]
+        results.rows = list(row_dict.values())
 
         for row in results.rows:
-            self.completize_row(request, row, results.cols)
+            self.completize_row(res_request, row, results.cols)
 
-    def get_submit_queryset(self, request):
+    def get_submit_queryset(self, res_request):
         """
         Returns the queryset of Submits that should be included in the results.
         """
-        rules = request.round.series.competition.rules
+        rules = res_request.round.series.competition.rules
 
         return Submit.objects.filter(
-            task__in=self.get_task_queryset(request),
+            task__in=self.get_task_queryset(res_request),
         ).filter(
             # TODO: filter users here?
             user__in=get_user_model().objects.all()
@@ -139,7 +110,7 @@ class ResultsGenerator(object):
             'user', 'task', 'submit_type'
         ).select_related('user', 'user__school', 'task')
 
-    def create_row(self, request, user, cols):
+    def create_row(self, res_request, user, cols):
         """
         Creates and returns new ResultsRow instance for specified user.
         Instance should have no cells and be ready to process Submits
@@ -147,16 +118,16 @@ class ResultsGenerator(object):
         """
         row = ResultsRow(
             user=user,
-            year=user.school_year_at(request.round.end_time),
-            previous=request.get_previous_row_for_user(user),
-            active=self.is_user_active(request, user),
+            year=user.school_year_at(res_request.round.end_time),
+            previous=res_request.get_previous_row_for_user(user),
+            active=self.is_user_active(res_request, user),
         )
         for col in cols:
             if col.task is not None:
                 row.cells_by_key[col.key] = ResultsCell()
         return row
 
-    def is_user_active(self, request, user):
+    def is_user_active(self, res_request, user):
         """
         Returns whether the user should be included to ranking.
 
@@ -164,18 +135,18 @@ class ResultsGenerator(object):
         Exclusion based on the tasks and score should be done in
         `deactive_row_cells`.
         """
-        minimal_year = self.get_minimal_year_of_graduation(request, user)
+        minimal_year = self.get_minimal_year_of_graduation(res_request, user)
         return user.graduation >= minimal_year
 
-    def get_minimal_year_of_graduation(self, request, user):
+    def get_minimal_year_of_graduation(self, res_request, user):
         """
         Returns minimal year given user must graduate in to be active.
         """
-        return request.round.end_time.year + int(
-            request.round.end_time.month > SCHOOL_YEAR_END_MONTH
+        return res_request.round.end_time.year + int(
+            res_request.round.end_time.month > SCHOOL_YEAR_END_MONTH
         )
 
-    def add_submit_to_row(self, request, submit, row):
+    def add_submit_to_row(self, res_request, submit, row):
         """
         Processes given Submit object and sets appropriate points
         to the corresponding RowCell instance.
@@ -190,7 +161,7 @@ class ResultsGenerator(object):
             if submit.testing_status == SUBMIT_STATUS_REVIEWED:
                 points = submit.user_points
             else:
-                points = self.UNKNOWN_POINTS_SYMBOL
+                points = c.UNKNOWN_POINTS_SYMBOL
             cell.manual_points = max(cell.manual_points, points, key=self._comp_cell_value)
         else:
             cell.auto_points = max(cell.auto_points, submit.user_points, key=self._comp_cell_value)
@@ -198,21 +169,21 @@ class ResultsGenerator(object):
     def _comp_cell_value(self, x):
         if x is None:
             return -2
-        if x is self.UNKNOWN_POINTS_SYMBOL:
+        if x is c.UNKNOWN_POINTS_SYMBOL:
             return -1
         return x
 
-    def completize_row(self, request, row, cols):
+    def completize_row(self, res_request, row, cols):
         """
         Called after all Submits are processed with `add_submit_to_row`.
         Should calculate all the row properties but rank, completize and
         format all row cells.
         """
-        self.deactivate_row_cells(request, row, cols)
-        self.calculate_row_round_total(request, row, cols)
-        self.calculate_row_total(request, row, cols)
-        self.format_row_cells(request, row, cols)
-        self.add_special_row_cells(request, row, cols)
+        self.deactivate_row_cells(res_request, row, cols)
+        self.calculate_row_round_total(res_request, row, cols)
+        self.calculate_row_total(res_request, row, cols)
+        self.format_row_cells(res_request, row, cols)
+        self.add_special_row_cells(res_request, row, cols)
 
     def deactivate_row_cells(self, requset, row, cols):
         """
@@ -223,28 +194,28 @@ class ResultsGenerator(object):
         """
         pass
 
-    def calculate_row_round_total(self, request, row, cols):
+    def calculate_row_round_total(self, res_request, row, cols):
         """
         Calculates and sets single round total points for row.
 
         Supposes row contains only cells that represent tasks.
         """
         row.round_total = sum(
-            self.get_cell_total(request, cell)
+            self.get_cell_total(res_request, cell)
             for cell in row.cells_by_key.values() if cell.active
         )
 
-    def get_cell_total(self, request, cell):
+    def get_cell_total(self, res_request, cell):
         """
         Returns total amount of points for cell.
         """
         return sum(
             value
             for value in (cell.manual_points, cell.auto_points)
-            if value not in [None, self.UNKNOWN_POINTS_SYMBOL]
+            if value not in [None, c.UNKNOWN_POINTS_SYMBOL]
         )
 
-    def calculate_row_total(self, request, row, cols):
+    def calculate_row_total(self, res_request, row, cols):
         """
         Calculates and sets overall total points for row.
 
@@ -256,7 +227,7 @@ class ResultsGenerator(object):
         if row.previous is not None:
             row.total += row.previous.total
 
-    def format_row_cells(self, request, row, cols):
+    def format_row_cells(self, res_request, row, cols):
         """
         Formats values in all the task cells into strings,
         that should be showed in the final resuls.
@@ -267,19 +238,19 @@ class ResultsGenerator(object):
         Supposes row contains only cells that represent tasks.
         """
         for cell in row.cells_by_key.values():
-            self.format_row_cell(request, cell)
+            self.format_row_cell(res_request, cell)
 
-    def format_row_cell(self, request, cell):
+    def format_row_cell(self, res_request, cell):
         """
         Formats single task cell values into strings.
         """
-        total = self.get_cell_total(request, cell)
+        total = self.get_cell_total(res_request, cell)
         cell.auto_points = self._str_cell_value(cell.auto_points)
         cell.manual_points = self._str_cell_value(cell.manual_points)
-        if cell.auto_points == self.UNKNOWN_POINTS_SYMBOL:
-            cell.points = self.PARTLY_UNKNOWN_FORMAT % cell.manual_points
-        elif cell.manual_points == self.UNKNOWN_POINTS_SYMBOL:
-            cell.points = self.PARTLY_UNKNOWN_FORMAT % cell.auto_points
+        if cell.auto_points == c.UNKNOWN_POINTS_SYMBOL:
+            cell.points = c.PARTLY_UNKNOWN_FORMAT % cell.manual_points
+        elif cell.manual_points == c.UNKNOWN_POINTS_SYMBOL:
+            cell.points = c.PARTLY_UNKNOWN_FORMAT % cell.auto_points
         elif cell.auto_points is not None or cell.manual_points is not None:
             cell.points = str(total)
         else:
@@ -288,7 +259,7 @@ class ResultsGenerator(object):
     def _str_cell_value(self, value):
         return str(value) if value is not None else None
 
-    def add_special_row_cells(self, request, row, cols):
+    def add_special_row_cells(self, res_request, row, cols):
         """
         Adds formated (containg string values) cells that correspond to
         columns other than tasks (previous points, total, bonus, ...).
@@ -300,7 +271,7 @@ class ResultsGenerator(object):
         row.cells_by_key[c.PREVIOUS_POINTS_COLUMN_KEY] = ResultsCell(str(prev_total))
         row.cells_by_key[c.TOTAL_POINTS_COLUMN_KEY] = ResultsCell(str(row.total))
 
-    def sort_results(self, request, results):
+    def sort_results(self, res_request, results):
         """
         Sorts rows of Results instance.
         """
@@ -313,7 +284,7 @@ class ResultsGenerator(object):
         """
         return -row.total
 
-    def calculate_row_ranks(self, request, results):
+    def calculate_row_ranks(self, res_request, results):
         """
         Adds rank information to the ResultsRow instances based on their
         order in the Results object.
@@ -337,11 +308,11 @@ class ResultsGenerator(object):
 
 class BonusColumnGeneratorMixin(object):
 
-    def create_results_cols(self, request):
-        if not request.single_round and request.previous_rows_dict:
+    def create_results_cols(self, res_request):
+        if not res_request.single_round and res_request.previous_rows_dict:
             yield ResultsCol(key=c.PREVIOUS_POINTS_COLUMN_KEY, name=c.PREVIOUS_POINTS_COLUMN_NAME)
 
-        for task in self.get_task_queryset(request):
+        for task in self.get_task_queryset(res_request):
             yield ResultsCol(
                 key=task.number, name=str(task.number), task=task
             )
@@ -349,7 +320,7 @@ class BonusColumnGeneratorMixin(object):
         yield ResultsCol(key=c.BONUS_POINTS_COLUMN_KEY, name=c.BONUS_POINTS_COLUMN_NAME)
         yield ResultsCol(key=c.TOTAL_POINTS_COLUMN_KEY, name=c.TOTAL_POINTS_COLUMN_NAME)
 
-    def add_special_row_cells(self, request, row, cols):
+    def add_special_row_cells(self, res_request, row, cols):
         prev_total = row.previous.total if row.previous is not None else 0
         row.cells_by_key[c.PREVIOUS_POINTS_COLUMN_KEY] = ResultsCell(str(prev_total))
         row.cells_by_key[c.TOTAL_POINTS_COLUMN_KEY] = ResultsCell(str(row.total))
@@ -358,16 +329,16 @@ class BonusColumnGeneratorMixin(object):
 
 class PrimarySchoolGeneratorMixin(object):
 
-    def get_minimal_year_of_graduation(self, request, user):
-        return request.round.end_time.year + GRADUATION_SCHOOL_YEAR + int(
-            request.round.end_time.month > SCHOOL_YEAR_END_MONTH
+    def get_minimal_year_of_graduation(self, res_request, user):
+        return res_request.round.end_time.year + GRADUATION_SCHOOL_YEAR + int(
+            res_request.round.end_time.month > SCHOOL_YEAR_END_MONTH
         )
 
 
 class CategoryTagKeyGeneratorMixin(object):
 
-    def get_task_queryset(self, request):
+    def get_task_queryset(self, res_request):
         return Task.objects.filter(
-            round=request.round,
+            round=res_request.round,
             category__name=self.tag.key,
         ).order_by('number')

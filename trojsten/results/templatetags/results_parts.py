@@ -1,9 +1,5 @@
 from django import template
 
-from trojsten.regal.tasks.models import Submit
-
-from ..helpers import make_result_table
-
 register = template.Library()
 
 

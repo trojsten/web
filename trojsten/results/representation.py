@@ -80,7 +80,7 @@ class ResultsRequest(object):
         self.single_round = single_round
 
         if previous_rows is None:
-            previous_rows = ()
+            previous_rows = tuple()
         self.previous_rows_dict = {
             row.user.pk: row for row in previous_rows if row.user is not None
         }
