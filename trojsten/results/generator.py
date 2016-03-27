@@ -187,12 +187,12 @@ class ResultsGenerator(object):
         cell = row.cells_by_key[submit.task.number]
         if submit.submit_type == Submit.DESCRIPTION:
             if submit.testing_status == SUBMIT_STATUS_REVIEWED:
-                points = submit.points
+                points = submit.user_points
             else:
                 points = self.UNKNOWN_POINTS_SYMBOL
             cell.manual_points = max(cell.manual_points, points, key=self._comp_cell_value)
         else:
-            cell.auto_points = max(cell.auto_points, submit.points, key=self._comp_cell_value)
+            cell.auto_points = max(cell.auto_points, submit.user_points, key=self._comp_cell_value)
 
     def _comp_cell_value(self, x):
         if x is None:
@@ -279,8 +279,10 @@ class ResultsGenerator(object):
             cell.points = self.PARTLY_UNKNOWN_FORMAT % cell.manual_points
         elif cell.manual_points == self.UNKNOWN_POINTS_SYMBOL:
             cell.points = self.PARTLY_UNKNOWN_FORMAT % cell.auto_points
-        else:
+        elif cell.auto_points is not None or cell.manual_points is not None:
             cell.points = str(total)
+        else:
+            cell.points = ""
 
     def _str_cell_value(self, value):
         return str(value) if value is not None else None
@@ -345,6 +347,12 @@ class BonusColumnGeneratorMixin(object):
 
         yield ResultsCol(key='bonus', name='B')
         yield ResultsCol(key='sum', name=u'∑')
+
+    def add_special_row_cells(self, request, row, cols):
+        prev_total = row.previous.total if row.previous is not None else 0
+        row.cells_by_key['prev'] = ResultsCell(str(prev_total))
+        row.cells_by_key['sum'] = ResultsCell(str(row.total))
+        row.cells_by_key['bonus'] = ResultsCell(str(self.bonus))
 
 
 class PrimarySchoolGeneratorMixin(object):

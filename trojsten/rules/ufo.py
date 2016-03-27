@@ -32,12 +32,6 @@ class UFOResultsGenerator(
         )
         row.round_total += self.bonus
 
-    def add_special_row_cells(self, request, row, cols):
-        prev_total = row.previous.total if row.previous is not None else 0
-        row.cells_by_key['prev'] = ResultsCell("%.3f" % prev_total)
-        row.cells_by_key['bonus'] = ResultsCell("%.3f" % self.bonus)
-        row.cells_by_key['sum'] = ResultsCell("%.3f" % row.total)
-
 
 class UFORules(CompetitionRules):
 

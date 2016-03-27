@@ -31,7 +31,11 @@
 {% for row in table.rows %}
 {% spaceless %}
 {% if row.active or show_staff %}
-<tr {% if user == result.user %}class="active"{% endif %}>
+<tr
+    {% if user == row.user %}class="active"{% endif %}
+    {% comment %} @FIXME: Hack until css`s are rewritten {% endcomment %}
+    {% if not row.active %}style="opacity: 0.5"{% endif %}
+>
     <td class="text-right result-rank">
     {% if row.rank %}
         {% ifchanged row.rank %}
@@ -71,6 +75,8 @@
     {% for cell in row.cell_list %}
         <td class="result-task">
             <span data-toggle="tooltip" data-placement="top"
+                  {% comment %} @FIXME: Hack until css`s are rewritten {% endcomment %}
+                  {% if not cell.active %}style="opacity: 0.5"{% endif %}
                   title="{% if cell.manual_points %}popis: {{ cell.manual_points }}{% endif %}
                     {% if cell.auto_points %}testovanie: {{ cell.auto_points }}{% endif %}">
                 {{ cell.points }}

@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+
 from trojsten.settings.common import *
 
 DEBUG = True
@@ -69,3 +70,5 @@ LOGGING = {
         },
     }
 }
+
+SITE_ID = int(env('TROJSTENWEB_DEVELOPMENT_SITE_ID', 1))
