@@ -8,6 +8,7 @@ from trojsten.regal.people.constants import (GRADUATION_SCHOOL_YEAR,
 from trojsten.regal.tasks.models import Submit, Task
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 
+from . import constants as c
 from .representation import Results, ResultsCell, ResultsCol, ResultsRow
 
 
@@ -82,14 +83,14 @@ class ResultsGenerator(object):
         as iterable in the correct order.
         """
         if not request.single_round and request.previous_rows_dict:
-            yield ResultsCol(key='prev', name='P')
+            yield ResultsCol(key=c.PREVIOUS_POINTS_COLUMN_KEY, name=c.PREVIOUS_POINTS_COLUMN_NAME)
 
         for task in self.get_task_queryset(request):
             yield ResultsCol(
                 key=task.number, name=str(task.number), task=task
             )
 
-        yield ResultsCol(key='sum', name=u'∑')
+        yield ResultsCol(key=c.TOTAL_POINTS_COLUMN_KEY, name=c.TOTAL_POINTS_COLUMN_NAME)
 
     def get_task_queryset(self, request):
         """
@@ -296,8 +297,8 @@ class ResultsGenerator(object):
         and formated. Should be using values accumulated in the ResultsRow instance.
         """
         prev_total = row.previous.total if row.previous is not None else 0
-        row.cells_by_key['prev'] = ResultsCell(str(prev_total))
-        row.cells_by_key['sum'] = ResultsCell(str(row.total))
+        row.cells_by_key[c.PREVIOUS_POINTS_COLUMN_KEY] = ResultsCell(str(prev_total))
+        row.cells_by_key[c.TOTAL_POINTS_COLUMN_KEY] = ResultsCell(str(row.total))
 
     def sort_results(self, request, results):
         """
@@ -338,21 +339,21 @@ class BonusColumnGeneratorMixin(object):
 
     def create_results_cols(self, request):
         if not request.single_round and request.previous_rows_dict:
-            yield ResultsCol(key='prev', name='P')
+            yield ResultsCol(key=c.PREVIOUS_POINTS_COLUMN_KEY, name=c.PREVIOUS_POINTS_COLUMN_NAME)
 
         for task in self.get_task_queryset(request):
             yield ResultsCol(
                 key=task.number, name=str(task.number), task=task
             )
 
-        yield ResultsCol(key='bonus', name='B')
-        yield ResultsCol(key='sum', name=u'∑')
+        yield ResultsCol(key=c.BONUS_POINTS_COLUMN_KEY, name=c.BONUS_POINTS_COLUMN_NAME)
+        yield ResultsCol(key=c.TOTAL_POINTS_COLUMN_KEY, name=c.TOTAL_POINTS_COLUMN_NAME)
 
     def add_special_row_cells(self, request, row, cols):
         prev_total = row.previous.total if row.previous is not None else 0
-        row.cells_by_key['prev'] = ResultsCell(str(prev_total))
-        row.cells_by_key['sum'] = ResultsCell(str(row.total))
-        row.cells_by_key['bonus'] = ResultsCell(str(self.bonus))
+        row.cells_by_key[c.PREVIOUS_POINTS_COLUMN_KEY] = ResultsCell(str(prev_total))
+        row.cells_by_key[c.TOTAL_POINTS_COLUMN_KEY] = ResultsCell(str(row.total))
+        row.cells_by_key[c.BONUS_POINTS_COLUMN_KEY] = ResultsCell(str(self.bonus))
 
 
 class PrimarySchoolGeneratorMixin(object):
