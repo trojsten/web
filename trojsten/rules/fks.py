@@ -25,17 +25,6 @@ class FKSResultsGenerator(
                 key=lambda cell: self.get_cell_total(request, cell)
             ).active = False
 
-            # User must have sloved at least one only B task:
-            row.active = row.previous is not None and row.previous.active
-            if not row.active:
-                for key in (1, 2, 3):
-                    if row.cells_by_key[key].manual_points is not None:
-                        row.active = True
-                        break
-                    if row.cells_by_key[key].auto_points is not None:
-                        row.active = True
-                        break
-
 
 class FKSRules(CompetitionRules):
 
