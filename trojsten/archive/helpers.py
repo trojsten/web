@@ -17,10 +17,10 @@ def get_rounds_by_year(user, competition):
         'series__competition__category_set',
     )
 
-    rounds_with_tags = get_results_tags_for_rounds(rounds)
+    results_tags = get_results_tags_for_rounds(rounds)
 
     rounds_dict = defaultdict(list)
-    for round, result_tags in rounds_with_tags:
+    for round, result_tags in zip(rounds, results_tags):
         rounds_dict[round.series.year].append((round, result_tags))
 
     return OrderedDict(sorted(rounds_dict.items(), key=lambda t: t[0], reverse=True))

@@ -17,7 +17,7 @@ class Command(BaseCommand):
         except Round.DoesNotExist:
             raise CommandError('Round "%s" does not exist' % round_id)
 
-        (_, tags), = get_results_tags_for_rounds((round,))
+        (tags,) = get_results_tags_for_rounds((round,))
         for tag in tags:
             results = get_results(tag.key, round, bool(single_round))
 

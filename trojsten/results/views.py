@@ -44,7 +44,7 @@ def view_latest_results(request):
 
     tables = [
         get_results(result_tag.key, round, single_round)
-        for round, result_tags in get_results_tags_for_rounds(rounds)
+        for round, result_tags in zip(rounds, get_results_tags_for_rounds(rounds))
         for result_tag in result_tags
     ]
 

@@ -19,14 +19,14 @@ def get_results(tag_key, round, single_round):
 
 def get_results_tags_for_rounds(rounds):
     """
-    Returns iterable over pairs `(round, its_results_tags)`, for each `round` of `rounds`.
+    Returns generator of results tags coresponding to the `rounds`.
 
     Note that results tags may vary over time for the same competition.
     """
     # @TODO frozen results
     # @FUTURE firstly try to get tags from frozen results and then calculate the rest
     return (
-        (r, r.series.competition.rules.get_results_tags()) for r in rounds
+        r.series.competition.rules.get_results_tags() for r in rounds
     )
 
 
