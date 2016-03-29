@@ -2,6 +2,7 @@ from trojsten.results.generator import (CategoryTagKeyGeneratorMixin,
                                         ResultsGenerator)
 from trojsten.results.representation import ResultsTag
 
+from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 from .default import CompetitionRules
 
 
@@ -30,7 +31,7 @@ class FKSResultsGenerator(
             ).active = False
 
 
-class FKSRules(CompetitionRules):
+class FKSRules(FinishedRounds, CompetitionRules):
 
     RESULTS_TAGS = {
         FKS_B: ResultsTag(key=FKS_B, name='B'),

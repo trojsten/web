@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from django.db import models
+from datetime import datetime
 
+from django.db import models
+from trojsten.regal.contests.models import Round
 from trojsten.results.constants import DEFAULT_TAG_KEY
 from trojsten.results.generator import ResultsGenerator
 from trojsten.results.representation import ResultsTag
@@ -36,3 +38,14 @@ class CompetitionRules(object):
             return qs.get()
         else:
             return None
+
+    def get_actual_result_rounds(self, competition):
+        rounds = Round.objects.filter(series__competition=competition, visible=True)
+        return rounds.order_by('-end_time', '-number')[:1]
+
+
+class FinishedRoundsResultsRulesMixin():
+
+    def get_actual_result_rounds(self, competition):
+        rounds = Round.objects.filter(series__competition=competition, end_time__lte=datetime.now())
+        return rounds.order_by('-end_time', '-number')[:1]

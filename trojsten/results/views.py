@@ -2,8 +2,7 @@
 
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
-
-from trojsten.regal.contests.models import Round
+from trojsten.regal.contests.models import Competition, Round
 from trojsten.utils.utils import is_true
 
 from .constants import DEFAULT_TAG_KEY
@@ -36,9 +35,11 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
 def view_latest_results(request):
     """Displays results for latest rounds for each competition
     """
-    rounds = Round.objects.latest_visible(
-        request.user
-    ).select_related('series__competition')
+    rounds = [
+        round
+        for competition in Competition.objects.current_site_only()
+        for round in competition.rules.get_actual_result_rounds(competition)
+    ]
 
     single_round = is_true(request.GET.get('single_round', False))
 

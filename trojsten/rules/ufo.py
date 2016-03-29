@@ -1,10 +1,11 @@
 from decimal import Decimal
 
 from django.db.models import Sum
-
 from trojsten.results.generator import (BonusColumnGeneratorMixin,
                                         PrimarySchoolGeneratorMixin,
                                         ResultsGenerator)
+
+from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 from .default import CompetitionRules
 
 
@@ -31,6 +32,6 @@ class UFOResultsGenerator(
         row.round_total += self.bonus
 
 
-class UFORules(CompetitionRules):
+class UFORules(FinishedRounds, CompetitionRules):
 
     RESULTS_GENERATOR_CLASS = UFOResultsGenerator
