@@ -75,11 +75,17 @@
     </td>
     {% for cell in row.cell_list %}
         <td class="result-task">
-            <span data-toggle="tooltip" data-placement="top"
-                  {# @FIXME(css): Hack until css`s are rewritten #}
-                  {% if not cell.active %}style="opacity: 0.5"{% endif %}
-                  title="{% if cell.manual_points %}popis: {{ cell.manual_points }}{% endif %}
-                    {% if cell.auto_points %}testovanie: {{ cell.auto_points }}{% endif %}">
+            <span
+                data-toggle="tooltip"
+                data-placement="top"
+                {# @FIXME(css): Hack until css`s are rewritten #}
+                {% if not cell.active %}
+                    style="opacity: 0.5"
+                {% endif %}
+                {% if cell.manual_points != None and cell.auto_points != None %}
+                  title="popis: {{ cell.manual_points }} testovanie: {{ cell.auto_points }}"
+                {% endif %}
+            >
                 {{ cell.points }}
             </span>
         </td>
