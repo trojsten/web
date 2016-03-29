@@ -62,7 +62,7 @@ class CompetitionManager(models.Manager):
     def current_site_only(self):
         """Returns only competitions belonging to current site
         """
-        return Site.objects.get(pk=settings.SITE_ID).competition_set.all()
+        return Site.objects.get(pk=settings.SITE_ID).competition_set.order_by('pk').all()
 
 
 @python_2_unicode_compatible
