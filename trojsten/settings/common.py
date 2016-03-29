@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Common settings for trojsten.
-
 import json
 import os
 
@@ -281,7 +280,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 # Override message tags for bootstrap 3 compatibility.
 MESSAGE_TAGS = {
-    messages.ERROR: 'danger',
+    messages.ERROR: 'danger error',
 }
 
 # The URL to which Django redirects as soon as login is required.
