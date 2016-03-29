@@ -248,9 +248,15 @@ class ResultsGenerator(object):
         cell.auto_points = self._str_cell_value(cell.auto_points)
         cell.manual_points = self._str_cell_value(cell.manual_points)
         if cell.auto_points == c.UNKNOWN_POINTS_SYMBOL:
-            cell.points = c.PARTLY_UNKNOWN_FORMAT % cell.manual_points
+            if cell.manual_points is not None:
+                cell.points = c.PARTLY_UNKNOWN_FORMAT % cell.manual_points
+            else:
+                cell.points = c.UNKNOWN_POINTS_SYMBOL
         elif cell.manual_points == c.UNKNOWN_POINTS_SYMBOL:
-            cell.points = c.PARTLY_UNKNOWN_FORMAT % cell.auto_points
+            if cell.auto_points is not None:
+                cell.points = c.PARTLY_UNKNOWN_FORMAT % cell.auto_points
+            else:
+                cell.points = c.UNKNOWN_POINTS_SYMBOL
         elif cell.auto_points is not None or cell.manual_points is not None:
             cell.points = str(total)
         else:
