@@ -4,9 +4,10 @@ from __future__ import unicode_literals
 
 from datetime import date
 
+from django.contrib.auth.models import UserManager as DjangoUserManager
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
-from django.contrib.auth.models import AbstractUser, UserManager as DjangoUserManager
 
 from . import constants
 
@@ -131,8 +132,11 @@ class User(AbstractUser):
 
     @property
     def school_year(self):
-        current_year = date.today().year + int(
-            date.today().month > constants.SCHOOL_YEAR_END_MONTH
+        return self.school_year_at(date.today())
+
+    def school_year_at(self, date):
+        current_year = date.year + int(
+            date.month > constants.SCHOOL_YEAR_END_MONTH
         )
         return current_year - self.graduation + constants.GRADUATION_SCHOOL_YEAR
 

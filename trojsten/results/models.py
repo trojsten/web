@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+# FIXME(generic_results_stage_2): Those are old, unsupported frozen results.
+# Create new frozen result models and, probably, throw the old models and data out.
+
+
 from __future__ import unicode_literals
 
 from django.utils.encoding import python_2_unicode_compatible

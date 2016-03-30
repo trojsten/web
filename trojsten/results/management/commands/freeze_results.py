@@ -1,3 +1,7 @@
+# FIXME(generic_results_stage_2): Freezing the old, unsupported frozen results.
+# New version of this file should simply use one manager function.
+
+
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from django.contrib.auth.models import AnonymousUser

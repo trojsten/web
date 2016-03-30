@@ -35,6 +35,7 @@ class RoundManager(models.Manager):
             )
         return res
 
+    # @FIXME(unused): Was used only by actual results, moved to Rules.
     def latest_visible(self, user, all_sites=False):
         """Returns latest visible round for each competition
         """
@@ -62,7 +63,7 @@ class CompetitionManager(models.Manager):
     def current_site_only(self):
         """Returns only competitions belonging to current site
         """
-        return Site.objects.get(pk=settings.SITE_ID).competition_set.all()
+        return Site.objects.get(pk=settings.SITE_ID).competition_set.order_by('pk').all()
 
 
 @python_2_unicode_compatible

@@ -36,6 +36,7 @@ class TaskManager(models.Manager):
 
 
 class SubmitManager(models.Manager):
+    # @FIXME(unused): Was used only by results, splitted to ResultsGenerator.
     def for_tasks(self, tasks, include_staff=False):
         """Returns submits which belong to specified tasks.
         Only one submit per user, submit type and task is returned.

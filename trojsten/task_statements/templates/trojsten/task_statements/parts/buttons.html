@@ -21,17 +21,10 @@
     Odovzdaj riešenia
 </a>
 
-{% if categories %}
-    {% for category in categories %}
-    <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-danger category-{{ category }}"
-       href="{% url 'view_results' round_id=round.id category_id=category.id %}">
-        Výsledky
-        <span class="label label-button category-{{ category }}">{{ category }}</span>
-    </a>
-    {% endfor %}
-{% else %}
-    <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-danger" href="{% url 'view_results' round_id=round.id %}">
-        Výsledky
-    </a>
-{% endif %}
+{% for results_tag in results_tags %}
+<a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-danger"
+   href="{% url 'view_results' round_id=round.id tag_key=results_tag.key %}">
+    Výsledky {{ results_tag.name }}
+</a>
+{% endfor %}
 </div>

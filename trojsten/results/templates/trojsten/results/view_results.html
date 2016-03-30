@@ -7,26 +7,22 @@
 {% block page_header %}
 <h1>Výsledky<small>
 {% if single_round %}
-    {{ round.number }}. kola{% else %}po {{ round.number }}. kole
+    {{ table.round.number }}. kola{% else %}po {{ table.round.number }}. kole
 {% endif %}
-{{ series.number }}. série {{ series.year }}. ročníka {{ series.competition }}
-{% if category %}
-    <span class="label label-default category-{{ category }}">
-        {{ category }}
-    </span>
-{% endif %}
+{{ table.round.series.number }}. série {{ table.round.series.year }}. ročníka
+{{ table.round.series.competition }} {{ table.tag.name }}
 </small></h1>
 {% endblock %}
 
 {% block page_content %}
-{% is_frozen round single_round as results_are_final %}
+{% is_frozen table.round table.single_round as results_are_final %}
 {% if not results_are_final %}
-    {% show_progress round results=True %}
+    {% show_progress table.round results=True %}
 {% endif %}
-{% show_results_table round=round category=category %}
+{% show_results_table table=table show_staff=show_staff%}
 {% include 'trojsten/results/parts/buttons.html' %}
 <h2>Vysvetlivky</h2>
 {% include 'trojsten/results/parts/legend.html' %}
 
-{% show_archive active_competition=round.series.competition %}
+{% show_archive active_competition=table.round.series.competition %}
 {% endblock %}

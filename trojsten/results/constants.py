@@ -1,0 +1,13 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
+DEFAULT_TAG_KEY = '_'
+PREVIOUS_POINTS_COLUMN_KEY = 'prev'
+TOTAL_POINTS_COLUMN_KEY = 'sum'
+BONUS_POINTS_COLUMN_KEY = 'bonus'
+PREVIOUS_POINTS_COLUMN_NAME = 'P'
+TOTAL_POINTS_COLUMN_NAME = '∑'
+BONUS_POINTS_COLUMN_NAME = 'B'
+UNKNOWN_POINTS_SYMBOL = '?'
+PARTLY_UNKNOWN_FORMAT = '%s?'

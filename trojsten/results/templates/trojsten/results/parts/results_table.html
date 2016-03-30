@@ -1,6 +1,8 @@
 {% load utils %}
 {% load mathfilters %}
 
+{# FIXME(generic_results_stage_2): Unify HTML style #}
+
 <div class="table-responsive">
 <table class="table table-hover table-condensed results-table">
 <thead>
@@ -11,81 +13,92 @@
         <abbr title="Ročník" data-toggle="tooltip" data-placement="top">R.</abbr>
     </th>
     <th class="result-header result-school">Škola</th>
-    {% if has_previous_results %}
-        <th class="result-header result-prev">
-            <abbr title="Predchádzajúce kolá" data-toggle="tooltip" data-placement="top">P.</abbr>
-        </th>
-    {% endif %}
-    {% for task in tasks %}
-        <th class="result-header result-task{% if task.integer_source_points %} result-task-integer{% endif %}">
-            <a href="{% url 'task_statement' task_id=task.id %}" title="{{ task.name }}"
-               data-toggle="tooltip" data-placement="top">
-                {{ task.number }}
-            </a>
-        </th>
+    {% for col in table.cols %}
+        {% if col.task %}
+            {# @FIXME(css): Class `result-task` is used also for total and previous columns. Rename? #}
+            <th class="result-header result-task">
+                <a href="{% url 'task_statement' task_id=col.task.id %}" title="{{ col.task.name }}"
+                   data-toggle="tooltip" data-placement="top">
+                    {{ col.name }}
+                </a>
+            </th>
+        {% else %}
+            <th class="result-header result-task">
+                <strong>{{ col.name }}</strong>
+            </th>
+        {% endif %}
     {% endfor %}
-    <th class="result-header result-sum"><strong>&sum;</strong></th>
 </tr>
 </thead>
-{% for result in results %}
+
+{% for row in table.rows %}
 {% spaceless %}
-<tr {% if user == result.user %}class="active"{% endif %}>
+{% if row.active or show_staff %}
+<tr
+    {% if user == row.user %}class="active"{% endif %}
+    {# @FIXME(css): Hack until css`s are rewritten #}
+    {% if not row.active %}style="opacity: 0.5"{% endif %}
+>
     <td class="text-right result-rank">
-    {% ifchanged result.data.sum %}
-        <strong>{{ result.data.rank }}. </strong>
-    {% endifchanged %}
-    {% if has_previous_results %}
-        {% if not result.data.prev_rank %}
+    {% if row.rank %}
+        {% ifchanged row.rank %}
+            <strong>{{ row.rank }}. </strong>
+        {% endifchanged %}
+        {% if row.previous %}
+            {% if not row.previous.rank %}
+                <span class="text-info glyphicon glyphicon-asterisk"></span>
+            {% elif row.rank < row.previous.rank %}
+                <span class="text-success glyphicon glyphicon-chevron-up"
+                      title="+{{ row.previous.rank|sub:row.rank }}"
+                      data-toggle="tooltip" data-placement="top"></span>
+            {% elif row.rank > row.previous.rank %}
+                <span class="text-danger glyphicon glyphicon-chevron-down"
+                      title="-{{ row.rank|sub:row.previous.rank }}"
+                      data-toggle="tooltip" data-placement="top"></span>
+            {% else %}
+                <span class="text-muted glyphicon glyphicon-pushpin"></span>
+            {% endif %}
+        {% elif table.has_previous %}
             <span class="text-info glyphicon glyphicon-asterisk"></span>
-        {% elif result.data.rank < result.data.prev_rank %}
-            <span class="text-success glyphicon glyphicon-chevron-up"
-                  title="+{{ result.data.prev_rank|sub:result.data.rank }}"
-                  data-toggle="tooltip" data-placement="top"></span>
-        {% elif result.data.rank > result.data.prev_rank %}
-            <span class="text-danger glyphicon glyphicon-chevron-down"
-                  title="-{{ result.data.rank|sub:result.data.prev_rank }}"
-                  data-toggle="tooltip" data-placement="top"></span>
-        {% else %}
-            <span class="text-muted glyphicon glyphicon-pushpin"></span>
         {% endif %}
     {% endif %}
     </td>
-    <td class="result-name">{{ result.user.get_full_name }}</td>
-    <td class="result-year">{{ result.user.school_year | school_year }}</td>
+    <td class="result-name">{{ row.name }}</td>
+    <td class="result-year">{{ row.year | school_year }}</td>
     <td class="result-school">
-    {% if result.user.school.has_abbreviation %}
-        <abbr title="{{ result.user.school.verbose_name }}" data-toggle="tooltip"
+    {% if row.school %}
+        <abbr title="{{ row.school.verbose_name }}" data-toggle="tooltip"
               data-placement="top">
-            {{ result.user.school.abbreviation }}
+            {{ row.school_name }}
         </abbr>
     {% else %}
-        {{ result.user.school.verbose_name }}
+        {{ row.school_name }}
     {% endif %}
     </td>
-    {% if has_previous_results %}
-        <td class="result-prev">{{ result.data.previous_rounds_points }}</td>
-    {% endif %}
-    {% for task in tasks %}
-        <td class="result-task{% if task.integer_source_points %} result-task-integer{% endif %}">
-        {% lookup_as result.data.tasks task.id as task_points %}
-        {% if task_points.submitted %}
-            <span data-toggle="tooltip" data-placement="top"
-                  title="{% if task.description_points > 0 %}popis: {% if task_points.description_pending %}??{% else %}{{ task_points.description_points }}{% endif %}{% if task.source_points > 0 %} {% endif %}{% endif %}{% if task.source_points > 0 %}program: {{ task_points.source_points }}{% endif %}">
-                {% if task_points.description_pending %}
-                    ({{ task_points.sum }})
-                {% else %}
-                    {{ task_points.sum }}
+    {% for cell in row.cell_list %}
+        <td class="result-task">
+            <span
+                data-toggle="tooltip"
+                data-placement="top"
+                {# @FIXME(css): Hack until css`s are rewritten #}
+                {% if not cell.active %}
+                    style="opacity: 0.5"
                 {% endif %}
+                {% if cell.manual_points != None and cell.auto_points != None %}
+                  title="popis: {{ cell.manual_points }} testovanie: {{ cell.auto_points }}"
+                {% endif %}
+            >
+                {{ cell.points }}
             </span>
-        {% endif %}
         </td>
     {% endfor %}
 
-    <td class="result-sum"><strong>{{ result.data.sum }}</strong></td>
 </tr>
+{% endif %}
 {% endspaceless %}
 {% empty %}
-<tr><td colspan="{{ tasks | length | add:5 }}">Žiadne submity</td></tr>
+<tr><td colspan="{{ table.cols | length | add:4 }}">Žiadne submity</td></tr>
 {% endfor %}
+
 </table>
 </div>
