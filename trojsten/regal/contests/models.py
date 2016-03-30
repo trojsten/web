@@ -35,6 +35,7 @@ class RoundManager(models.Manager):
             )
         return res
 
+    # @FIXME(unused): Was used only by actual results, moved to Rules.
     def latest_visible(self, user, all_sites=False):
         """Returns latest visible round for each competition
         """

@@ -13,7 +13,7 @@ def get_results(tag_key, round, single_round):
 
     The function abstracts the different result sources (generating, frozen, cached).
     """
-    # @TODO frozen results
+    # FIXME(generic_results_stage_2): frozen results
     return _generate_results(tag_key, round, single_round)
 
 
@@ -23,7 +23,7 @@ def get_results_tags_for_rounds(rounds):
 
     Note that results tags may vary over time for the same competition.
     """
-    # @TODO frozen results
+    # FIXME(generic_results_stage_2): frozen results
     # @FUTURE firstly try to get tags from frozen results and then calculate the rest
     return (
         r.series.competition.rules.get_results_tags() for r in rounds
