@@ -32,7 +32,7 @@ def review_task(request, task_pk):
     users = get_latest_submits_for_task(task)
 
     if (not request.user.is_superuser and
-            task.competition.organizers_group not in
+            task.round.series.competition.organizers_group not in
             request.user.groups.all()):
         raise PermissionDenied
 
