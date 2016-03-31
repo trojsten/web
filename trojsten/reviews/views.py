@@ -69,7 +69,7 @@ def edit_review(request, task_pk, submit_pk):
     submit = get_object_or_404(Submit, pk=submit_pk)
 
     if (not request.user.is_superuser and
-            task.competition.organizers_group not in
+            task.round.series.competition.organizers_group not in
             request.user.groups.all()):
         raise PermissionDenied
 
@@ -118,7 +118,7 @@ def submit_download(request, submit_pk):
     name = submit_download_filename(submit)
 
     if (not request.user.is_superuser and
-            submit.task.competition.organizers_group
+            submit.task.round.series.competition.organizers_group
             not in request.user.groups.all()):
         raise PermissionDenied
 
@@ -133,7 +133,7 @@ def download_latest_submits(request, task_pk):
     submits = get_latest_submits_for_task(task).values()
 
     if (not request.user.is_superuser and
-            task.competition.organizers_group
+            task.round.series.competition.organizers_group
             not in request.user.groups.all()):
         raise PermissionDenied
 
@@ -187,7 +187,7 @@ def zip_upload(request, task_pk):
         raise Http404
 
     if (not request.user.is_superuser and
-            task.competition.organizers_group
+            task.round.series.competition.organizers_group
             not in request.user.groups.all()):
         raise PermissionDenied
 
