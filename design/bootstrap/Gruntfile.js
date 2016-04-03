@@ -298,6 +298,66 @@ module.exports = function (grunt) {
       docs: {
         src: 'dist/*/*',
         dest: 'docs/'
+      },
+      js: {
+        expand: true,
+        cwd: 'dist/js/',
+        src: '**',
+        dest: '../../trojsten/static/js/'
+      },
+      font: {
+        expand: true,
+        cwd: 'dist/fonts/',
+        src: '**',
+        dest: '../../trojsten/static/fonts/'
+      },
+      ksp: {
+        expand: true,
+        cwd: 'dist/css/ksp/',
+        src: '**',
+        dest: '../../trojsten/static/css/ksp/'
+      },
+      prask: {
+        expand: true,
+        cwd: 'dist/css/ksp/',
+        src: '**',
+        dest: '../../trojsten/static/css/prask/'
+      },
+      fks: {
+        expand: true,
+        cwd: 'dist/css/fks/',
+        src: '**',
+        dest: '../../trojsten/static/css/fks/'
+      },
+      kms: {
+        expand: true,
+        cwd: 'dist/css/ksp/',
+        src: '**',
+        dest: '../../trojsten/static/css/kms/'
+      },
+      wiki: {
+        expand: true,
+        cwd: 'dist/css/ksp/',
+        src: '**',
+        dest: '../../trojsten/static/css/wiki/'
+      },
+      fx: {
+        expand: true,
+        cwd: 'dist/css/fks/',
+        src: '**',
+        dest: '../../trojsten/static/css/fx/'
+      },
+      ufo: {
+        expand: true,
+        cwd: 'dist/css/fks/',
+        src: '**',
+        dest: '../../trojsten/static/css/ufo/'
+      },
+      trojsten: {
+        expand: true,
+        cwd: 'dist/css/ksp/',
+        src: '**',
+        dest: '../../trojsten/static/css/trojsten/'
       }
     },
 
@@ -438,7 +498,21 @@ module.exports = function (grunt) {
   grunt.registerTask('dist-css', ['less-compile', 'autoprefixer:ksp', 'autoprefixer:fks', 'usebanner', 'csscomb:dist', 'cssmin:minifyKSP', 'cssmin:minifyFKS']);
 
   // Full distribution task.
-  grunt.registerTask('dist', ['clean:dist', 'dist-css', 'copy:fonts', 'dist-js']);
+  grunt.registerTask('dist', ['clean:dist',
+    'dist-css',
+    'copy:fonts',
+    'dist-js',
+    'copy:js',
+    'copy:font',
+    'copy:fx',
+    'copy:fks',
+    'copy:ufo',
+    'copy:ksp',
+    'copy:prask',
+    'copy:kms',
+    'copy:wiki',
+    'copy:trojsten'
+  ]);
 
   // Default task.
   grunt.registerTask('default', ['clean:dist', 'copy:fonts', 'test']);
