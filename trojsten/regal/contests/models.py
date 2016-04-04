@@ -224,3 +224,11 @@ class Round(models.Model):
     def short_str(self):
         return '%i. kolo' % self.number
     short_str.short_description = 'kolo'
+
+    def get_pdf_name(self, solution=False):
+        return '%s-rocnik%i-kolo%i-%s.pdf' % (
+            self.series.competition,
+            self.series.year,
+            self.number,
+            "vzoraky" if solution else "zadania"
+        )
