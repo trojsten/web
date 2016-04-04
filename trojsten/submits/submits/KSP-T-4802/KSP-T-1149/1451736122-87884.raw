@@ -1,0 +1,29 @@
+KSP
+1451736122-87884
+KSP-4108
+KSP-1096.py
+1451736122
+3.py
+pocet=int(input())
+for i in range(0,pocet):
+	cislo=int(input());
+	cislob=cislo;
+	result="";
+	if cislo%9!=0:
+		print("");
+		continue;
+	else:
+		broken=0;
+		while cislo>=9 and broken==0:
+			modul=int("9"*(len(str(cislo+1))-1));
+			cifra=cislo//modul;
+			if cifra==10:
+				broken=1;
+				print("");
+				break;
+			cislo=cislo%modul;
+			result=result+str(cifra);
+		result+=str(cislo//9);
+		if broken==0:
+			vypis=int(result+"0"*(len(str(cislob+1))-len(str(result))));
+			print(" ".join(str(x) for x in range(vypis,vypis+10)))

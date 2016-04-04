@@ -1,0 +1,4 @@
+﻿Vieme, že rozdiel ceny s ciframi abc a koľko musí za ˇnu zaplatiť je 100*a+10*b+c-a-b-c=99a+9b, čiže nám trojciferné číslo(so škaredou výnimkou 999, tam treba začať delením 999kou) stačí postupne modulovať 99 a 9 a dostaneme a & b. c môže byť ľubovoľné, a z toho poskladáme možnosti abc. Prvý modul je počet cifier v (číslo+1), +1 kvôli výnimke 999, 9999, 99999 atˇd, tam treba začať vyšším. Časová: O(n*z) kde n=počet cifier čiže O(log(m)*z) kde m je číslo; Pamäťová:O(log(m)*z) pretože si pre každú cifru pamätáme zvyšok po delení.
+
+-----------
+6b. Vlejd. Máš formátovanie textu asi ak ja keď som ešte riešil. A to naozaj nie je pochvala. :D

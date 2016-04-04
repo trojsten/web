@@ -10,30 +10,29 @@
     <pre>{{ compileLog }}</pre>
 {% endif %}
 {% if have_tests %}
-<table>
-    <thead>
-        <tr>
-            <th>Vstup</th>
-            <th>Výsledok</th>
-            <th>Čas</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for test in tests %}
-        <tr>
-            <td>{{ test.name }}</td>
-            <td>{{ test.result }}</td>
-            <td>{{ test.time }} ms</td>
-        </tr>
-        {% if test.showDetails %}
-        <tr>
-            <td><pre>{{ test.details }}</pre></td>
-        </tr>
-        {% endif %}
-    </tbody>
-    {% endfor %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Vstup</th>
+                <th>Výsledok <a class="glyphicon glyphicon-question-sign" onclick='bootbox.alert({title:"Nápoveda k výstupu",message:"<table class=\"table\"><thead><tr><th>Kód</th><th>Vysvetlenie</th></tr></thead><tbody><tr><td>WA</td><td>Wrong Answer</td></tr><tr><td>TLE</td><td>Time Limit Exceeded</td></tr><tr><td>IGN</td><td>Ignored</td></tr><tr><td>CERR</td><td>Compilation Error</td></tr><tr><td>EXC</td><td>Runtime Exception</td></tr><tr><td>SEC</td><td>Security Exception</td></tr><tr><td>OK</td><td>Výborne</td></tr></tbody></table>"})' href="#"></a></th>
+                <th>Čas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for test in tests %}
+                <tr class="{%if test.result == "OK" %}success{% elif test.result == "IGN" %}warning{% else %}danger{% endif %}">
+                    <td>{{ test.name }}
+                        {% if test.showDetails %}
+                            <a onclick='bootbox.alert({title:"Porovnanie výstupov",message:"{{ test.details|linebreaksbr|escapejs }}"})' href="#">Porovnanie výstupov</a>
+                        {% endif %}
+                    </td>
+                    <td>{{ test.result }}</td>
+                    <td>{{ test.time }} ms</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endif %}
-</table>
 {% else %}
     Protokol testovania nie je dostupný
 {% endif %}

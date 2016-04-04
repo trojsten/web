@@ -1,0 +1,14 @@
+loops=int(input())
+prices=[]
+sizes=[]
+for i in range(0,loops):
+	actual=input()
+	prices.append(int(actual.split(" ")[0]))
+	sizes.append(int(actual.split(" ")[1]))
+	pass
+optimali=0
+for i in range(1,loops):
+	if sizes[optimali]*prices[i]<sizes[i]*prices[optimali]:
+		optimali=i
+	pass
+print(str(prices[optimali])+" "+str(sizes[optimali]))
