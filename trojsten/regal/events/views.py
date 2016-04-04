@@ -50,7 +50,10 @@ class RegistrationView(FormView):
         context = super(RegistrationView, self).get_context_data(**kwargs)
         context['show_form'] = context['form'].invite.going is None
         context['after_deadline'] =\
-            context['form'].invite.event.registration_deadline < datetime.now(pytz.utc)
+            (
+                False if context['form'].invite.event.registration_deadline is None else
+                context['form'].invite.event.registration_deadline < datetime.now(pytz.utc)
+            )
         return context
 
     def get_form_kwargs(self):
