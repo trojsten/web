@@ -1,23 +1,24 @@
-# coding: utf8
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
+import os
 import re
 import zipfile
 from functools import partial, wraps
 from time import time
 
-import os
 from django import forms
 from django.conf import settings
-from django.forms.formsets import formset_factory, BaseFormSet
+from django.forms.formsets import BaseFormSet, formset_factory
 from django.forms.widgets import HiddenInput
 from django.utils.translation import ugettext_lazy as _
-from easy_select2 import Select2
-from unidecode import unidecode
 
+from easy_select2 import Select2
 from trojsten.regal.people.models import User
-from trojsten.reviews.constants import RE_LAST_NAME, RE_SUBMIT_PK, RE_FILENAME
-from trojsten.reviews.helpers import submit_review, edit_review
+from trojsten.reviews.constants import RE_FILENAME, RE_LAST_NAME, RE_SUBMIT_PK
+from trojsten.reviews.helpers import edit_review, submit_review
 from trojsten.submit.helpers import write_chunks_to_file
+from unidecode import unidecode
 
 reviews_upload_pattern = re.compile(
     r'(?P<%s>.*)_(?P<%s>[0-9]+)/(?!source/)(?P<%s>.+\.[^.]+)' % (
@@ -26,6 +27,7 @@ reviews_upload_pattern = re.compile(
         RE_FILENAME,
     )
 )
+
 
 class UploadZipForm(forms.Form):
     file = forms.FileField(max_length=128, label='Zip súbor')
@@ -42,6 +44,7 @@ class UploadZipForm(forms.Form):
 
     def save(self, req_user, task):
         filecontent = self.cleaned_data['file']
+        # @FIXME: unused variable
         filename = self.cleaned_data['file'].name
 
         path = os.path.join(
@@ -71,9 +74,10 @@ class ReviewForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(ReviewForm, self).clean()
-        
+
         if 'points' not in cleaned_data or cleaned_data['points'] is None:
             raise forms.ValidationError(_('Points are required'))
+        # @FIXME: unused variable
         points = cleaned_data['points']
 
         if 'user' not in cleaned_data or cleaned_data['user'] is None:
@@ -86,6 +90,7 @@ class ReviewForm(forms.Form):
 
         if 'file' in cleaned_data:
             file = cleaned_data['file']
+            # @FIXME: unused variable
             filename = cleaned_data['file'].name if file is not None else ''
 
         return cleaned_data
@@ -189,6 +194,8 @@ class BaseZipSet(BaseFormSet):
                 points = form.cleaned_data['points']
                 comment = form.cleaned_data['comment']
 
-                submit_review(archive.read(fname), os.path.basename(fname), task, user, points, comment)
+                submit_review(
+                    archive.read(fname), os.path.basename(fname), task, user, points, comment
+                )
 
         os.remove(archive_path)
