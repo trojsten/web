@@ -12,7 +12,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.sites.models import Site
 from django.conf import settings
 from django.contrib.auth.models import Group
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from unidecode import unidecode
 
 from trojsten.results.models import FrozenResults
@@ -230,9 +230,9 @@ class Round(models.Model):
     def get_pdf_name(self, solution=False):
         return '%s-%s%i-%s%i-%s.pdf' % (
             self.series.competition,
-            unidecode(unicode(_('year'))),
+            unidecode(_('year')),
             self.series.year,
-            unidecode(unicode(_('round'))),
+            unidecode(_('round')),
             self.number,
-            unidecode(unicode(_('solutions'))) if solution else unidecode(unicode(_('tasks')))
+            unidecode(_('solutions')) if solution else unidecode(_('tasks'))
         )
