@@ -233,3 +233,16 @@ msgstr "reagovať"
 
 msgid "cancel reply"
 msgstr "zrušiť reakciu"
+
+#pdf file names
+msgid "year"
+msgstr "ročník"
+
+msgid "round"
+msgstr "kolo"
+
+msgid "solutions"
+msgstr "vzoráky"
+
+msgid "tasks"
+msgstr "zadania"

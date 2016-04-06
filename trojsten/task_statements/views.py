@@ -74,7 +74,9 @@ def view_pdf(request, round_id, solution=False):
         raise Http404
     path = round.get_pdf_path(solution)
     if os.path.exists(path):
-        return sendfile(request, path)
+        response = sendfile(request, path)
+        response['Content-Disposition'] = 'inline; filename="%s"' % round.get_pdf_name(solution)
+        return response
     else:
         raise Http404
 

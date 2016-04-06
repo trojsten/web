@@ -12,6 +12,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.sites.models import Site
 from django.conf import settings
 from django.contrib.auth.models import Group
+from django.utils.translation import ugettext as _
+from unidecode import unidecode
 
 from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
@@ -224,3 +226,13 @@ class Round(models.Model):
     def short_str(self):
         return '%i. kolo' % self.number
     short_str.short_description = 'kolo'
+
+    def get_pdf_name(self, solution=False):
+        return '%s-%s%i-%s%i-%s.pdf' % (
+            self.series.competition,
+            unidecode(_('year')),
+            self.series.year,
+            unidecode(_('round')),
+            self.number,
+            unidecode(_('solutions')) if solution else unidecode(_('tasks'))
+        )
