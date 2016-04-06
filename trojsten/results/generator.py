@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth import get_user_model
-from trojsten.regal.people.constants import (GRADUATION_SCHOOL_YEAR,
+from trojsten.people.constants import (GRADUATION_SCHOOL_YEAR,
                                              SCHOOL_YEAR_END_MONTH)
-from trojsten.regal.tasks.models import Submit, Task
+from trojsten.tasks.models import Submit, Task
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 
 from . import constants as c

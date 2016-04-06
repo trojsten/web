@@ -7,7 +7,7 @@ from django import template
 from django.core import urlresolvers
 from django.conf import settings
 
-from trojsten.regal.contests.models import Competition
+from trojsten.contests.models import Competition
 
 register = template.Library()
 

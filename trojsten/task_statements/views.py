@@ -8,8 +8,8 @@ from django.conf import settings
 
 from sendfile import sendfile
 
-from trojsten.regal.tasks.models import Task
-from trojsten.regal.contests.models import Round, Competition
+from trojsten.tasks.models import Task
+from trojsten.contests.models import Round, Competition
 from trojsten.utils.utils import is_true
 
 

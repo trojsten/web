@@ -8,7 +8,7 @@ from django.utils.translation import string_concat
 
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
-from trojsten.regal.people.models import Address, DuplicateUser, User
+from trojsten.people.models import Address, DuplicateUser, User
 
 from . import constants
 from .helpers import get_similar_users

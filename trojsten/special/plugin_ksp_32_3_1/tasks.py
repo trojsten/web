@@ -4,9 +4,9 @@ import json
 import os
 from subprocess import Popen, PIPE
 
-from trojsten.regal.people.models import User
-from trojsten.regal.tasks.models import Submit
-from trojsten.regal.tasks.models import Task
+from trojsten.people.models import User
+from trojsten.tasks.models import Submit
+from trojsten.tasks.models import Task
 from trojsten.submit.constants import SUBMIT_STATUS_FINISHED
 from trojsten.submit.constants import SUBMIT_RESPONSE_OK
 

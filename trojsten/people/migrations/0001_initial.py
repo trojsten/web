@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 from django.conf import settings
 import django.utils.timezone
-import trojsten.regal.people.models
+import trojsten.people.models
 import django.core.validators
 
 
@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'pou\u017e\xedvatelia',
             },
             managers=[
-                ('objects', trojsten.regal.people.models.UserManager()),
+                ('objects', trojsten.people.models.UserManager()),
             ],
         ),
         migrations.CreateModel(

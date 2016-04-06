@@ -5,8 +5,8 @@ from collections import defaultdict
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count
 
-from trojsten.regal.people.models import User
-from trojsten.regal.tasks.models import Submit, Task
+from trojsten.people.models import User
+from trojsten.tasks.models import Submit, Task
 from trojsten.submit.constants import SUBMIT_STATUS_FINISHED
 from trojsten.submit.constants import SUBMIT_RESPONSE_OK
 

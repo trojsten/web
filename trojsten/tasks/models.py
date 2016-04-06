@@ -12,10 +12,10 @@ from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
-from trojsten.regal.contests.models import Round, Competition
-from trojsten.regal.people.models import User
-from trojsten.regal.people.constants import GRADUATION_SCHOOL_YEAR
-from trojsten.regal.people.constants import SCHOOL_YEAR_END_MONTH
+from trojsten.contests.models import Round, Competition
+from trojsten.people.models import User
+from trojsten.people.constants import GRADUATION_SCHOOL_YEAR
+from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
 from trojsten.submit import constants as submit_constants
 
 

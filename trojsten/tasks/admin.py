@@ -7,9 +7,9 @@ from django.utils.encoding import force_text
 
 from easy_select2 import select2_modelform
 
-from trojsten.regal.tasks.models import *
-from trojsten.regal.tasks.forms import TaskValidationForm
-from trojsten.regal.utils import get_related, attribute_format
+from trojsten.tasks.models import *
+from trojsten.tasks.forms import TaskValidationForm
+from trojsten.utils.utils import get_related, attribute_format
 from trojsten.reviews.urls import task_review_urls, submit_urls
 
 

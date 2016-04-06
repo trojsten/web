@@ -14,7 +14,7 @@ from django.forms.widgets import HiddenInput
 from django.utils.translation import ugettext_lazy as _
 
 from easy_select2 import Select2
-from trojsten.regal.people.models import User
+from trojsten.people.models import User
 from trojsten.reviews.constants import RE_FILENAME, RE_LAST_NAME, RE_SUBMIT_PK
 from trojsten.reviews.helpers import edit_review, submit_review
 from trojsten.submit.helpers import write_chunks_to_file

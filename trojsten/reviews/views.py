@@ -14,7 +14,7 @@ from django.utils.text import slugify
 from sendfile import sendfile
 
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
-from trojsten.regal.tasks.models import Task, Submit
+from trojsten.tasks.models import Task, Submit
 from trojsten.reviews.constants import REVIEW_POINTS_FILENAME, \
     REVIEW_COMMENT_FILENAME, RE_FILENAME, RE_SUBMIT_PK
 from trojsten.reviews.helpers import (submit_download_filename,
