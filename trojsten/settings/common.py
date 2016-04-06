@@ -3,6 +3,7 @@
 import json
 import os
 
+import sys
 from django.contrib.messages import constants as messages
 from django.http import UnreadablePostError
 
@@ -45,6 +46,10 @@ DATABASES = {
         'PORT': env('TROJSTENWEB_KASPAR_DATABASE_PORT', ''),
     },
 }
+
+if 'test' in sys.argv:
+    if 'kaspar' in DATABASES:
+        del DATABASES['kaspar']
 
 PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
     os.path.dirname(os.path.realpath(trojsten.__file__))
