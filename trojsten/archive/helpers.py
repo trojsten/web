@@ -1,6 +1,6 @@
 from collections import OrderedDict, defaultdict
 
-from trojsten.regal.contests.models import Round
+from trojsten.contests.models import Round
 from trojsten.results.manager import get_results_tags_for_rounds
 
 

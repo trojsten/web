@@ -13,7 +13,7 @@ import trojsten.submit.urls
 import trojsten.results.urls
 import trojsten.news.urls
 import trojsten.task_statements.urls
-from trojsten.regal.people.forms import TrojstenUserCreationForm, TrojstenUserChangeForm
+from trojsten.people.forms import TrojstenUserCreationForm, TrojstenUserChangeForm
 
 admin.autodiscover()
 admin.site.login = login_required(admin.site.login)
@@ -56,7 +56,7 @@ urlpatterns += patterns('',
     url(r'^novinky/', include(trojsten.news.urls)),
     url(r'^ulohy/', include(trojsten.task_statements.urls)),
     url(r'^archiv/$', 'trojsten.archive.views.archive', {'path': '/archiv', }, name='archive'),
-    url(r'^akcie/', include('trojsten.regal.events.urls')),
+    url(r'^akcie/', include('trojsten.events.urls')),
     url(r'^nahlasit-problem/', include('contact_form.urls')),
     url(r'^specialne/', include('trojsten.special.urls')),
     url(r'^komentare/', include('fluent_comments.urls')),

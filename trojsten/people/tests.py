@@ -6,8 +6,8 @@ import random
 from django.test import TestCase
 from django.contrib.auth.models import Group
 
-from trojsten.regal.contests.models import Competition, Round, Series
-from trojsten.regal.tasks.models import Task
+from trojsten.contests.models import Competition, Round, Series
+from trojsten.tasks.models import Task
 from .helpers import get_similar_users, merge_users
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
 

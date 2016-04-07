@@ -1,6 +1,6 @@
 from django.db.models import Sum
 
-from trojsten.regal.tasks.models import Submit, Task
+from trojsten.tasks.models import Submit, Task
 from trojsten.submit.constants import SUBMIT_STATUS_FINISHED
 from trojsten.submit.constants import SUBMIT_RESPONSE_OK
 

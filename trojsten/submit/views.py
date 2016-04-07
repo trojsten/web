@@ -17,8 +17,8 @@ from django.utils.html import format_html
 from sendfile import sendfile
 from unidecode import unidecode
 
-from trojsten.regal.contests.models import Round, Competition
-from trojsten.regal.tasks.models import Task, Submit
+from trojsten.contests.models import Round, Competition
+from trojsten.tasks.models import Task, Submit
 from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
 from trojsten.submit.helpers import write_chunks_to_file, process_submit, get_path,\
     update_submit

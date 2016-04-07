@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from trojsten.regal.contests.models import Round
+from trojsten.contests.models import Round
 from trojsten.results.helpers import UserResult
 
 

@@ -7,8 +7,8 @@ from django.utils.encoding import force_text
 
 from easy_select2 import select2_modelform
 
-from trojsten.regal.contests.models import *
-from trojsten.regal.utils import get_related, attribute_format
+from trojsten.contests.models import *
+from trojsten.utils.utils import get_related, attribute_format
 
 
 class CompetitionAdmin(admin.ModelAdmin):

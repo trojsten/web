@@ -9,7 +9,7 @@ from wiki.urls import get_pattern as get_wiki_pattern
 from django_nyt.urls import get_pattern as get_notify_pattern
 from contact_form.views import ContactFormView
 
-from trojsten.regal.people.forms import TrojstenUserCreationForm, TrojstenUserChangeForm
+from trojsten.people.forms import TrojstenUserCreationForm, TrojstenUserChangeForm
 
 admin.autodiscover()
 admin.site.login = login_required(admin.site.login)

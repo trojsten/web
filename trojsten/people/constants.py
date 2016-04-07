@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Common constants for regal.people
+# Common constants for people
 
 GRADUATION_SCHOOL_YEAR = 4
 SCHOOL_YEAR_END_MONTH = 6

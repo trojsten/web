@@ -24,7 +24,7 @@ from .forms import RegistrationForm
 
 
 class ParticipantsAndOrganizersListView(DetailView):
-    template_name = "trojsten/regal/events/participants_and_organizers_list.html"
+    template_name = "trojsten/events/participants_and_organizers_list.html"
     model = Event
     context_object_name = 'event'
     pk_url_kwarg = 'event_id'
@@ -33,7 +33,7 @@ participants_organizers_list = ParticipantsAndOrganizersListView.as_view()
 
 
 class RegistrationView(FormView):
-    template_name = "trojsten/regal/events/registration.html"
+    template_name = "trojsten/events/registration.html"
     form_class = RegistrationForm
 
     @method_decorator(login_required)
@@ -103,7 +103,7 @@ registration = RegistrationView.as_view()
 
 
 class EventView(DetailView):
-    template_name = "trojsten/regal/events/event.html"
+    template_name = "trojsten/events/event.html"
     model = Event
     context_object_name = 'event'
     pk_url_kwarg = 'event_id'
@@ -123,7 +123,7 @@ event_detail = EventView.as_view()
 
 
 class EventListView(ListView):
-    template_name = "trojsten/regal/events/event_list.html"
+    template_name = "trojsten/events/event_list.html"
     model = EventType
     context_object_name = 'event_types'
     queryset = EventType.objects.current_site_only().prefetch_related('event_set')
