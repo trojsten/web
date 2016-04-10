@@ -7,7 +7,11 @@ env:
 # command to install dependencies
 install:
   - pip install -r requirements.txt
+  - pip install coverage
 # command to run tests
 script:
-  - ./manage.py test
+  - coverage run --source='.' manage.py test
 sudo: false
+addons:
+    code_climate:
+        repo_token: a2d4a42a85b041da0c9d964e43de5a0bd632e7191ce66b262f6fdbe4fef83047
