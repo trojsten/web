@@ -7,10 +7,10 @@ from django.utils.six.moves import input
 from django.db import connections, transaction
 from django.db.models import Q
 
-from trojsten.regal.people.models import (User, UserPropertyKey, Address,
+from trojsten.people.models import (User, UserPropertyKey, Address,
     School, DuplicateUser)
 
-from trojsten.regal.people.helpers import get_similar_users
+from trojsten.people.helpers import get_similar_users
 
 # Kaspar property IDs
 EMAIL_PROP = 1
