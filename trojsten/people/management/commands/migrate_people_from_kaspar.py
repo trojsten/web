@@ -2,15 +2,13 @@ from __future__ import unicode_literals
 
 from datetime import datetime
 
-from django.core.management.base import NoArgsCommand, CommandError
-from django.utils.six.moves import input
+from django.core.management.base import NoArgsCommand
 from django.db import connections, transaction
 from django.db.models import Q
+from django.utils.six.moves import input
 
-from trojsten.regal.people.models import (User, UserPropertyKey, Address,
-    School, DuplicateUser)
-
-from trojsten.regal.people.helpers import get_similar_users
+from trojsten.people.helpers import get_similar_users
+from trojsten.people.models import DuplicateUser, School, User, UserPropertyKey
 
 # Kaspar property IDs
 EMAIL_PROP = 1
@@ -88,7 +86,7 @@ class Command(NoArgsCommand):
 
     def create_school(self, kaspar_id, abbr, name, addr_name, street,
                       city, zip_code):
-        abbr += '?' # Question mark denotes schools needing review.
+        abbr += '?'  # Question mark denotes schools needing review.
         school = School.objects.create(abbreviation=abbr,
                                        verbose_name=name,
                                        addr_name=addr_name,
@@ -101,7 +99,7 @@ class Command(NoArgsCommand):
 
     @transaction.atomic
     def process_person(self, man_id, first_name, last_name, school_id,
-                      grad_year, note):
+                       grad_year, note):
         # If the user already exists in our database, skip.
         if self.kaspar_id_key.properties.filter(value=man_id).exists():
             if self.verbosity >= 2:

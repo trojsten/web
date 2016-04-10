@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from trojsten.regal.tasks.models import Task, Submit
 from trojsten.submit.helpers import update_submit
+from trojsten.tasks.models import Submit, Task
 
 
 class Command(BaseCommand):
