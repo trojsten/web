@@ -1,11 +1,12 @@
 from __future__ import absolute_import
 
 from django.conf import settings
-from django.conf.urls import patterns, include, url
-from django.contrib.auth.decorators import login_required
+from django.conf.urls import include, patterns, url
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 
-from trojsten.regal.people.forms import TrojstenUserCreationForm, TrojstenUserChangeForm
+from trojsten.people.forms import (TrojstenUserChangeForm,
+                                   TrojstenUserCreationForm)
 
 admin.autodiscover()
 admin.site.login = login_required(admin.site.login)
