@@ -14,7 +14,7 @@
         <thead>
             <tr>
                 <th>Vstup</th>
-                <th>Výsledok <a class="glyphicon glyphicon-question-sign" onclick='bootbox.alert({title:"Nápoveda k výstupu",message:"<table class=\"table\"><thead><tr><th>Kód</th><th>Vysvetlenie</th></tr></thead><tbody><tr><td>WA</td><td>Wrong Answer</td></tr><tr><td>TLE</td><td>Time Limit Exceeded</td></tr><tr><td>IGN</td><td>Ignored</td></tr><tr><td>CERR</td><td>Compilation Error</td></tr><tr><td>EXC</td><td>Runtime Exception</td></tr><tr><td>SEC</td><td>Security Exception</td></tr><tr><td>OK</td><td>Výborne</td></tr></tbody></table>"})' href="#"></a></th>
+                <th>Výsledok</th>
                 <th>Čas</th>
             </tr>
         </thead>
@@ -23,12 +23,20 @@
                 <tr class="{%if test.result == "OK" %}success{% elif test.result == "IGN" %}warning{% else %}danger{% endif %}">
                     <td>{{ test.name }}
                         {% if test.showDetails %}
-                            <a onclick='bootbox.alert({title:"Porovnanie výstupov",message:"{{ test.details|linebreaksbr|escapejs }}"})' href="#">Porovnanie výstupov</a>
+                            <a data-toggle="collapse" href="#collapse{{ forloop.counter0 }}">Porovnanie výstupov</a>
                         {% endif %}
                     </td>
                     <td>{{ test.result }}</td>
                     <td>{{ test.time }} ms</td>
                 </tr>
+
+                    {% if test.showDetails %}
+                <tr style="padding:0">
+                <td colspan="3">
+                        <div  class="collapse" id="collapse{{ forloop.counter0 }}"> {{ test.details|linebreaksbr }}</div>
+                </td>
+                </tr>
+                   {% endif %}
             {% endfor %}
         </tbody>
     </table>
