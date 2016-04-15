@@ -41,24 +41,27 @@ var QuestionList = React.createClass({
         return {
             form_a: '',
             form_b: '',
-            questions: []
+            questions: [],
+            pending: false
         };
     },
     componentDidMount: function componentDidMount() {
+        this.setState({ pending: true });
         $.getJSON(this.url, function (data) {
             if (data.status == 'Success') {
-                this.setState({ questions: data.queries });
+                this.setState({ questions: data.queries, pending: false });
             }
         }.bind(this));
     },
     handleReset: function handleReset() {
+        this.setState({ pending: true });
         $.ajax({
             url: this.url,
             type: 'DELETE',
             dataType: 'json',
             success: function (data) {
                 if (data.status == 'Success') {
-                    this.setState({ questions: data.queries });
+                    this.setState({ questions: data.queries, pending: false });
                 }
             }.bind(this)
         });
@@ -72,10 +75,12 @@ var QuestionList = React.createClass({
         this.setState({ form_b: new_b });
     },
     handleSubmit: function handleSubmit(event) {
+        this.setState({ pending: true });
         $.post(this.url, { a: this.state.form_a, b: this.state.form_b }, function (data) {
             if (data.status == 'Success') {
-                this.setState({ questions: data.queries });
+                this.setState({ questions: data.queries, pending: false });
             } else {
+                this.setState({ pending: false });
                 alert(data.message);
             }
         }.bind(this), 'json');
@@ -98,7 +103,10 @@ var QuestionList = React.createClass({
                 'Ešte si nepoložil žiadnu otázku'
             );
         }
-
+        var pending = '';
+        if (this.state.pending) {
+            pending = React.createElement('span', { className: 'glyphicon glyphicon-refresh glyphicon-animate-rotate pull-right btn btn-link' });
+        }
         return React.createElement(
             'div',
             null,
@@ -135,7 +143,8 @@ var QuestionList = React.createClass({
                     'button',
                     { type: 'button', className: 'btn btn-danger', onClick: this.handleReset },
                     'Reset'
-                )
+                ),
+                pending
             )
         );
     }

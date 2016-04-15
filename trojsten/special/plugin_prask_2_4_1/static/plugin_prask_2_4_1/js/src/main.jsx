@@ -12,24 +12,27 @@ var QuestionList = React.createClass({
         return {
             form_a: '',
             form_b: '',
-            questions: []
+            questions: [],
+            pending: false
         }
     },
     componentDidMount: function () {
+        this.setState({pending:true});
         $.getJSON(this.url, function (data) {
             if (data.status == 'Success') {
-                this.setState({questions: data.queries});
+                this.setState({questions: data.queries, pending: false});
             }
         }.bind(this));
     },
     handleReset: function () {
+        this.setState({pending:true});
         $.ajax({
             url: this.url,
             type: 'DELETE',
             dataType: 'json',
             success: function (data) {
                 if (data.status == 'Success') {
-                    this.setState({questions: data.queries});
+                    this.setState({questions: data.queries, pending: false});
                 }
             }.bind(this)
         });
@@ -43,13 +46,15 @@ var QuestionList = React.createClass({
         this.setState({form_b: new_b});
     },
     handleSubmit: function (event) {
+        this.setState({pending: true});
         $.post(
             this.url,
             {a: this.state.form_a, b: this.state.form_b},
             function (data) {
                 if (data.status == 'Success') {
-                    this.setState({questions: data.queries});
+                    this.setState({questions: data.queries, pending: false});
                 } else {
+                    this.setState({pending: false});
                     alert(data.message);
                 }
             }.bind(this), 'json');
@@ -64,7 +69,10 @@ var QuestionList = React.createClass({
         } else {
             questions = <div className="alert alert-info">Ešte si nepoložil žiadnu otázku</div>
         }
-
+        var pending = '';
+        if (this.state.pending) {
+            pending = <span className="glyphicon glyphicon-refresh glyphicon-animate-rotate pull-right btn btn-link"/>;
+        }
         return <div>
             <h2>Odpovede na tvoje doterajšie otázky:</h2>
             {questions}
@@ -78,6 +86,7 @@ var QuestionList = React.createClass({
                        className="form-control"/>
                 <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Porovnaj</button>
                 <button type="button" className="btn btn-danger" onClick={this.handleReset}>Reset</button>
+                {pending}
             </form>
         </div>;
     }
