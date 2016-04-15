@@ -21,7 +21,7 @@ var Question = React.createClass({
                 'č. ',
                 this.props.a
             ),
-            ' je väčšia ako zlúčenina ',
+            ' je lepšia ako zlúčenina ',
             React.createElement(
                 'em',
                 null,
@@ -82,17 +82,36 @@ var QuestionList = React.createClass({
         return true;
     },
     render: function render() {
-        var questions = this.state.questions.map(function (item, index) {
-            return React.createElement(Question, { key: index, a: item[0], b: item[1] });
-        });
+        var questions;
+        if (this.state.questions.length) {
+            questions = React.createElement(
+                'ol',
+                null,
+                this.state.questions.map(function (item, index) {
+                    return React.createElement(Question, { key: index, a: item[0], b: item[1] });
+                })
+            );
+        } else {
+            questions = React.createElement(
+                'div',
+                { className: 'alert alert-info' },
+                'Ešte si nepoložil žiadnu otázku'
+            );
+        }
+
         return React.createElement(
             'div',
             null,
-            'Odpovede na tvoje doterajšie otázky:',
             React.createElement(
-                'ol',
+                'h2',
                 null,
-                questions
+                'Odpovede na tvoje doterajšie otázky:'
+            ),
+            questions,
+            React.createElement(
+                'h3',
+                null,
+                'Nová otázka'
             ),
             React.createElement(
                 'form',

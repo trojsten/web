@@ -1,7 +1,7 @@
 var Question = React.createClass({
     render: function () {
         return <li><span className="label label-info">{this.props.a} > {this.props.b}</span>&nbsp;
-            Zlúčenina <em>č. {this.props.a}</em> je väčšia ako zlúčenina <em>č. {this.props.b}</em>.
+            Zlúčenina <em>č. {this.props.a}</em> je lepšia ako zlúčenina <em>č. {this.props.b}</em>.
         </li>;
     }
 });
@@ -56,12 +56,19 @@ var QuestionList = React.createClass({
         return true;
     },
     render: function () {
-        var questions = this.state.questions.map(function (item, index) {
-            return <Question key={index} a={item[0]} b={item[1]}/>;
-        });
+        var questions;
+        if (this.state.questions.length) {
+            questions = <ol>{this.state.questions.map(function (item, index) {
+                return <Question key={index} a={item[0]} b={item[1]}/>;
+            })}</ol>;
+        } else {
+            questions = <div className="alert alert-info">Ešte si nepoložil žiadnu otázku</div>
+        }
+
         return <div>
-            Odpovede na tvoje doterajšie otázky:
-            <ol>{questions}</ol>
+            <h2>Odpovede na tvoje doterajšie otázky:</h2>
+            {questions}
+            <h3>Nová otázka</h3>
             <form className="form form-inline">
                 <label>Porovnaj:</label>
                 <input type="number" value={this.state.form_a} onChange={this.handleFormAChange}
