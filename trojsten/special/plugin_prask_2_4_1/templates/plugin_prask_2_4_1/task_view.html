@@ -3,7 +3,13 @@
 {% load bootstrap %}
 
 
+{% block title %}{{ task.name }}{% endblock %}
+{% block page_header %}
+    <h1>{{ task.name }}</h1>
+{% endblock %}
+
 {% block page_content %}
+    <a href="{% url 'task_statement' task_id=task.id %}">Zadanie</a>
     <div id="plugin_prask_2_4_1/questions"></div>
     <h2>Body:</h2>
     <ul class="list-group">

@@ -2,10 +2,12 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http.response import JsonResponse
+
+from trojsten.tasks.models import Task
 
 from .tester import process_question, process_answer, POCET_PRVKOV
 from .forms import SubmitForm
@@ -16,6 +18,7 @@ TASK_ID = 1173
 
 @login_required
 def task_view(request):
+    task = get_object_or_404(Task, pk=TASK_ID)
     if request.method == 'POST':
         form = SubmitForm(request.POST)
         if form.is_valid():
@@ -32,6 +35,7 @@ def task_view(request):
         form = SubmitForm()
 
     context = dict(
+        task=task,
         form=form,
         last_points=request.session.get('plugin_prask_2_4_1/last_points', 0),
         best_points=request.session.get('plugin_prask_2_4_1/best_points', 0),
