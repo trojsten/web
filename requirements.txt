@@ -38,6 +38,7 @@ django-threadedcomments==1.0.1
 Django==1.9.6             # via django-bootstrap-form, django-classy-tags, django-contrib-comments, django-mptt, django-nyt, django-oauth-toolkit, django-sendfile, ksp-login, wiki
 ecdsa==0.13
 fake-factory==0.5.7
+first==2.0.1
 importlib==1.0.3
 ipaddress==1.0.16         # via fake-factory
 kombu==3.0.35             # via celery
