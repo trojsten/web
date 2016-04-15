@@ -9,8 +9,9 @@ POCET_PRVKOV = 16
 
 
 def dfs(reach, edges, u):
-    if u not in reach:
+    if u in reach:
         return
+    reach[u] = set()
     for v in edges[u]:
         dfs(reach, edges, v)
         reach[u].add(v)
@@ -20,17 +21,15 @@ def dfs(reach, edges, u):
 def get_reach(queries):
     edges = defaultdict(set)
     for a, b in queries:
-        edges[a].add(b)
+        edges[b].add(a)
 
-    reach = defaultdict(set)
-    for i in range(POCET_PRVKOV):
+    reach = dict()
+    for i in range(1, POCET_PRVKOV + 1):
         dfs(reach, edges, i)
     return reach
 
 
 def adversary(reach, a, b):
-    if a == b:
-        raise RuntimeError('Porovnávaš samé so sebou.')
     if b in reach[a]:
         return b
     if a in reach[b]:
@@ -39,9 +38,9 @@ def adversary(reach, a, b):
     brank = min(2, len(reach[b]))
     if arank == 0 and brank == 0:
         for k, v in reach.items():
-            if len(v) == 1 and v[a]:
+            if len(v) == 1 and a in v:
                 arank -= 1
-            if len(v) == 1 and v[b]:
+            if len(v) == 1 and b in v:
                 brank -= 1
         if arank < brank:
             return a
@@ -65,15 +64,14 @@ def verify(reach, x, numqueries):
     # Overime, ci aj iny moze byt druhy najvacsi
     otherroot = None
     if len(roots) > 1:
-        otherroot = first(roots.keys(), key=lambda k: k != x)
+        otherroot = first(roots, key=lambda k: k != x)
     if len(semiroots) > 1:
-        otherroot = first(semiroots.keys(), key=lambda k: k != x)
+        otherroot = first(semiroots, key=lambda k: k != x)
     if otherroot is not None:
         return 0, "Len tipuješ! Podľa tvojich otázok by druhá najkvalitnejšia mohla byť aj %d." % (
             otherroot,
         )
     # OK, nasli ho
-    points = 0
     max_points = False
     if numqueries <= 16 + 3:
         points = 4
@@ -84,7 +82,6 @@ def verify(reach, x, numqueries):
         points = 2
     else:
         points = 1
-
     message = "Správne! Máš to za $numqueries otázok, takže dostávaš %d %s." % (
         points, "bod" if points == 1 else "body"
     )
@@ -97,7 +94,7 @@ def process_question(queries, a, b):
     reach = get_reach(queries)
     greater = adversary(reach, a, b)
     smaller = b if greater == a else a
-    queries.append(greater, smaller)
+    queries.append((greater, smaller))
 
 
 def process_answer(queries, selection):
