@@ -1,6 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -10,6 +11,10 @@ from .tester import process_question, process_answer, POCET_PRVKOV
 from .forms import SubmitForm
 
 
+TASK_ID = 1173
+
+
+@login_required
 def task_view(request):
     if request.method == 'POST':
         form = SubmitForm(request.POST)
@@ -27,11 +32,14 @@ def task_view(request):
         form = SubmitForm()
 
     context = dict(
-        form=form, last_points=task_session.get('last_points', 0), best_points=task_session.get('best_points', 0)
+        form=form,
+        last_points=request.session.get('plugin_prask_2_4_1/last_points', 0),
+        best_points=request.session.get('plugin_prask_2_4_1/best_points', 0),
     )
     return render(request, 'plugin_prask_2_4_1/task_view.html', context=context)
 
 
+@login_required
 def answer_query(request):
     data = dict()
     queries = request.session.get('plugin_prask_2_4_1/questions', list())
