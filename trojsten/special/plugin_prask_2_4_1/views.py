@@ -6,8 +6,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http.response import JsonResponse
+from django.db.models import Max
 
-from trojsten.tasks.models import Task
+from trojsten.tasks.models import Task, Submit
 
 from .tester import process_question, process_answer, POCET_PRVKOV
 from .forms import SubmitForm
@@ -19,6 +20,7 @@ TASK_ID = 1173
 @login_required
 def task_view(request):
     task = get_object_or_404(Task, pk=TASK_ID)
+    best_points = Submit.objects.filter(user=request.user, task=task).aggregate(Max('points'))
     if request.method == 'POST':
         form = SubmitForm(request.POST)
         if form.is_valid():
@@ -26,8 +28,20 @@ def task_view(request):
             selection = form.cleaned_data['selection']
             points, message = process_answer(queries, selection)
             if points:
+                if points > best_points:
+                    submit = Submit(
+                        task=task,
+                        user=request.user,
+                        points=points,
+                        submit_type=Submit.EXTERNAL,
+                        filepath="",
+                        testing_status="OK",
+                        tester_response="",
+                        protocol_id="",
+                    )
+                    submit.save()
                 pass  # @TODO: Submit!
-                request.session['plugin_prask_2_4_1/best_points'] = 'Todo!'
+                request.session['plugin_prask_2_4_1/best_points'] = best_points
                 request.session['plugin_prask_2_4_1/last_points'] = points
             messages.add_message(request, messages.SUCCESS if points else messages.ERROR, message)
             return redirect(reverse('plugin_prask_2_4_1:task_view'))
