@@ -60,7 +60,7 @@ def verify(reach, x, numqueries):
 
     # Overime, ci x moze byt druhy najvacsi
     if (x not in roots and x not in semiroots) or (len(roots) == 1 and x in roots):
-        return 0, "Zle! $x určite nie je druhá najkvalitnejšia."
+        return 0, "Zle! %d určite nie je druhá najkvalitnejšia." % (x,)
     # Overime, ci aj iny moze byt druhy najvacsi
     otherroot = None
     if len(roots) > 1:
@@ -82,8 +82,8 @@ def verify(reach, x, numqueries):
         points = 2
     else:
         points = 1
-    message = "Správne! Máš to za $numqueries otázok, takže dostávaš %d %s." % (
-        points, "bod" if points == 1 else "body"
+    message = "Správne! Máš to za %d otázok, takže dostávaš %d %s." % (
+        numqueries, points, "bod" if points == 1 else "body"
     )
     if not max_points:
         message = message + " Podarí sa ti vymyslieť lepšie riešenie?"
