@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse, Http404
 from django.db.models import Max
 
 from trojsten.tasks.models import Task, Submit
@@ -20,7 +20,11 @@ TASK_ID = 1173
 @login_required
 def task_view(request):
     task = get_object_or_404(Task, pk=TASK_ID)
-    best_points = Submit.objects.filter(user=request.user, task=task).aggregate(Max('points'))
+    if not task.visible(request.user):
+        raise Http404
+    best_points = Submit.objects.filter(user=request.user, task=task).aggregate(Max('points'))['points__max']
+    if best_points is None:
+        best_points = 0
     if request.method == 'POST':
         form = SubmitForm(request.POST)
         if form.is_valid():
@@ -40,8 +44,6 @@ def task_view(request):
                         protocol_id="",
                     )
                     submit.save()
-                pass  # @TODO: Submit!
-                request.session['plugin_prask_2_4_1/best_points'] = best_points
                 request.session['plugin_prask_2_4_1/last_points'] = points
             messages.add_message(request, messages.SUCCESS if points else messages.ERROR, message)
             return redirect(reverse('plugin_prask_2_4_1:task_view'))
@@ -52,13 +54,16 @@ def task_view(request):
         task=task,
         form=form,
         last_points=request.session.get('plugin_prask_2_4_1/last_points', 0),
-        best_points=request.session.get('plugin_prask_2_4_1/best_points', 0),
+        best_points=int(best_points)
     )
     return render(request, 'plugin_prask_2_4_1/task_view.html', context=context)
 
 
 @login_required
 def answer_query(request):
+    task = get_object_or_404(Task, pk=TASK_ID)
+    if not task.visible(request.user):
+        raise Http404
     data = dict()
     queries = request.session.get('plugin_prask_2_4_1/questions', list())
     if request.method == 'DELETE':
