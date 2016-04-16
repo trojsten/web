@@ -84,7 +84,8 @@ var QuestionList = React.createClass({
                 alert(data.message);
             }
         }.bind(this), 'json');
-        return true;
+        event.stopPropagation();
+        event.preventDefault();
     },
     render: function render() {
         var questions;
@@ -123,7 +124,7 @@ var QuestionList = React.createClass({
             ),
             React.createElement(
                 'form',
-                { className: 'form form-inline' },
+                { className: 'form form-inline', onSubmit: this.handleSubmit },
                 React.createElement(
                     'label',
                     null,
@@ -136,7 +137,7 @@ var QuestionList = React.createClass({
                     className: 'form-control' }),
                 React.createElement(
                     'button',
-                    { type: 'button', className: 'btn btn-primary', onClick: this.handleSubmit },
+                    { type: 'submit', className: 'btn btn-primary' },
                     'Porovnaj'
                 ),
                 React.createElement(

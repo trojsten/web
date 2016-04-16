@@ -58,7 +58,8 @@ var QuestionList = React.createClass({
                     alert(data.message);
                 }
             }.bind(this), 'json');
-        return true;
+        event.stopPropagation();
+        event.preventDefault();
     },
     render: function () {
         var questions;
@@ -77,14 +78,14 @@ var QuestionList = React.createClass({
             <h2>Odpovede na tvoje doterajšie otázky:</h2>
             {questions}
             <h3>Nová otázka</h3>
-            <form className="form form-inline">
+            <form className="form form-inline" onSubmit={this.handleSubmit}>
                 <label>Porovnaj:</label>
                 <input type="number" value={this.state.form_a} onChange={this.handleFormAChange}
                        className="form-control"/>
                 &nbsp;a&nbsp;
                 <input type="number" value={this.state.form_b} onChange={this.handleFormBChange}
                        className="form-control"/>
-                <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Porovnaj</button>
+                <button type="submit" className="btn btn-primary">Porovnaj</button>
                 <button type="button" className="btn btn-danger" onClick={this.handleReset}>Reset</button>
                 {pending}
             </form>
