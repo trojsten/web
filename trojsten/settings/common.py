@@ -216,7 +216,6 @@ INSTALLED_APPS = (
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
-    # 'south',
     'django_nyt',
     'mptt',
     'sekizai',

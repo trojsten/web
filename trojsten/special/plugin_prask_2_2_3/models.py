@@ -3,10 +3,9 @@ from django.conf import settings
 
 
 class UserLink(models.Model):
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         related_name='+',
-        unique=True,
         null=True,
         blank=True,
     )

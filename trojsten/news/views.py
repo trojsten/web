@@ -1,5 +1,5 @@
 from django.views.generic import ListView
-from django.contrib.sites.models import get_current_site
+from django.contrib.sites.shortcuts import get_current_site
 
 from trojsten.news.models import Entry
 
