@@ -9,7 +9,7 @@ version.txt
 .coverage
 
 #nodejs
-*/node_modules/*
+**/node_modules/**
 npm-debug.log
 
 # Vim-specific
