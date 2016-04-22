@@ -1,0 +1,5 @@
+coverage
+sqlparse
+django-debug-toolbar
+Fabric
+pip-tools
