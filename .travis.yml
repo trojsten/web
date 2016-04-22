@@ -6,9 +6,11 @@ env:
   - DJANGO_VERSION='>=1.9,<1.10'
 # command to install dependencies
 install:
+  - pip install --upgrade pip
   - pip install -r requirements.txt
   - pip install -q "Django${DJANGO_VERSION}"
   - pip install -q coverage
+  - pip install -q codeclimate-test-reporter
 # command to run tests
 script:
   - coverage run --source='.' manage.py test
