@@ -62,5 +62,13 @@
         },
         "model": "sites.site",
         "pk": 8
+    },
+    {
+        "fields": {
+            "domain": "login.trojsten.sk",
+            "name": "login"
+        },
+        "model": "sites.site",
+        "pk": 10
     }
 ]

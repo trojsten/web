@@ -7,6 +7,9 @@ TEMPLATE_DEBUG = True
 SUBMIT_DEBUG = True
 SENDFILE_BACKEND = 'sendfile.backends.development'
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
+SITE_ID = int(env('SITE_ID', '1'))
+ROOT_URLCONF = env('ROOT_URLCONF', 'trojsten.urls.default')
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Django debug toolbar set-up
 INSTALLED_APPS += (

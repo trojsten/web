@@ -213,7 +213,7 @@
     }, this), 1)
   }
 
-  OffCanvas.prototype.hide = function (fast) {
+  OffCanvas.prototype.hide = function () {
     if (this.state !== 'slid') return
 
     var startEvent = $.Event('hide.bs.offcanvas')
@@ -223,7 +223,6 @@
     this.state = 'slide-out'
 
     var elements = $('.canvas-slid')
-    var placement = this.placement
     var offset = -1 * this.offset()
 
     var complete = function () {
