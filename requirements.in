@@ -1,6 +1,7 @@
 celery
 django-autoslug
 django-bootstrap-form
+django-bulk-update
 django-classy-tags
 django-contact-form
 django-contrib-comments
@@ -21,6 +22,7 @@ django-threadedcomments
 django-uuidfield
 Django==1.8.12
 ecdsa
+fake-factory
 ksp-login
 importlib
 Markdown

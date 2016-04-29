@@ -199,6 +199,7 @@ INSTALLED_APPS = (
     'trojsten.task_statements',
     'trojsten.menu',
     'trojsten.threads',
+    'trojsten.dbsanitizer',
 
     # Keep this under trojsten to let trojsten override templates.
     'django.contrib.admin',
