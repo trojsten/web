@@ -1,6 +1,6 @@
-from django.views.generic.detail import DetailView
+from django.contrib.sites.shortcuts import get_current_site
 from django.views.generic import ListView
-from django.contrib.sites.models import get_current_site
+from django.views.generic.detail import DetailView
 
 from .models import Thread
 
