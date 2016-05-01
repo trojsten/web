@@ -1,12 +1,15 @@
 language: python
 python:
   - "2.7"
+  - "3.5"
 env:
   - DJANGO_VERSION='>=1.9,<1.10'
 # command to install dependencies
 install:
   - pip install --upgrade pip
-  - pip install -r requirements.txt
+  - pip install pip-tools
+  - if [[ $TRAVIS_PYTHON_VERSION != 2.7 ]]; then rm requirements.txt; pip-compile requirements.in -o requirements.txt; fi
+  - pip install -r requirements.txt;
   - pip install -q "Django${DJANGO_VERSION}"
   - pip install -q coverage
   - pip install -q codeclimate-test-reporter

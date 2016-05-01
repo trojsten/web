@@ -23,7 +23,6 @@ Django<1.10
 ecdsa
 fake-factory
 ksp-login>0.4
-importlib
 Markdown
 psycopg2
 pycrypto

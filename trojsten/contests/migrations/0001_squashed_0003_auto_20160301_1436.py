@@ -8,7 +8,7 @@ import trojsten.utils.utils
 
 class Migration(migrations.Migration):
 
-    replaces = [(b'contests', '0001_initial'), (b'contests', '0002_auto_20160119_1100'), (b'contests', '0003_auto_20160301_1436')]
+    replaces = [('contests', '0001_initial'), ('contests', '0002_auto_20160119_1100'), ('contests', '0003_auto_20160301_1436')]
 
     dependencies = [
         ('sites', '0001_initial'),
@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='competition',
             name='sites',
-            field=models.ManyToManyField(to=b'sites.Site'),
+            field=models.ManyToManyField(to='sites.Site'),
         ),
         migrations.AlterField(
             model_name='round',
