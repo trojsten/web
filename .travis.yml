@@ -7,6 +7,8 @@ env:
 # command to install dependencies
 install:
   - pip install --upgrade pip
+  - pip install pip-tools
+  - ./build_requirements.sh
   - pip install -r requirements.txt
   - pip install -q "Django${DJANGO_VERSION}"
   - pip install -q coverage
