@@ -2,8 +2,8 @@
 # Common settings for trojsten.
 import json
 import os
-
 import sys
+
 from django.contrib.messages import constants as messages
 from django.http import UnreadablePostError
 
@@ -71,6 +71,8 @@ if 'TROJSTENWEB_MANAGERS' in os.environ:
     ])
 else:
     MANAGERS = ()
+
+DEFAULT_FROM_EMAIL = 'no-reply@trojsten.sk'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
