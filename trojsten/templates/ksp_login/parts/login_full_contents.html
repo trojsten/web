@@ -36,6 +36,7 @@
       {% endfor %}
       <div class="form-group">
           <input class="btn btn-primary btn-block" type="submit" value="{% trans "Log in" %}" />
+          <a class="btn btn-link btn-block" href="{% url "password_reset" %}">{% trans "Forgotten password" %}</a>
       </div>
   </form>
   </div>
