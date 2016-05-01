@@ -38,7 +38,7 @@ django-sortedm2m==1.2.2
 django-tag-parser==2.1    # via django-fluent-comments
 django-taggit==0.18.1
 django-threadedcomments==1.0.1
-Django==1.8.12            # via django-bootstrap-form, django-classy-tags, django-contrib-comments, django-debug-toolbar, django-mptt, django-nyt, django-oauth-toolkit, django-sendfile, ksp-login, wiki
+Django==1.9.5             # via django-bootstrap-form, django-classy-tags, django-contrib-comments, django-debug-toolbar, django-mptt, django-nyt, django-oauth-toolkit, django-sendfile, ksp-login, wiki
 ecdsa==0.13
 Fabric==1.11.1
 fake-factory==0.5.7

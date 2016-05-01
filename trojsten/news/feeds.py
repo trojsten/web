@@ -1,7 +1,8 @@
 # coding: utf-8
 from __future__ import unicode_literals
+
+from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.syndication.views import Feed
-from django.contrib.sites.models import get_current_site
 from django.utils import feedgenerator
 
 from trojsten.news.models import Entry
