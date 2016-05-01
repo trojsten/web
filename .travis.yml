@@ -8,8 +8,7 @@ env:
 install:
   - pip install --upgrade pip
   - pip install pip-tools
-  - if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then pip-compile requirements.in requirements2.in -o requirements.txt; fi
-  - if [[ $TRAVIS_PYTHON_VERSION != 2.7 ]]; then pip-compile requirements.in -o requirements.txt; fi
+  - if [[ $TRAVIS_PYTHON_VERSION != 2.7 ]]; then rm requirements.txt; pip-compile requirements.in -o requirements.txt; fi
   - pip install -r requirements.txt;
   - pip install -q "Django${DJANGO_VERSION}"
   - pip install -q coverage
