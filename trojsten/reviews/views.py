@@ -1,30 +1,28 @@
-from collections import defaultdict
-from django.core.exceptions import PermissionDenied
 import os.path
 import zipfile
+from collections import defaultdict
 from time import time
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import Http404
-from django.contrib import messages
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.contrib import messages
+from django.core.exceptions import PermissionDenied
+from django.http import Http404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.text import slugify
-
+from django.utils.translation import ugettext_lazy as _
 from sendfile import sendfile
 
-from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
-from trojsten.tasks.models import Task, Submit
 from trojsten.reviews.constants import REVIEW_POINTS_FILENAME, \
     REVIEW_COMMENT_FILENAME, RE_FILENAME, RE_SUBMIT_PK
+from trojsten.reviews.forms import ReviewForm, get_zip_form_set, reviews_upload_pattern, \
+    UploadZipForm
 from trojsten.reviews.helpers import (submit_download_filename,
                                       get_latest_submits_for_task, get_user_as_choices,
                                       submit_protocol_download_filename,
                                       submit_source_download_filename,
                                       submit_directory)
-
-from trojsten.reviews.forms import ReviewForm, get_zip_form_set, reviews_upload_pattern, \
-    UploadZipForm
+from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
+from trojsten.tasks.models import Task, Submit
 
 
 def review_task(request, task_pk):
@@ -140,7 +138,7 @@ def download_latest_submits(request, task_pk):
     path = os.path.join(settings.SUBMIT_PATH, 'reviews')
     if not os.path.isdir(path):
         os.makedirs(path)
-        os.chmod(path, 0777)
+        os.chmod(path, 0o777)
 
     path = os.path.join(path, 'Uloha-%s-%s-%s.zip' %
                         (slugify(task.name), int(time()), slugify(request.user.username)))
@@ -193,7 +191,7 @@ def zip_upload(request, task_pk):
 
     try:
         archive = zipfile.ZipFile(name)
-    except (zipfile.BadZipfile, IOError), e:
+    except (zipfile.BadZipfile, IOError) as e:
         messages.add_message(request, messages.ERROR, _('Problems with uploaded zip'))
         return redirect('admin:review_task', task.pk)
 

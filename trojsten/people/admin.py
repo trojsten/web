@@ -18,7 +18,6 @@ from import_export.admin import ExportMixin
 from trojsten.contests.models import Competition, Series
 from trojsten.tasks.models import Submit
 from trojsten.utils.utils import attribute_format
-
 from . import constants
 from .forms import MergeForm
 from .helpers import get_similar_users, merge_users
@@ -230,16 +229,14 @@ class DuplicateUserAdmin(admin.ModelAdmin):
                     if form.cleaned_data['id'] == user.id else (candidate, user)
 
                 src_fields = [
-                    key for key, val in filter(
-                        lambda (k, _): k != 'id' and not k.startswith(constants.USER_PROP_PREFIX),
-                        form.cleaned_data.items()
-                    ) if int(val) == source_user.pk
+                    key for key, val in form.cleaned_data.items()
+                        if key != 'id' and not key.startswith(constants.USER_PROP_PREFIX) and
+                        int(val) == source_user.pk
                 ]
                 src_user_props = [
-                    int(key[len(constants.USER_PROP_PREFIX):]) for key, val in filter(
-                        lambda (k, _): k.startswith(constants.USER_PROP_PREFIX),
-                        form.cleaned_data.items()
-                    ) if int(val) == source_user.pk
+                    int(key[len(constants.USER_PROP_PREFIX):]) for key, val in form.cleaned_data.items()
+                        if key.startswith(constants.USER_PROP_PREFIX) and
+                        int(val) == source_user.pk
                 ]
 
                 merge_users(target_user, source_user, src_fields, src_user_props)
