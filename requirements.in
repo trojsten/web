@@ -19,7 +19,6 @@ django-sendfile
 django-sortedm2m
 django-taggit
 django-threadedcomments
-django-uuidfield
 Django==1.8.12
 ecdsa
 fake-factory

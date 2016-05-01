@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 import datetime
-import uuidfield.fields
 
 
 class Migration(migrations.Migration):
@@ -31,7 +30,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Repository',
             fields=[
-                ('notification_string', uuidfield.fields.UUIDField(primary_key=True, serialize=False, editable=False, max_length=32, blank=True, unique=True, verbose_name='string pre push notifik\xe1ciu')),
+                ('notification_string', models.UUIDField(primary_key=True, serialize=False, editable=False, max_length=32, blank=True, unique=True, verbose_name='string pre push notifik\xe1ciu')),
                 ('url', models.CharField(max_length=128, verbose_name='url git repozit\xe1ra')),
             ],
             options={
