@@ -352,13 +352,13 @@ module.exports = function (grunt) {
       },
       kms: {
         expand: true,
-        cwd: 'dist/css/ksp/',
+        cwd: 'dist/css/trojsten/',
         src: '**',
         dest: '../../trojsten/static/css/kms/'
       },
       wiki: {
         expand: true,
-        cwd: 'dist/css/ksp/',
+        cwd: 'dist/css/trojsten/',
         src: '**',
         dest: '../../trojsten/static/css/wiki/'
       },
@@ -376,7 +376,7 @@ module.exports = function (grunt) {
       },
       trojsten: {
         expand: true,
-        cwd: 'dist/css/ksp/',
+        cwd: 'dist/css/trojsten/',
         src: '**',
         dest: '../../trojsten/static/css/trojsten/'
       }
