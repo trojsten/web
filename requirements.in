@@ -19,7 +19,7 @@ django-sendfile
 django-sortedm2m
 django-taggit
 django-threadedcomments
-Django
+Django<1.10
 ecdsa
 fake-factory
 ksp-login>0.4
