@@ -14,7 +14,7 @@ click==6.6                # via pip-tools
 coverage==4.0.3
 diff-match-patch==20121119  # via django-import-export
 django-autoslug==1.9.3
-django-bootstrap-form==3.2
+django-bootstrap-form==3.2.1
 django-braces==1.8.1      # via django-oauth-toolkit
 django-bulk-update==1.1.10
 django-classy-tags==0.7.2
@@ -49,7 +49,7 @@ kombu==3.0.35             # via celery
 ksp-login==0.4.1
 Markdown==2.6.6           # via wiki
 oauthlib==1.0.3           # via django-oauth-toolkit, python-social-auth, requests-oauthlib
-paramiko==1.16.0          # via fabric
+paramiko==1.17.0          # via fabric
 Pillow==3.2.0             # via wiki
 pip-tools==1.6.1
 psycopg2==2.6.1
@@ -57,10 +57,10 @@ pycrypto==2.6.1
 PyJWT==1.4.0              # via python-social-auth
 python-dateutil==2.5.3    # via fake-factory
 python-openid==2.2.5      # via python-social-auth
-python-social-auth==0.2.18
-pytz==2016.3              # via celery
+python-social-auth==0.2.19
+pytz==2016.4              # via celery
 requests-oauthlib==0.6.1  # via python-social-auth
-requests==2.9.1           # via python-social-auth, requests-oauthlib
+requests==2.10.0          # via python-social-auth, requests-oauthlib
 six==1.10.0               # via django-braces, django-nyt, django-oauth-toolkit, fake-factory, pip-tools, python-dateutil, python-social-auth, wiki
 sorl-thumbnail==12.3      # via wiki
 South==1.0.2              # via wiki
