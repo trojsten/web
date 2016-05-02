@@ -238,7 +238,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'trojsten.middleware.multihostname.MultiHostnameMiddleware',
     'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 )
