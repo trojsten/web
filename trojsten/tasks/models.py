@@ -125,13 +125,13 @@ class Task(models.Model):
     round = models.ForeignKey(Round, verbose_name='kolo')
     category = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
-    description_points = models.IntegerField(verbose_name='body za popis')
-    source_points = models.IntegerField(verbose_name='body za program')
+    description_points = models.IntegerField(verbose_name='body za popis', default=0)
+    source_points = models.IntegerField(verbose_name='body za program', default=0)
     integer_source_points = models.BooleanField(
         default=True, verbose_name='celočíselné body za program'
     )
-    has_source = models.BooleanField(verbose_name='odovzáva sa zdroják')
-    has_description = models.BooleanField(verbose_name='odovzáva sa popis')
+    has_source = models.BooleanField(verbose_name='odovzáva sa zdroják', default=False)
+    has_description = models.BooleanField(verbose_name='odovzáva sa popis', default=False)
     has_testablezip = models.BooleanField(
         verbose_name='odovzdáva sa zip na testovač', default=False
     )

@@ -13,10 +13,9 @@ from django.utils.cache import patch_vary_headers
 
 
 class MultiHostnameMiddleware:
-
     def process_request(self, request):
-        host = request.META['HTTP_HOST'].split(':')[0]
         try:
+            host = request.META['HTTP_HOST'].split(':')[0]
             request.urlconf = settings.HOST_MIDDLEWARE_URLCONF_MAP[host]
         except KeyError:
             pass  # use default urlconf from settings.ROOT_URLCONF
