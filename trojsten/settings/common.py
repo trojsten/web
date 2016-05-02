@@ -57,7 +57,6 @@ PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
 
 AUTH_USER_MODEL = 'people.User'
 DEBUG = bool(env('TROJSTENWEB_DEBUG', 'False'))
-TEMPLATE_DEBUG = bool(env('TROJSTENWEB_TEMPLATE_DEBUG', DEBUG))
 
 if 'TROJSTENWEB_ADMINS' in os.environ:
     ADMINS = tuple([tuple(admin.split(':')) for admin in env('TROJSTENWEB_ADMINS', '').split(';')])
@@ -146,12 +145,91 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = env('TROJSTENWEB_SECRET_KEY', '*ev5i*d2v+ln+hm=swggoo-+%62y4*r8va@nign_mgq*&%x+z)')
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    # 'django.template.loaders.eggs.Loader',
+#
+# Trojstenweb Settings
+#
+
+# Task statements settings
+TASK_STATEMENTS_PATH = env('TROJSTENWEB_TASK_STATEMENTS_PATH', os.path.join(
+    PROJECT_DIR, PROJECT_MODULE_NAME, 'statements')
 )
+TASK_STATEMENTS_REPO_PATH = env(
+    'TROJSTENWEB_TASK_STATEMENTS_REPO_PATH',
+    os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'statements_repo')
+)
+TASK_STATEMENTS_SUFFIX_YEAR = env('TROJSTENWEB_TASK_STATEMENTS_SUFFIX_YEAR', 'rocnik')
+TASK_STATEMENTS_SUFFIX_ROUND = env('TROJSTENWEB_TASK_STATEMENTS_SUFFIX_ROUND', 'kolo')
+TASK_STATEMENTS_TASKS_DIR = env('TROJSTENWEB_TASK_STATEMENTS_TASKS_DIR', 'zadania')
+TASK_STATEMENTS_PREFIX_TASK = env('TROJSTENWEB_TASK_STATEMENTS_PREFIX_TASK', 'prikl')
+TASK_STATEMENTS_SOLUTIONS_DIR = env('TROJSTENWEB_TASK_STATEMENTS_SOLUTIONS_DIR', 'vzoraky')
+TASK_STATEMENTS_PICTURES_DIR = env('TROJSTENWEB_TASK_STATEMENTS_PICTURES_DIR', 'obrazky')
+TASK_STATEMENTS_HTML_DIR = env('TROJSTENWEB_TASK_STATEMENTS_HTML_DIR', 'html')
+TASK_STATEMENTS_PDF = env('TROJSTENWEB_TASK_STATEMENTS_PDF', 'zadania.pdf')
+TASK_STATEMENTS_SOLUTIONS_PDF = env('TROJSTENWEB_TASK_STATEMENTS_SOLUTIONS_PDF', 'vzoraky.pdf')
+ALLOWED_PICTURE_EXT = {'.jpg', '.png', '.gif', '.webp', }
+
+# Round progressbar settings
+ROUND_PROGRESS_DEFAULT_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DEFAULT_CLASS', 'progress-bar-info')
+ROUND_PROGRESS_WARNING_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_WARNING_DAYS', '14'))
+ROUND_PROGRESS_WARNING_CLASS = env(
+    'TROJSTENWEB_ROUND_PROGRESS_WARNING_CLASS', 'progress-bar-warning'
+)
+ROUND_PROGRESS_DANGER_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_DANGER_DAYS', '7'))
+ROUND_PROGRESS_DANGER_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DANGER_CLASS', 'progress-bar-danger')
+FROZEN_RESULTS_PATH = env(
+    'TROJSTENWEB_FROZEN_RESULTS_PATH',
+    os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'frozen_results')
+)
+
+# Submit settings
+SUBMIT_DEBUG = bool(int(env('TROJSTENWEB_SUBMIT_DEBUG', '0')))
+SUBMIT_PATH = env('TROJSTENWEB_SUBMIT_PATH', os.path.join(
+    PROJECT_DIR, PROJECT_MODULE_NAME, 'submits')
+)
+SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS = ['.pdf', '.txt', '.md', '.rtf', '.doc', '.docx', '.odt']
+UPLOADED_FILENAME_MAXLENGTH = int(env('TROJSTENWEB_UPLOADED_FILENAME_MAXLENGTH', '100000'))
+PROTOCOL_FILE_EXTENSION = env('TROJSTENWEB_PROTOCOL_FILE_EXTENSION', '.protokol')
+TESTER_URL = env('TROJSTENWEB_TESTER_URL', 'experiment')
+TESTER_PORT = int(env('TROJSTENWEB_TESTER_PORT', '12347'))
+TESTER_WEB_IDENTIFIER = env('TROJSTENWEB_TESTER_WEB_IDENTIFIER', 'KSP')
+
+# Rules settings
+COMPETITION_RULES = {
+    2: 'trojsten.rules.ksp.KSPRules',
+    3: 'trojsten.rules.kspt.KSPTRules',
+    4: 'trojsten.rules.prask.PraskRules',
+    5: 'trojsten.rules.fks.FKSRules',
+    6: 'trojsten.rules.ufo.UFORules',
+    8: 'trojsten.rules.fx.FXRules',
+}
+DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'
+
+# Template settings
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.template.context_processors.request',
+                'django.contrib.messages.context_processors.messages',
+                'sekizai.context_processors.sekizai',
+                'ksp_login.context_processors.login_providers_both',
+                'trojsten.context_processors.current_site',
+                'trojsten.context_processors.version_string',
+            ],
+            'allowed_include_roots': [
+                TASK_STATEMENTS_PATH,
+            ],
+        }
+    },
+]
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -159,26 +237,17 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'trojsten.middleware.multihostname.MultiHostnameMiddleware',
     'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 )
-
-ALLOWED_INCLUDE_ROOTS = ()
 
 ROOT_URLCONF = 'trojsten.urls.default'
 HOST_MIDDLEWARE_URLCONF_MAP = {}
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'trojsten.wsgi.application'
-
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -273,21 +342,6 @@ LOGGING = {
     }
 }
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.core.context_processors.request",
-    "django.contrib.messages.context_processors.messages",
-    "sekizai.context_processors.sekizai",
-    "ksp_login.context_processors.login_providers_both",
-    "trojsten.context_processors.current_site",
-    "trojsten.context_processors.version_string",
-)
-
 # Override message tags for bootstrap 3 compatibility.
 MESSAGE_TAGS = {
     messages.ERROR: 'danger error',
@@ -297,7 +351,6 @@ MESSAGE_TAGS = {
 LOGIN_URL = "/ucet/login/"
 LOGIN_ERROR_URL = "/ucet/login/"
 LOGIN_REDIRECT_URL = "/ucet/"
-
 
 #
 # Included packages settings
@@ -352,69 +405,6 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_IMPORTS = ("trojsten.task_statements.handlers", )
 BROKER_URL = env('TROJSTENWEB_CELERY_BROKER_URL', 'django://')
-
-#
-# Trojstenweb Settings
-#
-
-# Task statements settings
-TASK_STATEMENTS_PATH = env('TROJSTENWEB_TASK_STATEMENTS_PATH', os.path.join(
-    PROJECT_DIR, PROJECT_MODULE_NAME, 'statements')
-)
-TASK_STATEMENTS_REPO_PATH = env(
-    'TROJSTENWEB_TASK_STATEMENTS_REPO_PATH',
-    os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'statements_repo')
-)
-TASK_STATEMENTS_SUFFIX_YEAR = env('TROJSTENWEB_TASK_STATEMENTS_SUFFIX_YEAR', 'rocnik')
-TASK_STATEMENTS_SUFFIX_ROUND = env('TROJSTENWEB_TASK_STATEMENTS_SUFFIX_ROUND', 'kolo')
-TASK_STATEMENTS_TASKS_DIR = env('TROJSTENWEB_TASK_STATEMENTS_TASKS_DIR', 'zadania')
-TASK_STATEMENTS_PREFIX_TASK = env('TROJSTENWEB_TASK_STATEMENTS_PREFIX_TASK', 'prikl')
-TASK_STATEMENTS_SOLUTIONS_DIR = env('TROJSTENWEB_TASK_STATEMENTS_SOLUTIONS_DIR', 'vzoraky')
-TASK_STATEMENTS_PICTURES_DIR = env('TROJSTENWEB_TASK_STATEMENTS_PICTURES_DIR', 'obrazky')
-TASK_STATEMENTS_HTML_DIR = env('TROJSTENWEB_TASK_STATEMENTS_HTML_DIR', 'html')
-TASK_STATEMENTS_PDF = env('TROJSTENWEB_TASK_STATEMENTS_PDF', 'zadania.pdf')
-TASK_STATEMENTS_SOLUTIONS_PDF = env('TROJSTENWEB_TASK_STATEMENTS_SOLUTIONS_PDF', 'vzoraky.pdf')
-ALLOWED_PICTURE_EXT = {'.jpg', '.png', '.gif', '.webp', }
-
-# Round progressbar settings
-ROUND_PROGRESS_DEFAULT_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DEFAULT_CLASS', 'progress-bar-info')
-ROUND_PROGRESS_WARNING_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_WARNING_DAYS', '14'))
-ROUND_PROGRESS_WARNING_CLASS = env(
-    'TROJSTENWEB_ROUND_PROGRESS_WARNING_CLASS', 'progress-bar-warning'
-)
-ROUND_PROGRESS_DANGER_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_DANGER_DAYS', '7'))
-ROUND_PROGRESS_DANGER_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DANGER_CLASS', 'progress-bar-danger')
-FROZEN_RESULTS_PATH = env(
-    'TROJSTENWEB_FROZEN_RESULTS_PATH',
-    os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'frozen_results')
-)
-
-# Submit settings
-SUBMIT_DEBUG = bool(int(env('TROJSTENWEB_SUBMIT_DEBUG', '0')))
-SUBMIT_PATH = env('TROJSTENWEB_SUBMIT_PATH', os.path.join(
-    PROJECT_DIR, PROJECT_MODULE_NAME, 'submits')
-)
-SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS = ['.pdf', '.txt', '.md', '.rtf', '.doc', '.docx', '.odt']
-UPLOADED_FILENAME_MAXLENGTH = int(env('TROJSTENWEB_UPLOADED_FILENAME_MAXLENGTH', '100000'))
-PROTOCOL_FILE_EXTENSION = env('TROJSTENWEB_PROTOCOL_FILE_EXTENSION', '.protokol')
-TESTER_URL = env('TROJSTENWEB_TESTER_URL', 'experiment')
-TESTER_PORT = int(env('TROJSTENWEB_TESTER_PORT', '12347'))
-TESTER_WEB_IDENTIFIER = env('TROJSTENWEB_TESTER_WEB_IDENTIFIER', 'KSP')
-
-ALLOWED_INCLUDE_ROOTS += (
-    TASK_STATEMENTS_PATH,
-)
-
-# Rules settings
-COMPETITION_RULES = {
-    2: 'trojsten.rules.ksp.KSPRules',
-    3: 'trojsten.rules.kspt.KSPTRules',
-    4: 'trojsten.rules.prask.PraskRules',
-    5: 'trojsten.rules.fks.FKSRules',
-    6: 'trojsten.rules.ufo.UFORules',
-    8: 'trojsten.rules.fx.FXRules',
-}
-DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'
 
 # Comments settings
 COMMENTS_APP = 'fluent_comments'

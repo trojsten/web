@@ -8,7 +8,6 @@ def requiredenv(name):
     return os.environ.get(name)
 
 DEBUG = False
-TEMPLATE_DEBUG = False
 
 SENDFILE_BACKEND = 'sendfile.backends.xsendfile'
 

@@ -1,4 +1,5 @@
-from datetime import datetime
+from django.utils import timezone
+
 
 def is_true(value):
     """Converts GET parameter value to bool
@@ -7,13 +8,13 @@ def is_true(value):
 
 
 def default_start_time():
-    return datetime.now().replace(
+    return timezone.now().replace(
         hour=0, minute=0, second=0, microsecond=0
     )
 
 
 def default_end_time():
-    return datetime.now().replace(
+    return timezone.now().replace(
         hour=23, minute=59, second=59, microsecond=0
     )
 

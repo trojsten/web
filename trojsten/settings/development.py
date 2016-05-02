@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from trojsten.settings.common import *
 
 DEBUG = True
-TEMPLATE_DEBUG = True
 SUBMIT_DEBUG = True
 SENDFILE_BACKEND = 'sendfile.backends.development'
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
