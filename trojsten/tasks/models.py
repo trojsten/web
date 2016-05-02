@@ -2,20 +2,20 @@
 
 from __future__ import unicode_literals
 
-from decimal import Decimal
-from django.utils.safestring import mark_safe
-from markdown import markdown
 import os
+from decimal import Decimal
 
-from django.utils.encoding import python_2_unicode_compatible
-from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.safestring import mark_safe
+from markdown import markdown
 
-from trojsten.contests.models import Round, Competition
+from trojsten.contests.models import Competition, Round
+from trojsten.people.constants import (GRADUATION_SCHOOL_YEAR,
+                                       SCHOOL_YEAR_END_MONTH)
 from trojsten.people.models import User
-from trojsten.people.constants import GRADUATION_SCHOOL_YEAR
-from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
 from trojsten.submit import constants as submit_constants
 
 
@@ -65,8 +65,8 @@ class SubmitManager(models.Manager):
         return submits.filter(
             task__in=tasks,
         ).filter(
-            models.Q(time__lte=models.F('task__round__end_time'))
-            | models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
+            models.Q(time__lte=models.F('task__round__end_time')) |
+            models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
         ).order_by(
             'user', 'task', 'submit_type', '-time', '-id',
         ).distinct(
@@ -81,8 +81,8 @@ class SubmitManager(models.Manager):
             user=user,
             task__in=tasks,
         ).filter(
-            models.Q(time__lte=models.F('task__round__end_time'))
-            | models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
+            models.Q(time__lte=models.F('task__round__end_time')) |
+            models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
         ).order_by(
             'task', 'submit_type', '-time', '-id',
         ).distinct(
@@ -125,13 +125,13 @@ class Task(models.Model):
     round = models.ForeignKey(Round, verbose_name='kolo')
     category = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
-    description_points = models.IntegerField(verbose_name='body za popis')
-    source_points = models.IntegerField(verbose_name='body za program')
+    description_points = models.IntegerField(verbose_name='body za popis', default=0)
+    source_points = models.IntegerField(verbose_name='body za program', default=0)
     integer_source_points = models.BooleanField(
         default=True, verbose_name='celočíselné body za program'
     )
-    has_source = models.BooleanField(verbose_name='odovzáva sa zdroják')
-    has_description = models.BooleanField(verbose_name='odovzáva sa popis')
+    has_source = models.BooleanField(verbose_name='odovzdáva sa zdroják', default=False)
+    has_description = models.BooleanField(verbose_name='odovzdáva sa popis', default=False)
     has_testablezip = models.BooleanField(
         verbose_name='odovzdáva sa zip na testovač', default=False
     )
@@ -232,7 +232,9 @@ class Submit(models.Model):
         max_length=128, verbose_name='stav testovania', blank=True)
     tester_response = models.CharField(
         max_length=10, verbose_name='odpoveď testovača', blank=True,
-        help_text='Očakávané odpovede sú %s' % (', '.join(submit_constants.SUBMIT_VERBOSE_RESPONSE.keys()), )
+        help_text='Očakávané odpovede sú %s' % (
+            ', '.join(submit_constants.SUBMIT_VERBOSE_RESPONSE.keys()),
+        )
     )
     protocol_id = models.CharField(
         max_length=128, verbose_name='číslo protokolu', blank=True)
@@ -267,7 +269,9 @@ class Submit(models.Model):
 
     @property
     def tester_response_verbose(self):
-        return submit_constants.SUBMIT_VERBOSE_RESPONSE.get(self.tester_response, self.tester_response)
+        return submit_constants.SUBMIT_VERBOSE_RESPONSE.get(
+            self.tester_response, self.tester_response
+        )
 
     @staticmethod
     def display_decimal_value(value, is_integer):

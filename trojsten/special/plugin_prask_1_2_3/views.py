@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
 import json
 
-from django.shortcuts import render
 from django.http import HttpResponse
+from django.shortcuts import render
 
-from urllib2 import urlopen
+try:
+    from urllib2 import urlopen
+except ImportError:
+    from urllib.request import urlopen
 
 
 def main(request):

@@ -132,8 +132,8 @@ class Round(models.Model):
     end_time = models.DateTimeField(
         verbose_name='koniec', default=utils.default_end_time
     )
-    visible = models.BooleanField(verbose_name='viditeľnosť')
-    solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov')
+    visible = models.BooleanField(verbose_name='viditeľnosť', default=False)
+    solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov', default=False)
 
     objects = RoundManager()
 
