@@ -2,7 +2,6 @@ from django.conf.urls import patterns, url
 
 from .views import get_link
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^$', get_link),
-)
+]

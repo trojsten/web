@@ -1,7 +1,9 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
-urlpatterns = patterns('trojsten.results.views',
-    url(r'^(?P<round_id>(\d+))/$', 'view_results', name='view_results'),
-    url(r'^(?P<round_id>(\d+))/(?P<tag_key>(.+))/$', 'view_results', name='view_results'),
-    url(r'^$', 'view_latest_results', name='view_latest_results'),
-)
+from . import views
+
+urlpatterns = [
+    url(r'^(?P<round_id>(\d+))/$', views.view_results, name='view_results'),
+    url(r'^(?P<round_id>(\d+))/(?P<tag_key>(.+))/$', views.view_results, name='view_results'),
+    url(r'^$', views.view_latest_results, name='view_latest_results'),
+]

@@ -2,9 +2,7 @@ from django.conf.urls import patterns, url
 
 from .views import *
 
-urlpatterns = patterns(
-    '',
-
+urlpatterns =[
     url(r'^$', root,
         name='plugin_prask_1_2_1_root'),
     url(r'^(?P<category>[ABC])/$', main,
@@ -15,4 +13,4 @@ urlpatterns = patterns(
         name='plugin_prask_1_2_1_post'),
     url(r'^(?P<category>[ABC])/reset/$', reset,
         name='plugin_prask_1_2_1_reset'),
-)
+]
