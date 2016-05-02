@@ -8,14 +8,14 @@ def is_true(value):
 
 
 def default_start_time():
-    return timezone.now().replace(
-        hour=0, minute=0, second=0, microsecond=0
+    return timezone.localtime(timezone.now()).replace(
+        hour=0, minute=0, second=0, microsecond=0,
     )
 
 
 def default_end_time():
-    return timezone.now().replace(
-        hour=23, minute=59, second=59, microsecond=0
+    return timezone.localtime(timezone.now()).replace(
+        hour=23, minute=59, second=59, microsecond=0,
     )
 
 
