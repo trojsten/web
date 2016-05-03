@@ -57,7 +57,7 @@
     {% endif %}
     <div class="task-statement">
         {% if task.task_file_exists %}
-            {% include path %}
+            {% ssi path %}
         {% else %}
             <p class="lead">HTML zadanie nie je k dispozícii.</p>
         {% endif %}
