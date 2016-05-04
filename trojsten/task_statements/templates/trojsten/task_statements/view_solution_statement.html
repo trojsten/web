@@ -40,7 +40,7 @@
 
 {% block page_content %}
     <div class="task-statement">
-      {% if task.task_file_exists %}
+      {% if task_text %}
       <div class="panel panel-default">
         <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
           <div class="panel-heading">
@@ -51,13 +51,13 @@
         </a>
         <div id="collapseOne" class="panel-collapse collapse">
           <div class="panel-body">
-            {% ssi statement_path %}
+            {{ task_text }}
           </div>
         </div>
       </div>
       {% endif %}
-      {% if task.solution_file_exists %}
-        {% ssi path %}
+      {% if solution_text %}
+        {{ solution_text }}
       {% else %}
           <p class="lead">HTML vzorák nie je k dispozícii.</p>
       {% endif %}

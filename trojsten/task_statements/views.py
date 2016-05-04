@@ -17,12 +17,13 @@ def _statement_view(request, task_id, solution=False):
     task = get_object_or_404(Task, pk=task_id)
     if not task.visible(request.user) or (solution and not task.solution_visible(request.user)):
         raise Http404
-    template_data = {
-        'task': task,
-        'path': task.get_path(solution=solution),
-    }
+    template_data = {'task': task}
+    with open(task.get_path(solution=False)) as f:
+        template_data['task_text'] = f.readlines()
+
     if solution:
-        template_data['statement_path'] = task.get_path(solution=False)
+        with open(task.get_path(solution=True)) as f:
+            template_data['solution_text'] = f.readlines()
     return render(
         request,
         'trojsten/task_statements/view_{}_statement.html'.format(
