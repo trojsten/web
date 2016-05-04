@@ -2,14 +2,13 @@
 
 import os
 
-from django.http import Http404
-from django.shortcuts import render, get_object_or_404
 from django.conf import settings
-
+from django.http import Http404
+from django.shortcuts import get_object_or_404, render
 from sendfile import sendfile
 
+from trojsten.contests.models import Competition, Round
 from trojsten.tasks.models import Task
-from trojsten.contests.models import Round, Competition
 from trojsten.utils.utils import is_true
 
 
@@ -18,10 +17,11 @@ def _statement_view(request, task_id, solution=False):
     if not task.visible(request.user) or (solution and not task.solution_visible(request.user)):
         raise Http404
     template_data = {'task': task}
-    with open(task.get_path(solution=False)) as f:
-        template_data['task_text'] = f.readlines()
+    if task.task_file_exists:
+        with open(task.get_path(solution=False)) as f:
+            template_data['task_text'] = f.readlines()
 
-    if solution:
+    if solution and task.solution_file_exists:
         with open(task.get_path(solution=True)) as f:
             template_data['solution_text'] = f.readlines()
     return render(
