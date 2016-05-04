@@ -6,7 +6,7 @@ from os import path
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
-from django.test import TestCase, override_settings, modify_settings
+from django.test import TestCase, override_settings
 
 from trojsten.contests.models import Competition, Round, Series
 from trojsten.tasks.models import Task
@@ -69,6 +69,12 @@ class TaskStatementsTests(TestCase):
         self.assertContains(response, 'Test task')
         self.assertContains(response, 'test html task statement')
 
+    def test_missing_task_statement_file(self):
+        task = Task.objects.create(number=3, name='Test task 3', round=self.round)
+        url = reverse('task_statement', kwargs={'task_id': task.id})
+        response = self.client.get(url)
+        self.assertContains(response, 'Test task 3')
+
 
 @override_settings(
     TASK_STATEMENTS_PATH=path.join(path.dirname(__file__), 'test_data', 'statements'),
@@ -99,6 +105,20 @@ class SolutionStatementsTests(TestCase):
         response = self.client.get(self.url)
         self.assertContains(response, 'Test task')
         self.assertContains(response, 'test html solution statement')
+        self.assertContains(response, 'test html task statement')
+
+    def test_missing_task_statement_file(self):
+        task = Task.objects.create(number=3, name='Test task 3', round=self.round)
+        url = reverse('solution_statement', kwargs={'task_id': task.id})
+        response = self.client.get(url)
+        self.assertContains(response, 'Test task 3')
+        self.assertContains(response, 'test html solution statement')
+
+    def test_missing_solution_statement_file(self):
+        task = Task.objects.create(number=2, name='Test task 2', round=self.round)
+        url = reverse('solution_statement', kwargs={'task_id': task.id})
+        response = self.client.get(url)
+        self.assertContains(response, 'Test task 2')
         self.assertContains(response, 'test html task statement')
 
 
