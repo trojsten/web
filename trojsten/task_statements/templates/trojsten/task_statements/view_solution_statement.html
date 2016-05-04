@@ -51,13 +51,13 @@
         </a>
         <div id="collapseOne" class="panel-collapse collapse">
           <div class="panel-body">
-            {{ task_text }}
+            {{ task_text|safe}}
           </div>
         </div>
       </div>
       {% endif %}
       {% if solution_text %}
-        {{ solution_text }}
+        {{ solution_text|safe }}
       {% else %}
           <p class="lead">HTML vzorák nie je k dispozícii.</p>
       {% endif %}

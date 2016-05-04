@@ -67,7 +67,7 @@ class TaskStatementsTests(TestCase):
     def test_task_statement(self):
         response = self.client.get(self.url)
         self.assertContains(response, 'Test task')
-        self.assertContains(response, 'test html task statement')
+        self.assertContains(response, 'test <b>html</b> task statement')
 
     def test_missing_task_statement_file(self):
         task = Task.objects.create(number=3, name='Test task 3', round=self.round)
@@ -104,22 +104,22 @@ class SolutionStatementsTests(TestCase):
     def test_solution_statement(self):
         response = self.client.get(self.url)
         self.assertContains(response, 'Test task')
-        self.assertContains(response, 'test html solution statement')
-        self.assertContains(response, 'test html task statement')
+        self.assertContains(response, 'test <b>html</b> solution statement')
+        self.assertContains(response, 'test <b>html</b> task statement')
 
     def test_missing_task_statement_file(self):
         task = Task.objects.create(number=3, name='Test task 3', round=self.round)
         url = reverse('solution_statement', kwargs={'task_id': task.id})
         response = self.client.get(url)
         self.assertContains(response, 'Test task 3')
-        self.assertContains(response, 'test html solution statement')
+        self.assertContains(response, 'test <b>html</b> solution statement')
 
     def test_missing_solution_statement_file(self):
         task = Task.objects.create(number=2, name='Test task 2', round=self.round)
         url = reverse('solution_statement', kwargs={'task_id': task.id})
         response = self.client.get(url)
         self.assertContains(response, 'Test task 2')
-        self.assertContains(response, 'test html task statement')
+        self.assertContains(response, 'test <b>html</b> task statement')
 
 
 @override_settings(

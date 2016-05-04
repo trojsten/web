@@ -57,7 +57,7 @@
     {% endif %}
     <div class="task-statement">
         {% if task_text %}
-            {{ task_text }}
+            {{ task_text|safe }}
         {% else %}
             <p class="lead">HTML zadanie nie je k dispozícii.</p>
         {% endif %}
