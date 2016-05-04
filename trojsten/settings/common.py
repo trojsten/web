@@ -145,65 +145,6 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = env('TROJSTENWEB_SECRET_KEY', '*ev5i*d2v+ln+hm=swggoo-+%62y4*r8va@nign_mgq*&%x+z)')
 
-#
-# Trojstenweb Settings
-#
-
-# Task statements settings
-TASK_STATEMENTS_PATH = env('TROJSTENWEB_TASK_STATEMENTS_PATH', os.path.join(
-    PROJECT_DIR, PROJECT_MODULE_NAME, 'statements')
-)
-TASK_STATEMENTS_REPO_PATH = env(
-    'TROJSTENWEB_TASK_STATEMENTS_REPO_PATH',
-    os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'statements_repo')
-)
-TASK_STATEMENTS_SUFFIX_YEAR = env('TROJSTENWEB_TASK_STATEMENTS_SUFFIX_YEAR', 'rocnik')
-TASK_STATEMENTS_SUFFIX_ROUND = env('TROJSTENWEB_TASK_STATEMENTS_SUFFIX_ROUND', 'kolo')
-TASK_STATEMENTS_TASKS_DIR = env('TROJSTENWEB_TASK_STATEMENTS_TASKS_DIR', 'zadania')
-TASK_STATEMENTS_PREFIX_TASK = env('TROJSTENWEB_TASK_STATEMENTS_PREFIX_TASK', 'prikl')
-TASK_STATEMENTS_SOLUTIONS_DIR = env('TROJSTENWEB_TASK_STATEMENTS_SOLUTIONS_DIR', 'vzoraky')
-TASK_STATEMENTS_PICTURES_DIR = env('TROJSTENWEB_TASK_STATEMENTS_PICTURES_DIR', 'obrazky')
-TASK_STATEMENTS_HTML_DIR = env('TROJSTENWEB_TASK_STATEMENTS_HTML_DIR', 'html')
-TASK_STATEMENTS_PDF = env('TROJSTENWEB_TASK_STATEMENTS_PDF', 'zadania.pdf')
-TASK_STATEMENTS_SOLUTIONS_PDF = env('TROJSTENWEB_TASK_STATEMENTS_SOLUTIONS_PDF', 'vzoraky.pdf')
-ALLOWED_PICTURE_EXT = {'.jpg', '.png', '.gif', '.webp', }
-
-# Round progressbar settings
-ROUND_PROGRESS_DEFAULT_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DEFAULT_CLASS', 'progress-bar-info')
-ROUND_PROGRESS_WARNING_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_WARNING_DAYS', '14'))
-ROUND_PROGRESS_WARNING_CLASS = env(
-    'TROJSTENWEB_ROUND_PROGRESS_WARNING_CLASS', 'progress-bar-warning'
-)
-ROUND_PROGRESS_DANGER_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_DANGER_DAYS', '7'))
-ROUND_PROGRESS_DANGER_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DANGER_CLASS', 'progress-bar-danger')
-FROZEN_RESULTS_PATH = env(
-    'TROJSTENWEB_FROZEN_RESULTS_PATH',
-    os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'frozen_results')
-)
-
-# Submit settings
-SUBMIT_DEBUG = bool(int(env('TROJSTENWEB_SUBMIT_DEBUG', '0')))
-SUBMIT_PATH = env('TROJSTENWEB_SUBMIT_PATH', os.path.join(
-    PROJECT_DIR, PROJECT_MODULE_NAME, 'submits')
-)
-SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS = ['.pdf', '.txt', '.md', '.rtf', '.doc', '.docx', '.odt']
-UPLOADED_FILENAME_MAXLENGTH = int(env('TROJSTENWEB_UPLOADED_FILENAME_MAXLENGTH', '100000'))
-PROTOCOL_FILE_EXTENSION = env('TROJSTENWEB_PROTOCOL_FILE_EXTENSION', '.protokol')
-TESTER_URL = env('TROJSTENWEB_TESTER_URL', 'experiment')
-TESTER_PORT = int(env('TROJSTENWEB_TESTER_PORT', '12347'))
-TESTER_WEB_IDENTIFIER = env('TROJSTENWEB_TESTER_WEB_IDENTIFIER', 'KSP')
-
-# Rules settings
-COMPETITION_RULES = {
-    2: 'trojsten.rules.ksp.KSPRules',
-    3: 'trojsten.rules.kspt.KSPTRules',
-    4: 'trojsten.rules.prask.PraskRules',
-    5: 'trojsten.rules.fks.FKSRules',
-    6: 'trojsten.rules.ufo.UFORules',
-    8: 'trojsten.rules.fx.FXRules',
-}
-DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'
-
 # Template settings
 TEMPLATES = [
     {
@@ -223,9 +164,6 @@ TEMPLATES = [
                 'ksp_login.context_processors.login_providers_both',
                 'trojsten.context_processors.current_site',
                 'trojsten.context_processors.version_string',
-            ],
-            'allowed_include_roots': [
-                TASK_STATEMENTS_PATH,
             ],
         }
     },
@@ -410,3 +348,58 @@ COMMENTS_APP = 'fluent_comments'
 FLUENT_COMMENTS_EXCLUDE_FIELDS = ('url', 'title', 'email')
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 FLUENT_COMMENTS_USE_EMAIL_NOTIFICATION = False
+
+#
+# Trojstenweb Settings
+#
+
+# Task statements settings
+TASK_STATEMENTS_PATH = env('TROJSTENWEB_TASK_STATEMENTS_PATH', os.path.join(
+    PROJECT_DIR, PROJECT_MODULE_NAME, 'statements')
+)
+TASK_STATEMENTS_SUFFIX_YEAR = env('TROJSTENWEB_TASK_STATEMENTS_SUFFIX_YEAR', 'rocnik')
+TASK_STATEMENTS_SUFFIX_ROUND = env('TROJSTENWEB_TASK_STATEMENTS_SUFFIX_ROUND', 'kolo')
+TASK_STATEMENTS_TASKS_DIR = env('TROJSTENWEB_TASK_STATEMENTS_TASKS_DIR', 'zadania')
+TASK_STATEMENTS_PREFIX_TASK = env('TROJSTENWEB_TASK_STATEMENTS_PREFIX_TASK', 'prikl')
+TASK_STATEMENTS_SOLUTIONS_DIR = env('TROJSTENWEB_TASK_STATEMENTS_SOLUTIONS_DIR', 'vzoraky')
+TASK_STATEMENTS_PICTURES_DIR = env('TROJSTENWEB_TASK_STATEMENTS_PICTURES_DIR', 'obrazky')
+TASK_STATEMENTS_HTML_DIR = env('TROJSTENWEB_TASK_STATEMENTS_HTML_DIR', 'html')
+TASK_STATEMENTS_PDF = env('TROJSTENWEB_TASK_STATEMENTS_PDF', 'zadania.pdf')
+TASK_STATEMENTS_SOLUTIONS_PDF = env('TROJSTENWEB_TASK_STATEMENTS_SOLUTIONS_PDF', 'vzoraky.pdf')
+ALLOWED_PICTURE_EXT = {'.jpg', '.png', '.gif', '.webp', }
+
+# Round progressbar settings
+ROUND_PROGRESS_DEFAULT_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DEFAULT_CLASS', 'progress-bar-info')
+ROUND_PROGRESS_WARNING_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_WARNING_DAYS', '14'))
+ROUND_PROGRESS_WARNING_CLASS = env(
+    'TROJSTENWEB_ROUND_PROGRESS_WARNING_CLASS', 'progress-bar-warning'
+)
+ROUND_PROGRESS_DANGER_DAYS = int(env('TROJSTENWEB_ROUND_PROGRESS_DANGER_DAYS', '7'))
+ROUND_PROGRESS_DANGER_CLASS = env('TROJSTENWEB_ROUND_PROGRESS_DANGER_CLASS', 'progress-bar-danger')
+FROZEN_RESULTS_PATH = env(
+    'TROJSTENWEB_FROZEN_RESULTS_PATH',
+    os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'frozen_results')
+)
+
+# Submit settings
+SUBMIT_DEBUG = bool(int(env('TROJSTENWEB_SUBMIT_DEBUG', '0')))
+SUBMIT_PATH = env('TROJSTENWEB_SUBMIT_PATH', os.path.join(
+    PROJECT_DIR, PROJECT_MODULE_NAME, 'submits')
+)
+SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS = ['.pdf', '.txt', '.md', '.rtf', '.doc', '.docx', '.odt']
+UPLOADED_FILENAME_MAXLENGTH = int(env('TROJSTENWEB_UPLOADED_FILENAME_MAXLENGTH', '100000'))
+PROTOCOL_FILE_EXTENSION = env('TROJSTENWEB_PROTOCOL_FILE_EXTENSION', '.protokol')
+TESTER_URL = env('TROJSTENWEB_TESTER_URL', 'experiment')
+TESTER_PORT = int(env('TROJSTENWEB_TESTER_PORT', '12347'))
+TESTER_WEB_IDENTIFIER = env('TROJSTENWEB_TESTER_WEB_IDENTIFIER', 'KSP')
+
+# Rules settings
+COMPETITION_RULES = {
+    2: 'trojsten.rules.ksp.KSPRules',
+    3: 'trojsten.rules.kspt.KSPTRules',
+    4: 'trojsten.rules.prask.PraskRules',
+    5: 'trojsten.rules.fks.FKSRules',
+    6: 'trojsten.rules.ufo.UFORules',
+    8: 'trojsten.rules.fx.FXRules',
+}
+DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'
