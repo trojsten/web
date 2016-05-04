@@ -17,7 +17,7 @@ django-braces==1.8.1      # via django-oauth-toolkit
 django-bulk-update==1.1.10
 django-classy-tags==0.7.2
 django-contact-form==1.2
-django-contrib-comments==1.7.0
+django-contrib-comments==1.7.1
 django-cors-headers==1.1.0
 django-crispy-forms==1.6.0
 django-dotenv==1.4.1
@@ -26,7 +26,7 @@ django-favicon==0.1.2
 django-fluent-comments==1.2
 django-import-export==0.4.5
 django-mathfilters==0.4.0
-django-mptt==0.8.3        # via wiki
+django-mptt==0.8.4        # via wiki
 django-nyt==0.9.9         # via wiki
 django-oauth-toolkit==0.10.0
 django-sekizai==0.9.0
@@ -35,13 +35,13 @@ django-sortedm2m==1.2.2
 django-tag-parser==2.1    # via django-fluent-comments
 django-taggit==0.18.1
 django-threadedcomments==1.0.1
-Django==1.9.5             # via django-bootstrap-form, django-classy-tags, django-contrib-comments, django-mptt, django-nyt, django-oauth-toolkit, django-sendfile, ksp-login, wiki
+Django==1.9.6             # via django-bootstrap-form, django-classy-tags, django-contrib-comments, django-mptt, django-nyt, django-oauth-toolkit, django-sendfile, ksp-login, wiki
 ecdsa==0.13
 fake-factory==0.5.7
 importlib==1.0.3
 ipaddress==1.0.16         # via fake-factory
 kombu==3.0.35             # via celery
-ksp-login==0.4.1
+ksp-login==0.4.2
 Markdown==2.6.6           # via wiki
 oauthlib==1.0.3           # via django-oauth-toolkit, python-social-auth, requests-oauthlib
 Pillow==3.2.0             # via wiki
