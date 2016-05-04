@@ -47,31 +47,6 @@ class TaskListTests(TestCase):
     TASK_STATEMENTS_PREFIX_TASK='',
     TASK_STATEMENTS_SOLUTIONS_DIR='solutions',
     TASK_STATEMENTS_HTML_DIR='html',
-    TEMPLATES=[
-        {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'APP_DIRS': True,
-            'OPTIONS': {
-                'context_processors': [
-                    'django.contrib.auth.context_processors.auth',
-                    'django.template.context_processors.debug',
-                    'django.template.context_processors.i18n',
-                    'django.template.context_processors.media',
-                    'django.template.context_processors.static',
-                    'django.template.context_processors.tz',
-                    'django.template.context_processors.request',
-                    'django.contrib.messages.context_processors.messages',
-                    'sekizai.context_processors.sekizai',
-                    'ksp_login.context_processors.login_providers_both',
-                    'trojsten.context_processors.current_site',
-                    'trojsten.context_processors.version_string',
-                ],
-                'allowed_include_roots': [
-                    path.join(path.dirname(__file__), 'test_data', 'statements'),
-                ],
-            }
-        },
-    ]
 )
 class TaskStatementsTests(TestCase):
     def setUp(self):
@@ -103,31 +78,6 @@ class TaskStatementsTests(TestCase):
     TASK_STATEMENTS_PREFIX_TASK='',
     TASK_STATEMENTS_SOLUTIONS_DIR='solutions',
     TASK_STATEMENTS_HTML_DIR='html',
-    TEMPLATES=[
-        {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'APP_DIRS': True,
-            'OPTIONS': {
-                'context_processors': [
-                    'django.contrib.auth.context_processors.auth',
-                    'django.template.context_processors.debug',
-                    'django.template.context_processors.i18n',
-                    'django.template.context_processors.media',
-                    'django.template.context_processors.static',
-                    'django.template.context_processors.tz',
-                    'django.template.context_processors.request',
-                    'django.contrib.messages.context_processors.messages',
-                    'sekizai.context_processors.sekizai',
-                    'ksp_login.context_processors.login_providers_both',
-                    'trojsten.context_processors.current_site',
-                    'trojsten.context_processors.version_string',
-                ],
-                'allowed_include_roots': [
-                    path.join(path.dirname(__file__), 'test_data', 'statements'),
-                ],
-            }
-        },
-    ]
 )
 class SolutionStatementsTests(TestCase):
     def setUp(self):
