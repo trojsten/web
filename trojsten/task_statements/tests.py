@@ -18,18 +18,43 @@ INVALID_ID = 47
 
 class TaskListTests(TestCase):
     def setUp(self):
-        competition = Competition.objects.create(name='TestCompetition')
+        group = Group.objects.create(name='staff')
+        competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         series = Series.objects.create(number=1, name='Test series', competition=competition,
                                        year=1)
         self.round = Round.objects.create(number=1, series=series, visible=True,
                                           solutions_visible=True)
+        self.invisible_round = Round.objects.create(number=1, series=series, visible=False,
+                                          solutions_visible=False)
+        self.staff_user = User.objects.create(username='staff')
+        self.staff_user.groups.add(group)
+        self.nonstaff_user = User.objects.create(username='nonstaff')
         self.url = reverse('task_list', kwargs={'round_id': self.round.id})
+        self.invisible_round_url = reverse(
+            'task_list', kwargs={'round_id': self.invisible_round.id}
+        )
 
     def test_invalid_round(self):
         url = reverse('task_list', kwargs={'round_id': INVALID_ID})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+
+    def test_invisible_round(self):
+        response = self.client.get(self.invisible_round_url )
+        self.assertEqual(response.status_code, 404)
+
+    def test_nonstaff_invisible_round(self):
+        self.client.force_login(self.nonstaff_user)
+        response = self.client.get(self.invisible_round_url )
+        self.assertEqual(response.status_code, 404)
+        self.client.logout()
+
+    def test_staff_invisible_round(self):
+        self.client.force_login(self.staff_user)
+        response = self.client.get(self.invisible_round_url )
+        self.assertEqual(response.status_code, 200)
+        self.client.logout()
 
     def test_no_tasks(self):
         response = self.client.get(self.url)
@@ -52,25 +77,70 @@ class TaskListTests(TestCase):
     TASK_STATEMENTS_SOLUTIONS_DIR='solutions',
     TASK_STATEMENTS_HTML_DIR='html',
 )
-class TaskStatementsTests(TestCase):
+class TaskAndSolutionStatementsTests(TestCase):
     def setUp(self):
-        competition = Competition.objects.create(name='TestCompetition')
+        group = Group.objects.create(name='staff')
+        competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         series = Series.objects.create(number=1, name='Test series', competition=competition,
                                        year=1)
         self.round = Round.objects.create(number=1, series=series, visible=True,
                                           solutions_visible=True)
+        self.invisible_round = Round.objects.create(number=1, series=series, visible=False,
+                                                    solutions_visible=False)
         self.task = Task.objects.create(number=1, name='Test task', round=self.round)
-        self.url = reverse('task_statement', kwargs={'task_id': self.task.id})
+        self.staff_user = User.objects.create(username='staff')
+        self.staff_user.groups.add(group)
+        self.nonstaff_user = User.objects.create(username='nonstaff')
+        self.task_url = reverse('task_statement', kwargs={'task_id': self.task.id})
+        self.solution_url = reverse('solution_statement', kwargs={'task_id': self.task.id})
 
     def test_invalid_task(self):
         url = reverse('task_statement', kwargs={'task_id': INVALID_ID})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+        url = reverse('solution_statement', kwargs={'task_id': INVALID_ID})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
 
-    def test_task_statement(self):
-        response = self.client.get(self.url)
+    def test_invisible_round(self):
+        task = Task.objects.create(number=1, name='Test task', round=self.invisible_round)
+        url = reverse('task_statement', kwargs={'task_id': task.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+        url = reverse('solution_statement', kwargs={'task_id': task.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_nonstaff_invisible_round(self):
+        self.client.force_login(self.nonstaff_user)
+        task = Task.objects.create(number=1, name='Test task', round=self.invisible_round)
+        url = reverse('task_statement', kwargs={'task_id': task.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+        url = reverse('solution_statement', kwargs={'task_id': task.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+        self.client.logout()
+
+    def test_staff_invisible_round(self):
+        self.client.force_login(self.staff_user)
+        task = Task.objects.create(number=1, name='Test task', round=self.invisible_round)
+        url = reverse('task_statement', kwargs={'task_id': task.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        url = reverse('solution_statement', kwargs={'task_id': task.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.client.logout()
+
+    def test_statement(self):
+        response = self.client.get(self.task_url)
         self.assertContains(response, 'Test task')
+        self.assertContains(response, 'test <b>html</b> task statement')
+        response = self.client.get(self.solution_url)
+        self.assertContains(response, 'Test task')
+        self.assertContains(response, 'test <b>html</b> solution statement')
         self.assertContains(response, 'test <b>html</b> task statement')
 
     def test_missing_task_statement_file(self):
@@ -78,41 +148,6 @@ class TaskStatementsTests(TestCase):
         url = reverse('task_statement', kwargs={'task_id': task.id})
         response = self.client.get(url)
         self.assertContains(response, 'Test task 3')
-
-
-@override_settings(
-    TASK_STATEMENTS_PATH=path.join(path.dirname(__file__), 'test_data', 'statements'),
-    TASK_STATEMENTS_SUFFIX_YEAR='',
-    TASK_STATEMENTS_SUFFIX_ROUND='',
-    TASK_STATEMENTS_TASKS_DIR='tasks',
-    TASK_STATEMENTS_PREFIX_TASK='',
-    TASK_STATEMENTS_SOLUTIONS_DIR='solutions',
-    TASK_STATEMENTS_HTML_DIR='html',
-)
-class SolutionStatementsTests(TestCase):
-    def setUp(self):
-        competition = Competition.objects.create(name='TestCompetition')
-        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        series = Series.objects.create(number=1, name='Test series', competition=competition,
-                                       year=1)
-        self.round = Round.objects.create(number=1, series=series, visible=True,
-                                          solutions_visible=True)
-        self.task = Task.objects.create(number=1, name='Test task', round=self.round)
-        self.url = reverse('solution_statement', kwargs={'task_id': self.task.id})
-
-    def test_invalid_task(self):
-        url = reverse('solution_statement', kwargs={'task_id': INVALID_ID})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
-
-    def test_solution_statement(self):
-        response = self.client.get(self.url)
-        self.assertContains(response, 'Test task')
-        self.assertContains(response, 'test <b>html</b> solution statement')
-        self.assertContains(response, 'test <b>html</b> task statement')
-
-    def test_missing_task_statement_file(self):
-        task = Task.objects.create(number=3, name='Test task 3', round=self.round)
         url = reverse('solution_statement', kwargs={'task_id': task.id})
         response = self.client.get(url)
         self.assertContains(response, 'Test task 3')
