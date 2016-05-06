@@ -1,6 +1,6 @@
-from .models import UserLevel
 from trojsten.tasks.models import Submit, Task
 
+from .models import UserLevel
 
 ZWARTE_DOOS_TASK_ID = 972
 

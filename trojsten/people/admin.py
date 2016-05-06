@@ -18,6 +18,7 @@ from import_export.admin import ExportMixin
 from trojsten.contests.models import Competition, Series
 from trojsten.tasks.models import Submit
 from trojsten.utils.utils import attribute_format
+
 from . import constants
 from .forms import MergeForm
 from .helpers import get_similar_users, merge_users

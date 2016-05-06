@@ -1,5 +1,7 @@
 from django.conf import settings
+
 from trojsten import version
+
 
 def current_site(request):
     return {

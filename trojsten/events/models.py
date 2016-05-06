@@ -2,15 +2,14 @@
 
 from __future__ import unicode_literals
 
-from markdown import markdown
-
 from django.conf import settings
-from django.utils.encoding import python_2_unicode_compatible
-from django.db import models
-from django.contrib.sites.models import Site
-from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
+from django.contrib.sites.models import Site
+from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.html import mark_safe
+from markdown import markdown
 
 
 class EventTypeManager(models.Manager):

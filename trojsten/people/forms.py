@@ -5,9 +5,9 @@ from datetime import date
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import string_concat
-
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
+
 from trojsten.people.models import Address, DuplicateUser, User
 
 from . import constants

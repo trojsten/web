@@ -2,18 +2,17 @@
 
 import json
 import os
-from subprocess import Popen, PIPE
-
-from trojsten.people.models import User
-from trojsten.tasks.models import Submit
-from trojsten.tasks.models import Task
-from trojsten.submit.constants import SUBMIT_STATUS_FINISHED
-from trojsten.submit.constants import SUBMIT_RESPONSE_OK
+from subprocess import PIPE, Popen
 
 from celery import shared_task
 
-from .models import LevelSolved, LevelSubmit
+from trojsten.people.models import User
+from trojsten.submit.constants import (SUBMIT_RESPONSE_OK,
+                                       SUBMIT_STATUS_FINISHED)
+from trojsten.tasks.models import Submit, Task
+
 from .constants import DATA_ROOT
+from .models import LevelSolved, LevelSubmit
 
 
 @shared_task

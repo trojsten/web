@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from .views import ThreadView, ThreadListView
+from .views import ThreadListView, ThreadView
 
 urlpatterns = [
     url(r'^$', ThreadListView.as_view(), name='thread_list'),

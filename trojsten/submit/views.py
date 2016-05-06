@@ -1,31 +1,32 @@
 # -*- coding: utf-8 -*-
 # Create your views here.
 
-import os
 import json
+import os
 import xml.etree.ElementTree as ET
 
-from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from django.contrib import messages
-from django.http import Http404, HttpResponseBadRequest, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
-from django.conf import settings
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html
-
 from sendfile import sendfile
 from unidecode import unidecode
 
-from trojsten.contests.models import Round, Competition
-from trojsten.tasks.models import Task, Submit
-from trojsten.submit.forms import SourceSubmitForm, DescriptionSubmitForm, TestableZipSubmitForm
-from trojsten.submit.helpers import write_chunks_to_file, process_submit, get_path,\
-    update_submit
+from trojsten.contests.models import Competition, Round
+from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
+                                   TestableZipSubmitForm)
+from trojsten.submit.helpers import (get_path, process_submit, update_submit,
+                                     write_chunks_to_file)
 from trojsten.submit.templatetags.submit_parts import submitclass
-from .constants import VIEWABLE_EXTENSIONS
+from trojsten.tasks.models import Submit, Task
 
 from . import constants
+from .constants import VIEWABLE_EXTENSIONS
+
 
 def protocol_data(protocol_path, forceShowDetails=False):
     template_data = {}

@@ -4,7 +4,6 @@ from trojsten.results.representation import ResultsTag
 
 from .default import CompetitionRules
 
-
 KSP_Z = 'Z'
 KSP_O = 'O'
 

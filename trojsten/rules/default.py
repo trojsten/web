@@ -3,6 +3,7 @@
 from datetime import datetime
 
 from django.db import models
+
 from trojsten.contests.models import Round
 from trojsten.results.constants import DEFAULT_TAG_KEY
 from trojsten.results.generator import ResultsGenerator

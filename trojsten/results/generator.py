@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth import get_user_model
+
 from trojsten.people.constants import (GRADUATION_SCHOOL_YEAR,
-                                             SCHOOL_YEAR_END_MONTH)
-from trojsten.tasks.models import Submit, Task
+                                       SCHOOL_YEAR_END_MONTH)
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
+from trojsten.tasks.models import Submit, Task
 
 from . import constants as c
 from .representation import Results, ResultsCell, ResultsCol, ResultsRow

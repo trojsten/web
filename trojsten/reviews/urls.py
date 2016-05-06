@@ -1,8 +1,8 @@
 from django.conf.urls import url
-from trojsten.reviews.views import (review_task, submit_download,
-                                    download_latest_submits, zip_upload,
-                                    edit_review)
 from django.contrib import admin
+
+from trojsten.reviews.views import (download_latest_submits, edit_review,
+                                    review_task, submit_download, zip_upload)
 
 task_review_urls = [
     url(r'^(?P<task_pk>[0-9]+)/download_latest_submits$',

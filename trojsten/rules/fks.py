@@ -5,7 +5,6 @@ from trojsten.results.representation import ResultsTag
 from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 from .default import CompetitionRules
 
-
 FKS_A = 'A'
 FKS_B = 'B'
 

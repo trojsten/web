@@ -9,7 +9,8 @@ from django.contrib.auth.decorators import login_required
 from ksp_login import views as login_views
 
 import trojsten.views
-from trojsten.people.forms import TrojstenUserCreationForm, TrojstenUserChangeForm
+from trojsten.people.forms import (TrojstenUserChangeForm,
+                                   TrojstenUserCreationForm)
 
 admin.autodiscover()
 admin.site.login = login_required(admin.site.login)

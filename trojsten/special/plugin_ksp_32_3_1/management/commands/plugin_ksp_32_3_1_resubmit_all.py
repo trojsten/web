@@ -6,9 +6,9 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Count
 
 from trojsten.people.models import User
+from trojsten.submit.constants import (SUBMIT_RESPONSE_OK,
+                                       SUBMIT_STATUS_FINISHED)
 from trojsten.tasks.models import Submit, Task
-from trojsten.submit.constants import SUBMIT_STATUS_FINISHED
-from trojsten.submit.constants import SUBMIT_RESPONSE_OK
 
 from ...models import LevelSolved
 from ...views import load_level_index

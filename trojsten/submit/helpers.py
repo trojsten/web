@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
-from time import time
 import os
 import random
 import socket
 import stat
 import xml.etree.ElementTree as ET
 from decimal import Decimal
-from unidecode import unidecode
+from time import time
 
 from django.conf import settings
+from unidecode import unidecode
 
 from . import constants
+
 
 def write_chunks_to_file(filepath, chunks):
     try:

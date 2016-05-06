@@ -1,9 +1,10 @@
 # coding: utf-8
 from __future__ import unicode_literals
-from django import forms
-from django.conf import settings
 
 import os
+
+from django import forms
+from django.conf import settings
 
 
 class SourceSubmitForm(forms.Form):

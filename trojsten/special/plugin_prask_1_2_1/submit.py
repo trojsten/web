@@ -1,11 +1,10 @@
 from django.db.models import Sum
 
+from trojsten.submit.constants import (SUBMIT_RESPONSE_OK,
+                                       SUBMIT_STATUS_FINISHED)
 from trojsten.tasks.models import Submit, Task
-from trojsten.submit.constants import SUBMIT_STATUS_FINISHED
-from trojsten.submit.constants import SUBMIT_RESPONSE_OK
 
 from .models import UserCategory
-
 
 TASK_ID = 1013
 

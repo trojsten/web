@@ -1,6 +1,7 @@
 import os
 import sys
 
+
 def get_version_string():
     version_file = os.path.join(os.path.dirname(__file__), '..', 'version.txt')
     version_string = ''

@@ -1,7 +1,7 @@
-from django.utils.translation import activate
 from django.test import TestCase
+from django.utils.translation import activate
 
-from trojsten.contests.models import Competition, Series, Round
+from trojsten.contests.models import Competition, Round, Series
 
 
 class RoundMethodTests(TestCase):

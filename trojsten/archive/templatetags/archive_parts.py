@@ -1,6 +1,7 @@
 from django import template
 
 from trojsten.contests.models import Competition
+
 from ..helpers import get_rounds_by_year
 
 register = template.Library()

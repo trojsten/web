@@ -1,9 +1,6 @@
-from .models import UserLevel
 from trojsten.tasks.models import Submit, Task
 
 from .models import UserLevel
-from trojsten.tasks.models import Submit, Task
-
 
 ZWARTE_DOOS_TASK_ID = 984
 
@@ -29,5 +26,3 @@ def update_points(user):
         protocol_id="",
     )
     submit.save()
-
-

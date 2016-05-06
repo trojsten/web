@@ -3,12 +3,11 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from django.utils.encoding import force_text
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.utils.encoding import force_text
 from easy_select2 import select2_modelform
+from import_export import fields, resources
 from import_export.admin import ExportMixin
-from import_export import resources, fields
 
 from .models import *
 
