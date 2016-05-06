@@ -1,0 +1,41 @@
+{% extends 'trojsten/layout/main.html' %}
+{% load staticfiles sekizai_tags %}
+{% load bootstrap %}
+
+
+{% block title %}{{ task.name }}{% endblock %}
+{% block page_header %}
+    <h1>{{ task.name }}</h1>
+{% endblock %}
+
+{% block page_content %}
+    <a href="{% url 'task_statement' task_id=task.id %}">Zadanie</a>
+    <div id="plugin_prask_2_4_1/questions"></div>
+    <h2>Body:</h2>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <span class="badge">{{ last_points }}</span>
+            Tvoje posledné riešenie
+        </li>
+        <li class="list-group-item">
+            <span class="badge">{{ best_points }}</span>
+            Tvoje najlepšie riešenie
+        </li>
+    </ul>
+
+    <h2>Odovzdávanie:</h2>
+    <form class="form form-inline" method="post">
+        <div class="form-group" style="min-width:50px;"><label>Druhá najľahšia guľôčka:</label></div>
+        {% csrf_token %}
+        {{ form | bootstrap_inline}}
+        <button type="submit" class="btn btn-primary">Odovzdaj!</button>
+    </form>
+
+    {% addtoblock "js" %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.min.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.min.js" type="text/javascript"></script>
+        <script src="{% static "js/csrf_token.js" %}"></script>
+        <script src="{% static "plugin_prask_2_4_1/js/lib/main.js" %}" type="text/javascript"></script>
+    {% endaddtoblock %}
+
+{% endblock %}

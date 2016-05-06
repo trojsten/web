@@ -22,6 +22,7 @@ django-threadedcomments
 Django<1.10
 ecdsa
 fake-factory
+first
 ksp-login>0.4
 Markdown
 psycopg2
