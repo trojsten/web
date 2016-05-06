@@ -1,0 +1,21 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% block title %}Započítavač{% endblock %}
+
+{% block page_header %}
+  <h1>Započítavač</h1>
+{% endblock %}
+
+{% block page_content %}
+  {% if created %}
+    <p>Body boli započítané.</p>
+  {% else %}
+    <p>Body už boli započítané v minulosti.</p>
+  {% endif %}
+  <a
+    href="#"
+    onClick="history.go(-1); return false;"
+    class="btn btn-primary"
+    role="button"
+  >Späť do hry</a>
+{% endblock %}
