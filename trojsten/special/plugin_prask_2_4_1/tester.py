@@ -60,7 +60,7 @@ def verify(reach, x, numqueries):
 
     # Overime, ci x moze byt druhy najvacsi
     if (x not in roots and x not in semiroots) or (len(roots) == 1 and x in roots):
-        return 0, "Zle! %d určite nie je druhá najkvalitnejšia." % (x,)
+        return 0, "Zle! %d určite nie je druhá najľahšia." % (x,)
     # Overime, ci aj iny moze byt druhy najvacsi
     otherroot = None
     if len(roots) > 1:
@@ -68,22 +68,22 @@ def verify(reach, x, numqueries):
     if len(semiroots) > 1:
         otherroot = first(semiroots, key=lambda k: k != x)
     if otherroot is not None:
-        return 0, "Len tipuješ! Podľa tvojich otázok by druhá najkvalitnejšia mohla byť aj %d." % (
+        return 0, "Len tipuješ! Podľa tvojich otázok by druhá najľahšia mohla byť aj %d." % (
             otherroot,
         )
     # OK, nasli ho
     max_points = False
-    if numqueries <= 16 + 3:
-        points = 4
+    if numqueries <= 15 + 3:
+        points = 10
         max_points = True
-    elif numqueries <= 16 + 8:
-        points = 3
-    elif numqueries <= 16 + 16:
-        points = 2
+    elif numqueries <= 15 + 6:
+        points = 8
+    elif numqueries <= 15 + 14:
+        points = 6
     else:
-        points = 1
+        points = 4
     message = "Správne! Máš to za %d otázok, takže dostávaš %d %s." % (
-        numqueries, points, "bod" if points == 1 else "body"
+        numqueries, points, "body" if points == 4 else "bodov"
     )
     if not max_points:
         message = message + " Podarí sa ti vymyslieť lepšie riešenie?"

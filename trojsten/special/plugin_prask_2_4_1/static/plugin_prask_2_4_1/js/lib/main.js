@@ -11,17 +11,17 @@ var Question = React.createClass({
                 'span',
                 { className: 'label label-info' },
                 this.props.a,
-                ' > ',
+                ' < ',
                 this.props.b
             ),
-            '  Zlúčenina ',
+            '  Guľôčka ',
             React.createElement(
                 'em',
                 null,
                 'č. ',
                 this.props.a
             ),
-            ' je lepšia ako zlúčenina ',
+            ' je ľahšia ako guľôčka ',
             React.createElement(
                 'em',
                 null,

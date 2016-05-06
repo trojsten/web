@@ -1,7 +1,7 @@
 var Question = React.createClass({
     render: function () {
-        return <li><span className="label label-info">{this.props.a} > {this.props.b}</span>&nbsp;
-            Zlúčenina <em>č. {this.props.a}</em> je lepšia ako zlúčenina <em>č. {this.props.b}</em>.
+        return <li><span className="label label-info">{this.props.a} < {this.props.b}</span>&nbsp;
+            Guľôčka <em>č. {this.props.a}</em> je ľahšia ako guľôčka <em>č. {this.props.b}</em>.
         </li>;
     }
 });
