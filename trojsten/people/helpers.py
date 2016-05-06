@@ -1,5 +1,6 @@
-from .models import User, UserProperty, UserPropertyKey
 from django.db import transaction
+
+from .models import User, UserProperty, UserPropertyKey
 
 
 def get_similar_users(user):

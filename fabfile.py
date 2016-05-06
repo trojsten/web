@@ -1,6 +1,7 @@
-from fabric.api import run, cd, prefix, env, get
 import os
 import time
+
+from fabric.api import cd, env, get, prefix, run
 
 PROJECT_PATH = '~/web'
 LOCAL = False

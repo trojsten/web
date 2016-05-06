@@ -3,7 +3,6 @@ from django.conf import settings
 
 from ..models import MenuGroup
 
-
 register = template.Library()
 
 

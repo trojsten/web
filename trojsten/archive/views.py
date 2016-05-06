@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 from wiki.decorators import get_article
 
 

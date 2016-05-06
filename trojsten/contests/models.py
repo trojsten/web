@@ -3,15 +3,15 @@
 from __future__ import unicode_literals
 
 import os
-import pytz
 from datetime import datetime
 
+import pytz
+from django.conf import settings
+from django.contrib.auth.models import Group
+from django.contrib.sites.models import Site
 from django.db import models
 from django.db.models import Q
 from django.utils.encoding import python_2_unicode_compatible
-from django.contrib.sites.models import Site
-from django.conf import settings
-from django.contrib.auth.models import Group
 from django.utils.translation import ugettext as _
 from unidecode import unidecode
 

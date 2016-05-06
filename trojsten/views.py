@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
-from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
 from wiki.views import article
 
 

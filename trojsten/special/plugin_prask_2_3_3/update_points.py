@@ -1,6 +1,6 @@
-from .models import UserLevel
 from trojsten.tasks.models import Submit, Task
 
+from .models import UserLevel
 
 TASK_ID = 1145
 

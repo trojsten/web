@@ -1,10 +1,10 @@
 
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseBadRequest, HttpResponse
-
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 import json
+
+from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.shortcuts import render
 
 from .core import LEVELS
 from .models import UserLevel

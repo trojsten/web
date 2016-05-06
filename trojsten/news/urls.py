@@ -1,8 +1,7 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, patterns, url
 
-from trojsten.news.views import EntryListView
 from trojsten.news.feeds import NewsFeed
-
+from trojsten.news.views import EntryListView
 
 urlpatterns = [
     url(r'^strana/(?P<page>[0-9]+)/$', EntryListView.as_view(),

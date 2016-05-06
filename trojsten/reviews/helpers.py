@@ -5,9 +5,9 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from unidecode import unidecode
 
-from trojsten.tasks.models import Submit
-from trojsten.submit.helpers import get_path, write_chunks_to_file
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
+from trojsten.submit.helpers import get_path, write_chunks_to_file
+from trojsten.tasks.models import Submit
 
 
 def submit_review(filecontent, filename, task, user, points, comment='', submit=None):

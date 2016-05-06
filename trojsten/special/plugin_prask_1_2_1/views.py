@@ -2,17 +2,16 @@
 
 import json
 
-from django.db import transaction
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseNotFound, HttpResponse
-from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
+from django.db import transaction
+from django.http import HttpResponse, HttpResponseNotFound
+from django.shortcuts import redirect, render
 
 from .algorithms import ALL
+from .getcat import getcat
 from .models import UserCategory, Visit
 from .submit import update_points
-from .getcat import getcat
-
 
 GRATULATION = 'Gratulujeme! Prefíkaný kocúr je tvoj. Stačilo ti %d návštev.'
 

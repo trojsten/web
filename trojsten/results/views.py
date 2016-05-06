@@ -2,6 +2,7 @@
 
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
+
 from trojsten.contests.models import Competition, Round
 from trojsten.utils.utils import is_true
 

@@ -4,9 +4,8 @@ import json
 import os
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
-
 from sendfile import sendfile
 
 from trojsten.tasks.models import Task

@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
-from wiki.urls import get_pattern as get_wiki_pattern
 from django_nyt.urls import get_pattern as get_notify_pattern
+from wiki.urls import get_pattern as get_wiki_pattern
 
 from .common import *
 

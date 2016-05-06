@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import include, patterns, url
 
 urlpatterns = [
     url(r'^ksp/32/1/1/', include('trojsten.special.plugin_ksp_32_1_1.urls',

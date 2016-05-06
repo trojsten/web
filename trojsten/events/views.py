@@ -3,24 +3,23 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
+
 import pytz
-
-from wiki.decorators import get_article
-
-from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
-from django.views.generic.edit import FormView
-from django.shortcuts import get_object_or_404, redirect
-from django.http import Http404
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction
-from django.contrib import messages
+from django.http import Http404
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.decorators import method_decorator
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView
+from django.views.generic.list import ListView
+from wiki.decorators import get_article
 
-from .models import Event, Invitation, EventType
 from .forms import RegistrationForm
+from .models import Event, EventType, Invitation
 
 
 class ParticipantsAndOrganizersListView(DetailView):

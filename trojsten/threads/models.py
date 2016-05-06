@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.db import models
-from django.core.urlresolvers import reverse
-from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
+from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 
 
 @python_2_unicode_compatible

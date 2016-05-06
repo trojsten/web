@@ -3,11 +3,12 @@ from __future__ import unicode_literals
 
 import random
 
-from django.test import TestCase
 from django.contrib.auth.models import Group
+from django.test import TestCase
 
 from trojsten.contests.models import Competition, Round, Series
 from trojsten.tasks.models import Task
+
 from .helpers import get_similar_users, merge_users
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
 

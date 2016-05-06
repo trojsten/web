@@ -1,6 +1,9 @@
 from __future__ import absolute_import
-from trojsten.settings.common import *
+
 from django.core.exceptions import ImproperlyConfigured
+
+from trojsten.settings.common import *
+
 
 def requiredenv(name):
     if name not in os.environ:

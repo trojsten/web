@@ -1,17 +1,16 @@
 from __future__ import absolute_import
 
-from wiki.urls import get_pattern as get_wiki_pattern
 from django_nyt.urls import get_pattern as get_notify_pattern
-
-from .common import *
+from wiki.urls import get_pattern as get_wiki_pattern
 
 import trojsten.archive.views
-import trojsten.submit.urls
-import trojsten.results.urls
 import trojsten.news.urls
+import trojsten.results.urls
+import trojsten.submit.urls
 import trojsten.task_statements.urls
 import trojsten.views
 
+from .common import *
 
 urlpatterns += [
     url(r'^admin/', include(admin.site.urls)),

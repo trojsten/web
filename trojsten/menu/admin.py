@@ -17,4 +17,3 @@ class MenuGroupAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(MenuGroup, MenuGroupAdmin)
-

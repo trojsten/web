@@ -2,10 +2,10 @@
 
 from collections import defaultdict, namedtuple
 
-
-from trojsten.tasks.models import Task, Submit
 from trojsten.contests.models import Round
 from trojsten.submit import constants as submit_constants
+from trojsten.tasks.models import Submit, Task
+
 from .models import FrozenResults
 
 

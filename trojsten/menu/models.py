@@ -4,11 +4,11 @@ from __future__ import unicode_literals
 
 import re
 
-from django.db import models
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse, resolve
+from django.core.urlresolvers import resolve, reverse
 from django.core.validators import URLValidator
+from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from sortedm2m.fields import SortedManyToManyField
 

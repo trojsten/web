@@ -7,22 +7,23 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 from sendfile import sendfile
 
-from trojsten.reviews.constants import REVIEW_POINTS_FILENAME, \
-    REVIEW_COMMENT_FILENAME, RE_FILENAME, RE_SUBMIT_PK
-from trojsten.reviews.forms import ReviewForm, get_zip_form_set, reviews_upload_pattern, \
-    UploadZipForm
-from trojsten.reviews.helpers import (submit_download_filename,
-                                      get_latest_submits_for_task, get_user_as_choices,
+from trojsten.reviews.constants import (RE_FILENAME, RE_SUBMIT_PK,
+                                        REVIEW_COMMENT_FILENAME,
+                                        REVIEW_POINTS_FILENAME)
+from trojsten.reviews.forms import (ReviewForm, UploadZipForm,
+                                    get_zip_form_set, reviews_upload_pattern)
+from trojsten.reviews.helpers import (get_latest_submits_for_task,
+                                      get_user_as_choices, submit_directory,
+                                      submit_download_filename,
                                       submit_protocol_download_filename,
-                                      submit_source_download_filename,
-                                      submit_directory)
+                                      submit_source_download_filename)
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
-from trojsten.tasks.models import Task, Submit
+from trojsten.tasks.models import Submit, Task
 
 
 def review_task(request, task_pk):

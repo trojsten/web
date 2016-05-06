@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls import url, handler404
+from django.conf.urls import handler404, url
 
 from .views import *
-
 
 urlpatterns =[
     url(r'^$', index),

@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.db.models import Sum
+
 from trojsten.results.generator import (BonusColumnGeneratorMixin,
                                         PrimarySchoolGeneratorMixin,
                                         ResultsGenerator)

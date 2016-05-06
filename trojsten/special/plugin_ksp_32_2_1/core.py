@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+
+import codecs
 import itertools
+import os
+from collections import Counter
 
 """KSP 32.2.1 Specification"""
 
 __author__ = "Sysel"
 
-import codecs
-import os
-from collections import Counter
 
 
 class Level1(object):

@@ -1,5 +1,5 @@
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
 from .models import UserLevel
 from .update_points import update_points
@@ -16,4 +16,3 @@ def solved(request, level):
     return render(request, 'plugin_prask_2_3_3/level.html', {
         "created": created,
     }, current_app=request.resolver_match.namespace)
-

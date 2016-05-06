@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from easy_select2.widgets import Select2Multiple
 
 from trojsten.news.models import *
