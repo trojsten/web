@@ -12,6 +12,7 @@ from trojsten.contests.models import Competition, Round, Series
 from trojsten.tasks.models import Submit
 from trojsten.tasks.models import Task
 from trojsten.people.models import User
+from trojsten.utils.test_utils import get_noexisting_id
 
 
 class RecentResultsTest(TestCase):
@@ -122,7 +123,7 @@ class ResultsTest(TestCase):
         self.url3 = reverse('view_results', kwargs={'round_id': self.round3.id})
 
     def test_invalid_round(self):
-        url = reverse('view_results', kwargs={'round_id': 47})
+        url = reverse('view_results', kwargs={'round_id': get_noexisting_id(Round)})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
