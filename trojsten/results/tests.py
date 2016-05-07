@@ -26,8 +26,8 @@ class RecentResultsTest(TestCase):
 
     def test_no_rounds(self):
         response = self.client.get(self.url)
-        # @ToDo: translations
         self.assertEqual(response.status_code, 200)
+        # @ToDo: translations
         self.assertContains(response, 'Ešte nebeží žiadne kolo.')
 
     def test_two_rounds(self):
@@ -46,7 +46,7 @@ class RecentResultsTest(TestCase):
         submit.save()
 
         response = self.client.get(self.url)
-        self.assertNotContains(response, 'Jozko Mrkvicka')
+        self.assertNotContains(response, self.user.get_full_name())
         # @ToDo: translations
         self.assertContains(response, 'Žiadne submity')
 
@@ -101,22 +101,17 @@ class ResultsTest(TestCase):
         # @ToDo: translations
         self.assertContains(response, 'Žiadne submity')
 
-    def test_second_round_no_users(self):
-        response = self.client.get(self.url2)
-        # @ToDo: translations
-        self.assertContains(response, 'Žiadne submity')
-
     def test_submit_only_first_round(self):
         submit_time = self.round1.start_time + datetime.timedelta(0, 5)
         submit = Submit.objects.create(task=self.task1, user=self.user, submit_type=0, points=5)
         submit.time = submit_time
         submit.save()
         response = self.client.get(self.url1)
-        self.assertContains(response, self.user.first_name + " " + self.user.last_name)
+        self.assertContains(response, self.user.get_full_name())
         response = self.client.get(self.url2)
-        self.assertContains(response, self.user.first_name + " " + self.user.last_name)
+        self.assertContains(response, self.user.get_full_name())
         response = self.client.get(self.url3)
-        self.assertNotContains(response, self.user.first_name + " " + self.user.last_name)
+        self.assertNotContains(response, self.user.get_full_name())
 
     def test_submit_only_second_round(self):
         submit_time = self.round2.start_time + datetime.timedelta(0, 5)
@@ -124,11 +119,11 @@ class ResultsTest(TestCase):
         submit.time = submit_time
         submit.save()
         response = self.client.get(self.url1)
-        self.assertNotContains(response, self.user.first_name + " " + self.user.last_name)
+        self.assertNotContains(response, self.user.get_full_name())
         response = self.client.get(self.url2)
-        self.assertContains(response, self.user.first_name + " " + self.user.last_name)
+        self.assertContains(response, self.user.get_full_name())
         response = self.client.get(self.url3)
-        self.assertNotContains(response, self.user.first_name + " " + self.user.last_name)
+        self.assertNotContains(response, self.user.get_full_name())
 
     def test_submit_all(self):
         submit_time = self.round1.start_time + datetime.timedelta(0, 5)
@@ -147,8 +142,8 @@ class ResultsTest(TestCase):
         submit.save()
 
         response = self.client.get(self.url1)
-        self.assertContains(response, self.user.first_name + " " + self.user.last_name)
+        self.assertContains(response, self.user.get_full_name())
         response = self.client.get(self.url2)
-        self.assertContains(response, self.user.first_name + " " + self.user.last_name)
+        self.assertContains(response, self.user.get_full_name())
         response = self.client.get(self.url3)
-        self.assertContains(response, self.user.first_name + " " + self.user.last_name)
+        self.assertContains(response, self.user.get_full_name())
