@@ -12,8 +12,7 @@ from django.test import TestCase, override_settings
 from trojsten.contests.models import Competition, Round, Series
 from trojsten.people.models import User
 from trojsten.tasks.models import Task
-
-INVALID_ID = 47
+from trojsten.utils.test_utils import get_noexisting_id
 
 
 class TaskListTests(TestCase):
@@ -26,7 +25,7 @@ class TaskListTests(TestCase):
         self.round = Round.objects.create(number=1, series=series, visible=True,
                                           solutions_visible=True)
         self.invisible_round = Round.objects.create(number=1, series=series, visible=False,
-                                          solutions_visible=False)
+                                                    solutions_visible=False)
         self.staff_user = User.objects.create(username='staff')
         self.staff_user.groups.add(group)
         self.nonstaff_user = User.objects.create(username='nonstaff')
@@ -36,23 +35,23 @@ class TaskListTests(TestCase):
         )
 
     def test_invalid_round(self):
-        url = reverse('task_list', kwargs={'round_id': INVALID_ID})
+        url = reverse('task_list', kwargs={'round_id': get_noexisting_id(Round)})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
     def test_invisible_round(self):
-        response = self.client.get(self.invisible_round_url )
+        response = self.client.get(self.invisible_round_url)
         self.assertEqual(response.status_code, 404)
 
     def test_nonstaff_invisible_round(self):
         self.client.force_login(self.nonstaff_user)
-        response = self.client.get(self.invisible_round_url )
+        response = self.client.get(self.invisible_round_url)
         self.assertEqual(response.status_code, 404)
         self.client.logout()
 
     def test_staff_invisible_round(self):
         self.client.force_login(self.staff_user)
-        response = self.client.get(self.invisible_round_url )
+        response = self.client.get(self.invisible_round_url)
         self.assertEqual(response.status_code, 200)
         self.client.logout()
 
@@ -96,10 +95,10 @@ class TaskAndSolutionStatementsTests(TestCase):
         self.solution_url = reverse('solution_statement', kwargs={'task_id': self.task.id})
 
     def test_invalid_task(self):
-        url = reverse('task_statement', kwargs={'task_id': INVALID_ID})
+        url = reverse('task_statement', kwargs={'task_id': get_noexisting_id(Task)})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
-        url = reverse('solution_statement', kwargs={'task_id': INVALID_ID})
+        url = reverse('solution_statement', kwargs={'task_id': get_noexisting_id(Task)})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
@@ -184,12 +183,12 @@ class PdfDownloadTests(TestCase):
         self.nonstaff_user = User.objects.create(username='nonstaff')
 
     def test_invalid_task_pdf(self):
-        url = reverse('view_pdf', kwargs={'round_id': INVALID_ID})
+        url = reverse('view_pdf', kwargs={'round_id': get_noexisting_id(Round)})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
     def test_invalid_solutions_pdf(self):
-        url = reverse('view_solutions_pdf', kwargs={'round_id': INVALID_ID})
+        url = reverse('view_solutions_pdf', kwargs={'round_id': get_noexisting_id(Round)})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
