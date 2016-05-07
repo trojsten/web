@@ -10,7 +10,7 @@ from .models import Entry
 from trojsten.people.models import User
 
 
-class ArchiveTest(TestCase):
+class NewsTest(TestCase):
     def setUp(self):
         self.site = Site.objects.get(pk=settings.SITE_ID)
         self.user = User.objects.create_user(username="TestUser", password="password",
