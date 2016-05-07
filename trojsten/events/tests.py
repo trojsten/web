@@ -143,6 +143,7 @@ class EventParticipantsTest(TestCase):
                                           place=place, start_time=start_time,
                                           end_time=end_time)
         self.url = reverse('participants_list', kwargs={'event_id': self.event.id})
+        self.gradyear = datetime.datetime.now().year
 
     def test_event_not_exists(self):
         url = reverse('participants_list', kwargs={'event_id': get_noexisting_id(Event)})
@@ -155,21 +156,21 @@ class EventParticipantsTest(TestCase):
 
     def test_event_has_participants(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
-                                   password="pass")
+                                   password="pass", graduation=self.gradyear)
         Invitation.objects.create(event=self.event, user=user, going=True)
         response = self.client.get(self.url)
         self.assertContains(response, user.get_full_name())
 
     def test_participant_not_going(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
-                                   password="pass")
+                                   password="pass", graduation=self.gradyear)
         Invitation.objects.create(event=self.event, user=user, going=False)
         response = self.client.get(self.url)
         self.assertNotContains(response, user.get_full_name())
 
     def test_event_has_staff(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
-                                   password="pass")
+                                   password="pass", graduation=2000)
         self.group.user_set.add(user)
         Invitation.objects.create(event=self.event, user=user, going=True, type=2)
         response = self.client.get(self.url)
@@ -177,7 +178,7 @@ class EventParticipantsTest(TestCase):
 
     def test_participant_substitute_not_display(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
-                                   password="pass")
+                                   password="pass", graduation=self.gradyear)
         Invitation.objects.create(event=self.event, user=user, going=True, type=1)
         response = self.client.get(self.url)
         self.assertNotContains(response, user.get_full_name())
@@ -210,8 +211,10 @@ class EventRegistrationTest(TestCase):
                                parent=urlpath1)
         ArticleRevision.objects.create(article=article2, title="Nazov1")
 
+        gradyear = datetime.datetime.now().year
         self.user = User.objects.create_user(username="jozko", first_name="Jozko",
-                                             last_name="Mrkvicka", password="pass")
+                                             last_name="Mrkvicka", password="pass",
+                                             graduation=gradyear)
         self.url = reverse('event_registration', kwargs={'event_id': self.event.id})
 
     def test_event_registration_redirect_to_login(self):
