@@ -16,12 +16,13 @@ class ArchiveTest(TestCase):
     def setUp(self):
         self.site = Site.objects.get(pk=settings.SITE_ID)
 
-        article = Article.objects.create()
-        ArticleRevision.objects.create(article=article, title="test 1")
-        u1 = URLPath.objects.create(site=self.site, article=article)
-        article = Article.objects.create()
-        ArticleRevision.objects.create(article=article, title="test 2")
-        URLPath.objects.create(site=self.site, article=article, slug="archiv", parent=u1)
+        root_article = Article.objects.create()
+        ArticleRevision.objects.create(article=root_article, title="test 1")
+        urlpath_root = URLPath.objects.create(site=self.site, article=root_article)
+        archive_article = Article.objects.create()
+        ArticleRevision.objects.create(article=archive_article, title="test 2")
+        URLPath.objects.create(site=self.site, article=archive_article, slug="archiv",
+                               parent=urlpath_root)
 
         self.url = reverse('archive')
 
@@ -168,7 +169,7 @@ class ArchiveTest(TestCase):
         user = User.objects.create_user(username="TestUser", password="password",
                                         first_name="Arasid", last_name="Mrkvicka", graduation=2014)
         group.user_set.add(user)
-        self.client.login(username="TestUser", password="password")
+        self.client.force_login(user)
         response = self.client.get(self.url)
         # @ToDo: translations
         self.assertContains(response, "1. kolo")
