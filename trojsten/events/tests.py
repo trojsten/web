@@ -21,59 +21,59 @@ class EventListTest(TestCase):
     def setUp(self):
         site = Site.objects.get(pk=settings.SITE_ID)
 
-        article1 = Article.objects.create()
-        urlpath1 = URLPath.objects.create(site=site, article=article1)
-        ArticleRevision.objects.create(article=article1, title="Nazov1")
+        root_article = Article.objects.create()
+        root_path = URLPath.objects.create(site=site, article=root_article)
+        ArticleRevision.objects.create(article=root_article, title="Root article")
 
-        article2 = Article.objects.create()
-        urlpath2 = URLPath.objects.create(site=site, article=article2, slug="akcie",
-                                          parent=urlpath1)
-        ArticleRevision.objects.create(article=article2, title="Nazov1")
+        events_article = Article.objects.create()
+        events_path = URLPath.objects.create(site=site, article=events_article, slug="akcie",
+                                             parent=root_path)
+        ArticleRevision.objects.create(article=events_article, title="Events")
 
-        article3 = Article.objects.create()
-        URLPath.objects.create(site=site, article=article3, slug="sustredenia",
-                               parent=urlpath2)
-        ArticleRevision.objects.create(article=article3, title="Nazov1")
+        camps_article = Article.objects.create()
+        URLPath.objects.create(site=site, article=camps_article, slug="sustredenia",
+                               parent=events_path)
+        ArticleRevision.objects.create(article=camps_article, title="Camps")
 
-        self.url1 = reverse('event_list')
-        self.url2 = reverse('camp_event_list')
+        self.events_url = reverse('event_list')
+        self.camp_url = reverse('camp_event_list')
         group = Group.objects.create(name="skupina")
 
-        self.event_type1 = EventType.objects.create(name="nesustredenie",
-                                                    organizers_group=group, is_camp=False)
-        self.event_type2 = EventType.objects.create(name="sustredenie",
-                                                    organizers_group=group, is_camp=True)
-        self.event_type1.sites.add(site)
-        self.event_type2.sites.add(site)
+        self.type_not_camp = EventType.objects.create(name="Not camp",
+                                                      organizers_group=group, is_camp=False)
+        self.type_camp = EventType.objects.create(name="Camp",
+                                                  organizers_group=group, is_camp=True)
+        self.type_not_camp.sites.add(site)
+        self.type_camp.sites.add(site)
 
-        self.place = Place.objects.create(name="Miesto")
+        self.place = Place.objects.create(name="Camp place")
         self.start_time = datetime.datetime.now()
         self.end_time = datetime.datetime.now() + datetime.timedelta(5)
 
     def test_no_event(self):
-        response = self.client.get(self.url1)
+        response = self.client.get(self.events_url)
         self.assertEqual(response.status_code, 200)
 
     def test_visible_event(self):
-        event = Event.objects.create(name="Nesustredkovy event", type=self.event_type1,
-                                     place=self.place, start_time=self.start_time,
-                                     end_time=self.end_time)
-        response = self.client.get(self.url1)
-        self.assertContains(response, event.name)
+        not_camp_event = Event.objects.create(name="Not camp event", type=self.type_not_camp,
+                                              place=self.place, start_time=self.start_time,
+                                              end_time=self.end_time)
+        response = self.client.get(self.events_url)
+        self.assertContains(response, not_camp_event.name)
 
     def test_event_is_not_camp(self):
-        event = Event.objects.create(name="Nesustredkovy event", type=self.event_type1,
-                                     place=self.place, start_time=self.start_time,
-                                     end_time=self.end_time)
-        response = self.client.get(self.url2)
-        self.assertNotContains(response, event.name)
+        not_camp_event = Event.objects.create(name="Not camp event", type=self.type_not_camp,
+                                              place=self.place, start_time=self.start_time,
+                                              end_time=self.end_time)
+        response = self.client.get(self.camp_url)
+        self.assertNotContains(response, not_camp_event.name)
 
     def test_event_is_camp(self):
-        event = Event.objects.create(name="Sustredkovy event", type=self.event_type2,
-                                     place=self.place, start_time=self.start_time,
-                                     end_time=self.end_time)
-        response = self.client.get(self.url2)
-        self.assertContains(response, event.name)
+        camp_event = Event.objects.create(name="Camp event", type=self.type_camp,
+                                          place=self.place, start_time=self.start_time,
+                                          end_time=self.end_time)
+        response = self.client.get(self.camp_url)
+        self.assertContains(response, camp_event.name)
 
 
 class EventTest(TestCase):
@@ -81,22 +81,22 @@ class EventTest(TestCase):
     def setUp(self):
         site = Site.objects.get(pk=settings.SITE_ID)
 
-        article1 = Article.objects.create()
-        urlpath1 = URLPath.objects.create(site=site, article=article1)
-        ArticleRevision.objects.create(article=article1, title="Nazov1")
+        root_article = Article.objects.create()
+        root_path = URLPath.objects.create(site=site, article=root_article)
+        ArticleRevision.objects.create(article=root_article, title="Root article")
 
-        article2 = Article.objects.create()
-        URLPath.objects.create(site=site, article=article2, slug="akcie",
-                               parent=urlpath1)
-        ArticleRevision.objects.create(article=article2, title="Nazov1")
+        events_article = Article.objects.create()
+        URLPath.objects.create(site=site, article=events_article, slug="akcie",
+                               parent=root_path)
+        ArticleRevision.objects.create(article=events_article, title="Events")
 
-        group = Group.objects.create(name="skupina")
+        group = Group.objects.create(name="group")
 
-        self.event_type = EventType.objects.create(name="sustredenie",
-                                                   organizers_group=group, is_camp=True)
-        self.event_type.sites.add(site)
+        self.type_camp = EventType.objects.create(name="Camp",
+                                                  organizers_group=group, is_camp=True)
+        self.type_camp.sites.add(site)
 
-        self.place = Place.objects.create(name="Miesto")
+        self.place = Place.objects.create(name="Camp place")
         self.start_time = datetime.datetime.now()
         self.end_time = datetime.datetime.now() + datetime.timedelta(5)
 
@@ -106,7 +106,7 @@ class EventTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_existing_event(self):
-        event = Event.objects.create(name="Sustredkovy event", type=self.event_type,
+        event = Event.objects.create(name="Camp event", type=self.type_camp,
                                      place=self.place, start_time=self.start_time,
                                      end_time=self.end_time)
         url = reverse('event_detail', kwargs={'event_id': event.id})
@@ -120,29 +120,29 @@ class EventParticipantsTest(TestCase):
     def setUp(self):
         site = Site.objects.get(pk=settings.SITE_ID)
 
-        article1 = Article.objects.create()
-        urlpath1 = URLPath.objects.create(site=site, article=article1)
-        ArticleRevision.objects.create(article=article1, title="Nazov1")
+        root_article = Article.objects.create()
+        root_path = URLPath.objects.create(site=site, article=root_article)
+        ArticleRevision.objects.create(article=root_article, title="Nazov1")
 
-        article2 = Article.objects.create()
-        URLPath.objects.create(site=site, article=article2, slug="akcie",
-                               parent=urlpath1)
-        ArticleRevision.objects.create(article=article2, title="Nazov1")
+        events_article = Article.objects.create()
+        URLPath.objects.create(site=site, article=events_article, slug="akcie",
+                               parent=root_path)
+        ArticleRevision.objects.create(article=events_article, title="Nazov1")
 
         self.group = Group.objects.create(name="skupina")
 
-        event_type = EventType.objects.create(name="sustredenie",
-                                                   organizers_group=self.group, is_camp=True)
-        event_type.sites.add(site)
+        type_camp = EventType.objects.create(name="sustredenie",
+                                             organizers_group=self.group, is_camp=True)
+        type_camp.sites.add(site)
 
         place = Place.objects.create(name="Miesto")
         start_time = datetime.datetime.now()
         end_time = datetime.datetime.now() + datetime.timedelta(5)
 
-        self.event = Event.objects.create(name="Sustredkovy event", type=event_type,
+        self.event = Event.objects.create(name="Sustredkovy event", type=type_camp,
                                           place=place, start_time=start_time,
                                           end_time=end_time)
-        self.url = reverse('participants_list', kwargs={'event_id': self.event.id})
+        self.part_list_url = reverse('participants_list', kwargs={'event_id': self.event.id})
         self.gradyear = datetime.datetime.now().year
 
     def test_event_not_exists(self):
@@ -151,36 +151,36 @@ class EventParticipantsTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_user_list_exists(self):
-        response = self.client.get(self.url)
+        response = self.client.get(self.part_list_url)
         self.assertEqual(response.status_code, 200)
 
     def test_event_has_participants(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
                                    password="pass", graduation=self.gradyear)
         Invitation.objects.create(event=self.event, user=user, going=True)
-        response = self.client.get(self.url)
+        response = self.client.get(self.part_list_url)
         self.assertContains(response, user.get_full_name())
 
     def test_participant_not_going(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
                                    password="pass", graduation=self.gradyear)
         Invitation.objects.create(event=self.event, user=user, going=False)
-        response = self.client.get(self.url)
+        response = self.client.get(self.part_list_url)
         self.assertNotContains(response, user.get_full_name())
 
     def test_event_has_staff(self):
-        user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
-                                   password="pass", graduation=2000)
-        self.group.user_set.add(user)
-        Invitation.objects.create(event=self.event, user=user, going=True, type=2)
-        response = self.client.get(self.url)
-        self.assertContains(response, user.get_full_name())
+        staff_user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
+                                         password="pass", graduation=2000)
+        self.group.user_set.add(staff_user)
+        Invitation.objects.create(event=self.event, user=staff_user, going=True, type=2)
+        response = self.client.get(self.part_list_url)
+        self.assertContains(response, staff_user.get_full_name())
 
     def test_participant_substitute_not_display(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
                                    password="pass", graduation=self.gradyear)
         Invitation.objects.create(event=self.event, user=user, going=True, type=1)
-        response = self.client.get(self.url)
+        response = self.client.get(self.part_list_url)
         self.assertNotContains(response, user.get_full_name())
 
 
@@ -191,7 +191,7 @@ class EventRegistrationTest(TestCase):
         self.group = Group.objects.create(name="skupina")
 
         event_type = EventType.objects.create(name="sustredenie",
-                                                   organizers_group=self.group, is_camp=True)
+                                              organizers_group=self.group, is_camp=True)
         event_type.sites.add(site)
 
         place = Place.objects.create(name="Miesto")
@@ -202,50 +202,50 @@ class EventRegistrationTest(TestCase):
                                           place=place, start_time=start_time,
                                           end_time=end_time, registration=registration)
 
-        article1 = Article.objects.create()
-        urlpath1 = URLPath.objects.create(site=site, article=article1)
-        ArticleRevision.objects.create(article=article1, title="Nazov1")
+        root_article = Article.objects.create()
+        root_path = URLPath.objects.create(site=site, article=root_article)
+        ArticleRevision.objects.create(article=root_article, title="Nazov1")
 
-        article2 = Article.objects.create()
-        URLPath.objects.create(site=site, article=article2, slug="akcie",
-                               parent=urlpath1)
-        ArticleRevision.objects.create(article=article2, title="Nazov1")
+        events_article = Article.objects.create()
+        URLPath.objects.create(site=site, article=events_article, slug="akcie",
+                               parent=root_path)
+        ArticleRevision.objects.create(article=events_article, title="Nazov1")
 
         gradyear = datetime.datetime.now().year
         self.user = User.objects.create_user(username="jozko", first_name="Jozko",
                                              last_name="Mrkvicka", password="pass",
                                              graduation=gradyear)
-        self.url = reverse('event_registration', kwargs={'event_id': self.event.id})
+        self.event_reg_url = reverse('event_registration', kwargs={'event_id': self.event.id})
 
     def test_event_registration_redirect_to_login(self):
-        response = self.client.get(self.url)
+        response = self.client.get(self.event_reg_url)
         self.assertEqual(response.status_code, 302)
 
     def test_event_registration_permission_denied(self):
-        self.client.login(username='jozko', password='pass')
-        response = self.client.get(self.url)
+        self.client.force_login(self.user)
+        response = self.client.get(self.event_reg_url)
         self.assertEqual(response.status_code, 403)
 
     def test_registration_participant(self):
-        self.client.login(username='jozko', password='pass')
+        self.client.force_login(self.user)
         Invitation.objects.create(event=self.event, user=self.user, type=0)
-        response = self.client.get(self.url)
+        response = self.client.get(self.event_reg_url)
         self.assertContains(response, self.event.name)
         # @ToDo: translations
         self.assertContains(response, "účastník")
 
     def test_registration_sub(self):
-        self.client.login(username='jozko', password='pass')
+        self.client.force_login(self.user)
         Invitation.objects.create(event=self.event, user=self.user, type=1)
-        response = self.client.get(self.url)
+        response = self.client.get(self.event_reg_url)
         self.assertContains(response, self.event.name)
         # @ToDo: translations
         self.assertContains(response, "náhradník")
 
     def test_registration_staff(self):
-        self.client.login(username='jozko', password='pass')
+        self.client.force_login(self.user)
         Invitation.objects.create(event=self.event, user=self.user, type=2)
-        response = self.client.get(self.url)
+        response = self.client.get(self.event_reg_url)
         self.assertContains(response, self.event.name)
         # @ToDo: translations
         self.assertContains(response, "vedúci")
