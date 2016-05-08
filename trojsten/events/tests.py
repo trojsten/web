@@ -52,7 +52,8 @@ class EventListTest(TestCase):
 
     def test_no_event(self):
         response = self.client.get(self.events_url)
-        self.assertEqual(response.status_code, 200)
+        # @ToDo: translations
+        self.assertContains(response, "Žiadne akcie")
 
     def test_visible_event(self):
         not_camp_event = Event.objects.create(name="Not camp event", type=self.type_not_camp,
