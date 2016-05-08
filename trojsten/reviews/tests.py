@@ -102,15 +102,15 @@ class ReviewTest(TestCase):
         group.user_set.add(self.staff)
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        self.series = Series.objects.create(number=1, name='Test series 1', year=1,
-                                            competition=competition)
+        series = Series.objects.create(number=1, name='Test series 1', year=1,
+                                       competition=competition)
 
         start = datetime.datetime.now() + datetime.timedelta(-8)
         end = datetime.datetime.now() + datetime.timedelta(-4)
-        self.round = Round.objects.create(number=1, series=self.series, solutions_visible=True,
+        test_round = Round.objects.create(number=1, series=series, solutions_visible=True,
                                           start_time=start, end_time=end, visible=True)
-        self.no_submit_task = Task.objects.create(number=1, name='Test task 1', round=self.round)
-        self.task = Task.objects.create(number=2, name='Test task 2', round=self.round)
+        self.no_submit_task = Task.objects.create(number=1, name='Test task 1', round=test_round)
+        self.task = Task.objects.create(number=2, name='Test task 2', round=test_round)
         self.submit = Submit.objects.create(task=self.task, user=self.user, submit_type=1, points=5)
         self.submit.time = self.task.round.start_time + datetime.timedelta(0, 5)
         self.submit.save()
@@ -206,6 +206,9 @@ class DownloadLatestSubmits(TestCase):
         test_round = Round.objects.create(number=1, series=series, solutions_visible=True,
                                           visible=True)
         self.task = Task.objects.create(number=2, name='TestTask2', round=test_round)
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_redirect_to_login(self):
         url = reverse('admin:download_latest_submits', kwargs={'task_pk': 1})
