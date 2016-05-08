@@ -102,49 +102,34 @@ class ReviewTest(TestCase):
         group.user_set.add(self.staff)
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        series = Series.objects.create(number=1, name='Test series 1', year=1,
-                                       competition=competition)
+        self.series = Series.objects.create(number=1, name='Test series 1', year=1,
+                                            competition=competition)
 
         start = datetime.datetime.now() + datetime.timedelta(-8)
         end = datetime.datetime.now() + datetime.timedelta(-4)
-        test_round = Round.objects.create(number=1, series=series, solutions_visible=True,
+        self.round = Round.objects.create(number=1, series=self.series, solutions_visible=True,
                                           start_time=start, end_time=end, visible=True)
-        self.no_submit_task = Task.objects.create(number=1, name='Test task 1', round=test_round)
-        self.task = Task.objects.create(number=2, name='Test task 2', round=test_round)
+        self.no_submit_task = Task.objects.create(number=1, name='Test task 1', round=self.round)
+        self.task = Task.objects.create(number=2, name='Test task 2', round=self.round)
         self.submit = Submit.objects.create(task=self.task, user=self.user, submit_type=1, points=5)
         self.submit.time = self.task.round.start_time + datetime.timedelta(0, 5)
         self.submit.save()
 
-        self.url_name = 'admin:review_task'
+    def tearDown(self):
+        self.client.logout()
 
     def test_redirect_to_login(self):
-        """
-            Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
-            Posledna cast za next je double quoted, posledne next je len quoted.
-        """
-        url = reverse(self.url_name, kwargs={'task_pk': 1})
-        response = self.client.get(url, follow=True)
-        login_url = settings.LOGIN_URL
-        admin_login_url = "?next=%s" % reverse("admin:login")
-        last_url = quote(url, safe='')
-        last_url = quote("?next=%s" % last_url, safe='')
-        redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
-        self.assertRedirects(response, redirect_to)
+        url = reverse('admin:review_task', kwargs={'task_pk': 1})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
 
-    def test_redirect_to_admin_login(self):
-        """
-            Tato url nie je vobec quoted.
-        """
-        url = reverse(self.url_name, kwargs={'task_pk': 1})
-        response = self.client.get(url, follow=True)
         self.client.force_login(self.user)
         response = self.client.get(url)
-        redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
-        self.assertRedirects(response, redirect_to)
+        self.assertEqual(response.status_code, 302)
 
     def test_invalid_task(self):
         self.client.force_login(self.staff)
-        url = reverse(self.url_name, kwargs={'task_pk': get_noexisting_id(Task)})
+        url = reverse('admin:review_task', kwargs={'task_pk': get_noexisting_id(Task)})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
@@ -155,13 +140,13 @@ class ReviewTest(TestCase):
         staff.is_staff = True
         staff.save()
         self.client.force_login(staff)
-        url = reverse(self.url_name, kwargs={'task_pk': self.no_submit_task.id})
+        url = reverse('admin:review_task', kwargs={'task_pk': self.no_submit_task.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
 
     def test_valid_task(self):
         self.client.force_login(self.staff)
-        url = reverse(self.url_name, kwargs={'task_pk': self.no_submit_task.id})
+        url = reverse('admin:review_task', kwargs={'task_pk': self.no_submit_task.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.no_submit_task.name)
@@ -173,202 +158,25 @@ class ReviewTest(TestCase):
             submit.time = self.no_submit_task.round.start_time + datetime.timedelta(0, 5)
             submit.save()
         self.client.force_login(self.staff)
-        url = reverse(self.url_name, kwargs={'task_pk': self.no_submit_task.id})
+        url = reverse('admin:review_task', kwargs={'task_pk': self.no_submit_task.id})
         response = self.client.get(url)
         self.assertNotContains(response, self.user.get_full_name())
 
     def test_description_submit(self):
         self.client.force_login(self.staff)
-        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
+        url = reverse('admin:review_task', kwargs={'task_pk': self.task.id})
         response = self.client.get(url)
         self.assertContains(response, self.user.get_full_name())
 
     def test_reviewed(self):
         comment = "TESTINGcomment"
         self.client.force_login(self.staff)
-        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
-
-        self.submit.reviewer_comment = comment
-        self.submit.save()
+        url = reverse('admin:review_task', kwargs={'task_pk': self.task.id})
         response = self.client.get(url)
         self.assertNotContains(response, comment)
 
         self.submit.testing_status = SUBMIT_STATUS_REVIEWED
-        self.submit.save()
-        response = self.client.get(url)
-        self.assertContains(response, comment)
-
-
-class DownloadLatestSubmits(TestCase):
-    def setUp(self):
-        year = datetime.datetime.now().year + 2
-        self.user = User.objects.create_user(username="TestUser", password="password",
-                                             first_name="Jozko", last_name="Mrkvicka",
-                                             graduation=year)
-        self.staff = User.objects.create_user(username="TestStaff", password="password",
-                                              first_name="Jozko", last_name="Veduci",
-                                              graduation=2014)
-        self.staff.is_staff = True
-        self.staff.save()
-
-        group = Group.objects.create(name="Test Group")
-        group.user_set.add(self.staff)
-        competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
-        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        series = Series.objects.create(number=1, name='Test series 1', year=1,
-                                       competition=competition)
-
-        test_round = Round.objects.create(number=1, series=series, solutions_visible=True,
-                                          visible=True)
-        self.task = Task.objects.create(number=2, name='TestTask2', round=test_round)
-
-        self.url_name = 'admin:download_latest_submits'
-
-    def test_redirect_to_login(self):
-        """
-            Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
-            Posledna cast za next je double quoted, posledne next je len quoted.
-        """
-        url = reverse(self.url_name, kwargs={'task_pk': 1})
-        response = self.client.get(url, follow=True)
-        login_url = settings.LOGIN_URL
-        admin_login_url = "?next=%s" % reverse("admin:login")
-        last_url = quote(url, safe='')
-        last_url = quote("?next=%s" % last_url, safe='')
-        redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
-        self.assertRedirects(response, redirect_to)
-
-    def test_redirect_to_admin_login(self):
-        """
-            Tato url nie je vobec quoted.
-        """
-        url = reverse(self.url_name, kwargs={'task_pk': 1})
-        response = self.client.get(url, follow=True)
-        self.client.force_login(self.user)
-        response = self.client.get(url)
-        redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
-        self.assertRedirects(response, redirect_to)
-
-    def test_invalid_task(self):
-        self.client.force_login(self.staff)
-        url = reverse(self.url_name, kwargs={'task_pk': get_noexisting_id(Task)})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
-
-    def test_staff_not_in_group(self):
-        staff = User.objects.create_user(username="TestStaffOther", password="password",
-                                         first_name="Jozko", last_name="Veduci",
-                                         graduation=2014)
-        staff.is_staff = True
-        staff.save()
-        self.client.force_login(staff)
-        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 403)
-
-    def test_valid_task(self):
-        self.client.force_login(self.staff)
-        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertRegexpMatches(
-            response['Content-Disposition'], r'filename=.*%s.*' % slugify(self.task.name)
-        )
-
-
-class ReviewEditTest(TestCase):
-    def setUp(self):
-        year = datetime.datetime.now().year + 2
-        self.user = User.objects.create_user(username="TestUser", password="password",
-                                             first_name="Jozko", last_name="Mrkvicka",
-                                             graduation=year)
-        self.staff = User.objects.create_user(username="TestStaff", password="password",
-                                              first_name="Jozko", last_name="Veduci",
-                                              graduation=2014)
-        self.staff.is_staff = True
-        self.staff.save()
-
-        group = Group.objects.create(name="Test Group")
-        group.user_set.add(self.staff)
-        competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
-        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        series = Series.objects.create(number=1, name='Test series 1', year=1,
-                                       competition=competition)
-
-        start = datetime.datetime.now() + datetime.timedelta(-8)
-        end = datetime.datetime.now() + datetime.timedelta(-4)
-        test_round = Round.objects.create(number=1, series=series, solutions_visible=True,
-                                          start_time=start, end_time=end, visible=True)
-        self.task = Task.objects.create(number=2, name='Test task 2', round=test_round)
-        self.submit = Submit.objects.create(task=self.task, user=self.user, submit_type=1, points=5)
-        self.submit.time = self.task.round.start_time + datetime.timedelta(0, 5)
-        self.submit.save()
-
-        self.url_name = 'admin:review_edit'
-
-    def test_redirect_to_login(self):
-        """
-            Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
-            Posledna cast za next je double quoted, posledne next je len quoted.
-        """
-        url = reverse(self.url_name, kwargs={'task_pk': 1, 'submit_pk': 1})
-        response = self.client.get(url, follow=True)
-        login_url = settings.LOGIN_URL
-        admin_login_url = "?next=%s" % reverse("admin:login")
-        last_url = quote(url, safe='')
-        last_url = quote("?next=%s" % last_url, safe='')
-        redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
-        self.assertRedirects(response, redirect_to)
-
-    def test_redirect_to_admin_login(self):
-        """
-            Tato url nie je vobec quoted.
-        """
-        url = reverse(self.url_name, kwargs={'task_pk': 1, 'submit_pk': 1})
-        response = self.client.get(url, follow=True)
-        self.client.force_login(self.user)
-        response = self.client.get(url)
-        redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
-        self.assertRedirects(response, redirect_to)
-
-    def test_invalid_task(self):
-        self.client.force_login(self.staff)
-        url = reverse(self.url_name, kwargs={'task_pk': get_noexisting_id(Task),
-                      'submit_pk': get_noexisting_id(Submit)})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
-
-    def test_staff_not_in_group(self):
-        staff = User.objects.create_user(username="TestStaffOther", password="password",
-                                         first_name="Jozko", last_name="Veduci",
-                                         graduation=2014)
-        staff.is_staff = True
-        staff.save()
-        self.client.force_login(staff)
-        url = reverse(self.url_name,
-                      kwargs={'task_pk': self.task.id, 'submit_pk': self.submit.id})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 403)
-
-    def test_valid_task(self):
-        self.client.force_login(self.staff)
-        url = reverse(self.url_name,
-                      kwargs={'task_pk': self.task.id, 'submit_pk': self.submit.id})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.task.name)
-        self.assertContains(response, self.user.get_full_name())
-
-    def test_reviewed(self):
-        comment = "TESTINGcomment"
-        self.client.force_login(self.staff)
-        url = reverse(self.url_name,
-                      kwargs={'task_pk': self.task.id, 'submit_pk': self.submit.id})
-
-        response = self.client.get(url)
-        self.assertNotContains(response, comment)
-
-        self.submit.reviewer_comment = comment
+        self.submit.reviewer_comment = "TESTINGcomment"
         self.submit.save()
         response = self.client.get(url)
         self.assertContains(response, comment)
