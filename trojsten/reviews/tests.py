@@ -237,3 +237,86 @@ class DownloadLatestSubmits(TestCase):
         self.assertRegexpMatches(
             response['Content-Disposition'], r'filename=.*'+slugify(self.task.name)+'.*'
         )
+
+
+class ReviewEditTest(TestCase):
+    def setUp(self):
+        year = datetime.datetime.now().year + 2
+        self.user = User.objects.create_user(username="TestUser", password="password",
+                                             first_name="Jozko", last_name="Mrkvicka",
+                                             graduation=year)
+        self.staff = User.objects.create_user(username="TestStaff", password="password",
+                                              first_name="Jozko", last_name="Veduci",
+                                              graduation=2014)
+        self.staff.is_staff = True
+        self.staff.save()
+
+        group = Group.objects.create(name="Test Group")
+        group.user_set.add(self.staff)
+        competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        series = Series.objects.create(number=1, name='Test series 1', year=1,
+                                       competition=competition)
+
+        start = datetime.datetime.now() + datetime.timedelta(-8)
+        end = datetime.datetime.now() + datetime.timedelta(-4)
+        test_round = Round.objects.create(number=1, series=series, solutions_visible=True,
+                                          start_time=start, end_time=end, visible=True)
+        self.task = Task.objects.create(number=2, name='Test task 2', round=test_round)
+        self.submit = Submit.objects.create(task=self.task, user=self.user, submit_type=1, points=5)
+        self.submit.time = self.task.round.start_time + datetime.timedelta(0, 5)
+        self.submit.save()
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_redirect_to_login(self):
+        url = reverse('admin:review_edit', kwargs={'task_pk': 1, 'submit_pk': 1})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+
+        self.client.force_login(self.user)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+
+    def test_invalid_task(self):
+        self.client.force_login(self.staff)
+        url = reverse('admin:review_edit', kwargs={'task_pk': get_noexisting_id(Task),
+                      'submit_pk': get_noexisting_id(Submit)})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_staff_not_in_group(self):
+        staff = User.objects.create_user(username="TestStaffOther", password="password",
+                                         first_name="Jozko", last_name="Veduci",
+                                         graduation=2014)
+        staff.is_staff = True
+        staff.save()
+        self.client.force_login(staff)
+        url = reverse('admin:review_edit',
+                      kwargs={'task_pk': self.task.id, 'submit_pk': self.submit.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_valid_task(self):
+        self.client.force_login(self.staff)
+        url = reverse('admin:review_edit',
+                      kwargs={'task_pk': self.task.id, 'submit_pk': self.submit.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.task.name)
+        self.assertContains(response, self.user.get_full_name())
+
+    def test_reviewed(self):
+        comment = "TESTINGcomment"
+        self.client.force_login(self.staff)
+        url = reverse('admin:review_edit',
+                      kwargs={'task_pk': self.task.id, 'submit_pk': self.submit.id})
+
+        response = self.client.get(url)
+        self.assertNotContains(response, comment)
+
+        self.submit.reviewer_comment = comment
+        self.submit.save()
+        response = self.client.get(url)
+        self.assertContains(response, comment)
