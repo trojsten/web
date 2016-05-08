@@ -172,11 +172,72 @@ class ReviewTest(TestCase):
         comment = "TESTINGcomment"
         self.client.force_login(self.staff)
         url = reverse('admin:review_task', kwargs={'task_pk': self.task.id})
+
+        self.submit.reviewer_comment = comment
+        self.submit.save()
         response = self.client.get(url)
         self.assertNotContains(response, comment)
 
         self.submit.testing_status = SUBMIT_STATUS_REVIEWED
-        self.submit.reviewer_comment = "TESTINGcomment"
         self.submit.save()
         response = self.client.get(url)
         self.assertContains(response, comment)
+
+
+class DownloadLatestSubmits(TestCase):
+    def setUp(self):
+        year = datetime.datetime.now().year + 2
+        self.user = User.objects.create_user(username="TestUser", password="password",
+                                             first_name="Jozko", last_name="Mrkvicka",
+                                             graduation=year)
+        self.staff = User.objects.create_user(username="TestStaff", password="password",
+                                              first_name="Jozko", last_name="Veduci",
+                                              graduation=2014)
+        self.staff.is_staff = True
+        self.staff.save()
+
+        group = Group.objects.create(name="Test Group")
+        group.user_set.add(self.staff)
+        competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        series = Series.objects.create(number=1, name='Test series 1', year=1,
+                                       competition=competition)
+
+        test_round = Round.objects.create(number=1, series=series, solutions_visible=True,
+                                          visible=True)
+        self.task = Task.objects.create(number=2, name='TestTask2', round=test_round)
+
+    def test_redirect_to_login(self):
+        url = reverse('admin:download_latest_submits', kwargs={'task_pk': 1})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+
+        self.client.force_login(self.user)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+
+    def test_invalid_task(self):
+        self.client.force_login(self.staff)
+        url = reverse('admin:download_latest_submits', kwargs={'task_pk': get_noexisting_id(Task)})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_staff_not_in_group(self):
+        staff = User.objects.create_user(username="TestStaffOther", password="password",
+                                         first_name="Jozko", last_name="Veduci",
+                                         graduation=2014)
+        staff.is_staff = True
+        staff.save()
+        self.client.force_login(staff)
+        url = reverse('admin:download_latest_submits', kwargs={'task_pk': self.task.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_valid_task(self):
+        self.client.force_login(self.staff)
+        url = reverse('admin:download_latest_submits', kwargs={'task_pk': self.task.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertRegexpMatches(
+            response['Content-Disposition'], r'filename=.*'+slugify(self.task.name)+'.*'
+        )
