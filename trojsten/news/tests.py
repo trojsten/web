@@ -8,6 +8,7 @@ from django.test import TestCase
 
 from .models import Entry
 from trojsten.people.models import User
+from trojsten.news.constants import NEWS_PAGINATE_BY
 
 
 class NewsTest(TestCase):
@@ -73,11 +74,11 @@ class NewsTest(TestCase):
         self.assertContains(response, "TestTAG")
 
     def test_two_pages(self):
-        paginate_by = 10
-        count = 15
+        paginate_by = NEWS_PAGINATE_BY
+        count = paginate_by + 2
         titles = []
         for i in range(count):
-            title = "TITLE *"+str(i)+"*"
+            title = "TITLE *%d*" % i
             entry = Entry.objects.create(author=self.user, title=title, text="")
             entry.sites.add(self.site)
             titles.append(title)
