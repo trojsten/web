@@ -100,6 +100,7 @@ class EventTest(TestCase):
         self.place = Place.objects.create(name="Camp place")
         self.start_time = datetime.datetime.now()
         self.end_time = datetime.datetime.now() + datetime.timedelta(5)
+        self.grad_year = datetime.datetime.now().year
 
     def test_invalid_event(self):
         url = reverse('event_detail', kwargs={'event_id': get_noexisting_id(Event)})
@@ -114,6 +115,56 @@ class EventTest(TestCase):
         response = self.client.get(url)
         self.assertContains(response, event.name)
         self.assertContains(response, event.place)
+        # @ToDo: translations
+        self.assertContains(response, "Zoznam účastníkov")
+
+    def test_visible_application(self):
+        registration = Registration.objects.create(name="Registracia", text="")
+        event = Event.objects.create(name="Camp event", type=self.type_camp,
+                                     place=self.place, start_time=self.start_time,
+                                     end_time=self.end_time, registration=registration)
+        user_invited = User.objects.create_user(username="invited",
+                                                graduation=self.grad_year)
+        user_not_invited = User.objects.create_user(username="notinvited",
+                                                    graduation=self.grad_year)
+        Invitation.objects.create(event=event, user=user_invited, type=0)
+        url = reverse('event_detail', kwargs={'event_id': event.id})
+        self.client.force_login(user_invited)
+        response = self.client.get(url)
+        # @ToDo: translations
+        self.assertContains(response, "Prihláška")
+        self.client.force_login(user_not_invited)
+        response = self.client.get(url)
+        # @ToDo: translations
+        self.assertNotContains(response, "Prihláška")
+
+    def test_visible_applic_for_sub(self):
+        registration = Registration.objects.create(name="Registracia", text="")
+        event = Event.objects.create(name="Camp event", type=self.type_camp,
+                                     place=self.place, start_time=self.start_time,
+                                     end_time=self.end_time, registration=registration)
+        sub_invited = User.objects.create_user(username="invited",
+                                               graduation=self.grad_year)
+        Invitation.objects.create(event=event, user=sub_invited, type=1)
+        url = reverse('event_detail', kwargs={'event_id': event.id})
+        self.client.force_login(sub_invited)
+        response = self.client.get(url)
+        # @ToDo: translations
+        self.assertContains(response, "Prihláška")
+
+    def test_visible_applic_for_staff(self):
+        registration = Registration.objects.create(name="Registracia", text="")
+        event = Event.objects.create(name="Camp event", type=self.type_camp,
+                                     place=self.place, start_time=self.start_time,
+                                     end_time=self.end_time, registration=registration)
+        staff_invited = User.objects.create_user(username="invited",
+                                                 graduation=self.grad_year)
+        Invitation.objects.create(event=event, user=staff_invited, type=2)
+        url = reverse('event_detail', kwargs={'event_id': event.id})
+        self.client.force_login(staff_invited)
+        response = self.client.get(url)
+        # @ToDo: translations
+        self.assertContains(response, "Prihláška")
 
 
 class EventParticipantsTest(TestCase):
@@ -144,27 +195,23 @@ class EventParticipantsTest(TestCase):
                                           place=place, start_time=start_time,
                                           end_time=end_time)
         self.part_list_url = reverse('participants_list', kwargs={'event_id': self.event.id})
-        self.gradyear = datetime.datetime.now().year
+        self.grad_year = datetime.datetime.now().year
 
     def test_event_not_exists(self):
         url = reverse('participants_list', kwargs={'event_id': get_noexisting_id(Event)})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
-    def test_user_list_exists(self):
-        response = self.client.get(self.part_list_url)
-        self.assertEqual(response.status_code, 200)
-
     def test_event_has_participants(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
-                                   password="pass", graduation=self.gradyear)
+                                   password="pass", graduation=self.grad_year)
         Invitation.objects.create(event=self.event, user=user, going=True)
         response = self.client.get(self.part_list_url)
         self.assertContains(response, user.get_full_name())
 
     def test_participant_not_going(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
-                                   password="pass", graduation=self.gradyear)
+                                   password="pass", graduation=self.grad_year)
         Invitation.objects.create(event=self.event, user=user, going=False)
         response = self.client.get(self.part_list_url)
         self.assertNotContains(response, user.get_full_name())
@@ -179,7 +226,7 @@ class EventParticipantsTest(TestCase):
 
     def test_participant_substitute_not_display(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
-                                   password="pass", graduation=self.gradyear)
+                                   password="pass", graduation=self.grad_year)
         Invitation.objects.create(event=self.event, user=user, going=True, type=1)
         response = self.client.get(self.part_list_url)
         self.assertNotContains(response, user.get_full_name())
@@ -212,10 +259,10 @@ class EventRegistrationTest(TestCase):
                                parent=root_path)
         ArticleRevision.objects.create(article=events_article, title="Nazov1")
 
-        gradyear = datetime.datetime.now().year
+        grad_year = datetime.datetime.now().year
         self.user = User.objects.create_user(username="jozko", first_name="Jozko",
                                              last_name="Mrkvicka", password="pass",
-                                             graduation=gradyear)
+                                             graduation=grad_year)
         self.event_reg_url = reverse('event_registration', kwargs={'event_id': self.event.id})
 
     def test_event_registration_redirect_to_login(self):
@@ -228,24 +275,24 @@ class EventRegistrationTest(TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_registration_participant(self):
-        self.client.force_login(self.user)
         Invitation.objects.create(event=self.event, user=self.user, type=0)
+        self.client.force_login(self.user)
         response = self.client.get(self.event_reg_url)
         self.assertContains(response, self.event.name)
         # @ToDo: translations
         self.assertContains(response, "účastník")
 
     def test_registration_sub(self):
-        self.client.force_login(self.user)
         Invitation.objects.create(event=self.event, user=self.user, type=1)
+        self.client.force_login(self.user)
         response = self.client.get(self.event_reg_url)
         self.assertContains(response, self.event.name)
         # @ToDo: translations
         self.assertContains(response, "náhradník")
 
     def test_registration_staff(self):
-        self.client.force_login(self.user)
         Invitation.objects.create(event=self.event, user=self.user, type=2)
+        self.client.force_login(self.user)
         response = self.client.get(self.event_reg_url)
         self.assertContains(response, self.event.name)
         # @ToDo: translations
