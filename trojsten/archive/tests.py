@@ -175,4 +175,3 @@ class ArchiveTest(TestCase):
         self.assertContains(response, "1. kolo")
         # @ToDo: translations
         self.assertContains(response, "skryté")
-        self.client.logout()
