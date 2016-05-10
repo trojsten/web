@@ -9,7 +9,7 @@ except:
 
 import datetime
 try:
-    from urllib2 import quote
+    from urllib.request import quote
 except ImportError:
     from urllib import quote
 
