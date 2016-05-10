@@ -9,7 +9,7 @@ except:
 
 import datetime
 try:
-    from urllib.request import quote
+    from urllib2 import quote
 except ImportError:
     from urllib import quote
 
@@ -126,8 +126,8 @@ class ReviewTest(TestCase):
         response = self.client.get(url, follow=True)
         login_url = settings.LOGIN_URL
         admin_login_url = "?next=%s" % reverse("admin:login")
-        last_url = urllib.quote(url, safe='')
-        last_url = urllib.quote("?next=%s" % last_url, safe='')
+        last_url = quote(url, safe='')
+        last_url = quote("?next=%s" % last_url, safe='')
         redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
         self.assertRedirects(response, redirect_to)
 
@@ -233,8 +233,8 @@ class DownloadLatestSubmits(TestCase):
         response = self.client.get(url, follow=True)
         login_url = settings.LOGIN_URL
         admin_login_url = "?next=%s" % reverse("admin:login")
-        last_url = urllib.quote(url, safe='')
-        last_url = urllib.quote("?next=%s" % last_url, safe='')
+        last_url = quote(url, safe='')
+        last_url = quote("?next=%s" % last_url, safe='')
         redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
         self.assertRedirects(response, redirect_to)
 
@@ -315,8 +315,8 @@ class ReviewEditTest(TestCase):
         response = self.client.get(url, follow=True)
         login_url = settings.LOGIN_URL
         admin_login_url = "?next=%s" % reverse("admin:login")
-        last_url = urllib.quote(url, safe='')
-        last_url = urllib.quote("?next=%s" % last_url, safe='')
+        last_url = quote(url, safe='')
+        last_url = quote("?next=%s" % last_url, safe='')
         redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
         self.assertRedirects(response, redirect_to)
 
