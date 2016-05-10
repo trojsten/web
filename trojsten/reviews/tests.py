@@ -111,21 +111,24 @@ class ReviewTest(TestCase):
         self.submit.time = self.task.round.start_time + datetime.timedelta(0, 5)
         self.submit.save()
 
-    def tearDown(self):
-        self.client.logout()
+        self.url_name = 'admin:review_task'
 
     def test_redirect_to_login(self):
-        url = reverse('admin:review_task', kwargs={'task_pk': 1})
+        url = reverse(self.url_name, kwargs={'task_pk': 1})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
+        # @FIXME zisti url
+        # self.asserRedirects(response, )
 
         self.client.force_login(self.user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
+        # @FIXME zisti url
+        # self.asserRedirects(response, )
 
     def test_invalid_task(self):
         self.client.force_login(self.staff)
-        url = reverse('admin:review_task', kwargs={'task_pk': get_noexisting_id(Task)})
+        url = reverse(self.url_name, kwargs={'task_pk': get_noexisting_id(Task)})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
@@ -136,13 +139,13 @@ class ReviewTest(TestCase):
         staff.is_staff = True
         staff.save()
         self.client.force_login(staff)
-        url = reverse('admin:review_task', kwargs={'task_pk': self.no_submit_task.id})
+        url = reverse(self.url_name, kwargs={'task_pk': self.no_submit_task.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
 
     def test_valid_task(self):
         self.client.force_login(self.staff)
-        url = reverse('admin:review_task', kwargs={'task_pk': self.no_submit_task.id})
+        url = reverse(self.url_name, kwargs={'task_pk': self.no_submit_task.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.no_submit_task.name)
@@ -154,20 +157,20 @@ class ReviewTest(TestCase):
             submit.time = self.no_submit_task.round.start_time + datetime.timedelta(0, 5)
             submit.save()
         self.client.force_login(self.staff)
-        url = reverse('admin:review_task', kwargs={'task_pk': self.no_submit_task.id})
+        url = reverse(self.url_name, kwargs={'task_pk': self.no_submit_task.id})
         response = self.client.get(url)
         self.assertNotContains(response, self.user.get_full_name())
 
     def test_description_submit(self):
         self.client.force_login(self.staff)
-        url = reverse('admin:review_task', kwargs={'task_pk': self.task.id})
+        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
         response = self.client.get(url)
         self.assertContains(response, self.user.get_full_name())
 
     def test_reviewed(self):
         comment = "TESTINGcomment"
         self.client.force_login(self.staff)
-        url = reverse('admin:review_task', kwargs={'task_pk': self.task.id})
+        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
 
         self.submit.reviewer_comment = comment
         self.submit.save()
@@ -203,21 +206,24 @@ class DownloadLatestSubmits(TestCase):
                                           visible=True)
         self.task = Task.objects.create(number=2, name='TestTask2', round=test_round)
 
-    def tearDown(self):
-        self.client.logout()
+        self.url_name = 'admin:download_latest_submits'
 
     def test_redirect_to_login(self):
-        url = reverse('admin:download_latest_submits', kwargs={'task_pk': 1})
+        url = reverse(self.url_name, kwargs={'task_pk': 1})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
+        # @FIXME zisti url
+        # self.asserRedirects(response, )
 
         self.client.force_login(self.user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
+        # @FIXME zisti url
+        # self.asserRedirects(response, )
 
     def test_invalid_task(self):
         self.client.force_login(self.staff)
-        url = reverse('admin:download_latest_submits', kwargs={'task_pk': get_noexisting_id(Task)})
+        url = reverse(self.url_name, kwargs={'task_pk': get_noexisting_id(Task)})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
@@ -228,17 +234,17 @@ class DownloadLatestSubmits(TestCase):
         staff.is_staff = True
         staff.save()
         self.client.force_login(staff)
-        url = reverse('admin:download_latest_submits', kwargs={'task_pk': self.task.id})
+        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
 
     def test_valid_task(self):
         self.client.force_login(self.staff)
-        url = reverse('admin:download_latest_submits', kwargs={'task_pk': self.task.id})
+        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertRegexpMatches(
-            response['Content-Disposition'], r'filename=.*'+slugify(self.task.name)+'.*'
+            response['Content-Disposition'], r'filename=.*%s.*' % slugify(self.task.name)
         )
 
 
@@ -270,21 +276,24 @@ class ReviewEditTest(TestCase):
         self.submit.time = self.task.round.start_time + datetime.timedelta(0, 5)
         self.submit.save()
 
-    def tearDown(self):
-        self.client.logout()
+        self.url_name = 'admin:review_edit'
 
     def test_redirect_to_login(self):
-        url = reverse('admin:review_edit', kwargs={'task_pk': 1, 'submit_pk': 1})
+        url = reverse(self.url_name, kwargs={'task_pk': 1, 'submit_pk': 1})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
+        # @FIXME zisti url
+        # self.asserRedirects(response, )
 
         self.client.force_login(self.user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
+        # @FIXME zisti url
+        # self.asserRedirects(response, )
 
     def test_invalid_task(self):
         self.client.force_login(self.staff)
-        url = reverse('admin:review_edit', kwargs={'task_pk': get_noexisting_id(Task),
+        url = reverse(self.url_name, kwargs={'task_pk': get_noexisting_id(Task),
                       'submit_pk': get_noexisting_id(Submit)})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
@@ -296,14 +305,14 @@ class ReviewEditTest(TestCase):
         staff.is_staff = True
         staff.save()
         self.client.force_login(staff)
-        url = reverse('admin:review_edit',
+        url = reverse(self.url_name,
                       kwargs={'task_pk': self.task.id, 'submit_pk': self.submit.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
 
     def test_valid_task(self):
         self.client.force_login(self.staff)
-        url = reverse('admin:review_edit',
+        url = reverse(self.url_name,
                       kwargs={'task_pk': self.task.id, 'submit_pk': self.submit.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -313,7 +322,7 @@ class ReviewEditTest(TestCase):
     def test_reviewed(self):
         comment = "TESTINGcomment"
         self.client.force_login(self.staff)
-        url = reverse('admin:review_edit',
+        url = reverse(self.url_name,
                       kwargs={'task_pk': self.task.id, 'submit_pk': self.submit.id})
 
         response = self.client.get(url)
