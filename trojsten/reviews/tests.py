@@ -8,6 +8,7 @@ except:
     from urllib.request import quote, unquote
 
 import datetime
+import urllib
 
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -114,17 +115,29 @@ class ReviewTest(TestCase):
         self.url_name = 'admin:review_task'
 
     def test_redirect_to_login(self):
+        """
+            Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
+            Posledna cast za next je double quoted, posledne next je len quoted.
+        """
         url = reverse(self.url_name, kwargs={'task_pk': 1})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
-        # @FIXME zisti url
-        # self.asserRedirects(response, )
+        response = self.client.get(url, follow=True)
+        login_url = settings.LOGIN_URL
+        admin_login_url = "?next=%s" % reverse("admin:login")
+        last_url = urllib.quote(url, safe='')
+        last_url = urllib.quote("?next=%s" % last_url, safe='')
+        redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
+        self.assertRedirects(response, redirect_to)
 
+    def test_redirect_to_admin_login(self):
+        """
+            Tato url nie je vobec quoted.
+        """
+        url = reverse(self.url_name, kwargs={'task_pk': 1})
+        response = self.client.get(url, follow=True)
         self.client.force_login(self.user)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
-        # @FIXME zisti url
-        # self.asserRedirects(response, )
+        redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
+        self.assertRedirects(response, redirect_to)
 
     def test_invalid_task(self):
         self.client.force_login(self.staff)
@@ -209,17 +222,29 @@ class DownloadLatestSubmits(TestCase):
         self.url_name = 'admin:download_latest_submits'
 
     def test_redirect_to_login(self):
+        """
+            Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
+            Posledna cast za next je double quoted, posledne next je len quoted.
+        """
         url = reverse(self.url_name, kwargs={'task_pk': 1})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
-        # @FIXME zisti url
-        # self.asserRedirects(response, )
+        response = self.client.get(url, follow=True)
+        login_url = settings.LOGIN_URL
+        admin_login_url = "?next=%s" % reverse("admin:login")
+        last_url = urllib.quote(url, safe='')
+        last_url = urllib.quote("?next=%s" % last_url, safe='')
+        redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
+        self.assertRedirects(response, redirect_to)
 
+    def test_redirect_to_admin_login(self):
+        """
+            Tato url nie je vobec quoted.
+        """
+        url = reverse(self.url_name, kwargs={'task_pk': 1})
+        response = self.client.get(url, follow=True)
         self.client.force_login(self.user)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
-        # @FIXME zisti url
-        # self.asserRedirects(response, )
+        redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
+        self.assertRedirects(response, redirect_to)
 
     def test_invalid_task(self):
         self.client.force_login(self.staff)
@@ -279,17 +304,29 @@ class ReviewEditTest(TestCase):
         self.url_name = 'admin:review_edit'
 
     def test_redirect_to_login(self):
+        """
+            Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
+            Posledna cast za next je double quoted, posledne next je len quoted.
+        """
         url = reverse(self.url_name, kwargs={'task_pk': 1, 'submit_pk': 1})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
-        # @FIXME zisti url
-        # self.asserRedirects(response, )
+        response = self.client.get(url, follow=True)
+        login_url = settings.LOGIN_URL
+        admin_login_url = "?next=%s" % reverse("admin:login")
+        last_url = urllib.quote(url, safe='')
+        last_url = urllib.quote("?next=%s" % last_url, safe='')
+        redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
+        self.assertRedirects(response, redirect_to)
 
+    def test_redirect_to_admin_login(self):
+        """
+            Tato url nie je vobec quoted.
+        """
+        url = reverse(self.url_name, kwargs={'task_pk': 1, 'submit_pk': 1})
+        response = self.client.get(url, follow=True)
         self.client.force_login(self.user)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
-        # @FIXME zisti url
-        # self.asserRedirects(response, )
+        redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
+        self.assertRedirects(response, redirect_to)
 
     def test_invalid_task(self):
         self.client.force_login(self.staff)
