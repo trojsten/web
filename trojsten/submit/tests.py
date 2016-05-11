@@ -343,7 +343,6 @@ class JsonSubmitTest(TestCase):
         self.task = Task.objects.create(number=1, name='Test task', round=round, has_testablezip=True)
         self.submit = Submit.objects.create(task=self.task, user=self.non_staff_user, submit_type=0, points=0)
 
-
     def test_no_access(self):
         gradyear = datetime.datetime.now().year
         url = reverse('poll_submit_info', kwargs={'submit_id': self.submit.id})
@@ -356,7 +355,6 @@ class JsonSubmitTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
 
-
     def test_non_existing_submit(self):
         url = reverse('poll_submit_info', kwargs={'submit_id': get_noexisting_id(Submit)})
         response = self.client.get(url)
@@ -368,8 +366,56 @@ class JsonSubmitTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
+
+class JsonProtokolTest(TestCase):
+
+    def setUp(self):
+        gradyear = datetime.datetime.now().year
+        self.non_staff_user = User.objects.create_user(username="jozko", first_name="Jozko",
+                                                        last_name="Mrkvicka", password="pass",
+                                                        graduation=gradyear)
+        self.staff_user = User.objects.create_user(username="staff", first_name="Staff",
+                                                   last_name="Staff", password="pass",
+                                                   graduation=2010)
+        self.group = Group.objects.create(name='staff')
+        self.group.user_set.add(self.staff_user)
+        self.staff_user.groups.add(self.group)
+        competition = Competition.objects.create(name='TestCompetition',
+                                                      organizers_group=self.group)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.start_time_old = datetime.datetime.now() + datetime.timedelta(-10)
+        self.start_time_new = datetime.datetime.now() + datetime.timedelta(5)
+        self.end_time_old = datetime.datetime.now() + datetime.timedelta(-5)
+        self.end_time_new = datetime.datetime.now() + datetime.timedelta(10)
+        series = Series.objects.create(number=1, name='Test series',
+                                            competition=competition,
+                                            year=1)
+        round = Round.objects.create(number=1, series=series, visible=True,
+                                     solutions_visible=False, start_time=self.start_time_old,
+                                     end_time=self.end_time_new)
+        self.task = Task.objects.create(number=1, name='Test task', round=round, has_testablezip=True)
+        self.submit = Submit.objects.create(task=self.task, user=self.non_staff_user, submit_type=0, points=0)
+
+    def test_no_access(self):
+        gradyear = datetime.datetime.now().year
+        url = reverse('view_protocol', kwargs={'submit_id': self.submit.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        non_staff_user2 = User.objects.create_user(username="jurko", first_name="Jozko",
+                                                        last_name="Mrkvicka", password="pass",
+                                                        graduation=gradyear)
+        self.client.force_login(non_staff_user2)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_non_existing_submit(self):
+        self.client.force_login(self.non_staff_user)
+        url = reverse('view_protocol', kwargs={'submit_id': get_noexisting_id(Submit)})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
     def test_access_for_staff(self):
-        url = reverse('poll_submit_info', kwargs={'submit_id': self.submit.id})
+        url = reverse('view_protocol', kwargs={'submit_id': self.submit.id})
         self.client.force_login(self.staff_user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
