@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 
+from trojsten.login.views import login_root_view
+
 from .common import *
-from trojsten.views import login_root_view
 
 urlpatterns += [
     url(r'oauth', include('oauth2_provider.urls', namespace='oauth2_provider')),

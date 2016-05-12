@@ -2,9 +2,8 @@
 from __future__ import unicode_literals
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 
 from wiki.views import article
 
@@ -19,9 +18,3 @@ def home_redirect(request):
         if 'home' not in request.GET:
             return redirect(reverse('news_list', kwargs={'page': 1}))
     return article.ArticleView.as_view()(request, path='')
-
-
-@login_required
-def login_root_view(request):
-    # @TODO: vymyslieť čo tu bude
-    return render(request, 'trojsten/layout/main.html')

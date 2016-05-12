@@ -1,0 +1,35 @@
+{% extends "trojsten/layout/base.html" %}
+{% load utils navigation_tags %}
+
+{% block page_layout %}
+<header>{% include "trojsten/layout/header.html" %}</header>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 main-content">
+    <div class="page-header">
+        {% block page_header %}{% endblock %}
+    </div>
+        {% if messages %}
+        <!-- Messages for this instance -->
+        {% for message in messages %}
+            {% with message.tags|split:" " as tags %}
+            {# TODO: after bump to Django>=1.7, use level_tag here #}
+            <div class="alert {% for tag in tags %} alert-{{ tag }} {% endfor %}" role="alert">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                {{ message }}
+            </div>
+            {% endwith %}
+        {% endfor %}
+        {% endif %}
+    {% block page_content %}{% endblock %}
+    </div>
+  </div>
+</div>
+
+<footer>
+<div class="container">
+{% include "trojsten/layout/footer.html" %}
+</div>
+</footer>
+
+{% endblock %}
