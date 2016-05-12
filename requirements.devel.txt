@@ -64,8 +64,7 @@ requests-oauthlib==0.6.1  # via python-social-auth
 requests==2.10.0          # via python-social-auth, requests-oauthlib
 six==1.10.0               # via django-braces, django-nyt, django-oauth-toolkit, fake-factory, pip-tools, python-dateutil, python-social-auth, wiki
 sorl-thumbnail==12.3      # via wiki
-South==1.0.2              # via wiki
 sqlparse==0.1.19
 tablib==0.11.2            # via django-import-export
 Unidecode==0.4.19
-wiki==0.1
+wiki==0.1.1

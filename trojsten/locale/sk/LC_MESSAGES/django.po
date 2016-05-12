@@ -1,145 +1,494 @@
 msgid ""
 msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-06 12:13+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-# Submit
-msgid "Wrong answer"
-msgstr "Zlá odpoveď"
+# pdf file names
+#: contests/models.py:233
+msgid "year"
+msgstr "ročník"
 
-msgid "Compilation error"
-msgstr "Chyba počas kompilácie"
+#: contests/models.py:235
+msgid "round"
+msgstr "kolo"
 
-msgid "Time limit exceeded"
-msgstr "Prekročený časový limit"
+#: contests/models.py:237
+msgid "solutions"
+msgstr "vzoráky"
 
-msgid "OK"
-msgstr "OK"
+#: contests/models.py:237
+msgid "tasks"
+msgstr "zadania"
 
-msgid "Runtime exception"
-msgstr "Chyba počas behu programu"
+#: events/forms.py:47 people/forms.py:70 people/forms.py:78 people/forms.py:86
+#: people/forms.py:95 people/forms.py:105 people/forms.py:115
+#: people/forms.py:125
+msgid "This field is required."
+msgstr ""
 
-msgid "Security exception"
-msgstr "Pokus o narušenie bezpečnosti"
+#: people/admin.py:145
+msgid "Personal info"
+msgstr ""
 
-# Login
-msgid "Registration"
-msgstr "Registrácia"
+#: people/admin.py:148
+msgid "Address"
+msgstr ""
 
+#: people/admin.py:149
+msgid "School"
+msgstr ""
+
+#: people/admin.py:152
+msgid "Permissions"
+msgstr ""
+
+#: people/admin.py:155
+msgid "Important dates"
+msgstr ""
+
+#: people/admin.py:243
+msgid "Users merged succesfully."
+msgstr ""
+
+#: people/forms.py:136
 msgid "Your graduation year is too far in the past."
 msgstr "Tvoj rok maturity je príliš ďaleko v minulosti."
 
+#: people/forms.py:142
 msgid "Your graduation year is too far in the future."
 msgstr "Tvoj rok maturity je príliš ďaleko v budúcnosti."
 
-# Wiki
-msgid "View"
-msgstr "Pozrieť"
+#: people/forms.py:237
+msgid "Password"
+msgstr ""
 
+#: people/forms.py:239
+msgid "Password confirmation"
+msgstr ""
+
+#: people/forms.py:240
+msgid "Enter the same password as above, for verification."
+msgstr ""
+
+#: people/forms.py:273
+msgid ""
+"We recommend choosing a strong passphrase but we don't enforce any "
+"ridiculous constraints on your passwords."
+msgstr ""
+
+#: people/forms.py:281
+msgid ""
+"Since you're logging in using an external provider, this field is optional; "
+"however, by supplying it, you will be able to log in using a password. "
+msgstr ""
+
+#: people/forms.py:291
+msgid "The two password fields didn't match."
+msgstr ""
+
+#: people/templates/admin/people/duplicateuser/change_form.html:5
+msgid "Merge candidates"
+msgstr ""
+
+#: people/templates/admin/people/duplicateuser/change_form.html:11
+#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:10
+msgid "Merge"
+msgstr ""
+
+#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:6
+#: reviews/templates/admin/review_edit.html:6
+#: reviews/templates/admin/review_form.html:6
+#: reviews/templates/admin/zip_upload.html:6
+msgid "Home"
+msgstr ""
+
+#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:16
+#, python-format
+msgid "Merge users %(user)s and %(candidate)s"
+msgstr ""
+
+#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
+#: templates/ksp_login/parts/multiple_forms.html:11
+#: templates/ksp_login/parts/single_form.html:10
+msgid "Submit"
+msgstr ""
+
+#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:32
+msgid "Reset"
+msgstr ""
+
+#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:33
+msgid "Cancel"
+msgstr ""
+
+#: reviews/forms.py:42
+#, python-format
+msgid "Súbor musí byť ZIP archív: %s"
+msgstr ""
+
+#: reviews/forms.py:79
+msgid "Points are required"
+msgstr ""
+
+#: reviews/forms.py:84
+msgid "User is required"
+msgstr ""
+
+#: reviews/forms.py:89
+#, python-format
+msgid "User %s does not exist"
+msgstr ""
+
+#: reviews/forms.py:160
+#, python-format
+msgid "Invalid filename %s"
+msgstr ""
+
+#: reviews/forms.py:163
+msgid "Must have set points"
+msgstr ""
+
+#: reviews/forms.py:181
+msgid "Assigned 2 or more files to the same user."
+msgstr ""
+
+#: reviews/helpers.py:15
+msgid "You should upload a file or specify parent submit."
+msgstr ""
+
+#: reviews/templates/admin/review_edit.html:10
+#: reviews/templates/admin/review_form.html:10
+#: reviews/templates/admin/task_review.html:6
+#: reviews/templates/admin/zip_upload.html:10
+#, fuzzy
+#| msgid "Preview"
+msgid "Review"
+msgstr "Náhľad"
+
+#: reviews/templates/admin/review_edit.html:11
+#: reviews/templates/admin/review_form.html:51
 msgid "Edit"
 msgstr "Upraviť"
 
-msgid "Changes"
-msgstr "Zmeny"
+#: reviews/templates/admin/review_form.html:7
+#: reviews/templates/admin/zip_upload.html:7
+#, fuzzy
+#| msgid "tasks"
+msgid "Tasks"
+msgstr "zadania"
 
-msgid "Attachments"
-msgstr "Prílohy"
+#: reviews/templates/admin/review_form.html:8
+#: reviews/templates/admin/zip_upload.html:8
+msgid "Task"
+msgstr ""
 
-msgid "View Source"
-msgstr "Pozrieť zdroják"
+#: reviews/templates/admin/review_form.html:17
+#: reviews/templates/admin/review_form.html:74
+msgid "Download all solutions"
+msgstr ""
 
-msgid "This article was last modified:"
-msgstr "Čas poslednej úpravy:"
+#: reviews/templates/admin/review_form.html:44
+#: reviews/templates/admin/submit_form.html:12
+msgid "Download"
+msgstr ""
+
+#: reviews/templates/admin/review_form.html:50
+#: reviews/templates/admin/submit_form.html:9
+msgid "View"
+msgstr "Pozrieť"
+
+#: reviews/templates/admin/review_form.html:54
+msgid "Add new review"
+msgstr ""
+
+#: reviews/templates/admin/submit_form.html:6
+#, fuzzy
+#| msgid "View"
+msgid "View task"
+msgstr "Pozrieť"
+
+#: reviews/templates/admin/zip_upload.html:11
+msgid "Upload Zip"
+msgstr ""
+
+#: reviews/templates/admin/zip_upload.html:31
+msgid "Filename"
+msgstr ""
+
+#: reviews/templates/admin/zip_upload.html:32
+msgid "User"
+msgstr ""
+
+#: reviews/templates/admin/zip_upload.html:33
+msgid "Points"
+msgstr ""
+
+#: reviews/templates/admin/zip_upload.html:34
+msgid "Comment"
+msgstr ""
+
+#: reviews/views.py:48
+msgid "Successfully uploaded a zip file."
+msgstr ""
+
+#: reviews/views.py:92
+msgid "Successfully saved the review"
+msgstr ""
+
+#: reviews/views.py:153
+#, python-format
+msgid "Missing file of user %s"
+msgstr ""
+
+#: reviews/views.py:166
+#, python-format
+msgid "Missing source file of user %s"
+msgstr ""
+
+#: reviews/views.py:170
+#, python-format
+msgid "Missing protocol file of user %s"
+msgstr ""
+
+#: reviews/views.py:195
+msgid "Problems with uploaded zip"
+msgstr ""
+
+#: reviews/views.py:201
+msgid "Ignore"
+msgstr ""
+
+#: reviews/views.py:244
+msgid "Successfully finished reviewing this task!"
+msgstr ""
+
+# Submit
+#: submit/constants.py:16
+msgid "Wrong answer"
+msgstr "Zlá odpoveď"
+
+#: submit/constants.py:17
+msgid "Compilation error"
+msgstr "Chyba počas kompilácie"
+
+#: submit/constants.py:18
+msgid "Time limit exceeded"
+msgstr "Prekročený časový limit"
+
+#: submit/constants.py:19
+msgid "OK"
+msgstr "OK"
+
+#: submit/constants.py:20
+msgid "Runtime exception"
+msgstr "Chyba počas behu programu"
+
+#: submit/constants.py:21
+msgid "Security exception"
+msgstr "Pokus o narušenie bezpečnosti"
+
+#: submit/templates/trojsten/submit/parts/submit_list.html:30
+#: submit/templates/trojsten/submit/parts/submit_list.html:36
+msgid "Stiahni"
+msgstr ""
+
+#: submit/templates/trojsten/submit/parts/submit_list.html:37
+msgid "Pozri komentár"
+msgstr ""
+
+#: submit/templates/trojsten/submit/parts/submit_list.html:75
+#: submit/templates/trojsten/submit/parts/submit_list.html:92
+msgid "Detaily"
+msgstr ""
 
 # Task Statements
-#: task_statements/templatetags/statements_parts.py:96
-#, python-format
+#: task_statements/templatetags/statements_parts.py:94
+#, fuzzy, python-format
+#| msgid "%(count)d day"
+#| msgid_plural "%(count)s days"
 msgid "%(count)d day"
-msgid_plural "%(count)s days"
-msgstr[0] "%(count)s deň"
-msgstr[1] "%(count)s dni"
-msgstr[2] "%(count)s dní"
+msgstr "%(count)s deň"
 
-
-#: task_statements/templatetags/statements_parts.py:99
-#, python-format
+#: task_statements/templatetags/statements_parts.py:97
+#, fuzzy, python-format
+#| msgid "%(count)d hour"
+#| msgid_plural "%(count)s hours"
 msgid "%(count)d hour"
-msgid_plural "%(count)s hours"
-msgstr[0] "%(count)s hodina"
-msgstr[1] "%(count)s hodiny"
-msgstr[2] "%(count)s hodín"
+msgstr "%(count)s hodina"
 
-
-#: task_statements/templatetags/statements_parts.py:102
-#, python-format
+#: task_statements/templatetags/statements_parts.py:100
+#, fuzzy, python-format
+#| msgid "%(count)d minute"
+#| msgid_plural "%(count)s minutes"
 msgid "%(count)d minute"
-msgid_plural "%(count)s minutes"
-msgstr[0] "%(count)s minúta"
-msgstr[1] "%(count)s minúty"
-msgstr[2] "%(count)s minút"
+msgstr "%(count)s minúta"
 
-
-#: task_statements/templatetags/statements_parts.py:105
-#, python-format
+#: task_statements/templatetags/statements_parts.py:103
+#, fuzzy, python-format
+#| msgid "%(count)d second"
+#| msgid_plural "%(count)s seconds"
 msgid "%(count)d second"
-msgid_plural "%(count)s seconds"
-msgstr[0] "%(count)s sekunda"
-msgstr[1] "%(count)s sekundy"
-msgstr[2] "%(count)s sekúnd"
+msgstr "%(count)s sekunda"
 
+#: tasks/forms.py:11
+msgid "Category doesn't correspond with competition."
+msgstr ""
 
-# Django Fluent Comments
-
-#: admin.py:35
-msgid "Content"
-msgstr "Obsah"
-
-#: admin.py:38
-msgid "Account information"
-msgstr "Informácie o účte"
-
-#: admin.py:41
-msgid "Moderation"
-msgstr "Moderácia"
-
-#: admin.py:52
-msgid "Hierarchy"
-msgstr "Hierarchia"
-
-#: admin.py:61
-msgid "Page"
-msgstr "Stránka"
-
-#: templates/comments/comment.html:21 templates/comments/preview.html:12
+#: templates/comments/comment.html:23
 msgid "Preview of your comment"
 msgstr "Náhľad komentára"
 
-#: templates/comments/comment.html:25
+#: templates/comments/comment.html:32
 msgid "Anonymous"
 msgstr "Anonym"
 
-#: templates/comments/comment.html:28
+#: templates/comments/comment.html:39
 #, python-format
 msgid "on %(submit_date)s"
 msgstr "%(submit_date)s"
 
-#: templates/comments/comment.html:29
+#: templates/comments/comment.html:46
+msgid "reply"
+msgstr "reagovať"
+
+#: templates/comments/form.html:4
+msgid "Comments are closed."
+msgstr "Diskusia je uzavretá."
+
+#: templates/comments/form.html:24
+msgid "Post"
+msgstr "Odoslať"
+
+#: templates/ksp_login/login.html:4 templates/ksp_login/login.html:7
+#: templates/ksp_login/parts/include_javascript.html:15
+#: templates/ksp_login/parts/login_box.html:40
+#: templates/ksp_login/parts/login_box.html:57
+#: templates/ksp_login/parts/login_full_contents.html:21
+#: templates/ksp_login/parts/login_full_contents.html:38
+#: templates/ksp_login/settings.html:40
+msgid "Log in"
+msgstr ""
+
+#: templates/ksp_login/parts/associated_accounts_list.html:8
+msgid "Provider"
+msgstr ""
+
+#: templates/ksp_login/parts/associated_accounts_list.html:9
+msgid "Account"
+msgstr ""
+
+#: templates/ksp_login/parts/associated_accounts_list.html:28
+msgid "Disconnect"
+msgstr ""
+
+#: templates/ksp_login/parts/associated_accounts_list.html:37
+msgid "You don't have any services associated with your account."
+msgstr ""
+
+#: templates/ksp_login/parts/login_box.html:10
+msgid "Logged in as"
+msgstr ""
+
+# Login
+#: templates/ksp_login/parts/login_box.html:21
+#, fuzzy
+#| msgid "Registration"
+msgid "Site administration"
+msgstr "Registrácia"
+
+#: templates/ksp_login/parts/login_box.html:28
+msgid "Settings"
+msgstr ""
+
+#: templates/ksp_login/parts/login_box.html:35
+msgid "Log out"
+msgstr ""
+
+#: templates/ksp_login/parts/login_box.html:63
+msgid "More login options"
+msgstr ""
+
+#: templates/ksp_login/parts/login_full_contents.html:39
+msgid "Forgotten password"
+msgstr ""
+
+# Login
+#: templates/ksp_login/parts/login_full_contents.html:48
+#: templates/ksp_login/registration.html:5
+#: templates/ksp_login/registration.html:8
+msgid "Registration"
+msgstr "Registrácia"
+
+#: templates/ksp_login/password.html:5 templates/ksp_login/password.html:8
+#: templates/ksp_login/settings.html:46
+msgid "Password change"
+msgstr ""
+
+#: templates/ksp_login/registration.html:14
+msgid ""
+"Welcome, new user. You only need to give us a few details in order to finish "
+"the registration process."
+msgstr ""
+
+#: templates/ksp_login/settings.html:8 templates/ksp_login/settings.html:11
+#, fuzzy
+#| msgid "Account information"
+msgid "Account settings"
+msgstr "Informácie o účte"
+
+#: templates/ksp_login/settings.html:17
+msgid "Login settings"
+msgstr ""
+
+#: templates/ksp_login/settings.html:19
+msgid "You can use any of the following services to log in to your account."
+msgstr ""
+
+#: templates/ksp_login/settings.html:49
+#, python-format
+msgid ""
+"\n"
+"            You can change your password <a href=\"%(passwd_url)s\">here</"
+"a>.\n"
+"        "
+msgstr ""
+
+#: templates/wiki/article.html:19
+msgid "locked"
+msgstr ""
+
+#: templates/wiki/article.html:40
+msgid "This article was last modified:"
+msgstr "Čas poslednej úpravy:"
+
+# Django Fluent Comments
+msgid "Content"
+msgstr "Obsah"
+
+msgid "Moderation"
+msgstr "Moderácia"
+
+msgid "Hierarchy"
+msgstr "Hierarchia"
+
+msgid "Page"
+msgstr "Stránka"
+
 msgid "moderated"
 msgstr "moderované"
 
-#: templates/comments/deleted.html:4
 msgid "Thanks for removing"
 msgstr "Ďakujeme za odstránenie"
 
-#: templates/comments/deleted.html:12
 msgid "Thanks for removing the comment"
 msgstr "Ďakujeme za odstránenie komentára"
 
-#: templates/comments/deleted.html:14 templates/comments/flagged.html:14
 msgid ""
 "\n"
-"      Thanks for taking the time to improve the quality of discussion on our "
-"site.<br/>\n"
+"      Thanks for taking the time to improve the quality of discussion on "
+"our site.<br/>\n"
 "      You will be sent back to the article...\n"
 "    "
 msgstr ""
@@ -149,40 +498,21 @@ msgstr ""
 "      Budete presmerovaný späť na diskusiu...\n"
 "    "
 
-#: templates/comments/deleted.html:20 templates/comments/flagged.html:20
-#: templates/comments/posted.html:24
 msgid "Back to the article"
 msgstr "Naspäť k diskusii"
 
-#: templates/comments/flagged.html:4
 msgid "Thanks for flagging"
 msgstr "Vďaka za flagovanie"
 
-#: templates/comments/flagged.html:12
 msgid "Thanks for flagging the comment"
 msgstr "Vďaka za flagovanie komentára"
 
-#: templates/comments/form.html:4
-msgid "Comments are closed."
-msgstr "Diskusia je uzavretá."
-
-#: templates/comments/form.html:13 templates/comments/preview.html:26
-msgid "Post"
-msgstr "Odoslať"
-
-#: templates/comments/form.html:14 templates/comments/preview.html:27
-msgid "Preview"
-msgstr "Náhľad"
-
-#: templates/comments/posted.html:3
 msgid "Thanks for commenting"
 msgstr "Vďaka za komentár"
 
-#: templates/comments/posted.html:11
 msgid "Thanks for posting your comment"
 msgstr "Vďaka za komentár"
 
-#: templates/comments/posted.html:13
 msgid ""
 "\n"
 "      We have received your comment, and posted it on the web site.<br/>\n"
@@ -194,33 +524,26 @@ msgstr ""
 "      Budete presmerovaný späť na diskusiu...\n"
 "      "
 
-#: templates/comments/preview.html:3
 msgid "Preview your comment"
 msgstr "Náhľad na komentár"
 
-#: templates/comments/preview.html:10
 msgid "Please correct the error below"
 msgid_plural "Please correct the errors below"
 msgstr[0] "Prosím opravte nasledujúcu chybu"
 msgstr[1] "Prosím opravte nasledujúce chyby"
 
-#: templates/comments/preview.html:17
 msgid "Post your comment"
 msgstr "Odoslať komentár"
 
-#: templates/comments/preview.html:20
 msgid "Or make changes"
 msgstr "Alebo spravte zmeny"
 
-#: templates/fluent_comments/templatetags/ajax_comment_tags.html:3
 msgid "Please wait . . ."
 msgstr "Počkajte, prosím . . ."
 
-#: templates/fluent_comments/templatetags/ajax_comment_tags.html:5
 msgid "Your comment has been posted!"
 msgstr "Komentár je zverejnený!"
 
-#: templates/fluent_comments/templatetags/ajax_comment_tags.html:6
 msgid ""
 "Your comment has been posted, it will be visible for other users after "
 "approval."
@@ -228,21 +551,5 @@ msgstr ""
 "Komentár bol odoslaný, pre ostatných užívateľov bude viditeľný po súhlase "
 "moderátora."
 
-msgid "reply"
-msgstr "reagovať"
-
 msgid "cancel reply"
 msgstr "zrušiť reakciu"
-
-#pdf file names
-msgid "year"
-msgstr "ročník"
-
-msgid "round"
-msgstr "kolo"
-
-msgid "solutions"
-msgstr "vzoráky"
-
-msgid "tasks"
-msgstr "zadania"
