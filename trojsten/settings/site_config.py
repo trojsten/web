@@ -84,6 +84,12 @@ class TrojstenSite(BaseSite):
     theme_color = '#0089a2'
 
 
+class LoginSite(TrojstenSite):
+    name = 'Trojsten Login'
+    short_name = 'Login'
+    url = 'http://login.trojsten.sk'
+
+
 class WikiSite(TrojstenSite):
     name = 'Trojstenová Wikipédia'
     short_name = 'Wiki'
@@ -109,4 +115,5 @@ SITES = {
     7: UFOSite(),
     8: FXSite(),
     9: IKSSite(),
+    10: LoginSite(),
 }
