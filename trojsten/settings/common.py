@@ -297,13 +297,14 @@ LOGIN_REDIRECT_URL = "/ucet/"
 FAVICON_PATH = STATIC_URL + 'images/favicon.ico'
 
 # KSP-Login settings
-# The list of authentication backends we want to allow.
-AUTHENTICATION_BACKENDS = tuple(env('TROJSTENWEB_AUTHENTICATION_BACKENDS', ';'.join((
-    'social.backends.google.GoogleOpenId',
-    'ksp_login.backends.LaunchpadAuth',
-    'social.backends.open_id.OpenIdAuth',
+# The list of authentication providers we want to allow.
+LOGIN_PROVIDERS = (
+    'trojsten.login.backends.TrojstenOAuth2',
+)
+
+AUTHENTICATION_BACKENDS = LOGIN_PROVIDERS + (
     'django.contrib.auth.backends.ModelBackend',
-))).split(';'))
+)
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
