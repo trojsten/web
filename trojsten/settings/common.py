@@ -210,7 +210,6 @@ INSTALLED_APPS = (
     'trojsten.dbsanitizer',
     'trojsten.login',
 
-
     # Keep this under trojsten to let trojsten override templates.
     'django.contrib.admin',
     'social.apps.django_app.default',
