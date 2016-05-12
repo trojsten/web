@@ -72,3 +72,14 @@ LOGGING = {
         },
     }
 }
+
+
+def requiredenv(name):
+    if name not in os.environ:
+        raise ImproperlyConfigured("Value %s missing in environment configuration" % name)
+    return os.environ.get(name)
+
+
+SOCIAL_AUTH_TROJSTEN_KEY = requiredenv('TROJSTENWEB_LOGIN_KEY')
+SOCIAL_AUTH_TROJSTEN_SECRET = requiredenv('TROJSTENWEB_LOGIN_SECRET')
+# SOCIAL_AUTH_TROJSTEN_SCOPE = ['email']

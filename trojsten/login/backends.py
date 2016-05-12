@@ -4,11 +4,9 @@ from social.backends.oauth import BaseOAuth2
 class TrojstenOAuth2(BaseOAuth2):
     name = 'trojsten'
     ID_KEY = 'uid'
-    # @TODO: replace with:
-    # AUTHORIZATION_URL = 'https://login.trojsten.sk/oauth/authorize'
-    # ACCESS_TOKEN_URL = 'https://login.trojsten.sk/oauth/token'
-    AUTHORIZATION_URL = 'https://localhost:8000/oauth/authorize'
-    ACCESS_TOKEN_URL = 'https://localhost:8000/oauth/token'
+    AUTHORIZATION_URL = 'https://login.trojsten.sk/oauth/authorize/'
+    ACCESS_TOKEN_URL = 'https://login.trojsten.sk/oauth/token/'
+    USER_DATA_URL = 'https://login.trojsten.sk/api/me/'
     ACCESS_TOKEN_METHOD = 'POST'
     REDIRECT_STATE = False
     EXTRA_DATA = [
@@ -20,15 +18,23 @@ class TrojstenOAuth2(BaseOAuth2):
         fullname, first_name, last_name = self.get_user_names(
             response.get('display_name')
         )
+        print(response)
         return {'username': str(response.get('uid')),
                 'email': response.get('email'),
                 'fullname': fullname,
                 'first_name': first_name,
                 'last_name': last_name}
 
-    # def user_data(self, access_token, *args, **kwargs):
-    #     """Loads user data from service"""
-    #     return self.get_json(
-    #         'https://login.trojsten.sk/ucet/',
-    #         headers={'Authorization': 'Bearer {0}'.format(access_token)}
-    #     )
+    def user_data(self, access_token, *args, **kwargs):
+        """Loads user data from service"""
+        return self.get_json(
+            self.USER_DATA_URL,
+            headers={'Authorization': 'Bearer {0}'.format(access_token)}
+        )
+
+
+class TrojstenLocalOAuth2(TrojstenOAuth2):
+    AUTHORIZATION_URL = 'http://localhost:8047/oauth/authorize/'
+    ACCESS_TOKEN_URL = 'http://localhost:8047/oauth/token/'
+    USER_DATA_URL = 'http://localhost:8047/api/me/'
+
