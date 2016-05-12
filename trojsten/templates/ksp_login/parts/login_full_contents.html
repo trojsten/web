@@ -50,7 +50,7 @@
 </div>
 {% else %}
 {% with login_providers.0 as provider %}
-  <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline">
+  <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline" id="auto_login_form">
     {% csrf_token %}
     <input type="hidden" name="next" value="{% ksp_login_next %}" />
     <input class="btn btn-primary btn-block btn-lg" type="submit" value="{% trans "Log in with your Trojsten account" %}" />
