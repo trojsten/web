@@ -57,6 +57,7 @@ PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
 )
 
 AUTH_USER_MODEL = 'people.User'
+
 DEBUG = bool(env('TROJSTENWEB_DEBUG', 'False'))
 
 if 'TROJSTENWEB_ADMINS' in os.environ:
@@ -311,7 +312,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_uid',
     'social.pipeline.social_auth.auth_allowed',
     'social.pipeline.social_auth.social_user',
-    'ksp_login.pipeline.register_user',
+    'trojsten.login.pipeline.associate_by_username',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
 )
