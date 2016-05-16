@@ -19,11 +19,13 @@ class TrojstenOAuth2(BaseOAuth2):
             response.get('display_name')
         )
         print(response)
-        return {'username': str(response.get('uid')),
-                'email': response.get('email'),
-                'fullname': fullname,
-                'first_name': first_name,
-                'last_name': last_name}
+        return {
+            'username': str(response.get('uid')),
+            'email': response.get('email'),
+            'fullname': fullname,
+            'first_name': first_name,
+            'last_name': last_name,
+        }
 
     def user_data(self, access_token, *args, **kwargs):
         """Loads user data from service"""
@@ -34,6 +36,7 @@ class TrojstenOAuth2(BaseOAuth2):
 
 
 class TrojstenLocalOAuth2(TrojstenOAuth2):
+    name = 'trojsten_local'
     AUTHORIZATION_URL = 'http://localhost:8047/oauth/authorize/'
     ACCESS_TOKEN_URL = 'http://localhost:8047/oauth/token/'
     USER_DATA_URL = 'http://localhost:8047/api/me/'
