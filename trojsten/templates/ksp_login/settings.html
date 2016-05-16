@@ -15,6 +15,7 @@
 {% block ksp_login_content %}
     {% include "ksp_login/parts/multiple_forms.html" %}
     <h2>{% trans "Login settings" %}</h2>
+    {% if SITE.short_name == 'login' %}
     <p>
         {% trans "You can use any of the following services to log in to your account." %}
     </p>
@@ -41,8 +42,15 @@
         </form>
       </li>
       {% endfor %}
-    </ul>
+      </ul>
     </div>
+    {% else %}
+        {% url "trojsten_account_settings" as settings_url %}
+        {% blocktrans %}
+            You can change the login settings <a href="https://login.trojsten.sk{{ settings_url }}">on separate page</a>.
+        {% endblocktrans %}
+    {% endif %}
+
     <h3>{% trans "Password change" %}</h3>
     <p>
         {% url "account_password" as passwd_url %}
