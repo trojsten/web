@@ -9,3 +9,7 @@ class CurrentUserInfo(ProtectedResourceView):
             'uid': user.username,
         }
         return JsonResponse(user_info)
+
+
+def is_authenticated(request):
+    return JsonResponse({'authenticated': request.user.is_authenticated()})
