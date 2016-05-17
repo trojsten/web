@@ -4,7 +4,7 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}ksp_login/js/jquery.init.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}ksp_login/js/backend_list.js"></script>
-{% if not user.is_authenticated and SITE.short_name == 'Login' %}
+{% if not user.is_authenticated and SITE.is_login_provider %}
   <!-- Modal -->
   <div class="modal fade" id="ksp_login_modal_box" tabindex="-1" role="dialog" aria-labelledby="ksp_login_modal_label" aria-hidden="true">
     <div class="modal-dialog">

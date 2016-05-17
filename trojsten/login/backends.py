@@ -1,12 +1,13 @@
 from social.backends.oauth import BaseOAuth2
+from django.conf import settings
 
 
 class TrojstenOAuth2(BaseOAuth2):
     name = 'trojsten'
     ID_KEY = 'uid'
-    AUTHORIZATION_URL = 'https://login.trojsten.sk/oauth/authorize/'
-    ACCESS_TOKEN_URL = 'https://login.trojsten.sk/oauth/token/'
-    USER_DATA_URL = 'https://login.trojsten.sk/api/me/'
+    AUTHORIZATION_URL = '%s/oauth/authorize/' % settings.TROJSTEN_LOGIN_PROVIDER_URL
+    ACCESS_TOKEN_URL = '%s/oauth/token/' % settings.TROJSTEN_LOGIN_PROVIDER_URL
+    USER_DATA_URL = '%s/api/me/' % settings.TROJSTEN_LOGIN_PROVIDER_URL
     ACCESS_TOKEN_METHOD = 'POST'
     REDIRECT_STATE = False
     EXTRA_DATA = [
@@ -33,11 +34,4 @@ class TrojstenOAuth2(BaseOAuth2):
             self.USER_DATA_URL,
             headers={'Authorization': 'Bearer {0}'.format(access_token)}
         )
-
-
-class TrojstenLocalOAuth2(TrojstenOAuth2):
-    name = 'trojsten_local'
-    AUTHORIZATION_URL = 'http://localhost:8047/oauth/authorize/'
-    ACCESS_TOKEN_URL = 'http://localhost:8047/oauth/token/'
-    USER_DATA_URL = 'http://localhost:8047/api/me/'
 
