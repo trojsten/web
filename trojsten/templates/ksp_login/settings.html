@@ -15,7 +15,7 @@
 {% block ksp_login_content %}
     {% include "ksp_login/parts/multiple_forms.html" %}
     <h2>{% trans "Login settings" %}</h2>
-    {% if SITE.short_name == 'login' %}
+    {% if SITE.is_login_provider %}
     <p>
         {% trans "You can use any of the following services to log in to your account." %}
     </p>
