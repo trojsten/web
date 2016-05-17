@@ -1,2 +1,3 @@
 #python2 specific requirements
 importlib
+ndg-httpsclient
