@@ -171,6 +171,13 @@ TEMPLATES = [
     },
 ]
 
+CORS_ORIGIN_REGEX_WHITELIST = (
+    '^(https?://)?(\w+\.)*ksp\.sk$',
+    '^(https?://)?(\w+\.)*fks\.sk$',
+    '^(https?://)?(\w+\.)*kms\.sk$',
+    '^(https?://)?(\w+\.)*trojsten\.sk$',
+)
+
 MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
