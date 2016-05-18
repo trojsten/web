@@ -120,6 +120,7 @@ def view_submit(request, submit_id):
         template_data = {
             'submit': submit,
             'source': True,
+            'submit_verbose_response': constants.SUBMIT_VERBOSE_RESPONSE
         }
         protocol_path = submit.protocol_path
         template_data.update(protocol_data(protocol_path, submit.submit_type == Submit.TESTABLE_ZIP))

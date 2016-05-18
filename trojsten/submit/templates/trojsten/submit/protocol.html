@@ -1,3 +1,4 @@
+{% load utils %}
 {% if not submit.tested %}
 <div class="alert alert-info">
     <span class="glyphicon glyphicon-refresh glyphicon-animate-rotate"></span>
@@ -26,7 +27,7 @@
                             <a data-toggle="collapse" href="#collapse{{ forloop.counter0 }}">Porovnanie výstupov</a>
                         {% endif %}
                     </td>
-                    <td>{{ test.result }}</td>
+                    <td><abbr title="{{ submit_verbose_response|lookup:test.result }}">{{ test.result }}</abbr></td>
                     <td>{{ test.time }} ms</td>
                 </tr>
 
