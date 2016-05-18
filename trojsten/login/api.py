@@ -1,12 +1,14 @@
-try:
-    import urlparse
-except ImportError:
-    from urllib import parse as urlparse
-
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from oauth2_provider.views.generic import ProtectedResourceView
+
+from trojsten.utils.utils import json_response
+
+try:
+    import urlparse
+except ImportError:
+    from urllib import parse as urlparse
 
 
 class CurrentUserInfo(ProtectedResourceView):
@@ -19,8 +21,9 @@ class CurrentUserInfo(ProtectedResourceView):
         return JsonResponse(user_info)
 
 
+@json_response
 def is_authenticated(request):
-    return JsonResponse({'authenticated': request.user.is_authenticated()})
+    return {'authenticated': request.user.is_authenticated()}
 
 
 def _autologin_urls():
