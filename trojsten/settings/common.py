@@ -312,6 +312,9 @@ FAVICON_PATH = STATIC_URL + 'images/favicon.ico'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.ext.rest_framework.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     )
 }
 
@@ -340,6 +343,12 @@ PROVIDER_OVERRIDE_DICT = json.loads(env('TROJSTENWEB_AUTHENTICATION_PROVIDER_OVE
 # The number of authentication providers to show in the short list.
 AUTHENTICATION_PROVIDERS_BRIEF = int(env('TROJSTENWEB_AUTHENTICATION_PROVIDERS_BRIEF', '3'))
 
+# @TODO: nadefinovat vhodne scopy
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+}
+
 # Common markdown settings
 MARKDOWN_EXTENSIONS = [
     'pymdownx.github',
@@ -352,7 +361,6 @@ MARKDOWN_EXTENSIONS_CONFIGS = {
     'pymdownx.github': {
         'no_nl2br': True,
     }
-}
 
 MARKDOWN_SETTINGS = {
     'safe_mode': False,

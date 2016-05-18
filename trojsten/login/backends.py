@@ -4,14 +4,14 @@ from django.conf import settings
 
 class TrojstenOAuth2(BaseOAuth2):
     name = 'trojsten'
-    ID_KEY = 'uid'
+    ID_KEY = 'id'
     AUTHORIZATION_URL = '%s/oauth/authorize/' % settings.TROJSTEN_LOGIN_PROVIDER_URL
     ACCESS_TOKEN_URL = '%s/oauth/token/' % settings.TROJSTEN_LOGIN_PROVIDER_URL
     USER_DATA_URL = '%s/api/me/' % settings.TROJSTEN_LOGIN_PROVIDER_URL
     ACCESS_TOKEN_METHOD = 'POST'
     REDIRECT_STATE = False
     EXTRA_DATA = [
-        ('uid', 'uid'),
+        ('id', 'id'),
     ]
 
     def get_user_details(self, response):
@@ -21,7 +21,7 @@ class TrojstenOAuth2(BaseOAuth2):
         )
         print(response)
         return {
-            'uid': str(response.get('uid')),
+            'id': str(response.get('id')),
             'username': str(response.get('username')),
             'email': response.get('email'),
             'fullname': fullname,

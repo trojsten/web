@@ -1,10 +1,10 @@
 from django.conf.urls import url
 
-import trojsten.login.api
+from trojsten.login import api
 
 urlpatterns = [
-    url(r'^me/?$', trojsten.login.api.CurrentUserInfo.as_view()),
-    url(r'^checklogin/?$', trojsten.login.api.is_authenticated),
-    url(r'^autologin_urls/?$', trojsten.login.api.autologin_urls),
-    url(r'^autologout_urls/?$', trojsten.login.api.autologout_urls),
+    url(r'^me/?$', api.get_current_user_info),
+    url(r'^checklogin/?$', api.is_authenticated),
+    url(r'^autologin_urls/?$', api.autologin_urls),
+    url(r'^autologout_urls/?$', api.autologout_urls),
 ]
