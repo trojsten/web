@@ -1,18 +1,17 @@
 from trojsten.people.models import User
 
 
-def associate_by_username(backend, details, user=None, *args, **kwargs):
+def associate_by_uid(backend, details, user=None, *args, **kwargs):
     """
-    Associate current auth with a user with the same username in the DB.
+    Associate current auth with a user with the same uid in the DB.
 
-    This pipeline entry is not 100% secure unless you have full control over the providers.
+    Use this pipeline only if you share the user db with provider.
     """
     if user:
         return None
     try:
-        username = details.get('username')
-        user = backend.strategy.storage.user.get_user(username=username)
-        print(username, user)
+        uid = details.get('uid')
+        user = backend.strategy.storage.user.get_user(uid)
         if user:
             return {'user': user}
     except User.DoesNotExist:

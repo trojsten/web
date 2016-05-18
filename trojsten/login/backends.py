@@ -11,7 +11,7 @@ class TrojstenOAuth2(BaseOAuth2):
     ACCESS_TOKEN_METHOD = 'POST'
     REDIRECT_STATE = False
     EXTRA_DATA = [
-        ('uid', 'username'),
+        ('uid', 'uid'),
     ]
 
     def get_user_details(self, response):
@@ -21,7 +21,8 @@ class TrojstenOAuth2(BaseOAuth2):
         )
         print(response)
         return {
-            'username': str(response.get('uid')),
+            'uid': str(response.get('uid')),
+            'username': str(response.get('username')),
             'email': response.get('email'),
             'fullname': fullname,
             'first_name': first_name,

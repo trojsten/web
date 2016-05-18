@@ -316,7 +316,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_uid',
     'social.pipeline.social_auth.auth_allowed',
     'social.pipeline.social_auth.social_user',
-    'trojsten.login.pipeline.associate_by_username',
+    'trojsten.login.pipeline.associate_by_uid',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
 )
