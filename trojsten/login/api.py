@@ -13,7 +13,8 @@ class CurrentUserInfo(ProtectedResourceView):
     def get(self, request, *args, **kwargs):
         user = request.user
         user_info = {
-            'uid': user.username,
+            'uid': user.id,
+            'username': user.username,
         }
         return JsonResponse(user_info)
 
