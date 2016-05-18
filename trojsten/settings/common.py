@@ -170,6 +170,7 @@ TEMPLATES = [
 ]
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -177,7 +178,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'trojsten.urls.default'
