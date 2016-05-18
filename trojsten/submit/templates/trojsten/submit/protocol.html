@@ -27,7 +27,7 @@
                             <a data-toggle="collapse" href="#collapse{{ forloop.counter0 }}">Porovnanie výstupov</a>
                         {% endif %}
                     </td>
-                    <td><abbr title="{{ submit_verbose_response|lookup:test.result }}">{{ test.result }}</abbr></td>
+                    <td><abbr title="{{ test.result }}">{{ submit_verbose_response|lookup:test.result }}</abbr></td>
                     <td>{{ test.time }} ms</td>
                 </tr>
 
