@@ -232,6 +232,7 @@ INSTALLED_APPS = (
     'import_export',
     'oauth2_provider',
     'corsheaders',
+    'rest_framework',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
@@ -307,6 +308,12 @@ TROJSTEN_LOGIN_PROVIDER_URL = env(
 # Included packages settings
 #
 FAVICON_PATH = STATIC_URL + 'images/favicon.ico'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.ext.rest_framework.OAuth2Authentication',
+    )
+}
 
 # KSP-Login settings
 # The list of authentication providers we want to allow.
