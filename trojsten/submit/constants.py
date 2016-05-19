@@ -19,4 +19,5 @@ SUBMIT_VERBOSE_RESPONSE = {
     'OK': _('OK'),
     'EXC': _('Runtime exception'),
     'SEC': _('Security exception'),
+    'IGN': _('Ignored')
 }
