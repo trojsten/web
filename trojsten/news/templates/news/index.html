@@ -10,21 +10,23 @@
         <h1>Novinky</h1>
     </li>
     <li class="pull-right">
-        <a href="{% url 'news_feed' %}">
-            <img src="{% static 'images/rss.png' %}">
-        </a>
+        <div class="btn-group" role="group">
+            {% if user.is_staff %}
+                <a href="{% url 'admin:news_entry_add' %}" class="btn btn-primary btn-nav">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Pridať novinku
+                </a>
+            {% endif %}
+            <a class="btn btn-warning" href="{% url 'news_feed' %}">
+                <i class="fa fa-rss" aria-hidden="true"></i> RSS Feed
+            </a>
+        </div>
     </li>
 </ul>
 
 {% endblock %}
 
 {% block page_content %}
-    {% if user.is_staff %}
-        <a href="{% url 'admin:news_entry_add' %}" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Pridať novinku</a>
-    {% endif %}
-
-    {% include "trojsten/news/parts/news_list.html" %}
-
+    {% include "news/parts/news_list.html" %}
     {% if is_paginated %}
         <ul class="pager">
             {% if page_obj.has_previous %}
