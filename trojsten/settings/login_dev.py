@@ -1,18 +1,13 @@
 from __future__ import absolute_import
 
-from trojsten.settings.production import *
+from trojsten.settings.development import *
 
 SITE_ID = 10
 NAVBAR_SITES = []
 
 ROOT_URLCONF = 'trojsten.urls.login'
 
-CORS_ORIGIN_REGEX_WHITELIST = (
-    '^(https?://)?(\w+\.)*ksp\.sk$',
-    '^(https?://)?(\w+\.)*fks\.sk$',
-    '^(https?://)?(\w+\.)*kms\.sk$',
-    '^(https?://)?(\w+\.)*trojsten\.sk$',
-)
+CORS_ORIGIN_ALLOW_ALL = True
 
 MIDDLEWARE_CLASSES += (
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
