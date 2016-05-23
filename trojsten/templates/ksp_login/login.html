@@ -9,7 +9,7 @@
 
 {% block ksp_login_content %}
   {% include "ksp_login/parts/login_full_contents.html" %}
-  {% if SITE.short_name != 'Login' %}
+  {% if SITE.is_login_provider %}
     {% addtoblock "js" %}
       <script type="text/javascript">
         $(function() {
