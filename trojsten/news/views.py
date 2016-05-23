@@ -7,7 +7,7 @@ from trojsten.news.constants import NEWS_PAGINATE_BY
 
 class EntryListView(ListView):
     model = Entry
-    template_name = 'trojsten/news/index.html'
+    template_name = 'news/index.html'
     context_object_name = 'news_entries'
     paginate_by = NEWS_PAGINATE_BY
 
