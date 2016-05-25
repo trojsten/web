@@ -131,13 +131,17 @@ def branch(name):
         run('git checkout %s' % name)
 
 
+def after_pull():
+    install_requirements()
+    migrate()
+    compile_translations()
+
+
 def update():
     if not LOCAL:
         enable_maintenance_mode()
     pull()
-    install_requirements()
-    migrate()
-    compile_translations()
+    after_pull()
     if not LOCAL:
         collectstatic()
         restart_wsgi()
