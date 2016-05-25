@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-06 12:13+0200\n"
+"POT-Creation-Date: 2016-05-23 17:19+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -28,27 +28,31 @@ msgstr "zadania"
 msgid "This field is required."
 msgstr ""
 
-#: people/admin.py:145
+#: login/views.py:29
+msgid "Logout successful"
+msgstr ""
+
+#: people/admin.py:146
 msgid "Personal info"
 msgstr ""
 
-#: people/admin.py:148
+#: people/admin.py:149
 msgid "Address"
 msgstr ""
 
-#: people/admin.py:149
+#: people/admin.py:150
 msgid "School"
 msgstr ""
 
-#: people/admin.py:152
+#: people/admin.py:153
 msgid "Permissions"
 msgstr ""
 
-#: people/admin.py:155
+#: people/admin.py:156
 msgid "Important dates"
 msgstr ""
 
-#: people/admin.py:243
+#: people/admin.py:244
 msgid "Users merged succesfully."
 msgstr ""
 
@@ -229,38 +233,38 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: reviews/views.py:48
+#: reviews/views.py:49
 msgid "Successfully uploaded a zip file."
 msgstr ""
 
-#: reviews/views.py:92
+#: reviews/views.py:93
 msgid "Successfully saved the review"
 msgstr ""
 
-#: reviews/views.py:153
+#: reviews/views.py:154
 #, python-format
 msgid "Missing file of user %s"
 msgstr ""
 
-#: reviews/views.py:166
+#: reviews/views.py:167
 #, python-format
 msgid "Missing source file of user %s"
 msgstr ""
 
-#: reviews/views.py:170
+#: reviews/views.py:171
 #, python-format
 msgid "Missing protocol file of user %s"
 msgstr ""
 
-#: reviews/views.py:195
+#: reviews/views.py:196
 msgid "Problems with uploaded zip"
 msgstr ""
 
-#: reviews/views.py:201
+#: reviews/views.py:202
 msgid "Ignore"
 msgstr ""
 
-#: reviews/views.py:244
+#: reviews/views.py:245
 msgid "Successfully finished reviewing this task!"
 msgstr ""
 
@@ -288,6 +292,10 @@ msgstr "Chyba počas behu programu"
 #: submit/constants.py:21
 msgid "Security exception"
 msgstr "Pokus o narušenie bezpečnosti"
+
+#: submit/constants.py:22
+msgid "Ignored"
+msgstr ""
 
 #: submit/templates/trojsten/submit/parts/submit_list.html:30
 #: submit/templates/trojsten/submit/parts/submit_list.html:36
@@ -462,94 +470,3 @@ msgstr ""
 #: templates/wiki/article.html:40
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
-
-# Django Fluent Comments
-msgid "Content"
-msgstr "Obsah"
-
-msgid "Moderation"
-msgstr "Moderácia"
-
-msgid "Hierarchy"
-msgstr "Hierarchia"
-
-msgid "Page"
-msgstr "Stránka"
-
-msgid "moderated"
-msgstr "moderované"
-
-msgid "Thanks for removing"
-msgstr "Ďakujeme za odstránenie"
-
-msgid "Thanks for removing the comment"
-msgstr "Ďakujeme za odstránenie komentára"
-
-msgid ""
-"\n"
-"      Thanks for taking the time to improve the quality of discussion on "
-"our site.<br/>\n"
-"      You will be sent back to the article...\n"
-"    "
-msgstr ""
-"\n"
-"      Vďaka, že ste si našli čas na zlepšenie kvality diskusie na našom "
-"webe.<br/>\n"
-"      Budete presmerovaný späť na diskusiu...\n"
-"    "
-
-msgid "Back to the article"
-msgstr "Naspäť k diskusii"
-
-msgid "Thanks for flagging"
-msgstr "Vďaka za flagovanie"
-
-msgid "Thanks for flagging the comment"
-msgstr "Vďaka za flagovanie komentára"
-
-msgid "Thanks for commenting"
-msgstr "Vďaka za komentár"
-
-msgid "Thanks for posting your comment"
-msgstr "Vďaka za komentár"
-
-msgid ""
-"\n"
-"      We have received your comment, and posted it on the web site.<br/>\n"
-"      You will be sent back to the article...\n"
-"      "
-msgstr ""
-"\n"
-"      Dostali sme váš komentár a zobrazili sme ho na stránke.<br/>\n"
-"      Budete presmerovaný späť na diskusiu...\n"
-"      "
-
-msgid "Preview your comment"
-msgstr "Náhľad na komentár"
-
-msgid "Please correct the error below"
-msgid_plural "Please correct the errors below"
-msgstr[0] "Prosím opravte nasledujúcu chybu"
-msgstr[1] "Prosím opravte nasledujúce chyby"
-
-msgid "Post your comment"
-msgstr "Odoslať komentár"
-
-msgid "Or make changes"
-msgstr "Alebo spravte zmeny"
-
-msgid "Please wait . . ."
-msgstr "Počkajte, prosím . . ."
-
-msgid "Your comment has been posted!"
-msgstr "Komentár je zverejnený!"
-
-msgid ""
-"Your comment has been posted, it will be visible for other users after "
-"approval."
-msgstr ""
-"Komentár bol odoslaný, pre ostatných užívateľov bude viditeľný po súhlase "
-"moderátora."
-
-msgid "cancel reply"
-msgstr "zrušiť reakciu"

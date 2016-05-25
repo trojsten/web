@@ -10,7 +10,7 @@ django-crispy-forms
 django-dotenv
 django-easy-select2
 django-favicon
-django-fluent-comments
+-e git+https://github.com/edoburu/django-fluent-comments.git@ed53e646d559cdc062d0016734122328152aa98a#egg=django_fluent_comments
 django-import-export
 django-mathfilters
 django-oauth-toolkit
