@@ -9,7 +9,7 @@ version.txt
 .coverage
 
 # locale
-.mo
+*.mo
 
 #nodejs
 **/node_modules/**
