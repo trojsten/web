@@ -8,6 +8,9 @@ version.txt
 .venv
 .coverage
 
+# locale
+*.mo
+
 #nodejs
 **/node_modules/**
 npm-debug.log
