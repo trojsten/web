@@ -2,9 +2,9 @@ from __future__ import absolute_import
 
 from django_nyt.urls import get_pattern as get_notify_pattern
 from wiki.urls import get_pattern as get_wiki_pattern
+import news.urls
 
 import trojsten.archive.views
-import trojsten.news.urls
 import trojsten.results.urls
 import trojsten.submit.urls
 import trojsten.task_statements.urls
@@ -17,7 +17,7 @@ urlpatterns += [
     url(r'^ucet/', include('ksp_login.urls')),
     url(r'^odovzdavanie/', include(trojsten.submit.urls)),
     url(r'^vysledky/', include(trojsten.results.urls)),
-    url(r'^novinky/', include(trojsten.news.urls)),
+    url(r'^novinky/', include(news.urls)),
     url(r'^ulohy/', include(trojsten.task_statements.urls)),
     url(r'^archiv/$', trojsten.archive.views.archive, {'path': '/archiv',},
         name='archive'),
