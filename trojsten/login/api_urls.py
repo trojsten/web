@@ -2,7 +2,6 @@ from django.conf.urls import url
 
 import trojsten.login.api
 
-
 urlpatterns = [
     url(r'^me/?$', trojsten.login.api.CurrentUserInfo.as_view()),
     url(r'^checklogin/?$', trojsten.login.api.is_authenticated),

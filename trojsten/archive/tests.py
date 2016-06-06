@@ -2,14 +2,14 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
-from django.contrib.sites.models import Site
 from django.contrib.auth.models import Group
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from wiki.models import Article, ArticleRevision, URLPath
 
 from trojsten.contests.models import Competition, Round, Series
 from trojsten.people.models import User
-from wiki.models import Article, URLPath, ArticleRevision
 
 
 class ArchiveTest(TestCase):

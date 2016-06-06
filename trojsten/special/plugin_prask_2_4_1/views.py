@@ -1,18 +1,17 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http.response import JsonResponse, Http404
 from django.db.models import Max
+from django.http.response import Http404, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
-from trojsten.tasks.models import Task, Submit
+from trojsten.tasks.models import Submit, Task
 
-from .tester import process_question, process_answer, POCET_PRVKOV
 from .forms import SubmitForm
-
+from .tester import POCET_PRVKOV, process_answer, process_question
 
 TASK_ID = 1173
 
@@ -106,4 +105,3 @@ def answer_query(request):
     data['status'] = 'Success'
     data['queries'] = queries
     return JsonResponse(data)
-

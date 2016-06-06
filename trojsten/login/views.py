@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import logout as auth_logout
 from django.core.urlresolvers import reverse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.utils.translation import ugettext_lazy as _
 
 try:

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import random
 from collections import defaultdict
+
 from first import first
 
 POCET_PRVKOV = 16

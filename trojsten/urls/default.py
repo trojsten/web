@@ -1,8 +1,8 @@
 from __future__ import absolute_import
 
+import news.urls
 from django_nyt.urls import get_pattern as get_notify_pattern
 from wiki.urls import get_pattern as get_wiki_pattern
-import news.urls
 
 import trojsten.archive.views
 import trojsten.results.urls
