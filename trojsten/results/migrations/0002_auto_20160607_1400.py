@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('results', '0001_initial'),
+        ('schools', '0001_initial'),
     ]
 
     operations = [

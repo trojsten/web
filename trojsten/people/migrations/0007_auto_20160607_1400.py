@@ -9,15 +9,17 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('people', '0004_auto_20160502_1646'),
+        ('results', '0002_auto_20160607_1400'),
+        ('people', '0006_auto_20160607_1400'),
     ]
 
-    database_operations = [
-        migrations.AlterModelTable('School', 'schools_school')
+    state_operations = [
+        migrations.DeleteModel(
+            name='School',
+        ),
     ]
 
     operations = [
         migrations.SeparateDatabaseAndState(
-            database_operations=database_operations,
-        )
+            state_operations=state_operations)
     ]
