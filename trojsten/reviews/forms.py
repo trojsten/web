@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import os
 import re
+import sys
 try:
     from urllib.request import quote, unquote
 except:
@@ -162,7 +163,10 @@ class ZipForm(forms.Form):
     def clean(self):
         cleaned_data = super(ZipForm, self).clean()
         self.name = cleaned_data['filename']
-        cleaned_data['filename'] = unquote(cleaned_data['filename'].encode('ascii'))
+        if sys.version_info[0] == 3:
+            cleaned_data['filename'] = unquote(cleaned_data['filename'])
+        else:
+            cleaned_data['filename'] = unquote(cleaned_data['filename'].encode('ascii'))
 
         if cleaned_data['user'] == 'None':
             cleaned_data['user'] = None
