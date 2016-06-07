@@ -208,6 +208,7 @@ INSTALLED_APPS = (
     'trojsten.threads',
     'trojsten.dbsanitizer',
     'trojsten.login',
+    'trojsten.schools',
 
     # Keep this under trojsten to let trojsten override templates.
     'news',
