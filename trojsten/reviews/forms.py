@@ -164,6 +164,7 @@ class ZipForm(forms.Form):
         cleaned_data = super(ZipForm, self).clean()
         self.name = cleaned_data['filename']
         if sys.version_info[0] == 3:
+            # FIXME: remove this check when we stop supporting python2.7
             cleaned_data['filename'] = unquote(cleaned_data['filename'])
         else:
             cleaned_data['filename'] = unquote(cleaned_data['filename'].encode('ascii'))

@@ -21,6 +21,7 @@ class ReviewZipFormTests(TestCase):
         self.valid_files_win1250 = set([self.test_str_win1250])
         self.valid_files_utf8 = set([self.test_str_utf8])
         if sys.version_info[0] == 3:
+            # FIXME: remove this check when we stop supporting python2.7
             self.valid_files_win1250 = set([unquote(quote(self.test_str_win1250))])
             self.valid_files_utf8 = set([self.test_str_utf8.decode('utf8')])
         self.user = User(pk=47)
