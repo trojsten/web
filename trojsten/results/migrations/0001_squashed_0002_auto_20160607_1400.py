@@ -9,7 +9,7 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [(b'results', '0001_initial'), (b'results', '0002_auto_20160607_1400')]
+    replaces = [('results', '0001_initial'), ('results', '0002_auto_20160607_1400')]
 
     initial = True
 
@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
                 ('frozenresults', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='results.FrozenResults', verbose_name='v\xfdsledkovka')),
                 ('original_user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='p\xf4vodn\xfd pou\u017e\xedvate\u013e')),
                 ('school', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schools.School', verbose_name='\u0161kola')),
-                ('task_points', models.ManyToManyField(to=b'results.FrozenPoints', verbose_name='body za \xfalohy')),
+                ('task_points', models.ManyToManyField(to='results.FrozenPoints', verbose_name='body za \xfalohy')),
             ],
             options={
                 'verbose_name': 'Zmrazen\xfd v\xfdsledok',
