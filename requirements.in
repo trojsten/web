@@ -1,5 +1,4 @@
 celery
-django-autoslug
 django-bootstrap-form
 django-bulk-update
 django-classy-tags
@@ -17,14 +16,13 @@ django-oauth-toolkit
 django-sekizai
 django-sendfile
 django-sortedm2m
-django-taggit
+django-trojsten-news
 django-threadedcomments
 Django<1.10
 ecdsa
 fake-factory
 first
 ksp-login>0.4
-Markdown
 psycopg2
 pycrypto
 python-social-auth

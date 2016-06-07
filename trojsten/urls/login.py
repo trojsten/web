@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 import trojsten.login.views
 
-
 from .common import *
 
 urlpatterns += [

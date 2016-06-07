@@ -4,16 +4,16 @@ from __future__ import unicode_literals
 import datetime
 
 from django.conf import settings
+from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from django.contrib.auth.models import Group
+from wiki.models import Article, ArticleRevision, URLPath
 
+from trojsten.people.models import User
 from trojsten.utils.test_utils import get_noexisting_id
 
 from .models import Event, EventType, Invitation, Place, Registration
-from wiki.models import Article, URLPath, ArticleRevision
-from trojsten.people.models import User
 
 
 class EventListTest(TestCase):

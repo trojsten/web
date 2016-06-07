@@ -202,7 +202,6 @@ INSTALLED_APPS = (
     'trojsten.submit',
     'trojsten.results',
     'trojsten.reviews',
-    'trojsten.news',
     'trojsten.archive',
     'trojsten.task_statements',
     'trojsten.menu',
@@ -211,6 +210,7 @@ INSTALLED_APPS = (
     'trojsten.login',
 
     # Keep this under trojsten to let trojsten override templates.
+    'news',
     'django.contrib.admin',
     'social.apps.django_app.default',
     'ksp_login',
