@@ -3,6 +3,11 @@ from __future__ import unicode_literals
 
 import os
 import re
+import sys
+try:
+    from urllib.request import quote, unquote
+except:
+    from urllib import quote, unquote
 import zipfile
 from functools import partial, wraps
 from time import time
@@ -140,13 +145,29 @@ class ZipForm(forms.Form):
 
         self.fields['user'].choices = choices
         if 'initial' in kwargs and 'filename' in kwargs['initial']:
+            kwargs['initial']['filename'] = quote(kwargs['initial']['filename'])
+            self.filename = kwargs['initial']['filename']
             self.name = kwargs['initial']['filename']
+
+        if 'initial' in kwargs and 'comment' in kwargs['initial']:
+            try:
+                try:
+                    kwargs['initial']['comment'] = kwargs['initial']['comment'].decode('utf8')
+                except:
+                    kwargs['initial']['comment'] = kwargs['initial']['comment'].decode('windows-1250')
+            except:
+                kwargs['initial']['comment'] = unidecode(kwargs['initial']['comment'])
 
         self.fields['points'] = forms.IntegerField(min_value=0, required=False, max_value=max_val)
 
     def clean(self):
         cleaned_data = super(ZipForm, self).clean()
         self.name = cleaned_data['filename']
+        if sys.version_info[0] == 3:
+            # FIXME: remove this check when we stop supporting python2.7
+            cleaned_data['filename'] = unquote(cleaned_data['filename'])
+        else:
+            cleaned_data['filename'] = unquote(cleaned_data['filename'].encode('ascii'))
 
         if cleaned_data['user'] == 'None':
             cleaned_data['user'] = None
