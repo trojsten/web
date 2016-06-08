@@ -7,9 +7,10 @@ from subprocess import PIPE, Popen
 from celery import shared_task
 
 from trojsten.people.models import User
-from trojsten.submit.constants import (SUBMIT_RESPONSE_OK,
+from trojsten.submit.constants import (SUBMIT_TYPE_EXTERNAL, SUBMIT_RESPONSE_OK,
                                        SUBMIT_STATUS_FINISHED)
-from trojsten.tasks.models import Submit, Task
+from trojsten.submit.models import Submit
+from trojsten.tasks.models import Task
 
 from .constants import DATA_ROOT
 from .models import LevelSolved, LevelSubmit
@@ -54,7 +55,7 @@ def process_submit(uid, sid, lid, l_submit_id, taskpoints, program, level_path):
                 task=Task.objects.get(pk=task_id),
                 user=user,
                 points=points,
-                submit_type=Submit.EXTERNAL,
+                submit_type=SUBMIT_TYPE_EXTERNAL,
                 filepath='',
                 testing_status=SUBMIT_STATUS_FINISHED,
                 tester_response=SUBMIT_RESPONSE_OK,

@@ -1,4 +1,6 @@
-from trojsten.tasks.models import Submit, Task
+from trojsten.submit.constants import SUBMIT_TYPE_EXTERNAL
+from trojsten.submit.models import Submit
+from trojsten.tasks.models import Task
 
 from .models import UserLevel
 
@@ -19,7 +21,7 @@ def update_points(user):
         task=get_task(),
         user=user,
         points=points,
-        submit_type=Submit.EXTERNAL,
+        submit_type=SUBMIT_TYPE_EXTERNAL,
         filepath="",
         testing_status="OK",
         tester_response="",

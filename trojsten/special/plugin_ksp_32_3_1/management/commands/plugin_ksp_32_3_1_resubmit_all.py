@@ -2,13 +2,14 @@
 
 from collections import defaultdict
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db.models import Count
 
 from trojsten.people.models import User
-from trojsten.submit.constants import (SUBMIT_RESPONSE_OK,
+from trojsten.submit.constants import (SUBMIT_TYPE_EXTERNAL, SUBMIT_RESPONSE_OK,
                                        SUBMIT_STATUS_FINISHED)
-from trojsten.tasks.models import Submit, Task
+from trojsten.submit.models import Submit
+from trojsten.tasks.models import Task
 
 from ...models import LevelSolved
 from ...views import load_level_index
@@ -40,7 +41,7 @@ class Command(BaseCommand):
                     task=Task.objects.get(pk=task_id),
                     user=User.objects.get(pk=uid),
                     points=points[uid][task_id],
-                    submit_type=Submit.EXTERNAL,
+                    submit_type=SUBMIT_TYPE_EXTERNAL,
                     filepath='',
                     testing_status=SUBMIT_STATUS_FINISHED,
                     tester_response=SUBMIT_RESPONSE_OK,

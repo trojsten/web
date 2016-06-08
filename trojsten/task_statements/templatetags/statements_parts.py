@@ -8,7 +8,8 @@ from django.conf import settings
 from django.utils.translation import ungettext as _
 
 from trojsten.results.manager import get_results_tags_for_rounds
-from trojsten.tasks.models import Category, Submit, Task
+from trojsten.submit.models import Submit
+from trojsten.tasks.models import Category, Task
 
 from ..helpers import get_points_from_submits, get_rounds_by_year
 

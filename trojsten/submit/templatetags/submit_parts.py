@@ -2,9 +2,10 @@ from django import template
 
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
                                    TestableZipSubmitForm)
-from trojsten.tasks.models import Submit, Task
+from trojsten.tasks.models import Task
 
 from .. import constants
+from ..models import Submit
 
 register = template.Library()
 

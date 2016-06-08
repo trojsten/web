@@ -4,7 +4,8 @@ from collections import defaultdict, namedtuple
 
 from trojsten.contests.models import Round
 from trojsten.submit import constants as submit_constants
-from trojsten.tasks.models import Submit, Task
+from trojsten.submit.models import Submit
+from trojsten.tasks.models import Task
 
 from .models import FrozenResults
 
@@ -60,7 +61,7 @@ class UserResult(object):
         return self.previous_rounds_points + sum(t.sum for t in self.tasks.values())
 
     def add_task_points(self, task, submit_type, points, submit_status):
-        if submit_type == Submit.DESCRIPTION:
+        if submit_type == submit_constants.SUBMIT_TYPE_DESCRIPTION:
             if submit_status == submit_constants.SUBMIT_STATUS_REVIEWED:
                 self.tasks[task.id].set_description_points(points)
             else:
