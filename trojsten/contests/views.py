@@ -26,7 +26,7 @@ def _statement_view(request, task_id, solution=False):
             template_data['solution_text'] = f.read()
     return render(
         request,
-        'trojsten/task_statements/view_{}_statement.html'.format(
+        'trojsten/contests/view_{}_statement.html'.format(
             'solution' if solution else 'task'
         ),
         template_data,
@@ -50,7 +50,7 @@ def task_list(request, round_id):
     }
     return render(
         request,
-        'trojsten/task_statements/list_tasks.html',
+        'trojsten/contests/list_tasks.html',
         template_data,
     )
 
@@ -64,7 +64,7 @@ def active_rounds_task_list(request):
     }
     return render(
         request,
-        'trojsten/task_statements/list_active_rounds_tasks.html',
+        'trojsten/contests/list_active_rounds_tasks.html',
         template_data,
     )
 
@@ -107,6 +107,6 @@ def ajax_progressbar(request, round_id):
     }
     return render(
         request,
-        'trojsten/task_statements/ajax/progress.html',
+        'trojsten/contests/ajax/progress.html',
         template_data,
     )

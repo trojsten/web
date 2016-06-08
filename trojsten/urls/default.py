@@ -5,9 +5,9 @@ from django_nyt.urls import get_pattern as get_notify_pattern
 from wiki.urls import get_pattern as get_wiki_pattern
 
 import trojsten.archive.views
+import trojsten.contests.urls
 import trojsten.results.urls
 import trojsten.submit.urls
-import trojsten.task_statements.urls
 import trojsten.views
 
 from .common import *
@@ -18,8 +18,8 @@ urlpatterns += [
     url(r'^odovzdavanie/', include(trojsten.submit.urls)),
     url(r'^vysledky/', include(trojsten.results.urls)),
     url(r'^novinky/', include(news.urls)),
-    url(r'^ulohy/', include(trojsten.task_statements.urls)),
-    url(r'^archiv/$', trojsten.archive.views.archive, {'path': '/archiv',},
+    url(r'^ulohy/', include(trojsten.contests.urls)),
+    url(r'^archiv/$', trojsten.archive.views.archive, {'path': '/archiv'},
         name='archive'),
     url(r'^akcie/', include('trojsten.events.urls')),
     url(r'^nahlasit-problem/', include('contact_form.urls')),
