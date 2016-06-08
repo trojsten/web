@@ -27,20 +27,6 @@ def get_rounds_by_year(user, competition):
     return OrderedDict(sorted(rounds_dict.items(), key=lambda t: t[0], reverse=True))
 
 
-# def get_rounds_by_year(user, competition):
-#     rounds = Round.objects.visible(
-#         user
-#     ).filter(
-#         series__competition=competition
-#     ).order_by(
-#         '-series__year', '-number'
-#     ).select_related('series__year')
-#     rounds_dict = defaultdict(list)
-#     for round in rounds:
-#         rounds_dict[round.series.year].append(round)
-#     return dict(rounds_dict)
-
-
 def get_points_from_submits(tasks, submits):
     """Returns results data for each task
     """
