@@ -22,18 +22,13 @@ from trojsten.utils.utils import attribute_format
 from . import constants
 from .forms import MergeForm
 from .helpers import get_similar_users, merge_users
-from .models import (Address, DuplicateUser, School, User, UserProperty,
+from .models import (Address, DuplicateUser, User, UserProperty,
                      UserPropertyKey)
 
 
 class AddressAdmin(admin.ModelAdmin):
     list_display = ('street', 'town', 'postal_code', 'country')
     search_fields = ('street', 'town', 'postal_code', 'country')
-
-
-class SchoolAdmin(admin.ModelAdmin):
-    list_display = ('verbose_name', 'abbreviation', 'addr_name', 'street', 'city', 'zip_code')
-    search_fields = ('verbose_name', 'abbreviation', 'addr_name', 'street', 'city', 'zip_code')
 
 
 class UserPropertyInLine(admin.TabularInline):
@@ -260,7 +255,6 @@ class DuplicateUserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Address, AddressAdmin)
-admin.site.register(School, SchoolAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(DuplicateUser, DuplicateUserAdmin)
 admin.site.register(UserPropertyKey)

@@ -58,7 +58,7 @@ class FrozenUserResult(models.Model):
     prev_rank = models.IntegerField(verbose_name='poradie', blank=True, null=True)
     fullname = models.CharField(max_length=500, verbose_name='plné meno')
     school_year = models.IntegerField(verbose_name='ročník')
-    school = models.ForeignKey('people.School', verbose_name='škola')
+    school = models.ForeignKey('schools.School', verbose_name='škola')
     previous_points = models.CharField(max_length=10, verbose_name='body z predošlých kôl')
     sum = models.CharField(max_length=10, verbose_name='suma')
     task_points = models.ManyToManyField(FrozenPoints, verbose_name='body za úlohy')
