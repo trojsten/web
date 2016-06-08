@@ -4,7 +4,7 @@ import news.urls
 from django_nyt.urls import get_pattern as get_notify_pattern
 from wiki.urls import get_pattern as get_wiki_pattern
 
-import trojsten.archive.views
+import trojsten.contests.views
 import trojsten.contests.urls
 import trojsten.results.urls
 import trojsten.submit.urls
@@ -19,7 +19,7 @@ urlpatterns += [
     url(r'^vysledky/', include(trojsten.results.urls)),
     url(r'^novinky/', include(news.urls)),
     url(r'^ulohy/', include(trojsten.contests.urls)),
-    url(r'^archiv/$', trojsten.archive.views.archive, {'path': '/archiv'},
+    url(r'^archiv/$', trojsten.contests.views.archive, {'path': '/archiv'},
         name='archive'),
     url(r'^akcie/', include('trojsten.events.urls')),
     url(r'^nahlasit-problem/', include('contact_form.urls')),

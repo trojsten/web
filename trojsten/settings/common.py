@@ -202,7 +202,6 @@ INSTALLED_APPS = (
     'trojsten.submit',
     'trojsten.results',
     'trojsten.reviews',
-    'trojsten.archive',
     'trojsten.menu',
     'trojsten.threads',
     'trojsten.dbsanitizer',

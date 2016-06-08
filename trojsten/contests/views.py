@@ -6,10 +6,18 @@ from django.conf import settings
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 from sendfile import sendfile
+from wiki.decorators import get_article
 
-from trojsten.contests.models import Competition, Round
-from trojsten.contests.models import Task
+from trojsten.contests.models import Competition, Round, Task
 from trojsten.utils.utils import is_true
+
+
+@get_article(can_read=True)
+def archive(request, article, *args, **kwargs):
+    kwargs.update({
+        'article': article,
+    })
+    return render(request, 'trojsten/contests/archive.html', kwargs)
 
 
 def _statement_view(request, task_id, solution=False):
