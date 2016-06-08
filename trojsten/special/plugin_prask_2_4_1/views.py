@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from trojsten.submit.constants import SUBMIT_TYPE_EXTERNAL
 from trojsten.submit.models import Submit
-from trojsten.tasks.models import Task
+from trojsten.contests.models import Task
 
 from .forms import SubmitForm
 from .tester import POCET_PRVKOV, process_answer, process_question

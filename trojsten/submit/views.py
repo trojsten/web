@@ -21,7 +21,7 @@ from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
 from trojsten.submit.helpers import (get_path, process_submit, update_submit,
                                      write_chunks_to_file)
 from trojsten.submit.templatetags.submit_parts import submitclass
-from trojsten.tasks.models import Task
+from trojsten.contests.models import Task
 
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS

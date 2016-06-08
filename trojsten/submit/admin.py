@@ -8,7 +8,7 @@ from easy_select2 import select2_modelform
 
 from trojsten.contests.models import Round
 from trojsten.reviews.urls import submit_urls
-from trojsten.tasks.models import Task
+from trojsten.contests.models import Task
 from trojsten.utils.utils import attribute_format, get_related
 
 from .models import Submit

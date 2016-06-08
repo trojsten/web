@@ -8,7 +8,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from sendfile import sendfile
 
-from trojsten.tasks.models import Task
+from trojsten.contests.models import Task
 
 from .constants import DATA_ROOT
 from .models import LevelSolved, LevelSubmit

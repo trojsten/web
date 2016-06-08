@@ -2,7 +2,7 @@ from django import template
 
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
                                    TestableZipSubmitForm)
-from trojsten.tasks.models import Task
+from trojsten.contests.models import Task
 
 from .. import constants
 from ..models import Submit

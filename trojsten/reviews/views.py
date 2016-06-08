@@ -24,7 +24,7 @@ from trojsten.reviews.helpers import (get_latest_submits_for_task,
                                       submit_source_download_filename)
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 from trojsten.submit.models import Submit
-from trojsten.tasks.models import Task
+from trojsten.contests.models import Task
 
 
 def review_task(request, task_pk):

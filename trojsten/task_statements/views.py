@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, render
 from sendfile import sendfile
 
 from trojsten.contests.models import Competition, Round
-from trojsten.tasks.models import Task
+from trojsten.contests.models import Task
 from trojsten.utils.utils import is_true
 
 

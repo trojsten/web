@@ -1,6 +1,6 @@
 from trojsten.submit.constants import SUBMIT_TYPE_EXTERNAL
 from trojsten.submit.models import Submit
-from trojsten.tasks.models import Task
+from trojsten.contests.models import Task
 
 from .models import UserLevel
 

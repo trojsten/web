@@ -3,7 +3,7 @@ from django.db.models import Sum
 from trojsten.submit.constants import (SUBMIT_TYPE_EXTERNAL, SUBMIT_RESPONSE_OK,
                                        SUBMIT_STATUS_FINISHED)
 from trojsten.submit.models import Submit
-from trojsten.tasks.models import Task
+from trojsten.contests.models import Task
 
 from .models import UserCategory
 

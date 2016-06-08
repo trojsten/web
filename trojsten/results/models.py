@@ -16,7 +16,7 @@ class FrozenResults(models.Model):
     round = models.ForeignKey('contests.Round', verbose_name='kolo')
     is_single_round = models.BooleanField(verbose_name='vynechať predošlé kolá')
     has_previous_results = models.BooleanField(default=False, verbose_name='zahŕňa predošlé kolá')
-    category = models.ForeignKey('tasks.Category', blank=True, null=True, verbose_name='kategória')
+    category = models.ForeignKey('contests.Category', blank=True, null=True, verbose_name='kategória')
     time = models.DateTimeField(auto_now_add=True, verbose_name='čas')
 
     class Meta:
@@ -33,7 +33,7 @@ class FrozenResults(models.Model):
 
 @python_2_unicode_compatible
 class FrozenPoints(models.Model):
-    task = models.ForeignKey('tasks.Task', verbose_name='úloha')
+    task = models.ForeignKey('contests.Task', verbose_name='úloha')
     description_points = models.CharField(max_length=10, verbose_name='body za popis')
     source_points = models.CharField(max_length=10, verbose_name='body za program')
     sum = models.CharField(max_length=10, verbose_name='body')

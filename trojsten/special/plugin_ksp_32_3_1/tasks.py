@@ -10,7 +10,7 @@ from trojsten.people.models import User
 from trojsten.submit.constants import (SUBMIT_TYPE_EXTERNAL, SUBMIT_RESPONSE_OK,
                                        SUBMIT_STATUS_FINISHED)
 from trojsten.submit.models import Submit
-from trojsten.tasks.models import Task
+from trojsten.contests.models import Task
 
 from .constants import DATA_ROOT
 from .models import LevelSolved, LevelSubmit

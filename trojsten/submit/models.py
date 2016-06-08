@@ -15,7 +15,7 @@ from trojsten.people.constants import (GRADUATION_SCHOOL_YEAR,
                                        SCHOOL_YEAR_END_MONTH)
 from trojsten.people.models import User
 from trojsten.submit import constants as submit_constants
-from trojsten.tasks.models import Task
+from trojsten.contests.models import Task
 
 
 class SubmitManager(models.Manager):
