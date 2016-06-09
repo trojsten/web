@@ -6,6 +6,7 @@ import sys
 
 from django.contrib.messages import constants as messages
 from django.http import UnreadablePostError
+from django.utils.translation import ugettext_lazy as _
 
 import trojsten
 import trojsten.special.installed_apps
@@ -318,14 +319,47 @@ PROVIDER_OVERRIDE_DICT = json.loads(env('TROJSTENWEB_AUTHENTICATION_PROVIDER_OVE
 # The number of authentication providers to show in the short list.
 AUTHENTICATION_PROVIDERS_BRIEF = int(env('TROJSTENWEB_AUTHENTICATION_PROVIDERS_BRIEF', '3'))
 
+# Common markdown settings
+MARKDOWN_EXTENSIONS = [
+    'pymdownx.github',
+    'attr_list',
+    'codehilite',
+    'sane_lists',
+]
+
+MARKDOWN_EXTENSIONS_CONFIGS = {
+    'pymdownx.github': {
+        'no_nl2br': True,
+    }
+}
+
+MARKDOWN_SETTINGS = {
+    'safe_mode': False,
+    'output_format': 'html5',
+    'extensions': MARKDOWN_EXTENSIONS,
+    'extension_configs': MARKDOWN_EXTENSIONS_CONFIGS,
+}
+
+NEWS_MARKDOWN_KWARGS = MARKDOWN_SETTINGS
+
 # WIKI SETTINGS
 # We use ksp_login to handle accounts.
 WIKI_ACCOUNT_HANDLING = False
 # We use sendfile for downloading files
 WIKI_ATTACHMENTS_USE_SENDFILE = True
-WIKI_MARKDOWN_KWARGS = {
-    'safe_mode': False,
-}
+WIKI_MARKDOWN_KWARGS = dict(
+    MARKDOWN_SETTINGS,
+    extensions=MARKDOWN_EXTENSIONS + [
+        'footnotes',
+        'wikilinks',
+    ],
+    extension_configs=dict(
+        MARKDOWN_EXTENSIONS_CONFIGS,
+        toc={
+            'title': _('Table of Contents')
+        },
+    ),
+)
 WIKI_EDITOR = 'trojsten.markdown_editors.TrojstenMarkItUp'
 WIKI_ATTACHMENTS_PATH = env(
     'TROJSTENWEB_WIKI_ATTACHMENTS_PATH',

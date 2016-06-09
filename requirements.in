@@ -25,6 +25,7 @@ first
 ksp-login>0.4
 psycopg2
 pycrypto
+pymdown-extensions
 python-social-auth
 Unidecode
 wiki
