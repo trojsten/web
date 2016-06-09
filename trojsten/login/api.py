@@ -32,9 +32,13 @@ def _autologin_urls():
 
 def autologin_urls(request):
     url_suffix = reverse('social:begin', args=[TrojstenOAuth2.name])
-    return JsonResponse({ 'urls': list(urlparse.urljoin(url, url_suffix) for url in _autologin_urls())})
+    return JsonResponse({
+        'urls': list(urlparse.urljoin(url, url_suffix) for url in _autologin_urls())
+    })
 
 
 def autologout_urls(request):
     url_suffix = reverse('account_logout')
-    return JsonResponse({'urls': list(urlparse.urljoin(url, url_suffix) for url in _autologin_urls())})
+    return JsonResponse({
+        'urls': list(urlparse.urljoin(url, url_suffix) for url in _autologin_urls())
+    })
