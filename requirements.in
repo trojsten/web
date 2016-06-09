@@ -26,5 +26,6 @@ ksp-login>0.4
 psycopg2
 pycrypto
 python-social-auth
+pytz
 Unidecode
 wiki

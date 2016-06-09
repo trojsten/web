@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-
-import pytz
 from django import template
 from django.conf import settings
+from django.utils import timezone
 from django.utils.translation import ungettext as _
 
+from trojsten.contests.models import Category, Task
 from trojsten.results.manager import get_results_tags_for_rounds
 from trojsten.submit.models import Submit
-from trojsten.contests.models import Category, Task
 
 from ..helpers import get_points_from_submits, get_rounds_by_year
 
@@ -66,7 +64,7 @@ def show_progress(context, round, results=False):
     start = round.start_time
     end = round.end_time
     full = end - start
-    remaining = end - datetime.now(pytz.utc)
+    remaining = end - timezone.now()
     elapsed = full - remaining
     if remaining.days <= settings.ROUND_PROGRESS_DANGER_DAYS:
         progressbar_class = settings.ROUND_PROGRESS_DANGER_CLASS

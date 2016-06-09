@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
-from datetime import date
 
 from django import forms
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import string_concat
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
@@ -137,7 +137,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
                 code="graduation_too_soon",
             )
 
-        if grad > date.today().year + constants.GRADUATION_YEAR_MAX_AHEAD:
+        if grad > timezone.localtime(timezone.now()).year + constants.GRADUATION_YEAR_MAX_AHEAD:
             raise forms.ValidationError(
                 _("Your graduation year is too far in the future."),
                 code="graduation_too_late",
