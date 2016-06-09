@@ -6,10 +6,18 @@ from django.conf import settings
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 from sendfile import sendfile
+from wiki.decorators import get_article
 
-from trojsten.contests.models import Competition, Round
-from trojsten.tasks.models import Task
+from trojsten.contests.models import Competition, Round, Task
 from trojsten.utils.utils import is_true
+
+
+@get_article(can_read=True)
+def archive(request, article, *args, **kwargs):
+    kwargs.update({
+        'article': article,
+    })
+    return render(request, 'trojsten/contests/archive.html', kwargs)
 
 
 def _statement_view(request, task_id, solution=False):
@@ -26,7 +34,7 @@ def _statement_view(request, task_id, solution=False):
             template_data['solution_text'] = f.read()
     return render(
         request,
-        'trojsten/task_statements/view_{}_statement.html'.format(
+        'trojsten/contests/view_{}_statement.html'.format(
             'solution' if solution else 'task'
         ),
         template_data,
@@ -50,7 +58,7 @@ def task_list(request, round_id):
     }
     return render(
         request,
-        'trojsten/task_statements/list_tasks.html',
+        'trojsten/contests/list_tasks.html',
         template_data,
     )
 
@@ -64,7 +72,7 @@ def active_rounds_task_list(request):
     }
     return render(
         request,
-        'trojsten/task_statements/list_active_rounds_tasks.html',
+        'trojsten/contests/list_active_rounds_tasks.html',
         template_data,
     )
 
@@ -107,6 +115,6 @@ def ajax_progressbar(request, round_id):
     }
     return render(
         request,
-        'trojsten/task_statements/ajax/progress.html',
+        'trojsten/contests/ajax/progress.html',
         template_data,
     )

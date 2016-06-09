@@ -5,7 +5,6 @@ import json
 import os
 import xml.etree.ElementTree as ET
 
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -22,10 +21,11 @@ from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
 from trojsten.submit.helpers import (get_path, process_submit, update_submit,
                                      write_chunks_to_file)
 from trojsten.submit.templatetags.submit_parts import submitclass
-from trojsten.tasks.models import Submit, Task
+from trojsten.contests.models import Task
 
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
+from .models import Submit
 
 
 def protocol_data(protocol_path, forceShowDetails=False):
@@ -61,14 +61,15 @@ def protocol_data(protocol_path, forceShowDetails=False):
                 test['time'] = runtest[3].text
                 details = runtest[4].text if len(runtest) > 4 else None
                 test['details'] = details
-                test['showDetails'] = details is not None and ('sample' in test['name'] or forceShowDetails)
+                test['showDetails'] = details is not None and (
+                    'sample' in test['name'] or forceShowDetails
+                )
                 tests.append(test)
         template_data['tests'] = tests
         template_data['have_tests'] = len(tests) > 0
     else:
         template_data['protocolReady'] = False  # Not tested yet!
     return template_data
-
 
 
 @login_required
@@ -95,9 +96,14 @@ def view_protocol(request, submit_id):
         # of the competition
 
     # For source submits, display testing results, source code and submit list.
-    if submit.submit_type == Submit.SOURCE or submit.submit_type == Submit.TESTABLE_ZIP:
+    if (
+        submit.submit_type == constants.SUBMIT_TYPE_SOURCE or
+        submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+    ):
         protocol_path = submit.protocol_path
-        template_data = protocol_data(protocol_path, submit.submit_type == Submit.TESTABLE_ZIP)
+        template_data = protocol_data(
+            protocol_path, submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+        )
         template_data['submit'] = submit
         return render(
             request, 'trojsten/submit/protocol.html', template_data
@@ -117,17 +123,22 @@ def view_submit(request, submit_id):
         # of the competition
 
     # For source submits, display testing results, source code and submit list.
-    if submit.submit_type == Submit.SOURCE or submit.submit_type == Submit.TESTABLE_ZIP:
+    if (
+        submit.submit_type == constants.SUBMIT_TYPE_SOURCE or
+        submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+    ):
         template_data = {
             'submit': submit,
             'source': True,
             'submit_verbose_response': constants.SUBMIT_VERBOSE_RESPONSE
         }
         protocol_path = submit.protocol_path
-        template_data.update(protocol_data(protocol_path, submit.submit_type == Submit.TESTABLE_ZIP))
+        template_data.update(
+            protocol_data(protocol_path, submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP)
+        )
         if os.path.exists(submit.filepath):
             # Source code available, display it!
-            if submit.submit_type == Submit.SOURCE:
+            if submit.submit_type == constants.SUBMIT_TYPE_SOURCE:
                 template_data['fileReady'] = True
                 with open(submit.filepath, "r") as submitfile:
                     data = submitfile.read()
@@ -142,7 +153,7 @@ def view_submit(request, submit_id):
         )
 
     # For description submits, return submitted file.
-    elif submit.submit_type == Submit.DESCRIPTION:
+    elif submit.submit_type == constants.SUBMIT_TYPE_DESCRIPTION:
         extension = os.path.splitext(submit.filepath)[1]
         # display .txt and .pdf files in browser, offer download for other files
         send_attachment = extension.lower() not in VIEWABLE_EXTENSIONS
@@ -246,13 +257,16 @@ def task_submit_post(request, task_id, submit_type):
         pass
 
     # File will be sent to tester
-    if submit_type == Submit.SOURCE or submit_type == Submit.TESTABLE_ZIP:
-        if submit_type == Submit.SOURCE:
+    if (
+        submit_type == constants.SUBMIT_TYPE_SOURCE or
+        submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+    ):
+        if submit_type == constants.SUBMIT_TYPE_SOURCE:
             form = SourceSubmitForm(request.POST, request.FILES)
         else:
             form = TestableZipSubmitForm(request.POST, request.FILES)
         if form.is_valid():
-            if submit_type == Submit.SOURCE:
+            if submit_type == constants.SUBMIT_TYPE_SOURCE:
                 language = form.cleaned_data['language']
             else:
                 language = '.zip'
@@ -295,7 +309,7 @@ def task_submit_post(request, task_id, submit_type):
             )
 
     # File won't be sent to tester
-    elif submit_type == Submit.DESCRIPTION:
+    elif submit_type == constants.SUBMIT_TYPE_DESCRIPTION:
         form = DescriptionSubmitForm(request.POST, request.FILES)
         if form.is_valid():
             # Description submit id's are currently timestamps

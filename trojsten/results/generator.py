@@ -4,8 +4,9 @@ from django.contrib.auth import get_user_model
 
 from trojsten.people.constants import (GRADUATION_SCHOOL_YEAR,
                                        SCHOOL_YEAR_END_MONTH)
-from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
-from trojsten.tasks.models import Submit, Task
+from trojsten.submit import constants as submit_constants
+from trojsten.submit.models import Submit
+from trojsten.contests.models import Task
 
 from . import constants as c
 from .representation import Results, ResultsCell, ResultsCol, ResultsRow
@@ -158,8 +159,8 @@ class ResultsGenerator(object):
         is a submit, but it is not reviewed yet.)
         """
         cell = row.cells_by_key[submit.task.number]
-        if submit.submit_type == Submit.DESCRIPTION:
-            if submit.testing_status == SUBMIT_STATUS_REVIEWED:
+        if submit.submit_type == submit_constants.SUBMIT_TYPE_DESCRIPTION:
+            if submit.testing_status == submit_constants.SUBMIT_STATUS_REVIEWED:
                 points = submit.user_points
             else:
                 points = c.UNKNOWN_POINTS_SYMBOL

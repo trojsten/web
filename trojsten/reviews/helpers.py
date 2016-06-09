@@ -5,9 +5,9 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from unidecode import unidecode
 
-from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
+from trojsten.submit import constants as submit_constants
 from trojsten.submit.helpers import get_path, write_chunks_to_file
-from trojsten.tasks.models import Submit
+from trojsten.submit.models import Submit
 
 
 def submit_review(filecontent, filename, task, user, points, comment='', submit=None):
@@ -31,8 +31,8 @@ def submit_review(filecontent, filename, task, user, points, comment='', submit=
     else:
         sfiletarget = submit.filepath
 
-    sub = Submit(task=task, user=user, points=points, submit_type=Submit.DESCRIPTION,
-                 testing_status=SUBMIT_STATUS_REVIEWED, filepath=sfiletarget, reviewer_comment=comment)
+    sub = Submit(task=task, user=user, points=points, submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+                 testing_status=submit_constants.SUBMIT_STATUS_REVIEWED, filepath=sfiletarget, reviewer_comment=comment)
     sub.save()
 
 
@@ -59,15 +59,16 @@ def edit_review(filecontent, filename, submit, user, points, comment=''):
 
 def get_latest_submits_for_task(task):
     description_submits = task.submit_set.filter(
-        submit_type=Submit.DESCRIPTION, time__lt=task.round.end_time
-    ).exclude(testing_status=SUBMIT_STATUS_REVIEWED).select_related('user')
+        submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION, time__lt=task.round.end_time
+    ).exclude(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED).select_related('user')
 
     source_submits = task.submit_set.filter(
-        submit_type=Submit.SOURCE, time__lt=task.round.end_time
-    ).exclude(testing_status=SUBMIT_STATUS_REVIEWED).select_related('user')
+        submit_type=submit_constants.SUBMIT_TYPE_SOURCE, time__lt=task.round.end_time
+    ).exclude(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED).select_related('user')
 
     review_submits = task.submit_set.filter(
-        submit_type=Submit.DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
+        submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+        testing_status=submit_constants.SUBMIT_STATUS_REVIEWED
     ).select_related('user')
 
     submits_by_user = {}

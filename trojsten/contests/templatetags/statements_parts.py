@@ -8,14 +8,15 @@ from django.conf import settings
 from django.utils.translation import ungettext as _
 
 from trojsten.results.manager import get_results_tags_for_rounds
-from trojsten.tasks.models import Category, Submit, Task
+from trojsten.submit.models import Submit
+from trojsten.contests.models import Category, Task
 
 from ..helpers import get_points_from_submits, get_rounds_by_year
 
 register = template.Library()
 
 
-@register.inclusion_tag('trojsten/task_statements/parts/task_list.html', takes_context=True)
+@register.inclusion_tag('trojsten/contests/parts/task_list.html', takes_context=True)
 def show_task_list(context, round):
     tasks = Task.objects.filter(
         round=round
@@ -40,7 +41,7 @@ def show_task_list(context, round):
     return context
 
 
-@register.inclusion_tag('trojsten/task_statements/parts/buttons.html', takes_context=True)
+@register.inclusion_tag('trojsten/contests/parts/buttons.html', takes_context=True)
 def show_buttons(context, round):
     (results_tags,) = get_results_tags_for_rounds((round,))
 
@@ -51,7 +52,7 @@ def show_buttons(context, round):
     return context
 
 
-@register.inclusion_tag('trojsten/task_statements/parts/round_list.html')
+@register.inclusion_tag('trojsten/contests/parts/round_list.html')
 def show_round_list(user, competition):
     all_rounds = get_rounds_by_year(user, competition)
     data = {
@@ -60,7 +61,7 @@ def show_round_list(user, competition):
     return data
 
 
-@register.inclusion_tag('trojsten/task_statements/parts/progress.html', takes_context=True)
+@register.inclusion_tag('trojsten/contests/parts/progress.html', takes_context=True)
 def show_progress(context, round, results=False):
     start = round.start_time
     end = round.end_time

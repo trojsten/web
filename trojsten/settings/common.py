@@ -202,8 +202,6 @@ INSTALLED_APPS = (
     'trojsten.submit',
     'trojsten.results',
     'trojsten.reviews',
-    'trojsten.archive',
-    'trojsten.task_statements',
     'trojsten.menu',
     'trojsten.threads',
     'trojsten.dbsanitizer',
@@ -342,7 +340,6 @@ WIKI_CHECK_SLUG_URL_AVAILABLE = False
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_IMPORTS = ("trojsten.task_statements.handlers", )
 BROKER_URL = env('TROJSTENWEB_CELERY_BROKER_URL', 'django://')
 
 # Comments settings

@@ -8,7 +8,9 @@ from django.db.models import Max
 from django.http.response import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from trojsten.tasks.models import Submit, Task
+from trojsten.submit.constants import SUBMIT_TYPE_EXTERNAL
+from trojsten.submit.models import Submit
+from trojsten.contests.models import Task
 
 from .forms import SubmitForm
 from .tester import POCET_PRVKOV, process_answer, process_question
@@ -36,7 +38,7 @@ def task_view(request):
                         task=task,
                         user=request.user,
                         points=points,
-                        submit_type=Submit.EXTERNAL,
+                        submit_type=SUBMIT_TYPE_EXTERNAL,
                         filepath="",
                         testing_status="OK",
                         tester_response="",

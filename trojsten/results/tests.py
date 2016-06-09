@@ -10,7 +10,8 @@ from django.test import TestCase
 
 from trojsten.contests.models import Competition, Round, Series
 from trojsten.people.models import User
-from trojsten.tasks.models import Submit, Task
+from trojsten.submit.models import Submit
+from trojsten.contests.models import Task
 from trojsten.utils.test_utils import get_noexisting_id
 
 
