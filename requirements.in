@@ -16,6 +16,7 @@ django-oauth-toolkit
 django-sekizai
 django-sendfile
 django-sortedm2m
+django-tips
 django-trojsten-news
 django-threadedcomments
 Django<1.10

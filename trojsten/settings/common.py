@@ -211,6 +211,7 @@ INSTALLED_APPS = (
 
     # Keep this under trojsten to let trojsten override templates.
     'news',
+    'tips',
     'django.contrib.admin',
     'social.apps.django_app.default',
     'ksp_login',
