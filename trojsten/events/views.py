@@ -2,9 +2,6 @@
 
 from __future__ import unicode_literals
 
-from datetime import datetime
-
-import pytz
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -12,6 +9,7 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
@@ -51,7 +49,7 @@ class RegistrationView(FormView):
         context['after_deadline'] =\
             (
                 False if context['form'].invite.event.registration_deadline is None else
-                context['form'].invite.event.registration_deadline < datetime.now(pytz.utc)
+                context['form'].invite.event.registration_deadline < timezone.now()
             )
         return context
 
@@ -110,9 +108,9 @@ class EventView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(EventView, self).get_context_data(**kwargs)
         context['invited'] = (
-            self.request.user.is_authenticated()
-            and context['event'].registration
-            and Invitation.objects.select_related(
+            self.request.user.is_authenticated() and
+            context['event'].registration and
+            Invitation.objects.select_related(
                 'event__registration', 'user'
             ).filter(user=self.request.user, event=context['event']).exists()
         )

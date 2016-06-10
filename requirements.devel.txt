@@ -60,7 +60,7 @@ PyJWT==1.4.0              # via python-social-auth
 python-dateutil==2.5.3    # via fake-factory
 python-openid==2.2.5      # via python-social-auth
 python-social-auth==0.2.19
-pytz==2016.4              # via celery
+pytz==2016.4
 requests-oauthlib==0.6.1  # via python-social-auth
 requests==2.10.0          # via python-social-auth, requests-oauthlib
 six==1.10.0               # via django-nyt, django-oauth-toolkit, fake-factory, pip-tools, python-dateutil, python-social-auth, wiki

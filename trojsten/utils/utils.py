@@ -2,6 +2,7 @@ import json
 
 from django.http import HttpResponse
 from django.utils import timezone
+from datetime import time
 
 
 def is_true(value):
@@ -11,14 +12,18 @@ def is_true(value):
 
 
 def default_start_time():
-    return timezone.localtime(timezone.now()).replace(
-        hour=0, minute=0, second=0, microsecond=0,
+    today = timezone.now().date()
+    return timezone.make_aware(
+        timezone.datetime.combine(today, time.min),
+        timezone.get_current_timezone()
     )
 
 
 def default_end_time():
-    return timezone.localtime(timezone.now()).replace(
-        hour=23, minute=59, second=59, microsecond=0,
+    today = timezone.now().date()
+    return timezone.make_aware(
+        timezone.datetime.combine(today, time.max),
+        timezone.get_current_timezone()
     )
 
 

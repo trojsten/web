@@ -2,15 +2,15 @@
 
 from __future__ import unicode_literals
 
-from datetime import date
-
 from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils import timezone
+
+from trojsten.schools.models import School
 
 from . import constants
-from trojsten.schools.models import School
 
 
 class UserManager(DjangoUserManager):
@@ -95,7 +95,9 @@ class User(AbstractUser):
 
     @property
     def school_year(self):
-        return self.school_year_at(date.today())
+        return self.school_year_at(
+            timezone.localtime(timezone.now()).date()
+        )
 
     def school_year_at(self, date):
         current_year = date.year + int(

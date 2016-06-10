@@ -3,15 +3,14 @@
 from __future__ import unicode_literals
 
 import os
-from datetime import datetime
 
-import pytz
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 from unidecode import unidecode
@@ -55,7 +54,7 @@ class RoundManager(models.Manager):
         """Returns all visible running rounds for each competition
         """
         return self.visible(user, all_sites).filter(
-            end_time__gte=datetime.now()
+            end_time__gte=timezone.now()
         ).order_by(
             '-end_time', '-number',
         ).select_related(
@@ -141,7 +140,7 @@ class Round(models.Model):
 
     @property
     def can_submit(self):
-        if datetime.now(pytz.utc) <= self.end_time:
+        if timezone.now() <= self.end_time:
             return True
         return False
 

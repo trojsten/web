@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import datetime
-
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.utils import timezone
 from wiki.models import Article, ArticleRevision, URLPath
 
 from trojsten.people.models import User
@@ -47,8 +46,8 @@ class EventListTest(TestCase):
         self.type_camp.sites.add(site)
 
         self.place = Place.objects.create(name="Camp place")
-        self.start_time = datetime.datetime.now()
-        self.end_time = datetime.datetime.now() + datetime.timedelta(5)
+        self.start_time = timezone.now()
+        self.end_time = timezone.now() + timezone.timedelta(5)
 
     def test_no_event(self):
         response = self.client.get(self.events_url)
@@ -98,9 +97,9 @@ class EventTest(TestCase):
         self.type_camp.sites.add(site)
 
         self.place = Place.objects.create(name="Camp place")
-        self.start_time = datetime.datetime.now()
-        self.end_time = datetime.datetime.now() + datetime.timedelta(5)
-        self.grad_year = datetime.datetime.now().year
+        self.start_time = timezone.now()
+        self.end_time = timezone.now() + timezone.timedelta(5)
+        self.grad_year = timezone.now().year
 
     def test_invalid_event(self):
         url = reverse('event_detail', kwargs={'event_id': get_noexisting_id(Event)})
@@ -188,14 +187,14 @@ class EventParticipantsTest(TestCase):
         type_camp.sites.add(site)
 
         place = Place.objects.create(name="Miesto")
-        start_time = datetime.datetime.now()
-        end_time = datetime.datetime.now() + datetime.timedelta(5)
+        start_time = timezone.now()
+        end_time = timezone.now() + timezone.timedelta(5)
 
         self.event = Event.objects.create(name="Sustredkovy event", type=type_camp,
                                           place=place, start_time=start_time,
                                           end_time=end_time)
         self.part_list_url = reverse('participants_list', kwargs={'event_id': self.event.id})
-        self.grad_year = datetime.datetime.now().year
+        self.grad_year = timezone.now().year
 
     def test_event_not_exists(self):
         url = reverse('participants_list', kwargs={'event_id': get_noexisting_id(Event)})
@@ -243,8 +242,8 @@ class EventRegistrationTest(TestCase):
         event_type.sites.add(site)
 
         place = Place.objects.create(name="Miesto")
-        start_time = datetime.datetime.now()
-        end_time = datetime.datetime.now() + datetime.timedelta(5)
+        start_time = timezone.now()
+        end_time = timezone.now() + timezone.timedelta(5)
         registration = Registration.objects.create(name="Registracia", text="")
         self.event = Event.objects.create(name="Sustredkovy event", type=event_type,
                                           place=place, start_time=start_time,
@@ -259,7 +258,7 @@ class EventRegistrationTest(TestCase):
                                parent=root_path)
         ArticleRevision.objects.create(article=events_article, title="Nazov1")
 
-        grad_year = datetime.datetime.now().year
+        grad_year = timezone.now().year
         self.user = User.objects.create_user(username="jozko", first_name="Jozko",
                                              last_name="Mrkvicka", password="pass",
                                              graduation=grad_year)

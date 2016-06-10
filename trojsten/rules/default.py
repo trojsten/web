@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-
 from django.db import models
+from django.utils import timezone
 
 from trojsten.contests.models import Round
 from trojsten.results.constants import DEFAULT_TAG_KEY
@@ -48,5 +47,5 @@ class CompetitionRules(object):
 class FinishedRoundsResultsRulesMixin():
 
     def get_actual_result_rounds(self, competition):
-        rounds = Round.objects.filter(series__competition=competition, end_time__lte=datetime.now())
+        rounds = Round.objects.filter(series__competition=competition, end_time__lte=timezone.now())
         return rounds.order_by('-end_time', '-number')[:1]
