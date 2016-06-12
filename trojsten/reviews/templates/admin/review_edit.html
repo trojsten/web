@@ -4,9 +4,9 @@
 {% block breadcrumbs %}
 <div class="breadcrumbs">
     <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-    &rsaquo; <a href="{% url 'admin:app_list' app_label='tasks' %}">Tasks</a>
-    &rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}">Task</a>
-    &rsaquo; <a href="{% url 'admin:tasks_task_change' task.pk %}">{{ task }}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='contests' %}">Contests</a>
+    &rsaquo; <a href="{% url 'admin:contests_task_changelist' %}">Task</a>
+    &rsaquo; <a href="{% url 'admin:contests_task_change' task.pk %}">{{ task }}</a>
     &rsaquo; <a href="{% url 'admin:review_task' task.pk %}">{% trans 'Review' %}</a>
     &rsaquo; {% trans 'Edit' %}
 </div>
