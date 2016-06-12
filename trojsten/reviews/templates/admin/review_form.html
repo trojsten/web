@@ -4,9 +4,9 @@
 {% block breadcrumbs %}
 <div class="breadcrumbs">
     <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-    &rsaquo; <a href="{% url 'admin:app_list' app_label='tasks' %}">{% trans "Tasks" %}</a>
-    &rsaquo; <a href="{% url 'admin:tasks_task_changelist' %}">{% trans "Task" %}</a>
-    &rsaquo; <a href="{% url 'admin:tasks_task_change' task.pk %}">{{ task }}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='contests' %}">{% trans "Contests" %}</a>
+    &rsaquo; <a href="{% url 'admin:contests_task_changelist' %}">{% trans "Task" %}</a>
+    &rsaquo; <a href="{% url 'admin:contests_task_change' task.pk %}">{{ task }}</a>
     &rsaquo; {% trans 'Review' %}
 </div>
 {% endblock %}
@@ -37,8 +37,8 @@
     </thead>
     <tbody>
 {% for user, data in users.items %}
-    <tr>  
-    <td><a href="{% url 'admin:tasks_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a></td>
+    <tr>
+    <td><a href="{% url 'admin:submit_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a></td>
     <td>
     {% if data.description %}
         <a href="{% url 'admin:submit_download' data.description.pk %}">{% trans 'Download' %}</a>
@@ -47,7 +47,7 @@
 
     <td>
     {% if data.review %}
-        <a href="{% url 'admin:tasks_submit_change' data.review.pk %}">{% trans 'View' %}</a>
+        <a href="{% url 'admin:submit_submit_change' data.review.pk %}">{% trans 'View' %}</a>
         <a href="{% url 'admin:review_edit' task.pk data.review.pk %}">{% trans 'Edit' %}</a>
     {% endif %}
     {% if data.description %}
@@ -87,7 +87,7 @@
     <table>
     {{ form }}
     </table>
-    <input type="submit" text="Upload"/> 
+    <input type="submit" text="Upload"/>
 </form>
 
 {% endblock %}
