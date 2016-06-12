@@ -145,7 +145,10 @@ class ZipForm(forms.Form):
 
         self.fields['user'].choices = choices
         if 'initial' in kwargs and 'filename' in kwargs['initial']:
-            kwargs['initial']['filename'] = quote(kwargs['initial']['filename'])
+            try:
+                test = kwargs['initial']['filename'].encode('utf8')
+            except:
+                kwargs['initial']['filename'] = quote(kwargs['initial']['filename'])
             self.filename = kwargs['initial']['filename']
             self.name = kwargs['initial']['filename']
 
@@ -167,7 +170,10 @@ class ZipForm(forms.Form):
             # FIXME: remove this check when we stop supporting python2.7
             cleaned_data['filename'] = unquote(cleaned_data['filename'])
         else:
-            cleaned_data['filename'] = unquote(cleaned_data['filename'].encode('ascii'))
+            try:
+                cleaned_data['filename'] = unquote(cleaned_data['filename'].encode('ascii'))
+            except:
+                pass
 
         if cleaned_data['user'] == 'None':
             cleaned_data['user'] = None
