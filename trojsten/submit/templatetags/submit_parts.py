@@ -15,7 +15,7 @@ def show_submit_form(task, redirect):
     """Renders submit form for specified task"""
     data = {}
     data['task'] = task
-    data['Submit'] = Submit
+    data['constants'] = constants
     data['redirect_to'] = redirect
     if task.has_source:
         data['source_form'] = SourceSubmitForm()
@@ -31,11 +31,11 @@ def show_submit_list(task, user):
     """Renders submit list for specified task and user"""
     data = {'IN_QUEUE': constants.SUBMIT_STATUS_IN_QUEUE}
     data['task'] = task
-    data['Submit'] = Submit
+    data['constants'] = constants
     submits = Submit.objects.filter(task=task, user=user)
     data['submits'] = {
         submit_type: submits.filter(submit_type=submit_type).order_by('-time')
-        for submit_type, _ in Submit.SUBMIT_TYPES
+        for submit_type, _ in constants.SUBMIT_TYPES
     }
 
     return data

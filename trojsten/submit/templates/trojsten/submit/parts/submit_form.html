@@ -1,6 +1,6 @@
 {% load bootstrap %}
 {% if task.has_description %}
-    <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.DESCRIPTION %}">
+    <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=constants.SUBMIT_TYPE_DESCRIPTION %}">
         {% csrf_token %}
         <div class="form-group" style="min-width:50px;"><label>Popis</label></div>
         {{ description_form | bootstrap_inline }}
@@ -9,7 +9,7 @@
     </form>
 {% endif %}
 {% if task.has_source %}
-    <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.SOURCE %}">
+    <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=constants.SUBMIT_TYPE_SOURCE %}">
         {% csrf_token %}
         <div class="form-group" style="min-width:50px;"><label>Kód</label></div>
         {{ source_form | bootstrap_inline }}
@@ -18,7 +18,7 @@
     </form>
 {% endif %}
 {% if task.has_testablezip %}
-    <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=Submit.TESTABLE_ZIP %}">
+    <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=constants.SUBMIT_TYPE_TESTABLE_ZIP %}">
         {% csrf_token %}
         <div class="form-group" style="min-width:50px;"><label>Zip</label></div>
         {{ testablezip_form | bootstrap_inline }}
