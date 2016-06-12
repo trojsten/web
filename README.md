@@ -20,4 +20,4 @@ Trojstenovy web
 ## Related projects
 - https://github.com/koniiiik/ksp_login
 - https://github.com/trojsten/news
-- - https://github.com/trojsten/django-tips
+- https://github.com/trojsten/django-tips
