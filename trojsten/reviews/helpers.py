@@ -57,6 +57,7 @@ def edit_review(filecontent, filename, submit, user, points, comment=''):
     submit.reviewer_comment = comment
     submit.save()
 
+
 def get_latest_submits_for_task(task):
     description_submits = task.submit_set.filter(
         submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION, time__lt=task.round.end_time
@@ -105,27 +106,30 @@ def get_user_as_choices(task):
 
 def submit_directory(submit):
     return '%s_%s/' % (
-        submit.user.get_full_name().lower().replace(' ', '_'),
+        unidecode(submit.user.get_full_name().lower().replace(' ', '_')),
         submit.pk
     )
 
+
 def submit_download_filename(submit):
     return '%s_%s/%s' % (
-        submit.user.get_full_name().lower().replace(' ', '_'),
+        unidecode(submit.user.get_full_name().lower().replace(' ', '_')),
         submit.pk,
         submit.filename.split('-', 2)[-1]
     )
 
+
 def submit_source_download_filename(submit, description_submit_id):
     return '%s_%s/source/%s' % (
-        submit.user.get_full_name().lower().replace(' ', '_'),
+        unidecode(submit.user.get_full_name().lower().replace(' ', '_')),
         description_submit_id,
         submit.filename
     )
 
+
 def submit_protocol_download_filename(submit, description_submit_id):
     return '%s_%s/source/%s' % (
-        submit.user.get_full_name().lower().replace(' ', '_'),
+        unidecode(submit.user.get_full_name().lower().replace(' ', '_')),
         description_submit_id,
         os.path.basename(submit.protocol_path)
     )
