@@ -322,6 +322,16 @@ class TaskAndSolutionStatementsTests(TestCase):
         self.assertContains(response, 'test <b>html</b> solution statement')
         self.assertContains(response, 'test <b>html</b> task statement')
 
+    def test_statement_logged_in(self):
+        self.client.force_login(self.nonstaff_user)
+        response = self.client.get(self.task_url)
+        self.assertContains(response, 'Test task')
+        self.assertContains(response, 'test <b>html</b> task statement')
+        response = self.client.get(self.solution_url)
+        self.assertContains(response, 'Test task')
+        self.assertContains(response, 'test <b>html</b> solution statement')
+        self.assertContains(response, 'test <b>html</b> task statement')
+
     def test_missing_task_statement_file(self):
         task = Task.objects.create(number=3, name='Test task 3', round=self.round)
         url = reverse('task_statement', kwargs={'task_id': task.id})
