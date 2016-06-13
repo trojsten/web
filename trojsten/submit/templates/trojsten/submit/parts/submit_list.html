@@ -16,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for submit in submits|lookup:Submit.DESCRIPTION %}
+        {% for submit in submits|lookup:constants.SUBMIT_TYPE_DESCRIPTION %}
             {% if submit.testing_status == IN_QUEUE %}
             <tr>
             {% else %}
@@ -60,7 +60,7 @@
         </thead>
         <tbody>
         {% if task.has_source %}
-        {% for submit in submits|lookup:Submit.SOURCE %}
+        {% for submit in submits|lookup:constants.SUBMIT_TYPE_SOURCE %}
         <tr class="{{ submit|submitclass }}" data-id="{{ submit.id }}">
                 <td>{{ submit.time }}</td>
                 {% if submit.testing_status == IN_QUEUE %}
@@ -77,7 +77,7 @@
         {% endfor %}
         {% endif %}
         {% if task.has_testablezip %}
-        {% for submit in submits|lookup:Submit.TESTABLE_ZIP %}
+        {% for submit in submits|lookup:constants.SUBMIT_TYPE_TESTABLE_ZIP %}
             <tr class="{{ submit|submitclass }}" data-id="{{ submit.id }}">
                 <td><a href="{% url 'view_submit' submit_id=submit.id %}">{{ submit.time }}</a></td>
                 {% if submit.testing_status == IN_QUEUE %}
