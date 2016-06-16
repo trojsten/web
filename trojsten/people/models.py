@@ -119,6 +119,9 @@ class UserPropertyKey(models.Model):
     """
     key_name = models.CharField(max_length=100,
                                 verbose_name='názov vlastnosti')
+    regex = models.CharField(
+        max_length=100, verbose_name='regulárny výraz pre hodnotu', blank=True, null=True
+    )
 
     def __str__(self):
         return self.key_name
