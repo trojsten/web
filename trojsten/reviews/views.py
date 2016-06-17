@@ -149,18 +149,19 @@ def download_latest_submits(request, task_pk):
 
     with zipfile.ZipFile(path, 'w') as zipper:
         for user in submits:
-            submit = user['description']
-            description_submit_id = submit.pk
-            if not os.path.isfile(submit.filepath):
-                errors += [_('Missing file of user %s') % submit.user.get_full_name()]
-            else:
-                zipper.write(submit.filepath, submit_download_filename(submit))
-            last_review_points = str(int(user['review'].points)) if 'review' in user else ''
-            last_review_comment = user['review'].reviewer_comment if 'review' in user else ''
-            zipper.writestr(submit_directory(submit) + REVIEW_POINTS_FILENAME,
-                            last_review_points)
-            zipper.writestr(submit_directory(submit) + REVIEW_COMMENT_FILENAME,
-                            last_review_comment)
+            if 'description' in user:
+                submit = user['description']
+                description_submit_id = submit.pk
+                if not os.path.isfile(submit.filepath):
+                    errors += [_('Missing file of user %s') % submit.user.get_full_name()]
+                else:
+                    zipper.write(submit.filepath, submit_download_filename(submit))
+                last_review_points = str(int(user['review'].points)) if 'review' in user else ''
+                last_review_comment = user['review'].reviewer_comment if 'review' in user else ''
+                zipper.writestr(submit_directory(submit) + REVIEW_POINTS_FILENAME,
+                                last_review_points)
+                zipper.writestr(submit_directory(submit) + REVIEW_COMMENT_FILENAME,
+                                last_review_comment)
 
             if 'sources' in user:
                 for submit in user['sources']:
