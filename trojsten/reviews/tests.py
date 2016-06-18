@@ -2,16 +2,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import sys
-try:
-    from urllib import quote, unquote
-except:
-    from urllib.request import quote, unquote
-
 import datetime
 try:
-    from urllib.request import quote
+    from urllib.request import quote, unquote
 except ImportError:
-    from urllib import quote
+    from urllib import quote, unquote
 
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -21,13 +16,14 @@ from django.test import TestCase
 from django.utils.text import slugify
 
 from trojsten.contests.models import Competition, Round, Series
-from trojsten.tasks.models import Submit
-from trojsten.tasks.models import Task
+from trojsten.submit.models import Submit
+from trojsten.contests.models import Task
 from trojsten.reviews.forms import ZipForm
 from trojsten.people.models import User
 from trojsten.utils.test_utils import get_noexisting_id
 
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
+
 
 class ReviewZipFormTests(TestCase):
     def setUp(self):
