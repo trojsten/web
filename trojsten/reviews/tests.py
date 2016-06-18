@@ -114,10 +114,8 @@ class ReviewTest(TestCase):
         self.url_name = 'admin:review_task'
 
     def test_redirect_to_login(self):
-        """
-            Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
-            Posledna cast za next je double quoted, posledne next je len quoted.
-        """
+        # Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
+        # Posledna cast za next je double quoted, posledne next je len quoted.
         url = reverse(self.url_name, kwargs={'task_pk': 1})
         response = self.client.get(url, follow=True)
         login_url = settings.LOGIN_URL
@@ -128,9 +126,7 @@ class ReviewTest(TestCase):
         self.assertRedirects(response, redirect_to)
 
     def test_redirect_to_admin_login(self):
-        """
-            Tato url nie je vobec quoted.
-        """
+        # Tato url nie je vobec quoted.
         url = reverse(self.url_name, kwargs={'task_pk': 1})
         response = self.client.get(url, follow=True)
         self.client.force_login(self.user)
@@ -221,10 +217,8 @@ class DownloadLatestSubmits(TestCase):
         self.url_name = 'admin:download_latest_submits'
 
     def test_redirect_to_login(self):
-        """
-            Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
-            Posledna cast za next je double quoted, posledne next je len quoted.
-        """
+        # Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
+        # Posledna cast za next je double quoted, posledne next je len quoted.
         url = reverse(self.url_name, kwargs={'task_pk': 1})
         response = self.client.get(url, follow=True)
         login_url = settings.LOGIN_URL
@@ -235,9 +229,7 @@ class DownloadLatestSubmits(TestCase):
         self.assertRedirects(response, redirect_to)
 
     def test_redirect_to_admin_login(self):
-        """
-            Tato url nie je vobec quoted.
-        """
+        # Tato url nie je vobec quoted.
         url = reverse(self.url_name, kwargs={'task_pk': 1})
         response = self.client.get(url, follow=True)
         self.client.force_login(self.user)
@@ -303,10 +295,8 @@ class ReviewEditTest(TestCase):
         self.url_name = 'admin:review_edit'
 
     def test_redirect_to_login(self):
-        """
-            Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
-            Posledna cast za next je double quoted, posledne next je len quoted.
-        """
+        # Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
+        # Posledna cast za next je double quoted, posledne next je len quoted.
         url = reverse(self.url_name, kwargs={'task_pk': 1, 'submit_pk': 1})
         response = self.client.get(url, follow=True)
         login_url = settings.LOGIN_URL
@@ -317,9 +307,7 @@ class ReviewEditTest(TestCase):
         self.assertRedirects(response, redirect_to)
 
     def test_redirect_to_admin_login(self):
-        """
-            Tato url nie je vobec quoted.
-        """
+        # Tato url nie je vobec quoted.
         url = reverse(self.url_name, kwargs={'task_pk': 1, 'submit_pk': 1})
         response = self.client.get(url, follow=True)
         self.client.force_login(self.user)
