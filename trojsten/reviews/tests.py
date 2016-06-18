@@ -22,7 +22,7 @@ from trojsten.reviews.forms import ZipForm
 from trojsten.people.models import User
 from trojsten.utils.test_utils import get_noexisting_id
 
-from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
+from trojsten.submit import constants as submit_constants
 
 
 class ReviewZipFormTests(TestCase):
@@ -159,7 +159,11 @@ class ReviewTest(TestCase):
         self.assertContains(response, self.no_submit_task.name)
 
     def test_not_reviewable_submit(self):
-        for s_type in [0, 2, 3]:
+        for s_type in [
+            submit_constants.SUBMIT_TYPE_SOURCE,
+            submit_constants.SUBMIT_TYPE_TESTABLE_ZIP,
+            submit_constants.SUBMIT_TYPE_EXTERNAL
+        ]:
             submit = Submit.objects.create(task=self.no_submit_task, user=self.user,
                                            submit_type=s_type, points=5)
             submit.time = self.no_submit_task.round.start_time + datetime.timedelta(0, 5)
@@ -185,7 +189,7 @@ class ReviewTest(TestCase):
         response = self.client.get(url)
         self.assertNotContains(response, comment)
 
-        self.submit.testing_status = SUBMIT_STATUS_REVIEWED
+        self.submit.testing_status = submit_constants.SUBMIT_STATUS_REVIEWED
         self.submit.save()
         response = self.client.get(url)
         self.assertContains(response, comment)
