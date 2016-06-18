@@ -23,26 +23,24 @@ from unidecode import unidecode
 
 from django.contrib.sites.models import Site
 
-from trojsten.contests.models import Competition, Round
+from trojsten.contests.models import Competition, Round, Task
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
                                    TestableZipSubmitForm)
 from trojsten.submit.helpers import (get_path, process_submit, update_submit,
                                      write_chunks_to_file)
 from trojsten.submit.templatetags.submit_parts import submitclass
-from trojsten.tasks.models import Submit, Task
 from trojsten.utils.test_utils import get_noexisting_id
 
-from . import constants
+from .models import Submit
 from .constants import VIEWABLE_EXTENSIONS
 
-import datetime
-
+from django.utils import timezone
 
 class SubmitListTests(TestCase):
 
     def setUp(self):
         self.list_url = reverse('active_rounds_submit_page')
-        gradyear = datetime.datetime.now().year
+        gradyear = timezone.now().year
         self.non_staff_user = User.objects.create_user(username="jozko", first_name="Jozko",
                                                        last_name="Mrkvicka", password="pass",
                                                        graduation=gradyear)
@@ -55,9 +53,9 @@ class SubmitListTests(TestCase):
         self.competition = Competition.objects.create(name='TestCompetition',
                                                       organizers_group=self.group)
         self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        self.start_time_old = datetime.datetime.now() + datetime.timedelta(-10)
-        self.end_time_old = datetime.datetime.now() + datetime.timedelta(-5)
-        self.end_time_new = datetime.datetime.now() + datetime.timedelta(10)
+        self.start_time_old = timezone.now() + timezone.timedelta(-10)
+        self.end_time_old = timezone.now() + timezone.timedelta(-5)
+        self.end_time_new = timezone.now() + timezone.timedelta(10)
         self.series = Series.objects.create(number=1, name='Test series',
                                             competition=self.competition,
                                             year=1)
@@ -180,7 +178,7 @@ class SubmitListTests(TestCase):
 class SubmitTaskTests(TestCase):
 
     def setUp(self):
-        gradyear = datetime.datetime.now().year
+        gradyear = timezone.now().year
         self.non_staff_user = User.objects.create_user(username="jozko", first_name="Jozko",
                                                        last_name="Mrkvicka", password="pass",
                                                        graduation=gradyear)
@@ -193,10 +191,10 @@ class SubmitTaskTests(TestCase):
         self.competition = Competition.objects.create(name='TestCompetition',
                                                       organizers_group=self.group)
         self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        self.start_time_old = datetime.datetime.now() + datetime.timedelta(-10)
-        self.start_time_new = datetime.datetime.now() + datetime.timedelta(5)
-        self.end_time_old = datetime.datetime.now() + datetime.timedelta(-5)
-        self.end_time_new = datetime.datetime.now() + datetime.timedelta(10)
+        self.start_time_old = timezone.now() + timezone.timedelta(-10)
+        self.start_time_new = timezone.now() + timezone.timedelta(5)
+        self.end_time_old = timezone.now() + timezone.timedelta(-5)
+        self.end_time_new = timezone.now() + timezone.timedelta(10)
         self.series = Series.objects.create(number=1, name='Test series',
                                             competition=self.competition,
                                             year=1)
@@ -317,7 +315,7 @@ class SubmitTaskTests(TestCase):
 class JsonSubmitTest(TestCase):
 
     def setUp(self):
-        gradyear = datetime.datetime.now().year
+        gradyear = timezone.now().year
         self.non_staff_user = User.objects.create_user(username="jozko", first_name="Jozko",
                                                         last_name="Mrkvicka", password="pass",
                                                         graduation=gradyear)
@@ -330,10 +328,10 @@ class JsonSubmitTest(TestCase):
         competition = Competition.objects.create(name='TestCompetition',
                                                       organizers_group=self.group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        self.start_time_old = datetime.datetime.now() + datetime.timedelta(-10)
-        self.start_time_new = datetime.datetime.now() + datetime.timedelta(5)
-        self.end_time_old = datetime.datetime.now() + datetime.timedelta(-5)
-        self.end_time_new = datetime.datetime.now() + datetime.timedelta(10)
+        self.start_time_old = timezone.now() + timezone.timedelta(-10)
+        self.start_time_new = timezone.now() + timezone.timedelta(5)
+        self.end_time_old = timezone.now() + timezone.timedelta(-5)
+        self.end_time_new = timezone.now() + timezone.timedelta(10)
         series = Series.objects.create(number=1, name='Test series',
                                             competition=competition,
                                             year=1)
@@ -344,7 +342,7 @@ class JsonSubmitTest(TestCase):
         self.submit = Submit.objects.create(task=self.task, user=self.non_staff_user, submit_type=0, points=0)
 
     def test_no_access(self):
-        gradyear = datetime.datetime.now().year
+        gradyear = timezone.now().year
         url = reverse('poll_submit_info', kwargs={'submit_id': self.submit.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
@@ -370,7 +368,7 @@ class JsonSubmitTest(TestCase):
 class JsonProtokolTest(TestCase):
 
     def setUp(self):
-        gradyear = datetime.datetime.now().year
+        gradyear = timezone.now().year
         self.non_staff_user = User.objects.create_user(username="jozko", first_name="Jozko",
                                                         last_name="Mrkvicka", password="pass",
                                                         graduation=gradyear)
@@ -383,10 +381,10 @@ class JsonProtokolTest(TestCase):
         competition = Competition.objects.create(name='TestCompetition',
                                                       organizers_group=self.group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        self.start_time_old = datetime.datetime.now() + datetime.timedelta(-10)
-        self.start_time_new = datetime.datetime.now() + datetime.timedelta(5)
-        self.end_time_old = datetime.datetime.now() + datetime.timedelta(-5)
-        self.end_time_new = datetime.datetime.now() + datetime.timedelta(10)
+        self.start_time_old = timezone.now() + timezone.timedelta(-10)
+        self.start_time_new = timezone.now() + timezone.timedelta(5)
+        self.end_time_old = timezone.now() + timezone.timedelta(-5)
+        self.end_time_new = timezone.now() + timezone.timedelta(10)
         series = Series.objects.create(number=1, name='Test series',
                                             competition=competition,
                                             year=1)
@@ -397,7 +395,7 @@ class JsonProtokolTest(TestCase):
         self.submit = Submit.objects.create(task=self.task, user=self.non_staff_user, submit_type=0, points=0)
 
     def test_no_access(self):
-        gradyear = datetime.datetime.now().year
+        gradyear = timezone.now().year
         url = reverse('view_protocol', kwargs={'submit_id': self.submit.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
