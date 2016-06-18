@@ -85,16 +85,16 @@ class ReviewZipFormTests(TestCase):
 class ReviewTest(TestCase):
     def setUp(self):
         year = datetime.datetime.now().year + 2
-        self.user = User.objects.create_user(username="TestUser", password="password",
-                                             first_name="Jozko", last_name="Mrkvicka",
+        self.user = User.objects.create_user(username='TestUser', password='password',
+                                             first_name='Jozko', last_name='Mrkvicka',
                                              graduation=year)
-        self.staff = User.objects.create_user(username="TestStaff", password="password",
-                                              first_name="Jozko", last_name="Veduci",
+        self.staff = User.objects.create_user(username='TestStaff', password='password',
+                                              first_name='Jozko', last_name='Veduci',
                                               graduation=2014)
         self.staff.is_staff = True
         self.staff.save()
 
-        group = Group.objects.create(name="Test Group")
+        group = Group.objects.create(name='Test Group')
         group.user_set.add(self.staff)
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
@@ -119,10 +119,10 @@ class ReviewTest(TestCase):
         url = reverse(self.url_name, kwargs={'task_pk': 1})
         response = self.client.get(url, follow=True)
         login_url = settings.LOGIN_URL
-        admin_login_url = "?next=%s" % reverse("admin:login")
+        admin_login_url = '?next=%s' % reverse('admin:login')
         last_url = quote(url, safe='')
-        last_url = quote("?next=%s" % last_url, safe='')
-        redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
+        last_url = quote('?next=%s' % last_url, safe='')
+        redirect_to = '%s%s%s' % (login_url, admin_login_url, last_url)
         self.assertRedirects(response, redirect_to)
 
     def test_redirect_to_admin_login(self):
@@ -131,7 +131,7 @@ class ReviewTest(TestCase):
         response = self.client.get(url, follow=True)
         self.client.force_login(self.user)
         response = self.client.get(url)
-        redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
+        redirect_to = '%s?next=%s' % (reverse('admin:login'), url)
         self.assertRedirects(response, redirect_to)
 
     def test_invalid_task(self):
@@ -141,8 +141,8 @@ class ReviewTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_staff_not_in_group(self):
-        staff = User.objects.create_user(username="TestStaffOther", password="password",
-                                         first_name="Jozko", last_name="Veduci",
+        staff = User.objects.create_user(username='TestStaffOther', password='password',
+                                         first_name='Jozko', last_name='Veduci',
                                          graduation=2014)
         staff.is_staff = True
         staff.save()
@@ -176,7 +176,7 @@ class ReviewTest(TestCase):
         self.assertContains(response, self.user.get_full_name())
 
     def test_reviewed(self):
-        comment = "TESTINGcomment"
+        comment = 'TESTINGcomment'
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
 
@@ -194,16 +194,16 @@ class ReviewTest(TestCase):
 class DownloadLatestSubmits(TestCase):
     def setUp(self):
         year = datetime.datetime.now().year + 2
-        self.user = User.objects.create_user(username="TestUser", password="password",
-                                             first_name="Jozko", last_name="Mrkvicka",
+        self.user = User.objects.create_user(username='TestUser', password='password',
+                                             first_name='Jozko', last_name='Mrkvicka',
                                              graduation=year)
-        self.staff = User.objects.create_user(username="TestStaff", password="password",
-                                              first_name="Jozko", last_name="Veduci",
+        self.staff = User.objects.create_user(username='TestStaff', password='password',
+                                              first_name='Jozko', last_name='Veduci',
                                               graduation=2014)
         self.staff.is_staff = True
         self.staff.save()
 
-        group = Group.objects.create(name="Test Group")
+        group = Group.objects.create(name='Test Group')
         group.user_set.add(self.staff)
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
@@ -222,10 +222,10 @@ class DownloadLatestSubmits(TestCase):
         url = reverse(self.url_name, kwargs={'task_pk': 1})
         response = self.client.get(url, follow=True)
         login_url = settings.LOGIN_URL
-        admin_login_url = "?next=%s" % reverse("admin:login")
+        admin_login_url = '?next=%s' % reverse('admin:login')
         last_url = quote(url, safe='')
-        last_url = quote("?next=%s" % last_url, safe='')
-        redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
+        last_url = quote('?next=%s' % last_url, safe='')
+        redirect_to = '%s%s%s' % (login_url, admin_login_url, last_url)
         self.assertRedirects(response, redirect_to)
 
     def test_redirect_to_admin_login(self):
@@ -234,7 +234,7 @@ class DownloadLatestSubmits(TestCase):
         response = self.client.get(url, follow=True)
         self.client.force_login(self.user)
         response = self.client.get(url)
-        redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
+        redirect_to = '%s?next=%s' % (reverse('admin:login'), url)
         self.assertRedirects(response, redirect_to)
 
     def test_invalid_task(self):
@@ -244,8 +244,8 @@ class DownloadLatestSubmits(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_staff_not_in_group(self):
-        staff = User.objects.create_user(username="TestStaffOther", password="password",
-                                         first_name="Jozko", last_name="Veduci",
+        staff = User.objects.create_user(username='TestStaffOther', password='password',
+                                         first_name='Jozko', last_name='Veduci',
                                          graduation=2014)
         staff.is_staff = True
         staff.save()
@@ -267,16 +267,16 @@ class DownloadLatestSubmits(TestCase):
 class ReviewEditTest(TestCase):
     def setUp(self):
         year = datetime.datetime.now().year + 2
-        self.user = User.objects.create_user(username="TestUser", password="password",
-                                             first_name="Jozko", last_name="Mrkvicka",
+        self.user = User.objects.create_user(username='TestUser', password='password',
+                                             first_name='Jozko', last_name='Mrkvicka',
                                              graduation=year)
-        self.staff = User.objects.create_user(username="TestStaff", password="password",
-                                              first_name="Jozko", last_name="Veduci",
+        self.staff = User.objects.create_user(username='TestStaff', password='password',
+                                              first_name='Jozko', last_name='Veduci',
                                               graduation=2014)
         self.staff.is_staff = True
         self.staff.save()
 
-        group = Group.objects.create(name="Test Group")
+        group = Group.objects.create(name='Test Group')
         group.user_set.add(self.staff)
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
@@ -300,10 +300,10 @@ class ReviewEditTest(TestCase):
         url = reverse(self.url_name, kwargs={'task_pk': 1, 'submit_pk': 1})
         response = self.client.get(url, follow=True)
         login_url = settings.LOGIN_URL
-        admin_login_url = "?next=%s" % reverse("admin:login")
+        admin_login_url = '?next=%s' % reverse('admin:login')
         last_url = quote(url, safe='')
-        last_url = quote("?next=%s" % last_url, safe='')
-        redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
+        last_url = quote('?next=%s' % last_url, safe='')
+        redirect_to = '%s%s%s' % (login_url, admin_login_url, last_url)
         self.assertRedirects(response, redirect_to)
 
     def test_redirect_to_admin_login(self):
@@ -312,7 +312,7 @@ class ReviewEditTest(TestCase):
         response = self.client.get(url, follow=True)
         self.client.force_login(self.user)
         response = self.client.get(url)
-        redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
+        redirect_to = '%s?next=%s' % (reverse('admin:login'), url)
         self.assertRedirects(response, redirect_to)
 
     def test_invalid_task(self):
@@ -323,8 +323,8 @@ class ReviewEditTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_staff_not_in_group(self):
-        staff = User.objects.create_user(username="TestStaffOther", password="password",
-                                         first_name="Jozko", last_name="Veduci",
+        staff = User.objects.create_user(username='TestStaffOther', password='password',
+                                         first_name='Jozko', last_name='Veduci',
                                          graduation=2014)
         staff.is_staff = True
         staff.save()
@@ -344,7 +344,7 @@ class ReviewEditTest(TestCase):
         self.assertContains(response, self.user.get_full_name())
 
     def test_reviewed(self):
-        comment = "TESTINGcomment"
+        comment = 'TESTINGcomment'
         self.client.force_login(self.staff)
         url = reverse(self.url_name,
                       kwargs={'task_pk': self.task.id, 'submit_pk': self.submit.id})
