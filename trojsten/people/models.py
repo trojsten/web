@@ -2,11 +2,15 @@
 
 from __future__ import unicode_literals
 
+import re
+
 from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils import timezone
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _
 
 from trojsten.schools.models import School
 
@@ -119,6 +123,9 @@ class UserPropertyKey(models.Model):
     """
     key_name = models.CharField(max_length=100,
                                 verbose_name='názov vlastnosti')
+    regex = models.CharField(
+        max_length=100, verbose_name='regulárny výraz pre hodnotu', blank=True, null=True
+    )
 
     def __str__(self):
         return self.key_name
@@ -147,6 +154,12 @@ class UserProperty(models.Model):
         verbose_name = 'dodatočná vlastnosť'
         verbose_name_plural = 'dodatočné vlastnosti'
         unique_together = ('user', 'key')
+
+    def clean(self):
+        if self.key.regex and not re.match(self.key.regex, self.value):
+            raise ValidationError(
+                _('Value "%s" does not match regex "%s".') % (self.value, self.key.regex)
+            )
 
 
 @python_2_unicode_compatible
