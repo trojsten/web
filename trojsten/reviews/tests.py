@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import sys
-import datetime
+from django.utils import timezone
 try:
     from urllib.request import quote, unquote
 except ImportError:
@@ -84,7 +84,7 @@ class ReviewZipFormTests(TestCase):
 
 class ReviewTest(TestCase):
     def setUp(self):
-        year = datetime.datetime.now().year + 2
+        year = timezone.now().year + 2
         self.user = User.objects.create_user(username='TestUser', password='password',
                                              first_name='Jozko', last_name='Mrkvicka',
                                              graduation=year)
@@ -101,14 +101,14 @@ class ReviewTest(TestCase):
         series = Series.objects.create(number=1, name='Test series 1', year=1,
                                        competition=competition)
 
-        start = datetime.datetime.now() + datetime.timedelta(-8)
-        end = datetime.datetime.now() + datetime.timedelta(-4)
+        start = timezone.now() + timezone.timedelta(-8)
+        end = timezone.now() + timezone.timedelta(-4)
         test_round = Round.objects.create(number=1, series=series, solutions_visible=True,
                                           start_time=start, end_time=end, visible=True)
         self.no_submit_task = Task.objects.create(number=1, name='Test task 1', round=test_round)
         self.task = Task.objects.create(number=2, name='Test task 2', round=test_round)
         self.submit = Submit.objects.create(task=self.task, user=self.user, submit_type=1, points=5)
-        self.submit.time = self.task.round.start_time + datetime.timedelta(0, 5)
+        self.submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
         self.submit.save()
 
         self.url_name = 'admin:review_task'
@@ -166,7 +166,7 @@ class ReviewTest(TestCase):
         ]:
             submit = Submit.objects.create(task=self.no_submit_task, user=self.user,
                                            submit_type=s_type, points=5)
-            submit.time = self.no_submit_task.round.start_time + datetime.timedelta(0, 5)
+            submit.time = self.no_submit_task.round.start_time + timezone.timedelta(0, 5)
             submit.save()
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={'task_pk': self.no_submit_task.id})
@@ -197,7 +197,7 @@ class ReviewTest(TestCase):
 
 class DownloadLatestSubmits(TestCase):
     def setUp(self):
-        year = datetime.datetime.now().year + 2
+        year = timezone.now().year + 2
         self.user = User.objects.create_user(username='TestUser', password='password',
                                              first_name='Jozko', last_name='Mrkvicka',
                                              graduation=year)
@@ -270,7 +270,7 @@ class DownloadLatestSubmits(TestCase):
 
 class ReviewEditTest(TestCase):
     def setUp(self):
-        year = datetime.datetime.now().year + 2
+        year = timezone.now().year + 2
         self.user = User.objects.create_user(username='TestUser', password='password',
                                              first_name='Jozko', last_name='Mrkvicka',
                                              graduation=year)
@@ -287,13 +287,13 @@ class ReviewEditTest(TestCase):
         series = Series.objects.create(number=1, name='Test series 1', year=1,
                                        competition=competition)
 
-        start = datetime.datetime.now() + datetime.timedelta(-8)
-        end = datetime.datetime.now() + datetime.timedelta(-4)
+        start = timezone.now() + timezone.timedelta(-8)
+        end = timezone.now() + timezone.timedelta(-4)
         test_round = Round.objects.create(number=1, series=series, solutions_visible=True,
                                           start_time=start, end_time=end, visible=True)
         self.task = Task.objects.create(number=2, name='Test task 2', round=test_round)
         self.submit = Submit.objects.create(task=self.task, user=self.user, submit_type=1, points=5)
-        self.submit.time = self.task.round.start_time + datetime.timedelta(0, 5)
+        self.submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
         self.submit.save()
 
         self.url_name = 'admin:review_edit'
