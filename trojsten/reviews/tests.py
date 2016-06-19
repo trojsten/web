@@ -181,6 +181,10 @@ class ReviewTest(TestCase):
 
     def test_reviewed(self):
         comment = 'TESTINGcomment'
+        multi_line_comment = '''Comment
+        On
+        More
+        Lines'''
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
 
@@ -188,11 +192,18 @@ class ReviewTest(TestCase):
         self.submit.save()
         response = self.client.get(url)
         self.assertNotContains(response, comment)
+        self.assertNotContains(response, multi_line_comment)
 
         self.submit.testing_status = submit_constants.SUBMIT_STATUS_REVIEWED
         self.submit.save()
         response = self.client.get(url)
         self.assertContains(response, comment)
+
+        self.submit.reviewer_comment = multi_line_comment
+        self.submit.save()
+        response = self.client.get(url)
+        self.assertNotContains(response, comment)
+        self.assertContains(response, multi_line_comment)
 
 
 class DownloadLatestSubmits(TestCase):
