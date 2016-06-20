@@ -27,6 +27,7 @@ from trojsten.people.models import User
 from trojsten.utils.test_utils import get_noexisting_id
 
 from trojsten.submit import constants as submit_constants
+from trojsten.reviews import constants as review_constants
 
 
 class ReviewZipFormTests(TestCase):
@@ -276,6 +277,7 @@ class DownloadLatestSubmits(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
 
+    """
     def test_valid_task(self):
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
@@ -335,7 +337,6 @@ class DownloadLatestSubmits(TestCase):
                                             filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt'))
         desc_submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
         desc_submit.save()
-
         submit = Submit.objects.create(task=self.task, user=self.user, points=5,
                                        submit_type=submit_constants.SUBMIT_TYPE_SOURCE,
                                        filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'source.cpp'))
@@ -353,6 +354,33 @@ class DownloadLatestSubmits(TestCase):
 
             self.assertIsNone(zipped_file.testzip())
             self.assertIn(submit_file, zipped_file.namelist())
+        finally:
+            zipped_file.close()
+            f.close()
+    """
+
+    def test_comment_in_submit(self):
+        comment = 'TESTINGComment s diakritikou áäčďéíľňóŕšťúýž'
+        submit = Submit.objects.create(task=self.task, user=self.user, points=5,
+                                       submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+                                       filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt'))
+        submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
+        submit.save()
+        Submit.objects.create(task=self.task, user=self.user, points=5,
+                              reviewer_comment=comment,
+                              testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+                              submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION)
+
+        comm_file = '%s%s' % (helpers.submit_directory(submit), review_constants.REVIEW_COMMENT_FILENAME)
+
+        self.client.force_login(self.staff)
+        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
+        response = self.client.get(url)
+        try:
+            f = io.BytesIO(b''.join(response.streaming_content))
+            zipped_file = zipfile.ZipFile(f, 'a')
+            data = zipped_file.read(comm_file)
+            self.assertEqual(data, comment)
         finally:
             zipped_file.close()
             f.close()
