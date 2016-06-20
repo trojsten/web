@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import sys
+import zipfile
+import io
+from os import path
 from django.utils import timezone
 try:
     from urllib.request import quote, unquote
@@ -12,13 +15,14 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.utils.text import slugify
 
 from trojsten.contests.models import Competition, Round, Series
 from trojsten.submit.models import Submit
 from trojsten.contests.models import Task
 from trojsten.reviews.forms import ZipForm
+from trojsten.reviews import helpers
 from trojsten.people.models import User
 from trojsten.utils.test_utils import get_noexisting_id
 
@@ -206,6 +210,9 @@ class ReviewTest(TestCase):
         self.assertContains(response, multi_line_comment)
 
 
+@override_settings(
+    SUBMIT_PATH=path.join(path.dirname(__file__), 'test_data'),
+)
 class DownloadLatestSubmits(TestCase):
     def setUp(self):
         year = timezone.now().year + 2
@@ -277,6 +284,78 @@ class DownloadLatestSubmits(TestCase):
         self.assertRegexpMatches(
             response['Content-Disposition'], r'filename=.*%s.*' % slugify(self.task.name)
         )
+
+    def test_only_description_submit(self):
+        submit = Submit.objects.create(task=self.task, user=self.user, points=5,
+                                       submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+                                       filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt'))
+        submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
+        submit.save()
+        submit_file = helpers.submit_download_filename(submit)
+
+        self.client.force_login(self.staff)
+        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
+        response = self.client.get(url)
+        try:
+            f = io.BytesIO(b''.join(response.streaming_content))
+            zipped_file = zipfile.ZipFile(f, 'a')
+
+            self.assertIsNone(zipped_file.testzip())
+            self.assertIn(submit_file, zipped_file.namelist())
+        finally:
+            zipped_file.close()
+            f.close()
+
+    def test_only_source_submit(self):
+        submit = Submit.objects.create(task=self.task, user=self.user, points=5,
+                                       submit_type=submit_constants.SUBMIT_TYPE_SOURCE,
+                                       filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'source.cpp'))
+        submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
+        submit.save()
+
+        submit_file = helpers.submit_download_filename(submit)
+
+        self.client.force_login(self.staff)
+        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
+        response = self.client.get(url)
+        try:
+            f = io.BytesIO(b''.join(response.streaming_content))
+            zipped_file = zipfile.ZipFile(f, 'a')
+
+            self.assertIsNone(zipped_file.testzip())
+            # pretoze k nemu nemam description tak nie je co reviewovat
+            self.assertNotIn(submit_file, zipped_file.namelist())
+        finally:
+            zipped_file.close()
+            f.close()
+
+    def test_source_description_submit(self):
+        desc_submit = Submit.objects.create(task=self.task, user=self.user, points=5,
+                                            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+                                            filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt'))
+        desc_submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
+        desc_submit.save()
+
+        submit = Submit.objects.create(task=self.task, user=self.user, points=5,
+                                       submit_type=submit_constants.SUBMIT_TYPE_SOURCE,
+                                       filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'source.cpp'))
+        submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
+        submit.save()
+
+        submit_file = helpers.submit_source_download_filename(submit, desc_submit.id)
+
+        self.client.force_login(self.staff)
+        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
+        response = self.client.get(url)
+        try:
+            f = io.BytesIO(b''.join(response.streaming_content))
+            zipped_file = zipfile.ZipFile(f, 'a')
+
+            self.assertIsNone(zipped_file.testzip())
+            self.assertIn(submit_file, zipped_file.namelist())
+        finally:
+            zipped_file.close()
+            f.close()
 
 
 class ReviewEditTest(TestCase):
