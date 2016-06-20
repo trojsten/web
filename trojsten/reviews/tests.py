@@ -378,7 +378,7 @@ class DownloadLatestSubmits(TestCase):
             f = io.BytesIO(b''.join(response.streaming_content))
             zipped_file = zipfile.ZipFile(f, 'a')
             data = zipped_file.read(comm_file)
-            self.assertEqual(data, comment)
+            self.assertEqual(data.decode('utf-8'), comment)
         finally:
             zipped_file.close()
             f.close()
