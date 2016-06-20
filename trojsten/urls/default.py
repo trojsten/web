@@ -9,13 +9,14 @@ import trojsten.contests.views
 import trojsten.contests.urls
 import trojsten.results.urls
 import trojsten.submit.urls
-import trojsten.views
+import trojsten.login.views
 
 from .common import *
 
 urlpatterns += [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^ucet/', include('ksp_login.urls')),
+    url(r'^ucet/remote_logout', trojsten.login.views.remote_logout, name='remote_account_logout'),
     url(r'^odovzdavanie/', include(trojsten.submit.urls)),
     url(r'^vysledky/', include(trojsten.results.urls)),
     url(r'^novinky/', include(news.urls)),
