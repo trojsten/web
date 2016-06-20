@@ -297,15 +297,13 @@ class DownloadLatestSubmits(TestCase):
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
         response = self.client.get(url)
-        try:
-            f = io.BytesIO(b''.join(response.streaming_content))
-            zipped_file = zipfile.ZipFile(f, 'a')
+        f = io.BytesIO(b''.join(response.streaming_content))
+        zipped_file = zipfile.ZipFile(f, 'a')
 
-            self.assertIsNone(zipped_file.testzip())
-            self.assertIn(submit_file, zipped_file.namelist())
-        finally:
-            zipped_file.close()
-            f.close()
+        self.assertIsNone(zipped_file.testzip())
+        self.assertIn(submit_file, zipped_file.namelist())
+        zipped_file.close()
+        f.close()
 
     def test_only_source_submit(self):
         submit = Submit.objects.create(task=self.task, user=self.user, points=5,
@@ -319,16 +317,14 @@ class DownloadLatestSubmits(TestCase):
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
         response = self.client.get(url)
-        try:
-            f = io.BytesIO(b''.join(response.streaming_content))
-            zipped_file = zipfile.ZipFile(f, 'a')
+        f = io.BytesIO(b''.join(response.streaming_content))
+        zipped_file = zipfile.ZipFile(f, 'a')
 
-            self.assertIsNone(zipped_file.testzip())
-            # pretoze k nemu nemam description tak nie je co reviewovat
-            self.assertNotIn(submit_file, zipped_file.namelist())
-        finally:
-            zipped_file.close()
-            f.close()
+        self.assertIsNone(zipped_file.testzip())
+        # pretoze k nemu nemam description tak nie je co reviewovat
+        self.assertNotIn(submit_file, zipped_file.namelist())
+        zipped_file.close()
+        f.close()
 
     def test_source_description_submit(self):
         desc_submit = Submit.objects.create(task=self.task, user=self.user, points=5,
@@ -347,15 +343,13 @@ class DownloadLatestSubmits(TestCase):
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
         response = self.client.get(url)
-        try:
-            f = io.BytesIO(b''.join(response.streaming_content))
-            zipped_file = zipfile.ZipFile(f, 'a')
+        f = io.BytesIO(b''.join(response.streaming_content))
+        zipped_file = zipfile.ZipFile(f, 'a')
 
-            self.assertIsNone(zipped_file.testzip())
-            self.assertIn(submit_file, zipped_file.namelist())
-        finally:
-            zipped_file.close()
-            f.close()
+        self.assertIsNone(zipped_file.testzip())
+        self.assertIn(submit_file, zipped_file.namelist())
+        zipped_file.close()
+        f.close()
 
     def test_comment_in_submit(self):
         comment = 'TESTINGComment s diakritikou áäčďéíľňóŕšťúýž'
@@ -374,14 +368,12 @@ class DownloadLatestSubmits(TestCase):
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
         response = self.client.get(url)
-        try:
-            f = io.BytesIO(b''.join(response.streaming_content))
-            zipped_file = zipfile.ZipFile(f, 'a')
-            data = zipped_file.read(comm_file)
-            self.assertEqual(data.decode('utf-8'), comment)
-        finally:
-            zipped_file.close()
-            f.close()
+        f = io.BytesIO(b''.join(response.streaming_content))
+        zipped_file = zipfile.ZipFile(f, 'a')
+        data = zipped_file.read(comm_file)
+        self.assertEqual(data.decode('utf-8'), comment)
+        zipped_file.close()
+        f.close()
 
 
 class ReviewEditTest(TestCase):
