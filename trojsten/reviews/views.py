@@ -161,7 +161,7 @@ def download_latest_submits(request, task_pk):
                 zipper.writestr(submit_directory(submit) + REVIEW_POINTS_FILENAME,
                                 last_review_points)
                 zipper.writestr(submit_directory(submit) + REVIEW_COMMENT_FILENAME,
-                                last_review_comment)
+                                last_review_comment.encode('utf-8'))
 
             if 'sources' in user:
                 for submit in user['sources']:
