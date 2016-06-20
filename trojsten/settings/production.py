@@ -12,7 +12,7 @@ def requiredenv(name):
 
 DEBUG = False
 
-SENDFILE_BACKEND = 'sendfile.backends.xsendfile'
+SENDFILE_BACKEND = 'sendfile.backends.xsendfile' if os.environ.get('TRAVIS', '') != 'true' else 'sendfile.backends.development'
 
 # Top secret keys for production settings
 SOCIAL_AUTH_FACEBOOK_KEY = requiredenv('TROJSTENWEB_FACEBOOK_KEY')
