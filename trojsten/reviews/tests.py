@@ -277,7 +277,6 @@ class DownloadLatestSubmits(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
 
-    """
     def test_valid_task(self):
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
@@ -357,7 +356,6 @@ class DownloadLatestSubmits(TestCase):
         finally:
             zipped_file.close()
             f.close()
-    """
 
     def test_comment_in_submit(self):
         comment = 'TESTINGComment s diakritikou áäčďéíľňóŕšťúýž'
