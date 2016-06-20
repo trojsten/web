@@ -361,6 +361,7 @@ MARKDOWN_EXTENSIONS_CONFIGS = {
     'pymdownx.github': {
         'no_nl2br': True,
     }
+}
 
 MARKDOWN_SETTINGS = {
     'safe_mode': False,
