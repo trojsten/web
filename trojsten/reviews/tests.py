@@ -352,7 +352,7 @@ class DownloadLatestSubmits(TestCase):
         f.close()
 
     def test_comment_in_submit(self):
-        comment = 'TESTINGComment s diakritikou áäčďéíľňóŕšťúýž'
+        comment = '''TESTINGComment\ns diakritikou áäčďéíľňóŕšťúýž'''
         submit = Submit.objects.create(task=self.task, user=self.user, points=5,
                                        submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
                                        filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt'))
