@@ -394,7 +394,7 @@ class DownloadLatestSubmits(TestCase):
         f = io.BytesIO(b''.join(response.streaming_content))
         zipped_file = zipfile.ZipFile(f, 'a')
         data = zipped_file.read(points_file)
-        self.assertEqual(data, str(points))
+        self.assertEqual(int(data), points)
         zipped_file.close()
         f.close()
 
