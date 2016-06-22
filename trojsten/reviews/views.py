@@ -14,7 +14,8 @@ from sendfile import sendfile
 
 from trojsten.reviews.constants import (RE_FILENAME, RE_SUBMIT_PK,
                                         REVIEW_COMMENT_FILENAME,
-                                        REVIEW_POINTS_FILENAME)
+                                        REVIEW_POINTS_FILENAME,
+                                        REVIEW_ERRORS_FILENAME)
 from trojsten.reviews.forms import (ReviewForm, UploadZipForm,
                                     get_zip_form_set, reviews_upload_pattern)
 from trojsten.reviews.helpers import (get_latest_submits_for_task,
@@ -175,7 +176,7 @@ def download_latest_submits(request, task_pk):
                         zipper.write(submit.protocol_path, submit_protocol_download_filename(submit, description_submit_id))
 
         if errors:
-            zipper.writestr("errors.txt", u"\n".join(errors).encode('utf8'))
+            zipper.writestr(REVIEW_ERRORS_FILENAME, u"\n".join(errors).encode('utf8'))
 
     return sendfile(request, path, attachment=True)
 
