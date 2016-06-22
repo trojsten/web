@@ -522,7 +522,7 @@ class ReviewEditTest(TestCase):
         self.assertContains(response, self.user.get_full_name())
 
     def test_reviewed(self):
-        comment = 'TESTINGcomment'
+        comment = '''TESTINGComment s diakritikou áäčďéíľňóŕšťúýž'''
         self.client.force_login(self.staff)
         url = reverse(self.url_name,
                       kwargs={'task_pk': self.task.id, 'submit_pk': self.submit.id})
@@ -534,3 +534,10 @@ class ReviewEditTest(TestCase):
         self.submit.save()
         response = self.client.get(url)
         self.assertContains(response, comment)
+
+        multi_line_comment = 'Comment\nOn\nMore\nLines'
+
+        self.submit.reviewer_comment = multi_line_comment
+        self.submit.save()
+        response = self.client.get(url)
+        self.assertContains(response, multi_line_comment)
