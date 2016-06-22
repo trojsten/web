@@ -4,6 +4,7 @@
 import json
 import os
 import xml.etree.ElementTree as ET
+import six
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -224,7 +225,7 @@ def poll_submit_info(request, submit_id):
         raise PermissionDenied()
     return HttpResponse(json.dumps({
         'tested': submit.tested,
-        'response_verbose': unicode(submit.tester_response_verbose),
+        'response_verbose': six.text_type(submit.tester_response_verbose),
         'response': submit.tester_response,
         'points': float(submit.points),
         'class': submitclass(submit),
