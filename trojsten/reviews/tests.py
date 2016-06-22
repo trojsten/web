@@ -411,8 +411,8 @@ class DownloadLatestSubmits(TestCase):
         f = io.BytesIO(b''.join(response.streaming_content))
         zipped_file = zipfile.ZipFile(f, 'a')
 
-        data = zipped_file.read('errors.txt')
-        self.assertIn(self.user.get_full_name(), data)
+        data = zipped_file.read(review_constants.REVIEW_ERRORS_FILENAME)
+        self.assertIn(self.user.get_full_name(), data.decode('utf-8'))
 
         zipped_file.close()
         f.close()
@@ -436,9 +436,7 @@ class DownloadLatestSubmits(TestCase):
         zipped_file = zipfile.ZipFile(f, 'a')
 
         data = zipped_file.read(review_constants.REVIEW_ERRORS_FILENAME)
-        self.assertIn(self.user.get_full_name(), data)
-        self.assertIn('source', data)
-        self.assertIn('file', data)
+        self.assertIn(self.user.get_full_name(), data.decode('utf-8'))
 
         zipped_file.close()
         f.close()
