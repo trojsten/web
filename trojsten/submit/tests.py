@@ -10,6 +10,7 @@ from django.contrib.auth.models import Group
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.sites.models import Site
 from trojsten.utils.test_utils import get_noexisting_id
@@ -376,7 +377,7 @@ class JsonSubmitTest(TestCase):
         response = self.client.get(url)
         json_response = json.loads(response.content.decode('utf-8'))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual("Wrong answer", json_response['response_verbose'])
+        self.assertEqual(_('Wrong answer'), json_response['response_verbose'])
 
 
 class JsonProtokolTest(TestCase):
