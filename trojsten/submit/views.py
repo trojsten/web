@@ -4,6 +4,7 @@
 import json
 import os
 import xml.etree.ElementTree as ET
+import six
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
