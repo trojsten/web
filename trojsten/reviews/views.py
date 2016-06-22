@@ -176,7 +176,7 @@ def download_latest_submits(request, task_pk):
                         zipper.write(submit.protocol_path, submit_protocol_download_filename(submit, description_submit_id))
 
         if errors:
-            zipper.writestr(REVIEW_ERRORS_FILENAME, u"\n".join(errors).encode('utf8'))
+            zipper.writestr(REVIEW_ERRORS_FILENAME, u'\n'.join(errors).encode('utf8'))
 
     return sendfile(request, path, attachment=True)
 
@@ -202,7 +202,7 @@ def zip_upload(request, task_pk):
     with archive:
         filelist = archive.namelist()
 
-        users = [("None", _('Ignore'))] + get_user_as_choices(task)
+        users = [('None', _('Ignore'))] + get_user_as_choices(task)
         initial = [{'filename': file} for file in filelist]
         user_data = defaultdict(dict)
 
@@ -245,7 +245,7 @@ def zip_upload(request, task_pk):
             messages.add_message(
                 request,
                 messages.SUCCESS,
-                _("Successfully finished reviewing this task!")
+                _('Successfully finished reviewing this task!')
             )
             return redirect('admin:review_task', task.pk)
     else:
