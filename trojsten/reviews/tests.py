@@ -375,6 +375,74 @@ class DownloadLatestSubmits(TestCase):
         zipped_file.close()
         f.close()
 
+    def test_points_in_submit(self):
+        points = 47
+        submit = Submit.objects.create(task=self.task, user=self.user, points=0,
+                                       submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+                                       filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt'))
+        submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
+        submit.save()
+        Submit.objects.create(task=self.task, user=self.user, points=points,
+                              testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+                              submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION)
+
+        points_file = '%s%s' % (helpers.submit_directory(submit), review_constants.REVIEW_POINTS_FILENAME)
+
+        self.client.force_login(self.staff)
+        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
+        response = self.client.get(url)
+        f = io.BytesIO(b''.join(response.streaming_content))
+        zipped_file = zipfile.ZipFile(f, 'a')
+        data = zipped_file.read(points_file)
+        self.assertEqual(data, str(points))
+        zipped_file.close()
+        f.close()
+
+    def test_description_without_file(self):
+        submit = Submit.objects.create(task=self.task, user=self.user, points=5,
+                                       submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+                                       filepath='')
+        submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
+        submit.save()
+
+        self.client.force_login(self.staff)
+        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
+        response = self.client.get(url)
+        f = io.BytesIO(b''.join(response.streaming_content))
+        zipped_file = zipfile.ZipFile(f, 'a')
+
+        data = zipped_file.read('errors.txt')
+        self.assertIn(self.user.get_full_name(), data)
+
+        zipped_file.close()
+        f.close()
+
+    def test_source_description_without_files(self):
+        desc_submit = Submit.objects.create(task=self.task, user=self.user, points=5,
+                                            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+                                            filepath='')
+        desc_submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
+        desc_submit.save()
+        submit = Submit.objects.create(task=self.task, user=self.user, points=5,
+                                       submit_type=submit_constants.SUBMIT_TYPE_SOURCE,
+                                       filepath='')
+        submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
+        submit.save()
+
+        self.client.force_login(self.staff)
+        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
+        response = self.client.get(url)
+        f = io.BytesIO(b''.join(response.streaming_content))
+        zipped_file = zipfile.ZipFile(f, 'a')
+
+        data = zipped_file.read('errors.txt')
+        self.assertIn(self.user.get_full_name(), data)
+        self.assertIn('source', data)
+        self.assertIn('file', data)
+
+        zipped_file.close()
+        f.close()
+
 
 class ReviewEditTest(TestCase):
     def setUp(self):
