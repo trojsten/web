@@ -368,6 +368,16 @@ class JsonSubmitTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.submit.tester_response, json_response['response_verbose'])
 
+    def test_wa_response(self):
+        self.submit.tester_response = 'WA'
+        self.submit.save()
+        url = reverse('poll_submit_info', kwargs={'submit_id': self.submit.id})
+        self.client.force_login(self.non_staff_user)
+        response = self.client.get(url)
+        json_response = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual("Wrong answer", json_response['response_verbose'])
+
 
 class JsonProtokolTest(TestCase):
 
