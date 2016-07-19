@@ -19,7 +19,6 @@ class TrojstenOAuth2(BaseOAuth2):
         fullname, first_name, last_name = self.get_user_names(
             response.get('display_name')
         )
-        print(response)
         return {
             'id': str(response.get('id')),
             'username': str(response.get('username')),
@@ -35,4 +34,3 @@ class TrojstenOAuth2(BaseOAuth2):
             self.USER_DATA_URL,
             headers={'Authorization': 'Bearer {0}'.format(access_token)}
         )
-
