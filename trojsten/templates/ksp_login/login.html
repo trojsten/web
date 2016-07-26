@@ -1,5 +1,5 @@
 {% extends "ksp_login/base.html" %}
-{% load i18n %}
+{% load i18n sekizai_tags %}
 
 {% block ksp_login_title %}{% trans "Log in" %}{% endblock ksp_login_title %}
 
@@ -9,4 +9,13 @@
 
 {% block ksp_login_content %}
   {% include "ksp_login/parts/login_full_contents.html" %}
+  {% if SITE.is_login_provider %}
+    {% addtoblock "js" %}
+      <script type="text/javascript">
+        $(function() {
+          $("#auto_login_form").submit();
+        });
+      </script>
+    {% endaddtoblock %}
+  {% endif %}
 {% endblock ksp_login_content %}

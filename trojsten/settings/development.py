@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from trojsten.settings.common import *
 
+
 DEBUG = True
 SUBMIT_DEBUG = True
 SENDFILE_BACKEND = 'sendfile.backends.development'
@@ -72,3 +73,15 @@ LOGGING = {
         },
     }
 }
+
+TROJSTEN_LOGIN_PROVIDER_URL = env(
+    'TROJSTENWEB_LOGIN_PROVIDER_URL',
+    'http://localhost:8047',
+)
+
+SOCIAL_AUTH_TROJSTEN_KEY = env('TROJSTENWEB_LOGIN_KEY', '2uDyDhLKULKxzDyrpwabt0TLWsc2Weq9GaNUfwWD')
+SOCIAL_AUTH_TROJSTEN_SECRET = env(
+    'TROJSTENWEB_LOGIN_SECRET',
+    '8osYrtZPMAMaWBmc3KePnyJ87euqrrcXZHbKPVbnLTWoR8MLCmNT1bqhIOsJbn6NK0WkQA19jePbyw7iGtdQ05Q1rbXja'
+    'EaRtfDI9OHDlBVfd9CUM7Ve0lxdXjhI3Ldj'
+)

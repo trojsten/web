@@ -57,6 +57,7 @@ PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
 )
 
 AUTH_USER_MODEL = 'people.User'
+
 DEBUG = bool(env('TROJSTENWEB_DEBUG', 'False'))
 
 if 'TROJSTENWEB_ADMINS' in os.environ:
@@ -170,6 +171,13 @@ TEMPLATES = [
     },
 ]
 
+CORS_ORIGIN_REGEX_WHITELIST = (
+    '^(https?://)?(\w+\.)*ksp\.sk$',
+    '^(https?://)?(\w+\.)*fks\.sk$',
+    '^(https?://)?(\w+\.)*kms\.sk$',
+    '^(https?://)?(\w+\.)*trojsten\.sk$',
+)
+
 MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -224,6 +232,7 @@ INSTALLED_APPS = (
     'import_export',
     'oauth2_provider',
     'corsheaders',
+    'rest_framework',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
@@ -290,27 +299,41 @@ MESSAGE_TAGS = {
 LOGIN_URL = "/ucet/login/"
 LOGIN_ERROR_URL = "/ucet/login/"
 LOGIN_REDIRECT_URL = "/ucet/"
+TROJSTEN_LOGIN_PROVIDER_URL = env(
+    'TROJSTENWEB_LOGIN_PROVIDER_URL',
+    'https://login.trojsten.sk',
+)
 
 #
 # Included packages settings
 #
 FAVICON_PATH = STATIC_URL + 'images/favicon.ico'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.ext.rest_framework.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
+
 # KSP-Login settings
-# The list of authentication backends we want to allow.
-AUTHENTICATION_BACKENDS = tuple(env('TROJSTENWEB_AUTHENTICATION_BACKENDS', ';'.join((
-    'social.backends.google.GoogleOpenId',
-    'ksp_login.backends.LaunchpadAuth',
-    'social.backends.open_id.OpenIdAuth',
+# The list of authentication providers we want to allow.
+LOGIN_PROVIDERS = (
+    'trojsten.login.backends.TrojstenOAuth2',
+)
+
+AUTHENTICATION_BACKENDS = LOGIN_PROVIDERS + (
     'django.contrib.auth.backends.ModelBackend',
-))).split(';'))
+)
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
     'social.pipeline.social_auth.social_uid',
     'social.pipeline.social_auth.auth_allowed',
     'social.pipeline.social_auth.social_user',
-    'ksp_login.pipeline.register_user',
+    'trojsten.login.pipeline.associate_by_uid',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
 )
@@ -319,6 +342,12 @@ PROVIDER_OVERRIDE_DICT = json.loads(env('TROJSTENWEB_AUTHENTICATION_PROVIDER_OVE
 
 # The number of authentication providers to show in the short list.
 AUTHENTICATION_PROVIDERS_BRIEF = int(env('TROJSTENWEB_AUTHENTICATION_PROVIDERS_BRIEF', '3'))
+
+# @TODO: nadefinovat vhodne scopy
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+}
 
 # Common markdown settings
 MARKDOWN_EXTENSIONS = [

@@ -30,39 +30,51 @@
       </li>
       <li role="presentation" class="divider"></li>
       <li role="presentation">
-        <a role="menuitem" tabindex="-1" href="{% url "account_logout" %}?next={% ksp_login_next %}">
+
+        <a role="menuitem" tabindex="-1" href="{% if SITE.is_login_provider %}{% url "account_logout" %}
+        {% else %}{% url "remote_account_logout" %}{%  endif %}?next={% ksp_login_next %}">
           <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
           {% trans "Log out" %}</a>
       </li>
     </ul>
   {% else %}
-    <p class="dropdown-toggle btn btn-primary navbar-btn" id="login-dropdown" data-toggle="dropdown">
-      {% trans "Log in" %}
-      <span class="caret"></span>
-    </p>
-    <ul class="dropdown-menu ksp_login_provider_list" role="menu" aria-labelledby="login-dropdown"
-        id="account_links">
-      {% for provider in login_providers_short %}
-      <li role="presentation" class="provider_{% if provider.required_field %}with_input{% else %}simple{% endif %}">
-        <a href="#">
-          <img src="{{ STATIC_URL }}ksp_login/img/{{ provider.name }}.png" title="{{ provider.name }}" alt="{{ provider.name }}" />
-          {{ provider.name | provider_name }}
-        </a>
-        <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline">
-          {% csrf_token %}
-          {% if provider.required_field %}
-            <input class="form-control input-sm col-md-3" type="text" name="{{ provider.required_field }}" placeholder="{{ provider.required_field_verbose }}" />
-          {% endif %}
-          <input type="hidden" name="next" value="{% ksp_login_next %}" />
-          <input class="btn btn-default btn-sm" type="submit" value="{% trans "Log in" %}" />
-        </form>
-      </li>
-      {% endfor %}
-      <li role="presentation" class="divider"></li>
-      <li role="presentation">
-        <a class="ksp_login_more" href="{% url "account_login" %}?next={% ksp_login_next %}"><span class="glyphicon glyphicon-log-in"></span> {% trans "More login options" %}</a>
-      </li>
-    </ul>
+    {% if SITE.is_login_provider %}
+      <p class="dropdown-toggle btn btn-primary navbar-btn" id="login-dropdown" data-toggle="dropdown">
+        {% trans "Log in" %}
+        <span class="caret"></span>
+      </p>
+      <ul class="dropdown-menu ksp_login_provider_list" role="menu" aria-labelledby="login-dropdown"
+          id="account_links">
+        {% for provider in login_providers_short %}
+        <li role="presentation" class="provider_{% if provider.required_field %}with_input{% else %}simple{% endif %}">
+          <a href="#">
+            <img src="{{ STATIC_URL }}ksp_login/img/{{ provider.name }}.png" title="{{ provider.name }}" alt="{{ provider.name }}" />
+            {{ provider.name | provider_name }}
+          </a>
+          <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline">
+            {% csrf_token %}
+            {% if provider.required_field %}
+              <input class="form-control input-sm col-md-3" type="text" name="{{ provider.required_field }}" placeholder="{{ provider.required_field_verbose }}" />
+            {% endif %}
+            <input type="hidden" name="next" value="{% ksp_login_next %}" />
+            <input class="btn btn-default btn-sm" type="submit" value="{% trans "Log in" %}" />
+          </form>
+        </li>
+        {% endfor %}
+        <li role="presentation" class="divider"></li>
+        <li role="presentation">
+          <a class="ksp_login_more" href="{% url "account_login" %}?next={% ksp_login_next %}"><span class="glyphicon glyphicon-log-in"></span> {% trans "More login options" %}</a>
+        </li>
+      </ul>
+    {% else %}
+    {% with login_providers.0 as provider %}
+      <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% ksp_login_next %}" />
+        <input class="btn btn-primary navbar-btn" id="login-dropdown" type="submit" value="{% trans "Log in" %}" />
+      </form>
+    {% endwith %}
+    {% endif %}
   {% endif %}
 </li>
 </ul>

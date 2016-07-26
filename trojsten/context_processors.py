@@ -9,6 +9,7 @@ def current_site(request):
         'OTHER_SITES': [settings.SITES[k] for k in settings.NAVBAR_SITES],
     }
 
+
 def version_string(request):
     return {
         'VERSION': version.version_string,

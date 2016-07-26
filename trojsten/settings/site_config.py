@@ -6,14 +6,20 @@ class BaseSite(object):
     name = None
     short_name = None
     url = None
+    autologin = False
+
+
+class InternalSite(BaseSite):
     has_logo = False
-    folder = None
-    theme_color = None
-    facebook_page = None
-    googleplus_page = None
+    is_login_provider = False
+    folder = 'trojsten'
+    theme_color = '#0089a2'
+    autologin = True
+    facebook_page = 'https://www.facebook.com/Trojsten'
+    googleplus_page = 'http://trojsten.sk'
 
 
-class KSPSite(BaseSite):
+class KSPSite(InternalSite):
     name = 'Korešpondenčný seminár z programovania'
     short_name = 'KSP'
     url = 'http://ksp.sk'
@@ -34,7 +40,7 @@ class PraskSite(KSPSite):
     googleplus_page = 'https://prask.ksp.sk'
 
 
-class FKSSite(BaseSite):
+class FKSSite(InternalSite):
     name = 'Fyzikálny korešpondenčný seminár'
     short_name = 'FKS'
     url = 'http://fks.sk'
@@ -84,19 +90,18 @@ class TrojstenSite(BaseSite):
     theme_color = '#0089a2'
 
 
-class LoginSite(TrojstenSite):
+class LoginSite(InternalSite):
     name = 'Trojsten Login'
     short_name = 'Login'
     url = 'http://login.trojsten.sk'
+    is_login_provider = True
 
 
-class WikiSite(TrojstenSite):
+class WikiSite(InternalSite):
     name = 'Trojstenová Wikipédia'
     short_name = 'Wiki'
     url = 'http://wiki.trojsten.sk'
     folder = 'wiki'
-    facebook_page = 'https://www.facebook.com/Trojsten'
-    googleplus_page = 'http://trojsten.sk'
 
 
 class IKSSite(BaseSite):

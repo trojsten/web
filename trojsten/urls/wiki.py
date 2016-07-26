@@ -1,11 +1,15 @@
 from __future__ import absolute_import
 
+from django.conf.urls import include, url
+from django.contrib import admin
+
+
 from django_nyt.urls import get_pattern as get_notify_pattern
 from wiki.urls import get_pattern as get_wiki_pattern
 
-from .common import *
+from .common import urlpatterns as common_urlpatterns
 
-urlpatterns += [
+urlpatterns = common_urlpatterns + [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^ucet/', include('ksp_login.urls')),
     url(r'^nahlasit-problem/', include('contact_form.urls')),

@@ -15,7 +15,7 @@ except ImportError:
 try:
     from urllib2 import quote
 except ImportError:
-    from urllib import quote
+    from urllib.parse import quote
 
 
 @login_required

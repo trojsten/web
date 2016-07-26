@@ -1,8 +1,11 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
-from oauth2_provider.views.generic import ProtectedResourceView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
+from trojsten.login.backends import TrojstenOAuth2
+from trojsten.login.serializers import UserSerializer
 from trojsten.utils.utils import json_response
 
 try:
@@ -11,14 +14,11 @@ except ImportError:
     from urllib import parse as urlparse
 
 
-class CurrentUserInfo(ProtectedResourceView):
-    def get(self, request, *args, **kwargs):
-        user = request.user
-        user_info = {
-            'uid': user.id,
-            'username': user.username,
-        }
-        return JsonResponse(user_info)
+@api_view(['GET'])
+def get_current_user_info(request):
+    user = request.user
+    serializer = UserSerializer(user)
+    return Response(serializer.data)
 
 
 @json_response
@@ -31,10 +31,14 @@ def _autologin_urls():
 
 
 def autologin_urls(request):
-    url_suffix = reverse('account_login')
-    return JsonResponse({ 'urls': list(urlparse.urljoin(url, url_suffix) for url in _autologin_urls())})
+    url_suffix = reverse('social:begin', args=[TrojstenOAuth2.name])
+    return JsonResponse({
+        'urls': list(urlparse.urljoin(url, url_suffix) for url in _autologin_urls())
+    })
 
 
 def autologout_urls(request):
     url_suffix = reverse('account_logout')
-    return JsonResponse({'urls': list(urlparse.urljoin(url, url_suffix) for url in _autologin_urls())})
+    return JsonResponse({
+        'urls': list(urlparse.urljoin(url, url_suffix) for url in _autologin_urls())
+    })

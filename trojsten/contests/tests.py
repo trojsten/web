@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from os import path
@@ -227,13 +226,11 @@ class TaskListTests(TestCase):
         self.client.force_login(self.nonstaff_user)
         response = self.client.get(self.invisible_round_url)
         self.assertEqual(response.status_code, 404)
-        self.client.logout()
 
     def test_staff_invisible_round(self):
         self.client.force_login(self.staff_user)
         response = self.client.get(self.invisible_round_url)
         self.assertEqual(response.status_code, 200)
-        self.client.logout()
 
     def test_no_tasks(self):
         response = self.client.get(self.url)
@@ -300,7 +297,6 @@ class TaskAndSolutionStatementsTests(TestCase):
         url = reverse('solution_statement', kwargs={'task_id': task.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
-        self.client.logout()
 
     def test_staff_invisible_round(self):
         self.client.force_login(self.staff_user)
@@ -311,7 +307,6 @@ class TaskAndSolutionStatementsTests(TestCase):
         url = reverse('solution_statement', kwargs={'task_id': task.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.client.logout()
 
     def test_statement(self):
         response = self.client.get(self.task_url)
@@ -438,7 +433,6 @@ class PdfDownloadTests(TestCase):
         url = reverse('view_pdf', kwargs={'round_id': round.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
-        self.client.logout()
 
     def test_nostaff_invisible_solution_pdf(self):
         self.client.force_login(self.nonstaff_user)
@@ -448,7 +442,6 @@ class PdfDownloadTests(TestCase):
         url = reverse('view_solutions_pdf', kwargs={'round_id': round.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
-        self.client.logout()
 
     def test_staff_invisible_task_pdf(self):
         self.client.force_login(self.staff_user)
@@ -458,7 +451,6 @@ class PdfDownloadTests(TestCase):
         url = reverse('view_pdf', kwargs={'round_id': round.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.client.logout()
 
     def test_staff_invisible_solution_pdf(self):
         self.client.force_login(self.staff_user)
@@ -468,4 +460,3 @@ class PdfDownloadTests(TestCase):
         url = reverse('view_solutions_pdf', kwargs={'round_id': round.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.client.logout()
