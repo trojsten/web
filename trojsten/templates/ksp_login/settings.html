@@ -47,7 +47,7 @@
     {% else %}
         {% url "trojsten_account_settings" as settings_url %}
         {% blocktrans %}
-            You can change the login settings <a href="{{ TROJSTEN_LOGIN_PROVIDER_URL + settings_url }}">on separate page</a>.
+            You can change the login settings <a href="{{ TROJSTEN_LOGIN_PROVIDER_URL }}{{ settings_url }}">on separate page</a>.
         {% endblocktrans %}
     {% endif %}
 
