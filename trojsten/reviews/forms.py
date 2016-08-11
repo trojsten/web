@@ -134,7 +134,10 @@ class ZipForm(forms.Form):
     filename = forms.CharField(widget=HiddenInput())
     user = forms.ChoiceField(widget=Select2)
     points = forms.IntegerField(min_value=0, required=False)
-    comment = forms.CharField(required=False)
+    comment = forms.CharField(
+        widget=forms.widgets.Textarea(attrs={'rows':1, 'cols':30}),
+        required=False
+    )
 
     def __init__(self, data=None, *args, **kwargs):
         choices = kwargs.pop('choices')
