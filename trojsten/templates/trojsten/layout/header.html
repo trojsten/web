@@ -22,6 +22,18 @@
       <div class="hidden-xs">
         {% include "trojsten/layout/social-buttons.html" %}
       </div>
+      <div>
+        <form class="navbar-form navbar-right" id="wiki-search-form" method="GET" action="{% url 'wiki:search' %}">
+            <div class="input-group">
+              <input type="search" class="form-control search-query" name="q" placeholder="Search..."/>
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">
+                  <span class="fa fa-search"></span>
+                </button>
+              </span>
+            </div><!-- /input-group -->
+          </form>
+      </div>
     </div><!-- /.navbar-collapse -->
   </div>
 </nav>
