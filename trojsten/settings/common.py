@@ -400,6 +400,9 @@ WIKI_ATTACHMENTS_PATH = env(
 WIKI_ATTACHMENTS_EXTENSIONS = ['pdf', 'doc', 'odt', 'docx', 'txt', 'jpg', 'png', 'gif']
 WIKI_CHECK_SLUG_URL_AVAILABLE = False
 
+WIKI_SEARCH_VIEW = 'trojsten.views.WikiSearchView'
+
+
 # Celery settings
 #: Only add pickle to this list if your broker is secured
 #: from unwanted access (see userguide/security.html)
