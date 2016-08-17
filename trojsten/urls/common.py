@@ -46,3 +46,8 @@ if settings.DEBUG:
         }),
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
+
+#Url for haystack elasticsearch
+urlpatterns += [
+    url(r'^search/', include('haystack.urls')),
+]

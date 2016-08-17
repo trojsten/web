@@ -246,6 +246,7 @@ INSTALLED_APPS = (
     'wiki.plugins.macros',
     'taggit',
     'kombu.transport.django',
+    'haystack',
 
     # django-fluent-comments and its dependencies
     'fluent_comments',
@@ -402,6 +403,62 @@ WIKI_CHECK_SLUG_URL_AVAILABLE = False
 
 WIKI_SEARCH_VIEW = 'trojsten.views.WikiSearchView'
 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'trojsten.search.haystack_custom_backend.AsciifoldingElasticSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'haystack',
+    },
+}
+
+ELASTICSEARCH_INDEX_SETTINGS = {
+    'settings': {
+        "analysis": {
+            "analyzer": {
+                "ascii_analyser": {
+                    "tokenizer": "standard",
+                    "filter": ["standard", "asciifolding", "lowercase"]
+                },
+                "ngram_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "lowercase",
+                    "filter": ["haystack_ngram", "asciifolding"]
+                },
+                "edgengram_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "lowercase",
+                    "filter": ["haystack_edgengram", "asciifolding"]
+                }
+            },
+            "tokenizer": {
+                "haystack_ngram_tokenizer": {
+                    "type": "nGram",
+                    "min_gram": 3,
+                    "max_gram": 15,
+                },
+                "haystack_edgengram_tokenizer": {
+                    "type": "edgeNGram",
+                    "min_gram": 2,
+                    "max_gram": 15,
+                    "side": "front"
+                }
+            },
+            "filter": {
+                "haystack_ngram": {
+                    "type": "nGram",
+                    "min_gram": 3,
+                    "max_gram": 15
+                },
+                "haystack_edgengram": {
+                    "type": "edgeNGram",
+                    "min_gram": 2,
+                    "max_gram": 15
+                }
+            }
+        }
+    }
+}
+ELASTICSEARCH_DEFAULT_ANALYZER = "snowball"
 
 # Celery settings
 #: Only add pickle to this list if your broker is secured

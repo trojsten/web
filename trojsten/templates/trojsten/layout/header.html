@@ -24,7 +24,7 @@
       </div>
       {%if SITE.short_name = 'Wiki' %}
         <div>
-          <form class="navbar-form navbar-right" id="wiki-search-form" method="GET" action="{% url 'wiki:search' %}">
+          <form class="navbar-form navbar-right" id="wiki-search-form" type="GET" action="/search/">
             <div class="input-group">
               <input type="search" class="form-control search-query" name="q" placeholder="Search..."/>
                 <span class="input-group-btn">

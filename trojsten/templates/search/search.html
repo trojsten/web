@@ -1,0 +1,70 @@
+{% extends "wiki/base.html" %}
+{% load wiki_tags i18n humanize %}
+
+
+{% block wiki_pagetitle %}{% trans "Search results for:" %} {{ query }}{% endblock %}
+
+{% block wiki_contents %}
+
+<h1 class="page-header">{% trans "Search results for:" %} {{ query }}</h1>
+
+<form class="form-search directory-toolbar">
+    <p class="lead">
+    <div class="pull-right">
+        <div class="input-group">
+            <input type="search" class="form-control search-query" name="q" value="{{ query }}"/>
+            <span class="input-group-btn">
+        <button class="btn btn-default" type="button">
+          <span class="fa fa-search"></span>
+        </button>
+      </span>
+        </div>
+    </div>
+    <p>{% blocktrans with paginator.object_list.count as cnt %}Your search returned <strong>{{ cnt }}</strong>
+        results.{% endblocktrans %}</p>
+    <div class="clearfix"></div>
+    </p>
+</form>
+
+<table class="table table-striped">
+    <tr>
+        <th style="width: 75%">{% trans "Title" %}</th>
+        <th>{% trans "Last modified" %}</th>
+    </tr>
+    {% for result in page.object_list %}
+    <tr>
+        <td>
+            {% for urlpath in result.object.urlpath_set.all %}
+            <a href="{% url 'wiki:get' path=urlpath.path %}">{{ result.object.current_revision.title }}<br/>
+                <small class="muted">/{{ urlpath.path }}</small>
+            </a>
+            {% empty %}
+            <a href="{% url 'wiki:get' article_id=article.id %}">{{ result.object.current_revision.title }}</a>
+            {% endfor %}
+            {% if result.object.current_revision.deleted %}
+            <span class="fa fa-trash"></span>
+            {% endif %}
+            {% if result.object.current_revision.locked %}
+            <span class="fa fa-lock"></span>
+            {% endif %}
+            <p class="muted">
+                <small>{{ result.object.current_revision.content|get_content_snippet:query }}</small>
+            </p>
+        </td>
+        <td style="white-space: nowrap">
+            {{ result.object.current_revision.created|naturaltime }}
+        </td>
+    </tr>
+    {% empty%}
+    <tr>
+        <td colspan="100">
+            <em>{% trans "There are no articles in this level" %}</em>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% include "wiki/includes/pagination.html" %}
+
+{% endblock %}
+
