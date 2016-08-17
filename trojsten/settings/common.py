@@ -401,8 +401,6 @@ WIKI_ATTACHMENTS_PATH = env(
 WIKI_ATTACHMENTS_EXTENSIONS = ['pdf', 'doc', 'odt', 'docx', 'txt', 'jpg', 'png', 'gif']
 WIKI_CHECK_SLUG_URL_AVAILABLE = False
 
-WIKI_SEARCH_VIEW = 'trojsten.views.WikiSearchView'
-
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'trojsten.search.haystack_custom_backend.AsciifoldingElasticSearchEngine',
