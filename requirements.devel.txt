@@ -4,7 +4,6 @@
 #
 #    pip-compile --output-file requirements.devel.txt requirements.in requirements2.in requirements.devel.in
 #
-
 -e git+https://github.com/edoburu/django-fluent-comments.git@ed53e646d559cdc062d0016734122328152aa98a#egg=django_fluent_comments
 akismet==0.2.0
 amqp==1.4.9               # via kombu
@@ -70,7 +69,7 @@ pymdown-extensions==1.1
 PyOpenSSL==16.0.0         # via ndg-httpsclient
 python-dateutil==2.5.3    # via fake-factory
 python-openid==2.2.5      # via python-social-auth
-python-social-auth==0.2.20
+python-social-auth==0.2.21
 pytz==2016.6.1
 requests-oauthlib==0.6.2  # via python-social-auth
 requests==2.11.0          # via python-social-auth, requests-oauthlib
