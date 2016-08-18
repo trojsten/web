@@ -34,25 +34,21 @@
     {% for result in page.object_list %}
     <tr>
         <td>
-            {% for urlpath in result.object.urlpath_set.all %}
-            <a href="{% url 'wiki:get' path=urlpath.path %}">{{ result.object.current_revision.title }}<br/>
-                <small class="muted">/{{ urlpath.path }}</small>
+            <a href="{% url 'wiki:get' path=result.urlpath %}">{{ result.title }}<br/>
+                <small class="muted">/{{ result.urlpath }}</small>
             </a>
-            {% empty %}
-            <a href="{% url 'wiki:get' article_id=article.id %}">{{ result.object.current_revision.title }}</a>
-            {% endfor %}
-            {% if result.object.current_revision.deleted %}
+            {% if result.deleted %}
             <span class="fa fa-trash"></span>
             {% endif %}
-            {% if result.object.current_revision.locked %}
+            {% if result.locked %}
             <span class="fa fa-lock"></span>
             {% endif %}
             <p class="muted">
-                <small>{{ result.object.current_revision.content|get_content_snippet:query }}</small>
+                <small>{{ result.content|get_content_snippet:query }}</small>
             </p>
         </td>
         <td style="white-space: nowrap">
-            {{ result.object.current_revision.created|naturaltime }}
+            {{ result.modified|naturaltime }}
         </td>
     </tr>
     {% empty%}
