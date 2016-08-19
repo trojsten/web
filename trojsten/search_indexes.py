@@ -14,12 +14,21 @@ class ArticleIndex(indexes.SearchIndex, indexes.Indexable):
     locked = indexes.BooleanField(model_attr='current_revision__locked')
     urlpath = indexes.CharField(model_attr='get_absolute_url')
     id = indexes.IntegerField(model_attr='id')
+    other_read = indexes.BooleanField(model_attr='other_read')
+    group = indexes.IntegerField(null=True)
 
     def get_model(self):
         return Article
 
-    def prepare_urlpath(self, object):
-        return object.get_absolute_url()
+    def prepare_urlpath(self, obj):
+        return obj.get_absolute_url()[1::]
+
+    def prepare_group(self, obj):
+        if obj.group is None:
+            return None
+        else:
+            return obj.group.id
+
 
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""

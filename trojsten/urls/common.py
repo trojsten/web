@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from ksp_login import views as login_views
 from trojsten.people.forms import (TrojstenUserChangeForm,
                                    TrojstenUserCreationForm)
+from trojsten.views import CustomSearchView
 
 admin.autodiscover()
 admin.site.login = login_required(admin.site.login)
@@ -47,7 +48,7 @@ if settings.DEBUG:
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
 
-#Url for haystack elasticsearch
+#Url for custom view of haystack elasticsearch
 urlpatterns += [
-    url(r'^search/', include('haystack.urls')),
+    url(r'^search/', CustomSearchView(), name='haystack_search'),
 ]
