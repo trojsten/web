@@ -232,7 +232,7 @@ INSTALLED_APPS = (
     'oauth2_provider',
     'corsheaders',
     'rest_framework',
-    'rules',
+    'rules.apps.AutodiscoverRulesConfig',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
