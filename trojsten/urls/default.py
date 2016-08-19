@@ -12,6 +12,7 @@ import trojsten.contests.views
 import trojsten.contests.urls
 import trojsten.results.urls
 import trojsten.submit.urls
+import trojsten.wiki_permalinks.urls
 import trojsten.login.views
 
 from .common import urlpatterns as common_urlpatterns
@@ -35,5 +36,6 @@ urlpatterns = common_urlpatterns + [
     url(r'^$', trojsten.views.home_redirect),
     url(r'^wiki/notify/', get_notify_pattern()),
     url(r'^', include('favicon.urls')),
+    url(r'^permalinks/', include(trojsten.wiki_permalinks.urls)),
     url(r'^', get_wiki_pattern()),
 ]
