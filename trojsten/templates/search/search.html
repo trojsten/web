@@ -20,8 +20,7 @@
       </span>
         </div>
     </div>
-    <p>{% blocktrans with paginator.object_list.count as cnt %}Your search returned <strong>{{ cnt }}</strong>
-        results.{% endblocktrans %}</p>
+    <p>Nájdených <strong>{{ cnt }}</strong> výskytov.</p>
     <div class="clearfix"></div>
     </p>
 </form>
@@ -62,9 +61,9 @@
 
 {% if page.has_previous or page.has_next %}
                 <div>
-                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Predchádzajúca{% if page.has_previous %}</a>{% endif %}
                     |
-                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Nasledujúca &raquo;{% if page.has_next %}</a>{% endif %}
                 </div>
 {% endif %}
 
