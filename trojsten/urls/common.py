@@ -1,14 +1,15 @@
 from __future__ import absolute_import
 
 import django
+import tips.urls
+import trojsten.login.views
+import trojsten.views
 from contact_form.views import ContactFormView
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from ksp_login import views as login_views
-
-import trojsten.views
 from trojsten.people.forms import (TrojstenUserChangeForm,
                                    TrojstenUserCreationForm)
 
@@ -21,6 +22,12 @@ urlpatterns = [
         name='trojsten_register'),
     url(r'^ucet/$', login_views.settings, {'settings_form': TrojstenUserChangeForm},
         name='trojsten_account_settings'),
+    url(r'^ucet/remote_logout', trojsten.login.views.remote_logout, name='remote_account_logout'),
+]
+
+# API
+urlpatterns += [
+    url(r'^api/tips/', include(tips.urls, namespace='tips')),
 ]
 
 # Override default views in contact_form
