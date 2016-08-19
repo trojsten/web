@@ -4,12 +4,11 @@ import json
 import os
 import sys
 
+import trojsten
+import trojsten.special.installed_apps
 from django.contrib.messages import constants as messages
 from django.http import UnreadablePostError
 from django.utils.translation import ugettext_lazy as _
-
-import trojsten
-import trojsten.special.installed_apps
 
 from . import site_config
 
@@ -312,6 +311,8 @@ FAVICON_PATH = STATIC_URL + 'images/favicon.ico'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.ext.rest_framework.OAuth2Authentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
