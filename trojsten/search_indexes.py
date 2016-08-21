@@ -1,4 +1,4 @@
-#Indexes for haystack elasticsearch
+# Indexes for haystack elasticsearch
 from django.conf import settings
 
 from haystack import indexes
@@ -28,7 +28,6 @@ class ArticleIndex(indexes.SearchIndex, indexes.Indexable):
             return None
         else:
             return obj.group.id
-
 
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""

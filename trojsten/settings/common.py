@@ -4,12 +4,11 @@ import json
 import os
 import sys
 
-import trojsten
-import trojsten.special.installed_apps
 from django.contrib.messages import constants as messages
 from django.http import UnreadablePostError
 from django.utils.translation import ugettext_lazy as _
 
+import trojsten.special.installed_apps
 from . import site_config
 
 

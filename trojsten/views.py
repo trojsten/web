@@ -4,10 +4,9 @@ from __future__ import unicode_literals
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
-from wiki.views import article
-from wiki.models import Article
 from haystack.views import SearchView
-from django.db.models import Q
+from wiki.views import article
+
 
 def contact_form_sent_redirect(request):
     messages.success(request, 'Vaša správa bola odoslaná. Ďakujeme za spätnú väzbu.')
@@ -21,11 +20,11 @@ def home_redirect(request):
     return article.ArticleView.as_view()(request, path='')
 
 
-#Custom view for haystack SearchView
+# Custom view for haystack SearchView
 class CustomSearchView(SearchView):
     request = None
 
-    #filer results according to read permissions of user
+    # filer results according to read permissions of user
     def get_results(self):
         qs = super(CustomSearchView, self).get_results()
         user = self.request.user
