@@ -400,62 +400,22 @@ WIKI_ATTACHMENTS_PATH = env(
 WIKI_ATTACHMENTS_EXTENSIONS = ['pdf', 'doc', 'odt', 'docx', 'txt', 'jpg', 'png', 'gif']
 WIKI_CHECK_SLUG_URL_AVAILABLE = False
 
+HAYSTACK_CONNECTIONS_URL = 'http://127.0.0.1:9200/'
+
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'trojsten.search.haystack_custom_backend.AsciifoldingElasticSearchEngine',
-        'URL': 'http://127.0.0.1:9200/',
+        'URL': HAYSTACK_CONNECTIONS_URL,
         'INDEX_NAME': 'haystack',
     },
 }
 
-ELASTICSEARCH_INDEX_SETTINGS = {
-    'settings': {
-        "analysis": {
-            "analyzer": {
-                "ascii_analyser": {
-                    "tokenizer": "standard",
-                    "filter": ["standard", "asciifolding", "lowercase"]
-                },
-                "ngram_analyzer": {
-                    "type": "custom",
-                    "tokenizer": "lowercase",
-                    "filter": ["haystack_ngram", "asciifolding"]
-                },
-                "edgengram_analyzer": {
-                    "type": "custom",
-                    "tokenizer": "lowercase",
-                    "filter": ["haystack_edgengram", "asciifolding"]
-                }
-            },
-            "tokenizer": {
-                "haystack_ngram_tokenizer": {
-                    "type": "nGram",
-                    "min_gram": 3,
-                    "max_gram": 15,
-                },
-                "haystack_edgengram_tokenizer": {
-                    "type": "edgeNGram",
-                    "min_gram": 2,
-                    "max_gram": 15,
-                    "side": "front"
-                }
-            },
-            "filter": {
-                "haystack_ngram": {
-                    "type": "nGram",
-                    "min_gram": 3,
-                    "max_gram": 15
-                },
-                "haystack_edgengram": {
-                    "type": "edgeNGram",
-                    "min_gram": 2,
-                    "max_gram": 15
-                }
-            }
-        }
-    }
+ELASTICSEARCH_ANALYZER = {
+    "ascii_analyser": {
+        "tokenizer": "standard",
+        "filter": ["standard", "asciifolding", "lowercase"]
+    },
 }
-ELASTICSEARCH_DEFAULT_ANALYZER = "snowball"
 
 # Celery settings
 #: Only add pickle to this list if your broker is secured
