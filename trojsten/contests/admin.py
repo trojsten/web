@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 
 from django.contrib import admin
 from django.utils.encoding import force_text
 from easy_select2 import select2_modelform
-
+from trojsten.contests.forms import TaskValidationForm
 from trojsten.contests.models import Category, Competition, Round, Series, Task
 from trojsten.reviews.urls import task_review_urls
-from trojsten.contests.forms import TaskValidationForm
 from trojsten.utils.utils import attribute_format, get_related
+from trojsten.utils.permissions import ObjectPermissionsModelAdmin
+
+from .rules import is_competition_organizer_filter
 
 
-class CompetitionAdmin(admin.ModelAdmin):
+class CompetitionAdmin(ObjectPermissionsModelAdmin):
+    def get_filter_query(self, request):
+        return is_competition_organizer_filter(request.user)
+
     form = select2_modelform(Competition)
     list_display = ('name', 'organizers_group', 'get_sites')
 

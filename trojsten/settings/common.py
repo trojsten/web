@@ -232,6 +232,7 @@ INSTALLED_APPS = (
     'oauth2_provider',
     'corsheaders',
     'rest_framework',
+    'rules.apps.AutodiscoverRulesConfig',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
@@ -326,6 +327,7 @@ LOGIN_PROVIDERS = (
 )
 
 AUTHENTICATION_BACKENDS = LOGIN_PROVIDERS + (
+    'rules.permissions.ObjectPermissionBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
