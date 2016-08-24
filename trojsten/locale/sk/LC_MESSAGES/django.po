@@ -1,26 +1,59 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-23 17:19+0200\n"
+"POT-Creation-Date: 2016-08-24 18:59+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+#: contests/forms.py:11
+msgid "Category doesn't correspond with competition."
+msgstr ""
+
 # pdf file names
-#: contests/models.py:233
+#: contests/models.py:234
 msgid "year"
 msgstr "ročník"
 
-#: contests/models.py:235
+#: contests/models.py:236
 msgid "round"
 msgstr "kolo"
 
-#: contests/models.py:237
+#: contests/models.py:238
 msgid "solutions"
 msgstr "vzoráky"
 
-#: contests/models.py:237
+#: contests/models.py:238
 msgid "tasks"
 msgstr "zadania"
+
+# Task Statements
+#: contests/templatetags/statements_parts.py:93
+#, fuzzy, python-format
+#| msgid "%(count)d day"
+#| msgid_plural "%(count)s days"
+msgid "%(count)d day"
+msgstr "%(count)s deň"
+
+#: contests/templatetags/statements_parts.py:96
+#, fuzzy, python-format
+#| msgid "%(count)d hour"
+#| msgid_plural "%(count)s hours"
+msgid "%(count)d hour"
+msgstr "%(count)s hodina"
+
+#: contests/templatetags/statements_parts.py:99
+#, fuzzy, python-format
+#| msgid "%(count)d minute"
+#| msgid_plural "%(count)s minutes"
+msgid "%(count)d minute"
+msgstr "%(count)s minúta"
+
+#: contests/templatetags/statements_parts.py:102
+#, fuzzy, python-format
+#| msgid "%(count)d second"
+#| msgid_plural "%(count)s seconds"
+msgid "%(count)d second"
+msgstr "%(count)s sekunda"
 
 #: events/forms.py:47 people/forms.py:70 people/forms.py:78 people/forms.py:86
 #: people/forms.py:95 people/forms.py:105 people/forms.py:115
@@ -32,27 +65,27 @@ msgstr ""
 msgid "Logout successful"
 msgstr ""
 
-#: people/admin.py:146
+#: people/admin.py:141
 msgid "Personal info"
 msgstr ""
 
-#: people/admin.py:149
+#: people/admin.py:144
 msgid "Address"
 msgstr ""
 
-#: people/admin.py:150
+#: people/admin.py:145
 msgid "School"
 msgstr ""
 
-#: people/admin.py:153
+#: people/admin.py:148
 msgid "Permissions"
 msgstr ""
 
-#: people/admin.py:156
+#: people/admin.py:151
 msgid "Important dates"
 msgstr ""
 
-#: people/admin.py:244
+#: people/admin.py:239
 msgid "Users merged succesfully."
 msgstr ""
 
@@ -92,6 +125,11 @@ msgstr ""
 msgid "The two password fields didn't match."
 msgstr ""
 
+#: people/models.py:161
+#, python-format
+msgid "Value \"%s\" does not match regex \"%s\"."
+msgstr ""
+
 #: people/templates/admin/people/duplicateuser/change_form.html:5
 msgid "Merge candidates"
 msgstr ""
@@ -127,34 +165,34 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: reviews/forms.py:42
+#: reviews/forms.py:47
 #, python-format
 msgid "Súbor musí byť ZIP archív: %s"
 msgstr ""
 
-#: reviews/forms.py:79
+#: reviews/forms.py:84
 msgid "Points are required"
 msgstr ""
 
-#: reviews/forms.py:84
+#: reviews/forms.py:89
 msgid "User is required"
 msgstr ""
 
-#: reviews/forms.py:89
+#: reviews/forms.py:94
 #, python-format
 msgid "User %s does not exist"
 msgstr ""
 
-#: reviews/forms.py:160
+#: reviews/forms.py:190
 #, python-format
 msgid "Invalid filename %s"
 msgstr ""
 
-#: reviews/forms.py:163
+#: reviews/forms.py:193
 msgid "Must have set points"
 msgstr ""
 
-#: reviews/forms.py:181
+#: reviews/forms.py:211
 msgid "Assigned 2 or more files to the same user."
 msgstr ""
 
@@ -178,10 +216,8 @@ msgstr "Upraviť"
 
 #: reviews/templates/admin/review_form.html:7
 #: reviews/templates/admin/zip_upload.html:7
-#, fuzzy
-#| msgid "tasks"
-msgid "Tasks"
-msgstr "zadania"
+msgid "Contests"
+msgstr ""
 
 #: reviews/templates/admin/review_form.html:8
 #: reviews/templates/admin/zip_upload.html:8
@@ -233,67 +269,71 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: reviews/views.py:49
+#: reviews/views.py:51
 msgid "Successfully uploaded a zip file."
 msgstr ""
 
-#: reviews/views.py:93
+#: reviews/views.py:95
 msgid "Successfully saved the review"
 msgstr ""
 
-#: reviews/views.py:154
+#: reviews/views.py:157
 #, python-format
 msgid "Missing file of user %s"
 msgstr ""
 
-#: reviews/views.py:167
+#: reviews/views.py:170
 #, python-format
 msgid "Missing source file of user %s"
 msgstr ""
 
-#: reviews/views.py:171
+#: reviews/views.py:174
 #, python-format
 msgid "Missing protocol file of user %s"
 msgstr ""
 
-#: reviews/views.py:196
+#: reviews/views.py:199
 msgid "Problems with uploaded zip"
 msgstr ""
 
-#: reviews/views.py:202
+#: reviews/views.py:205
 msgid "Ignore"
 msgstr ""
 
-#: reviews/views.py:245
+#: reviews/views.py:248
 msgid "Successfully finished reviewing this task!"
 msgstr ""
 
+#: settings/common.py:391
+msgid "Table of Contents"
+msgstr ""
+
 # Submit
-#: submit/constants.py:16
+#: submit/constants.py:26 submit/tests.py:380
 msgid "Wrong answer"
 msgstr "Zlá odpoveď"
 
-#: submit/constants.py:17
+#: submit/constants.py:27
 msgid "Compilation error"
 msgstr "Chyba počas kompilácie"
 
-#: submit/constants.py:18
+#: submit/constants.py:28
 msgid "Time limit exceeded"
 msgstr "Prekročený časový limit"
 
-#: submit/constants.py:19
+#: submit/constants.py:29
 msgid "OK"
 msgstr "OK"
 
-#: submit/constants.py:20
+#: submit/constants.py:30
 msgid "Runtime exception"
 msgstr "Chyba počas behu programu"
 
-#: submit/constants.py:21
+#: submit/constants.py:31
 msgid "Security exception"
 msgstr "Pokus o narušenie bezpečnosti"
 
-#: submit/constants.py:22
+#: submit/constants.py:32
 msgid "Ignored"
 msgstr ""
 
@@ -309,39 +349,6 @@ msgstr ""
 #: submit/templates/trojsten/submit/parts/submit_list.html:75
 #: submit/templates/trojsten/submit/parts/submit_list.html:92
 msgid "Detaily"
-msgstr ""
-
-# Task Statements
-#: task_statements/templatetags/statements_parts.py:94
-#, fuzzy, python-format
-#| msgid "%(count)d day"
-#| msgid_plural "%(count)s days"
-msgid "%(count)d day"
-msgstr "%(count)s deň"
-
-#: task_statements/templatetags/statements_parts.py:97
-#, fuzzy, python-format
-#| msgid "%(count)d hour"
-#| msgid_plural "%(count)s hours"
-msgid "%(count)d hour"
-msgstr "%(count)s hodina"
-
-#: task_statements/templatetags/statements_parts.py:100
-#, fuzzy, python-format
-#| msgid "%(count)d minute"
-#| msgid_plural "%(count)s minutes"
-msgid "%(count)d minute"
-msgstr "%(count)s minúta"
-
-#: task_statements/templatetags/statements_parts.py:103
-#, fuzzy, python-format
-#| msgid "%(count)d second"
-#| msgid_plural "%(count)s seconds"
-msgid "%(count)d second"
-msgstr "%(count)s sekunda"
-
-#: tasks/forms.py:11
-msgid "Category doesn't correspond with competition."
 msgstr ""
 
 #: templates/comments/comment.html:23
@@ -370,12 +377,13 @@ msgid "Post"
 msgstr "Odoslať"
 
 #: templates/ksp_login/login.html:4 templates/ksp_login/login.html:7
-#: templates/ksp_login/parts/include_javascript.html:15
-#: templates/ksp_login/parts/login_box.html:40
-#: templates/ksp_login/parts/login_box.html:57
-#: templates/ksp_login/parts/login_full_contents.html:21
-#: templates/ksp_login/parts/login_full_contents.html:38
-#: templates/ksp_login/settings.html:40
+#: templates/ksp_login/parts/include_javascript.html:14
+#: templates/ksp_login/parts/login_box.html:43
+#: templates/ksp_login/parts/login_box.html:60
+#: templates/ksp_login/parts/login_box.html:74
+#: templates/ksp_login/parts/login_full_contents.html:22
+#: templates/ksp_login/parts/login_full_contents.html:39
+#: templates/ksp_login/settings.html:41
 msgid "Log in"
 msgstr ""
 
@@ -387,11 +395,11 @@ msgstr ""
 msgid "Account"
 msgstr ""
 
-#: templates/ksp_login/parts/associated_accounts_list.html:28
+#: templates/ksp_login/parts/associated_accounts_list.html:31
 msgid "Disconnect"
 msgstr ""
 
-#: templates/ksp_login/parts/associated_accounts_list.html:37
+#: templates/ksp_login/parts/associated_accounts_list.html:41
 msgid "You don't have any services associated with your account."
 msgstr ""
 
@@ -410,27 +418,31 @@ msgstr "Registrácia"
 msgid "Settings"
 msgstr ""
 
-#: templates/ksp_login/parts/login_box.html:35
+#: templates/ksp_login/parts/login_box.html:37
 msgid "Log out"
 msgstr ""
 
-#: templates/ksp_login/parts/login_box.html:63
+#: templates/ksp_login/parts/login_box.html:66
 msgid "More login options"
 msgstr ""
 
-#: templates/ksp_login/parts/login_full_contents.html:39
+#: templates/ksp_login/parts/login_full_contents.html:40
 msgid "Forgotten password"
 msgstr ""
 
 # Login
-#: templates/ksp_login/parts/login_full_contents.html:48
+#: templates/ksp_login/parts/login_full_contents.html:49
 #: templates/ksp_login/registration.html:5
 #: templates/ksp_login/registration.html:8
 msgid "Registration"
 msgstr "Registrácia"
 
+#: templates/ksp_login/parts/login_full_contents.html:56
+msgid "Log in with your Trojsten account"
+msgstr ""
+
 #: templates/ksp_login/password.html:5 templates/ksp_login/password.html:8
-#: templates/ksp_login/settings.html:46
+#: templates/ksp_login/settings.html:54
 msgid "Password change"
 msgstr ""
 
@@ -450,11 +462,20 @@ msgstr "Informácie o účte"
 msgid "Login settings"
 msgstr ""
 
-#: templates/ksp_login/settings.html:19
+#: templates/ksp_login/settings.html:20
 msgid "You can use any of the following services to log in to your account."
 msgstr ""
 
 #: templates/ksp_login/settings.html:49
+#, python-format
+msgid ""
+"\n"
+"            You can change the login settings <a href="
+"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">on separate page</a>.\n"
+"        "
+msgstr ""
+
+#: templates/ksp_login/settings.html:57
 #, python-format
 msgid ""
 "\n"
@@ -463,6 +484,35 @@ msgid ""
 "        "
 msgstr ""
 
+#: templates/search/search.html:5 templates/search/search.html:9
+msgid "Search results for:"
+msgstr "Výsledky hľadania pre"
+
+#: templates/search/search.html:23
+#, python-format
+msgid "Your search returned <strong>%(cnt)s</strong> results."
+msgstr "Nájdených <strong>%(cnt)s</strong> výskytov."
+
+#: templates/search/search.html:30
+msgid "Title"
+msgstr "Názov"
+
+#: templates/search/search.html:31
+msgid "Last modified"
+msgstr "Naposledy upravené"
+
+#: templates/search/search.html:56
+msgid "There are no articles in this level"
+msgstr "Na tejto úrovni nie sú žiadne články."
+
+#: templates/search/search.html:64
+msgid "Previous"
+msgstr "Predchádzajúca"
+
+#: templates/search/search.html:66
+msgid "Next"
+msgstr "Nasledujúca"
+
 #: templates/wiki/article.html:19
 msgid "locked"
 msgstr ""
@@ -470,3 +520,8 @@ msgstr ""
 #: templates/wiki/article.html:40
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
+
+#, fuzzy
+#~| msgid "tasks"
+#~ msgid "Tasks"
+#~ msgstr "zadania"
