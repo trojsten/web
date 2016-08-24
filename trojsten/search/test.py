@@ -50,13 +50,17 @@ class SearchTests(TestCase):
         public_article.add_revision(
             ArticleRevision.objects.create(title='Nadpis', content='Verejný článok a jeho text',
                                            article=public_article))
-        URLPath.objects.create(site=self.site, article=public_article, slug='clanok', parent=self.root_path)
+        URLPath.objects.create(site=self.site, article=public_article,
+                               slug='clanok', parent=self.root_path)
 
-        staff_article = Article.objects.create(group=self.group, other_read=False, other_write=False, group_read=True)
+        staff_article = Article.objects.create(group=self.group, other_read=False,
+                                               other_write=False, group_read=True)
         staff_article.add_revision(
-            ArticleRevision.objects.create(title='Top secret', content='Tento článok má tajný obsah.',
+            ArticleRevision.objects.create(title='Top secret',
+                                           content='Tento článok má tajný obsah.',
                                            article=staff_article))
-        URLPath.objects.create(site=self.site, article=staff_article, slug='secret', parent=self.root_path)
+        URLPath.objects.create(site=self.site, article=staff_article,
+                               slug='secret', parent=self.root_path)
 
         call_command('rebuild_index', interactive=False)
 
@@ -67,7 +71,8 @@ class SearchTests(TestCase):
     def test_basic_search(self):
         response = self.client.get('/search/', {'q': 'text'})
         self.assertEqual(len(response.context['page'].object_list), 1)
-        self.assertSetEqual(set(['Nadpis']),set([res.title for res in response.context['page'].object_list]))
+        self.assertSetEqual(set(['Nadpis']),
+                            set([res.title for res in response.context['page'].object_list]))
 
     def test_no_staff_search(self):
         response = self.client.get('/search/', {'q': 'tajný'})
@@ -76,14 +81,16 @@ class SearchTests(TestCase):
     def test_ignore_diacritics_search(self):
         response = self.client.get('/search/', {'q': 'clanok'})
         self.assertEqual(len(response.context['page'].object_list), 1)
-        self.assertSetEqual(set(['Nadpis']), set([res.title for res in response.context['page'].object_list]))
+        self.assertSetEqual(set(['Nadpis']),
+                            set([res.title for res in response.context['page'].object_list]))
 
     # Find through all articles, which user has access to.
     def test_staff_search(self):
         self.client.force_login(self.staff_user)
         response = self.client.get('/search/', {'q': 'článok'})
         self.assertEqual(len(response.context['page'].object_list), 2)
-        self.assertSetEqual(set(['Nadpis', 'Top secret']), set([res.title for res in response.context['page'].object_list]))
+        self.assertSetEqual(set(['Nadpis', 'Top secret']),
+                            set([res.title for res in response.context['page'].object_list]))
 
     # Create a new article and find text in it.
     def test_new_article(self):
@@ -92,8 +99,9 @@ class SearchTests(TestCase):
         new_article = Article.objects.create()
         new_article.add_revision(ArticleRevision.objects.create(
             title='Nové novinky', content='Toto je novy clanok.', article=new_article))
-        URLPath.objects.create(site=self.site, article=new_article, slug='new', parent=self.root_path)
+        URLPath.objects.create(site=self.site, article=new_article,
+                               slug='new', parent=self.root_path)
         call_command('update_index', interactive=False)
         response = self.client.get('/search/', {'q': 'novy clanok'})
-        self.assertSetEqual(set(['Nové novinky']),set([res.title for res in response.context['page'].object_list]))
-
+        self.assertSetEqual(set(['Nové novinky']),
+                            set([res.title for res in response.context['page'].object_list]))
