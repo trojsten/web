@@ -400,12 +400,13 @@ WIKI_ATTACHMENTS_PATH = env(
 WIKI_ATTACHMENTS_EXTENSIONS = ['pdf', 'doc', 'odt', 'docx', 'txt', 'jpg', 'png', 'gif']
 WIKI_CHECK_SLUG_URL_AVAILABLE = False
 
-HAYSTACK_CONNECTIONS_URL = 'http://127.0.0.1:9200/'
-
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'trojsten.search.haystack_custom_backend.AsciifoldingElasticSearchEngine',
-        'URL': HAYSTACK_CONNECTIONS_URL,
+        'URL': env(
+            'TROJSTENWEB_HAYSTACK_CONNECTIONS_URL',
+            'http://127.0.0.1:9200/',
+        ),
         'INDEX_NAME': 'haystack',
     },
 }
