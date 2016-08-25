@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import unittest
 
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -26,6 +27,7 @@ TEST_INDEX = {
     ROOT_URLCONF='trojsten.urls.wiki',
     HAYSTACK_CONNECTIONS=TEST_INDEX
 )
+@unittest.skipIf(not settings.ELASTICSEARCH_TESTS, "Elasticsearch tests skipped.")
 class SearchTests(TestCase):
 
     def setUp(self):
