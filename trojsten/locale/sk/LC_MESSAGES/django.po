@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-24 18:59+0200\n"
+"POT-Creation-Date: 2016-08-25 21:22+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -490,26 +490,30 @@ msgstr "Výsledky hľadania pre"
 
 #: templates/search/search.html:23
 #, python-format
-msgid "Your search returned <strong>%(cnt)s</strong> results."
-msgstr "Nájdených <strong>%(cnt)s</strong> výskytov."
+msgid ""
+"\n"
+"          Your search returned <strong>%(cnt)s</strong> results."
+msgstr ""
+"\n"
+"          Nájdených <strong>%(cnt)s</strong> výskytov."
 
-#: templates/search/search.html:30
+#: templates/search/search.html:32
 msgid "Title"
 msgstr "Názov"
 
-#: templates/search/search.html:31
+#: templates/search/search.html:33
 msgid "Last modified"
 msgstr "Naposledy upravené"
 
-#: templates/search/search.html:56
+#: templates/search/search.html:58
 msgid "There are no articles in this level"
 msgstr "Na tejto úrovni nie sú žiadne články."
 
-#: templates/search/search.html:64
+#: templates/search/search.html:68 templates/search/search.html:70
 msgid "Previous"
 msgstr "Predchádzajúca"
 
-#: templates/search/search.html:66
+#: templates/search/search.html:79 templates/search/search.html:81
 msgid "Next"
 msgstr "Nasledujúca"
 
