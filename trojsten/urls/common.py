@@ -2,16 +2,18 @@ from __future__ import absolute_import
 
 import django
 import tips.urls
-import trojsten.login.views
-import trojsten.views
 from contact_form.views import ContactFormView
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from ksp_login import views as login_views
+
+import trojsten.login.views
+import trojsten.views
 from trojsten.people.forms import (TrojstenUserChangeForm,
                                    TrojstenUserCreationForm)
+from trojsten.views import CustomSearchView
 
 admin.autodiscover()
 admin.site.login = login_required(admin.site.login)

@@ -4,6 +4,11 @@ python:
   - "3.5"
 env:
   - DJANGO_VERSION='>=1.9,<1.10'
+services:
+  - elasticsearch
+# To ensure, that elasticsearch is available
+before_script:
+  - sleep 10
 # command to install dependencies
 install:
   - pip install --upgrade pip==8.1.1 pip-tools

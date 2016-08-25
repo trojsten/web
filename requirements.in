@@ -10,6 +10,7 @@ django-dotenv
 django-easy-select2
 django-favicon
 -e git+https://github.com/edoburu/django-fluent-comments.git@ed53e646d559cdc062d0016734122328152aa98a#egg=django_fluent_comments
+django-haystack
 django-import-export
 django-mathfilters
 django-oauth-toolkit
@@ -22,6 +23,7 @@ django-threadedcomments
 Django<1.10
 djangorestframework
 ecdsa
+elasticsearch
 fake-factory
 first
 ksp-login>0.4

@@ -4,12 +4,11 @@ import json
 import os
 import sys
 
-import trojsten
-import trojsten.special.installed_apps
 from django.contrib.messages import constants as messages
 from django.http import UnreadablePostError
 from django.utils.translation import ugettext_lazy as _
 
+import trojsten.special.installed_apps
 from . import site_config
 
 
@@ -246,6 +245,7 @@ INSTALLED_APPS = (
     'wiki.plugins.macros',
     'taggit',
     'kombu.transport.django',
+    'haystack',
 
     # django-fluent-comments and its dependencies
     'fluent_comments',
@@ -400,6 +400,24 @@ WIKI_ATTACHMENTS_PATH = env(
 WIKI_ATTACHMENTS_EXTENSIONS = ['pdf', 'doc', 'odt', 'docx', 'txt', 'jpg', 'png', 'gif']
 WIKI_CHECK_SLUG_URL_AVAILABLE = False
 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'trojsten.search.haystack_custom_backend.AsciifoldingElasticSearchEngine',
+        'URL': env(
+            'TROJSTENWEB_HAYSTACK_CONNECTIONS_URL',
+            'http://127.0.0.1:9200/',
+        ),
+        'INDEX_NAME': 'haystack',
+    },
+}
+
+ELASTICSEARCH_ANALYZER = {
+    "ascii_analyser": {
+        "tokenizer": "standard",
+        "filter": ["standard", "asciifolding", "lowercase"]
+    },
+}
+
 # Celery settings
 #: Only add pickle to this list if your broker is secured
 #: from unwanted access (see userguide/security.html)
@@ -468,3 +486,5 @@ COMPETITION_RULES = {
     8: 'trojsten.rules.fx.FXRules',
 }
 DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'
+
+ELASTICSEARCH_TESTS = True
