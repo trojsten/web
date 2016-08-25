@@ -8,6 +8,7 @@ from django_nyt.urls import get_pattern as get_notify_pattern
 from wiki.urls import get_pattern as get_wiki_pattern
 
 from .common import urlpatterns as common_urlpatterns
+from trojsten.views import CustomSearchView
 
 urlpatterns = common_urlpatterns + [
     url(r'^admin/', include(admin.site.urls)),
@@ -16,4 +17,6 @@ urlpatterns = common_urlpatterns + [
     url(r'^wiki/notify/', get_notify_pattern()),
     url(r'^', include('favicon.urls')),
     url(r'^', get_wiki_pattern()),
+    # Url for custom view of haystack elasticsearch
+    url(r'^search/', CustomSearchView(), name='haystack_search'),
 ]

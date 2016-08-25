@@ -48,8 +48,3 @@ if settings.DEBUG:
         }),
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
-
-# Url for custom view of haystack elasticsearch
-urlpatterns += [
-    url(r'^search/', CustomSearchView(), name='haystack_search'),
-]
