@@ -72,6 +72,7 @@ class SearchTests(TestCase):
     # Find public articles containing 'text'.
     def test_basic_search(self):
         response = self.client.get('/search/', {'q': 'text'})
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['page'].object_list), 1)
         self.assertSetEqual(set(['Nadpis']),
                             set([res.title for res in response.context['page'].object_list]))

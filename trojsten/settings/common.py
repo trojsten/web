@@ -486,3 +486,5 @@ COMPETITION_RULES = {
     8: 'trojsten.rules.fx.FXRules',
 }
 DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'
+
+ELASTICSEARCH_TESTS = True
