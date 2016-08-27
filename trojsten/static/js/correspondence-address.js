@@ -22,7 +22,15 @@
             }
         };
 
-        $("input#id_has_correspondence_address").change(function() {
+        $("input#id_mailing_option_0").change(function() {
+            this.checked ? hide_address() : show_address();
+        });
+
+        $("input#id_mailing_option_1").change(function() {
+            this.checked ? hide_address() : show_address();
+        });
+
+        $("input#id_mailing_option_2").change(function() {
             this.checked ? show_address() : hide_address();
         });
 

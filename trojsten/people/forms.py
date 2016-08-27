@@ -23,11 +23,10 @@ class TrojstenUserBaseForm(forms.ModelForm):
     country = forms.CharField(
         max_length=32, label='Krajina')
 
-    has_correspondence_address = forms.BooleanField(
-        label="Korešpondenčná adresa",
-        required=False,
-        help_text="Zaškrtni, ak chceš aby sme ti poštu posielali "
-        "inde ako domov.(Typicky, ak bývaš na internáte.)"
+    mailing_option = forms.ChoiceField(
+        required=True, choices=User.MAILING_OPTION_CHOICES,
+        label="Korešpondenčná adresa", widget=forms.RadioSelect,
+        help_text="Vyber, kam ti máme posielať poštu."
     )
 
     corr_street = forms.CharField(max_length=70, label='Ulica', required=False)
@@ -159,6 +158,7 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
                     'town': user.home_address.town,
                     'postal_code': user.home_address.postal_code,
                     'country': user.home_address.country,
+                    'mailing_option': user.mailing_option,
                 }
             if user.mailing_address:
                 kwargs['initial']['corr_street'] = user.mailing_address.street
@@ -178,12 +178,16 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
         postal_code = self.cleaned_data.get('postal_code')
         country = self.cleaned_data.get('country')
 
-        has_correspondence_address = self.cleaned_data.get(
-            'has_correspondence_address')
+        correspondence_address = self.cleaned_data.get(
+            'correspondence_address')
         corr_street = self.cleaned_data.get('corr_street')
         corr_town = self.cleaned_data.get('corr_town')
         corr_postal_code = self.cleaned_data.get('corr_postal_code')
         corr_country = self.cleaned_data.get('corr_country')
+
+        mailing_option = self.cleaned_data.get('mailing_option', 'HOME')
+        user.mailing_option = mailing_option
+        has_correspondence_address = mailing_option == 'OTHER'
 
         if has_correspondence_address:
             if not user.mailing_address:
@@ -311,8 +315,10 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
         postal_code = self.cleaned_data.get('postal_code')
         country = self.cleaned_data.get('country')
 
-        has_correspondence_address = self.cleaned_data.get(
-            'has_correspondence_address')
+        mailing_option = self.cleaned_data.get('mailing_option', 'HOME')
+        has_correspondence_address = mailing_option == 'OTHER'
+        user.mailing_option = mailing_option
+
         corr_street = self.cleaned_data.get('corr_street')
         corr_town = self.cleaned_data.get('corr_town')
         corr_postal_code = self.cleaned_data.get('corr_postal_code')

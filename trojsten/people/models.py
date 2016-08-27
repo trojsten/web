@@ -71,6 +71,11 @@ class User(AbstractUser):
                                         blank=True,
                                         null=True,
                                         verbose_name='adresa korešpondencie')
+    MAILING_OPTION_CHOICES = [('HOME', 'domov'), ('SCHOOL', 'do skoly'), ('OTHER', 'inde')]
+    mailing_option = models.CharField(max_length=6,
+                                      choices=MAILING_OPTION_CHOICES,
+                                      default='HOME',
+                                      verbose_name='adresa korešpondencie')
     school = models.ForeignKey(School,
                                null=True,
                                default=1,
@@ -91,7 +96,11 @@ class User(AbstractUser):
         return self.is_superuser or self.groups.filter(pk=group.pk).exists()
 
     def get_mailing_address(self):
-        return self.home_address if self.mailing_address is None else self.mailing_address
+        if self.mailing_address:
+            return self.mailing_address
+        elif self.mailing_option == 'SCHOOL':
+            return self.home_address
+        return self.home_address
 
     class Meta:
         verbose_name = 'používateľ'
