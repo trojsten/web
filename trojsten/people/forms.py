@@ -88,7 +88,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         return self.cleaned_data.get('last_name')
 
     def clean_corr_street(self):
-        if self.cleaned_data.get('has_correspondence_address'):
+        if self.cleaned_data.get('mailing_option') == 'OTHER':
             if len(self.cleaned_data.get('corr_street')) == 0:
                 raise forms.ValidationError(
                     _("This field is required."),
@@ -98,7 +98,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         return self.cleaned_data.get('corr_street')
 
     def clean_corr_town(self):
-        if self.cleaned_data.get('has_correspondence_address'):
+        if self.cleaned_data.get('mailing_option') == 'OTHER':
             if len(self.cleaned_data.get('corr_town')) == 0:
                 raise forms.ValidationError(
                     _("This field is required."),
@@ -108,7 +108,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         return self.cleaned_data.get('corr_town')
 
     def clean_corr_postal_code(self):
-        if self.cleaned_data.get('has_correspondence_address'):
+        if self.cleaned_data.get('mailing_option') == 'OTHER':
             if len(self.cleaned_data.get('corr_postal_code')) == 0:
                 raise forms.ValidationError(
                     _("This field is required."),
@@ -118,7 +118,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         return self.cleaned_data.get('corr_postal_code')
 
     def clean_corr_country(self):
-        if self.cleaned_data.get('has_correspondence_address'):
+        if self.cleaned_data.get('mailing_option') == 'OTHER':
             if len(self.cleaned_data.get('corr_country')) == 0:
                 raise forms.ValidationError(
                     _("This field is required."),
@@ -233,7 +233,7 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
                 if len(similar_users):
                     DuplicateUser.objects.create(user=user)
 
-        return self
+        return user
 
 
 class TrojstenUserCreationForm(TrojstenUserBaseForm):

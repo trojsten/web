@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import datetime
 import random
 
 from django.contrib.auth.models import Group
+from django.http.request import HttpRequest
 from django.test import TestCase
+from django_webtest import WebTest
 
 from trojsten.contests.models import Competition, Round, Series
 from trojsten.contests.models import Task
+from trojsten.schools.models import School
 
+from .forms import TrojstenUserCreationForm, TrojstenUserChangeForm
 from .helpers import get_similar_users, merge_users
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
 
@@ -159,3 +164,134 @@ class MergeUsersTests(TestCase):
             User.DoesNotExist, 'User matching query does not exist.'
         ):
             User.objects.get(pk=self.source_user.pk)
+
+
+class UserFormTests(TestCase):
+
+    def setUp(self):
+        self.request = HttpRequest()
+        self.request.session = {}
+        address = Address.objects.create(
+            street='Matematicka 47', town='Algebrovo', postal_code='420 47',
+            country='Slovensko'
+        )
+        self.school = School.objects.create(
+            abbreviation='GJH', verbose_name='Gymnázium Janka Hraška', pk=1
+        )
+        self.user = User.objects.create(
+            username='janko4247', first_name='Janko', last_name='Hrasko', password='pass',
+            gender='M', birth_date=datetime.date(1999, 9, 19), email='hrasko@example.com',
+            mailing_option='SCHOOL', school=self.school, graduation=2018,
+            home_address=address
+        )
+        self.form_data = {
+            'username': 'mrkva',
+            'password1': 'heslo',
+            'password2': 'heslo',
+            'first_name': 'Jožko',
+            'last_name': 'Mrkvička',
+            'gender': 'M',
+            'mailing_option': 'SCHOOL',
+            'school': 1,
+            'graduation': 2017,
+            'street': 'Pekná 47',
+            'town': 'Bratislava',
+            'postal_code': '420 47',
+            'country': 'Slovensko',
+            'birth_date': datetime.date(2016, 8, 19),
+            'email': 'mail@example.com'
+        }
+
+    def test_valid_user_creation(self):
+        for option in ['HOME', 'SCHOOL']:
+            data = self.form_data
+            data['username'] = option
+            data['mailing_option'] = option
+            form = TrojstenUserCreationForm(data=data, request=self.request)
+            self.assertTrue(form.is_valid())
+            user = form.save()
+            self.assertEqual(user.mailing_option, option)
+            self.assertIsNone(user.mailing_address)
+
+    def test_corr_address_creation(self):
+        data = self.form_data
+        data['mailing_option'] = 'OTHER'
+        form = TrojstenUserCreationForm(data=data, request=self.request)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {
+            'corr_street': ['Toto pole je povinné.'],
+            'corr_town': ['Toto pole je povinné.'],
+            'corr_postal_code': ['Toto pole je povinné.'],
+            'corr_country': ['Toto pole je povinné.']
+        })
+        street = 'Kukucinova 47'
+        town = 'Sladkovicovo'
+        postal_code = '420 47'
+        country = 'Slovensko'
+
+        data['corr_street'] = street
+        data['corr_town'] = town
+        data['corr_postal_code'] = postal_code
+        data['corr_country'] = country
+
+        form = TrojstenUserCreationForm(data=data, request=self.request)
+        self.assertTrue(form.is_valid())
+        user = form.save()
+        self.assertEqual(user.mailing_option, 'OTHER')
+        self.assertEqual([user.mailing_address.street, user.mailing_address.town,
+                          user.mailing_address.postal_code, user.mailing_address.country],
+                         [street, town, postal_code, country])
+
+    def test_invalid_user_creation(self):
+        data = self.form_data
+        data['password2'] = 'helso'
+        form = TrojstenUserCreationForm(data=data, request=self.request)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'password2': ['Heslo a jeho potvrdenie sa nezhodujú.']})
+
+    def test_valid_initial_data(self):
+        form = TrojstenUserChangeForm({}, user=self.user)
+        form.data = form.initial
+        self.assertTrue(form.is_valid())
+
+    def test_valid_user_change(self):
+        form = TrojstenUserChangeForm({}, user=self.user)
+        form.data = form.initial
+        form.data['mailing_option'] = 'HOME'
+        self.assertTrue(form.is_valid())
+        user = form.save()
+        self.assertEqual(user.mailing_option, 'HOME')
+
+    def test_invalid_user_change(self):
+        form = TrojstenUserChangeForm({}, user=self.user)
+        form.data = form.initial
+        form.data['mailing_option'] = 'OTHER'
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {
+            'corr_street': ['Toto pole je povinné.'],
+            'corr_town': ['Toto pole je povinné.'],
+            'corr_postal_code': ['Toto pole je povinné.'],
+            'corr_country': ['Toto pole je povinné.']
+        })
+
+    def test_mailing_address_change(self):
+        form = TrojstenUserChangeForm({}, user=self.user)
+        form.data = form.initial
+        street = 'Kukucinova 47'
+        town = 'Sladkovicovo'
+        postal_code = '420 47'
+        country = 'Slovensko'
+
+        form.data['mailing_option'] = 'OTHER'
+        form.data['corr_street'] = street
+        form.data['corr_town'] = town
+        form.data['corr_postal_code'] = postal_code
+        form.data['corr_country'] = country
+
+        print form.errors
+        self.assertTrue(form.is_valid())
+        user = form.save()
+        self.assertEqual(user.mailing_option, 'OTHER')
+        self.assertEqual([user.mailing_address.street, user.mailing_address.town,
+                          user.mailing_address.postal_code, user.mailing_address.country],
+                         [street, town, postal_code, country])

@@ -71,7 +71,8 @@ class User(AbstractUser):
                                         blank=True,
                                         null=True,
                                         verbose_name='adresa korešpondencie')
-    MAILING_OPTION_CHOICES = [('HOME', 'domov'), ('SCHOOL', 'do skoly'), ('OTHER', 'inde')]
+    MAILING_OPTION_CHOICES = [('HOME', 'domov'), ('SCHOOL', 'do školy'),
+                              ('OTHER', 'na inú adresu (napr. na internát)')]
     mailing_option = models.CharField(max_length=6,
                                       choices=MAILING_OPTION_CHOICES,
                                       default='HOME',
