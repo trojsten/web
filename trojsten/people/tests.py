@@ -298,7 +298,6 @@ class UserFormTests(TestCase):
         form.data['corr_postal_code'] = postal_code
         form.data['corr_country'] = country
 
-        print form.errors
         self.assertTrue(form.is_valid())
         user = form.save()
         self.assertEqual(user.mailing_option, 'OTHER')
