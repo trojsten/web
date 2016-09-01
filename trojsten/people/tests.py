@@ -7,12 +7,10 @@ import random
 from django.contrib.auth.models import Group
 from django.http.request import HttpRequest
 from django.test import TestCase
-from django_webtest import WebTest
 
 from trojsten.contests.models import Competition, Round, Series
 from trojsten.contests.models import Task
 from trojsten.schools.models import School
-
 from .forms import TrojstenUserCreationForm, TrojstenUserChangeForm
 from .helpers import get_similar_users, merge_users
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
@@ -176,7 +174,8 @@ class UserFormTests(TestCase):
             country='Slovensko'
         )
         self.school = School.objects.create(
-            abbreviation='GJH', verbose_name='Gymnázium Janka Hraška', pk=1
+            abbreviation='GJH', verbose_name='Gymnázium Janka Hraška', pk=1,
+            street='Hronca 42', city='Bratislava', zip_code='123 45'
         )
         self.user = User.objects.create(
             username='janko4247', first_name='Janko', last_name='Hrasko', password='pass',
@@ -212,6 +211,17 @@ class UserFormTests(TestCase):
             user = form.save()
             self.assertEqual(user.mailing_option, option)
             self.assertIsNone(user.mailing_address)
+            address = user.get_mailing_address()
+            if option == 'HOME':
+                self.assertEqual(
+                    [address.street, address.town, address.postal_code],
+                    [data['street'], data['town'], data['postal_code']]
+                )
+            else:
+                self.assertEqual(
+                    [address.street, address.town, address.postal_code],
+                    [self.school.street, self.school.city, self.school.zip_code]
+                )
 
     def test_corr_address_creation(self):
         data = self.form_data

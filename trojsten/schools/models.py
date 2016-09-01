@@ -41,3 +41,12 @@ class School(models.Model):
     @property
     def has_abbreviation(self):
         return self.abbreviation.strip() != ''
+
+    def get_mailing_address(self):
+        from trojsten.people.models import SchoolAddress
+        return SchoolAddress(
+            addr_name=self.addr_name,
+            street=self.street,
+            town=self.city,
+            postal_code=self.zip_code
+        )
