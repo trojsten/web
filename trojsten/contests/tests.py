@@ -11,7 +11,7 @@ from django.test import TestCase, override_settings
 from django.utils.translation import activate
 from wiki.models import Article, ArticleRevision, URLPath
 
-from trojsten.contests.models import Competition, Round, Series, Task
+from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
 from trojsten.utils.test_utils import get_noexisting_id
 
@@ -46,15 +46,15 @@ class ArchiveTest(TestCase):
     def test_one_year(self):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(self.site)
-        series = Series.objects.create(number=1, name='Test series', competition=competition,
+        semester = Semester.objects.create(number=1, name='Test semester', competition=competition,
                                        year=1)
-        Round.objects.create(number=1, series=series, solutions_visible=True, visible=True)
+        Round.objects.create(number=1, semester=semester, solutions_visible=True, visible=True)
 
         response = self.client.get(self.url)
         # @ToDo: translations
         self.assertContains(response, "1. ročník")
         # @ToDo: translations
-        self.assertContains(response, "1. séria")
+        self.assertContains(response, "1. časť")
         # @ToDo: translations
         self.assertContains(response, "1. kolo")
         # @ToDo: translations
@@ -76,12 +76,12 @@ class ArchiveTest(TestCase):
         response = self.client.get(self.url)
         self.assertContains(response, "TestCompetition 47")
 
-        series1 = Series.objects.create(number=42, name='Test series 42', competition=competition1,
+        semester1 = Semester.objects.create(number=42, name='Test semester 42', competition=competition1,
                                         year=42)
-        series2 = Series.objects.create(number=47, name='Test series 47', competition=competition2,
+        semester2 = Semester.objects.create(number=47, name='Test semester 47', competition=competition2,
                                         year=47)
-        Round.objects.create(number=42, series=series1, solutions_visible=True, visible=True)
-        Round.objects.create(number=47, series=series2, solutions_visible=True, visible=True)
+        Round.objects.create(number=42, semester=semester1, solutions_visible=True, visible=True)
+        Round.objects.create(number=47, semester=semester2, solutions_visible=True, visible=True)
 
         response = self.client.get(self.url)
         # @ToDo: translations
@@ -89,9 +89,9 @@ class ArchiveTest(TestCase):
         # @ToDo: translations
         self.assertContains(response, "47. ročník")
         # @ToDo: translations
-        self.assertContains(response, "42. séria")
+        self.assertContains(response, "42. časť")
         # @ToDo: translations
-        self.assertContains(response, "47. séria")
+        self.assertContains(response, "47. časť")
         # @ToDo: translations
         self.assertContains(response, "42. kolo")
         # @ToDo: translations
@@ -100,11 +100,11 @@ class ArchiveTest(TestCase):
     def test_two_years(self):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(self.site)
-        series1 = Series.objects.create(number=1, name='Test series 1', competition=competition,
+        semester1 = Semester.objects.create(number=1, name='Test semester 1', competition=competition,
                                         year=1)
-        series2 = Series.objects.create(number=1, name='Test series 2', competition=competition,
+        semester2 = Semester.objects.create(number=1, name='Test semester 2', competition=competition,
                                         year=2)
-        Round.objects.create(number=1, series=series1, solutions_visible=True, visible=True)
+        Round.objects.create(number=1, semester=semester1, solutions_visible=True, visible=True)
 
         response = self.client.get(self.url)
         # @ToDo: translations
@@ -112,39 +112,39 @@ class ArchiveTest(TestCase):
         # @ToDo: translations
         self.assertNotContains(response, "2. ročník")
 
-        Round.objects.create(number=1, series=series2, solutions_visible=True, visible=True)
+        Round.objects.create(number=1, semester=semester2, solutions_visible=True, visible=True)
 
         response = self.client.get(self.url)
         # @ToDo: translations
         self.assertContains(response, "2. ročník")
 
-    def test_two_series(self):
+    def test_two_semester(self):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(self.site)
-        series1 = Series.objects.create(number=1, name='Test series 1', competition=competition,
+        semester1 = Semester.objects.create(number=1, name='Test semester 1', competition=competition,
                                         year=1)
-        series2 = Series.objects.create(number=2, name='Test series 2', competition=competition,
+        semester2 = Semester.objects.create(number=2, name='Test semester 2', competition=competition,
                                         year=1)
-        Round.objects.create(number=1, series=series1, solutions_visible=True, visible=True)
+        Round.objects.create(number=1, semester=semester1, solutions_visible=True, visible=True)
 
         response = self.client.get(self.url)
         # @ToDo: translations
-        self.assertContains(response, "1. séria")
+        self.assertContains(response, "1. časť")
         # @ToDo: translations
-        self.assertNotContains(response, "2. séria")
+        self.assertNotContains(response, "2. časť")
 
-        Round.objects.create(number=1, series=series2, solutions_visible=True, visible=True)
+        Round.objects.create(number=1, semester=semester2, solutions_visible=True, visible=True)
 
         response = self.client.get(self.url)
         # @ToDo: translations
-        self.assertContains(response, "2. séria")
+        self.assertContains(response, "2. časť")
 
     def test_two_rounds(self):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(self.site)
-        series = Series.objects.create(number=1, name='Test series 1', competition=competition,
+        semester = Semester.objects.create(number=1, name='Test semester 1', competition=competition,
                                        year=1)
-        Round.objects.create(number=1, series=series, solutions_visible=True, visible=True)
+        Round.objects.create(number=1, semester=semester, solutions_visible=True, visible=True)
 
         response = self.client.get(self.url)
         # @ToDo: translations
@@ -152,7 +152,7 @@ class ArchiveTest(TestCase):
         # @ToDo: translations
         self.assertNotContains(response, "2. kolo")
 
-        Round.objects.create(number=2, series=series, solutions_visible=True, visible=True)
+        Round.objects.create(number=2, semester=semester, solutions_visible=True, visible=True)
 
         response = self.client.get(self.url)
         # @ToDo: translations
@@ -162,9 +162,9 @@ class ArchiveTest(TestCase):
         group = Group.objects.create(name="Test Group")
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(self.site)
-        series = Series.objects.create(number=1, name='Test series 1', competition=competition,
+        semester = Semester.objects.create(number=1, name='Test semester 1', competition=competition,
                                        year=1)
-        Round.objects.create(number=1, series=series, solutions_visible=True, visible=False)
+        Round.objects.create(number=1, semester=semester, solutions_visible=True, visible=False)
 
         response = self.client.get(self.url)
         # @ToDo: translations
@@ -184,8 +184,8 @@ class ArchiveTest(TestCase):
 class RoundMethodTests(TestCase):
     def test_get_pdf_name(self):
         c = Competition.objects.create(name='ABCD')
-        s = Series.objects.create(year=47, competition=c, number=1)
-        r = Round.objects.create(number=3, series=s, visible=True, solutions_visible=True)
+        s = Semester.objects.create(year=47, competition=c, number=1)
+        r = Round.objects.create(number=3, semester=s, visible=True, solutions_visible=True)
         activate('en')
         self.assertEqual(r.get_pdf_name(), u'ABCD-year47-round3-tasks.pdf')
         self.assertEqual(r.get_pdf_name(True), u'ABCD-year47-round3-solutions.pdf')
@@ -199,11 +199,11 @@ class TaskListTests(TestCase):
         group = Group.objects.create(name='staff')
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        series = Series.objects.create(number=1, name='Test series', competition=competition,
+        semester = Semester.objects.create(number=1, name='Test semester', competition=competition,
                                        year=1)
-        self.round = Round.objects.create(number=1, series=series, visible=True,
+        self.round = Round.objects.create(number=1, semester=semester, visible=True,
                                           solutions_visible=True)
-        self.invisible_round = Round.objects.create(number=1, series=series, visible=False,
+        self.invisible_round = Round.objects.create(number=1, semester=semester, visible=False,
                                                     solutions_visible=False)
         self.staff_user = User.objects.create(username='staff')
         self.staff_user.groups.add(group)
@@ -258,11 +258,11 @@ class TaskAndSolutionStatementsTests(TestCase):
         group = Group.objects.create(name='staff')
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        series = Series.objects.create(number=1, name='Test series', competition=competition,
+        semester = Semester.objects.create(number=1, name='Test semester', competition=competition,
                                        year=1)
-        self.round = Round.objects.create(number=1, series=series, visible=True,
+        self.round = Round.objects.create(number=1, semester=semester, visible=True,
                                           solutions_visible=True)
-        self.invisible_round = Round.objects.create(number=1, series=series, visible=False,
+        self.invisible_round = Round.objects.create(number=1, semester=semester, visible=False,
                                                     solutions_visible=False)
         self.task = Task.objects.create(number=1, name='Test task', round=self.round)
         self.staff_user = User.objects.create(username='staff')
@@ -360,8 +360,8 @@ class PdfDownloadTests(TestCase):
         group = Group.objects.create(name='staff')
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        self.series = Series.objects.create(
-            number=1, name='Test series', competition=competition, year=1,
+        self.semester = Semester.objects.create(
+            number=1, name='Test semester', competition=competition, year=1,
         )
         self.staff_user = User.objects.create(username='staff')
         self.staff_user.groups.add(group)
@@ -379,7 +379,7 @@ class PdfDownloadTests(TestCase):
 
     def test_task_pdf(self):
         round = Round.objects.create(
-            number=1, series=self.series, visible=True, solutions_visible=True,
+            number=1, semester=self.semester, visible=True, solutions_visible=True,
         )
         url = reverse('view_pdf', kwargs={'round_id': round.id})
         response = self.client.get(url)
@@ -387,7 +387,7 @@ class PdfDownloadTests(TestCase):
 
     def test_solution_pdf(self):
         round = Round.objects.create(
-            number=1, series=self.series, visible=True, solutions_visible=True,
+            number=1, semester=self.semester, visible=True, solutions_visible=True,
         )
         url = reverse('view_solutions_pdf', kwargs={'round_id': round.id})
         response = self.client.get(url)
@@ -395,7 +395,7 @@ class PdfDownloadTests(TestCase):
 
     def test_missing_task_pdf(self):
         round2 = Round.objects.create(
-            number=2, series=self.series, visible=True, solutions_visible=True,
+            number=2, semester=self.semester, visible=True, solutions_visible=True,
         )
         url = reverse('view_pdf', kwargs={'round_id': round2.id})
         response = self.client.get(url)
@@ -403,7 +403,7 @@ class PdfDownloadTests(TestCase):
 
     def test_missing_solutions_pdf(self):
         round2 = Round.objects.create(
-            number=2, series=self.series, visible=True, solutions_visible=True,
+            number=2, semester=self.semester, visible=True, solutions_visible=True,
         )
         url = reverse('view_solutions_pdf', kwargs={'round_id': round2.id})
         response = self.client.get(url)
@@ -411,7 +411,7 @@ class PdfDownloadTests(TestCase):
 
     def test_invisible_task_pdf(self):
         round = Round.objects.create(
-            number=1, series=self.series, visible=False, solutions_visible=False,
+            number=1, semester=self.semester, visible=False, solutions_visible=False,
         )
         url = reverse('view_pdf', kwargs={'round_id': round.id})
         response = self.client.get(url)
@@ -419,7 +419,7 @@ class PdfDownloadTests(TestCase):
 
     def test_invisible_solution_pdf(self):
         round = Round.objects.create(
-            number=1, series=self.series, visible=True, solutions_visible=False,
+            number=1, semester=self.semester, visible=True, solutions_visible=False,
         )
         url = reverse('view_solutions_pdf', kwargs={'round_id': round.id})
         response = self.client.get(url)
@@ -428,7 +428,7 @@ class PdfDownloadTests(TestCase):
     def test_nostaff_invisible_task_pdf(self):
         self.client.force_login(self.nonstaff_user)
         round = Round.objects.create(
-            number=1, series=self.series, visible=False, solutions_visible=False,
+            number=1, semester=self.semester, visible=False, solutions_visible=False,
         )
         url = reverse('view_pdf', kwargs={'round_id': round.id})
         response = self.client.get(url)
@@ -437,7 +437,7 @@ class PdfDownloadTests(TestCase):
     def test_nostaff_invisible_solution_pdf(self):
         self.client.force_login(self.nonstaff_user)
         round = Round.objects.create(
-            number=1, series=self.series, visible=True, solutions_visible=False,
+            number=1, semester=self.semester, visible=True, solutions_visible=False,
         )
         url = reverse('view_solutions_pdf', kwargs={'round_id': round.id})
         response = self.client.get(url)
@@ -446,7 +446,7 @@ class PdfDownloadTests(TestCase):
     def test_staff_invisible_task_pdf(self):
         self.client.force_login(self.staff_user)
         round = Round.objects.create(
-            number=1, series=self.series, visible=False, solutions_visible=False,
+            number=1, semester=self.semester, visible=False, solutions_visible=False,
         )
         url = reverse('view_pdf', kwargs={'round_id': round.id})
         response = self.client.get(url)
@@ -455,7 +455,7 @@ class PdfDownloadTests(TestCase):
     def test_staff_invisible_solution_pdf(self):
         self.client.force_login(self.staff_user)
         round = Round.objects.create(
-            number=1, series=self.series, visible=True, solutions_visible=False,
+            number=1, semester=self.semester, visible=True, solutions_visible=False,
         )
         url = reverse('view_solutions_pdf', kwargs={'round_id': round.id})
         response = self.client.get(url)

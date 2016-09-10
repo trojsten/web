@@ -97,7 +97,7 @@ class ResultsGenerator(object):
         """
         Returns the queryset of Submits that should be included in the results.
         """
-        rules = res_request.round.series.competition.rules
+        rules = res_request.round.semester.competition.rules
 
         return Submit.objects.filter(
             task__in=self.get_task_queryset(res_request),

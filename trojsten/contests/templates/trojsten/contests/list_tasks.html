@@ -8,8 +8,8 @@
 <h1>
     Zadania
     <small>
-        {{ round.number }}. kola {{ round.series.number }}. série
-        {{ round.series.year }}. ročníka {{ round.series.competition.name }}
+        {{ round.number }}. kola {{ round.semester.number }}. časti
+        {{ round.semester.year }}. ročníka {{ round.semester.competition.name }}
         {% if not round.visible %}
             <span class="label label-danger">skryté</span>
         {% endif %}
@@ -22,6 +22,6 @@
     {% show_buttons round %}
     <h2>Zoznam úloh</h2>
     {% show_task_list round %}
-    {% show_archive active_competition=round.series.competition %}
+    {% show_archive active_competition=round.semester.competition %}
     </div>
 {% endblock %}

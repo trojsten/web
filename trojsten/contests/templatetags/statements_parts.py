@@ -21,9 +21,9 @@ def show_task_list(context, round):
     ).order_by(
         'number'
     ).select_related(
-        'round', 'round__series', 'round__series__competition'
+        'round', 'round__semester', 'round__semester__competition'
     )
-    categories = Category.objects.filter(competition=round.series.competition)
+    categories = Category.objects.filter(competition=round.semester.competition)
 
     data = {
         'round': round,

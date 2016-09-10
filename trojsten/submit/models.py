@@ -35,13 +35,13 @@ class SubmitManager(models.Manager):
             minimal_year_of_graduation = tasks[0].round.end_time.year + int(
                 tasks[0].round.end_time.month > SCHOOL_YEAR_END_MONTH
             )
-            if tasks[0].round.series.competition.primary_school_only:
+            if tasks[0].round.semester.competition.primary_school_only:
                 minimal_year_of_graduation += GRADUATION_SCHOOL_YEAR
             submits = submits.exclude(
                 user__graduation__lt=minimal_year_of_graduation
             ).exclude(
                 user__in=User.objects.filter(
-                    groups=tasks[0].round.series.competition.organizers_group
+                    groups=tasks[0].round.semester.competition.organizers_group
                 )
             )
 

@@ -14,7 +14,7 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
     """Displays results for specified round_ids and category_id
     """
     round = get_object_or_404(
-        Round.objects.visible(request.user).select_related('series__competition'),
+        Round.objects.visible(request.user).select_related('semester__competition'),
         pk=round_id,
     )
     single_round = is_true(request.GET.get('single_round', False))

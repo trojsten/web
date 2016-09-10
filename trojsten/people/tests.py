@@ -6,7 +6,7 @@ import random
 from django.contrib.auth.models import Group
 from django.test import TestCase
 
-from trojsten.contests.models import Competition, Round, Series
+from trojsten.contests.models import Competition, Round, Semester
 from trojsten.contests.models import Task
 
 from .helpers import get_similar_users, merge_users
@@ -60,7 +60,7 @@ class MergeUsersTests(TestCase):
             street='Jablková 47', town='Dolný Kubín', postal_code='94742', country='Slovensko'
         )
         rnd = Round.objects.create(
-            series=Series.objects.create(
+            semester=Semester.objects.create(
                 competition=Competition.objects.create(
                     name='Test competition'
                 ),

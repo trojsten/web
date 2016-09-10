@@ -15,7 +15,7 @@ from easy_select2.widgets import Select2
 from import_export import fields, resources
 from import_export.admin import ExportMixin
 
-from trojsten.contests.models import Competition, Series
+from trojsten.contests.models import Competition, Semester
 from trojsten.submit.models import Submit
 from trojsten.utils.utils import attribute_format
 
@@ -65,27 +65,27 @@ class ActiveInCompetitionFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value():
             active_users = Submit.objects.filter(
-                task__round__series__competition__id=self.value()
+                task__round__semester__competition__id=self.value()
             ).values_list('user', flat=True)
             return queryset.filter(id__in=active_users)
         else:
             return queryset
 
 
-class ActiveInSeriesSubFilter(admin.SimpleListFilter):
-    title = 'účasti v sérii'
-    parameter_name = 'series'
+class ActiveInSemesterSubFilter(admin.SimpleListFilter):
+    title = 'účasti v časti'
+    parameter_name = 'semester'
 
     def lookups(self, request, model_admin):
-        series = Series.objects
+        semester = Semester.objects
         if 'competition' in request.GET:
-            series = series.filter(competition__id=request.GET['competition'])
-        return ((s.id, force_text(s)) for s in series.all())
+            semester = semester.filter(competition__id=request.GET['competition'])
+        return ((s.id, force_text(s)) for s in semester.all())
 
     def queryset(self, request, queryset):
         if self.value():
             active_users = Submit.objects.filter(
-                task__round__series__id=self.value()
+                task__round__semester__id=self.value()
             ).values_list('user', flat=True)
             return queryset.filter(id__in=active_users)
         else:
@@ -129,7 +129,7 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
     list_display = ('username', 'first_name', 'last_name', 'email',
                     'get_school', 'graduation', 'get_is_staff', 'get_groups',
                     'is_active', 'get_properties')
-    list_filter = ('groups', StaffFilter, ActiveInCompetitionFilter, ActiveInSeriesSubFilter)
+    list_filter = ('groups', StaffFilter, ActiveInCompetitionFilter, ActiveInSemesterSubFilter)
     search_fields = ('username', 'first_name', 'last_name')
 
     formfield_overrides = {

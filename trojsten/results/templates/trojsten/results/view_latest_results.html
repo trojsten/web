@@ -16,7 +16,7 @@
     <li {% if forloop.counter == 1 %}class="active"{% endif %}>
         <a href="#category-tab-{{ table.round.id }}-{{ table.tag.key }}" role="tab"
            data-toggle="tab">
-            {{ table.round.series.competition }} {{ table.tag.name }}
+            {{ table.round.semester.competition }} {{ table.tag.name }}
         </a>
     </li>
 {% endfor %}

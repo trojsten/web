@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
 
-from trojsten.contests.models import Competition, Round, Series
+from trojsten.contests.models import Competition, Round, Semester
 from trojsten.people.models import User
 from trojsten.submit.models import Submit
 from trojsten.contests.models import Task
@@ -20,7 +20,7 @@ class RecentResultsTest(TestCase):
     def setUp(self):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        self.series = Series.objects.create(number=1, name='Test series', competition=competition,
+        self.semester = Semester.objects.create(number=1, name='Test semester', competition=competition,
                                             year=1)
         self.url = reverse('view_latest_results')
         year = timezone.now().year + 2
@@ -38,9 +38,9 @@ class RecentResultsTest(TestCase):
         end1 = timezone.now() + timezone.timedelta(-4)
         start2 = timezone.now() + timezone.timedelta(-4)
         end2 = timezone.now() + timezone.timedelta(4)
-        round1 = Round.objects.create(number=1, series=self.series, visible=True,
+        round1 = Round.objects.create(number=1, semester=self.semester, visible=True,
                                       solutions_visible=True, start_time=start1, end_time=end1)
-        round2 = Round.objects.create(number=2, series=self.series, visible=True, start_time=start2,
+        round2 = Round.objects.create(number=2, semester=self.semester, visible=True, start_time=start2,
                                       end_time=end2, solutions_visible=True)
         task1 = Task.objects.create(number=1, name='Test task 1', round=round1)
         task2 = Task.objects.create(number=1, name='Test task 2', round=round2)
@@ -64,7 +64,7 @@ class RecentResultsTest(TestCase):
     def test_closed_round(self):
         start = timezone.now() + timezone.timedelta(-8)
         end = timezone.now() + timezone.timedelta(-4)
-        Round.objects.create(number=1, series=self.series, visible=True, solutions_visible=True,
+        Round.objects.create(number=1, semester=self.semester, visible=True, solutions_visible=True,
                              start_time=start, end_time=end)
 
         response = self.client.get(self.url)
@@ -76,7 +76,7 @@ class RecentResultsTest(TestCase):
                                        first_name="Jozko", last_name="Starcek", graduation=2010)
         start = timezone.now() + timezone.timedelta(-4)
         end = timezone.now() + timezone.timedelta(4)
-        test_round = Round.objects.create(number=1, series=self.series, visible=True,
+        test_round = Round.objects.create(number=1, semester=self.semester, visible=True,
                                           solutions_visible=True, start_time=start, end_time=end)
         task = Task.objects.create(number=1, name='Test task 1', round=test_round)
 
@@ -95,9 +95,9 @@ class ResultsTest(TestCase):
     def setUp(self):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        self.series1 = Series.objects.create(number=1, name='Test series 1', year=1,
+        self.semester1 = Semester.objects.create(number=1, name='Test semester 1', year=1,
                                              competition=competition)
-        self.series2 = Series.objects.create(number=2, name='Test series 2', year=1,
+        self.semester2 = Semester.objects.create(number=2, name='Test semester 2', year=1,
                                              competition=competition)
 
         start1 = timezone.now() + timezone.timedelta(-12)
@@ -106,11 +106,11 @@ class ResultsTest(TestCase):
         end2 = timezone.now() + timezone.timedelta(-4)
         start3 = timezone.now() + timezone.timedelta(-4)
         end3 = timezone.now() + timezone.timedelta(4)
-        self.round1 = Round.objects.create(number=1, series=self.series1, solutions_visible=True,
+        self.round1 = Round.objects.create(number=1, semester=self.semester1, solutions_visible=True,
                                            start_time=start1, end_time=end1, visible=True)
-        self.round2 = Round.objects.create(number=2, series=self.series1, solutions_visible=True,
+        self.round2 = Round.objects.create(number=2, semester=self.semester1, solutions_visible=True,
                                            start_time=start2, end_time=end2, visible=True)
-        self.round3 = Round.objects.create(number=2, series=self.series2, solutions_visible=True,
+        self.round3 = Round.objects.create(number=2, semester=self.semester2, solutions_visible=True,
                                            start_time=start3, end_time=end3, visible=True)
         self.task1 = Task.objects.create(number=1, name='Test task 1', round=self.round1)
         self.task2 = Task.objects.create(number=1, name='Test task 2', round=self.round2)

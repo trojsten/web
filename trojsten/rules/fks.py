@@ -18,7 +18,7 @@ class FKSResultsGenerator(
 
         # FIXME(generic_results_stage_2): Hacking backward compatibility, since there is no
         # results freezing yet.
-        if (request.round.series.pk == 9):
+        if (request.round.semester.pk == 9):
             if self.tag.key == FKS_B:
                 STARCI = [
                     115, 92, 4447, 4512, 4350, 5, 4471, 4507, 130, 4513, 40, 4499, 4450, 4404, 4668,
@@ -43,7 +43,7 @@ class FKSResultsGenerator(
         # FIXME(generic_results_stage_2): Hacking backward compatibility, since there is no
         # results freezing yet.
         if self.tag.key == FKS_A:
-            if (request.round.series.pk == 9):
+            if (request.round.semester.pk == 9):
                 row.active = (row.previous and row.previous.active) or [
                     key for key in (6, 7) if row.cells_by_key[key].manual_points is not None
                 ]

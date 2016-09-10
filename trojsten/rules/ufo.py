@@ -33,7 +33,7 @@ class UFOResultsGenerator(
 
         # FIXME(generic_results_stage_2): Hacking backward compatibility, since there is no
         # results freezing yet.
-        if (request.round.series.pk == 10):
+        if (request.round.semester.pk == 10):
             self.bonus = (request.max_points - row.round_total)*(
                 Decimal('0.000') if r == 9 else Decimal('0.008') if r == 8 else Decimal('0.015')
             )
