@@ -1,36 +1,39 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-import sys
-import zipfile
+
 import io
+import shutil
+import sys
+import tempfile
+import zipfile
 from os import path
+
+from django.conf import settings
+from django.contrib.auth.models import Group
+from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
+from django.test import TestCase, override_settings
 from django.utils import timezone
+from django.utils.text import slugify
+
+from trojsten.contests.models import Competition, Round, Series, Task
+from trojsten.people.models import User
+from trojsten.reviews import constants as review_constants
+from trojsten.reviews import helpers
+from trojsten.reviews.forms import ZipForm
+from trojsten.submit import constants as submit_constants
+from trojsten.submit.models import Submit
+from trojsten.utils.test_utils import get_noexisting_id
+
 try:
     from urllib.request import quote, unquote
 except ImportError:
     from urllib import quote, unquote
 
-from django.conf import settings
-from django.contrib.sites.models import Site
-from django.contrib.auth.models import Group
-from django.core.urlresolvers import reverse
-from django.test import TestCase, override_settings
-from django.utils.text import slugify
-
-from trojsten.contests.models import Competition, Round, Series
-from trojsten.submit.models import Submit
-from trojsten.contests.models import Task
-from trojsten.reviews.forms import ZipForm
-from trojsten.reviews import helpers
-from trojsten.people.models import User
-from trojsten.utils.test_utils import get_noexisting_id
-
-from trojsten.submit import constants as submit_constants
-from trojsten.reviews import constants as review_constants
-
 
 class ReviewZipFormTests(TestCase):
+
     def setUp(self):
         self.choices = [(47, 'Meno Priezvisko')]
         self.test_str = u'ľščťžýáíéúňďôä'
@@ -88,6 +91,7 @@ class ReviewZipFormTests(TestCase):
 
 
 class ReviewTest(TestCase):
+
     def setUp(self):
         year = timezone.now().year + 2
         self.user = User.objects.create_user(username='TestUser', password='password',
@@ -212,9 +216,15 @@ class ReviewTest(TestCase):
 
 
 @override_settings(
-    SUBMIT_PATH=path.join(path.dirname(__file__), 'test_data'),
+    SUBMIT_PATH=tempfile.mkdtemp(dir=path.join(path.dirname(__file__), 'test_data')),
 )
 class DownloadLatestSubmits(TestCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(settings.SUBMIT_PATH)
+        super(DownloadLatestSubmits, cls).tearDownClass()
+
     def setUp(self):
         year = timezone.now().year + 2
         self.user = User.objects.create_user(username='TestUser', password='password',
@@ -363,7 +373,8 @@ class DownloadLatestSubmits(TestCase):
                               testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
                               submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION)
 
-        comm_file = '%s%s' % (helpers.submit_directory(submit), review_constants.REVIEW_COMMENT_FILENAME)
+        comm_file = '%s%s' % (helpers.submit_directory(
+            submit), review_constants.REVIEW_COMMENT_FILENAME)
 
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
@@ -386,7 +397,8 @@ class DownloadLatestSubmits(TestCase):
                               testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
                               submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION)
 
-        points_file = '%s%s' % (helpers.submit_directory(submit), review_constants.REVIEW_POINTS_FILENAME)
+        points_file = '%s%s' % (helpers.submit_directory(
+            submit), review_constants.REVIEW_POINTS_FILENAME)
 
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
@@ -443,6 +455,7 @@ class DownloadLatestSubmits(TestCase):
 
 
 class ReviewEditTest(TestCase):
+
     def setUp(self):
         year = timezone.now().year + 2
         self.user = User.objects.create_user(username='TestUser', password='password',
@@ -496,7 +509,7 @@ class ReviewEditTest(TestCase):
     def test_invalid_task(self):
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={'task_pk': get_noexisting_id(Task),
-                      'submit_pk': get_noexisting_id(Submit)})
+                                             'submit_pk': get_noexisting_id(Submit)})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
