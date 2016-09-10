@@ -53,9 +53,9 @@ class SubmitAdmin(admin.ModelAdmin):
         return submit_urls + super(SubmitAdmin, self).get_urls()
 
     def get_category(self, obj):
-        return ', '.join(force_text(x.name) for x in obj.task.category.all())
+        return ', '.join(force_text(x.name) for x in obj.task.categories.all())
     get_category.short_description = 'kategória'
-    get_category.admin_order_field = 'task__category'
+    get_category.admin_order_field = 'task__categories'
 
     def get_queryset(self, request):
         user_groups = request.user.groups.all()
@@ -63,6 +63,6 @@ class SubmitAdmin(admin.ModelAdmin):
         task_lst = Task.objects.filter(round__in=round_lst)
         return super(SubmitAdmin, self).get_queryset(request).filter(
             task__in=task_lst
-        ).prefetch_related('task__category')
+        ).prefetch_related('task__categories')
 
 admin.site.register(Submit, SubmitAdmin)

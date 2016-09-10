@@ -157,9 +157,9 @@ class TaskAdmin(admin.ModelAdmin):
         return task_review_urls + super(TaskAdmin, self).get_urls()
 
     def get_category(self, obj):
-        return ', '.join(force_text(x.name) for x in obj.category.all())
+        return ', '.join(force_text(x.name) for x in obj.categories.all())
     get_category.short_description = 'kategória'
-    get_category.admin_order_field = 'category'
+    get_category.admin_order_field = 'categories'
 
     def submit_type(self, obj):
         res = ''
@@ -186,7 +186,7 @@ class TaskAdmin(admin.ModelAdmin):
         round_lst = Round.objects.filter(series__competition__organizers_group__in=user_groups)
         return super(TaskAdmin, self).get_queryset(request).filter(
             round__in=round_lst
-        ).distinct().prefetch_related('category').select_related(
+        ).distinct().prefetch_related('categories').select_related(
             'reviewer', 'round__series__competition'
         )
 

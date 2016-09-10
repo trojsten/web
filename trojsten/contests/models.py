@@ -288,7 +288,7 @@ class Task(models.Model):
         verbose_name='opravovateľ',
     )
     round = models.ForeignKey(Round, verbose_name='kolo')
-    category = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
+    categories = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
     description_points = models.IntegerField(verbose_name='body za popis', default=0)
     source_points = models.IntegerField(verbose_name='body za program', default=0)
