@@ -188,6 +188,17 @@ module.exports = function (grunt) {
         src: 'less/trojsten.less',
         dest: 'dist/css/trojsten/<%= pkg.name %>.css'
       },
+      compileKMS: {
+        options: {
+          strictMath: true,
+          sourceMap: true,
+          outputSourceFiles: true,
+          sourceMapURL: '<%= pkg.name %>.css.map',
+          sourceMapFilename: 'dist/css/<%= pkg.name %>.css.map'
+        },
+        src: 'less/kms.less',
+        dest: 'dist/css/kms/<%= pkg.name %>.css'
+      },
     },
 
     autoprefixer: {
@@ -199,7 +210,6 @@ module.exports = function (grunt) {
           'Firefox >= 24', // Firefox 24 is the latest ESR
           'Explorer >= 8',
           'iOS >= 6',
-          'Opera >= 12',
           'Safari >= 6'
         ]
       },
@@ -220,6 +230,12 @@ module.exports = function (grunt) {
           map: true
         },
         src: 'dist/css/trojsten/<%= pkg.name %>.css'
+      },
+      kms: {
+        options: {
+          map: true
+        },
+        src: 'dist/css/kms/<%= pkg.name %>.css'
       },
       docs: {
         src: 'docs/assets/css/src/docs.css'
@@ -269,6 +285,10 @@ module.exports = function (grunt) {
       minifyTrojsten: {
         src: 'dist/css/trojsten/<%= pkg.name %>.css',
         dest: 'dist/css/trojsten/<%= pkg.name %>.min.css'
+      },
+      minifyKMS: {
+        src: 'dist/css/kms/<%= pkg.name %>.css',
+        dest: 'dist/css/kms/<%= pkg.name %>.min.css'
       },
       docs: {
         src: [
@@ -352,7 +372,7 @@ module.exports = function (grunt) {
       },
       kms: {
         expand: true,
-        cwd: 'dist/css/trojsten/',
+        cwd: 'dist/css/kms/',
         src: '**',
         dest: '../../trojsten/static/css/kms/'
       },
@@ -515,8 +535,8 @@ module.exports = function (grunt) {
   grunt.registerTask('dist-js', ['concat', 'uglify:core']);
 
   // CSS distribution task.
-  grunt.registerTask('less-compile', ['less:compileFKS', 'less:compileKSP', 'less:compileTrojsten']);
-  grunt.registerTask('dist-css', ['less-compile', 'autoprefixer:ksp', 'autoprefixer:fks', 'autoprefixer:trojsten', 'usebanner', 'csscomb:dist', 'cssmin:minifyKSP', 'cssmin:minifyFKS', 'cssmin:minifyTrojsten']);
+  grunt.registerTask('less-compile', ['less:compileFKS', 'less:compileKSP', 'less:compileTrojsten', 'less:compileKMS']);
+  grunt.registerTask('dist-css', ['less-compile', 'autoprefixer:ksp', 'autoprefixer:fks', 'autoprefixer:trojsten', 'autoprefixer:kms', 'usebanner', 'csscomb:dist', 'cssmin:minifyKSP', 'cssmin:minifyFKS', 'cssmin:minifyTrojsten', 'cssmin:minifyKMS']);
 
   // Full distribution task.
   grunt.registerTask('dist', ['clean:dist',
