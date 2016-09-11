@@ -78,6 +78,7 @@ class KMSSite(BaseSite):
     folder = 'kms'
     facebook_page = 'https://www.facebook.com/pages/KMS/144730632208936'
     googleplus_page = 'http://kms.sk'
+    theme_color = '#663399'
 
 
 class TrojstenSite(BaseSite):
