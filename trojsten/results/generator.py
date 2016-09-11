@@ -348,5 +348,5 @@ class CategoryTagKeyGeneratorMixin(object):
     def get_task_queryset(self, res_request):
         return Task.objects.filter(
             round=res_request.round,
-            category__name=self.tag.key,
+            categories__name=self.tag.key,
         ).order_by('number')

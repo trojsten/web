@@ -20,7 +20,7 @@ class SubmitAdmin(admin.ModelAdmin):
 
     list_select_related = True
     list_display = ('get_task_name', 'get_task_number',
-                    'get_round', 'get_semester', 'get_year', 'get_competition', 'get_category',
+                    'get_round', 'get_semester', 'get_year', 'get_competition', 'get_categories',
                     'user', 'time', 'get_points', 'submit_type', 'testing_status', 'filepath',)
     list_filter = ('task__round__semester__competition',)
     search_fields = ('user__username', 'task__name',)
@@ -52,10 +52,10 @@ class SubmitAdmin(admin.ModelAdmin):
     def get_urls(self):
         return submit_urls + super(SubmitAdmin, self).get_urls()
 
-    def get_category(self, obj):
+    def get_categories(self, obj):
         return ', '.join(force_text(x.name) for x in obj.task.categories.all())
-    get_category.short_description = 'kategória'
-    get_category.admin_order_field = 'task__categories'
+    get_categories.short_description = 'kategória'
+    get_categories.admin_order_field = 'task__categories'
 
     def get_queryset(self, request):
         user_groups = request.user.groups.all()

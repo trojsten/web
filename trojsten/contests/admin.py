@@ -139,7 +139,7 @@ class TaskAdmin(admin.ModelAdmin):
 
     list_select_related = True
     list_display = ('name', 'number',
-                    'get_round', 'get_semester', 'get_year', 'get_competition', 'get_category',
+                    'get_round', 'get_semester', 'get_year', 'get_competition', 'get_categories',
                     'submit_type', 'integer_source_points', 'reviewer',
                     'tasks_pdf', 'solutions_pdf')
     list_filter = ('round__semester__competition',
@@ -162,10 +162,10 @@ class TaskAdmin(admin.ModelAdmin):
     def get_urls(self):
         return task_review_urls + super(TaskAdmin, self).get_urls()
 
-    def get_category(self, obj):
+    def get_categories(self, obj):
         return ', '.join(force_text(x.name) for x in obj.categories.all())
-    get_category.short_description = 'kategória'
-    get_category.admin_order_field = 'categories'
+    get_categories.short_description = 'kategória'
+    get_categories.admin_order_field = 'categories'
 
     def submit_type(self, obj):
         res = ''
