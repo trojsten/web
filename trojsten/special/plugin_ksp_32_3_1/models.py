@@ -6,11 +6,11 @@ from django.db import models
 
 class LevelSolved(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+')
-    series = models.IntegerField()
+    semester = models.IntegerField()
     level = models.IntegerField()
 
     class Meta:
-        unique_together = ('user', 'series', 'level')
+        unique_together = ('user', 'semester', 'level')
 
 
 class LevelSubmit(models.Model):

@@ -33,19 +33,19 @@ class CompetitionRules(object):
         raise KeyError(tag_key)
 
     def get_previous_round(self, round):
-        qs = round.series.round_set.filter(number=round.number - 1)
+        qs = round.semester.round_set.filter(number=round.number - 1)
         if qs:
             return qs.get()
         else:
             return None
 
     def get_actual_result_rounds(self, competition):
-        rounds = Round.objects.filter(series__competition=competition, visible=True)
+        rounds = Round.objects.filter(semester__competition=competition, visible=True)
         return rounds.order_by('-end_time', '-number')[:1]
 
 
 class FinishedRoundsResultsRulesMixin():
 
     def get_actual_result_rounds(self, competition):
-        rounds = Round.objects.filter(series__competition=competition, end_time__lte=timezone.now())
+        rounds = Round.objects.filter(semester__competition=competition, end_time__lte=timezone.now())
         return rounds.order_by('-end_time', '-number')[:1]

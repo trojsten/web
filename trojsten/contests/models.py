@@ -30,10 +30,10 @@ class RoundManager(models.Manager):
         else:
             competitions = Competition.objects.current_site_only()
 
-        res = self.filter(series__competition__in=competitions)
+        res = self.filter(semester__competition__in=competitions)
         if not user.is_superuser:
             res = res.filter(
-                Q(series__competition__organizers_group__in=user.groups.all()) |
+                Q(semester__competition__organizers_group__in=user.groups.all()) |
                 Q(visible=True)
             )
         return res
@@ -43,11 +43,11 @@ class RoundManager(models.Manager):
         """Returns latest visible round for each competition
         """
         return self.visible(user, all_sites).order_by(
-            'series__competition', '-end_time', '-number',
+            'semester__competition', '-end_time', '-number',
         ).distinct(
-            'series__competition'
+            'semester__competition'
         ).select_related(
-            'series__competition'
+            'semester__competition'
         )
 
     def active_visible(self, user, all_sites=False):
@@ -58,7 +58,7 @@ class RoundManager(models.Manager):
         ).order_by(
             '-end_time', '-number',
         ).select_related(
-            'series__competition'
+            'semester__competition'
         )
 
 
@@ -72,7 +72,7 @@ class CompetitionManager(models.Manager):
 @python_2_unicode_compatible
 class Competition(models.Model):
     """
-    Consists of series.
+    Consists of semester.
     """
     name = models.CharField(max_length=128, verbose_name='názov')
     sites = models.ManyToManyField(Site)
@@ -96,27 +96,27 @@ class Competition(models.Model):
 
 
 @python_2_unicode_compatible
-class Series(models.Model):
+class Semester(models.Model):
     """
-    Series consists of several rounds.
+    Semester consists of several rounds.
     """
     competition = models.ForeignKey(Competition, verbose_name='súťaž')
     name = models.CharField(max_length=32, verbose_name='názov', blank=True)
-    number = models.IntegerField(verbose_name='číslo série')
+    number = models.IntegerField(verbose_name='číslo části')
     year = models.IntegerField(verbose_name='ročník')
 
     class Meta:
-        verbose_name = 'Séria'
-        verbose_name_plural = 'Série'
+        verbose_name = 'Časť'
+        verbose_name_plural = 'Časti'
 
     def __str__(self):
-        return '%i. (%s) séria, %i. ročník %s'\
+        return '%i. (%s) časť, %i. ročník %s'\
             % (self.number, self.name, self.year, self.competition)
 
     def short_str(self):
-        return '%i. (%s) séria'\
+        return '%i. (%s) časť'\
             % (self.number, self.name)
-    short_str.short_description = 'Séria'
+    short_str.short_description = 'Časť'
 
 
 @python_2_unicode_compatible
@@ -125,7 +125,7 @@ class Round(models.Model):
     Round has tasks.
     Holds information about deadline and such things
     """
-    series = models.ForeignKey(Series, verbose_name='séria')
+    semester = models.ForeignKey(Semester, verbose_name='časť')
     number = models.IntegerField(verbose_name='číslo')
     start_time = models.DateTimeField(
         verbose_name='začiatok', default=utils.default_start_time
@@ -146,8 +146,8 @@ class Round(models.Model):
 
     def get_base_path(self):
         round_dir = '{}{}'.format(self.number, settings.TASK_STATEMENTS_SUFFIX_ROUND)
-        year_dir = '{}{}'.format(self.series.year, settings.TASK_STATEMENTS_SUFFIX_YEAR)
-        competition_name = self.series.competition.name
+        year_dir = '{}{}'.format(self.semester.year, settings.TASK_STATEMENTS_SUFFIX_YEAR)
+        competition_name = self.semester.competition.name
         path = os.path.join(
             settings.TASK_STATEMENTS_PATH,
             competition_name,
@@ -197,31 +197,31 @@ class Round(models.Model):
     def is_visible_for_user(self, user):
         return (
             user.is_superuser or
-            self.series.competition.organizers_group in user.groups.all() or
+            self.semester.competition.organizers_group in user.groups.all() or
             self.visible
         )
 
     def solutions_are_visible_for_user(self, user):
         return (
             user.is_superuser or
-            self.series.competition.organizers_group in user.groups.all() or
+            self.semester.competition.organizers_group in user.groups.all() or
             self.solutions_visible
         )
 
     @property
     def categories(self):
-        return self.series.competition.category_set.all()
+        return self.semester.competition.category_set.all()
 
     class Meta:
         verbose_name = 'Kolo'
         verbose_name_plural = 'Kolá'
 
     def __str__(self):
-        return '%i. kolo, %i. séria, %i. ročník %s' % (
+        return '%i. kolo, %i. časť, %i. ročník %s' % (
             self.number,
-            self.series.number,
-            self.series.year,
-            self.series.competition,
+            self.semester.number,
+            self.semester.year,
+            self.semester.competition,
         )
 
     def short_str(self):
@@ -230,9 +230,9 @@ class Round(models.Model):
 
     def get_pdf_name(self, solution=False):
         return '%s-%s%i-%s%i-%s.pdf' % (
-            self.series.competition,
+            self.semester.competition,
             unidecode(_('year')),
-            self.series.year,
+            self.semester.year,
             unidecode(_('round')),
             self.number,
             unidecode(_('solutions')) if solution else unidecode(_('tasks'))
@@ -288,7 +288,7 @@ class Task(models.Model):
         verbose_name='opravovateľ',
     )
     round = models.ForeignKey(Round, verbose_name='kolo')
-    category = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
+    categories = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
     description_points = models.IntegerField(verbose_name='body za popis', default=0)
     source_points = models.IntegerField(verbose_name='body za program', default=0)

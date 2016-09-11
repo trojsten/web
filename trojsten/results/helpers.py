@@ -219,7 +219,7 @@ def make_result_table(
     ResultsTable = namedtuple('ResultsTable', ['tasks', 'results_data', 'has_previous_results'])
 
     if not (user.is_authenticated()
-            and user.is_in_group(round.series.competition.organizers_group)):
+            and user.is_in_group(round.semester.competition.organizers_group)):
         show_staff = False
 
     current_tasks = Task.objects.for_rounds_and_category(
@@ -233,7 +233,7 @@ def make_result_table(
         previous_results_data = None
         if not single_round:
             previous_rounds = Round.objects.visible(user, all_sites=True).filter(
-                series=round.series, number__lt=round.number
+                semester=round.semester, number__lt=round.number
             ).order_by('number')
 
             if previous_rounds:

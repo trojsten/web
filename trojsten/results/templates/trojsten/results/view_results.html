@@ -9,8 +9,8 @@
 {% if single_round %}
     {{ table.round.number }}. kola{% else %}po {{ table.round.number }}. kole
 {% endif %}
-{{ table.round.series.number }}. série {{ table.round.series.year }}. ročníka
-{{ table.round.series.competition }} {{ table.tag.name }}
+{{ table.round.semester.number }}. časi {{ table.round.semester.year }}. ročníka
+{{ table.round.semester.competition }} {{ table.tag.name }}
 </small></h1>
 {% endblock %}
 
@@ -24,5 +24,5 @@
 <h2>Vysvetlivky</h2>
 {% include 'trojsten/results/parts/legend.html' %}
 
-{% show_archive active_competition=table.round.series.competition %}
+{% show_archive active_competition=table.round.semester.competition %}
 {% endblock %}

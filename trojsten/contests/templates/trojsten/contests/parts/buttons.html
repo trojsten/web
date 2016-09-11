@@ -4,7 +4,7 @@
 <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-info" href="{% url 'view_pdf' round_id=round.id %}">PDF zadania</a>
 {% endif %}
 {% if round.solutions_pdf_exists %}
-    {% is_organizer round.series.competition as organizer %}
+    {% is_organizer round.semester.competition as organizer %}
     {% if organizer or round.solutions_visible %}
         <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-info" href="{% url 'view_solutions_pdf' round_id=round.id %}">
             PDF vzoráky

@@ -78,7 +78,7 @@ def view_reviewer_comment(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
     if submit.user != request.user and not Submit.objects.filter(
             pk=submit.pk,
-            task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
+            task__round__semester__competition__organizers_group__user__pk=request.user.pk).exists():
         raise PermissionDenied()
         # You shouldn't see other user's submits if you are not an organizer
         # of the competition
@@ -91,7 +91,7 @@ def view_protocol(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
     if submit.user != request.user and not Submit.objects.filter(
             pk=submit.pk,
-            task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
+            task__round__semester__competition__organizers_group__user__pk=request.user.pk).exists():
         raise PermissionDenied()
         # You shouldn't see other user's submits if you are not an organizer
         # of the competition
@@ -118,7 +118,7 @@ def view_submit(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
     if submit.user != request.user and not Submit.objects.filter(
             pk=submit.pk,
-            task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
+            task__round__semester__competition__organizers_group__user__pk=request.user.pk).exists():
         raise PermissionDenied()
         # You shouldn't see other user's submits if you are not an organizer
         # of the competition
@@ -220,7 +220,7 @@ def poll_submit_info(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
     if submit.user != request.user and not Submit.objects.filter(
             pk=submit.pk,
-            task__round__series__competition__organizers_group__user__pk=request.user.pk).exists():
+            task__round__semester__competition__organizers_group__user__pk=request.user.pk).exists():
         # You shouldn't see other user's submits if you are not an organizer of the competition
         raise PermissionDenied()
     return HttpResponse(json.dumps({

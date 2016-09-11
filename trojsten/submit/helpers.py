@@ -60,10 +60,10 @@ def get_path(task, user):
     Cesta má tvar: $SUBMIT_PATH/submits/KSP/task_id/user_id
     """
     return get_path_raw(
-        task.round.series.competition.name, "%s-%d" % (
-            task.round.series.competition.name, task.id
+        task.round.semester.competition.name, "%s-%d" % (
+            task.round.semester.competition.name, task.id
         ),
-        "%s-%d" % (task.round.series.competition.name, user.id)
+        "%s-%d" % (task.round.semester.competition.name, user.id)
     )
 
 
@@ -125,7 +125,7 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
 
 def process_submit(f, task, language, user):
     """Načíta všetko potrebné z databázy a spracuje submit"""
-    contest_id = task.round.series.competition.name
+    contest_id = task.round.semester.competition.name
     return process_submit_raw(f, contest_id, task.id, language, user.id)
 
 

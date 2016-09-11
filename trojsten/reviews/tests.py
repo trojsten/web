@@ -7,23 +7,34 @@ import shutil
 import sys
 import tempfile
 import zipfile
+import io
 from os import path
+from django.utils import timezone
+try:
+    from urllib.request import quote, unquote
+except ImportError:
+    from urllib import quote, unquote
 
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
+from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
 from django.utils import timezone
 from django.utils.text import slugify
 
-from trojsten.contests.models import Competition, Round, Series, Task
+from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
 from trojsten.reviews import constants as review_constants
 from trojsten.reviews import helpers
 from trojsten.reviews.forms import ZipForm
 from trojsten.submit import constants as submit_constants
 from trojsten.submit.models import Submit
+from trojsten.contests.models import Task
+from trojsten.reviews.forms import ZipForm
+from trojsten.reviews import helpers
+from trojsten.people.models import User
 from trojsten.utils.test_utils import get_noexisting_id
 
 try:
@@ -107,12 +118,12 @@ class ReviewTest(TestCase):
         group.user_set.add(self.staff)
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        series = Series.objects.create(number=1, name='Test series 1', year=1,
+        semester = Semester.objects.create(number=1, name='Test semester 1', year=1,
                                        competition=competition)
 
         start = timezone.now() + timezone.timedelta(-8)
         end = timezone.now() + timezone.timedelta(-4)
-        test_round = Round.objects.create(number=1, series=series, solutions_visible=True,
+        test_round = Round.objects.create(number=1, semester=semester, solutions_visible=True,
                                           start_time=start, end_time=end, visible=True)
         self.no_submit_task = Task.objects.create(number=1, name='Test task 1', round=test_round)
         self.task = Task.objects.create(number=2, name='Test task 2', round=test_round)
@@ -240,10 +251,10 @@ class DownloadLatestSubmits(TestCase):
         group.user_set.add(self.staff)
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        series = Series.objects.create(number=1, name='Test series 1', year=1,
+        semester = Semester.objects.create(number=1, name='Test semester 1', year=1,
                                        competition=competition)
 
-        test_round = Round.objects.create(number=1, series=series, solutions_visible=True,
+        test_round = Round.objects.create(number=1, semester=semester, solutions_visible=True,
                                           visible=True)
         self.task = Task.objects.create(number=2, name='TestTask2', round=test_round)
 
@@ -471,12 +482,12 @@ class ReviewEditTest(TestCase):
         group.user_set.add(self.staff)
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        series = Series.objects.create(number=1, name='Test series 1', year=1,
+        semester = Semester.objects.create(number=1, name='Test semester 1', year=1,
                                        competition=competition)
 
         start = timezone.now() + timezone.timedelta(-8)
         end = timezone.now() + timezone.timedelta(-4)
-        test_round = Round.objects.create(number=1, series=series, solutions_visible=True,
+        test_round = Round.objects.create(number=1, semester=semester, solutions_visible=True,
                                           start_time=start, end_time=end, visible=True)
         self.task = Task.objects.create(number=2, name='Test task 2', round=test_round)
         self.submit = Submit.objects.create(task=self.task, user=self.user, submit_type=1, points=5)

@@ -4,7 +4,7 @@ from django.test import TestCase
 import unittest
 import json
 
-from trojsten.contests.models import Competition, Round, Series, Task
+from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
 from django.contrib.auth.models import Group
 
@@ -38,7 +38,7 @@ class SubmitListTests(TestCase):
         self.start_time_old = timezone.now() + timezone.timedelta(-10)
         self.end_time_old = timezone.now() + timezone.timedelta(-5)
         self.end_time_new = timezone.now() + timezone.timedelta(10)
-        self.series = Series.objects.create(number=1, name='Test series',
+        self.semester = Semester.objects.create(number=1, name='Test semester',
                                             competition=self.competition,
                                             year=1)
 
@@ -54,7 +54,7 @@ class SubmitListTests(TestCase):
         self.assertContains(response, 'Aktuálne nebeží žiadne kolo.')
 
     def test_non_active_round(self):
-        Round.objects.create(number=1, series=self.series, visible=True,
+        Round.objects.create(number=1, semester=self.semester, visible=True,
                              solutions_visible=False, start_time=self.start_time_old,
                              end_time=self.end_time_old)
         self.client.force_login(self.non_staff_user)
@@ -67,7 +67,7 @@ class SubmitListTests(TestCase):
         self.assertContains(response, 'Aktuálne nebeží žiadne kolo.')
 
     def test_non_visible_round(self):
-        Round.objects.create(number=1, series=self.series, visible=False,
+        Round.objects.create(number=1, semester=self.semester, visible=False,
                              solutions_visible=False, start_time=self.start_time_old,
                              end_time=self.end_time_new)
         self.client.force_login(self.non_staff_user)
@@ -81,7 +81,7 @@ class SubmitListTests(TestCase):
         self.assertContains(response, 'skryté')
 
     def test_task_without_submit(self):
-        Round.objects.create(number=1, series=self.series, visible=True,
+        Round.objects.create(number=1, semester=self.semester, visible=True,
                              solutions_visible=False, start_time=self.start_time_old,
                              end_time=self.end_time_new)
         self.client.force_login(self.non_staff_user)
@@ -94,7 +94,7 @@ class SubmitListTests(TestCase):
         self.assertNotContains(response, 'skryté')
 
     def test_task_in_round(self):
-        round = Round.objects.create(number=1, series=self.series, visible=True,
+        round = Round.objects.create(number=1, semester=self.semester, visible=True,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
         task = Task.objects.create(number=1, name='Test task', round=round)
@@ -106,7 +106,7 @@ class SubmitListTests(TestCase):
         self.assertContains(response, 'Tento príklad momentálne nemá možnosť odovzdávania.')
 
     def test_task_with_source(self):
-        round = Round.objects.create(number=1, series=self.series, visible=True,
+        round = Round.objects.create(number=1, semester=self.semester, visible=True,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
         Task.objects.create(number=1, name='Test task', round=round, has_source=True)
@@ -118,7 +118,7 @@ class SubmitListTests(TestCase):
         self.assertContains(response, 'Kód')
 
     def test_task_with_description(self):
-        round = Round.objects.create(number=1, series=self.series, visible=True,
+        round = Round.objects.create(number=1, semester=self.semester, visible=True,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
         Task.objects.create(number=1, name='Test task', round=round, has_description=True)
@@ -130,7 +130,7 @@ class SubmitListTests(TestCase):
         self.assertContains(response, 'Popis')
 
     def test_task_with_zip(self):
-        round = Round.objects.create(number=1, series=self.series, visible=True,
+        round = Round.objects.create(number=1, semester=self.semester, visible=True,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
         Task.objects.create(number=1, name='Test task', round=round, has_testablezip=True)
@@ -142,7 +142,7 @@ class SubmitListTests(TestCase):
         self.assertContains(response, 'Zip')
 
     def tesk_task_with_all_submit_types(self):
-        round = Round.objects.create(number=1, series=self.series, visible=True,
+        round = Round.objects.create(number=1, semester=self.semester, visible=True,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
         Task.objects.create(number=1, name='Test task', round=round, has_testablezip=True,
@@ -179,7 +179,7 @@ class SubmitTaskTests(TestCase):
         self.start_time_new = timezone.now() + timezone.timedelta(5)
         self.end_time_old = timezone.now() + timezone.timedelta(-5)
         self.end_time_new = timezone.now() + timezone.timedelta(10)
-        self.series = Series.objects.create(number=1, name='Test series',
+        self.semester = Semester.objects.create(number=1, name='Test semester',
                                             competition=self.competition,
                                             year=1)
 
@@ -199,7 +199,7 @@ class SubmitTaskTests(TestCase):
 #   @FIXME: Feature not implemented yet.
     @unittest.expectedFailure
     def test_non_active_round(self):
-        round = Round.objects.create(number=1, series=self.series, visible=False,
+        round = Round.objects.create(number=1, semester=self.semester, visible=False,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
         task = Task.objects.create(number=1, name='Test task', round=round, has_testablezip=True,
@@ -210,7 +210,7 @@ class SubmitTaskTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_old_round(self):
-        round = Round.objects.create(number=1, series=self.series, visible=False,
+        round = Round.objects.create(number=1, semester=self.semester, visible=False,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_old)
         task = Task.objects.create(number=1, name='Test task', round=round, has_testablezip=True,
@@ -224,7 +224,7 @@ class SubmitTaskTests(TestCase):
 #   @FIXME: Feature not implemented yet.
     @unittest.expectedFailure
     def test_future_round(self):
-        round = Round.objects.create(number=1, series=self.series, visible=False,
+        round = Round.objects.create(number=1, semester=self.semester, visible=False,
                                      solutions_visible=False, start_time=self.start_time_new,
                                      end_time=self.end_time_new)
         task = Task.objects.create(number=1, name='Test task', round=round, has_testablezip=True,
@@ -236,7 +236,7 @@ class SubmitTaskTests(TestCase):
         self.assertNotContains(response, 'Submit')
 
     def test_non_submittable_task(self):
-        round = Round.objects.create(number=1, series=self.series, visible=False,
+        round = Round.objects.create(number=1, semester=self.semester, visible=False,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
         task = Task.objects.create(number=1, name='Test task', round=round)
@@ -251,7 +251,7 @@ class SubmitTaskTests(TestCase):
         self.assertNotContains(response, 'Kód')
 
     def test_task_with_source(self):
-        round = Round.objects.create(number=1, series=self.series, visible=True,
+        round = Round.objects.create(number=1, semester=self.semester, visible=True,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
         task = Task.objects.create(number=1, name='Test task', round=round, has_source=True)
@@ -262,7 +262,7 @@ class SubmitTaskTests(TestCase):
         self.assertContains(response, 'Kód')
 
     def test_task_with_description(self):
-        round = Round.objects.create(number=1, series=self.series, visible=True,
+        round = Round.objects.create(number=1, semester=self.semester, visible=True,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
         task = Task.objects.create(number=1, name='Test task', round=round, has_description=True)
@@ -273,7 +273,7 @@ class SubmitTaskTests(TestCase):
         self.assertContains(response, 'Popis')
 
     def test_task_with_zip(self):
-        round = Round.objects.create(number=1, series=self.series, visible=True,
+        round = Round.objects.create(number=1, semester=self.semester, visible=True,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
         task = Task.objects.create(number=1, name='Test task', round=round, has_testablezip=True)
@@ -284,7 +284,7 @@ class SubmitTaskTests(TestCase):
         self.assertContains(response, 'Zip')
 
     def test_task_with_all_submit_types(self):
-        round = Round.objects.create(number=1, series=self.series, visible=True,
+        round = Round.objects.create(number=1, semester=self.semester, visible=True,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
         task = Task.objects.create(number=1, name='Test task', round=round, has_testablezip=True,
@@ -320,10 +320,10 @@ class JsonSubmitTest(TestCase):
         self.start_time_new = timezone.now() + timezone.timedelta(5)
         self.end_time_old = timezone.now() + timezone.timedelta(-5)
         self.end_time_new = timezone.now() + timezone.timedelta(10)
-        series = Series.objects.create(number=1, name='Test series',
+        semester = Semester.objects.create(number=1, name='Test semester',
                                        competition=competition,
                                        year=1)
-        round = Round.objects.create(number=1, series=series, visible=True,
+        round = Round.objects.create(number=1, semester=semester, visible=True,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
         self.task = Task.objects.create(number=1, name='Test task', round=round,
@@ -400,10 +400,10 @@ class JsonProtokolTest(TestCase):
         self.start_time_new = timezone.now() + timezone.timedelta(5)
         self.end_time_old = timezone.now() + timezone.timedelta(-5)
         self.end_time_new = timezone.now() + timezone.timedelta(10)
-        series = Series.objects.create(number=1, name='Test series',
+        semester = Semester.objects.create(number=1, name='Test semester',
                                        competition=competition,
                                        year=1)
-        round = Round.objects.create(number=1, series=series, visible=True,
+        round = Round.objects.create(number=1, semester=semester, visible=True,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
         self.task = Task.objects.create(number=1, name='Test task', round=round,

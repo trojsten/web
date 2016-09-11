@@ -26,12 +26,12 @@ def get_results_tags_for_rounds(rounds):
     # FIXME(generic_results_stage_2): frozen results
     # @FUTURE firstly try to get tags from frozen results and then calculate the rest
     return (
-        r.series.competition.rules.get_results_tags() for r in rounds
+        r.semester.competition.rules.get_results_tags() for r in rounds
     )
 
 
 def _generate_results(tag_key, round, single_round):
-    rules = round.series.competition.rules
+    rules = round.semester.competition.rules
     try:
         generator = rules.get_results_generator(tag_key)
     except KeyError:

@@ -27,7 +27,7 @@
         <span class="glyphicon glyphicon-list"></span> Všetky úlohy
     </a>
   </li>
-  {% is_organizer competition=task.round.series.competition as is_organizer %}
+  {% is_organizer competition=task.round.semester.competition as is_organizer %}
   {% if is_organizer %}
       <li class="pull-right">
         <a href="{% url 'admin:review_task' task_pk=task.id %}">

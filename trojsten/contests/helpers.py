@@ -9,20 +9,20 @@ def get_rounds_by_year(user, competition):
     rounds = Round.objects.visible(
         user
     ).filter(
-        series__competition=competition
+        semester__competition=competition
     ).order_by(
-        '-series__year', '-series__number', '-number'
+        '-semester__year', '-semester__number', '-number'
     ).select_related(
-        'series__year', 'series__competition'
+        'semester__year', 'semester__competition'
     ).prefetch_related(
-        'series__competition__category_set',
+        'semester__competition__category_set',
     )
 
     results_tags = get_results_tags_for_rounds(rounds)
 
     rounds_dict = defaultdict(list)
     for round, result_tags in zip(rounds, results_tags):
-        rounds_dict[round.series.year].append((round, result_tags))
+        rounds_dict[round.semester.year].append((round, result_tags))
 
     return OrderedDict(sorted(rounds_dict.items(), key=lambda t: t[0], reverse=True))
 
