@@ -22,18 +22,10 @@
             }
         };
 
-        $("input#id_mailing_option_0").click(function() {
-            this.checked ? hide_address() : show_address();
+        $("input[name=mailing_option]").click(function() {
+            $(this).val() == "O" ? show_address() : hide_address();
         });
 
-        $("input#id_mailing_option_1").click(function() {
-            this.checked ? hide_address() : show_address();
-        });
-
-        $("input#id_mailing_option_2").click(function() {
-            this.checked ? show_address() : hide_address();
-        });
-
-        if (!document.getElementById('id_mailing_option_2').checked) hide_address();
+        $("input[name=mailing_option]:checked").val() == "O" ? show_address() : hide_address();
     });
 })(jQuery);

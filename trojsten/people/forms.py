@@ -9,6 +9,7 @@ from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
 
 from trojsten.people.models import Address, DuplicateUser, User
+from trojsten.schools.models import School
 
 from . import constants
 from .helpers import get_similar_users
@@ -23,10 +24,15 @@ class TrojstenUserBaseForm(forms.ModelForm):
     country = forms.CharField(
         max_length=32, label='Krajina')
 
+    MAILING_OPTION_CHOICES = [
+        (constants.MAILING_OPTION_HOME, 'domov'),
+        (constants.MAILING_OPTION_SCHOOL, 'do školy'),
+        (constants.MAILING_OPTION_OTHER, 'na inú adresu (napr. na internát)')
+    ]
     mailing_option = forms.ChoiceField(
-        required=True, choices=User.MAILING_OPTION_CHOICES,
+        required=True, choices=MAILING_OPTION_CHOICES,
         label="Korešpondenčná adresa", widget=forms.RadioSelect,
-        help_text="Vyber, kam ti máme posielať poštu."
+        help_text="Vyber, kam ti máme posielať poštu.", initial=constants.MAILING_OPTION_HOME
     )
 
     corr_street = forms.CharField(max_length=70, label='Ulica', required=False)
@@ -88,7 +94,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         return self.cleaned_data.get('last_name')
 
     def clean_corr_street(self):
-        if self.cleaned_data.get('mailing_option') == 'OTHER':
+        if self.cleaned_data.get('mailing_option') == constants.MAILING_OPTION_OTHER:
             if len(self.cleaned_data.get('corr_street')) == 0:
                 raise forms.ValidationError(
                     _("This field is required."),
@@ -98,7 +104,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         return self.cleaned_data.get('corr_street')
 
     def clean_corr_town(self):
-        if self.cleaned_data.get('mailing_option') == 'OTHER':
+        if self.cleaned_data.get('mailing_option') == constants.MAILING_OPTION_OTHER:
             if len(self.cleaned_data.get('corr_town')) == 0:
                 raise forms.ValidationError(
                     _("This field is required."),
@@ -108,7 +114,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         return self.cleaned_data.get('corr_town')
 
     def clean_corr_postal_code(self):
-        if self.cleaned_data.get('mailing_option') == 'OTHER':
+        if self.cleaned_data.get('mailing_option') == constants.MAILING_OPTION_OTHER:
             if len(self.cleaned_data.get('corr_postal_code')) == 0:
                 raise forms.ValidationError(
                     _("This field is required."),
@@ -118,7 +124,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         return self.cleaned_data.get('corr_postal_code')
 
     def clean_corr_country(self):
-        if self.cleaned_data.get('mailing_option') == 'OTHER':
+        if self.cleaned_data.get('mailing_option') == constants.MAILING_OPTION_OTHER:
             if len(self.cleaned_data.get('corr_country')) == 0:
                 raise forms.ValidationError(
                     _("This field is required."),
@@ -144,6 +150,19 @@ class TrojstenUserBaseForm(forms.ModelForm):
 
         return grad
 
+    def clean_mailing_option(self):
+        school = self.cleaned_data.get('school')
+        option = self.cleaned_data.get('mailing_option')
+        if option == constants.MAILING_OPTION_SCHOOL and \
+                (school in School.objects.filter(verbose_name='Iná škola') or school is None):
+            raise forms.ValidationError(
+                _("We cannot send you correspondence to school when you don't choose any school. "
+                  "If your school is not in the list "
+                  "write us in an e-mail that you want us to send correspodence to school"),
+                code='no_school_to_mail'
+            )
+        return option
+
 
 class TrojstenUserChangeForm(TrojstenUserBaseForm):
 
@@ -158,7 +177,7 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
                     'town': user.home_address.town,
                     'postal_code': user.home_address.postal_code,
                     'country': user.home_address.country,
-                    'mailing_option': user.mailing_option,
+                    'mailing_option': user.get_mailing_option(),
                 }
             if user.mailing_address:
                 kwargs['initial']['corr_street'] = user.mailing_address.street
@@ -178,16 +197,14 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
         postal_code = self.cleaned_data.get('postal_code')
         country = self.cleaned_data.get('country')
 
-        correspondence_address = self.cleaned_data.get(
-            'correspondence_address')
         corr_street = self.cleaned_data.get('corr_street')
         corr_town = self.cleaned_data.get('corr_town')
         corr_postal_code = self.cleaned_data.get('corr_postal_code')
         corr_country = self.cleaned_data.get('corr_country')
 
-        mailing_option = self.cleaned_data.get('mailing_option', 'HOME')
-        user.mailing_option = mailing_option
-        has_correspondence_address = mailing_option == 'OTHER'
+        mailing_option = self.cleaned_data.get('mailing_option', constants.MAILING_OPTION_HOME)
+        has_correspondence_address = mailing_option == constants.MAILING_OPTION_OTHER
+        user.mail_to_school = (mailing_option == constants.MAILING_OPTION_SCHOOL)
 
         if has_correspondence_address:
             if not user.mailing_address:
@@ -315,9 +332,9 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
         postal_code = self.cleaned_data.get('postal_code')
         country = self.cleaned_data.get('country')
 
-        mailing_option = self.cleaned_data.get('mailing_option', 'HOME')
-        has_correspondence_address = mailing_option == 'OTHER'
-        user.mailing_option = mailing_option
+        mailing_option = self.cleaned_data.get('mailing_option', constants.MAILING_OPTION_HOME)
+        has_correspondence_address = mailing_option == constants.MAILING_OPTION_OTHER
+        user.mail_to_school = mailing_option == constants.MAILING_OPTION_SCHOOL
 
         corr_street = self.cleaned_data.get('corr_street')
         corr_town = self.cleaned_data.get('corr_town')

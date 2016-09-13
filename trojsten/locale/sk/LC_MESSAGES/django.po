@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-25 21:22+0200\n"
+"POT-Creation-Date: 2016-09-13 22:10+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -55,9 +55,9 @@ msgstr "%(count)s minúta"
 msgid "%(count)d second"
 msgstr "%(count)s sekunda"
 
-#: events/forms.py:47 people/forms.py:70 people/forms.py:78 people/forms.py:86
-#: people/forms.py:95 people/forms.py:105 people/forms.py:115
-#: people/forms.py:125
+#: events/forms.py:47 people/forms.py:75 people/forms.py:83 people/forms.py:91
+#: people/forms.py:100 people/forms.py:110 people/forms.py:120
+#: people/forms.py:130
 msgid "This field is required."
 msgstr ""
 
@@ -89,43 +89,53 @@ msgstr ""
 msgid "Users merged succesfully."
 msgstr ""
 
-#: people/forms.py:136
+#: people/forms.py:141
 msgid "Your graduation year is too far in the past."
 msgstr "Tvoj rok maturity je príliš ďaleko v minulosti."
 
-#: people/forms.py:142
+#: people/forms.py:147
 msgid "Your graduation year is too far in the future."
 msgstr "Tvoj rok maturity je príliš ďaleko v budúcnosti."
 
-#: people/forms.py:237
+#: people/forms.py:158
+msgid ""
+"We cannot send you correspondence to school when you don't choose any "
+"school. If your school is not in the list write us in an e-mail that you "
+"want us to send correspodence to school"
+msgstr ""
+"Nemôžeme ti posielať poštu na školu, pokiaľ si si žiadnu nevybral. "
+"Ak sa tvoja škola nenachádza v zozname, napíš v e-maili, "
+"že ti máme posielať poštu na školu"
+
+#: people/forms.py:257
 msgid "Password"
 msgstr ""
 
-#: people/forms.py:239
+#: people/forms.py:259
 msgid "Password confirmation"
 msgstr ""
 
-#: people/forms.py:240
+#: people/forms.py:260
 msgid "Enter the same password as above, for verification."
 msgstr ""
 
-#: people/forms.py:273
+#: people/forms.py:293
 msgid ""
 "We recommend choosing a strong passphrase but we don't enforce any "
 "ridiculous constraints on your passwords."
 msgstr ""
 
-#: people/forms.py:281
+#: people/forms.py:301
 msgid ""
 "Since you're logging in using an external provider, this field is optional; "
 "however, by supplying it, you will be able to log in using a password. "
 msgstr ""
 
-#: people/forms.py:291
+#: people/forms.py:311
 msgid "The two password fields didn't match."
 msgstr ""
 
-#: people/models.py:161
+#: people/models.py:191
 #, python-format
 msgid "Value \"%s\" does not match regex \"%s\"."
 msgstr ""

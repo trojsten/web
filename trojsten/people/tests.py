@@ -14,6 +14,7 @@ from trojsten.schools.models import School
 from .forms import TrojstenUserCreationForm, TrojstenUserChangeForm
 from .helpers import get_similar_users, merge_users
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
+from . import constants
 
 
 def _create_random_user(**kwargs):
@@ -173,14 +174,17 @@ class UserFormTests(TestCase):
             street='Matematicka 47', town='Algebrovo', postal_code='420 47',
             country='Slovensko'
         )
+        School.objects.create(
+            verbose_name='Iná škola', pk=1
+        )
         self.school = School.objects.create(
-            abbreviation='GJH', verbose_name='Gymnázium Janka Hraška', pk=1,
+            abbreviation='GJH', verbose_name='Gymnázium Janka Hraška', pk=2,
             street='Hronca 42', city='Bratislava', zip_code='123 45'
         )
         self.user = User.objects.create(
             username='janko4247', first_name='Janko', last_name='Hrasko', password='pass',
             gender='M', birth_date=datetime.date(1999, 9, 19), email='hrasko@example.com',
-            mailing_option='SCHOOL', school=self.school, graduation=2018,
+            mail_to_school=True, school=self.school, graduation=2018,
             home_address=address
         )
         self.form_data = {
@@ -190,8 +194,8 @@ class UserFormTests(TestCase):
             'first_name': 'Jožko',
             'last_name': 'Mrkvička',
             'gender': 'M',
-            'mailing_option': 'SCHOOL',
-            'school': 1,
+            'mailing_option': constants.MAILING_OPTION_SCHOOL,
+            'school': 2,
             'graduation': 2017,
             'street': 'Pekná 47',
             'town': 'Bratislava',
@@ -200,32 +204,45 @@ class UserFormTests(TestCase):
             'birth_date': datetime.date(2016, 8, 19),
             'email': 'mail@example.com'
         }
+        self.form_data_corr = self.form_data.copy()
+        self.form_data_corr.update({
+            'username': 'mrkva2',
+            'corr_street': 'Pekna 47',
+            'corr_town': 'Krasno',
+            'corr_postal_code': '842 47',
+            'corr_country': 'Slovensko'
+        })
+        self.full_name = 'Jožko Mrkvička'
 
-    def test_valid_user_creation(self):
-        for option in ['HOME', 'SCHOOL']:
-            data = self.form_data
-            data['username'] = option
-            data['mailing_option'] = option
+    def test_mailing_option_home(self):
+        for data in [self.form_data, self.form_data_corr]:
+            data['mailing_option'] = constants.MAILING_OPTION_HOME
             form = TrojstenUserCreationForm(data=data, request=self.request)
             self.assertTrue(form.is_valid())
             user = form.save()
-            self.assertEqual(user.mailing_option, option)
             self.assertIsNone(user.mailing_address)
             address = user.get_mailing_address()
-            if option == 'HOME':
-                self.assertEqual(
-                    [address.street, address.town, address.postal_code],
-                    [data['street'], data['town'], data['postal_code']]
-                )
-            else:
-                self.assertEqual(
-                    [address.street, address.town, address.postal_code],
-                    [self.school.street, self.school.city, self.school.zip_code]
-                )
+            self.assertEqual(
+                [address.street, address.town, address.postal_code],
+                [data['street'], data['town'], data['postal_code']]
+            )
 
-    def test_corr_address_creation(self):
+    def test_mailing_option_school(self):
+        for data in [self.form_data, self.form_data_corr]:
+            data['mailing_option'] = constants.MAILING_OPTION_SCHOOL
+            form = TrojstenUserCreationForm(data=data, request=self.request)
+            self.assertTrue(form.is_valid())
+            user = form.save()
+            self.assertTrue(user.mail_to_school)
+            address = user.get_mailing_address()
+            self.assertEqual(
+                [address.recipient, address.street, address.town, address.postal_code],
+                [self.full_name, self.school.street, self.school.city, self.school.zip_code]
+            )
+
+    def test_mailing_option_other(self):
         data = self.form_data
-        data['mailing_option'] = 'OTHER'
+        data['mailing_option'] = constants.MAILING_OPTION_OTHER
         form = TrojstenUserCreationForm(data=data, request=self.request)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
@@ -234,27 +251,29 @@ class UserFormTests(TestCase):
             'corr_postal_code': ['Toto pole je povinné.'],
             'corr_country': ['Toto pole je povinné.']
         })
-        street = 'Kukucinova 47'
-        town = 'Sladkovicovo'
-        postal_code = '420 47'
-        country = 'Slovensko'
-
-        data['corr_street'] = street
-        data['corr_town'] = town
-        data['corr_postal_code'] = postal_code
-        data['corr_country'] = country
+        data = self.form_data_corr
+        data['mailing_option'] = constants.MAILING_OPTION_OTHER
 
         form = TrojstenUserCreationForm(data=data, request=self.request)
         self.assertTrue(form.is_valid())
         user = form.save()
-        self.assertEqual(user.mailing_option, 'OTHER')
+        self.assertFalse(user.mail_to_school)
         self.assertEqual([user.mailing_address.street, user.mailing_address.town,
                           user.mailing_address.postal_code, user.mailing_address.country],
-                         [street, town, postal_code, country])
+                         [data['corr_street'], data['corr_town'],
+                          data['corr_postal_code'], data['corr_country']])
 
-    def test_invalid_user_creation(self):
+    def test_user_creation_invalid_school(self):
         data = self.form_data
-        data['password2'] = 'helso'
+        data['school'] = 1
+        data['mailing_option'] = constants.MAILING_OPTION_SCHOOL
+        form = TrojstenUserCreationForm(data=data, request=self.request)
+        self.assertFalse(form.is_valid())
+        self.assertIn('mailing_option', form.errors)
+
+    def test_user_creation_invalid_password(self):
+        data = self.form_data
+        data['password2'] = 'ine heslo'
         form = TrojstenUserCreationForm(data=data, request=self.request)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {'password2': ['Heslo a jeho potvrdenie sa nezhodujú.']})
@@ -267,15 +286,15 @@ class UserFormTests(TestCase):
     def test_valid_user_change(self):
         form = TrojstenUserChangeForm({}, user=self.user)
         form.data = form.initial
-        form.data['mailing_option'] = 'HOME'
+        form.data['mailing_option'] = constants.MAILING_OPTION_HOME
         self.assertTrue(form.is_valid())
         user = form.save()
-        self.assertEqual(user.mailing_option, 'HOME')
+        self.assertFalse(user.mail_to_school)
 
     def test_invalid_user_change(self):
         form = TrojstenUserChangeForm({}, user=self.user)
         form.data = form.initial
-        form.data['mailing_option'] = 'OTHER'
+        form.data['mailing_option'] = constants.MAILING_OPTION_OTHER
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
             'corr_street': ['Toto pole je povinné.'],
@@ -292,7 +311,7 @@ class UserFormTests(TestCase):
         postal_code = '420 47'
         country = 'Slovensko'
 
-        form.data['mailing_option'] = 'OTHER'
+        form.data['mailing_option'] = constants.MAILING_OPTION_OTHER
         form.data['corr_street'] = street
         form.data['corr_town'] = town
         form.data['corr_postal_code'] = postal_code
@@ -300,7 +319,7 @@ class UserFormTests(TestCase):
 
         self.assertTrue(form.is_valid())
         user = form.save()
-        self.assertEqual(user.mailing_option, 'OTHER')
+        self.assertFalse(user.mail_to_school)
         self.assertEqual([user.mailing_address.street, user.mailing_address.town,
                           user.mailing_address.postal_code, user.mailing_address.country],
                          [street, town, postal_code, country])
