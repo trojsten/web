@@ -8,7 +8,7 @@
   {% if user.is_authenticated %}
     <p class="dropdown-toggle btn btn-primary navbar-btn" id="login-dropdown" data-toggle="dropdown">
       {% trans "Logged in as" %}
-      <a href="{% url "account_settings" %}" class="navbar-link">{{ user.username }}</a>
+      	{{ user.username }}
       <span class="caret"></span>
     </p>
     <ul class="dropdown-menu" role="menu" aria-labelledby="login-dropdown"
