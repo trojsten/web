@@ -154,7 +154,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         school = self.cleaned_data.get('school')
         option = self.cleaned_data.get('mailing_option')
         if option == constants.MAILING_OPTION_SCHOOL and \
-                (school in School.objects.filter(verbose_name='Iná škola') or school is None):
+                (school is None or school.pk == constants.OTHER_SCHOOL_ID):
             raise forms.ValidationError(
                 _("We cannot send you correspondence to school when you don't choose any school. "
                   "If your school is not in the list "
