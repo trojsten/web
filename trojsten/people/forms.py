@@ -17,30 +17,30 @@ from .helpers import get_similar_users
 
 class TrojstenUserBaseForm(forms.ModelForm):
     required_css_class = 'required'
-    street = forms.CharField(max_length=70, label='Ulica')
-    town = forms.CharField(max_length=64, label='Mesto')
+    street = forms.CharField(max_length=70, label=_('Street'))
+    town = forms.CharField(max_length=64, label=_('Town'))
     postal_code = forms.CharField(
-        max_length=16, label='PSČ')
+        max_length=16, label=_('Postal code'))
     country = forms.CharField(
-        max_length=32, label='Krajina')
+        max_length=32, label=_('Country'))
 
     MAILING_OPTION_CHOICES = [
-        (constants.MAILING_OPTION_HOME, 'domov'),
-        (constants.MAILING_OPTION_SCHOOL, 'do školy'),
-        (constants.MAILING_OPTION_OTHER, 'na inú adresu (napr. na internát)')
+        (constants.MAILING_OPTION_HOME, _('home')),
+        (constants.MAILING_OPTION_SCHOOL, _('school')),
+        (constants.MAILING_OPTION_OTHER, _('other address (e. g. to a dormitory)'))
     ]
     mailing_option = forms.ChoiceField(
         required=True, choices=MAILING_OPTION_CHOICES,
-        label="Korešpondenčná adresa", widget=forms.RadioSelect,
-        help_text="Vyber, kam ti máme posielať poštu.", initial=constants.MAILING_OPTION_HOME
+        label=_("Correspondence address"), widget=forms.RadioSelect,
+        help_text=_("Choose, where you want to accept mails."), initial=constants.MAILING_OPTION_HOME
     )
 
-    corr_street = forms.CharField(max_length=70, label='Ulica', required=False)
-    corr_town = forms.CharField(max_length=64, label='Mesto', required=False)
+    corr_street = forms.CharField(max_length=70, label=_('Street'), required=False)
+    corr_town = forms.CharField(max_length=64, label=_('Town'), required=False)
     corr_postal_code = forms.CharField(
-        max_length=16, label='PSČ', required=False)
+        max_length=16, label=_('Postal code'), required=False)
     corr_country = forms.CharField(
-        max_length=32, label='Krajina', required=False)
+        max_length=32, label=_('Country'), required=False)
 
     class Meta:
         model = User
@@ -57,7 +57,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         self.fields['email'].required = True
         self.fields['gender'] = forms.ChoiceField(
             widget=forms.RadioSelect,
-            label='Pohlavie',
+            label=_('Gender'),
             choices=User.GENDER_CHOICES,
         )
 

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-13 22:10+0200\n"
+"POT-Creation-Date: 2016-09-18 19:51+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -89,6 +89,46 @@ msgstr ""
 msgid "Users merged succesfully."
 msgstr ""
 
+#: people/forms.py:20 people/forms.py:38
+msgid "Street"
+msgstr "Ulica"
+
+#: people/forms.py:21 people/forms.py:39
+msgid "Town"
+msgstr "Mesto"
+
+#: people/forms.py:23 people/forms.py:41
+msgid "Postal code"
+msgstr "PSČ"
+
+#: people/forms.py:25 people/forms.py:43
+msgid "Country"
+msgstr "Krajina"
+
+#: people/forms.py:28
+msgid "home"
+msgstr "domov"
+
+#: people/forms.py:29
+msgid "school"
+msgstr "do školy"
+
+#: people/forms.py:30
+msgid "other address (e. g. to a dormitory)"
+msgstr "na inú adresu (napr. na internát)"
+
+#: people/forms.py:34
+msgid "Correspondence address"
+msgstr "Korešpondenčná adresa"
+
+#: people/forms.py:35
+msgid "Choose, where you want to accept mails."
+msgstr "Vyber, kam ti máme posielať poštu."
+
+#: people/forms.py:60
+msgid "Gender"
+msgstr "Pohlavie"
+
 #: people/forms.py:141
 msgid "Your graduation year is too far in the past."
 msgstr "Tvoj rok maturity je príliš ďaleko v minulosti."
@@ -97,45 +137,47 @@ msgstr "Tvoj rok maturity je príliš ďaleko v minulosti."
 msgid "Your graduation year is too far in the future."
 msgstr "Tvoj rok maturity je príliš ďaleko v budúcnosti."
 
-#: people/forms.py:158
+#: people/forms.py:159
 msgid ""
 "We cannot send you correspondence to school when you don't choose any "
 "school. If your school is not in the list write us in an e-mail that you "
 "want us to send correspodence to school"
 msgstr ""
-"Nemôžeme ti posielať poštu na školu, pokiaľ si si žiadnu nevybral. "
-"Ak sa tvoja škola nenachádza v zozname, napíš v e-maili, "
-"že ti máme posielať poštu na školu"
+"Nemôžeme ti posielať poštu na školu, pokiaľ si si žiadnu nevybral. Ak sa "
+"tvoja škola nenachádza v zozname, napíš v e-maili, že ti máme posielať poštu "
+"na školu"
 
-#: people/forms.py:257
+#: people/forms.py:258
 msgid "Password"
-msgstr ""
-
-#: people/forms.py:259
-msgid "Password confirmation"
-msgstr ""
+msgstr "Heslo"
 
 #: people/forms.py:260
-msgid "Enter the same password as above, for verification."
-msgstr ""
+msgid "Password confirmation"
+msgstr "Potvrdenie hesla"
 
-#: people/forms.py:293
+#: people/forms.py:261
+msgid "Enter the same password as above, for verification."
+msgstr "Zadaj rovnaké heslo ako vyššie pre jeho overenie"
+
+#: people/forms.py:294
 msgid ""
 "We recommend choosing a strong passphrase but we don't enforce any "
 "ridiculous constraints on your passwords."
 msgstr ""
+"Odporúčame ti vybrať silné heslo, ale nebudeme od teba vyžadovať žiadne "
+"smiešne požiadavky"
 
-#: people/forms.py:301
+#: people/forms.py:302
 msgid ""
 "Since you're logging in using an external provider, this field is optional; "
 "however, by supplying it, you will be able to log in using a password. "
 msgstr ""
 
-#: people/forms.py:311
+#: people/forms.py:312
 msgid "The two password fields didn't match."
 msgstr ""
 
-#: people/models.py:191
+#: people/models.py:194
 #, python-format
 msgid "Value \"%s\" does not match regex \"%s\"."
 msgstr ""
@@ -534,6 +576,9 @@ msgstr ""
 #: templates/wiki/article.html:40
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
+
+#~ msgid "Postal Code"
+#~ msgstr "PSČ"
 
 #, fuzzy
 #~| msgid "tasks"
