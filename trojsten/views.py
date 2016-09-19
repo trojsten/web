@@ -10,7 +10,7 @@ from wiki.views import article
 
 def contact_form_sent_redirect(request):
     messages.success(request, 'Vaša správa bola odoslaná. Ďakujeme za spätnú väzbu.')
-    return redirect('/')
+    return redirect('contact_form')
 
 
 def home_redirect(request):
