@@ -11,6 +11,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from unidecode import unidecode
 
 from trojsten.schools.models import School
 
@@ -93,11 +94,11 @@ class User(AbstractUser):
                                default=1,
                                verbose_name='škola',
                                help_text='Do políčka napíšte skratku, '
-                               'časť názvu alebo adresy školy a následne '
-                               'vyberte správnu možnosť zo zoznamu. '
-                               'Pokiaľ vaša škola nie je '
-                               'v&nbsp;zozname, vyberte "Iná škola" '
-                               'a&nbsp;pošlite nám e-mail.')
+                                         'časť názvu alebo adresy školy a následne '
+                                         'vyberte správnu možnosť zo zoznamu. '
+                                         'Pokiaľ vaša škola nie je '
+                                         'v&nbsp;zozname, vyberte "Iná škola" '
+                                         'a&nbsp;pošlite nám e-mail.')
     graduation = models.IntegerField(null=True,
                                      verbose_name='rok maturity',
                                      help_text='Povinné pre žiakov.')
@@ -147,6 +148,25 @@ class User(AbstractUser):
 
     def __str__(self):
         return '%s (%s)' % (self.username, self.get_full_name())
+
+    def save(self, *args, **kwargs):
+        if not self.username:
+            def format_name(num):
+                return unidecode("{}{}{}".format(self.first_name, self.last_name, num))
+
+            number = 0
+
+            while User.objects.filter(username=format_name(number)).exists():
+                number += 1
+
+            self.username = format_name(number)
+
+        super(User, self).save(*args, **kwargs)
+
+
+User._meta.get_field('first_name').blank = False
+User._meta.get_field('last_name').blank = False
+User._meta.get_field('username').blank = True
 
 
 @python_2_unicode_compatible
