@@ -21,19 +21,19 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         data = load_level_index()
         points = defaultdict(lambda: defaultdict(lambda: 0))
-        semester_id = 0
-        for serie in data['semester']:
-            solved_semester = LevelSolved.objects.filter(
-                semester=semester_id
+        series_id = 0
+        for serie in data['series']:
+            solved_series = LevelSolved.objects.filter(
+                series=series_id
             ).values('user').annotate(count=Count('level'))
 
-            for solved_serie in solved_semester:
+            for solved_serie in solved_series:
                 for (task_id, multiple) in serie['taskpoints']:
                     points[solved_serie['user']][task_id] += (
                         solved_serie['count'] * multiple
                     )
 
-            semester_id += 1
+            series_id += 1
 
         for uid in points:
             for task_id in points[uid]:
