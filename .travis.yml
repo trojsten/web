@@ -10,6 +10,14 @@ services:
 before_script:
   - sleep 10
 # command to install dependencies
+
+matrix:
+  - python: "3.5"
+    env: TEST_PEP8=True
+    install: pip install flake8
+    script: flake8 trojsten
+
+
 install:
   - pip install --upgrade pip==8.1.1 pip-tools
   - if [[ $TRAVIS_PYTHON_VERSION != 2.7 ]]; then rm requirements.txt; pip-compile requirements.in -o requirements.txt; fi
