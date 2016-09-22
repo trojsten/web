@@ -2,7 +2,10 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
+
+import trojsten.people.models
 
 
 @python_2_unicode_compatible
@@ -41,3 +44,12 @@ class School(models.Model):
     @property
     def has_abbreviation(self):
         return self.abbreviation.strip() != ''
+
+    def get_mailing_address(self):
+        return trojsten.people.models.SchoolAddress(
+            addr_name=self.addr_name,
+            street=self.street,
+            town=self.city,
+            postal_code=self.zip_code,
+            country=settings.DEFAULT_COUNTRY
+        )

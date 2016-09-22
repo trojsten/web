@@ -30,8 +30,7 @@ class UserManager(DjangoUserManager):
         return self.filter(**filters).select_related('school')
 
 
-@python_2_unicode_compatible
-class Address(models.Model):
+class AbstractAddress(models.Model):
     street = models.CharField(max_length=70, verbose_name='ulica')
     town = models.CharField(max_length=64, db_index=True, verbose_name='mesto')
     postal_code = models.CharField(
@@ -39,12 +38,28 @@ class Address(models.Model):
     country = models.CharField(
         max_length=32, db_index=True, verbose_name='krajina')
 
+    class Meta:
+        abstract = True
+        verbose_name = 'Adresa'
+        verbose_name_plural = 'Adresy'
+
+
+@python_2_unicode_compatible
+class Address(AbstractAddress):
     def __str__(self):
         return '%s, %s, %s, %s' % (self.street, self.town, self.postal_code, self.country)
 
+
+@python_2_unicode_compatible
+class SchoolAddress(AbstractAddress):
+    addr_name = models.CharField(max_length=100, blank=True, verbose_name='názov v adrese')
+    recipient = models.CharField(max_length=100, blank=True, verbose_name='meno adresáta')
+
+    def __str__(self):
+        return '%s, %s, %s, %s' % (self.addr_name, self.street, self.town, self.postal_code)
+
     class Meta:
-        verbose_name = 'Adresa'
-        verbose_name_plural = 'Adresy'
+        abstract = True
 
 
 @python_2_unicode_compatible
@@ -71,6 +86,8 @@ class User(AbstractUser):
                                         blank=True,
                                         null=True,
                                         verbose_name='adresa korešpondencie')
+    mail_to_school = models.BooleanField(default=False,
+                                         verbose_name='posielať poštu do školy')
     school = models.ForeignKey(School,
                                null=True,
                                default=1,
@@ -79,7 +96,7 @@ class User(AbstractUser):
                                'časť názvu alebo adresy školy a následne '
                                'vyberte správnu možnosť zo zoznamu. '
                                'Pokiaľ vaša škola nie je '
-                               'v&nbsp;zozname, vyberte "Gymnázium iné" '
+                               'v&nbsp;zozname, vyberte "Iná škola" '
                                'a&nbsp;pošlite nám e-mail.')
     graduation = models.IntegerField(null=True,
                                      verbose_name='rok maturity',
@@ -91,7 +108,18 @@ class User(AbstractUser):
         return self.is_superuser or self.groups.filter(pk=group.pk).exists()
 
     def get_mailing_address(self):
-        return self.home_address if self.mailing_address is None else self.mailing_address
+        if self.mailing_address:
+            return self.mailing_address
+        elif self.get_mailing_option() == constants.MAILING_OPTION_SCHOOL:
+            return self.get_school_mailing_address()
+        return self.home_address
+
+    def get_mailing_option(self):
+        if self.mail_to_school:
+            return constants.MAILING_OPTION_SCHOOL
+        if self.mailing_address:
+            return constants.MAILING_OPTION_OTHER
+        return constants.MAILING_OPTION_HOME
 
     class Meta:
         verbose_name = 'používateľ'
@@ -111,6 +139,11 @@ class User(AbstractUser):
 
     def get_properties(self):
         return {prop.key: prop.value for prop in self.properties.all()}
+
+    def get_school_mailing_address(self):
+        address = self.school.get_mailing_address()
+        address.recipient = '%s %s' % (self.first_name, self.last_name)
+        return address
 
     def __str__(self):
         return '%s (%s)' % (self.username, self.get_full_name())

@@ -22,10 +22,10 @@
             }
         };
 
-        $("input#id_has_correspondence_address").change(function() {
-            this.checked ? show_address() : hide_address();
+        $("input[name=mailing_option]").click(function() {
+            $(this).val() == "O" ? show_address() : hide_address();
         });
 
-        hide_address();
+        $("input[name=mailing_option]:checked").val() == "O" ? show_address() : hide_address();
     });
 })(jQuery);

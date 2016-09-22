@@ -488,3 +488,5 @@ COMPETITION_RULES = {
 DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'
 
 ELASTICSEARCH_TESTS = True
+
+DEFAULT_COUNTRY = 'Slovensko'

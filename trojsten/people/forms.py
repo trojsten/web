@@ -16,26 +16,31 @@ from .helpers import get_similar_users
 
 class TrojstenUserBaseForm(forms.ModelForm):
     required_css_class = 'required'
-    street = forms.CharField(max_length=70, label='Ulica')
-    town = forms.CharField(max_length=64, label='Mesto')
+    street = forms.CharField(max_length=70, label=_('Street'))
+    town = forms.CharField(max_length=64, label=_('Town'))
     postal_code = forms.CharField(
-        max_length=16, label='PSČ')
+        max_length=16, label=_('Postal code'))
     country = forms.CharField(
-        max_length=32, label='Krajina')
+        max_length=32, label=_('Country'))
 
-    has_correspondence_address = forms.BooleanField(
-        label="Korešpondenčná adresa",
-        required=False,
-        help_text="Zaškrtni, ak chceš aby sme ti poštu posielali "
-        "inde ako domov.(Typicky, ak bývaš na internáte.)"
+    MAILING_OPTION_CHOICES = [
+        (constants.MAILING_OPTION_HOME, _('home')),
+        (constants.MAILING_OPTION_SCHOOL, _('school')),
+        (constants.MAILING_OPTION_OTHER, _('other address (e. g. to a dormitory)'))
+    ]
+    mailing_option = forms.ChoiceField(
+        required=True, choices=MAILING_OPTION_CHOICES,
+        label=_("Correspondence address"), widget=forms.RadioSelect,
+        help_text=_("Choose, where you want to accept mails."),
+        initial=constants.MAILING_OPTION_HOME
     )
 
-    corr_street = forms.CharField(max_length=70, label='Ulica', required=False)
-    corr_town = forms.CharField(max_length=64, label='Mesto', required=False)
+    corr_street = forms.CharField(max_length=70, label=_('Street'), required=False)
+    corr_town = forms.CharField(max_length=64, label=_('Town'), required=False)
     corr_postal_code = forms.CharField(
-        max_length=16, label='PSČ', required=False)
+        max_length=16, label=_('Postal code'), required=False)
     corr_country = forms.CharField(
-        max_length=32, label='Krajina', required=False)
+        max_length=32, label=_('Country'), required=False)
 
     class Meta:
         model = User
@@ -52,7 +57,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         self.fields['email'].required = True
         self.fields['gender'] = forms.ChoiceField(
             widget=forms.RadioSelect,
-            label='Pohlavie',
+            label=_('Gender'),
             choices=User.GENDER_CHOICES,
         )
 
@@ -89,7 +94,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         return self.cleaned_data.get('last_name')
 
     def clean_corr_street(self):
-        if self.cleaned_data.get('has_correspondence_address'):
+        if self.cleaned_data.get('mailing_option') == constants.MAILING_OPTION_OTHER:
             if len(self.cleaned_data.get('corr_street')) == 0:
                 raise forms.ValidationError(
                     _("This field is required."),
@@ -99,7 +104,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         return self.cleaned_data.get('corr_street')
 
     def clean_corr_town(self):
-        if self.cleaned_data.get('has_correspondence_address'):
+        if self.cleaned_data.get('mailing_option') == constants.MAILING_OPTION_OTHER:
             if len(self.cleaned_data.get('corr_town')) == 0:
                 raise forms.ValidationError(
                     _("This field is required."),
@@ -109,7 +114,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         return self.cleaned_data.get('corr_town')
 
     def clean_corr_postal_code(self):
-        if self.cleaned_data.get('has_correspondence_address'):
+        if self.cleaned_data.get('mailing_option') == constants.MAILING_OPTION_OTHER:
             if len(self.cleaned_data.get('corr_postal_code')) == 0:
                 raise forms.ValidationError(
                     _("This field is required."),
@@ -119,7 +124,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
         return self.cleaned_data.get('corr_postal_code')
 
     def clean_corr_country(self):
-        if self.cleaned_data.get('has_correspondence_address'):
+        if self.cleaned_data.get('mailing_option') == constants.MAILING_OPTION_OTHER:
             if len(self.cleaned_data.get('corr_country')) == 0:
                 raise forms.ValidationError(
                     _("This field is required."),
@@ -145,6 +150,19 @@ class TrojstenUserBaseForm(forms.ModelForm):
 
         return grad
 
+    def clean_mailing_option(self):
+        school = self.cleaned_data.get('school')
+        option = self.cleaned_data.get('mailing_option')
+        if option == constants.MAILING_OPTION_SCHOOL and \
+                (school is None or school.pk == constants.OTHER_SCHOOL_ID):
+            raise forms.ValidationError(
+                _("We cannot send you correspondence to school when you don't choose any school. "
+                  "If your school is not in the list "
+                  "write us in an e-mail that you want us to send correspodence to school"),
+                code='no_school_to_mail'
+            )
+        return option
+
 
 class TrojstenUserChangeForm(TrojstenUserBaseForm):
 
@@ -159,6 +177,7 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
                     'town': user.home_address.town,
                     'postal_code': user.home_address.postal_code,
                     'country': user.home_address.country,
+                    'mailing_option': user.get_mailing_option(),
                 }
             if user.mailing_address:
                 kwargs['initial']['corr_street'] = user.mailing_address.street
@@ -178,12 +197,14 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
         postal_code = self.cleaned_data.get('postal_code')
         country = self.cleaned_data.get('country')
 
-        has_correspondence_address = self.cleaned_data.get(
-            'has_correspondence_address')
         corr_street = self.cleaned_data.get('corr_street')
         corr_town = self.cleaned_data.get('corr_town')
         corr_postal_code = self.cleaned_data.get('corr_postal_code')
         corr_country = self.cleaned_data.get('corr_country')
+
+        mailing_option = self.cleaned_data.get('mailing_option', constants.MAILING_OPTION_HOME)
+        has_correspondence_address = mailing_option == constants.MAILING_OPTION_OTHER
+        user.mail_to_school = (mailing_option == constants.MAILING_OPTION_SCHOOL)
 
         if has_correspondence_address:
             if not user.mailing_address:
@@ -229,7 +250,7 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
                 if len(similar_users):
                     DuplicateUser.objects.create(user=user)
 
-        return self
+        return user
 
 
 class TrojstenUserCreationForm(TrojstenUserBaseForm):
@@ -311,8 +332,10 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
         postal_code = self.cleaned_data.get('postal_code')
         country = self.cleaned_data.get('country')
 
-        has_correspondence_address = self.cleaned_data.get(
-            'has_correspondence_address')
+        mailing_option = self.cleaned_data.get('mailing_option', constants.MAILING_OPTION_HOME)
+        has_correspondence_address = mailing_option == constants.MAILING_OPTION_OTHER
+        user.mail_to_school = mailing_option == constants.MAILING_OPTION_SCHOOL
+
         corr_street = self.cleaned_data.get('corr_street')
         corr_town = self.cleaned_data.get('corr_town')
         corr_postal_code = self.cleaned_data.get('corr_postal_code')

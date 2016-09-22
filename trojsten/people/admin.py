@@ -141,7 +141,7 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
         (_('Personal info'), {'fields': (
             'first_name', 'last_name', 'email', 'gender', 'birth_date'
         )}),
-        (_('Address'), {'fields': ('home_address', 'mailing_address')}),
+        (_('Address'), {'fields': ('home_address', 'mail_to_school', 'mailing_address')}),
         (_('School'), {'fields': ('school', 'graduation')}),
     )
     superuser_fieldsets = fieldsets + (
