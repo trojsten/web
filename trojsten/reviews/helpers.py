@@ -31,8 +31,10 @@ def submit_review(filecontent, filename, task, user, points, comment='', submit=
     else:
         sfiletarget = submit.filepath
 
-    sub = Submit(task=task, user=user, points=points, submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
-                 testing_status=submit_constants.SUBMIT_STATUS_REVIEWED, filepath=sfiletarget, reviewer_comment=comment)
+    sub = Submit(
+        task=task, user=user, points=points, submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+        testing_status=submit_constants.SUBMIT_STATUS_REVIEWED, filepath=sfiletarget, reviewer_comment=comment
+    )
     sub.save()
 
 

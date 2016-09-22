@@ -226,13 +226,11 @@ class DuplicateUserAdmin(admin.ModelAdmin):
 
                 src_fields = [
                     key for key, val in form.cleaned_data.items()
-                        if key != 'id' and not key.startswith(constants.USER_PROP_PREFIX) and
-                        int(val) == source_user.pk
+                    if key != 'id' and not key.startswith(constants.USER_PROP_PREFIX) and int(val) == source_user.pk
                 ]
                 src_user_props = [
                     int(key[len(constants.USER_PROP_PREFIX):]) for key, val in form.cleaned_data.items()
-                        if key.startswith(constants.USER_PROP_PREFIX) and
-                        int(val) == source_user.pk
+                    if key.startswith(constants.USER_PROP_PREFIX) and int(val) == source_user.pk
                 ]
 
                 merge_users(target_user, source_user, src_fields, src_user_props)

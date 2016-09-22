@@ -39,7 +39,7 @@ def get_lang_from_filename(filename):
         ".java": ".java",
         ".zip": ".zip"}
 
-    if not ext in extmapping:
+    if ext not in extmapping:
         return False
     return extmapping[ext]
 
@@ -79,6 +79,7 @@ def post_submit(raw, data):
         sock.send(raw)
         sock.send(data)
         sock.close()
+
 
 def process_submit_raw(f, contest_id, task_id, language, user_id):
     """Spracuje submit bez dotknutia databázy"""

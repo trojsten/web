@@ -49,8 +49,6 @@ class UploadZipForm(forms.Form):
 
     def save(self, req_user, task):
         filecontent = self.cleaned_data['file']
-        # @FIXME: unused variable
-        filename = self.cleaned_data['file'].name
 
         path = os.path.join(
             settings.SUBMIT_PATH, 'reviews', '%s_%s.zip' % (int(time()), req_user.username)
@@ -82,8 +80,6 @@ class ReviewForm(forms.Form):
 
         if 'points' not in cleaned_data or cleaned_data['points'] is None:
             raise forms.ValidationError(_('Points are required'))
-        # @FIXME: unused variable
-        points = cleaned_data['points']
 
         if 'user' not in cleaned_data or cleaned_data['user'] is None:
             raise forms.ValidationError(_('User is required'))
@@ -92,11 +88,6 @@ class ReviewForm(forms.Form):
             cleaned_data['user'] = User.objects.get(pk=user_id)
         except:
             raise forms.ValidationError(_('User %s does not exist') % user_id)
-
-        if 'file' in cleaned_data:
-            file = cleaned_data['file']
-            # @FIXME: unused variable
-            filename = cleaned_data['file'].name if file is not None else ''
 
         return cleaned_data
 
@@ -135,7 +126,7 @@ class ZipForm(forms.Form):
     user = forms.ChoiceField(widget=Select2)
     points = forms.IntegerField(min_value=0, required=False)
     comment = forms.CharField(
-        widget=forms.widgets.Textarea(attrs={'rows':1, 'cols':30}),
+        widget=forms.widgets.Textarea(attrs={'rows': 1, 'cols': 30}),
         required=False
     )
 
@@ -149,7 +140,7 @@ class ZipForm(forms.Form):
         self.fields['user'].choices = choices
         if 'initial' in kwargs and 'filename' in kwargs['initial']:
             try:
-                test = kwargs['initial']['filename'].encode('utf8')
+                kwargs['initial']['filename'].encode('utf8')
             except:
                 kwargs['initial']['filename'] = quote(kwargs['initial']['filename'])
             self.filename = kwargs['initial']['filename']

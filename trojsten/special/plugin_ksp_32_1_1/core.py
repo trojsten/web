@@ -1,9 +1,9 @@
 """KSP 32.1.1 Specification"""
 
-__author__ = "Sysel"
-
 import datetime
 import time
+
+__author__ = "Sysel"
 
 
 class Level1:

@@ -14,7 +14,6 @@ from sortedm2m.fields import SortedManyToManyField
 
 
 def validate_url(value):
-    valid = False
     is_url = URLValidator()
 
     # External URL is valid

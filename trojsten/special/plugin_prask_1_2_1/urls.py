@@ -1,8 +1,8 @@
 from django.conf.urls import patterns, url
 
-from .views import *
+from .views import root, main, post, reset
 
-urlpatterns =[
+urlpatterns = [
     url(r'^$', root,
         name='plugin_prask_1_2_1_root'),
     url(r'^(?P<category>[ABC])/$', main,

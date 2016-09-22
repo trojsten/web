@@ -46,8 +46,9 @@ class ArchiveTest(TestCase):
     def test_one_year(self):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(self.site)
-        semester = Semester.objects.create(number=1, name='Test semester', competition=competition,
-                                       year=1)
+        semester = Semester.objects.create(
+            number=1, name='Test semester', competition=competition, year=1
+        )
         Round.objects.create(number=1, semester=semester, solutions_visible=True, visible=True)
 
         response = self.client.get(self.url)
@@ -76,10 +77,12 @@ class ArchiveTest(TestCase):
         response = self.client.get(self.url)
         self.assertContains(response, "TestCompetition 47")
 
-        semester1 = Semester.objects.create(number=42, name='Test semester 42', competition=competition1,
-                                        year=42)
-        semester2 = Semester.objects.create(number=47, name='Test semester 47', competition=competition2,
-                                        year=47)
+        semester1 = Semester.objects.create(
+            number=42, name='Test semester 42', competition=competition1, year=42
+        )
+        semester2 = Semester.objects.create(
+            number=47, name='Test semester 47', competition=competition2, year=47
+        )
         Round.objects.create(number=42, semester=semester1, solutions_visible=True, visible=True)
         Round.objects.create(number=47, semester=semester2, solutions_visible=True, visible=True)
 
@@ -100,10 +103,12 @@ class ArchiveTest(TestCase):
     def test_two_years(self):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(self.site)
-        semester1 = Semester.objects.create(number=1, name='Test semester 1', competition=competition,
-                                        year=1)
-        semester2 = Semester.objects.create(number=1, name='Test semester 2', competition=competition,
-                                        year=2)
+        semester1 = Semester.objects.create(
+            number=1, name='Test semester 1', competition=competition, year=1
+        )
+        semester2 = Semester.objects.create(
+            number=1, name='Test semester 2', competition=competition, year=2
+        )
         Round.objects.create(number=1, semester=semester1, solutions_visible=True, visible=True)
 
         response = self.client.get(self.url)
@@ -121,10 +126,12 @@ class ArchiveTest(TestCase):
     def test_two_semester(self):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(self.site)
-        semester1 = Semester.objects.create(number=1, name='Test semester 1', competition=competition,
-                                        year=1)
-        semester2 = Semester.objects.create(number=2, name='Test semester 2', competition=competition,
-                                        year=1)
+        semester1 = Semester.objects.create(
+            number=1, name='Test semester 1', competition=competition, year=1
+        )
+        semester2 = Semester.objects.create(
+            number=2, name='Test semester 2', competition=competition, year=1
+        )
         Round.objects.create(number=1, semester=semester1, solutions_visible=True, visible=True)
 
         response = self.client.get(self.url)
@@ -142,8 +149,9 @@ class ArchiveTest(TestCase):
     def test_two_rounds(self):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(self.site)
-        semester = Semester.objects.create(number=1, name='Test semester 1', competition=competition,
-                                       year=1)
+        semester = Semester.objects.create(
+            number=1, name='Test semester 1', competition=competition, year=1
+        )
         Round.objects.create(number=1, semester=semester, solutions_visible=True, visible=True)
 
         response = self.client.get(self.url)
@@ -162,8 +170,9 @@ class ArchiveTest(TestCase):
         group = Group.objects.create(name="Test Group")
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(self.site)
-        semester = Semester.objects.create(number=1, name='Test semester 1', competition=competition,
-                                       year=1)
+        semester = Semester.objects.create(
+            number=1, name='Test semester 1', competition=competition, year=1
+        )
         Round.objects.create(number=1, semester=semester, solutions_visible=True, visible=False)
 
         response = self.client.get(self.url)
@@ -199,8 +208,9 @@ class TaskListTests(TestCase):
         group = Group.objects.create(name='staff')
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        semester = Semester.objects.create(number=1, name='Test semester', competition=competition,
-                                       year=1)
+        semester = Semester.objects.create(
+            number=1, name='Test semester', competition=competition, year=1
+        )
         self.round = Round.objects.create(number=1, semester=semester, visible=True,
                                           solutions_visible=True)
         self.invisible_round = Round.objects.create(number=1, semester=semester, visible=False,
@@ -258,8 +268,9 @@ class TaskAndSolutionStatementsTests(TestCase):
         group = Group.objects.create(name='staff')
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        semester = Semester.objects.create(number=1, name='Test semester', competition=competition,
-                                       year=1)
+        semester = Semester.objects.create(
+            number=1, name='Test semester', competition=competition, year=1
+        )
         self.round = Round.objects.create(number=1, semester=semester, visible=True,
                                           solutions_visible=True)
         self.invisible_round = Round.objects.create(number=1, semester=semester, visible=False,

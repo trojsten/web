@@ -38,9 +38,8 @@ class SubmitListTests(TestCase):
         self.start_time_old = timezone.now() + timezone.timedelta(-10)
         self.end_time_old = timezone.now() + timezone.timedelta(-5)
         self.end_time_new = timezone.now() + timezone.timedelta(10)
-        self.semester = Semester.objects.create(number=1, name='Test semester',
-                                            competition=self.competition,
-                                            year=1)
+        self.semester = Semester.objects.create(
+            number=1, name='Test semester', competition=self.competition, year=1)
 
     def test_redirect_to_login(self):
         response = self.client.get(self.list_url)
@@ -179,9 +178,8 @@ class SubmitTaskTests(TestCase):
         self.start_time_new = timezone.now() + timezone.timedelta(5)
         self.end_time_old = timezone.now() + timezone.timedelta(-5)
         self.end_time_new = timezone.now() + timezone.timedelta(10)
-        self.semester = Semester.objects.create(number=1, name='Test semester',
-                                            competition=self.competition,
-                                            year=1)
+        self.semester = Semester.objects.create(
+            number=1, name='Test semester', competition=self.competition, year=1)
 
     def test_redirect_to_login(self):
         url = reverse('task_submit_page', kwargs={'task_id': 47})
@@ -320,9 +318,8 @@ class JsonSubmitTest(TestCase):
         self.start_time_new = timezone.now() + timezone.timedelta(5)
         self.end_time_old = timezone.now() + timezone.timedelta(-5)
         self.end_time_new = timezone.now() + timezone.timedelta(10)
-        semester = Semester.objects.create(number=1, name='Test semester',
-                                       competition=competition,
-                                       year=1)
+        semester = Semester.objects.create(
+            number=1, name='Test semester', competition=competition, year=1)
         round = Round.objects.create(number=1, semester=semester, visible=True,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)
@@ -400,9 +397,8 @@ class JsonProtokolTest(TestCase):
         self.start_time_new = timezone.now() + timezone.timedelta(5)
         self.end_time_old = timezone.now() + timezone.timedelta(-5)
         self.end_time_new = timezone.now() + timezone.timedelta(10)
-        semester = Semester.objects.create(number=1, name='Test semester',
-                                       competition=competition,
-                                       year=1)
+        semester = Semester.objects.create(
+            number=1, name='Test semester', competition=competition, year=1)
         round = Round.objects.create(number=1, semester=semester, visible=True,
                                      solutions_visible=False, start_time=self.start_time_old,
                                      end_time=self.end_time_new)

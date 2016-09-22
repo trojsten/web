@@ -2,9 +2,10 @@
 
 from django.conf.urls import handler404, url
 
-from .views import *
+from .views import index, level, levels, solution, submit_status
 
-urlpatterns =[
+
+urlpatterns = [
     url(r'^$', index),
     url(r'^levels$', levels),
     url(r'^levels/s(?P<sid>\d+)l(?P<lid>\d+)$', level),

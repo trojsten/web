@@ -7,9 +7,7 @@ import shutil
 import sys
 import tempfile
 import zipfile
-import io
 from os import path
-from django.utils import timezone
 try:
     from urllib.request import quote, unquote
 except ImportError:
@@ -18,7 +16,6 @@ except ImportError:
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
-from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
 from django.utils import timezone
@@ -31,10 +28,6 @@ from trojsten.reviews import helpers
 from trojsten.reviews.forms import ZipForm
 from trojsten.submit import constants as submit_constants
 from trojsten.submit.models import Submit
-from trojsten.contests.models import Task
-from trojsten.reviews.forms import ZipForm
-from trojsten.reviews import helpers
-from trojsten.people.models import User
 from trojsten.utils.test_utils import get_noexisting_id
 
 try:
@@ -118,8 +111,9 @@ class ReviewTest(TestCase):
         group.user_set.add(self.staff)
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        semester = Semester.objects.create(number=1, name='Test semester 1', year=1,
-                                       competition=competition)
+        semester = Semester.objects.create(
+            number=1, name='Test semester 1', year=1, competition=competition
+        )
 
         start = timezone.now() + timezone.timedelta(-8)
         end = timezone.now() + timezone.timedelta(-4)
@@ -251,8 +245,9 @@ class DownloadLatestSubmits(TestCase):
         group.user_set.add(self.staff)
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        semester = Semester.objects.create(number=1, name='Test semester 1', year=1,
-                                       competition=competition)
+        semester = Semester.objects.create(
+            number=1, name='Test semester 1', year=1, competition=competition
+        )
 
         test_round = Round.objects.create(number=1, semester=semester, solutions_visible=True,
                                           visible=True)
@@ -308,9 +303,11 @@ class DownloadLatestSubmits(TestCase):
         )
 
     def test_only_description_submit(self):
-        submit = Submit.objects.create(task=self.task, user=self.user, points=5,
-                                       submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
-                                       filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt'))
+        submit = Submit.objects.create(
+            task=self.task, user=self.user, points=5,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt')
+        )
         submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
         submit.save()
         submit_file = helpers.submit_download_filename(submit)
@@ -327,9 +324,11 @@ class DownloadLatestSubmits(TestCase):
         f.close()
 
     def test_only_source_submit(self):
-        submit = Submit.objects.create(task=self.task, user=self.user, points=5,
-                                       submit_type=submit_constants.SUBMIT_TYPE_SOURCE,
-                                       filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'source.cpp'))
+        submit = Submit.objects.create(
+            task=self.task, user=self.user, points=5,
+            submit_type=submit_constants.SUBMIT_TYPE_SOURCE,
+            filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'source.cpp')
+        )
         submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
         submit.save()
 
@@ -348,14 +347,18 @@ class DownloadLatestSubmits(TestCase):
         f.close()
 
     def test_source_description_submit(self):
-        desc_submit = Submit.objects.create(task=self.task, user=self.user, points=5,
-                                            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
-                                            filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt'))
+        desc_submit = Submit.objects.create(
+            task=self.task, user=self.user, points=5,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt')
+        )
         desc_submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
         desc_submit.save()
-        submit = Submit.objects.create(task=self.task, user=self.user, points=5,
-                                       submit_type=submit_constants.SUBMIT_TYPE_SOURCE,
-                                       filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'source.cpp'))
+        submit = Submit.objects.create(
+            task=self.task, user=self.user, points=5,
+            submit_type=submit_constants.SUBMIT_TYPE_SOURCE,
+            filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'source.cpp')
+        )
         submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
         submit.save()
 
@@ -374,9 +377,11 @@ class DownloadLatestSubmits(TestCase):
 
     def test_comment_in_submit(self):
         comment = '''TESTINGComment\ns diakritikou áäčďéíľňóŕšťúýž'''
-        submit = Submit.objects.create(task=self.task, user=self.user, points=5,
-                                       submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
-                                       filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt'))
+        submit = Submit.objects.create(
+            task=self.task, user=self.user, points=5,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt')
+        )
         submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
         submit.save()
         Submit.objects.create(task=self.task, user=self.user, points=5,
@@ -399,9 +404,11 @@ class DownloadLatestSubmits(TestCase):
 
     def test_points_in_submit(self):
         points = 47
-        submit = Submit.objects.create(task=self.task, user=self.user, points=0,
-                                       submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
-                                       filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt'))
+        submit = Submit.objects.create(
+            task=self.task, user=self.user, points=0,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt')
+        )
         submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
         submit.save()
         Submit.objects.create(task=self.task, user=self.user, points=points,
@@ -482,8 +489,9 @@ class ReviewEditTest(TestCase):
         group.user_set.add(self.staff)
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        semester = Semester.objects.create(number=1, name='Test semester 1', year=1,
-                                       competition=competition)
+        semester = Semester.objects.create(
+            number=1, name='Test semester 1', year=1, competition=competition
+        )
 
         start = timezone.now() + timezone.timedelta(-8)
         end = timezone.now() + timezone.timedelta(-4)

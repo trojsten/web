@@ -218,8 +218,7 @@ def make_result_table(
 ):
     ResultsTable = namedtuple('ResultsTable', ['tasks', 'results_data', 'has_previous_results'])
 
-    if not (user.is_authenticated()
-            and user.is_in_group(round.semester.competition.organizers_group)):
+    if not (user.is_authenticated() and user.is_in_group(round.semester.competition.organizers_group)):
         show_staff = False
 
     current_tasks = Task.objects.for_rounds_and_category(
