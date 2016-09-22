@@ -9,7 +9,6 @@ from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
 
 from trojsten.people.models import Address, DuplicateUser, User
-from trojsten.schools.models import School
 
 from . import constants
 from .helpers import get_similar_users
@@ -32,7 +31,8 @@ class TrojstenUserBaseForm(forms.ModelForm):
     mailing_option = forms.ChoiceField(
         required=True, choices=MAILING_OPTION_CHOICES,
         label=_("Correspondence address"), widget=forms.RadioSelect,
-        help_text=_("Choose, where you want to accept mails."), initial=constants.MAILING_OPTION_HOME
+        help_text=_("Choose, where you want to accept mails."),
+        initial=constants.MAILING_OPTION_HOME
     )
 
     corr_street = forms.CharField(max_length=70, label=_('Street'), required=False)

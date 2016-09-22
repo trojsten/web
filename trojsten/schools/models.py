@@ -5,6 +5,8 @@ from django.db import models
 from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 
+import trojsten.people.models
+
 
 @python_2_unicode_compatible
 class School(models.Model):
@@ -44,8 +46,7 @@ class School(models.Model):
         return self.abbreviation.strip() != ''
 
     def get_mailing_address(self):
-        from trojsten.people.models import SchoolAddress
-        return SchoolAddress(
+        return trojsten.people.models.SchoolAddress(
             addr_name=self.addr_name,
             street=self.street,
             town=self.city,
