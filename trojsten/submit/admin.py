@@ -40,8 +40,8 @@ class SubmitAdmin(admin.ModelAdmin):
                             description='kolo',
                             order='task__round__number')
     get_semester = get_related(attribute_chain=('task', 'round', 'semester', 'short_str'),
-                             description='časť',
-                             order='task__round__semester__number')
+                               description='časť',
+                               order='task__round__semester__number')
     get_year = get_related(attribute_chain=('task', 'round', 'semester', 'year'),
                            description='ročník',
                            order='task__round__semester__year')

@@ -12,7 +12,6 @@ from collections import Counter
 __author__ = "Sysel"
 
 
-
 class Level1(object):
 
     TARGET = "47"

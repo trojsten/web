@@ -173,7 +173,10 @@ def download_latest_submits(request, task_pk):
                     if not os.path.isfile(submit.protocol_path):
                         errors += [_('Missing protocol file of user %s') % submit.user.get_full_name()]
                     else:
-                        zipper.write(submit.protocol_path, submit_protocol_download_filename(submit, description_submit_id))
+                        zipper.write(
+                            submit.protocol_path,
+                            submit_protocol_download_filename(submit, description_submit_id)
+                        )
 
         if errors:
             zipper.writestr(REVIEW_ERRORS_FILENAME, u'\n'.join(errors).encode('utf8'))
@@ -195,7 +198,7 @@ def zip_upload(request, task_pk):
 
     try:
         archive = zipfile.ZipFile(name)
-    except (zipfile.BadZipfile, IOError) as e:
+    except (zipfile.BadZipfile, IOError):
         messages.add_message(request, messages.ERROR, _('Problems with uploaded zip'))
         return redirect('admin:review_task', task.pk)
 

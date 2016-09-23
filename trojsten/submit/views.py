@@ -215,7 +215,7 @@ def receive_protocol(request, protocol_id):
     return HttpResponse('')
 
 
-#@login_required
+#  @login_required
 def poll_submit_info(request, submit_id):
     submit = get_object_or_404(Submit, pk=submit_id)
     if submit.user != request.user and not Submit.objects.filter(

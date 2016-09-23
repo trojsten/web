@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
+from django.db import models
 from django.utils.encoding import force_text
 from easy_select2.widgets import Select2Multiple
 
-from .models import *
+from .models import Thread
 
 
 class ThreadAdmin(admin.ModelAdmin):

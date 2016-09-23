@@ -9,7 +9,7 @@ from easy_select2 import select2_modelform
 from import_export import fields, resources
 from import_export.admin import ExportMixin
 
-from .models import *
+from .models import Event, EventType, Invitation, OrganizerInvitation, Link, Place, Registration
 
 
 class EventTypeAdmin(admin.ModelAdmin):

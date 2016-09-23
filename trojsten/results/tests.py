@@ -21,7 +21,7 @@ class RecentResultsTest(TestCase):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         self.semester = Semester.objects.create(number=1, name='Test semester', competition=competition,
-                                            year=1)
+                                                year=1)
         self.url = reverse('view_latest_results')
         year = timezone.now().year + 2
         self.user = User.objects.create(username="TestUser", password="password",
@@ -96,9 +96,9 @@ class ResultsTest(TestCase):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         self.semester1 = Semester.objects.create(number=1, name='Test semester 1', year=1,
-                                             competition=competition)
+                                                 competition=competition)
         self.semester2 = Semester.objects.create(number=2, name='Test semester 2', year=1,
-                                             competition=competition)
+                                                 competition=competition)
 
         start1 = timezone.now() + timezone.timedelta(-12)
         end1 = timezone.now() + timezone.timedelta(-8)

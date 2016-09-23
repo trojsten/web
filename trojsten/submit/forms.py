@@ -25,6 +25,7 @@ class SourceSubmitForm(forms.Form):
     language = forms.ChoiceField(label='Jazyk',
                                  choices=LANGUAGE_CHOICES)
 
+
 class DescriptionSubmitForm(forms.Form):
     submit_file = forms.FileField(
         max_length=settings.UPLOADED_FILENAME_MAXLENGTH,
@@ -37,6 +38,7 @@ class DescriptionSubmitForm(forms.Form):
         if extension.lower() not in settings.SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS:
             raise forms.ValidationError("Zaslaný súbor má nepodporovanú príponu %s" % extension)
         return sfile
+
 
 class TestableZipSubmitForm(forms.Form):
     submit_file = forms.FileField(
