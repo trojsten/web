@@ -256,8 +256,6 @@ class TaskListTests(TestCase):
 
 @override_settings(
     TASK_STATEMENTS_PATH=path.join(path.dirname(__file__), 'test_data', 'statements'),
-    TASK_STATEMENTS_SUFFIX_YEAR='',
-    TASK_STATEMENTS_SUFFIX_ROUND='',
     TASK_STATEMENTS_TASKS_DIR='tasks',
     TASK_STATEMENTS_PREFIX_TASK='',
     TASK_STATEMENTS_SOLUTIONS_DIR='solutions',
@@ -358,8 +356,6 @@ class TaskAndSolutionStatementsTests(TestCase):
 
 @override_settings(
     TASK_STATEMENTS_PATH=path.join(path.dirname(__file__), 'test_data', 'statements'),
-    TASK_STATEMENTS_SUFFIX_YEAR='',
-    TASK_STATEMENTS_SUFFIX_ROUND='',
     TASK_STATEMENTS_TASKS_DIR='tasks',
     TASK_STATEMENTS_PREFIX_TASK='',
     TASK_STATEMENTS_SOLUTIONS_DIR='solutions',

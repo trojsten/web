@@ -145,13 +145,15 @@ class Round(models.Model):
         return False
 
     def get_base_path(self):
-        round_dir = '{}{}'.format(self.number, settings.TASK_STATEMENTS_SUFFIX_ROUND)
-        year_dir = '{}{}'.format(self.semester.year, settings.TASK_STATEMENTS_SUFFIX_YEAR)
+        round_dir = str(self.number)
+        semester_dir = str(self.semester.number)
+        year_dir = str(self.semester.year)
         competition_name = self.semester.competition.name
         path = os.path.join(
             settings.TASK_STATEMENTS_PATH,
             competition_name,
             year_dir,
+            semester_dir,
             round_dir,
         )
         return path
