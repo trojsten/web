@@ -13,7 +13,6 @@ import trojsten.login.views
 import trojsten.views
 from trojsten.people.forms import (TrojstenUserChangeForm,
                                    TrojstenUserCreationForm)
-from trojsten.views import CustomSearchView
 
 admin.autodiscover()
 admin.site.login = login_required(admin.site.login)
