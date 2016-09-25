@@ -179,6 +179,7 @@ class UserPropertyKey(models.Model):
     regex = models.CharField(
         max_length=100, verbose_name='regulárny výraz pre hodnotu', blank=True, null=True
     )
+    hidden = models.BooleanField(default=False, verbose_name='skryté')
 
     def __str__(self):
         return self.key_name
