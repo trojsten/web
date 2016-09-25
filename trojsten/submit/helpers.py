@@ -2,7 +2,6 @@
 import os
 import random
 import socket
-import stat
 import xml.etree.ElementTree as ET
 from decimal import Decimal
 from time import time

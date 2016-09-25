@@ -2,11 +2,8 @@
 
 from __future__ import unicode_literals
 
-import re
-
 from django import template
 from django.conf import settings
-from django.core import urlresolvers
 
 from trojsten.contests.models import Competition
 

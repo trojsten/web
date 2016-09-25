@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
 import news.urls
-import tips.urls
 import trojsten.contests.urls
 import trojsten.contests.views
 import trojsten.login.views
