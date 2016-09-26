@@ -37,18 +37,18 @@ def process_submit(uid, sid, lid, l_submit_id, taskpoints, program, level_path):
 
         level_submit.status = 'OK'
 
-        LevelSolved.objects.get_or_create(user=user, semester=sid, level=lid)
+        LevelSolved.objects.get_or_create(user=user, series=sid, level=lid)
 
         for (task_id, _) in taskpoints:
 
-            # Look if there are another semester with same task_id and sum points
+            # Look if there are another series with same task_id and sum points
             points = 0
             _sid = 0
-            for serie in index_data['semester']:
+            for serie in index_data['series']:
                 for (other_task_id, multiple) in serie['taskpoints']:
                     if task_id == other_task_id:
                         points += multiple * LevelSolved.objects.filter(
-                            user=user, semester=_sid).count()
+                            user=user, series=_sid).count()
                 _sid += 1
 
             submit = Submit(

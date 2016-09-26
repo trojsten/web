@@ -24,7 +24,7 @@ def levels(request):
     user = request.user
 
     sid = 0
-    for serie in data['semester']:
+    for serie in data['series']:
         # Set whether serie is rated
         serie['rated'] = bool(serie['taskpoints'])
         del serie['taskpoints']
@@ -59,8 +59,8 @@ def level(request, sid, lid):
     user = request.user
 
     try:
-        path = data['semester'][sid]['levels'][lid]
-        taskpoints = data['semester'][sid]['taskpoints']
+        path = data['series'][sid]['levels'][lid]
+        taskpoints = data['series'][sid]['taskpoints']
     except (KeyError, IndexError):
         raise Http404()
 
@@ -106,8 +106,8 @@ def solution(request, sid, lid):
     data = load_level_index()
 
     try:
-        path = data['semester'][sid]['solutions'][lid]
-        rated = bool(data['semester'][sid]['taskpoints'])
+        path = data['series'][sid]['solutions'][lid]
+        rated = bool(data['series'][sid]['taskpoints'])
     except (KeyError, IndexError):
         raise Http404()
 
@@ -138,4 +138,4 @@ def load_level_index():
 
 def is_level_solved(sid, lid, user):
     return LevelSolved.objects.filter(
-        user=user, semester=sid, level=lid).exists()
+        user=user, series=sid, level=lid).exists()
