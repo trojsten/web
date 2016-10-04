@@ -6,6 +6,7 @@ from django.conf.urls import url
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from django.db import models
+from django.forms import ModelForm
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.encoding import force_text
 from django.utils.html import escape
@@ -125,6 +126,13 @@ class UsersExport(resources.ModelResource):
         return '' if address is None else address.country
 
 
+class AdminUserAddForm(ModelForm):
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'school', 'graduation']
+
+
 class UserAdmin(ExportMixin, DefaultUserAdmin):
     list_display = ('username', 'first_name', 'last_name', 'email',
                     'get_school', 'graduation', 'get_is_staff', 'get_groups',
@@ -132,9 +140,15 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
     list_filter = ('groups', StaffFilter, ActiveInCompetitionFilter, ActiveInSemesterSubFilter)
     search_fields = ('username', 'first_name', 'last_name')
 
+    add_form = AdminUserAddForm
+
     formfield_overrides = {
         models.ForeignKey: {'widget': Select2()}
     }
+
+    add_fieldsets = (
+        (None, {'fields': ('first_name', 'last_name', 'school', 'graduation')}),
+    )
 
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
