@@ -55,7 +55,7 @@
 </tr>
 </thead>
 {% for task in tasks %}
-    <tr class="{% for category in task.category.all %} category-{{ category }}{% endfor %}">
+    <tr class="{% for category in task.categories.all %} category-{{ category }}{% endfor %}">
         <td>
             {{ task.number }}.
         </td>
@@ -68,7 +68,7 @@
             </td>
         {% endif %}
         <td>
-            {% for category in task.category.all %}
+            {% for category in task.categories.all %}
                 <span class="label label-default category-{{ category }}">{{ category }}</span>
             {% endfor %}
         </td>
