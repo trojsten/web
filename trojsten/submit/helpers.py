@@ -75,8 +75,8 @@ def post_submit(raw, data):
     else:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((settings.TESTER_URL, settings.TESTER_PORT))
-        sock.send(raw)
-        sock.send(data)
+        sock.sendall(raw)
+        sock.sendall(data)
         sock.close()
 
 
