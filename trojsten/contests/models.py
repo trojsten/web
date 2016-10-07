@@ -15,10 +15,13 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 from unidecode import unidecode
 
+from trojsten.people.models import User
 from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
 from trojsten.submit import constants as submit_constants
 from trojsten.utils import utils
+
+from . import constants
 
 
 class RoundManager(models.Manager):
@@ -367,3 +370,25 @@ class Task(models.Model):
 
     def solution_visible(self, user):
         return self.round.solutions_are_visible_for_user(user)
+
+
+class TaskPeople(models.Model):
+    task = models.ForeignKey(
+        Task, verbose_name=_('task')
+    )
+    person = models.ForeignKey(
+        User, verbose_name=_('organizer'),
+    )
+    TASK_FUNCTION_CHOISES = [
+        (constants.TASK_FUNCTION_REVIEWER, _('reviewer')),
+        (constants.TASK_FUNCTION_SOLVER, _('solution-writer')),
+        (constants.TASK_FUNCTION_PROOFREADER, _('proofreader'))
+    ]
+    function = models.IntegerField(
+        choices=TASK_FUNCTION_CHOISES, verbose_name=_('function')
+    )
+
+    class Meta:
+        verbose_name = _('Assigned person')
+        verbose_name_plural = _('Assigned people')
+
