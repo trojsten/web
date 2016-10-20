@@ -371,6 +371,16 @@ class Task(models.Model):
     def solution_visible(self, user):
         return self.round.solutions_are_visible_for_user(user)
 
+    def get_assigned_people(self, function):
+        return [line.person for line in TaskPeople.objects
+                .filter(task=self, function=function)]
+
+    # @property
+    # def reviewer(self):
+    #     reviewers = self.get_assigned_people(constants.TASK_FUNCTION_REVIEWER)
+    #     if len(reviewers) > 0:
+    #         return reviewers[0]
+
 
 class TaskPeople(models.Model):
     task = models.ForeignKey(

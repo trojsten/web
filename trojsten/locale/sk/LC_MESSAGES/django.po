@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-18 19:51+0200\n"
+"POT-Creation-Date: 2016-10-20 19:03+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -10,21 +10,55 @@ msgid "Category doesn't correspond with competition."
 msgstr ""
 
 # pdf file names
-#: contests/models.py:234
+#: contests/models.py:237
 msgid "year"
 msgstr "ročník"
 
-#: contests/models.py:236
+#: contests/models.py:239
 msgid "round"
 msgstr "kolo"
 
-#: contests/models.py:238
+#: contests/models.py:241
 msgid "solutions"
 msgstr "vzoráky"
 
-#: contests/models.py:238
+#: contests/models.py:241
 msgid "tasks"
 msgstr "zadania"
+
+#: contests/models.py:381
+#, fuzzy
+#| msgid "tasks"
+msgid "task"
+msgstr "úloha"
+
+#: contests/models.py:384
+msgid "organizer"
+msgstr "vedúci"
+
+#: contests/models.py:387
+msgid "reviewer"
+msgstr "opravovateľ"
+
+#: contests/models.py:388
+msgid "solution-writer"
+msgstr "vzorákovač"
+
+#: contests/models.py:389
+msgid "proofreader"
+msgstr "recenzovač"
+
+#: contests/models.py:392
+msgid "function"
+msgstr "funkcia"
+
+#: contests/models.py:396
+msgid "Assigned person"
+msgstr "Predelená osoba"
+
+#: contests/models.py:397
+msgid "Assigned people"
+msgstr "Pridelení ľudia"
 
 # Task Statements
 #: contests/templatetags/statements_parts.py:93
@@ -65,63 +99,63 @@ msgstr ""
 msgid "Logout successful"
 msgstr ""
 
-#: people/admin.py:141
+#: people/admin.py:155
 msgid "Personal info"
 msgstr ""
 
-#: people/admin.py:144
+#: people/admin.py:158
 msgid "Address"
 msgstr ""
 
-#: people/admin.py:145
+#: people/admin.py:159
 msgid "School"
 msgstr ""
 
-#: people/admin.py:148
+#: people/admin.py:162
 msgid "Permissions"
 msgstr ""
 
-#: people/admin.py:151
+#: people/admin.py:165
 msgid "Important dates"
 msgstr ""
 
-#: people/admin.py:239
+#: people/admin.py:251
 msgid "Users merged succesfully."
 msgstr ""
 
-#: people/forms.py:20 people/forms.py:38
+#: people/forms.py:19 people/forms.py:38
 msgid "Street"
 msgstr "Ulica"
 
-#: people/forms.py:21 people/forms.py:39
+#: people/forms.py:20 people/forms.py:39
 msgid "Town"
 msgstr "Mesto"
 
-#: people/forms.py:23 people/forms.py:41
+#: people/forms.py:22 people/forms.py:41
 msgid "Postal code"
 msgstr "PSČ"
 
-#: people/forms.py:25 people/forms.py:43
+#: people/forms.py:24 people/forms.py:43
 msgid "Country"
 msgstr "Krajina"
 
-#: people/forms.py:28
+#: people/forms.py:27
 msgid "home"
 msgstr "domov"
 
-#: people/forms.py:29
+#: people/forms.py:28
 msgid "school"
 msgstr "do školy"
 
-#: people/forms.py:30
+#: people/forms.py:29
 msgid "other address (e. g. to a dormitory)"
 msgstr "na inú adresu (napr. na internát)"
 
-#: people/forms.py:34
+#: people/forms.py:33
 msgid "Correspondence address"
 msgstr "Korešpondenčná adresa"
 
-#: people/forms.py:35
+#: people/forms.py:34
 msgid "Choose, where you want to accept mails."
 msgstr "Vyber, kam ti máme posielať poštu."
 
@@ -177,7 +211,7 @@ msgstr ""
 msgid "The two password fields didn't match."
 msgstr ""
 
-#: people/models.py:194
+#: people/models.py:214
 #, python-format
 msgid "Value \"%s\" does not match regex \"%s\"."
 msgstr ""
@@ -222,29 +256,29 @@ msgstr ""
 msgid "Súbor musí byť ZIP archív: %s"
 msgstr ""
 
-#: reviews/forms.py:84
+#: reviews/forms.py:82
 msgid "Points are required"
 msgstr ""
 
-#: reviews/forms.py:89
+#: reviews/forms.py:85
 msgid "User is required"
 msgstr ""
 
-#: reviews/forms.py:94
+#: reviews/forms.py:90
 #, python-format
 msgid "User %s does not exist"
 msgstr ""
 
-#: reviews/forms.py:190
+#: reviews/forms.py:181
 #, python-format
 msgid "Invalid filename %s"
 msgstr ""
 
-#: reviews/forms.py:193
+#: reviews/forms.py:184
 msgid "Must have set points"
 msgstr ""
 
-#: reviews/forms.py:211
+#: reviews/forms.py:202
 msgid "Assigned 2 or more files to the same user."
 msgstr ""
 
@@ -344,15 +378,15 @@ msgstr ""
 msgid "Missing protocol file of user %s"
 msgstr ""
 
-#: reviews/views.py:199
+#: reviews/views.py:202
 msgid "Problems with uploaded zip"
 msgstr ""
 
-#: reviews/views.py:205
+#: reviews/views.py:208
 msgid "Ignore"
 msgstr ""
 
-#: reviews/views.py:248
+#: reviews/views.py:251
 msgid "Successfully finished reviewing this task!"
 msgstr ""
 
@@ -361,7 +395,7 @@ msgid "Table of Contents"
 msgstr ""
 
 # Submit
-#: submit/constants.py:26 submit/tests.py:380
+#: submit/constants.py:26 submit/tests.py:377
 msgid "Wrong answer"
 msgstr "Zlá odpoveď"
 

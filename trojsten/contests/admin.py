@@ -135,6 +135,7 @@ class TaskByRoundSubFilter(admin.SimpleListFilter):
 
 class TaskPeopleInline(admin.TabularInline):
     model = TaskPeople
+    extra = 1
 
 
 class TaskAdmin(admin.ModelAdmin):
