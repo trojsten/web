@@ -1,0 +1,99 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% load i18n %}
+{% load ksp_login %}
+{% load utils %}
+{% load bootstrap %}
+{% load sekizai_tags %}
+
+{% block page_header %}
+<h1>{% trans "Account settings" %}</h1>
+{% endblock %}
+
+{% block page_content %}
+<div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">{%  trans "Profile" %}</a></li>
+        <li role="presentation"><a href="#props" aria-controls="properties" role="tab" data-toggle="tab">{% trans "Properties" %}</a></li>
+        <li role="presentation"><a href="#login" aria-controls="login settings" role="tab" data-toggle="tab">{% trans "Login settings" %}</a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="profile">
+            {% include "ksp_login/parts/multiple_forms.html" %}
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="props">
+            <form method="post" action="" class="form-inline">
+                {% csrf_token %}
+                {{ user_props_form_set.management_form }}
+                {% for form in user_props_form_set %}
+                    {{ form | bootstrap_inline }}
+                {% endfor %}
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <input class="btn btn-primary" type="submit" name="user_props_submit" value="{% trans "Submit" %}" />
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="login">
+            {% if SITE.is_login_provider %}
+            <p>
+                {% trans "You can use any of the following services to log in to your account." %}
+            </p>
+            {% include "ksp_login/parts/associated_accounts_list.html" %}
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                Pridať nové konto<span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu ksp_login_provider_list" role="menu" aria-labelledby="login-dropdown"
+                id="account_links">
+              {% for provider in login_providers %}
+              <li role="presentation" class="provider_{% if provider.required_field %}with_input{% else %}simple{% endif %}">
+                <a href="javascript:void;">
+                  <img src="{{ STATIC_URL }}ksp_login/img/{{ provider.name }}.png" title="{{ provider.name }}" alt="{{ provider.name }}" />
+                  {{ provider.name | provider_name }}
+                </a>
+                <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline">
+                  {% csrf_token %}
+                  {% if provider.required_field %}
+                    <input class="form-control input-sm col-md-3" type="text" name="{{ provider.required_field }}" placeholder="{{ provider.required_field_verbose }}" />
+                  {% endif %}
+                  <input type="hidden" name="next" value="{% ksp_login_next %}" />
+                  <input class="btn btn-default btn-sm" type="submit" value="{% trans "Log in" %}" />
+                </form>
+              </li>
+              {% endfor %}
+              </ul>
+            </div>
+            {% else %}
+                {% url "trojsten_account_settings" as settings_url %}
+                {% blocktrans %}
+                    You can change the login settings <a href="{{ TROJSTEN_LOGIN_PROVIDER_URL }}{{ settings_url }}">on separate page</a>.
+                {% endblocktrans %}
+            {% endif %}
+
+            <h3>{% trans "Password change" %}</h3>
+            <p>
+                {% url "account_password" as passwd_url %}
+                {% blocktrans %}
+                    You can change your password <a href="{{ passwd_url }}">here</a>.
+                {% endblocktrans %}
+            </p>
+        </div>
+    </div>
+</div>
+
+{% addtoblock "js" %}
+    <script src="{{ STATIC_URL }}js/jquery-ui.min.js"></script>
+    <script src="{{ STATIC_URL }}js/latinize.js"></script>
+    <script src="{{ STATIC_URL }}js/autocomplete.js"></script>
+    <script src="{{ STATIC_URL }}js/correspondence-address.js"></script>
+    <script src="{{ STATIC_URL }}js/settings-datepicker.js"></script>
+    <script src="{{ STATIC_URL }}js/moment.min.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-datetimepicker.js"></script>
+{% endaddtoblock %}
+{% endblock %}
