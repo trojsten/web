@@ -23,6 +23,8 @@ def settings(request, settings_form=UserProfileForm):
     if request.method == "POST":
         if request.POST.get('user_props_submit', None):
             user_props_form_set = UserPropsFormSet(request.POST, instance=request.user)
+            # @TODO(mio): check if user tries to set a hidden user_prop
+            # @TODO(mio): enable creating new user props with existing, non hidden key
             if user_props_form_set.is_valid():
                 user_props_form_set.save()
                 return redirect('account_settings')

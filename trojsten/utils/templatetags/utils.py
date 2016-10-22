@@ -32,6 +32,7 @@ def lookup_as(object, key):
     except (KeyError, IndexError, TypeError):
         return None
 
+
 @register.filter
 def choice_text(choices, value):
     for v, t in choices:
