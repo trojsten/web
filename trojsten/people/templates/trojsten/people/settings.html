@@ -25,14 +25,36 @@
         </div>
 
         <div role="tabpanel" class="tab-pane" id="props">
-            <form method="post" action="" class="form-inline">
+            <form method="post" action="" class="form-horizontal">
                 {% csrf_token %}
                 {{ user_props_form_set.management_form }}
                 {% for form in user_props_form_set %}
-                    {{ form | bootstrap_inline }}
+                    <div class="form-group">
+                    {% for field in form %}
+                        {{ field.errors }}
+                        {% if field.name == "key" %}
+                            {% if field.value %}
+                                <label class="col-md-3 control-label">{{ field.field.choices|choice_text:field.value }}</label>
+                                <input type="hidden" name="{{ field.html_name }}" value="{{ field.value }}"/>
+                            {% else %}
+                                {{ field | bootstrap_inline}}
+                            {% endif %}
+                        {% elif field.name == "value" %}
+                            <span class="col-md-7">
+                                {{ field }}
+                            </span>
+                        {% elif field.is_hidden %}
+                            {{ field }}
+                        {% else %}
+                            <span class="col-md-2">
+                                {{ field | bootstrap_inline}}
+                            </span>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
                 {% endfor %}
                 <div class="form-group">
-                    <div class="col-sm-12">
+                    <div class="col-sm-offset-3 col-sm-7">
                         <input class="btn btn-primary" type="submit" name="user_props_submit" value="{% trans "Submit" %}" />
                     </div>
                 </div>

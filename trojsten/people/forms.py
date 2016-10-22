@@ -431,6 +431,6 @@ class MergeForm(forms.Form):
 UserPropsFormSet = forms.inlineformset_factory(
     User, UserProperty,
     fields=('key', 'value'),
-    widgets={'value': forms.widgets.Textarea(attrs={'cols': 40, 'rows': 1})},
-    extra=1,
+    widgets={'value': forms.widgets.Textarea(attrs={'class': 'col-sm-12 form-control', 'rows': 1})},
+    extra=0,
 )

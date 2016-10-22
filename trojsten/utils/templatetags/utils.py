@@ -9,7 +9,6 @@ from trojsten.contests.models import Competition
 
 register = template.Library()
 
-
 @register.filter
 def lookup(object, key):
     """
@@ -32,6 +31,13 @@ def lookup_as(object, key):
         return object[key]
     except (KeyError, IndexError, TypeError):
         return None
+
+@register.filter
+def choice_text(choices, value):
+    for v, t in choices:
+        if v == value:
+            return t
+    return None
 
 
 @register.filter
