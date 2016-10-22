@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-18 14:37+0100\n"
+"POT-Creation-Date: 2017-02-02 14:02+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -21,7 +21,7 @@ msgstr "E-mail"
 msgid "Message"
 msgstr "Správa"
 
-#: contact_form/templates/contact_form/contact_form.html:15
+#: contact_form/templates/contact_form/contact_form.html:14
 #, python-format
 msgid ""
 "\n"
@@ -33,18 +33,19 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Tento formulár slúži na technické problémy so stránkou, nie na problémy s riešením úloh. "
-"Pokiaľ máte problém s nejakou úlohou, napíšte vedúcim semináru na "
-"<a class=\"alert-link\" href=\"mailto:%(email)s\">%(email)s</a>, "
+"Tento formulár slúži na technické problémy so stránkou, nie na problémy s "
+"riešením úloh. Pokiaľ máte problém s nejakou úlohou, napíšte vedúcim "
+"semináru na <a class=\"alert-link\" href=\"mailto:%(email)s\">%(email)s</a>, "
 "alebo priamo vedúcemu uvedenému pri úlohe.\n"
 "    "
 
-#: contact_form/templates/contact_form/contact_form.html:26
+#: contact_form/templates/contact_form/contact_form.html:24
 msgid ""
 "If you have found any problem with our web site, please let us know using "
 "the following form."
 msgstr ""
-"Ak ste objavili chybu na našej stránke, prosím, dajte nám vedieť použitím nasledujúceho formulára."
+"Ak ste objavili chybu na našej stránke, prosím, dajte nám vedieť použitím "
+"nasledujúceho formulára."
 
 #: contests/forms.py:11
 msgid "Category doesn't correspond with competition."
@@ -254,8 +255,19 @@ msgstr ""
 msgid "The two password fields didn't match."
 msgstr ""
 
-#: people/models.py:214
+#: people/models.py:215 people/models_BACKUP_20662.py:216
+#: people/models_LOCAL_20662.py:215
 msgid "Value \"{}\" does not match regex \"{}\"."
+msgstr ""
+
+#: people/models_BACKUP_20662.py:218 people/models_REMOTE_20662.py:215
+#, python-brace-format
+msgid "Value \"{value}\" does not match regex \"{regex}\"."
+msgstr ""
+
+#: people/models_BASE_20662.py:215
+#, python-format
+msgid "Value \"%s\" does not match regex \"%s\"."
 msgstr ""
 
 #: people/templates/admin/people/duplicateuser/change_form.html:5
@@ -280,6 +292,7 @@ msgid "Merge users %(user)s and %(candidate)s"
 msgstr ""
 
 #: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
+#: people/templates/trojsten/people/settings.html:36
 #: templates/ksp_login/parts/multiple_forms.html:11
 #: templates/ksp_login/parts/single_form.html:10
 msgid "Submit"
@@ -292,6 +305,89 @@ msgstr ""
 #: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:33
 msgid "Cancel"
 msgstr ""
+
+#: people/templates/trojsten/people/settings.html:10
+#: templates/ksp_login/settings.html:9 templates/ksp_login/settings.html:12
+#, fuzzy
+#| msgid "Account information"
+msgid "Account settings"
+msgstr "Informácie o účte"
+
+#: people/templates/trojsten/people/settings.html:17
+msgid "Profile"
+msgstr ""
+
+#: people/templates/trojsten/people/settings.html:18
+msgid "Properties"
+msgstr ""
+
+#: people/templates/trojsten/people/settings.html:19
+#: templates/ksp_login/settings.html:18
+msgid "Login settings"
+msgstr ""
+
+#: people/templates/trojsten/people/settings.html:45
+#: templates/ksp_login/settings.html:21
+msgid "You can use any of the following services to log in to your account."
+msgstr ""
+
+#: people/templates/trojsten/people/settings.html:66
+#: templates/ksp_login/login.html:4 templates/ksp_login/login.html:7
+#: templates/ksp_login/parts/include_javascript.html:15
+#: templates/ksp_login/parts/login_box.html:44
+#: templates/ksp_login/parts/login_box.html:61
+#: templates/ksp_login/parts/login_box.html:75
+#: templates/ksp_login/parts/login_full_contents.html:23
+#: templates/ksp_login/parts/login_full_contents.html:40
+#: templates/ksp_login/settings.html:42
+msgid "Log in"
+msgstr ""
+
+#: people/templates/trojsten/people/settings.html:74
+#, fuzzy, python-format
+#| msgid ""
+#| "\n"
+#| "            You can change the login settings <a href="
+#| "\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">on separate page</"
+#| "a>.\n"
+#| "        "
+msgid ""
+"\n"
+"                    You can change the login settings <a href="
+"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">on separate page</a>.\n"
+"                "
+msgstr ""
+"\n"
+"            Nastavenia prihlásenia si môžeš zmeniť <a href="
+"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">na samostatnej stránke</"
+"a>.\n"
+"        "
+
+#: people/templates/trojsten/people/settings.html:79
+#: templates/ksp_login/password.html:5 templates/ksp_login/password.html:8
+#: templates/ksp_login/settings.html:55
+msgid "Password change"
+msgstr ""
+
+#: people/templates/trojsten/people/settings.html:82
+#, fuzzy, python-format
+#| msgid ""
+#| "\n"
+#| "            You can change the login settings <a href="
+#| "\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">on separate page</"
+#| "a>.\n"
+#| "        "
+msgid ""
+"\n"
+"                    You can change your password <a href=\"%(passwd_url)s"
+"\">here</a>.\n"
+"                "
+msgstr ""
+"\n"
+"            Nastavenia prihlásenia si môžeš zmeniť <a href="
+"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">na samostatnej stránke</"
+"a>.\n"
+"        "
 
 #: reviews/forms.py:47
 #, python-format
@@ -504,17 +600,6 @@ msgstr "Diskusia je uzavretá."
 msgid "Post"
 msgstr "Odoslať"
 
-#: templates/ksp_login/login.html:4 templates/ksp_login/login.html:7
-#: templates/ksp_login/parts/include_javascript.html:15
-#: templates/ksp_login/parts/login_box.html:44
-#: templates/ksp_login/parts/login_box.html:61
-#: templates/ksp_login/parts/login_box.html:75
-#: templates/ksp_login/parts/login_full_contents.html:23
-#: templates/ksp_login/parts/login_full_contents.html:40
-#: templates/ksp_login/settings.html:42
-msgid "Log in"
-msgstr ""
-
 #: templates/ksp_login/parts/associated_accounts_list.html:9
 msgid "Provider"
 msgstr ""
@@ -569,29 +654,10 @@ msgstr "Registrácia"
 msgid "Log in with your Trojsten account"
 msgstr ""
 
-#: templates/ksp_login/password.html:5 templates/ksp_login/password.html:8
-#: templates/ksp_login/settings.html:55
-msgid "Password change"
-msgstr ""
-
 #: templates/ksp_login/registration.html:14
 msgid ""
 "Welcome, new user. You only need to give us a few details in order to finish "
 "the registration process."
-msgstr ""
-
-#: templates/ksp_login/settings.html:9 templates/ksp_login/settings.html:12
-#, fuzzy
-#| msgid "Account information"
-msgid "Account settings"
-msgstr "Informácie o účte"
-
-#: templates/ksp_login/settings.html:18
-msgid "Login settings"
-msgstr ""
-
-#: templates/ksp_login/settings.html:21
-msgid "You can use any of the following services to log in to your account."
 msgstr ""
 
 #: templates/ksp_login/settings.html:50
@@ -604,7 +670,8 @@ msgid ""
 msgstr ""
 "\n"
 "            Nastavenia prihlásenia si môžeš zmeniť <a href="
-"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">na samostatnej stránke</a>.\n"
+"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">na samostatnej stránke</"
+"a>.\n"
 "        "
 
 #: templates/ksp_login/settings.html:58
