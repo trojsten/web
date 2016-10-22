@@ -2,6 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from ksp_login.forms import UserProfileForm, get_profile_forms
 from social.apps.django_app.default.models import UserSocialAuth
+
+from trojsten.people.models import UserProperty
 from .forms import UserPropsFormSet
 
 
@@ -35,7 +37,9 @@ def settings(request, settings_form=UserProfileForm):
     if not forms:
         forms = [form(user=request.user) for form in form_classes]
     if not user_props_form_set:
-        user_props_form_set = UserPropsFormSet(instance=request.user)
+        user_props_form_set = UserPropsFormSet(
+            instance=request.user, queryset=UserProperty.objects.visible(request.user)
+        )
 
     return render(request, 'trojsten/people/settings.html', {
         'account_associations': UserSocialAuth.get_social_auth_for_user(request.user),
