@@ -202,7 +202,7 @@ class TaskAdmin(admin.ModelAdmin):
         return super(TaskAdmin, self).get_queryset(request).filter(
             round__in=round_lst
         ).distinct().prefetch_related('categories').select_related(
-            'reviewer', 'round__semester__competition'
+            'round__semester__competition'
         )
 
 

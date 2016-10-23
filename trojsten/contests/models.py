@@ -286,10 +286,10 @@ class Task(models.Model):
     Task has submits.
     """
     name = models.CharField(max_length=128, verbose_name='názov')
-    reviewer = models.ForeignKey(
-        settings.AUTH_USER_MODEL, null=True, blank=True,
-        verbose_name='opravovateľ',
-    )
+    # reviewer = models.ForeignKey(
+    #     settings.AUTH_USER_MODEL, null=True, blank=True,
+    #     verbose_name='opravovateľ',
+    # )
     round = models.ForeignKey(Round, verbose_name='kolo')
     categories = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
@@ -375,11 +375,11 @@ class Task(models.Model):
         return [line.person for line in TaskPeople.objects
                 .filter(task=self, function=function)]
 
-    # @property
-    # def reviewer(self):
-    #     reviewers = self.get_assigned_people(constants.TASK_FUNCTION_REVIEWER)
-    #     if len(reviewers) > 0:
-    #         return reviewers[0]
+    @property
+    def reviewer(self):
+        reviewers = self.get_assigned_people(constants.TASK_FUNCTION_REVIEWER)
+        if len(reviewers) > 0:
+            return reviewers[0]
 
 
 class TaskPeople(models.Model):
@@ -389,13 +389,13 @@ class TaskPeople(models.Model):
     person = models.ForeignKey(
         User, verbose_name=_('organizer'),
     )
-    TASK_FUNCTION_CHOISES = [
+    TASK_FUNCTION_CHOICES = [
         (constants.TASK_FUNCTION_REVIEWER, _('reviewer')),
         (constants.TASK_FUNCTION_SOLVER, _('solution-writer')),
         (constants.TASK_FUNCTION_PROOFREADER, _('proofreader'))
     ]
     function = models.IntegerField(
-        choices=TASK_FUNCTION_CHOISES, verbose_name=_('function')
+        choices=TASK_FUNCTION_CHOICES, verbose_name=_('function')
     )
 
     class Meta:
