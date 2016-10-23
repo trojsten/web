@@ -12,7 +12,7 @@ from django.utils.translation import activate
 from wiki.models import Article, ArticleRevision, URLPath
 
 from trojsten.contests import constants
-from trojsten.contests.models import Competition, Round, Semester, Task, TaskPeople
+from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
 from trojsten.utils.test_utils import get_noexisting_id
 
@@ -488,20 +488,21 @@ class TaskPeopleTests(TestCase):
         self.reviewer1 = User.objects.create(username='reviewer1')
         self.reviewer2 = User.objects.create(username='reviewer2')
         self.proofreader = User.objects.create(username='proofreader')
-        TaskPeople.objects.create(task=self.task, person=self.reviewer1,
-                                  function=constants.TASK_FUNCTION_REVIEWER)
-        TaskPeople.objects.create(task=self.task, person=self.reviewer2,
-                                  function=constants.TASK_FUNCTION_REVIEWER)
-        TaskPeople.objects.create(task=self.task, person=self.proofreader,
-                                  function=constants.TASK_FUNCTION_PROOFREADER)
+        self.task.assign_person(self.reviewer1, constants.TASK_FUNCTION_REVIEWER)
+        self.task.assign_person(self.reviewer2, constants.TASK_FUNCTION_REVIEWER)
+        self.task.assign_person(self.proofreader, constants.TASK_FUNCTION_PROOFREADER)
 
     def test_get_assigned_people(self):
         reviewers = self.task.get_assigned_people(constants.TASK_FUNCTION_REVIEWER)
         solvers = self.task.get_assigned_people(constants.TASK_FUNCTION_SOLVER)
-        print reviewers
         proofreaders = self.task.get_assigned_people(constants.TASK_FUNCTION_PROOFREADER)
         self.assertEqual(len(reviewers), 2)
         self.assertIn(self.reviewer1, reviewers)
         self.assertIn(self.reviewer2, reviewers)
         self.assertEqual(proofreaders, [self.proofreader])
         self.assertEqual(len(solvers), 0)
+
+    def test_reviewer_property(self):
+        task = Task.objects.create(number=2, name='One person task', round=self.round)
+        task.assign_person(self.reviewer1, constants.TASK_FUNCTION_REVIEWER)
+        self.assertEqual(task.reviewer, self.reviewer1)

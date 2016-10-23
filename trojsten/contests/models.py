@@ -286,10 +286,6 @@ class Task(models.Model):
     Task has submits.
     """
     name = models.CharField(max_length=128, verbose_name='názov')
-    # reviewer = models.ForeignKey(
-    #     settings.AUTH_USER_MODEL, null=True, blank=True,
-    #     verbose_name='opravovateľ',
-    # )
     round = models.ForeignKey(Round, verbose_name='kolo')
     categories = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
@@ -371,6 +367,9 @@ class Task(models.Model):
     def solution_visible(self, user):
         return self.round.solutions_are_visible_for_user(user)
 
+    def assign_person(self, user, function):
+        TaskPeople.objects.create(task=self, person=user, function=function)
+
     def get_assigned_people(self, function):
         return [line.person for line in TaskPeople.objects
                 .filter(task=self, function=function)]
@@ -401,4 +400,3 @@ class TaskPeople(models.Model):
     class Meta:
         verbose_name = _('Assigned person')
         verbose_name_plural = _('Assigned people')
-

@@ -54,7 +54,7 @@ msgstr "funkcia"
 
 #: contests/models.py:396
 msgid "Assigned person"
-msgstr "Predelená osoba"
+msgstr "Pridelený človek"
 
 #: contests/models.py:397
 msgid "Assigned people"
