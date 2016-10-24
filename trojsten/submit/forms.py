@@ -7,6 +7,7 @@ from django import forms
 from django.conf import settings
 from django.utils.html import format_html, escape
 
+
 class SourceSubmitForm(forms.Form):
     LANGUAGE_CHOICES = (
         (".", "Zisti podľa prípony"),
