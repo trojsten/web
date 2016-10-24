@@ -16,7 +16,7 @@
             {% with message.level_tag|split:" " as tags %}
             <div class="alert {% for tag in tags %} alert-{{ tag }} {% endfor %}" role="alert">
                 <a class="close" data-dismiss="alert" href="#">&times;</a>
-                {{ message }}
+                {{ message|safe }}
             </div>
             {% endwith %}
         {% endfor %}
