@@ -5,6 +5,7 @@ import os
 
 from django import forms
 from django.conf import settings
+from django.utils.html import format_html, escape
 
 
 class SourceSubmitForm(forms.Form):
@@ -36,7 +37,14 @@ class DescriptionSubmitForm(forms.Form):
         sfile = self.cleaned_data['submit_file']
         extension = os.path.splitext(sfile.name)[1]
         if extension.lower() not in settings.SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS:
-            raise forms.ValidationError("Zaslaný súbor má nepodporovanú príponu %s" % extension)
+            raise forms.ValidationError(
+                format_html(
+                    "Zaslaný súbor má nepodporovanú príponu {extension}<br />"
+                    "Podporované prípony sú {allowed}",
+                    extension=escape(extension),
+                    allowed=escape(" ".join(settings.SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS))
+                )
+            )
         return sfile
 
 
