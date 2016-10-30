@@ -12,28 +12,30 @@ KMS_BETA = 'beta'
 
 KMS_ALFA_MAX_COEFFICIENT = 3
 KMS_MAX_COEFFICIENTS = [0, 1, 2, 3, 4, 7, 100, 100, 100, 100, 100]
-KMS_COEFFICIENT_PROP_NAME = "KMS koeficient"
+KMS_COEFFICIENT_PROP_NAME = 'KMS koeficient'
 
 
 class KMSResultsGenerator(
     CategoryTagKeyGeneratorMixin, ResultsGenerator
 ):
+    @staticmethod
+    def get_user_coefficient(user):
+        coefficient_prop = user.properties.filter(key__key_name=KMS_COEFFICIENT_PROP_NAME).first()
+        return int(coefficient_prop.value) if coefficient_prop else 0
 
     def is_user_active(self, request, user):
         active = super(KMSResultsGenerator, self).is_user_active(request, user)
 
         if self.tag.key == KMS_ALFA:
-            # @FIXME: While the data needed to calculate whether user can solve
-            # this category are not migrated, we use this hack.
-            if user.properties.filter(key__key_name=KMS_COEFFICIENT_PROP_NAME).count() > 0:
-                active = active and (int(user.properties.filter(key__key_name=KMS_COEFFICIENT_PROP_NAME).first().value)
-                                     <= KMS_ALFA_MAX_COEFFICIENT)
+            # @FIXME This is a temporary hack, while the data to calculate whether
+            # a user can solve this category or not are not available.
+            # The data will be available once the old users are migrated.
+            active = active and (self.get_user_coefficient(user) <= KMS_ALFA_MAX_COEFFICIENT)
 
         return active
 
     def deactivate_row_cells(self, request, row, cols):
-        coefficient_prop = row.user.properties.filter(key__key_name=KMS_COEFFICIENT_PROP_NAME).first()
-        coefficient = int(coefficient_prop.value) if coefficient_prop else 0
+        coefficient = self.get_user_coefficient(row.user)
 
         # Count only tasks your coefficient is eligible for
         for key in row.cells_by_key:
@@ -47,14 +49,14 @@ class KMSResultsGenerator(
 
     def add_special_row_cells(self, res_request, row, cols):
         super(KMSResultsGenerator, self).add_special_row_cells(res_request, row, cols)
-        coefficient_prop = row.user.properties.filter(key__key_name=KMS_COEFFICIENT_PROP_NAME).first()
-        coefficient = int(coefficient_prop.value) if coefficient_prop else 0
+        coefficient = self.get_user_coefficient(row.user)
         row.cells_by_key[COEFFICIENT_COLUMN_KEY] = ResultsCell(str(coefficient))
 
     def create_results_cols(self, res_request):
         yield ResultsCol(key=COEFFICIENT_COLUMN_KEY, name='K.')
         for col in super(KMSResultsGenerator, self).create_results_cols(res_request):
             yield col
+
 
 class KMSRules(FinishedRounds, CompetitionRules):
 
