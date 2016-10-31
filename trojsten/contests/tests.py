@@ -501,8 +501,3 @@ class TaskPeopleTests(TestCase):
         self.assertIn(self.reviewer2, reviewers)
         self.assertEqual(proofreaders, [self.proofreader])
         self.assertEqual(len(solvers), 0)
-
-    def test_reviewer_property(self):
-        task = Task.objects.create(number=2, name='One user task', round=self.round)
-        task.assign_person(self.reviewer1, constants.TASK_ROLE_REVIEWER)
-        self.assertEqual(task.reviewer, self.reviewer1)

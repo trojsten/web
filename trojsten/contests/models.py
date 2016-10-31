@@ -369,17 +369,11 @@ class Task(models.Model):
         return self.round.solutions_are_visible_for_user(user)
 
     def assign_person(self, user, function):
-        TaskPeople.objects.create(task=self, person=user, function=function)
+        TaskPeople.objects.create(task=self, user=user, role=function)
 
     def get_assigned_people_for_role(self, function):
         return [line.person for line in TaskPeople.objects
-                .filter(task=self, function=function)]
-
-    @property
-    def reviewer(self):
-        reviewers = self.get_assigned_people_for_role(constants.TASK_ROLE_REVIEWER)
-        if len(reviewers) > 0:
-            return reviewers[0]
+                .filter(task=self, role=function)]
 
 
 class TaskPeople(models.Model):

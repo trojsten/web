@@ -8,6 +8,7 @@ from django.contrib.auth.models import Group
 from django.http.request import HttpRequest
 from django.test import TestCase
 
+from trojsten.contests import constants as contests_constants
 from trojsten.contests.models import Competition, Round, Semester
 from trojsten.contests.models import Task
 from trojsten.schools.models import School
@@ -91,10 +92,11 @@ class MergeUsersTests(TestCase):
         UserProperty.objects.create(user=self.source_user, key=self.topanka, value='42')
         UserProperty.objects.create(user=self.source_user, key=self.telefon, value='+421212345678')
         UserProperty.objects.create(user=self.source_user, key=self.op, value='EA000444')
-        Task.objects.create(
-            name='Test task', reviewer=self.source_user, round=rnd, number=3, description_points=0,
+        task = Task.objects.create(
+            name='Test task', round=rnd, number=3, description_points=0,
             source_points=0, has_source=False, has_description=False,
         )
+        task.assign_person(self.source_user, contests_constants.TASK_ROLE_REVIEWER)
 
     def test_merge_fields_and_user_props(self):
         merge_users(
