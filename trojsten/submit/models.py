@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 
+import binascii
 import os
 from decimal import Decimal
 
@@ -155,3 +156,21 @@ class Submit(models.Model):
             self.points,
             self.submit_type == submit_constants.SUBMIT_TYPE_DESCRIPTION or self.task.integer_source_points,
         )
+
+
+@python_2_unicode_compatible
+class ExternalSubmitKey(models.Model):
+    key = models.CharField(verbose_name='kľúč', max_length=40, primary_key=True)
+    name = models.CharField(verbose_name='meno', max_length=64)
+    task = models.ForeignKey(Task, verbose_name='úloha', on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = self.generate_key()
+        return super(ExternalSubmitKey, self).save(*args, **kwargs)
+
+    def generate_key(self):
+        return binascii.hexlify(os.urandom(20)).decode()
+
+    def __str__(self):
+        return self.name

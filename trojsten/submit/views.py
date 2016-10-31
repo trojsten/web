@@ -16,6 +16,9 @@ from django.utils.html import format_html
 from sendfile import sendfile
 from unidecode import unidecode
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response as APIResponse
+
 from trojsten.contests.models import Competition, Round
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
                                    TestableZipSubmitForm)
@@ -27,6 +30,7 @@ from trojsten.contests.models import Task
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
+from .serializers import ExternalSubmitSerializer
 
 
 def protocol_data(protocol_path, forceShowDetails=False):
@@ -350,3 +354,22 @@ def task_submit_post(request, task_id, submit_type):
     else:
         # Only Description and Source and Zip submitting is developed currently
         raise Http404
+
+
+@api_view(('POST',))
+@permission_classes([])
+def external_submit(request):
+    serializer = ExternalSubmitSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    validated = serializer.validated_data
+
+    submit = Submit(
+        task=validated['key'].task,
+        user=validated['user'],
+        points=validated['points'],
+        submit_type=constants.SUBMIT_TYPE_EXTERNAL,
+        testing_status=constants.SUBMIT_RESPONSE_OK,
+    )
+    submit.save()
+
+    return APIResponse()
