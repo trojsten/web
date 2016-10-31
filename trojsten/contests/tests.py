@@ -488,14 +488,14 @@ class TaskPeopleTests(TestCase):
         self.reviewer1 = User.objects.create(username='reviewer1')
         self.reviewer2 = User.objects.create(username='reviewer2')
         self.proofreader = User.objects.create(username='proofreader')
-        self.task.assign_person(self.reviewer1, constants.TASK_FUNCTION_REVIEWER)
-        self.task.assign_person(self.reviewer2, constants.TASK_FUNCTION_REVIEWER)
-        self.task.assign_person(self.proofreader, constants.TASK_FUNCTION_PROOFREADER)
+        self.task.assign_person(self.reviewer1, constants.TASK_ROLE_REVIEWER)
+        self.task.assign_person(self.reviewer2, constants.TASK_ROLE_REVIEWER)
+        self.task.assign_person(self.proofreader, constants.TASK_ROLE_PROOFREADER)
 
     def test_get_assigned_people(self):
-        reviewers = self.task.get_assigned_people(constants.TASK_FUNCTION_REVIEWER)
-        solvers = self.task.get_assigned_people(constants.TASK_FUNCTION_SOLVER)
-        proofreaders = self.task.get_assigned_people(constants.TASK_FUNCTION_PROOFREADER)
+        reviewers = self.task.get_assigned_people_for_role(constants.TASK_ROLE_REVIEWER)
+        solvers = self.task.get_assigned_people_for_role(constants.TASK_ROLE_SOLUTION_WRITER)
+        proofreaders = self.task.get_assigned_people_for_role(constants.TASK_ROLE_PROOFREADER)
         self.assertEqual(len(reviewers), 2)
         self.assertIn(self.reviewer1, reviewers)
         self.assertIn(self.reviewer2, reviewers)
@@ -503,6 +503,6 @@ class TaskPeopleTests(TestCase):
         self.assertEqual(len(solvers), 0)
 
     def test_reviewer_property(self):
-        task = Task.objects.create(number=2, name='One person task', round=self.round)
-        task.assign_person(self.reviewer1, constants.TASK_FUNCTION_REVIEWER)
+        task = Task.objects.create(number=2, name='One user task', round=self.round)
+        task.assign_person(self.reviewer1, constants.TASK_ROLE_REVIEWER)
         self.assertEqual(task.reviewer, self.reviewer1)

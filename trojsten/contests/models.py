@@ -286,6 +286,7 @@ class Task(models.Model):
     Task has submits.
     """
     name = models.CharField(max_length=128, verbose_name='názov')
+    # reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, verbose_name='opravovateľ',)
     round = models.ForeignKey(Round, verbose_name='kolo')
     categories = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
@@ -370,13 +371,13 @@ class Task(models.Model):
     def assign_person(self, user, function):
         TaskPeople.objects.create(task=self, person=user, function=function)
 
-    def get_assigned_people(self, function):
+    def get_assigned_people_for_role(self, function):
         return [line.person for line in TaskPeople.objects
                 .filter(task=self, function=function)]
 
     @property
     def reviewer(self):
-        reviewers = self.get_assigned_people(constants.TASK_FUNCTION_REVIEWER)
+        reviewers = self.get_assigned_people_for_role(constants.TASK_ROLE_REVIEWER)
         if len(reviewers) > 0:
             return reviewers[0]
 
@@ -385,18 +386,18 @@ class TaskPeople(models.Model):
     task = models.ForeignKey(
         Task, verbose_name=_('task')
     )
-    person = models.ForeignKey(
+    user = models.ForeignKey(
         User, verbose_name=_('organizer'),
     )
     TASK_FUNCTION_CHOICES = [
-        (constants.TASK_FUNCTION_REVIEWER, _('reviewer')),
-        (constants.TASK_FUNCTION_SOLVER, _('solution-writer')),
-        (constants.TASK_FUNCTION_PROOFREADER, _('proofreader'))
+        (constants.TASK_ROLE_REVIEWER, _('reviewer')),
+        (constants.TASK_ROLE_SOLUTION_WRITER, _('solution-writer')),
+        (constants.TASK_ROLE_PROOFREADER, _('proofreader'))
     ]
-    function = models.IntegerField(
-        choices=TASK_FUNCTION_CHOICES, verbose_name=_('function')
+    role = models.IntegerField(
+        choices=TASK_FUNCTION_CHOICES, verbose_name=_('role')
     )
 
     class Meta:
-        verbose_name = _('Assigned person')
+        verbose_name = _('Assigned user')
         verbose_name_plural = _('Assigned people')

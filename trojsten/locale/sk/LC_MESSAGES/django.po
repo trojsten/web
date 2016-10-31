@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-20 19:03+0200\n"
+"POT-Creation-Date: 2016-10-31 23:39+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -26,37 +26,37 @@ msgstr "vzoráky"
 msgid "tasks"
 msgstr "zadania"
 
-#: contests/models.py:381
+#: contests/models.py:387
 #, fuzzy
 #| msgid "tasks"
 msgid "task"
 msgstr "úloha"
 
-#: contests/models.py:384
+#: contests/models.py:390
 msgid "organizer"
 msgstr "vedúci"
 
-#: contests/models.py:387
+#: contests/models.py:393
 msgid "reviewer"
 msgstr "opravovateľ"
 
-#: contests/models.py:388
+#: contests/models.py:394
 msgid "solution-writer"
 msgstr "vzorákovač"
 
-#: contests/models.py:389
+#: contests/models.py:395
 msgid "proofreader"
 msgstr "recenzovač"
 
-#: contests/models.py:392
-msgid "function"
+#: contests/models.py:398
+msgid "role"
 msgstr "funkcia"
 
-#: contests/models.py:396
-msgid "Assigned person"
+#: contests/models.py:402
+msgid "Assigned user"
 msgstr "Pridelený človek"
 
-#: contests/models.py:397
+#: contests/models.py:403
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
 
@@ -610,6 +610,9 @@ msgstr ""
 #: templates/wiki/article.html:40
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
+
+#~ msgid "function"
+#~ msgstr "funkcia"
 
 #~ msgid "Postal Code"
 #~ msgstr "PSČ"
