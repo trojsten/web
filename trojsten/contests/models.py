@@ -286,7 +286,6 @@ class Task(models.Model):
     Task has submits.
     """
     name = models.CharField(max_length=128, verbose_name='názov')
-    # reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, verbose_name='opravovateľ',)
     round = models.ForeignKey(Round, verbose_name='kolo')
     categories = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
@@ -368,28 +367,28 @@ class Task(models.Model):
     def solution_visible(self, user):
         return self.round.solutions_are_visible_for_user(user)
 
-    def assign_person(self, user, function):
-        TaskPeople.objects.create(task=self, user=user, role=function)
+    def assign_person(self, user, role):
+        TaskPeople.objects.create(task=self, user=user, role=role)
 
-    def get_assigned_people_for_role(self, function):
-        return [line.person for line in TaskPeople.objects
-                .filter(task=self, role=function)]
+    def get_assigned_people_for_role(self, role):
+        return [line.user for line in TaskPeople.objects
+                .filter(task=self, role=role)]
 
 
 class TaskPeople(models.Model):
     task = models.ForeignKey(
-        Task, verbose_name=_('task')
+        Task, verbose_name=_('task'), related_name='task_people'
     )
     user = models.ForeignKey(
         User, verbose_name=_('organizer'),
     )
-    TASK_FUNCTION_CHOICES = [
+    TASK_ROLE_CHOICES = [
         (constants.TASK_ROLE_REVIEWER, _('reviewer')),
         (constants.TASK_ROLE_SOLUTION_WRITER, _('solution-writer')),
         (constants.TASK_ROLE_PROOFREADER, _('proofreader'))
     ]
     role = models.IntegerField(
-        choices=TASK_FUNCTION_CHOICES, verbose_name=_('role')
+        choices=TASK_ROLE_CHOICES, verbose_name=_('role')
     )
 
     class Meta:

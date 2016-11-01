@@ -611,9 +611,6 @@ msgstr ""
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
 
-#~ msgid "function"
-#~ msgstr "funkcia"
-
 #~ msgid "Postal Code"
 #~ msgstr "PSČ"
 
