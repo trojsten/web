@@ -24,7 +24,7 @@ def fill_task_people(apps, schema_editor):
 def reverse_fill_task_people(apps, schema_editor):
     TaskPeople = apps.get_model('contests', 'TaskPeople')
     for line in TaskPeople.objects.all():
-        if line.role == constants.TASK_ROLE_REVIEWER:
+        if line.role == constants.TASK_ROLE_REVIEWER and not line.task.reviewer:
             line.task.reviewer = line.user
             line.task.save()
 

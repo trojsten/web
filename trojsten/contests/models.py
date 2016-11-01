@@ -384,7 +384,7 @@ class TaskPeople(models.Model):
     )
     TASK_ROLE_CHOICES = [
         (constants.TASK_ROLE_REVIEWER, _('reviewer')),
-        (constants.TASK_ROLE_SOLUTION_WRITER, _('solution-writer')),
+        (constants.TASK_ROLE_SOLUTION_WRITER, _('solution writer')),
         (constants.TASK_ROLE_PROOFREADER, _('proofreader'))
     ]
     role = models.IntegerField(
