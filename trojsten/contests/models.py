@@ -15,10 +15,13 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 from unidecode import unidecode
 
+from trojsten.people.models import User
 from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
 from trojsten.submit import constants as submit_constants
 from trojsten.utils import utils
+
+from . import constants
 
 
 class RoundManager(models.Manager):
@@ -283,10 +286,6 @@ class Task(models.Model):
     Task has submits.
     """
     name = models.CharField(max_length=128, verbose_name='názov')
-    reviewer = models.ForeignKey(
-        settings.AUTH_USER_MODEL, null=True, blank=True,
-        verbose_name='opravovateľ',
-    )
     round = models.ForeignKey(Round, verbose_name='kolo')
     categories = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
@@ -367,3 +366,31 @@ class Task(models.Model):
 
     def solution_visible(self, user):
         return self.round.solutions_are_visible_for_user(user)
+
+    def assign_person(self, user, role):
+        TaskPeople.objects.create(task=self, user=user, role=role)
+
+    def get_assigned_people_for_role(self, role):
+        return [line.user for line in TaskPeople.objects
+                .filter(task=self, role=role)]
+
+
+class TaskPeople(models.Model):
+    task = models.ForeignKey(
+        Task, verbose_name=_('task'), related_name='task_people'
+    )
+    user = models.ForeignKey(
+        User, verbose_name=_('organizer'),
+    )
+    TASK_ROLE_CHOICES = [
+        (constants.TASK_ROLE_REVIEWER, _('reviewer')),
+        (constants.TASK_ROLE_SOLUTION_WRITER, _('solution writer')),
+        (constants.TASK_ROLE_PROOFREADER, _('proofreader'))
+    ]
+    role = models.IntegerField(
+        choices=TASK_ROLE_CHOICES, verbose_name=_('role')
+    )
+
+    class Meta:
+        verbose_name = _('Assigned user')
+        verbose_name_plural = _('Assigned people')

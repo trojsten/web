@@ -11,6 +11,7 @@ from django.test import TestCase, override_settings
 from django.utils.translation import activate
 from wiki.models import Article, ArticleRevision, URLPath
 
+from trojsten.contests import constants
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
 from trojsten.utils.test_utils import get_noexisting_id
@@ -471,3 +472,32 @@ class PdfDownloadTests(TestCase):
         url = reverse('view_solutions_pdf', kwargs={'round_id': round.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+
+class TaskPeopleTests(TestCase):
+    def setUp(self):
+        group = Group.objects.create(name='staff')
+        competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        semester = Semester.objects.create(
+            number=1, name='Test semester', competition=competition, year=1
+        )
+        self.round = Round.objects.create(number=1, semester=semester, visible=True,
+                                          solutions_visible=True)
+        self.task = Task.objects.create(number=1, name='Test task', round=self.round)
+        self.reviewer1 = User.objects.create(username='reviewer1')
+        self.reviewer2 = User.objects.create(username='reviewer2')
+        self.proofreader = User.objects.create(username='proofreader')
+        self.task.assign_person(self.reviewer1, constants.TASK_ROLE_REVIEWER)
+        self.task.assign_person(self.reviewer2, constants.TASK_ROLE_REVIEWER)
+        self.task.assign_person(self.proofreader, constants.TASK_ROLE_PROOFREADER)
+
+    def test_get_assigned_people(self):
+        reviewers = self.task.get_assigned_people_for_role(constants.TASK_ROLE_REVIEWER)
+        solvers = self.task.get_assigned_people_for_role(constants.TASK_ROLE_SOLUTION_WRITER)
+        proofreaders = self.task.get_assigned_people_for_role(constants.TASK_ROLE_PROOFREADER)
+        self.assertEqual(len(reviewers), 2)
+        self.assertIn(self.reviewer1, reviewers)
+        self.assertIn(self.reviewer2, reviewers)
+        self.assertEqual(proofreaders, [self.proofreader])
+        self.assertEqual(len(solvers), 0)

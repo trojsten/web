@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.utils.encoding import force_text
 from easy_select2 import select2_modelform
 
-from trojsten.contests.models import Category, Competition, Round, Semester, Task
+from trojsten.contests.models import Category, Competition, Round, Semester, Task, TaskPeople
 from trojsten.reviews.urls import task_review_urls
 from trojsten.contests.forms import TaskValidationForm
 from trojsten.utils.utils import attribute_format, get_related
@@ -133,6 +133,11 @@ class TaskByRoundSubFilter(admin.SimpleListFilter):
             return queryset
 
 
+class TaskPeopleInline(admin.TabularInline):
+    model = TaskPeople
+    extra = 1
+
+
 class TaskAdmin(admin.ModelAdmin):
     change_form_template = 'admin/task_review.html'
     form = select2_modelform(Task, form_class=TaskValidationForm)
@@ -140,11 +145,14 @@ class TaskAdmin(admin.ModelAdmin):
     list_select_related = True
     list_display = ('name', 'number',
                     'get_round', 'get_semester', 'get_year', 'get_competition', 'get_categories',
-                    'submit_type', 'integer_source_points', 'reviewer',
+                    'submit_type', 'integer_source_points',
                     'tasks_pdf', 'solutions_pdf')
     list_filter = ('round__semester__competition',
                    TaskByYearSubFilter, TaskByRoundSubFilter)
     search_fields = ('name',)
+    inlines = [
+        TaskPeopleInline,
+    ]
 
     get_round = get_related(attribute_chain=('round', 'short_str'),
                             description='kolo',
@@ -194,7 +202,7 @@ class TaskAdmin(admin.ModelAdmin):
         return super(TaskAdmin, self).get_queryset(request).filter(
             round__in=round_lst
         ).distinct().prefetch_related('categories').select_related(
-            'reviewer', 'round__semester__competition'
+            'round__semester__competition'
         )
 
 
