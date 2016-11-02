@@ -482,14 +482,14 @@ class SubmitHelpersTests(TestCase):
             raw = conn.recv(2048)
             data = conn.recv(2048)
             server_sock.close()
-            test.received = (raw, data)
+            test.received = raw + data
 
         server_thread = threading.Thread(target=run_fake_server, args=(self,))
         server_thread.start()
         time.sleep(50.0 / 1000.0)  # 50ms should be enough for the server to bind
         post_submit(u"raw", b"data")
         server_thread.join()
-        self.assertEqual(self.received, (b"raw", b"data"))
+        self.assertEqual(self.received, b"rawdata")
 
 
 class ExternalSubmitKeyTests(TestCase):
