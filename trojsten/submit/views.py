@@ -145,7 +145,7 @@ def view_submit(request, submit_id):
             # Source code available, display it!
             if submit.submit_type == constants.SUBMIT_TYPE_SOURCE:
                 template_data['fileReady'] = True
-                with open(submit.filepath, "r") as submitfile:
+                with open(submit.filepath, "rb") as submitfile:
                     data = submitfile.read()
                     template_data['data'] = data.decode('utf-8', 'replace')
             else:
