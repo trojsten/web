@@ -3,6 +3,11 @@ from __future__ import unicode_literals
 from django.test import TestCase
 import unittest
 import json
+import os
+import shutil
+import socket
+import tempfile
+import threading
 
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
@@ -13,6 +18,8 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.sites.models import Site
+
+from trojsten.submit.helpers import write_chunks_to_file, get_lang_from_filename, get_path_raw, post_submit
 from trojsten.utils.test_utils import get_noexisting_id
 from .models import Submit, ExternalSubmitToken
 from django.utils import timezone
@@ -184,7 +191,7 @@ class SubmitTaskTests(TestCase):
     def test_redirect_to_login(self):
         url = reverse('task_submit_page', kwargs={'task_id': 47})
         redirect_to = '%s?next=%s' % (settings.LOGIN_URL, reverse('task_submit_page',
-                                      kwargs={'task_id': 47}))
+                                                                  kwargs={'task_id': 47}))
         response = self.client.get(url)
         self.assertRedirects(response, redirect_to)
 
@@ -194,7 +201,7 @@ class SubmitTaskTests(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
-#   @FIXME: Feature not implemented yet.
+    #   @FIXME: Feature not implemented yet.
     @unittest.expectedFailure
     def test_non_active_round(self):
         round = Round.objects.create(number=1, semester=self.semester, visible=False,
@@ -219,7 +226,7 @@ class SubmitTaskTests(TestCase):
         # @ToDo: translations
         self.assertContains(response, 'Kolo už skončilo.')
 
-#   @FIXME: Feature not implemented yet.
+    #   @FIXME: Feature not implemented yet.
     @unittest.expectedFailure
     def test_future_round(self):
         round = Round.objects.create(number=1, semester=self.semester, visible=False,
@@ -312,7 +319,7 @@ class JsonSubmitTest(TestCase):
         self.group.user_set.add(self.staff_user)
         self.staff_user.groups.add(self.group)
         competition = Competition.objects.create(name='TestCompetition',
-                                                      organizers_group=self.group)
+                                                 organizers_group=self.group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         self.start_time_old = timezone.now() + timezone.timedelta(-10)
         self.start_time_new = timezone.now() + timezone.timedelta(5)
@@ -391,7 +398,7 @@ class JsonProtokolTest(TestCase):
         self.group.user_set.add(self.staff_user)
         self.staff_user.groups.add(self.group)
         competition = Competition.objects.create(name='TestCompetition',
-                                                      organizers_group=self.group)
+                                                 organizers_group=self.group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         self.start_time_old = timezone.now() + timezone.timedelta(-10)
         self.start_time_new = timezone.now() + timezone.timedelta(5)
@@ -412,7 +419,7 @@ class JsonProtokolTest(TestCase):
         url = reverse('view_protocol', kwargs={'submit_id': self.submit.id})
         response = self.client.get(url)
         redirect_to = '%s?next=%s' % (settings.LOGIN_URL, reverse('view_protocol',
-                                      kwargs={'submit_id': self.submit.id}))
+                                                                  kwargs={'submit_id': self.submit.id}))
         self.assertRedirects(response, redirect_to)
         non_staff_user2 = User.objects.create_user(username='jurko', first_name='Jozko',
                                                    last_name='Mrkvicka', password='pass',
@@ -438,6 +445,49 @@ class JsonProtokolTest(TestCase):
         self.client.force_login(self.non_staff_user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+
+class SubmitHelpersTests(TestCase):
+
+    def setUp(self):
+        self.temp_dir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.temp_dir)
+
+    def test_write_chunks_to_file(self):
+        # Tests that the directory will be created
+        temp_file_path = os.path.join(self.temp_dir, "dir_to_create", "tempfile")
+        # Tests that we can write both bytes and unicode objects (unicode will be saved with utf-8 encoding
+        write_chunks_to_file(temp_file_path, [u"hello", b"world"])
+        with open(temp_file_path, 'rb') as f:
+            data = f.read()
+            self.assertEqual(data, b"helloworld")
+
+    def test_get_lang_from_filename(self):
+        self.assertEqual(get_lang_from_filename("file.cpp"), ".cc")
+        self.assertEqual(get_lang_from_filename("file.foo"), False)
+
+    def test_get_path_raw(self):
+        self.assertEqual(get_path_raw("contest", "task", "user"),
+                         os.path.join(settings.SUBMIT_PATH, "submits", "user", "task"))
+
+    def test_post_submit(self):
+        def run_fake_server(test):
+            server_sock = socket.socket()
+            server_sock.bind(('127.0.0.1', 7777))
+            server_sock.listen(0)
+            conn, addr = server_sock.accept()
+            raw = conn.recv(2048)
+            data = conn.recv(2048)
+            server_sock.close()
+            test.received = (raw, data)
+
+        server_thread = threading.Thread(target=run_fake_server, args=(self,))
+        server_thread.start()
+        post_submit(u"raw", b"data")
+        server_thread.join()
+        self.assertEqual(self.received, (b"raw", b"data"))
 
 
 class ExternalSubmitKeyTests(TestCase):
