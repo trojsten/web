@@ -202,7 +202,7 @@ class SubmitTaskTests(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
-    #   @FIXME: Feature not implemented yet.
+    # @FIXME: Feature not implemented yet.
     @unittest.expectedFailure
     def test_non_active_round(self):
         round = Round.objects.create(number=1, semester=self.semester, visible=False,
@@ -227,7 +227,7 @@ class SubmitTaskTests(TestCase):
         # @ToDo: translations
         self.assertContains(response, 'Kolo už skončilo.')
 
-    #   @FIXME: Feature not implemented yet.
+    # @FIXME: Feature not implemented yet.
     @unittest.expectedFailure
     def test_future_round(self):
         round = Round.objects.create(number=1, semester=self.semester, visible=False,
