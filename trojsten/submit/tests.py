@@ -486,7 +486,7 @@ class SubmitHelpersTests(TestCase):
 
         server_thread = threading.Thread(target=run_fake_server, args=(self,))
         server_thread.start()
-        time.sleep(50.0/1000.0) # 50ms should be enough for the server to bind
+        time.sleep(50.0 / 1000.0)  # 50ms should be enough for the server to bind
         post_submit(u"raw", b"data")
         server_thread.join()
         self.assertEqual(self.received, (b"raw", b"data"))
