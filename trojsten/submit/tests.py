@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.sites.models import Site
 from trojsten.utils.test_utils import get_noexisting_id
-from .models import Submit
+from .models import Submit, ExternalSubmitToken
 from django.utils import timezone
 
 
@@ -438,3 +438,75 @@ class JsonProtokolTest(TestCase):
         self.client.force_login(self.non_staff_user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+
+class ExternalSubmitKeyTests(TestCase):
+
+    def setUp(self):
+        grad_year = timezone.now().year + 1
+        self.user = User.objects.create_user(
+            username='jozko', first_name='Jozko', last_name='Mrkvicka',
+            password='pass', graduation=grad_year
+        )
+        self.competition = Competition.objects.create(
+            name='TestCompetition'
+        )
+        self.semester = Semester.objects.create(
+            number=1, name='Test semester',
+            competition=self.competition, year=1
+        )
+        self.round = Round.objects.create(
+            number=1, semester=self.semester, visible=False,
+            solutions_visible=False, start_time=timezone.now(),
+            end_time=timezone.now(),
+        )
+        self.task = Task.objects.create(
+            number=1, name='Test task', round=self.round,
+            has_testablezip=True, has_description=True,
+            has_source=True,
+        )
+        self.token = ExternalSubmitToken.objects.create(
+            task=self.task, name="Test external submit token"
+        )
+
+    def _post_external_submit(self, data):
+        url = reverse('external_submit')
+        return self.client.post(
+            url, json.dumps(data),
+            content_type="application/json",
+        )
+
+    def test_external_submit_ok(self):
+        self.assertEqual(self.task.submit_set.count(), 0)
+        response = self._post_external_submit({
+            "token": self.token.token,
+            "user": self.user.pk,
+            "points": 10,
+        })
+        self.assertEqual(self.task.submit_set.count(), 1)
+        self.assertEqual(response.status_code, 200)
+
+    def test_external_submit_invalid_token(self):
+        response = self._post_external_submit({
+            "token": "I am a Hacker",
+            "user": self.user.pk,
+            "points": 10,
+        })
+        self.assertEqual(response.status_code, 400)
+
+    def test_external_submit_invalid_user(self):
+        response = self._post_external_submit({
+            "token": self.token.token,
+            "user": 0,
+            "points": 10,
+        })
+        self.assertEqual(response.status_code, 400)
+
+    def test_external_submit_missing_parameters(self):
+        response = self._post_external_submit({})
+        self.assertEqual(response.status_code, 400)
+
+    def test_external_submit_invalid_method(self):
+        url = reverse('external_submit')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 405)

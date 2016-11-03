@@ -21,4 +21,8 @@ urlpatterns = [
     url(r'^ajax/submit/(?P<submit_id>\d+)/komentar/$',
         views.view_reviewer_comment,
         name='view_reviewer_comment'),
+    url(r'^ajax/externy_submit/$',
+        views.external_submit,
+        name='external_submit'),
+
 ]

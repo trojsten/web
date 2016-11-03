@@ -11,7 +11,7 @@ from trojsten.reviews.urls import submit_urls
 from trojsten.contests.models import Task
 from trojsten.utils.utils import attribute_format, get_related
 
-from .models import Submit
+from .models import Submit, ExternalSubmitToken
 
 
 class SubmitAdmin(admin.ModelAdmin):
@@ -66,3 +66,10 @@ class SubmitAdmin(admin.ModelAdmin):
         ).prefetch_related('task__categories')
 
 admin.site.register(Submit, SubmitAdmin)
+
+
+class ExternalSubmitTokenAdmin(admin.ModelAdmin):
+    readonly_fields = ('token',)
+    list_display = ('name', 'task')
+
+admin.site.register(ExternalSubmitToken, ExternalSubmitTokenAdmin)
