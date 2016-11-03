@@ -14,7 +14,7 @@ from trojsten.contests.models import Competition, Round, Semester
 
 
 class Command(NoArgsCommand):
-    help = 'Imports people and their related info from kaspar.'
+    help = 'Migrates contest directory structure.'
 
     def handle_noargs(self, **options):
         # Compute changes
@@ -23,19 +23,19 @@ class Command(NoArgsCommand):
 
         for competition in glob(os.path.join(settings.TASK_STATEMENTS_PATH, '*')):
             for year in glob(os.path.join(competition, '*rocnik')):
-                for round in glob(os.path.join(year, '*kolo')):
-                    new_path, round_obj = self.migrate_path(round)
-                    move_paths.append((round, new_path))
+                for rnd in glob(os.path.join(year, '*kolo')):
+                    new_path, round_obj = self.migrate_path(rnd)
+                    move_paths.append((rnd, new_path))
                     if round_obj:
                         rounds.append(round_obj)
 
         # List changes
-        print('Following paths are going to be moved:')
-        print('\n'.join(('%s -> %s' % move for move in move_paths)))
-        print('Following rounds are going to be renumbered:')
-        print('\n'.join((six.text_type(r) for r in rounds)))
+        self.stdout.write('Following paths are going to be moved:')
+        self.stdout.write('\n'.join(('%s -> %s' % move for move in move_paths)))
+        self.stdout.write('Following rounds are going to be renumbered:')
+        self.stdout.write('\n'.join((six.text_type(r) for r in rounds)))
         # Ask and apply
-        choice = input("Do you wish to proceed? [yN]:")
+        choice = input('Do you wish to proceed? [yN]: ')
         if choice and choice[0].lower() == 'y':
             for src, dst in move_paths:
                 shutil.move(src, dst)
