@@ -458,20 +458,20 @@ class SubmitHelpersTests(TestCase):
 
     def test_write_chunks_to_file(self):
         # Tests that the directory will be created
-        temp_file_path = os.path.join(self.temp_dir, "dir_to_create", "tempfile")
+        temp_file_path = os.path.join(self.temp_dir, 'dir_to_create', 'tempfile')
         # Tests that we can write both bytes and unicode objects (unicode will be saved with utf-8 encoding
-        write_chunks_to_file(temp_file_path, [u"hello", b"world"])
+        write_chunks_to_file(temp_file_path, [u'hello', b'world'])
         with open(temp_file_path, 'rb') as f:
             data = f.read()
-            self.assertEqual(data, b"helloworld")
+            self.assertEqual(data, b'helloworld')
 
     def test_get_lang_from_filename(self):
-        self.assertEqual(get_lang_from_filename("file.cpp"), ".cc")
-        self.assertEqual(get_lang_from_filename("file.foo"), False)
+        self.assertEqual(get_lang_from_filename('file.cpp'), '.cc')
+        self.assertEqual(get_lang_from_filename('file.foo'), False)
 
     def test_get_path_raw(self):
-        self.assertEqual(get_path_raw("contest", "task", "user"),
-                         os.path.join(settings.SUBMIT_PATH, "submits", "user", "task"))
+        self.assertEqual(get_path_raw('contest', 'task', 'user'),
+                         os.path.join(settings.SUBMIT_PATH, 'submits', 'user', 'task'))
 
     def test_post_submit(self):
         def run_fake_server(test):
@@ -487,9 +487,9 @@ class SubmitHelpersTests(TestCase):
         server_thread = threading.Thread(target=run_fake_server, args=(self,))
         server_thread.start()
         time.sleep(50.0 / 1000.0)  # 50ms should be enough for the server to bind
-        post_submit(u"raw", b"data")
+        post_submit(u'raw', b'data')
         server_thread.join()
-        self.assertEqual(self.received, b"rawdata")
+        self.assertEqual(self.received, b'rawdata')
 
 
 class ExternalSubmitKeyTests(TestCase):

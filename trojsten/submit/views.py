@@ -44,16 +44,16 @@ def protocol_data(protocol_path, forceShowDetails=False):
             # while protocol is being uploaded)
             template_data['protocolReady'] = False
             return template_data
-        clog = tree.find("compileLog")
+        clog = tree.find('compileLog')
         # Show compilation log if present
         template_data['compileLogPresent'] = clog is not None
         if clog is None:
-            clog = ""
+            clog = ''
         else:
             clog = clog.text
         template_data['compileLog'] = clog
         tests = []
-        runlog = tree.find("runLog")
+        runlog = tree.find('runLog')
         if runlog is not None:
             for runtest in runlog:
                 # Test log format in protocol is:
@@ -145,7 +145,7 @@ def view_submit(request, submit_id):
             # Source code available, display it!
             if submit.submit_type == constants.SUBMIT_TYPE_SOURCE:
                 template_data['fileReady'] = True
-                with open(submit.filepath, "rb") as submitfile:
+                with open(submit.filepath, 'rb') as submitfile:
                     data = submitfile.read()
                     template_data['data'] = data.decode('utf-8', 'replace')
             else:
@@ -252,7 +252,7 @@ def task_submit_post(request, task_id, submit_type):
         raise Http404
 
     # Raise Not Found when not submitting through POST
-    if request.method != "POST":
+    if request.method != 'POST':
         raise Http404
 
     try:
@@ -279,7 +279,7 @@ def task_submit_post(request, task_id, submit_type):
             submit_id = process_submit(sfile, task, language, request.user)
             if not submit_id:
                 messages.add_message(request, messages.ERROR,
-                                     "Nepodporovaný formát súboru")
+                                     'Nepodporovaný formát súboru')
             else:
                 # Source file-name is id.data
                 sfiletarget = unidecode(os.path.join(get_path(
@@ -294,16 +294,16 @@ def task_submit_post(request, task_id, submit_type):
                              protocol_id=submit_id)
                 sub.save()
                 success_message = format_html(
-                    "Úspešne si submitol program, výsledok testovania nájdeš "
-                    "<a href='{}'>tu</a>",
-                    reverse("view_submit", args=[sub.id])
+                    'Úspešne si submitol program, výsledok testovania nájdeš '
+                    '<a href=\'{}\'>tu</a>',
+                    reverse('view_submit', args=[sub.id])
                 )
                 messages.add_message(request, messages.SUCCESS, success_message)
         else:
             for field in form:
                 for error in field.errors:
                     messages.add_message(request, messages.ERROR,
-                                         "%s: %s" % (field.label, error))
+                                         '%s: %s' % (field.label, error))
         if 'redirect_to' in request.POST and request.POST['redirect_to']:
             return redirect(request.POST['redirect_to'])
         else:
@@ -323,7 +323,7 @@ def task_submit_post(request, task_id, submit_type):
             # Description file-name should be: surname-id-originalfilename
             sfiletarget = unidecode(os.path.join(
                 get_path(task, request.user),
-                "%s-%s-%s" % (request.user.last_name, submit_id, sfile.name),
+                '%s-%s-%s' % (request.user.last_name, submit_id, sfile.name),
             ))
             write_chunks_to_file(sfiletarget, sfile.chunks())
             sub = Submit(task=task,
@@ -334,13 +334,13 @@ def task_submit_post(request, task_id, submit_type):
                          filepath=sfiletarget)
             sub.save()
             messages.add_message(request, messages.SUCCESS,
-                                 "Úspešne sa ti podarilo submitnúť popis, "
-                                 "po skončení kola ti ho vedúci opravia")
+                                 'Úspešne sa ti podarilo submitnúť popis, '
+                                 'po skončení kola ti ho vedúci opravia')
         else:
             for field in form:
                 for error in field.errors:
                     messages.add_message(request, messages.ERROR,
-                                         "%s: %s" % (field.label, error))
+                                         '%s: %s' % (field.label, error))
 
         if 'redirect_to' in request.POST and request.POST['redirect_to']:
             return redirect(request.POST['redirect_to'])
