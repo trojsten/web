@@ -159,17 +159,17 @@ class Submit(models.Model):
 
 
 @python_2_unicode_compatible
-class ExternalSubmitKey(models.Model):
-    key = models.CharField(verbose_name='kľúč', max_length=40, primary_key=True)
-    name = models.CharField(verbose_name='meno', max_length=64)
+class ExternalSubmitToken(models.Model):
+    token = models.CharField(verbose_name='token', max_length=40, primary_key=True)
+    name = models.CharField(verbose_name='názov', max_length=64)
     task = models.ForeignKey(Task, verbose_name='úloha', on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        if not self.key:
-            self.key = self.generate_key()
-        return super(ExternalSubmitKey, self).save(*args, **kwargs)
+        if not self.token:
+            self.token = self.generate_token()
+        return super(ExternalSubmitToken, self).save(*args, **kwargs)
 
-    def generate_key(self):
+    def generate_token(self):
         return binascii.hexlify(os.urandom(20)).decode()
 
     def __str__(self):

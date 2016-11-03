@@ -356,7 +356,7 @@ def task_submit_post(request, task_id, submit_type):
         raise Http404
 
 
-@api_view(('POST',))
+@api_view(['POST'])
 @permission_classes([])
 def external_submit(request):
     serializer = ExternalSubmitSerializer(data=request.data)
@@ -364,7 +364,7 @@ def external_submit(request):
     validated = serializer.validated_data
 
     submit = Submit(
-        task=validated['key'].task,
+        task=validated['token'].task,
         user=validated['user'],
         points=validated['points'],
         submit_type=constants.SUBMIT_TYPE_EXTERNAL,

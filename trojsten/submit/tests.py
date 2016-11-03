@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.sites.models import Site
 from trojsten.utils.test_utils import get_noexisting_id
-from .models import Submit, ExternalSubmitKey
+from .models import Submit, ExternalSubmitToken
 from django.utils import timezone
 
 
@@ -465,8 +465,8 @@ class ExternalSubmitKeyTests(TestCase):
             has_testablezip=True, has_description=True,
             has_source=True,
         )
-        self.key = ExternalSubmitKey.objects.create(
-            task=self.task, name="Test external submit key"
+        self.token = ExternalSubmitToken.objects.create(
+            task=self.task, name="Test external submit token"
         )
 
     def _post_external_submit(self, data):
@@ -479,16 +479,16 @@ class ExternalSubmitKeyTests(TestCase):
     def test_external_submit_ok(self):
         self.assertEqual(self.task.submit_set.count(), 0)
         response = self._post_external_submit({
-            "key": self.key.key,
+            "token": self.token.token,
             "user": self.user.pk,
             "points": 10,
         })
         self.assertEqual(self.task.submit_set.count(), 1)
         self.assertEqual(response.status_code, 200)
 
-    def test_external_submit_invalid_key(self):
+    def test_external_submit_invalid_token(self):
         response = self._post_external_submit({
-            "key": "I am a Hacker",
+            "token": "I am a Hacker",
             "user": self.user.pk,
             "points": 10,
         })
@@ -496,7 +496,7 @@ class ExternalSubmitKeyTests(TestCase):
 
     def test_external_submit_invalid_user(self):
         response = self._post_external_submit({
-            "key": self.key.key,
+            "token": self.token.token,
             "user": 0,
             "points": 10,
         })
