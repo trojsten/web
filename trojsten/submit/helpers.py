@@ -7,6 +7,7 @@ from decimal import Decimal
 from time import time
 
 from django.conf import settings
+from django.utils.encoding import smart_bytes
 from unidecode import unidecode
 
 from . import constants
@@ -19,7 +20,7 @@ def write_chunks_to_file(filepath, chunks):
         pass
     with open(filepath, 'wb+') as destination:
         for chunk in chunks:
-            destination.write(chunk)
+            destination.write(smart_bytes(chunk))
 
 
 def get_lang_from_filename(filename):
@@ -75,8 +76,8 @@ def post_submit(raw, data):
     else:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((settings.TESTER_URL, settings.TESTER_PORT))
-        sock.sendall(raw)
-        sock.sendall(data)
+        sock.sendall(smart_bytes(raw))
+        sock.sendall(smart_bytes(data))
         sock.close()
 
 
