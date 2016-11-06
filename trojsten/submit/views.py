@@ -295,7 +295,7 @@ def task_submit_post(request, task_id, submit_type):
                 sub.save()
                 success_message = format_html(
                     'Úspešne si submitol program, výsledok testovania nájdeš '
-                    '<a href=\'{}\'>tu</a>',
+                    '<a href="{}">tu</a>',
                     reverse('view_submit', args=[sub.id])
                 )
                 messages.add_message(request, messages.SUCCESS, success_message)
