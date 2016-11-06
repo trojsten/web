@@ -2,7 +2,7 @@ import os
 import time
 
 from fabric.api import env
-from fabric.operations import get, run, sudo
+from fabric.operations import get, run as fabric_run, sudo
 from fabric.context_managers import cd, prefix
 
 """
@@ -47,11 +47,11 @@ env.roledefs = {
 }
 
 
-def srun(*args, **kwargs):
+def run(*args, **kwargs):
     if env.use_sudo:
         sudo(user=env.sudo_user, *args, **kwargs)
     else:
-        run(*args, **kwargs)
+        fabric_run(*args, **kwargs)
 
 
 def load_role(role_name):
@@ -73,7 +73,7 @@ def prod():
 
 def pull():
     with cd(env.project_path):
-        srun('git pull')
+        run('git pull')
 
 
 def collectstatic():
@@ -91,7 +91,7 @@ def load_fixtures():
 def install_requirements():
     with cd(env.project_path):
         with prefix('workon %s' % env.virtualenv_name):
-            srun('pip install -r requirements.txt --exists-action w')
+            run('pip install -r requirements.txt --exists-action w')
             if env.local:
                 run('pip install -r requirements.devel.txt')
 
@@ -99,45 +99,45 @@ def install_requirements():
 def manage(*args):
     with cd(env.project_path):
         with prefix('workon %s' % env.virtualenv_name):
-            srun('python manage.py ' + ' '.join(args))
+            run('python manage.py ' + ' '.join(args))
 
 
 def restart_wsgi():
     with cd(env.project_path):
-        srun('touch {}'.format(env.server_configuration))
+        run('touch {}'.format(env.server_configuration))
 
 
 def compile_translations():
     with prefix('workon %s' % env.virtualenv_name):
         with cd(env.project_path):
-            srun('cd trojsten && python ../manage.py compilemessages')
+            run('cd trojsten && python ../manage.py compilemessages')
 
 
 def write_version_txt():
     with cd(env.project_path):
-        srun('git log --no-merges --pretty=format:"%h %cd" -n 1 --date=short > version.txt')
-        srun('echo >> version.txt')
+        run('git log --no-merges --pretty=format:"%h %cd" -n 1 --date=short > version.txt')
+        run('echo >> version.txt')
 
 
 def enable_maintenance_mode():
-    srun('touch ~/maintenance')
+    run('touch ~/maintenance')
 
 
 def disable_maintenance_mode():
-    srun('rm -f ~/maintenance')
+    run('rm -f ~/maintenance')
 
 
 def dump_sql():
-    srun('mkdir -p db-dumps')
+    run('mkdir -p db-dumps')
     filename = str(int(time.time()))
     with cd('db-dumps'):
-        srun('pg_dump -Fc -O -c %s > %s.sql' % (env.db_name, filename))
-        srun('rm -f latest.sql')
-        srun('ln -s %s.sql latest.sql' % filename)
+        run('pg_dump -Fc -O -c %s > %s.sql' % (env.db_name, filename))
+        run('rm -f latest.sql')
+        run('ln -s %s.sql latest.sql' % filename)
 
 
 def get_latest_dump():
-    srun('mkdir -p db-dumps')
+    run('mkdir -p db-dumps')
     with cd('db-dumps'):
         get('latest.sql')
 
@@ -145,13 +145,13 @@ def get_latest_dump():
 def freeze_results(*args):
     with cd(env.project_path):
         with prefix('workon %s' % env.virtualenv_name):
-            srun('python manage.py freeze_results ' + ' '.join(args))
+            run('python manage.py freeze_results ' + ' '.join(args))
 
 
 def branch(name):
     with cd(env.project_path):
-        srun('git fetch')
-        srun('git checkout %s' % name)
+        run('git fetch')
+        run('git checkout %s' % name)
 
 
 def after_pull():
@@ -174,4 +174,4 @@ def update():
 
 def version():
     with cd(env.project_path):
-        srun('cat version.txt')
+        run('cat version.txt')
