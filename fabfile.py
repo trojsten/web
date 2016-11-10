@@ -23,6 +23,7 @@ env.roledefs = {
         'use_sudo': False,
         'server_configuration': 'trojsten/*.wsgi',
         'local': False,
+        'build_requirements': False
     },
     'beta': {
         'hosts': ['inteligent.trojsten.sk:22100'],
@@ -34,6 +35,7 @@ env.roledefs = {
         'shell': '/usr/local/bin/bash -l -c',
         'server_configuration': '/usr/local/www/trojstenweb/*.yaml',
         'local': False,
+        'build_requirements': True
     },
     'local': {
         'user': os.environ.get('USER'),
@@ -43,6 +45,7 @@ env.roledefs = {
         'db_name': 'trojsten',
         'use_sudo': False,
         'local': True,
+        'build_requirements': False
     }
 }
 
@@ -73,6 +76,9 @@ def prod():
 
 def pull():
     with cd(env.project_path):
+        if env.build_requirements:
+            run('git reset HEAD requirements*')
+            run('git checkout -- requirements*')
         run('git pull')
 
 
@@ -91,6 +97,8 @@ def load_fixtures():
 def install_requirements():
     with cd(env.project_path):
         with prefix('workon %s' % env.virtualenv_name):
+            if env.build_requirements:
+                run('bash build_requirements.sh')
             run('pip install -r requirements.txt --exists-action w')
             if env.local:
                 run('pip install -r requirements.devel.txt')
