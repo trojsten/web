@@ -9392,17 +9392,6 @@ body {
 .fancy {
   font-family: 'Reckless Regular', 'Comic Sans MS', sans-serif;
 }
-.fancy div {
-  font-size: 5em;
-}
-.fancy h1,
-.fancy h2,
-.fancy h3,
-.fancy h4,
-.fancy h5,
-.fancy h6 {
-  font-family: 'Reckless Regular', 'Comic Sans MS', sans-serif;
-}
 #main_menu .glyphicon {
   margin-left: .5em;
 }
@@ -9433,7 +9422,6 @@ h2.logo {
   margin-top: 0;
 }
 h2.logo img {
-  width: 160px;
   max-width: 80%;
 }
 #trojsten_logo {
