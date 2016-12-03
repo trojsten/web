@@ -3,7 +3,7 @@
 {% load utils %}
 
 
-<ul class="nav navbar-nav navbar-right">
+<ul id="login-box" class="nav navbar-nav navbar-right">
 <li class="dropdown">
   {% if user.is_authenticated %}
     <p class="dropdown-toggle btn btn-primary navbar-btn" id="login-dropdown" data-toggle="dropdown">
@@ -39,7 +39,7 @@
     </ul>
   {% else %}
     {% if SITE.is_login_provider %}
-      <p class="dropdown-toggle btn btn-primary navbar-btn" id="login-dropdown" data-toggle="dropdown">
+      <p class="dropdown-toggle btn btn-primary navbar-btn navbar-last" id="login-dropdown" data-toggle="dropdown">
         {% trans "Log in" %}
         <span class="caret"></span>
       </p>

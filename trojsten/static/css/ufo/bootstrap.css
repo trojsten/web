@@ -9517,6 +9517,9 @@ footer a:visited {
   padding-left: 15px;
 }
 /* Login Button */
+#login-box {
+  margin-right: -30px;
+}
 #login-dropdown {
   border: 1px solid #a26917;
   background-color: #ce861e;
