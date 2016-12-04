@@ -10,7 +10,7 @@
 
 {% block javascript %}
 {{ block.super }}
-<script src={% static "js/jquery-ui.min.js" %}></script>
+<script src={% static "js/jquery-ui-1.9.2-autocomplete.min.js" %}></script>
 <script src={% static "js/latinize.js" %}></script>
 <script src={% static "js/autocomplete.js" %}></script>
 <script src={% static "js/correspondence-address.js" %}></script>
@@ -21,7 +21,6 @@
 
 {% block stylesheets %}
 {{ block.super }}
-<link rel="stylesheet" href={% static "css/jquery-ui-base.css" type="text/css" %}>
-<link rel="stylesheet" href={% static "css/jquery-ui-smoothness.css" type="text/css" %}>
+<link rel="stylesheet" href={% static "css/jquery-ui-autocomplete/jquery-ui-1.9.2-autocomplete.min.css" type="text/css" %}>
 <link rel="stylesheet" href={% static "css/bootstrap-datetimepicker.min.css" type="text/css" %}>
 {% endblock stylesheets %}
