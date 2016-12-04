@@ -13,7 +13,7 @@ class InternalSite(BaseSite):
     has_logo = False
     is_login_provider = False
     folder = 'trojsten'
-    theme_color = '#0089a2'
+    theme_color = '#5f7de4'
     autologin = True
     facebook_page = 'https://www.facebook.com/Trojsten'
     googleplus_page = 'http://trojsten.sk'
@@ -27,7 +27,7 @@ class KSPSite(InternalSite):
     folder = 'ksp'
     facebook_page = 'https://www.facebook.com/KSPsk'
     googleplus_page = 'http://www.ksp.sk'
-    theme_color = '#6a831e'
+    theme_color = '#818f3d'
 
 
 class PraskSite(KSPSite):
@@ -48,7 +48,7 @@ class FKSSite(InternalSite):
     folder = 'fks'
     facebook_page = 'http://fks.sk'
     googleplus_page = 'http://fks.sk'
-    theme_color = '#fa9200'
+    theme_color = '#e39f3c'
 
 
 class UFOSite(FKSSite):
@@ -78,7 +78,7 @@ class KMSSite(BaseSite):
     folder = 'kms'
     facebook_page = 'https://www.facebook.com/pages/KMS/144730632208936'
     googleplus_page = 'http://kms.sk'
-    theme_color = '#663399'
+    theme_color = '#8c3be3'
 
 
 class TrojstenSite(BaseSite):
@@ -88,7 +88,7 @@ class TrojstenSite(BaseSite):
     folder = 'trojsten'
     facebook_page = 'https://www.facebook.com/Trojsten'
     googleplus_page = 'http://trojsten.sk'
-    theme_color = '#0089a2'
+    theme_color = '#5f7de4'
 
 
 class LoginSite(InternalSite):
