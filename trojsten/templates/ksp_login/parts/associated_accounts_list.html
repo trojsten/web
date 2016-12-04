@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load utils %}
+{% load staticfiles %}
 
 {% if account_associations %}
     <table id="ksp_login_association_list" class="table">
@@ -15,7 +16,7 @@
             {% if association.provider != 'trojsten' %}
                 <tr>
                     <td class="provider-logo">
-                        <img src="{{ STATIC_URL }}ksp_login/img/{{ association.provider }}.png"
+                        <img src={% static "ksp_login/img/{{ association.provider }}.png" %}
                              alt="{{ association.provider }}"/>
                     </td>
                     <td>

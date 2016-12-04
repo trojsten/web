@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load ksp_login %}
 {% load utils %}
+{% load staticfiles %}
 
 
 <ul id="login-box" class="nav navbar-nav navbar-right">
@@ -48,7 +49,7 @@
         {% for provider in login_providers_short %}
         <li role="presentation" class="provider_{% if provider.required_field %}with_input{% else %}simple{% endif %}">
           <a href="#">
-            <img src="{{ STATIC_URL }}ksp_login/img/{{ provider.name }}.png" title="{{ provider.name }}" alt="{{ provider.name }}" />
+            <img src={% static "ksp_login/img/{{ provider.name }}.png" title="{{ provider.name }}" alt="{{ provider.name }}" %} />
             {{ provider.name | provider_name }}
           </a>
           <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline">

@@ -1,5 +1,6 @@
 {% extends "trojsten/layout/main.html" %}
 {% load sekizai_tags i18n wiki_tags %}
+{% load staticfiles %}
 {% block title %}{% block wiki_pagetitle %}{% endblock %}{% endblock %}
 
 {% block stylesheets %}
@@ -16,5 +17,5 @@
 {% endblock %}
 
 {% addtoblock "js" %}
-<script src="{{ STATIC_URL }}wiki/js/core.js"></script>
+<script src={% static "wiki/js/core.js" %}></script>
 {% endaddtoblock %}
