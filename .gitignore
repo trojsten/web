@@ -4,6 +4,7 @@
 *.py[co]
 local_settings.py
 media/*
+/static/*
 version.txt
 .venv
 .coverage
