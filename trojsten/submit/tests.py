@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.test import TestCase
-import unittest
+
 import json
 import os
 import shutil
@@ -9,21 +8,23 @@ import socket
 import tempfile
 import threading
 import time
+import unittest
+
+from django.conf import settings
+from django.contrib.auth.models import Group
+from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
+from django.test import TestCase, override_settings
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
-from django.contrib.auth.models import Group
-
-from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
-
-from django.contrib.sites.models import Site
-
-from trojsten.submit.helpers import write_chunks_to_file, get_lang_from_filename, get_path_raw, post_submit
+from trojsten.submit.helpers import (get_lang_from_filename, get_path_raw,
+                                     post_submit, write_chunks_to_file)
 from trojsten.utils.test_utils import get_noexisting_id
-from .models import Submit, ExternalSubmitToken
-from django.utils import timezone
+
+from .models import ExternalSubmitToken, Submit
 
 
 class SubmitListTests(TestCase):
@@ -419,8 +420,9 @@ class JsonProtokolTest(TestCase):
         grad_year = timezone.now().year + 1
         url = reverse('view_protocol', kwargs={'submit_id': self.submit.id})
         response = self.client.get(url)
-        redirect_to = '%s?next=%s' % (settings.LOGIN_URL, reverse('view_protocol',
-                                                                  kwargs={'submit_id': self.submit.id}))
+        redirect_to = '%s?next=%s' % (
+            settings.LOGIN_URL, reverse('view_protocol', kwargs={'submit_id': self.submit.id})
+        )
         self.assertRedirects(response, redirect_to)
         non_staff_user2 = User.objects.create_user(username='jurko', first_name='Jozko',
                                                    last_name='Mrkvicka', password='pass',
@@ -459,7 +461,8 @@ class SubmitHelpersTests(TestCase):
     def test_write_chunks_to_file(self):
         # Tests that the directory will be created
         temp_file_path = os.path.join(self.temp_dir, 'dir_to_create', 'tempfile')
-        # Tests that we can write both bytes and unicode objects (unicode will be saved with utf-8 encoding
+        # Tests that we can write both bytes and unicode objects
+        # (unicode will be saved with utf-8 encoding)
         write_chunks_to_file(temp_file_path, [u'hello', b'world'])
         with open(temp_file_path, 'rb') as f:
             data = f.read()
@@ -473,10 +476,15 @@ class SubmitHelpersTests(TestCase):
         self.assertEqual(get_path_raw('contest', 'task', 'user'),
                          os.path.join(settings.SUBMIT_PATH, 'submits', 'user', 'task'))
 
+    @override_settings(
+        TESTER_URL='127.0.0.1',
+        TESTER_PORT=7777,
+        SUBMIT_DEBUG=False,
+    )
     def test_post_submit(self):
         def run_fake_server(test):
             server_sock = socket.socket()
-            server_sock.bind(('127.0.0.1', 7777))
+            server_sock.bind((settings.TESTER_URL, settings.TESTER_PORT))
             server_sock.listen(0)
             conn, addr = server_sock.accept()
             raw = conn.recv(2048)
