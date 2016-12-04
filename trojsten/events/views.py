@@ -26,6 +26,7 @@ class ParticipantsAndOrganizersListView(DetailView):
     context_object_name = 'event'
     pk_url_kwarg = 'event_id'
 
+
 participants_organizers_list = ParticipantsAndOrganizersListView.as_view()
 
 
@@ -95,6 +96,7 @@ class RegistrationView(FormView):
         )
         return super(RegistrationView, self).form_valid(form)
 
+
 registration = RegistrationView.as_view()
 
 
@@ -114,6 +116,7 @@ class EventView(DetailView):
             ).filter(user=self.request.user, event=context['event']).exists()
         )
         return context
+
 
 event_detail = EventView.as_view()
 
@@ -142,6 +145,7 @@ class EventListView(ListView):
         })
         return context
 
+
 event_list = EventListView.as_view()
 
 
@@ -149,5 +153,6 @@ class CampEventListView(EventListView):
     queryset = EventType.objects.current_site_only().filter(
         is_camp=True
     ).prefetch_related('event_set')
+
 
 camp_event_list = CampEventListView.as_view()

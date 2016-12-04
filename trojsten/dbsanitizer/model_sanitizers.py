@@ -160,6 +160,7 @@ class UserPropertySanitizer(BaseModelSanitizer):
         'value': SmartStringSanitizer(),
     }
 
+
 ModelSanitizerManager.register(TaskSanitizer())
 ModelSanitizerManager.register(UserSanitizer())
 ModelSanitizerManager.register(UserPropertySanitizer())

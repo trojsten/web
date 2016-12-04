@@ -18,4 +18,5 @@ class ThreadAdmin(admin.ModelAdmin):
         return ', '.join(force_text(x) for x in obj.sites.all())
     get_sites.short_description = 'domény'
 
+
 admin.site.register(Thread, ThreadAdmin)
