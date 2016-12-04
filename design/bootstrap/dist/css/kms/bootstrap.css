@@ -6956,12 +6956,14 @@ label {
   padding-bottom: 9px;
   margin: 40px 0 20px;
   border-bottom: 1px solid #eeeeee;
+  text-align: left;
 }
 .wiki-article h2 {
   font-size: 24.5px;
   padding-bottom: 9px;
   margin: 40px 0 20px;
   border-bottom: 1px solid #eeeeee;
+  text-align: left;
   margin-bottom: 20px;
   padding-bottom: 0px;
 }
@@ -9495,6 +9497,9 @@ label.required:after {
 }
 .main-content .wiki-article table td {
   padding: 0.5em 2em 0 0;
+}
+.page-header {
+  text-align: left;
 }
 .sidebar {
   text-align: right;

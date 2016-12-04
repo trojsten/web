@@ -12,6 +12,7 @@ def requiredenv(name):
 
 DEBUG = False
 
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 SENDFILE_BACKEND = 'sendfile.backends.xsendfile'
 
 # Top secret keys for production settings
