@@ -11,7 +11,7 @@
     {% for provider in login_providers %}
         <div class="form-group provider_{% if provider.required_field %}with_input{% else %}simple{% endif %}">
         <a href="#" class="btn btn-default btn-block">
-          <img src={% static "ksp_login/img/{{ provider.name }}.png" title="{{ provider.name }}" alt="{{ provider.name }}" %} />
+          <img src="{% static "ksp_login/img/"|add:provider.name|add:".png" %}" title="{{ provider.name }}" alt="{{ provider.name }}" />
           {{ provider.name | provider_name }}
         </a>
         <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline">
