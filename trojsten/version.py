@@ -9,4 +9,5 @@ def get_version_string():
             version_string = f.readline().strip()
     return version_string
 
+
 version_string = get_version_string()

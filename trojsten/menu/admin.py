@@ -10,10 +10,12 @@ from trojsten.menu.models import MenuItem, MenuGroup
 class MenuItemAdmin(admin.ModelAdmin):
     pass
 
+
 admin.site.register(MenuItem, MenuItemAdmin)
 
 
 class MenuGroupAdmin(admin.ModelAdmin):
     pass
+
 
 admin.site.register(MenuGroup, MenuGroupAdmin)

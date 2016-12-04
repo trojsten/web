@@ -176,4 +176,5 @@ class C(object):
 
         return result, state, False
 
+
 ALL = {'A': A, 'B': B, 'C': C}

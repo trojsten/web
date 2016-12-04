@@ -65,11 +65,13 @@ class SubmitAdmin(admin.ModelAdmin):
             task__in=task_lst
         ).prefetch_related('task__categories')
 
+
 admin.site.register(Submit, SubmitAdmin)
 
 
 class ExternalSubmitTokenAdmin(admin.ModelAdmin):
     readonly_fields = ('token',)
     list_display = ('name', 'task')
+
 
 admin.site.register(ExternalSubmitToken, ExternalSubmitTokenAdmin)
