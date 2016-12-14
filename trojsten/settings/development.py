@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 from trojsten.settings.common import *
 
-
+ALLOWED_HOSTS = []
 DEBUG = True
 SUBMIT_DEBUG = True
 SENDFILE_BACKEND = 'sendfile.backends.development'
