@@ -11,6 +11,7 @@ from ksp_login import views as login_views
 
 import trojsten.login.views
 import trojsten.views
+from trojsten.contact_form.forms import ContactForm
 from trojsten.people.forms import (TrojstenUserChangeForm,
                                    TrojstenUserCreationForm)
 
@@ -33,7 +34,7 @@ urlpatterns += [
 
 # Override default views in contact_form
 urlpatterns += [
-    url(r'^nahlasit-problem/$', ContactFormView.as_view(), name='contact_form'),
+    url(r'^nahlasit-problem/$', ContactFormView.as_view(form_class=ContactForm), name='contact_form'),
     url(r'^nahlasit-problem/sent/$', trojsten.views.contact_form_sent_redirect),
 ]
 

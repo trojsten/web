@@ -1,4 +1,0 @@
-Od:      {% if request.user.id %}{{ request.user.first_name }} {{ request.user.last_name }} {% endif %}<{{ email }}>
-Predmet: {{ name }}
-
-{{ body }}

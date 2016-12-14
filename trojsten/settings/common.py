@@ -214,6 +214,7 @@ INSTALLED_APPS = (
     'trojsten.dbsanitizer',
     'trojsten.login',
     'trojsten.schools',
+    'trojsten.contact_form',
 
     # Keep this under trojsten to let trojsten override templates.
     'news',
@@ -222,7 +223,6 @@ INSTALLED_APPS = (
     'social.apps.django_app.default',
     'ksp_login',
     'bootstrapform',
-    'contact_form',
     'easy_select2',
     'mathfilters',
     'sortedm2m',
