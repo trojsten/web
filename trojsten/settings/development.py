@@ -10,6 +10,7 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 SITE_ID = int(env('TROJSTENWEB_DEVELOPMENT_SITE_ID', 1))
 ROOT_URLCONF = env('TROJSTENWEB_DEVELOPMENT_ROOT_URLCONF', 'trojsten.urls.default')
 CORS_ORIGIN_ALLOW_ALL = True
+ADMINS = MANAGERS = (('Admin', 'admin@localhost'),)
 
 # Django debug toolbar set-up
 INSTALLED_APPS += (
