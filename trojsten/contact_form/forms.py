@@ -9,6 +9,7 @@ from contact_form import forms as contact_forms
 
 class ContactForm(contact_forms.ContactForm):
     subject = forms.CharField(max_length=100,
+                              required=True,
                               label=_('Subject'))
 
     def __init__(self, *args, **kwargs):
@@ -25,7 +26,7 @@ class ContactForm(contact_forms.ContactForm):
         """
         Generate the various parts of the message and return them in a
         dictionary, suitable for passing directly as keyword arguments
-        to ``django.core.mail.send_mail()``.
+        to ``django.core.mail.EmailMessage()``.
 
         By default, the following values are returned:
 
