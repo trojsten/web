@@ -45,9 +45,3 @@ class ContactFormTests(TestCase):
         self.assertEqual(form.recipient_list,
                          message.recipients())
         self.assertListEqual([self.valid_data['email']], message.reply_to)
-
-
-
-
-
-
