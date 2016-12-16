@@ -1,4 +1,4 @@
-from __future__ import  unicode_literals
+from __future__ import unicode_literals
 
 from django import forms
 from django.core.mail import EmailMessage
@@ -52,5 +52,3 @@ class ContactForm(contact_forms.ContactForm):
 
     def save(self, fail_silently=False):
         EmailMessage(**self.get_message_dict()).send(fail_silently=fail_silently)
-
-
