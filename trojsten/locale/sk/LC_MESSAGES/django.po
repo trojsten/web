@@ -1,62 +1,80 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-31 23:39+0100\n"
+"POT-Creation-Date: 2016-12-18 14:03+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#: contact_form/forms.py:13
+msgid "Subject"
+msgstr "Predmet"
+
+#: contact_form/forms.py:20
+msgid "Name"
+msgstr "Meno"
+
+#: contact_form/forms.py:21
+msgid "Email"
+msgstr "E-mail"
+
+#: contact_form/forms.py:22
+msgid "Message"
+msgstr "Správa"
 
 #: contests/forms.py:11
 msgid "Category doesn't correspond with competition."
 msgstr ""
 
 # pdf file names
-#: contests/models.py:237
+#: contests/models.py:239
 msgid "year"
 msgstr "ročník"
 
-#: contests/models.py:239
+#: contests/models.py:241
 msgid "round"
 msgstr "kolo"
 
-#: contests/models.py:241
+#: contests/models.py:243
 msgid "solutions"
 msgstr "vzoráky"
 
-#: contests/models.py:241
+#: contests/models.py:243
 msgid "tasks"
 msgstr "zadania"
 
-#: contests/models.py:387
+#: contests/models.py:382
 #, fuzzy
 #| msgid "tasks"
 msgid "task"
 msgstr "úloha"
 
-#: contests/models.py:390
+#: contests/models.py:385
 msgid "organizer"
 msgstr "vedúci"
 
-#: contests/models.py:393
+#: contests/models.py:388
 msgid "reviewer"
 msgstr "opravovateľ"
 
-#: contests/models.py:394
-msgid "solution-writer"
+#: contests/models.py:389
+#, fuzzy
+#| msgid "solution-writer"
+msgid "solution writer"
 msgstr "vzorákovač"
 
-#: contests/models.py:395
+#: contests/models.py:390
 msgid "proofreader"
 msgstr "recenzovač"
 
-#: contests/models.py:398
+#: contests/models.py:393
 msgid "role"
 msgstr "funkcia"
 
-#: contests/models.py:402
+#: contests/models.py:397
 msgid "Assigned user"
 msgstr "Pridelený človek"
 
-#: contests/models.py:403
+#: contests/models.py:398
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
 
@@ -212,8 +230,7 @@ msgid "The two password fields didn't match."
 msgstr ""
 
 #: people/models.py:214
-#, python-format
-msgid "Value \"%s\" does not match regex \"%s\"."
+msgid "Value \"{}\" does not match regex \"{}\"."
 msgstr ""
 
 #: people/templates/admin/people/duplicateuser/change_form.html:5
@@ -395,7 +412,7 @@ msgid "Table of Contents"
 msgstr ""
 
 # Submit
-#: submit/constants.py:26 submit/tests.py:377
+#: submit/constants.py:26 submit/tests.py:386
 msgid "Wrong answer"
 msgstr "Zlá odpoveď"
 
@@ -463,72 +480,72 @@ msgid "Post"
 msgstr "Odoslať"
 
 #: templates/ksp_login/login.html:4 templates/ksp_login/login.html:7
-#: templates/ksp_login/parts/include_javascript.html:14
-#: templates/ksp_login/parts/login_box.html:43
-#: templates/ksp_login/parts/login_box.html:60
-#: templates/ksp_login/parts/login_box.html:74
-#: templates/ksp_login/parts/login_full_contents.html:22
-#: templates/ksp_login/parts/login_full_contents.html:39
-#: templates/ksp_login/settings.html:41
+#: templates/ksp_login/parts/include_javascript.html:15
+#: templates/ksp_login/parts/login_box.html:44
+#: templates/ksp_login/parts/login_box.html:61
+#: templates/ksp_login/parts/login_box.html:75
+#: templates/ksp_login/parts/login_full_contents.html:23
+#: templates/ksp_login/parts/login_full_contents.html:40
+#: templates/ksp_login/settings.html:42
 msgid "Log in"
 msgstr ""
 
-#: templates/ksp_login/parts/associated_accounts_list.html:8
+#: templates/ksp_login/parts/associated_accounts_list.html:9
 msgid "Provider"
 msgstr ""
 
-#: templates/ksp_login/parts/associated_accounts_list.html:9
+#: templates/ksp_login/parts/associated_accounts_list.html:10
 msgid "Account"
 msgstr ""
 
-#: templates/ksp_login/parts/associated_accounts_list.html:31
+#: templates/ksp_login/parts/associated_accounts_list.html:32
 msgid "Disconnect"
 msgstr ""
 
-#: templates/ksp_login/parts/associated_accounts_list.html:41
+#: templates/ksp_login/parts/associated_accounts_list.html:42
 msgid "You don't have any services associated with your account."
 msgstr ""
 
-#: templates/ksp_login/parts/login_box.html:10
+#: templates/ksp_login/parts/login_box.html:11
 msgid "Logged in as"
 msgstr ""
 
 # Login
-#: templates/ksp_login/parts/login_box.html:21
+#: templates/ksp_login/parts/login_box.html:22
 #, fuzzy
 #| msgid "Registration"
 msgid "Site administration"
 msgstr "Registrácia"
 
-#: templates/ksp_login/parts/login_box.html:28
+#: templates/ksp_login/parts/login_box.html:29
 msgid "Settings"
 msgstr ""
 
-#: templates/ksp_login/parts/login_box.html:37
+#: templates/ksp_login/parts/login_box.html:38
 msgid "Log out"
 msgstr ""
 
-#: templates/ksp_login/parts/login_box.html:66
+#: templates/ksp_login/parts/login_box.html:67
 msgid "More login options"
 msgstr ""
 
-#: templates/ksp_login/parts/login_full_contents.html:40
+#: templates/ksp_login/parts/login_full_contents.html:41
 msgid "Forgotten password"
 msgstr ""
 
 # Login
-#: templates/ksp_login/parts/login_full_contents.html:49
+#: templates/ksp_login/parts/login_full_contents.html:50
 #: templates/ksp_login/registration.html:5
 #: templates/ksp_login/registration.html:8
 msgid "Registration"
 msgstr "Registrácia"
 
-#: templates/ksp_login/parts/login_full_contents.html:56
+#: templates/ksp_login/parts/login_full_contents.html:57
 msgid "Log in with your Trojsten account"
 msgstr ""
 
 #: templates/ksp_login/password.html:5 templates/ksp_login/password.html:8
-#: templates/ksp_login/settings.html:54
+#: templates/ksp_login/settings.html:55
 msgid "Password change"
 msgstr ""
 
@@ -538,21 +555,21 @@ msgid ""
 "the registration process."
 msgstr ""
 
-#: templates/ksp_login/settings.html:8 templates/ksp_login/settings.html:11
+#: templates/ksp_login/settings.html:9 templates/ksp_login/settings.html:12
 #, fuzzy
 #| msgid "Account information"
 msgid "Account settings"
 msgstr "Informácie o účte"
 
-#: templates/ksp_login/settings.html:17
+#: templates/ksp_login/settings.html:18
 msgid "Login settings"
 msgstr ""
 
-#: templates/ksp_login/settings.html:20
+#: templates/ksp_login/settings.html:21
 msgid "You can use any of the following services to log in to your account."
 msgstr ""
 
-#: templates/ksp_login/settings.html:49
+#: templates/ksp_login/settings.html:50
 #, python-format
 msgid ""
 "\n"
@@ -561,7 +578,7 @@ msgid ""
 "        "
 msgstr ""
 
-#: templates/ksp_login/settings.html:57
+#: templates/ksp_login/settings.html:58
 #, python-format
 msgid ""
 "\n"

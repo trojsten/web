@@ -211,7 +211,7 @@ class UserProperty(models.Model):
     def clean(self):
         if self.key.regex and not re.match(self.key.regex, self.value):
             raise ValidationError(
-                _('Value "%s" does not match regex "%s".') % (self.value, self.key.regex)
+                _('Value "{}" does not match regex "{}".').format(self.value, self.key.regex)
             )
 
 

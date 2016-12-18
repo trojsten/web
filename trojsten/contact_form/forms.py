@@ -8,19 +8,28 @@ from contact_form import forms as contact_forms
 
 
 class ContactForm(contact_forms.ContactForm):
-    subject = forms.CharField(max_length=100,
+    subject = forms.CharField(max_length=160,
                               required=True,
                               label=_('Subject'))
+
+    field_order = ['name', 'email', 'subject', 'body']
 
     def __init__(self, *args, **kwargs):
         super(ContactForm, self).__init__(*args, **kwargs)
         self.to = self.recipient_list
+        self.fields['name'].label = _('Name')
+        self.fields['email'].label = _('Email')
+        self.fields['body'].label = _('Message')
 
     def body(self):
         return self.message()
 
     def reply_to(self):
-        return [self.cleaned_data['email']]
+        return [
+            '{name}<{email}>'.format(
+                name=self.cleaned_data['name'], email=self.cleaned_data['email']
+            )
+        ]
 
     def get_message_dict(self):
         """
