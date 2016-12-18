@@ -69,6 +69,7 @@ class FXSite(FKSSite):
     short_name = 'FX'
     url = 'http://fx.fks.sk'
     has_logo = True
+    organizers_email = 'fx@fks.sk'
     folder = 'fx'
     facebook_page = 'http://fx.fks.sk'
     googleplus_page = 'http://fx.fks.sk'
