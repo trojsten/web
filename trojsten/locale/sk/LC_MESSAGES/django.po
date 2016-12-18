@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-18 14:03+0100\n"
+"POT-Creation-Date: 2016-12-18 14:37+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -20,6 +20,31 @@ msgstr "E-mail"
 #: contact_form/forms.py:22
 msgid "Message"
 msgstr "Správa"
+
+#: contact_form/templates/contact_form/contact_form.html:15
+#, python-format
+msgid ""
+"\n"
+"    This form is for reporting technical issues with our web site.\n"
+"    If you have a problem with tasks, please send an email directly to the "
+"seminary organizers to\n"
+"    <a class=\"alert-link\" href=\"mailto:%(email)s\">%(email)s</a>,\n"
+"    or to the organizer listed in the task statement.\n"
+"    "
+msgstr ""
+"\n"
+"Tento formulár slúži na technické problémy so stránkou, nie na problémy s riešením úloh. "
+"Pokiaľ máte problém s nejakou úlohou, napíšte vedúcim semináru na "
+"<a class=\"alert-link\" href=\"mailto:%(email)s\">%(email)s</a>, "
+"alebo priamo vedúcemu uvedenému pri úlohe.\n"
+"    "
+
+#: contact_form/templates/contact_form/contact_form.html:26
+msgid ""
+"If you have found any problem with our web site, please let us know using "
+"the following form."
+msgstr ""
+"Ak ste objavili chybu na našej stránke, prosím, dajte nám vedieť použitím nasledujúceho formulára."
 
 #: contests/forms.py:11
 msgid "Category doesn't correspond with competition."
