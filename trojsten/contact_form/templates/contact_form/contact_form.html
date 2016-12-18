@@ -1,0 +1,35 @@
+{% extends "trojsten/layout/main.html" %}
+{% load bootstrap %}
+{% load i18n %}
+
+{% block title %}Nahlásiť problém{% endblock title %}
+
+{% block page_header %}
+<h1>Nahlásiť problém</h1>
+{% endblock %}
+
+{% block page_content %}
+{% if SITE.organizers_email %}
+<div class="alert alert-info" role="alert">
+    {% blocktrans with email=SITE.organizers_email %}
+    This form is for reporting technical issues with our web site.
+    If you have a problem with tasks, please send an email directly to the seminary organizers to
+    <a class="alert-link" href="mailto:{{ email }}">{{ email }}</a>,
+    or to the organizer listed in the task statement.
+    {% endblocktrans %}
+</div>
+{% endif %}
+
+<p class="lead">
+    {% trans "If you have found any problem with our web site, please let us know using the following form." %}
+</p>
+<form class="form-horizontal" method="post" role="form">
+    {% csrf_token %}
+    {{ form | bootstrap_horizontal }}
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input class="btn btn-primary" type="submit" value="Pošli" />
+        </div>
+    </div>
+</form>
+{% endblock %}

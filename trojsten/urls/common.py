@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 import django
 import tips.urls
-from contact_form.views import ContactFormView
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -11,6 +10,7 @@ from ksp_login import views as login_views
 
 import trojsten.login.views
 import trojsten.views
+from trojsten.contact_form.views import ContactFormView
 from trojsten.people.forms import (TrojstenUserChangeForm,
                                    TrojstenUserCreationForm)
 

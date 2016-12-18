@@ -7,6 +7,7 @@ class BaseSite(object):
     short_name = None
     url = None
     autologin = False
+    organizers_email = None
 
 
 class InternalSite(BaseSite):
@@ -23,6 +24,7 @@ class KSPSite(InternalSite):
     name = 'Korešpondenčný seminár z programovania'
     short_name = 'KSP'
     url = 'http://ksp.sk'
+    organizers_email = 'ksp-info@ksp.sk'
     has_logo = True
     folder = 'ksp'
     facebook_page = 'https://www.facebook.com/KSPsk'
@@ -44,6 +46,7 @@ class FKSSite(InternalSite):
     name = 'Fyzikálny korešpondenčný seminár'
     short_name = 'FKS'
     url = 'http://fks.sk'
+    organizers_email = 'otazky@fks.sk'
     has_logo = True
     folder = 'fks'
     facebook_page = 'http://fks.sk'
@@ -66,6 +69,7 @@ class FXSite(FKSSite):
     short_name = 'FX'
     url = 'http://fx.fks.sk'
     has_logo = True
+    organizers_email = 'fx@fks.sk'
     folder = 'fx'
     facebook_page = 'http://fx.fks.sk'
     googleplus_page = 'http://fx.fks.sk'
