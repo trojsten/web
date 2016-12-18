@@ -8,6 +8,10 @@
 {% endblock %}
 
 {% block page_content %}
+{% if SITE.organizers_email %}
+<div class="alert alert-info" role="alert">Tento formulár slúži na technické problémy so stránkou, nie na problémy s riešením úloh. Pokiaľ máte problém s nejakou úlohou, napíšte vedúcim semináru na <a class="alert-link" href="mailto:{{ SITE.organizers_email }}">{{ SITE.organizers_email }}</a>, alebo priamo vedúcemu uvedenému pri úlohe.</div>
+{% endif %}
+
 <p class="lead">Ak ste objavili chybu na stránke, budeme vďační, ak nám dáte vedieť.</p>
 <form class="form-horizontal" method="post" role="form">
     {% csrf_token %}
