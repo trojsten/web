@@ -602,6 +602,10 @@ msgid ""
 "\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">on separate page</a>.\n"
 "        "
 msgstr ""
+"\n"
+"            Môžeš si zmeniť prihlasovacie nastavenia <a href="
+"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">na samostatnej stránke</a>.\n"
+"        "
 
 #: templates/ksp_login/settings.html:58
 #, python-format
