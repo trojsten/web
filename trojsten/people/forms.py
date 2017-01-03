@@ -3,6 +3,7 @@ from collections import OrderedDict
 
 from crispy_forms import layout
 from crispy_forms.helper import FormHelper
+from django_countries.fields import LazyTypedChoiceField, countries
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db import transaction
@@ -31,8 +32,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
     town = forms.CharField(max_length=64, label=_('Town'))
     postal_code = forms.CharField(
         max_length=16, label=_('Postal code'))
-    country = forms.CharField(
-        max_length=32, label=_('Country'))
+    country = LazyTypedChoiceField(choices=countries, label=_('Country'))
 
     MAILING_OPTION_CHOICES = [
         (constants.MAILING_OPTION_HOME, _('home')),
@@ -50,8 +50,9 @@ class TrojstenUserBaseForm(forms.ModelForm):
     corr_town = forms.CharField(max_length=64, label=_('Town'), required=False)
     corr_postal_code = forms.CharField(
         max_length=16, label=_('Postal code'), required=False)
-    corr_country = forms.CharField(
-        max_length=32, label=_('Country'), required=False)
+    corr_country = LazyTypedChoiceField(choices=countries,
+                                        label=_('Country'),
+                                        required=False)
 
     class Meta:
         model = User

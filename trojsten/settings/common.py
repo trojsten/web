@@ -225,6 +225,8 @@ INSTALLED_APPS = (
     'trojsten.schools',
     'trojsten.contact_form',
 
+    'django_countries',
+
     # Keep this under trojsten to let trojsten override templates.
     'news',
     'tips',
