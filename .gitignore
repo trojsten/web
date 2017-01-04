@@ -24,6 +24,9 @@ Session.vim
 *.sublime-project
 *.sublime-workspace
 
+# Visual Studio Code
+.vscode/
+
 # PyLint
 .pylintrc
 
