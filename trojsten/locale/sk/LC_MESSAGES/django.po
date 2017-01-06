@@ -603,7 +603,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"            Môžeš si zmeniť prihlasovacie nastavenia <a href="
+"            Nastavenia prihlásenia si môžeš zmeniť <a href="
 "\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">na samostatnej stránke</a>.\n"
 "        "
 
