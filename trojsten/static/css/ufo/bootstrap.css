@@ -9625,4 +9625,12 @@ footer ul {
   border-collapse: collapse;
   padding: 2px 5px;
 }
+.wiki-article h2 {
+  margin-top: -35px;
+  padding-top: 65px;
+}
+.wiki-article h3 {
+  margin-top: -60px;
+  padding-top: 65px;
+}
 /*# sourceMappingURL=bootstrap.css.map */
