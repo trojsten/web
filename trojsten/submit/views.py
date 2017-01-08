@@ -4,8 +4,8 @@
 import json
 import os
 import xml.etree.ElementTree as ET
-import six
 
+import six
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -13,20 +13,18 @@ from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response as APIResponse
 from sendfile import sendfile
 from unidecode import unidecode
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response as APIResponse
-
 from trojsten.contests.models import Competition, Round
+from trojsten.contests.models import Task
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
                                    TestableZipSubmitForm)
 from trojsten.submit.helpers import (get_path, process_submit, update_submit,
                                      write_chunks_to_file)
 from trojsten.submit.templatetags.submit_parts import submitclass
-from trojsten.contests.models import Task
-
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
@@ -321,9 +319,13 @@ def task_submit_post(request, task_id, submit_type):
             from time import time
             submit_id = str(int(time()))
             # Description file-name should be: surname-id-originalfilename
+            orig_filename, extension = os.path.splitext(sfile.name)
+            target_filename = ('%s-%s-%s' %
+                               (request.user.last_name, submit_id, orig_filename)
+                               )[:(255 - len(extension))] + extension
             sfiletarget = unidecode(os.path.join(
                 get_path(task, request.user),
-                '%s-%s-%s' % (request.user.last_name, submit_id, sfile.name),
+                target_filename,
             ))
             write_chunks_to_file(sfiletarget, sfile.chunks())
             sub = Submit(task=task,

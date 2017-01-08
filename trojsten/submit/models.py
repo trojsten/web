@@ -88,7 +88,7 @@ class Submit(models.Model):
     submit_type = models.IntegerField(verbose_name='typ submitu', choices=submit_constants.SUBMIT_TYPES)
     points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body')
 
-    filepath = models.CharField(max_length=128, verbose_name='súbor', blank=True)
+    filepath = models.CharField(max_length=512, verbose_name='súbor', blank=True)
     testing_status = models.CharField(
         max_length=128, verbose_name='stav testovania', blank=True)
     tester_response = models.CharField(
