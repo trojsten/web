@@ -108,6 +108,7 @@ def view_protocol(request, submit_id):
             protocol_path, submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
         )
         template_data['submit'] = submit
+        template_data['submit_verbose_response'] = constants.SUBMIT_VERBOSE_RESPONSE
         return render(
             request, 'trojsten/submit/protocol.html', template_data
         )
