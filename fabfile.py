@@ -74,12 +74,23 @@ def prod():
     load_role('prod')
 
 
+def checkout(target):
+    with cd(env.project_path):
+        run("git checkout -- .")
+        run("git checkout {}".format(target))
+
+
 def pull():
     with cd(env.project_path):
         if env.build_requirements:
             run('git reset HEAD requirements*')
             run('git checkout -- requirements*')
         run('git pull')
+
+
+def fetch():
+    with cd(env.project_path):
+        run('git fetch')
 
 
 def collectstatic():
@@ -123,7 +134,8 @@ def compile_translations():
 
 def write_version_txt():
     with cd(env.project_path):
-        run('git log --no-merges --pretty=format:"%h %cd" -n 1 --date=short > version.txt')
+        run('echo -n `git describe --tag --always`" " > version.txt')
+        run('git show --pretty=format:"%cd" --date=short --quiet >> version.txt')
         run('echo >> version.txt')
 
 
@@ -168,10 +180,14 @@ def after_pull():
     compile_translations()
 
 
-def update():
+def update(target=None):
     if not env.local:
         enable_maintenance_mode()
-    pull()
+    if target:
+        fetch()
+        checkout(target)
+    else:
+        pull()
     after_pull()
     if not env.local:
         collectstatic()
