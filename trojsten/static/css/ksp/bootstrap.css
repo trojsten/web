@@ -9633,4 +9633,12 @@ footer ul {
   margin-top: -60px;
   padding-top: 65px;
 }
+.footnoteRef sup {
+  margin-top: -65px;
+  padding-top: 65px;
+}
+.footnotes li {
+  margin-top: -65px;
+  padding-top: 65px;
+}
 /*# sourceMappingURL=bootstrap.css.map */
