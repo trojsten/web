@@ -31,7 +31,7 @@ from .models import Submit
 from .serializers import ExternalSubmitSerializer
 
 
-def protocol_data(protocol_path, forceShowDetails=False):
+def protocol_data(protocol_path, force_show_details=False):
     template_data = {}
     if os.path.exists(protocol_path):
         template_data['protocolReady'] = True  # Tested, show the protocol
@@ -65,7 +65,7 @@ def protocol_data(protocol_path, forceShowDetails=False):
                 details = runtest[4].text if len(runtest) > 4 else None
                 test['details'] = details
                 test['showDetails'] = details is not None and (
-                    'sample' in test['name'] or forceShowDetails
+                    'sample' in test['name'] or force_show_details
                 )
                 tests.append(test)
         template_data['tests'] = tests
@@ -104,8 +104,9 @@ def view_protocol(request, submit_id):
         submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
     ):
         protocol_path = submit.protocol_path
+        is_organizer = request.user.is_in_group(submit.task.round.semester.competition.organizers_group)
         template_data = protocol_data(
-            protocol_path, submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+            protocol_path, submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP or is_organizer
         )
         template_data['submit'] = submit
         template_data['submit_verbose_response'] = constants.SUBMIT_VERBOSE_RESPONSE
@@ -137,8 +138,9 @@ def view_submit(request, submit_id):
             'submit_verbose_response': constants.SUBMIT_VERBOSE_RESPONSE
         }
         protocol_path = submit.protocol_path
+        is_organizer = request.user.is_in_group(submit.task.round.semester.competition.organizers_group)
         template_data.update(
-            protocol_data(protocol_path, submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP)
+            protocol_data(protocol_path, submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP or is_organizer)
         )
         if os.path.exists(submit.filepath):
             # Source code available, display it!
