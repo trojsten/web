@@ -2,8 +2,8 @@ import os
 import time
 
 from fabric.api import env
-from fabric.operations import get, run as fabric_run, sudo
-from fabric.context_managers import cd, prefix
+from fabric.operations import local as fabric_local, get, run as fabric_run, sudo
+from fabric.context_managers import cd, prefix, quiet
 
 """
 Fabric deployment scripts for github.com:trojsten/web
@@ -52,9 +52,9 @@ env.roledefs = {
 
 def run(*args, **kwargs):
     if env.use_sudo:
-        sudo(user=env.sudo_user, *args, **kwargs)
+        return sudo(user=env.sudo_user, *args, **kwargs)
     else:
-        fabric_run(*args, **kwargs)
+        return fabric_run(*args, **kwargs)
 
 
 def load_role(role_name):
@@ -74,12 +74,23 @@ def prod():
     load_role('prod')
 
 
+def checkout(target):
+    with cd(env.project_path):
+        run("git checkout -- .")
+        run("git checkout {}".format(target))
+
+
 def pull():
     with cd(env.project_path):
         if env.build_requirements:
             run('git reset HEAD requirements*')
             run('git checkout -- requirements*')
         run('git pull')
+
+
+def fetch():
+    with cd(env.project_path):
+        run('git fetch')
 
 
 def collectstatic():
@@ -123,7 +134,8 @@ def compile_translations():
 
 def write_version_txt():
     with cd(env.project_path):
-        run('git log --no-merges --pretty=format:"%h %cd" -n 1 --date=short > version.txt')
+        run('echo -n `git describe --tag --always`" " > version.txt')
+        run('git show --pretty=format:"%cd" --date=short --quiet >> version.txt')
         run('echo >> version.txt')
 
 
@@ -168,16 +180,29 @@ def after_pull():
     compile_translations()
 
 
-def update():
+def update(target=None):
     if not env.local:
         enable_maintenance_mode()
-    pull()
+    if target:
+        fetch()
+        checkout(target)
+    else:
+        pull()
     after_pull()
     if not env.local:
         collectstatic()
         restart_wsgi()
         disable_maintenance_mode()
     write_version_txt()
+
+
+def update_if_necessary():
+    with quiet():
+        latest_version = fabric_local("git tag --sort=v:refname -l \"v*\" | tail -n -1", capture=True)
+        with cd(env.project_path):
+            current_version = run("git describe --tags --always")
+    if latest_version and current_version != latest_version:
+        update(latest_version)
 
 
 def version():
