@@ -9641,4 +9641,33 @@ footer ul {
   margin-top: -65px;
   padding-top: 65px;
 }
+@media print {
+  body {
+    padding-top: 0;
+  }
+  .nav-menu {
+    display: none;
+  }
+  footer {
+    display: none;
+  }
+  .main-content {
+    border: none;
+  }
+  .main-content .alert {
+    display: none;
+  }
+  .main-content .page-header .nav-pills .pull-right {
+    display: none;
+  }
+  .main-content .task-submit {
+    display: none;
+  }
+  .main-content .js-comments-form-orig-position {
+    display: none;
+  }
+  .main-content .list-inline.pull-right {
+    display: none;
+  }
+}
 /*# sourceMappingURL=bootstrap.css.map */
