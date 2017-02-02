@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from ksp_login.forms import UserProfileForm, get_profile_forms
 from social.apps.django_app.default.models import UserSocialAuth
+from django.core.urlresolvers import reverse
 
 from trojsten.people.models import UserProperty
 from .forms import UserPropsFormSet
@@ -27,7 +28,7 @@ def settings(request, settings_form=UserProfileForm):
             # @TODO(mio): enable creating new user props with existing, non hidden key
             if user_props_form_set.is_valid():
                 user_props_form_set.save()
-                return redirect('account_settings')
+                return redirect(reverse('account_settings') + '#props')
         else:
             forms = [form(request.POST, user=request.user)
                      for form in form_classes]
