@@ -9,6 +9,7 @@ from trojsten.contests.models import Competition
 
 register = template.Library()
 
+
 @register.filter
 def lookup(object, key):
     """

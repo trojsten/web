@@ -428,6 +428,7 @@ class MergeForm(forms.Form):
             ) for prop_key in prop_keys
         ]))
 
+
 UserPropsFormSet = forms.inlineformset_factory(
     User, UserProperty,
     fields=('key', 'value'),
