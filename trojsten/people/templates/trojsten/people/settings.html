@@ -28,7 +28,8 @@
             <form method="post" action="" class="form-horizontal">
                 {% csrf_token %}
                 {{ user_props_form_set.management_form }}
-                {% for form in user_props_form_set %}
+                <div id='items_container'>
+                  {% for form in user_props_form_set %}
                     <div class="form-group">
                     {% for field in form %}
                         {{ field.errors }}
@@ -52,10 +53,36 @@
                         {% endif %}
                     {% endfor %}
                     </div>
-                {% endfor %}
+                  {% endfor %}
+                </div>
+                <script type="text/html" id="item-template">
+                    <div id="item-__prefix__" class="form-group">
+                    {% for field in user_props_form_set.empty_form %}
+                        {{ field.errors }}
+                        {% if field.name == "key" %}
+                        <span class="col-md-3">
+                            {{ field | bootstrap_inline}}
+                        </span>
+
+                        {% elif field.name == "value" %}
+                            <span class="col-md-7">
+                                {{ field }}
+                            </span>
+                        {% elif field.is_hidden %}
+                            {{ field }}
+                        {% else %}
+                            <span class="col-md-2">
+                                {{ field | bootstrap_inline}}
+                            </span>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                </script>
+
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-7">
                         <input class="btn btn-primary" type="submit" name="user_props_submit" value="{% trans "Submit" %}" />
+                        <a href="#" id="add-item-button" class="btn btn-info add-item" onClick="addItem(event)">{% trans "Add property" %}</a>
                     </div>
                 </div>
             </form>
@@ -117,5 +144,27 @@
     <script src="{{ STATIC_URL }}js/settings-datepicker.js"></script>
     <script src="{{ STATIC_URL }}js/moment.min.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-datetimepicker.js"></script>
+    <script>
+      function addItem(ev) {
+        ev.preventDefault();
+        var count = $('div#items_container').children().length;
+        var ids = new Set($('[name^="properties"][name$="key"]').map(function() {
+            return $(this).attr("value");}).toArray());
+        var tmplMarkup = $('#item-template').html();
+        var compiledTmpl = $(tmplMarkup.replace(/__prefix__/g, count));
+        $('[name^="properties"][name$="key"]', compiledTmpl).children().each(function() {
+            if (ids.has($(this).attr("value"))) {
+                $(this).remove();
+            }
+        });
+        $('div#items_container').append(compiledTmpl);
+        // update form count
+        $('#id_properties-TOTAL_FORMS').attr('value', count+1);
+        // some animate to scroll to view our new form
+        $('html, body').animate({
+           scrollTop: $("#add-item-button").position().top-200
+        }, 800);
+      }
+      </script>
 {% endaddtoblock %}
 {% endblock %}
