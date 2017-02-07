@@ -37,7 +37,7 @@ def lookup_as(object, key):
 @register.filter
 def choice_text(choices, value):
     for v, t in choices:
-        if v == value:
+        if str(v) == str(value):
             return t
     return None
 

@@ -30,9 +30,8 @@
                 {{ user_props_form_set.management_form }}
                 <div id='items_container'>
                   {% for form in user_props_form_set %}
-                    <div class="form-group">
+                    <div class="form-group{% if form.errors %} has-error{% endif %}">
                     {% for field in form %}
-                        {{ field.errors }}
                         {% if field.name == "key" %}
                             {% if field.value %}
                                 <label class="col-md-3 control-label">{{ field.field.choices|choice_text:field.value }}</label>
@@ -51,6 +50,9 @@
                                 {{ field | bootstrap_inline}}
                             </span>
                         {% endif %}
+                        {% for error in field.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
                     {% endfor %}
                     </div>
                   {% endfor %}
