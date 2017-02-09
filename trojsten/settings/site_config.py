@@ -79,10 +79,12 @@ class KMSSite(BaseSite):
     name = 'Korešpondenčný matematický seminár'
     short_name = 'KMS'
     url = 'http://kms.sk'
+    has_logo = True
     folder = 'kms'
     facebook_page = 'https://www.facebook.com/pages/KMS/144730632208936'
     googleplus_page = 'http://kms.sk'
     theme_color = '#8c3be3'
+    organizers_email = 'kms@kms.sk'
 
 
 class TrojstenSite(BaseSite):
