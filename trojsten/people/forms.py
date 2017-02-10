@@ -8,7 +8,7 @@ from django.utils.translation import string_concat
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
 
-from trojsten.people.models import Address, DuplicateUser, User, UserProperty
+from trojsten.people.models import Address, DuplicateUser, User
 
 from . import constants
 from .helpers import get_similar_users
@@ -427,11 +427,3 @@ class MergeForm(forms.Form):
                 field_factory.get_prop_field(prop_key)
             ) for prop_key in prop_keys
         ]))
-
-
-UserPropsFormSet = forms.inlineformset_factory(
-    User, UserProperty,
-    fields=('key', 'value'),
-    widgets={'value': forms.widgets.Textarea(attrs={'class': 'col-sm-12 form-control', 'rows': 1})},
-    extra=0,
-)
