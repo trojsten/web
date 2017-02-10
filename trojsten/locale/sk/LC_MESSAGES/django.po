@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-02 14:11+0100\n"
+"POT-Creation-Date: 2017-02-10 21:42+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -281,19 +281,19 @@ msgid "Merge users %(user)s and %(candidate)s"
 msgstr ""
 
 #: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
-#: people/templates/trojsten/people/settings.html:58
+#: people/templates/trojsten/people/settings.html:86
 #: templates/ksp_login/parts/multiple_forms.html:11
 #: templates/ksp_login/parts/single_form.html:10
 msgid "Submit"
-msgstr ""
+msgstr "Odoslať"
 
 #: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:32
 msgid "Reset"
-msgstr ""
+msgstr "Obnoviť"
 
 #: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:33
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušiť"
 
 #: people/templates/trojsten/people/settings.html:10
 #: templates/ksp_login/settings.html:9 templates/ksp_login/settings.html:12
@@ -304,23 +304,27 @@ msgstr "Informácie o účte"
 
 #: people/templates/trojsten/people/settings.html:17
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 #: people/templates/trojsten/people/settings.html:18
 msgid "Properties"
-msgstr ""
+msgstr "Vlastnosti"
 
 #: people/templates/trojsten/people/settings.html:19
 #: templates/ksp_login/settings.html:18
 msgid "Login settings"
-msgstr ""
+msgstr "Nastavenia prihlasovania"
 
-#: people/templates/trojsten/people/settings.html:67
+#: people/templates/trojsten/people/settings.html:87
+msgid "Add property"
+msgstr "Pridať vlastnosť"
+
+#: people/templates/trojsten/people/settings.html:96
 #: templates/ksp_login/settings.html:21
 msgid "You can use any of the following services to log in to your account."
-msgstr ""
+msgstr "Možete použiť ľubovoľnú z následujúcich služieb na prihlásenie."
 
-#: people/templates/trojsten/people/settings.html:88
+#: people/templates/trojsten/people/settings.html:117
 #: templates/ksp_login/login.html:4 templates/ksp_login/login.html:7
 #: templates/ksp_login/parts/include_javascript.html:15
 #: templates/ksp_login/parts/login_box.html:44
@@ -330,9 +334,9 @@ msgstr ""
 #: templates/ksp_login/parts/login_full_contents.html:40
 #: templates/ksp_login/settings.html:42
 msgid "Log in"
-msgstr ""
+msgstr "Prihlásiť sa"
 
-#: people/templates/trojsten/people/settings.html:96
+#: people/templates/trojsten/people/settings.html:125
 #, fuzzy, python-format
 #| msgid ""
 #| "\n"
@@ -352,13 +356,13 @@ msgstr ""
 "a>.\n"
 "        "
 
-#: people/templates/trojsten/people/settings.html:101
+#: people/templates/trojsten/people/settings.html:130
 #: templates/ksp_login/password.html:5 templates/ksp_login/password.html:8
 #: templates/ksp_login/settings.html:55
 msgid "Password change"
-msgstr ""
+msgstr "Zmena Hesla"
 
-#: people/templates/trojsten/people/settings.html:104
+#: people/templates/trojsten/people/settings.html:133
 #, fuzzy, python-format
 #| msgid ""
 #| "\n"
