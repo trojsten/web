@@ -322,7 +322,7 @@ msgstr "Pridať vlastnosť"
 #: people/templates/trojsten/people/settings.html:96
 #: templates/ksp_login/settings.html:21
 msgid "You can use any of the following services to log in to your account."
-msgstr "Možete použiť ľubovoľnú z následujúcich služieb na prihlásenie."
+msgstr "Možete použiť ľubovoľnú z nasledujúcich služieb na prihlásenie."
 
 #: people/templates/trojsten/people/settings.html:117
 #: templates/ksp_login/login.html:4 templates/ksp_login/login.html:7
@@ -360,7 +360,7 @@ msgstr ""
 #: templates/ksp_login/password.html:5 templates/ksp_login/password.html:8
 #: templates/ksp_login/settings.html:55
 msgid "Password change"
-msgstr "Zmena Hesla"
+msgstr "Zmena hesla"
 
 #: people/templates/trojsten/people/settings.html:133
 #, fuzzy, python-format
