@@ -9631,7 +9631,7 @@ footer ul {
   margin-top: -35px;
   padding-top: 65px;
 }
-.wiki-article h2:first-child {
+.wiki-article > h2:first-child {
   clear: both;
   padding-top: 10px;
 }
