@@ -179,6 +179,8 @@ footer a:visited {
   font-size: 1.5em;
   padding: 10px 25px 0 0;
   color: @text-color-sidebar;
+  margin-top: 7px;
+  margin-bottom: 7px;
 }
 
 .sidebar .nav>li>a {
@@ -291,6 +293,11 @@ footer ul {
   h2 {
     margin-top: (-(@navbar-height - 20px));
     padding-top: (@navbar-height + 10px);
+
+    &:first-child {
+      clear: both;
+      padding-top: 10px;
+    }
   }
 
   h3 {

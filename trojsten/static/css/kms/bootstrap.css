@@ -9517,6 +9517,8 @@ footer a:visited {
   font-size: 1.5em;
   padding: 10px 25px 0 0;
   color: #ffffff;
+  margin-top: 7px;
+  margin-bottom: 7px;
 }
 .sidebar .nav > li > a {
   padding-left: 15px;
@@ -9628,6 +9630,10 @@ footer ul {
 .wiki-article h2 {
   margin-top: -35px;
   padding-top: 65px;
+}
+.wiki-article h2:first-child {
+  clear: both;
+  padding-top: 10px;
 }
 .wiki-article h3 {
   margin-top: -60px;
