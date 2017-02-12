@@ -9520,6 +9520,10 @@ footer a:visited {
   margin-top: 7px;
   margin-bottom: 7px;
 }
+.sidebar h2.logo {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
 .sidebar .nav > li > a {
   padding-left: 15px;
 }
