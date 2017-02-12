@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-10 21:42+0100\n"
+"POT-Creation-Date: 2017-02-12 14:04+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -281,7 +281,7 @@ msgid "Merge users %(user)s and %(candidate)s"
 msgstr ""
 
 #: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
-#: people/templates/trojsten/people/settings.html:86
+#: people/templates/trojsten/people/settings.html:90
 #: templates/ksp_login/parts/multiple_forms.html:11
 #: templates/ksp_login/parts/single_form.html:10
 msgid "Submit"
@@ -296,7 +296,6 @@ msgid "Cancel"
 msgstr "Zrušiť"
 
 #: people/templates/trojsten/people/settings.html:10
-#: templates/ksp_login/settings.html:9 templates/ksp_login/settings.html:12
 #, fuzzy
 #| msgid "Account information"
 msgid "Account settings"
@@ -310,21 +309,20 @@ msgstr "Profil"
 msgid "Properties"
 msgstr "Vlastnosti"
 
-#: people/templates/trojsten/people/settings.html:19
-#: templates/ksp_login/settings.html:18
+#: people/templates/trojsten/people/settings.html:20
+#: people/templates/trojsten/people/settings.html:22
 msgid "Login settings"
 msgstr "Nastavenia prihlasovania"
 
-#: people/templates/trojsten/people/settings.html:87
+#: people/templates/trojsten/people/settings.html:91
 msgid "Add property"
 msgstr "Pridať vlastnosť"
 
-#: people/templates/trojsten/people/settings.html:96
-#: templates/ksp_login/settings.html:21
+#: people/templates/trojsten/people/settings.html:100
 msgid "You can use any of the following services to log in to your account."
 msgstr "Možete použiť ľubovoľnú z nasledujúcich služieb na prihlásenie."
 
-#: people/templates/trojsten/people/settings.html:117
+#: people/templates/trojsten/people/settings.html:121
 #: templates/ksp_login/login.html:4 templates/ksp_login/login.html:7
 #: templates/ksp_login/parts/include_javascript.html:15
 #: templates/ksp_login/parts/login_box.html:44
@@ -332,11 +330,10 @@ msgstr "Možete použiť ľubovoľnú z nasledujúcich služieb na prihlásenie.
 #: templates/ksp_login/parts/login_box.html:75
 #: templates/ksp_login/parts/login_full_contents.html:23
 #: templates/ksp_login/parts/login_full_contents.html:40
-#: templates/ksp_login/settings.html:42
 msgid "Log in"
 msgstr "Prihlásiť sa"
 
-#: people/templates/trojsten/people/settings.html:125
+#: people/templates/trojsten/people/settings.html:129
 #, fuzzy, python-format
 #| msgid ""
 #| "\n"
@@ -347,22 +344,22 @@ msgstr "Prihlásiť sa"
 msgid ""
 "\n"
 "                    You can change the login settings <a href="
-"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">on separate page</a>.\n"
+"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s#login\">on separate page</"
+"a>.\n"
 "                "
 msgstr ""
 "\n"
 "            Nastavenia prihlásenia si môžeš zmeniť <a href="
-"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">na samostatnej stránke</"
-"a>.\n"
-"        "
+"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s#login\">na samostatnej "
+"stránke</a>.\n"
+"                "
 
-#: people/templates/trojsten/people/settings.html:130
+#: people/templates/trojsten/people/settings.html:134
 #: templates/ksp_login/password.html:5 templates/ksp_login/password.html:8
-#: templates/ksp_login/settings.html:55
 msgid "Password change"
 msgstr "Zmena hesla"
 
-#: people/templates/trojsten/people/settings.html:133
+#: people/templates/trojsten/people/settings.html:137
 #, fuzzy, python-format
 #| msgid ""
 #| "\n"
@@ -377,10 +374,9 @@ msgid ""
 "                "
 msgstr ""
 "\n"
-"            Nastavenia prihlásenia si môžeš zmeniť <a href="
-"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">na samostatnej stránke</"
-"a>.\n"
-"        "
+"                    Heslo si môžeš zmeniť <a href=\"%(passwd_url)s"
+"\">tu</a>.\n"
+"                "
 
 #: reviews/forms.py:47
 #, python-format
@@ -653,29 +649,6 @@ msgid ""
 "the registration process."
 msgstr ""
 
-#: templates/ksp_login/settings.html:50
-#, python-format
-msgid ""
-"\n"
-"            You can change the login settings <a href="
-"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">on separate page</a>.\n"
-"        "
-msgstr ""
-"\n"
-"            Nastavenia prihlásenia si môžeš zmeniť <a href="
-"\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">na samostatnej stránke</"
-"a>.\n"
-"        "
-
-#: templates/ksp_login/settings.html:58
-#, python-format
-msgid ""
-"\n"
-"            You can change your password <a href=\"%(passwd_url)s\">here</"
-"a>.\n"
-"        "
-msgstr ""
-
 #: templates/search/search.html:5 templates/search/search.html:9
 msgid "Search results for:"
 msgstr "Výsledky hľadania pre"
@@ -716,6 +689,19 @@ msgstr ""
 #: templates/wiki/article.html:40
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
+
+#~ msgid ""
+#~ "\n"
+#~ "            You can change the login settings <a href="
+#~ "\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">on separate page</"
+#~ "a>.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "            Nastavenia prihlásenia si môžeš zmeniť <a href="
+#~ "\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">na samostatnej "
+#~ "stránke</a>.\n"
+#~ "        "
 
 #~ msgid "Postal Code"
 #~ msgstr "PSČ"
