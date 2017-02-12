@@ -9567,6 +9567,13 @@ footer a:visited {
 .task-list td {
   vertical-align: middle !important;
 }
+.tab-content > .tab-pane {
+  margin-top: -100px;
+  padding-top: 100px;
+}
+.settings-tabs {
+  margin-bottom: 15px;
+}
 /* Sticky footer styles
 -------------------------------------------------- */
 html {

@@ -13,7 +13,7 @@
 {% block page_content %}
 <div>
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
+    <ul class="nav nav-tabs settings-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">{%  trans "Profile" %}</a></li>
         <li role="presentation"><a href="#props" aria-controls="properties" role="tab" data-toggle="tab">{% trans "Properties" %}</a></li>
         {% if SITE.is_login_provider %}
@@ -24,11 +24,11 @@
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="profile">
+        <div role="tabpanel" class="tab-pane fade in active" id="profile">
             {% include "ksp_login/parts/multiple_forms.html" %}
         </div>
 
-        <div role="tabpanel" class="tab-pane" id="props">
+        <div role="tabpanel" class="tab-pane fade" id="props">
             <form method="post" action="" class="form-horizontal">
                 {% csrf_token %}
                 {{ user_props_form_set.management_form }}
@@ -94,7 +94,7 @@
             </form>
         </div>
 
-        <div role="tabpanel" class="tab-pane" id="login">
+        <div role="tabpanel" class="tab-pane fade" id="login">
             {% if SITE.is_login_provider %}
             <p>
                 {% trans "You can use any of the following services to log in to your account." %}
