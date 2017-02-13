@@ -15,9 +15,8 @@ KMS_MAX_COEFFICIENTS = [0, 1, 2, 3, 4, 7, 100, 100, 100, 100, 100]
 KMS_COEFFICIENT_PROP_NAME = 'KMS koeficient'
 
 
-class KMSResultsGenerator(
-    CategoryTagKeyGeneratorMixin, ResultsGenerator
-):
+class KMSResultsGenerator(CategoryTagKeyGeneratorMixin,
+                          ResultsGenerator):
     @staticmethod
     def get_user_coefficient(user):
         coefficient_prop = user.properties.filter(key__key_name=KMS_COEFFICIENT_PROP_NAME).first()
