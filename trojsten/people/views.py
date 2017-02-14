@@ -18,6 +18,20 @@ class VisibleUserPropForm(forms.ModelForm):
         self.fields['key'].queryset = self.fields['key'].queryset.filter(hidden=False)
 
 
+def _get_user_props_formset(is_staff=False):
+    form_class = forms.ModelForm if is_staff else VisibleUserPropForm
+
+    return forms.inlineformset_factory(
+        User, UserProperty,
+        form=form_class,
+        fields=('key', 'value'),
+        widgets={
+            'value': forms.widgets.Textarea(attrs={'class': 'col-sm-12 form-control', 'rows': 1})
+        },
+        extra=0,
+    )
+
+
 @login_required
 def settings(request, settings_form=UserProfileForm):
     """
@@ -27,17 +41,7 @@ def settings(request, settings_form=UserProfileForm):
     KSP_LOGIN_PROFILE_FORMS setting to the user.
     """
 
-    form_class = forms.ModelForm if request.user.is_staff else VisibleUserPropForm
-
-    UserPropsFormSet = forms.inlineformset_factory(
-        User, UserProperty,
-        form=form_class,
-        fields=('key', 'value'),
-        widgets={
-            'value': forms.widgets.Textarea(attrs={'class': 'col-sm-12 form-control', 'rows': 1})
-        },
-        extra=0,
-    )
+    UserPropsFormSet = _get_user_props_formset(request.user.is_staff)
 
     form_classes = [settings_form] + get_profile_forms()
 

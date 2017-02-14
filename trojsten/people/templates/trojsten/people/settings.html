@@ -5,6 +5,9 @@
 {% load utils %}
 {% load bootstrap %}
 {% load sekizai_tags %}
+{% load staticfiles %}
+
+{% block title %}{% trans "Account settings" %}{% endblock %}
 
 {% block page_header %}
 <h1>{% trans "Account settings" %}</h1>
@@ -143,13 +146,13 @@
 </div>
 
 {% addtoblock "js" %}
-    <script src="{{ STATIC_URL }}js/jquery-ui.min.js"></script>
-    <script src="{{ STATIC_URL }}js/latinize.js"></script>
-    <script src="{{ STATIC_URL }}js/autocomplete.js"></script>
-    <script src="{{ STATIC_URL }}js/correspondence-address.js"></script>
-    <script src="{{ STATIC_URL }}js/settings-datepicker.js"></script>
-    <script src="{{ STATIC_URL }}js/moment.min.js"></script>
-    <script src="{{ STATIC_URL }}js/bootstrap-datetimepicker.js"></script>
+    <script src="{% static "js/jquery-ui-1.9.2-autocomplete.min.js" %}"></script>
+    <script src="{% static "js/latinize.js" %}"></script>
+    <script src="{% static "js/autocomplete.js" %}"></script>
+    <script src="{% static "js/correspondence-address.js" %}"></script>
+    <script src="{% static "js/settings-datepicker.js" %}"></script>
+    <script src="{% static "js/moment.min.js" %}"></script>
+    <script src="{% static "js/bootstrap-datetimepicker.js" %}"></script>
     <script>
       function addItem(ev) {
         ev.preventDefault();
