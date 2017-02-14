@@ -334,13 +334,7 @@ msgid "Log in"
 msgstr "Prihlásiť sa"
 
 #: people/templates/trojsten/people/settings.html:129
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "            You can change the login settings <a href="
-#| "\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">on separate page</"
-#| "a>.\n"
-#| "        "
+#, python-format
 msgid ""
 "\n"
 "                    You can change the login settings <a href="
@@ -360,13 +354,7 @@ msgid "Password change"
 msgstr "Zmena hesla"
 
 #: people/templates/trojsten/people/settings.html:137
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "            You can change the login settings <a href="
-#| "\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">on separate page</"
-#| "a>.\n"
-#| "        "
+#, python-format
 msgid ""
 "\n"
 "                    You can change your password <a href=\"%(passwd_url)s"
