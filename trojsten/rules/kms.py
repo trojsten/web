@@ -1,10 +1,10 @@
+from trojsten.results.constants import COEFFICIENT_COLUMN_KEY
 from trojsten.results.generator import (CategoryTagKeyGeneratorMixin,
                                         ResultsGenerator)
 from trojsten.results.representation import ResultsTag, ResultsCell, ResultsCol
-
-from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
+from trojsten.submit.models import Submit
 from .default import CompetitionRules
-from trojsten.results.constants import COEFFICIENT_COLUMN_KEY
+from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 
 KMS_ALFA = 'alfa'
 KMS_BETA = 'beta'
@@ -13,6 +13,7 @@ KMS_BETA = 'beta'
 KMS_ALFA_MAX_COEFFICIENT = 3
 KMS_MAX_COEFFICIENTS = [0, 1, 2, 3, 4, 7, 100, 100, 100, 100, 100]
 KMS_COEFFICIENT_PROP_NAME = 'KMS koeficient'
+KMS_COMPETITION_ID = 7
 
 
 class KMSResultsGenerator(CategoryTagKeyGeneratorMixin,
@@ -22,14 +23,26 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin,
         coefficient_prop = user.properties.filter(key__key_name=KMS_COEFFICIENT_PROP_NAME).first()
         return int(coefficient_prop.value) if coefficient_prop else 0
 
+    def run(self, res_request):
+        res_request.has_submit_in_beta = set()
+        for submit in Submit.objects.filter(task__round__semester=res_request.round.semester,
+                                            task__number__in=[8, 9, 10]):
+            res_request.has_submit_in_beta.add(submit.user)
+        return super(KMSResultsGenerator, self).run(res_request)
+
     def is_user_active(self, request, user):
         active = super(KMSResultsGenerator, self).is_user_active(request, user)
+        coefficient = self.get_user_coefficient(user)
 
         if self.tag.key == KMS_ALFA:
             # @FIXME This is a temporary hack, while the data to calculate whether
             # a user can solve this category or not are not available.
             # The data will be available once the old users are migrated.
-            active = active and (self.get_user_coefficient(user) <= KMS_ALFA_MAX_COEFFICIENT)
+            active = active and (coefficient <= KMS_ALFA_MAX_COEFFICIENT)
+
+        if self.tag.key == KMS_BETA:
+            active = active and \
+                     (coefficient > KMS_ALFA_MAX_COEFFICIENT or user in request.has_submit_in_beta)
 
         return active
 
