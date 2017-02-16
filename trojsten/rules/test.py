@@ -59,7 +59,6 @@ class KMSRulesTest(TestCase):
                 submit.save()
 
     def test_only_best_five(self):
-
         points = [9, 7, 0, 8, 4, 5, 4]
         active = [True] * 7
         active[2] = False

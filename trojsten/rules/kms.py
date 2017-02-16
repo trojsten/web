@@ -13,7 +13,6 @@ KMS_BETA = 'beta'
 KMS_ALFA_MAX_COEFFICIENT = 3
 KMS_MAX_COEFFICIENTS = [0, 1, 2, 3, 4, 7, 100, 100, 100, 100, 100]
 KMS_COEFFICIENT_PROP_NAME = 'KMS koeficient'
-KMS_COMPETITION_ID = 7
 
 
 class KMSResultsGenerator(CategoryTagKeyGeneratorMixin,
