@@ -35,6 +35,14 @@ def lookup_as(object, key):
 
 
 @register.filter
+def choice_text(choices, value):
+    for v, t in choices:
+        if str(v) == str(value):
+            return t
+    return None
+
+
+@register.filter
 def split(value, arg):
     return value.split(arg)
 

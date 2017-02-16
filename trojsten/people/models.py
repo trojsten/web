@@ -169,6 +169,14 @@ User._meta.get_field('last_name').blank = False
 User._meta.get_field('username').blank = True
 
 
+class UserPropertyManager(models.Manager):
+    def visible(self, user):
+        if user.is_staff:
+            return self.get_queryset()
+        else:
+            return self.filter(key__hidden=False)
+
+
 @python_2_unicode_compatible
 class UserPropertyKey(models.Model):
     """
@@ -179,6 +187,7 @@ class UserPropertyKey(models.Model):
     regex = models.CharField(
         max_length=100, verbose_name='regulárny výraz pre hodnotu', blank=True, null=True
     )
+    hidden = models.BooleanField(default=False, verbose_name='skryté')
 
     def __str__(self):
         return self.key_name
@@ -199,6 +208,8 @@ class UserProperty(models.Model):
                             verbose_name='názov vlastnosti',
                             related_name='properties')
     value = models.TextField(verbose_name='hodnota vlastnosti')
+
+    objects = UserPropertyManager()
 
     def __str__(self):
         return '%s: %s' % (self.key, self.value)

@@ -13,6 +13,7 @@ import trojsten.views
 from trojsten.contact_form.views import ContactFormView
 from trojsten.people.forms import (TrojstenUserChangeForm,
                                    TrojstenUserCreationForm)
+from trojsten.people.views import settings as settings_view
 
 admin.autodiscover()
 admin.site.login = login_required(admin.site.login)
@@ -21,7 +22,7 @@ admin.site.login = login_required(admin.site.login)
 urlpatterns = [
     url(r'^ucet/register/$', login_views.register, {'creation_form': TrojstenUserCreationForm},
         name='trojsten_register'),
-    url(r'^ucet/$', login_views.settings, {'settings_form': TrojstenUserChangeForm},
+    url(r'^ucet/$', settings_view, {'settings_form': TrojstenUserChangeForm},
         name='trojsten_account_settings'),
     url(r'^ucet/remote_logout', trojsten.login.views.remote_logout, name='remote_account_logout'),
 ]

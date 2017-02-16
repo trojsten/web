@@ -1,0 +1,179 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% load i18n %}
+{% load ksp_login %}
+{% load utils %}
+{% load bootstrap %}
+{% load sekizai_tags %}
+{% load staticfiles %}
+
+{% block title %}{% trans "Account settings" %}{% endblock %}
+
+{% block page_header %}
+<h1>{% trans "Account settings" %}</h1>
+{% endblock %}
+
+{% block page_content %}
+<div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs settings-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">{%  trans "Profile" %}</a></li>
+        <li role="presentation"><a href="#props" aria-controls="properties" role="tab" data-toggle="tab">{% trans "Properties" %}</a></li>
+        {% if SITE.is_login_provider %}
+        <li role="presentation"><a href="#login" aria-controls="login settings" role="tab" data-toggle="tab">{% trans "Login settings" %}</a></li>
+        {% else %}
+        <li role="presentation"><a href="{{ TROJSTEN_LOGIN_PROVIDER_URL }}{% url "trojsten_account_settings" %}#login" aria-controls="login settings">{% trans "Login settings" %}</a></li>
+        {% endif %}
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="profile">
+            {% include "ksp_login/parts/multiple_forms.html" %}
+        </div>
+
+        <div role="tabpanel" class="tab-pane fade" id="props">
+            <form method="post" action="" class="form-horizontal">
+                {% csrf_token %}
+                {{ user_props_form_set.management_form }}
+                <div id='items_container'>
+                  {% for form in user_props_form_set %}
+                    <div class="form-group{% if form.errors %} has-error{% endif %}">
+                    {% for field in form %}
+                        {% if field.name == "key" %}
+                            {% if field.value %}
+                                <label class="col-md-3 control-label">{{ field.field.choices|choice_text:field.value }}</label>
+                                <input type="hidden" name="{{ field.html_name }}" value="{{ field.value }}"/>
+                            {% else %}
+                                {{ field | bootstrap_inline}}
+                            {% endif %}
+                        {% elif field.name == "value" %}
+                            <span class="col-md-7">
+                                {{ field }}
+                            </span>
+                        {% elif field.is_hidden %}
+                            {{ field }}
+                        {% else %}
+                            <span class="col-md-2">
+                                {{ field | bootstrap_inline}}
+                            </span>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                    {% endfor %}
+                    </div>
+                  {% endfor %}
+                </div>
+                <script type="text/html" id="item-template">
+                    <div id="item-__prefix__" class="form-group">
+                    {% for field in user_props_form_set.empty_form %}
+                        {{ field.errors }}
+                        {% if field.name == "key" %}
+                        <span class="col-md-3">
+                            {{ field | bootstrap_inline}}
+                        </span>
+
+                        {% elif field.name == "value" %}
+                            <span class="col-md-7">
+                                {{ field }}
+                            </span>
+                        {% elif field.is_hidden %}
+                            {{ field }}
+                        {% else %}
+                            <span class="col-md-2">
+                                {{ field | bootstrap_inline}}
+                            </span>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                </script>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-7">
+                        <input class="btn btn-primary" type="submit" name="user_props_submit" value="{% trans "Submit" %}" />
+                        <a href="#" id="add-item-button" class="btn btn-info add-item" onClick="addItem(event)">{% trans "Add property" %}</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div role="tabpanel" class="tab-pane fade" id="login">
+            {% if SITE.is_login_provider %}
+            <p>
+                {% trans "You can use any of the following services to log in to your account." %}
+            </p>
+            {% include "ksp_login/parts/associated_accounts_list.html" %}
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                Pridať nové konto<span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu ksp_login_provider_list" role="menu" aria-labelledby="login-dropdown"
+                id="account_links">
+              {% for provider in login_providers %}
+              <li role="presentation" class="provider_{% if provider.required_field %}with_input{% else %}simple{% endif %}">
+                <a href="javascript:void;">
+                  <img src="{{ STATIC_URL }}ksp_login/img/{{ provider.name }}.png" title="{{ provider.name }}" alt="{{ provider.name }}" />
+                  {{ provider.name | provider_name }}
+                </a>
+                <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline">
+                  {% csrf_token %}
+                  {% if provider.required_field %}
+                    <input class="form-control input-sm col-md-3" type="text" name="{{ provider.required_field }}" placeholder="{{ provider.required_field_verbose }}" />
+                  {% endif %}
+                  <input type="hidden" name="next" value="{% ksp_login_next %}" />
+                  <input class="btn btn-default btn-sm" type="submit" value="{% trans "Log in" %}" />
+                </form>
+              </li>
+              {% endfor %}
+              </ul>
+            </div>
+            {% else %}
+                {% url "trojsten_account_settings" as settings_url %}
+                {% blocktrans %}
+                    You can change the login settings <a href="{{ TROJSTEN_LOGIN_PROVIDER_URL }}{{ settings_url }}#login">on separate page</a>.
+                {% endblocktrans %}
+            {% endif %}
+
+            <h3>{% trans "Password change" %}</h3>
+            <p>
+                {% url "account_password" as passwd_url %}
+                {% blocktrans %}
+                    You can change your password <a href="{{ passwd_url }}">here</a>.
+                {% endblocktrans %}
+            </p>
+        </div>
+    </div>
+</div>
+
+{% addtoblock "js" %}
+    <script src="{% static "js/jquery-ui-1.9.2-autocomplete.min.js" %}"></script>
+    <script src="{% static "js/latinize.js" %}"></script>
+    <script src="{% static "js/autocomplete.js" %}"></script>
+    <script src="{% static "js/correspondence-address.js" %}"></script>
+    <script src="{% static "js/settings-datepicker.js" %}"></script>
+    <script src="{% static "js/moment.min.js" %}"></script>
+    <script src="{% static "js/bootstrap-datetimepicker.js" %}"></script>
+    <script>
+      function addItem(ev) {
+        ev.preventDefault();
+        var count = $('div#items_container').children().length;
+        var ids = new Set($('[name^="properties"][name$="key"]').map(function() {
+            return $(this).attr("value");}).toArray());
+        var tmplMarkup = $('#item-template').html();
+        var compiledTmpl = $(tmplMarkup.replace(/__prefix__/g, count));
+        $('[name^="properties"][name$="key"]', compiledTmpl).children().each(function() {
+            if (ids.has($(this).attr("value"))) {
+                $(this).remove();
+            }
+        });
+        $('div#items_container').append(compiledTmpl);
+        // update form count
+        $('#id_properties-TOTAL_FORMS').attr('value', count+1);
+        // some animate to scroll to view our new form
+        $('html, body').animate({
+           scrollTop: $("#add-item-button").position().top-200
+        }, 800);
+      }
+      </script>
+{% endaddtoblock %}
+{% endblock %}

@@ -4,18 +4,20 @@ from __future__ import unicode_literals
 import datetime
 import random
 
+from django.conf import settings
 from django.contrib.auth.models import Group
+from django.core.urlresolvers import reverse
 from django.http.request import HttpRequest
 from django.test import TestCase
 
 from trojsten.contests import constants as contests_constants
-from trojsten.contests.models import Competition, Round, Semester
-from trojsten.contests.models import Task
+from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.schools.models import School
-from .forms import TrojstenUserCreationForm, TrojstenUserChangeForm
+
+from . import constants
+from .forms import TrojstenUserChangeForm, TrojstenUserCreationForm
 from .helpers import get_similar_users, merge_users
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
-from . import constants
 
 
 def _create_random_user(**kwargs):
@@ -28,6 +30,7 @@ def _create_random_user(**kwargs):
 
 
 class GetSimilarUsersTests(TestCase):
+
     def test_get_similar_users(self):
         user = _create_random_user(first_name='Jozef', last_name='Novak')
         similar_users = get_similar_users(user)
@@ -55,6 +58,7 @@ class GetSimilarUsersTests(TestCase):
 
 
 class MergeUsersTests(TestCase):
+
     def setUp(self):
         self.tricko = UserPropertyKey.objects.create(key_name='Veľkosť trička')
         self.topanka = UserPropertyKey.objects.create(key_name='Veľkosť topánky')
@@ -325,3 +329,46 @@ class UserFormTests(TestCase):
         self.assertEqual([user.mailing_address.street, user.mailing_address.town,
                           user.mailing_address.postal_code, user.mailing_address.country],
                          [street, town, postal_code, country])
+
+
+class SettingsViewTests(TestCase):
+
+    def setUp(self):
+        self.url = reverse('trojsten_account_settings')
+        self.element_login = UserPropertyKey.objects.create(
+            key_name='Login na elementa', hidden=True)
+        self.kaspar_id = UserPropertyKey.objects.create(key_name='kaspar_id', hidden=True)
+        self.mobil = UserPropertyKey.objects.create(key_name='Mobil')
+        self.tricko = UserPropertyKey.objects.create(key_name='Veľkosť trička')
+
+    def test_login_redirect(self):
+        response = self.client.get(self.url)
+        redirect_to = '%s?next=%s' % (settings.LOGIN_URL, self.url)
+        self.assertRedirects(response, redirect_to)
+
+    def test_non_staff_see_only_visible_props(self):
+        non_staff_user = User.objects.create_user(username='jozko', first_name='Jozko',
+                                                  last_name='Mrkvicka')
+        UserProperty.objects.create(user=non_staff_user, key=self.kaspar_id, value='1234')
+        UserProperty.objects.create(user=non_staff_user, key=self.mobil, value='+421234567890')
+        self.client.force_login(non_staff_user)
+        response = self.client.get(self.url)
+        self.assertContains(response, self.mobil.key_name)
+        self.assertContains(response, '+421234567890')
+        self.assertContains(response, self.tricko.key_name)
+        self.assertNotContains(response, self.element_login)
+        self.assertNotContains(response, self.kaspar_id)
+
+    def test_staff_see_all_props(self):
+        staff_user = User.objects.create_user(username='staff', first_name='Staff',
+                                              last_name='Staff', is_staff=True)
+        UserProperty.objects.create(user=staff_user, key=self.element_login, value='supercoollogin')
+        UserProperty.objects.create(user=staff_user, key=self.mobil, value='+471234567890')
+        self.client.force_login(staff_user)
+        response = self.client.get(self.url)
+        self.assertContains(response, self.mobil.key_name)
+        self.assertContains(response, '+471234567890')
+        self.assertContains(response, self.tricko.key_name)
+        self.assertContains(response, self.element_login)
+        self.assertContains(response, 'supercoollogin')
+        self.assertContains(response, self.kaspar_id)
