@@ -42,7 +42,7 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin,
 
         if self.tag.key == KMS_BETA:
             active = active and \
-                     (coefficient > KMS_ALFA_MAX_COEFFICIENT or user in request.has_submit_in_beta)
+                (coefficient > KMS_ALFA_MAX_COEFFICIENT or user in request.has_submit_in_beta)
 
         return active
 

@@ -4,9 +4,9 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
 
-from kms import KMS_ALFA, KMS_BETA, KMS_COEFFICIENT_PROP_NAME
 from trojsten.contests.models import Competition, Semester, Round, Task, Category
 from trojsten.people.models import User, UserProperty, UserPropertyKey
+from trojsten.rules.kms import KMS_ALFA, KMS_BETA, KMS_COEFFICIENT_PROP_NAME
 from trojsten.submit.models import Submit
 
 
