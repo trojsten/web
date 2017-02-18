@@ -172,4 +172,11 @@
       }
       </script>
 {% endaddtoblock %}
+
+{% endblock %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/jquery-ui-autocomplete/jquery-ui-1.9.2-autocomplete.min.css" %}" type="text/css">
+<link rel="stylesheet" href="{% static "css/bootstrap-datetimepicker.min.css" %}" type="text/css">
 {% endblock %}
