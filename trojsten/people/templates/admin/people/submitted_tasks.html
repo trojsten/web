@@ -1,0 +1,31 @@
+{% extends "admin/review_base.html" %}
+{% load i18n admin_urls admin_static admin_modify %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='people' %}">{% trans "People" %}</a>
+    &rsaquo; <a href="{% url 'admin:people_user_changelist' %}">{% trans "Users" %}</a>
+    &rsaquo; <a href="{% url 'admin:people_user_change' user.pk %}">{{ user }}</a>
+    &rsaquo; {% trans 'Submitted tasks' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<h1>{% trans "Submitted tasks of user" %} {{ user }}</h1>
+{% blocktrans %}
+Check which tasks has the competitor sent. This form can't be used to delete submits of a user.
+To delete some submits contact person who knows how to do so.
+<br>
+You can go down through the checkboxes using the tab-key and check the boxes with space.
+<br>
+To change round select the desired round below and click submit.
+{% endblocktrans %}
+<form method="post" action=""> {% csrf_token %}
+    <table>
+        {{ form }}
+    </table>
+    <input type="submit" text="Save"/>
+</form>
+
+{% endblock %}
