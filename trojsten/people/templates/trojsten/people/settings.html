@@ -169,10 +169,6 @@
         $('div#items_container').append(compiledTmpl);
         // update form count
         $('#id_properties-TOTAL_FORMS').attr('value', count+1);
-        // some animate to scroll to view our new form
-        $('html, body').animate({
-           scrollTop: $("#add-item-button").position().top-200
-        }, 800);
       }
       </script>
 {% endaddtoblock %}
