@@ -14,6 +14,7 @@ Trojstenovy web
 - https://fks.sk
 - https://ufo.fks.sk
 - https://fx.fks.sk
+- https://kms.sk
 - https://wiki.trojsten.sk
 - https://login.trojsten.sk
 
@@ -21,3 +22,4 @@ Trojstenovy web
 - https://github.com/koniiiik/ksp_login
 - https://github.com/trojsten/news
 - https://github.com/trojsten/django-tips
+- https://github.com/trojsten/submit
