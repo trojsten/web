@@ -9568,8 +9568,8 @@ footer a:visited {
   vertical-align: middle !important;
 }
 .tab-content > .tab-pane {
-  margin-top: -100px;
-  padding-top: 100px;
+  margin-top: -120px;
+  padding-top: 120px;
 }
 .settings-tabs {
   margin-bottom: 15px;
@@ -9649,6 +9649,9 @@ footer ul {
 .wiki-article h3 {
   margin-top: -60px;
   padding-top: 65px;
+}
+.wiki-article.archive {
+  padding-top: 60px;
 }
 .footnoteRef sup {
   margin-top: -65px;
