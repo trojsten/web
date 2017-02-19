@@ -20,8 +20,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
-from trojsten.submit.helpers import (get_lang_from_filename, get_path_raw,
-                                     post_submit, write_chunks_to_file)
+from trojsten.old_submit.helpers import (get_lang_from_filename, get_path_raw,
+                                         post_submit, write_chunks_to_file)
 from trojsten.utils.test_utils import get_noexisting_id
 
 from .models import ExternalSubmitToken, Submit
@@ -530,7 +530,7 @@ class ExternalSubmitKeyTests(TestCase):
         )
 
     def _post_external_submit(self, data):
-        url = reverse('external_submit')
+        url = reverse('old_external_submit')
         return self.client.post(
             url, json.dumps(data),
             content_type="application/json",
@@ -567,6 +567,6 @@ class ExternalSubmitKeyTests(TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_external_submit_invalid_method(self):
-        url = reverse('external_submit')
+        url = reverse('old_external_submit')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 405)

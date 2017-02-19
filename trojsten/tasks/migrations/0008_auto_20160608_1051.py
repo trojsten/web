@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('tasks', '0007_auto_20160608_1051'),
-        ('submit', '0001_initial'),
+        ('old_submit', '0001_initial'),
     ]
 
     state_operations = [

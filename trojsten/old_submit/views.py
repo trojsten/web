@@ -20,11 +20,11 @@ from unidecode import unidecode
 
 from trojsten.contests.models import Competition, Round
 from trojsten.contests.models import Task
-from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
-                                   TestableZipSubmitForm)
-from trojsten.submit.helpers import (get_path, process_submit, update_submit,
-                                     write_chunks_to_file)
-from trojsten.submit.templatetags.submit_parts import submitclass
+from trojsten.old_submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
+                                       TestableZipSubmitForm)
+from trojsten.old_submit.helpers import (get_path, process_submit, update_submit,
+                                         write_chunks_to_file)
+from trojsten.old_submit.templatetags.old_submit_parts import submitclass
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
@@ -111,7 +111,7 @@ def view_protocol(request, submit_id):
         template_data['submit'] = submit
         template_data['submit_verbose_response'] = constants.SUBMIT_VERBOSE_RESPONSE
         return render(
-            request, 'trojsten/submit/protocol.html', template_data
+            request, 'trojsten/old_submit/protocol.html', template_data
         )
     else:
         raise Http404
@@ -155,7 +155,7 @@ def view_submit(request, submit_id):
         else:
             template_data['fileReady'] = False  # File does not exist on server
         return render(
-            request, 'trojsten/submit/view_submit.html', template_data
+            request, 'trojsten/old_submit/view_submit.html', template_data
         )
 
     # For description submits, return submitted file.
@@ -174,7 +174,7 @@ def view_submit(request, submit_id):
 
     else:
         return render(
-            request, 'trojsten/submit/view_submit.html', {
+            request, 'trojsten/old_submit/view_submit.html', {
                 'submit': submit,
                 'source': False,
             }
@@ -187,7 +187,7 @@ def task_submit_page(request, task_id):
     prave prihlaseneho cloveka pre danu ulohu"""
     task = get_object_or_404(Task, pk=task_id)
     template_data = {'task': task}
-    return render(request, 'trojsten/submit/task_submit.html', template_data)
+    return render(request, 'trojsten/old_submit/task_submit.html', template_data)
 
 
 @login_required
@@ -196,7 +196,7 @@ def round_submit_page(request, round_id):
     z daného kola"""
     round = get_object_or_404(Round, pk=round_id)
     template_data = {'round': round}
-    return render(request, 'trojsten/submit/round_submit.html', template_data)
+    return render(request, 'trojsten/old_submit/round_submit.html', template_data)
 
 
 @login_required
@@ -209,7 +209,7 @@ def active_rounds_submit_page(request):
     }
     return render(
         request,
-        'trojsten/submit/active_rounds_submit.html',
+        'trojsten/old_submit/active_rounds_submit.html',
         template_data,
     )
 

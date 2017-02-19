@@ -19,6 +19,7 @@ django-sendfile
 django-sortedm2m
 django-tips
 django-trojsten-news
+django-trojsten-submit
 django-threadedcomments
 Django<1.10
 djangorestframework

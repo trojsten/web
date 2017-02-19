@@ -7,7 +7,7 @@ from trojsten.contests.models import Round
 from trojsten.results.constants import DEFAULT_TAG_KEY
 from trojsten.results.generator import ResultsGenerator
 from trojsten.results.representation import ResultsTag
-from trojsten.submit import constants as submit_constants
+from trojsten.old_submit import constants as submit_constants
 
 
 class CompetitionRules(object):

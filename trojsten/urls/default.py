@@ -5,7 +5,7 @@ import trojsten.contests.urls
 import trojsten.contests.views
 import trojsten.login.views
 import trojsten.results.urls
-import trojsten.submit.urls
+import trojsten.old_submit.urls
 from django.conf.urls import include, url
 from django.contrib import admin
 from django_nyt.urls import get_pattern as get_notify_pattern
@@ -16,7 +16,7 @@ from .common import urlpatterns as common_urlpatterns
 urlpatterns = common_urlpatterns + [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^ucet/', include('ksp_login.urls')),
-    url(r'^odovzdavanie/', include(trojsten.submit.urls)),
+    url(r'^odovzdavanie/', include(trojsten.old_submit.urls)),
     url(r'^vysledky/', include(trojsten.results.urls)),
     url(r'^novinky/', include(news.urls)),
     url(r'^ulohy/', include(trojsten.contests.urls)),

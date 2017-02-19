@@ -206,7 +206,7 @@ INSTALLED_APPS = (
     'trojsten.contests',
     'trojsten.tasks',
     'trojsten.events',
-    'trojsten.submit',
+    'trojsten.old_submit',
     'trojsten.results',
     'trojsten.reviews',
     'trojsten.menu',

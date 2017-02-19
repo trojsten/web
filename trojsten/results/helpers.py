@@ -3,8 +3,8 @@
 from collections import defaultdict, namedtuple
 
 from trojsten.contests.models import Round
-from trojsten.submit import constants as submit_constants
-from trojsten.submit.models import Submit
+from trojsten.old_submit import constants as submit_constants
+from trojsten.old_submit.models import Submit
 from trojsten.contests.models import Task
 
 from .models import FrozenResults

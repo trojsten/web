@@ -17,7 +17,7 @@ from import_export import fields, resources
 from import_export.admin import ExportMixin
 
 from trojsten.contests.models import Competition, Semester
-from trojsten.submit.models import Submit
+from trojsten.old_submit.models import Submit
 from trojsten.utils.utils import attribute_format
 
 from . import constants

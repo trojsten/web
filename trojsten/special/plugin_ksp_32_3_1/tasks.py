@@ -7,9 +7,9 @@ from subprocess import PIPE, Popen
 from celery import shared_task
 
 from trojsten.people.models import User
-from trojsten.submit.constants import (SUBMIT_TYPE_EXTERNAL, SUBMIT_RESPONSE_OK,
-                                       SUBMIT_STATUS_FINISHED)
-from trojsten.submit.models import Submit
+from trojsten.old_submit.constants import (SUBMIT_TYPE_EXTERNAL, SUBMIT_RESPONSE_OK,
+                                           SUBMIT_STATUS_FINISHED)
+from trojsten.old_submit.models import Submit
 from trojsten.contests.models import Task
 
 from .constants import DATA_ROOT

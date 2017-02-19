@@ -7,7 +7,7 @@ from django.utils import timezone
 from trojsten.contests.models import Competition, Semester, Round, Task, Category
 from trojsten.people.models import User, UserProperty, UserPropertyKey
 from trojsten.rules.kms import KMS_ALFA, KMS_BETA, KMS_COEFFICIENT_PROP_NAME
-from trojsten.submit.models import Submit
+from trojsten.old_submit.models import Submit
 
 
 def get_row_for_user(tables, user, category):

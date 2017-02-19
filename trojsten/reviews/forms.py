@@ -23,7 +23,7 @@ from unidecode import unidecode
 from trojsten.people.models import User
 from trojsten.reviews.constants import RE_FILENAME, RE_LAST_NAME, RE_SUBMIT_PK
 from trojsten.reviews.helpers import edit_review, submit_review
-from trojsten.submit.helpers import write_chunks_to_file
+from trojsten.old_submit.helpers import write_chunks_to_file
 
 reviews_upload_pattern = re.compile(
     r'(?P<%s>.*)_(?P<%s>[0-9]+)/(?!source/)(?P<%s>.+\.[^.]+)' % (

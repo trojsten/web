@@ -18,7 +18,7 @@ from unidecode import unidecode
 from trojsten.people.models import User
 from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
-from trojsten.submit import constants as submit_constants
+from trojsten.old_submit import constants as submit_constants
 from trojsten.utils import utils
 
 from . import constants

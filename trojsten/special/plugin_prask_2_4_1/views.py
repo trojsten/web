@@ -8,8 +8,8 @@ from django.db.models import Max
 from django.http.response import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from trojsten.submit.constants import SUBMIT_TYPE_EXTERNAL
-from trojsten.submit.models import Submit
+from trojsten.old_submit.constants import SUBMIT_TYPE_EXTERNAL
+from trojsten.old_submit.models import Submit
 from trojsten.contests.models import Task
 
 from .forms import SubmitForm

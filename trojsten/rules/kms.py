@@ -2,7 +2,7 @@ from trojsten.results.constants import COEFFICIENT_COLUMN_KEY
 from trojsten.results.generator import (CategoryTagKeyGeneratorMixin,
                                         ResultsGenerator)
 from trojsten.results.representation import ResultsTag, ResultsCell, ResultsCol
-from trojsten.submit.models import Submit
+from trojsten.old_submit.models import Submit
 from .default import CompetitionRules
 from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 

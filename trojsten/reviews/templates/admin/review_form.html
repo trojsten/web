@@ -38,7 +38,7 @@
     <tbody>
 {% for user, data in users.items %}
     <tr>
-    <td><a href="{% url 'admin:submit_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a></td>
+    <td><a href="{% url 'admin:old_submit_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a></td>
     <td>
     {% if data.description %}
         <a href="{% url 'admin:submit_download' data.description.pk %}">{% trans 'Download' %}</a>
@@ -47,7 +47,7 @@
 
     <td>
     {% if data.review %}
-        <a href="{% url 'admin:submit_submit_change' data.review.pk %}">{% trans 'View' %}</a>
+        <a href="{% url 'admin:old_submit_submit_change' data.review.pk %}">{% trans 'View' %}</a>
         <a href="{% url 'admin:review_edit' task.pk data.review.pk %}">{% trans 'Edit' %}</a>
     {% endif %}
     {% if data.description %}

@@ -23,8 +23,8 @@ from trojsten.reviews.helpers import (get_latest_submits_for_task,
                                       submit_download_filename,
                                       submit_protocol_download_filename,
                                       submit_source_download_filename)
-from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
-from trojsten.submit.models import Submit
+from trojsten.old_submit.constants import SUBMIT_STATUS_REVIEWED
+from trojsten.old_submit.models import Submit
 from trojsten.contests.models import Task
 
 

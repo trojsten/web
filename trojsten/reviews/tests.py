@@ -26,8 +26,8 @@ from trojsten.people.models import User
 from trojsten.reviews import constants as review_constants
 from trojsten.reviews import helpers
 from trojsten.reviews.forms import ZipForm
-from trojsten.submit import constants as submit_constants
-from trojsten.submit.models import Submit
+from trojsten.old_submit import constants as submit_constants
+from trojsten.old_submit.models import Submit
 from trojsten.utils.test_utils import get_noexisting_id
 
 try:

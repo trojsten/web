@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     ]
 
     database_operations = [
-        migrations.AlterModelTable('Submit', 'submit_submit')
+        migrations.AlterModelTable('Submit', 'old_submit_submit')
     ]
 
     operations = [

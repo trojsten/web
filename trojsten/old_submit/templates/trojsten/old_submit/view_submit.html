@@ -1,5 +1,5 @@
 {% extends "trojsten/layout/main.html" %}
-{% load staticfiles submit_parts %}
+{% load staticfiles old_submit_parts %}
 {% load utils %}
 
 {% block title %}Detaily submitu{% endblock %}
@@ -34,7 +34,7 @@
     {% is_organizer competition=submit.task.round.semester.competition as is_organizer %}
     {% if is_organizer %}
         <li class="pull-right">
-            <a href="{% url 'admin:submit_submit_change' submit.id %}">
+            <a href="{% url 'admin:old_submit_submit_change' submit.id %}">
                 <span class="glyphicon glyphicon-pencil"></span> Upraviť
             </a>
         </li>
@@ -44,7 +44,7 @@
 {% block page_content %}
     {% if source %}
     <div class="submit-protocol" data-id="{{ submit.id }}" data-ready="{{ protocolReady }}">
-        {% include "trojsten/submit/protocol.html" %}
+        {% include "trojsten/old_submit/protocol.html" %}
     </div>
     <h3>Odovzdaný program</h3>
     {% if fileReady %}

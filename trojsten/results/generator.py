@@ -4,8 +4,8 @@ from django.contrib.auth import get_user_model
 
 from trojsten.people.constants import (GRADUATION_SCHOOL_YEAR,
                                        SCHOOL_YEAR_END_MONTH)
-from trojsten.submit import constants as submit_constants
-from trojsten.submit.models import Submit
+from trojsten.old_submit import constants as submit_constants
+from trojsten.old_submit.models import Submit
 from trojsten.contests.models import Task
 
 from . import constants as c
