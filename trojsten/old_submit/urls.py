@@ -3,12 +3,6 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.active_rounds_submit_page,
-        name='active_rounds_submit_page'),
-    url(r'^uloha/(?P<task_id>\d+)/$', views.task_submit_page,
-        name='task_submit_page'),
-    url(r'^kolo/(?P<round_id>\d+)/$', views.round_submit_page,
-        name='round_submit_page'),
     url(r'^(?P<task_id>\d+)/(?P<submit_type>\d+)/$', views.task_submit_post,
         name='task_submit_post'),
     url(r'^ajax/old_submit/(?P<submit_id>\d+)/info.json$', views.poll_submit_info,
@@ -24,5 +18,4 @@ urlpatterns = [
     url(r'^ajax/externy_submit/$',
         views.external_submit,
         name='old_external_submit'),
-
 ]

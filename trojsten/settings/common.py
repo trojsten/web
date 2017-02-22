@@ -214,9 +214,11 @@ INSTALLED_APPS = (
     'trojsten.dbsanitizer',
     'trojsten.login',
     'trojsten.schools',
+    'trojsten.submit_utils',
     'trojsten.contact_form',
 
     # Keep this under trojsten to let trojsten override templates.
+    # 'submit',
     'news',
     'tips',
     'django.contrib.admin',
@@ -462,7 +464,7 @@ FROZEN_RESULTS_PATH = env(
     os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, 'frozen_results')
 )
 
-# Submit settings
+# Old Submit settings
 SUBMIT_DEBUG = bool(int(env('TROJSTENWEB_SUBMIT_DEBUG', '0')))
 SUBMIT_PATH = env('TROJSTENWEB_SUBMIT_PATH', os.path.join(
     PROJECT_DIR, PROJECT_MODULE_NAME, 'submits')
@@ -473,6 +475,9 @@ PROTOCOL_FILE_EXTENSION = env('TROJSTENWEB_PROTOCOL_FILE_EXTENSION', '.protokol'
 TESTER_URL = env('TROJSTENWEB_TESTER_URL', 'experiment')
 TESTER_PORT = int(env('TROJSTENWEB_TESTER_PORT', '12347'))
 TESTER_WEB_IDENTIFIER = env('TROJSTENWEB_TESTER_WEB_IDENTIFIER', 'KSP')
+
+# New Submit settings
+SUBMIT_TASK_MODEL = 'contests.Task'
 
 # Rules settings
 COMPETITION_RULES = {

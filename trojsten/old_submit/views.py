@@ -2,9 +2,9 @@
 # Create your views here.
 
 import json
-import os
 import xml.etree.ElementTree as ET
 
+import os
 import six
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -18,13 +18,12 @@ from rest_framework.response import Response as APIResponse
 from sendfile import sendfile
 from unidecode import unidecode
 
-from trojsten.contests.models import Competition, Round
 from trojsten.contests.models import Task
 from trojsten.old_submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
                                        TestableZipSubmitForm)
 from trojsten.old_submit.helpers import (get_path, process_submit, update_submit,
                                          write_chunks_to_file)
-from trojsten.old_submit.templatetags.old_submit_parts import submitclass
+from trojsten.submit_utils.templatetags.submit_utils_parts import submitclass
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
@@ -179,39 +178,6 @@ def view_submit(request, submit_id):
                 'source': False,
             }
         )
-
-
-@login_required
-def task_submit_page(request, task_id):
-    """View, ktory zobrazi formular na odovzdanie a zoznam submitov
-    prave prihlaseneho cloveka pre danu ulohu"""
-    task = get_object_or_404(Task, pk=task_id)
-    template_data = {'task': task}
-    return render(request, 'trojsten/old_submit/task_submit.html', template_data)
-
-
-@login_required
-def round_submit_page(request, round_id):
-    """View, ktorý zobrazí formuláre pre odovzdanie pre všetky úlohy
-    z daného kola"""
-    round = get_object_or_404(Round, pk=round_id)
-    template_data = {'round': round}
-    return render(request, 'trojsten/old_submit/round_submit.html', template_data)
-
-
-@login_required
-def active_rounds_submit_page(request):
-    rounds = Round.objects.active_visible(request.user).order_by('end_time')
-    competitions = Competition.objects.current_site_only()
-    template_data = {
-        'rounds': rounds,
-        'competitions': competitions,
-    }
-    return render(
-        request,
-        'trojsten/old_submit/active_rounds_submit.html',
-        template_data,
-    )
 
 
 def receive_protocol(request, protocol_id):

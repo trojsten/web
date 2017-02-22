@@ -4,13 +4,13 @@ from trojsten.old_submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
                                        TestableZipSubmitForm)
 from trojsten.contests.models import Task
 
-from .. import constants
-from ..models import Submit
+from trojsten.old_submit import constants
+from trojsten.old_submit.models import Submit
 
 register = template.Library()
 
 
-@register.inclusion_tag('trojsten/old_submit/parts/submit_form.html')
+@register.inclusion_tag('trojsten/submit_utils/parts/submit_form.html')
 def show_submit_form(task, redirect):
     """Renders submit form for specified task"""
     data = {}
@@ -26,7 +26,7 @@ def show_submit_form(task, redirect):
     return data
 
 
-@register.inclusion_tag('trojsten/old_submit/parts/submit_list.html')
+@register.inclusion_tag('trojsten/submit_utils/parts/submit_list.html')
 def show_submit_list(task, user):
     """Renders submit list for specified task and user"""
     data = {'IN_QUEUE': constants.SUBMIT_STATUS_IN_QUEUE}
@@ -53,7 +53,7 @@ def submitclass(submit):
         return 'danger submit-tested'
 
 
-@register.inclusion_tag('trojsten/old_submit/parts/round_submit_form.html', takes_context=True)
+@register.inclusion_tag('trojsten/submit_utils/parts/round_submit_form.html', takes_context=True)
 def round_submit_form(context, round):
     """View, showing submit form for all tasks from round
     """
