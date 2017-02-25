@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-18 21:32+0100\n"
+"POT-Creation-Date: 2017-02-25 19:40+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -255,6 +255,10 @@ msgstr ""
 msgid "The two password fields didn't match."
 msgstr ""
 
+#: people/forms.py:454
+msgid "Round"
+msgstr "Kolo"
+
 #: people/models.py:225
 msgid "Value \"{}\" does not match regex \"{}\"."
 msgstr ""
@@ -316,14 +320,24 @@ msgstr "Úlohy odovzdané riešiteľom"
 #: people/templates/admin/people/submitted_tasks.html:16
 msgid ""
 "\n"
+"You are viewing submits for round:\n"
+msgstr ""
+"\n"
+"Prezeráš si odovzdané úlohy pre kolo:\n"
+
+#: people/templates/admin/people/submitted_tasks.html:23
+msgid "Change round"
+msgstr "Zmeň kolo"
+
+#: people/templates/admin/people/submitted_tasks.html:27
+msgid ""
+"\n"
 "Check which tasks has the competitor sent. This form can't be used to delete "
 "submits of a user.\n"
 "To delete some submits contact person who knows how to do so.\n"
 "<br>\n"
 "You can go down through the checkboxes using the tab-key and check the boxes "
 "with spacebar.\n"
-"<br>\n"
-"To change round select the desired round below and click submit.\n"
 msgstr ""
 "\n"
 "Zaškrtni úlohy, ktoré riešiteľ poslal. Tento formulár nemožno použiť na "
@@ -332,8 +346,6 @@ msgstr ""
 "<br>\n"
 "Cez políčka môžeš prechádzať pomocou tabulátora a zaškrkávať ich "
 "medzerníkom.\n"
-"<br>\n"
-"Pre zmenu kola vyber požadované kolo a klikni na Submit.\n"
 
 #: people/templates/trojsten/people/settings.html:10
 #: people/templates/trojsten/people/settings.html:13
