@@ -84,14 +84,9 @@ def settings(request, settings_form=UserProfileForm):
 def submitted_tasks(request, user_pk, round_pk):
     user = get_object_or_404(User, pk=user_pk)
     round = get_object_or_404(Round, pk=round_pk)
-    # competition = Competition.objects.current_site_only()[0]
-    # rules = get_rules_for_competition(competition)
-    # round = rules.get_actual_result_rounds(competition)[0]
     if request.method == 'POST':
-        print request.POST
         roundform = RoundSelectForm(request.POST)
         if roundform.is_valid():
-            print roundform.cleaned_data
             round = roundform.cleaned_data['round']
         else:
             form = SubmittedTasksFrom(request.POST, round=round)
@@ -134,10 +129,3 @@ def submitted_tasks_for_latest_round(request, user_pk):
     rules = get_rules_for_competition(competition)
     round = rules.get_actual_result_rounds(competition)[0]
     return submitted_tasks(request, user_pk, round.pk)
-
-
-# def submitted_tasks_round_changed(request, user_pk):
-#     if request.method == "POST":
-#         roundform = RoundSelectForm(request.POST)
-#         if roundform.is_valid():
-#             return submitted_tasks(request, user_pk, roundform.cleaned_data['round'].pk)
