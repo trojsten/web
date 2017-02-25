@@ -5,7 +5,6 @@ import datetime
 import random
 
 from django.conf import settings
-from django.contrib.auth import login
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
@@ -419,7 +418,6 @@ class EnvelopingTests(TestCase):
         }
         self.client.force_login(self.staff_user)
         response = self.client.post(self.url, data, follow=True)
-        print "RESPNOSE: ", response
         self.assertEqual(response.status_code, 200)
         for task_number in data.keys():
             self.assertGreater(Submit.objects.filter(

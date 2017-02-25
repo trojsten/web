@@ -440,9 +440,9 @@ class SubmittedTasksFrom(forms.Form):
 
 class RoundSelectForm(forms.Form):
     round = forms.ModelChoiceField(
-            label=_('Round'),
-            queryset=Round.objects.filter(
-                semester__competition__in=Competition.objects.current_site_only()
-            ).order_by('-end_time'),
-            initial=round
+        label=_('Round'),
+        queryset=Round.objects.filter(
+            semester__competition__in=Competition.objects.current_site_only()
+        ).order_by('-end_time'),
+        initial=round
     )

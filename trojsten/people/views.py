@@ -7,7 +7,6 @@ from social.apps.django_app.default.models import UserSocialAuth
 
 from trojsten.contests.models import Competition, Task, Round
 from trojsten.people.models import User
-from trojsten.rules import get_rules_for_competition
 from trojsten.submit.constants import SUBMIT_TYPE_DESCRIPTION, SUBMIT_STATUS_IN_QUEUE,\
     SUBMIT_PAPER_FILEPATH
 from trojsten.submit.models import Submit
@@ -125,7 +124,6 @@ def submitted_tasks(request, user_pk, round_pk):
 
 
 def submitted_tasks_for_latest_round(request, user_pk):
-    competition = Competition.objects.current_site_only()[0]
-    rules = get_rules_for_competition(competition)
-    round = rules.get_actual_result_rounds(competition)[0]
+    competition = Competition.objects.current_site_only().first()
+    round = Round.objects.latest_finished_for_competition(competition)
     return submitted_tasks(request, user_pk, round.pk)
