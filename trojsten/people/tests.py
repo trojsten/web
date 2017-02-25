@@ -5,17 +5,23 @@ import datetime
 import random
 
 from django.conf import settings
+from django.contrib.auth import login
 from django.contrib.auth.models import Group
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.http.request import HttpRequest
 from django.test import TestCase
+from django.utils import timezone
 
 from trojsten.contests import constants as contests_constants
 from trojsten.contests.models import Competition, Round, Semester, Task
+from trojsten.rules.kms import KMS_COEFFICIENT_PROP_NAME
 from trojsten.schools.models import School
+from trojsten.submit.constants import SUBMIT_STATUS_IN_QUEUE, SUBMIT_TYPE_DESCRIPTION
+from trojsten.submit.models import Submit
 
 from . import constants
-from .forms import TrojstenUserChangeForm, TrojstenUserCreationForm
+from .forms import TrojstenUserChangeForm, TrojstenUserCreationForm, SubmittedTasksFrom
 from .helpers import get_similar_users, merge_users
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
 
@@ -372,3 +378,57 @@ class SettingsViewTests(TestCase):
         self.assertContains(response, self.element_login)
         self.assertContains(response, 'supercoollogin')
         self.assertContains(response, self.kaspar_id)
+
+
+class EnvelopingTests(TestCase):
+    def setUp(self):
+        group = Group.objects.create(name='staff')
+        competition = Competition.objects.create(name='TestCompetition', pk=7, organizers_group=group)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        semester = Semester.objects.create(number=1, name='Test semester', competition=competition,
+                                           year=1)
+        start = timezone.now() + timezone.timedelta(-8)
+        end = timezone.now() + timezone.timedelta(-2)
+        Round.objects.create(pk=1, number=1, semester=semester, visible=True,
+                             solutions_visible=False, start_time=start,
+                             end_time=end + timezone.timedelta(-1))
+        self.round = Round.objects.create(pk=2, number=2, semester=semester, visible=True,
+                                          solutions_visible=False, start_time=start, end_time=end)
+        self.tasks = [None]
+        for i in range(1, 11):
+            task = Task.objects.create(number=i, name='Test task {}'.format(i), round=self.round)
+            self.tasks.append(task)
+        self.user = User.objects.create(username="TestUser", password="password",
+                                        first_name="Jozko", last_name="Mrkvicka",
+                                        graduation=timezone.now().year + 2)
+        self.coeff_prop_key = UserPropertyKey.objects.create(key_name=KMS_COEFFICIENT_PROP_NAME)
+        self.url = reverse('admin:submitted_tasks',
+                           kwargs={'user_pk': self.user.pk, 'round_pk': self.round.pk})
+        self.staff_user = User.objects.create_superuser('admin', 'mail@e.com', 'password')
+
+    def test_correct_tasks_in_form(self):
+        form = SubmittedTasksFrom(round=self.round)
+        for i in range(1, 11):
+            self.assertIn(str(i), form.fields.keys())
+
+    def test_add_new_submits(self):
+        data = {
+            '2': 'on',
+            '3': 'on',
+            '5': 'on',
+        }
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url, data, follow=True)
+        print "RESPNOSE: ", response
+        self.assertEqual(response.status_code, 200)
+        for task_number in data.keys():
+            self.assertGreater(Submit.objects.filter(
+                user=self.user, task__number=task_number, points=0,
+                submit_type=SUBMIT_TYPE_DESCRIPTION,
+                testing_status=SUBMIT_STATUS_IN_QUEUE).count(), 0)
+
+    def test_round_change(self):
+        self.client.force_login(self.staff_user)
+        respose = self.client.post(self.url, {'round': '1'})
+        self.assertEqual(respose.status_code, 200)
+        self.assertEqual(respose.context['round'].pk, 1)
