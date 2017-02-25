@@ -3,14 +3,13 @@ from collections import OrderedDict
 
 from django import forms
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import string_concat
+from django.utils.translation import ugettext_lazy as _
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
 
 from trojsten.contests.models import Task, Round, Competition
 from trojsten.people.models import Address, DuplicateUser, User
-
 from . import constants
 from .helpers import get_similar_users
 
