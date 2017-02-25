@@ -8,7 +8,7 @@ from django.utils.translation import string_concat
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
 
-from trojsten.contests.models import Task, Round
+from trojsten.contests.models import Task, Round, Competition
 from trojsten.people.models import Address, DuplicateUser, User
 
 from . import constants
@@ -435,11 +435,24 @@ class SubmittedTasksFrom(forms.Form):
     def __init__(self, *args, **kwargs):
         round = kwargs.pop('round')
         super(SubmittedTasksFrom, self).__init__(*args, **kwargs)
-        self.fields['round'] = forms.ModelChoiceField(
-            queryset=Round.objects.all(), initial=round)
+        # self.fields['round'] = forms.ModelChoiceField(
+        #     queryset=Round.objects.filter(
+        #         semester__competition__in=Competition.objects.current_site_only()
+        #     ).order_by('-end_time'),
+        #     initial=round
+        # )
         for task in Task.objects.filter(round=round).order_by('number'):
             # self.fields[str(task.number)] = forms.CharField(label=str(task.number), required=False,
             #                                            max_length=4)
             self.fields[str(task.number)] = forms.BooleanField(required=False)
         # choices.append((task.number, task.number))
         # self.fields['submitted_tasks'].choices = choices
+
+
+class RoundSelectForm(forms.Form):
+    round = forms.ModelChoiceField(
+            queryset=Round.objects.filter(
+                semester__competition__in=Competition.objects.current_site_only()
+            ).order_by('-end_time'),
+            initial=round
+    )
