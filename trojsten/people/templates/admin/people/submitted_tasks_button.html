@@ -3,7 +3,7 @@
 
 {% block object-tools-items %}
 	<li>
-	<a href="{% url 'admin:submitted_tasks' original.pk %}" class="historylink">{% trans 'Submitted tasks' %}</a>
+	<a href="{% url 'admin:submitted_tasks_for_latest_round' original.pk %}" class="historylink">{% trans 'Submitted tasks' %}</a>
 	</li>
 	{{ block.super}}
 {% endblock %}

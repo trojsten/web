@@ -14,14 +14,23 @@
 {% block content %}
 <h1>{% trans "Tasks submitted by competitor" %} {{ user }}</h1>
 {% blocktrans %}
+You are viewing submits for following round.
+{% endblocktrans %}
+<form method="post" action="{% url 'admin:submitted_tasks' user.pk round.pk%}"> {% csrf_token %}
+    <table>
+        <tr>
+        <td> {{ roundform.as_p }} </td>
+        <td> <input type="submit" text="Save" value="_(Change round)"/> </td>
+        </tr>
+    </table>
+</form>
+{% blocktrans %}
 Check which tasks has the competitor sent. This form can't be used to delete submits of a user.
 To delete some submits contact person who knows how to do so.
 <br>
 You can go down through the checkboxes using the tab-key and check the boxes with spacebar.
-<br>
-To change round select the desired round below and click submit.
 {% endblocktrans %}
-<form method="post" action=""> {% csrf_token %}
+<form method="post" action="{% url 'admin:submitted_tasks' user.pk round.pk%}"> {% csrf_token %}
     <table>
         {{ form }}
     </table>

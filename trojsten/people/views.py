@@ -5,13 +5,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from ksp_login.forms import UserProfileForm, get_profile_forms
 from social.apps.django_app.default.models import UserSocialAuth
 
-from trojsten.contests.models import Competition, Task
+from trojsten.contests.models import Competition, Task, Round
 from trojsten.people.models import User
 from trojsten.rules import get_rules_for_competition
 from trojsten.submit.models import Submit
 from trojsten.submit.constants import SUBMIT_TYPE_DESCRIPTION, SUBMIT_STATUS_IN_QUEUE,\
     SUBMIT_PAPER_FILEPATH
-from .forms import SubmittedTasksFrom
+from .forms import SubmittedTasksFrom, RoundSelectForm
 from .models import UserProperty
 
 
@@ -81,18 +81,22 @@ def settings(request, settings_form=UserProfileForm):
     })
 
 
-def submitted_tasks(request, user_pk):
+def submitted_tasks(request, user_pk, round_pk):
     user = get_object_or_404(User, pk=user_pk)
-    competition = Competition.objects.current_site_only()[0]
-    rules = get_rules_for_competition(competition)
-    round = rules.get_actual_result_rounds(competition)[0]
+    round = get_object_or_404(Round, pk=round_pk)
+    # competition = Competition.objects.current_site_only()[0]
+    # rules = get_rules_for_competition(competition)
+    # round = rules.get_actual_result_rounds(competition)[0]
     if request.method == 'POST':
-        form = SubmittedTasksFrom(request.POST, round=round)
         print request.POST
-        if form.is_valid():
-            data = form.cleaned_data
-            print data
-            if data['round'] == round:
+        roundform = RoundSelectForm(request.POST)
+        if roundform.is_valid():
+            print roundform.cleaned_data
+            round = roundform.cleaned_data['round']
+        else:
+            form = SubmittedTasksFrom(request.POST, round=round)
+            if form.is_valid():
+                data = form.cleaned_data
                 for task in Task.objects.filter(round=round):
                     if data[str(task.number)]:
                         submit, created = Submit.objects.get_or_create(
@@ -109,16 +113,31 @@ def submitted_tasks(request, user_pk):
                             submit.time = round.end_time
                             submit.save()
                 return redirect('admin:people_user_change', user.pk)
-            else:
-                round = data['round']
     form = SubmittedTasksFrom(round=round)
+    roundform = RoundSelectForm()
+    roundform.initial['round'] = round
     for submit in Submit.objects.filter(task__round=round, user=user):
         form.initial[str(submit.task.number)] = True
     context = {
         'round': round,
         'form': form,
+        'roundform': roundform,
         'user': user
     }
     return render(
         request, 'admin/people/submitted_tasks.html', context
     )
+
+
+def submitted_tasks_for_latest_round(request, user_pk):
+    competition = Competition.objects.current_site_only()[0]
+    rules = get_rules_for_competition(competition)
+    round = rules.get_actual_result_rounds(competition)[0]
+    return submitted_tasks(request, user_pk, round.pk)
+
+
+# def submitted_tasks_round_changed(request, user_pk):
+#     if request.method == "POST":
+#         roundform = RoundSelectForm(request.POST)
+#         if roundform.is_valid():
+#             return submitted_tasks(request, user_pk, roundform.cleaned_data['round'].pk)
