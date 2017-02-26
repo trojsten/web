@@ -439,10 +439,11 @@ class SubmittedTasksFrom(forms.Form):
 
 
 class RoundSelectForm(forms.Form):
-    round = forms.ModelChoiceField(
-        label=_('Round'),
-        queryset=Round.objects.filter(
-            semester__competition__in=Competition.objects.current_site_only()
-        ).order_by('-end_time'),
-        initial=round
-    )
+    def __init__(self, *args, **kwargs):
+        super(RoundSelectForm, self).__init__(*args, **kwargs)
+        self.fields['round'] = forms.ModelChoiceField(
+            label=_('Round'),
+            queryset=Round.objects.filter(
+                semester__competition__in=Competition.objects.current_site_only()
+            ).order_by('-end_time'),
+        )

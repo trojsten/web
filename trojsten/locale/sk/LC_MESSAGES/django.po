@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-25 23:06+0100\n"
+"POT-Creation-Date: 2017-02-26 13:19+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -52,55 +52,55 @@ msgid "Category doesn't correspond with competition."
 msgstr ""
 
 # pdf file names
-#: contests/models.py:242
+#: contests/models.py:243
 msgid "year"
 msgstr "ročník"
 
-#: contests/models.py:244
+#: contests/models.py:245
 msgid "round"
 msgstr "kolo"
 
-#: contests/models.py:246
+#: contests/models.py:247
 msgid "solutions"
 msgstr "vzoráky"
 
-#: contests/models.py:246
+#: contests/models.py:247
 msgid "tasks"
 msgstr "zadania"
 
-#: contests/models.py:385
+#: contests/models.py:386
 #, fuzzy
 #| msgid "tasks"
 msgid "task"
 msgstr "úloha"
 
-#: contests/models.py:388
+#: contests/models.py:389
 msgid "organizer"
 msgstr "vedúci"
 
-#: contests/models.py:391
+#: contests/models.py:392
 msgid "reviewer"
 msgstr "opravovateľ"
 
-#: contests/models.py:392
+#: contests/models.py:393
 #, fuzzy
 #| msgid "solution-writer"
 msgid "solution writer"
 msgstr "vzorákovač"
 
-#: contests/models.py:393
+#: contests/models.py:394
 msgid "proofreader"
 msgstr "recenzovač"
 
-#: contests/models.py:396
+#: contests/models.py:397
 msgid "role"
 msgstr "funkcia"
 
-#: contests/models.py:400
+#: contests/models.py:401
 msgid "Assigned user"
 msgstr "Pridelený človek"
 
-#: contests/models.py:401
+#: contests/models.py:402
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
 
@@ -255,7 +255,7 @@ msgstr ""
 msgid "The two password fields didn't match."
 msgstr ""
 
-#: people/forms.py:443
+#: people/forms.py:445
 msgid "Round"
 msgstr "Kolo"
 
@@ -332,17 +332,17 @@ msgstr "Zmeň kolo"
 #: people/templates/admin/people/submitted_tasks.html:27
 msgid ""
 "\n"
-"Check which tasks has the competitor sent. This form can't be used to delete "
-"submits of a user.\n"
-"To delete some submits contact person who knows how to do so.\n"
+"Check which tasks has the competitor sent. If you want to delete submits, "
+"leave the corresponding\n"
+"checkboxes empty. However, in this way, only paper submits can be deleted.\n"
 "<br>\n"
 "You can go down through the checkboxes using the tab-key and check the boxes "
 "with spacebar.\n"
 msgstr ""
 "\n"
-"Zaškrtni úlohy, ktoré riešiteľ poslal. Tento formulár nemožno použiť na "
-"zmazanie odovzdaných úloh riešiteľa.\n"
-"Pre zmazanie úloh kontaktuj človeka, ktorý vie, ako to spraviť.\n"
+"Zaškrtni úlohy, ktoré riešiteľ poslal. Ak chceš zmazať nejaké riešenia, "
+"ponechaj odpovedajúce checkboxy\n"
+"prázdne. Avšak týmto spôsobom možno zmazať len papierové riešeia.\n"
 "<br>\n"
 "Cez políčka môžeš prechádzať pomocou tabulátora a zaškrkávať ich "
 "medzerníkom.\n"

@@ -93,19 +93,27 @@ def submitted_tasks(request, user_pk, round_pk):
                 data = form.cleaned_data
                 for task in Task.objects.filter(round=round):
                     if data[str(task.number)]:
-                        submit, created = Submit.objects.get_or_create(
+                        exists = Submit.objects.filter(
                             task=task,
                             user=user,
                             submit_type=SUBMIT_TYPE_DESCRIPTION,
-                            defaults={
-                                'points': 0,
-                                'filepath': SUBMIT_PAPER_FILEPATH,
-                                'testing_status': SUBMIT_STATUS_IN_QUEUE,
-                            }
-                        )
-                        if created:
-                            submit.time = round.end_time
-                            submit.save()
+                        ).count() > 0
+                        if not exists:
+                            Submit.objects.create(
+                                task=task,
+                                user=user,
+                                submit_type=SUBMIT_TYPE_DESCRIPTION,
+                                points=0,
+                                filepath=SUBMIT_PAPER_FILEPATH,
+                                testing_status=SUBMIT_STATUS_IN_QUEUE,
+                            )
+                    else:
+                        Submit.objects.filter(
+                            task=task,
+                            user=user,
+                            submit_type=SUBMIT_TYPE_DESCRIPTION,
+                            filepath=SUBMIT_PAPER_FILEPATH,
+                        ).delete()
                 return redirect('admin:people_user_change', user.pk)
     form = SubmittedTasksFrom(round=round)
     roundform = RoundSelectForm()

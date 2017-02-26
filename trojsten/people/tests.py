@@ -14,9 +14,8 @@ from django.utils import timezone
 
 from trojsten.contests import constants as contests_constants
 from trojsten.contests.models import Competition, Round, Semester, Task
-from trojsten.rules.kms import KMS_COEFFICIENT_PROP_NAME
 from trojsten.schools.models import School
-from trojsten.submit.constants import SUBMIT_STATUS_IN_QUEUE, SUBMIT_TYPE_DESCRIPTION
+from trojsten.submit.constants import SUBMIT_STATUS_IN_QUEUE, SUBMIT_TYPE_DESCRIPTION, SUBMIT_PAPER_FILEPATH
 from trojsten.submit.models import Submit
 
 from . import constants
@@ -397,36 +396,109 @@ class EnvelopingTests(TestCase):
         for i in range(1, 11):
             task = Task.objects.create(number=i, name='Test task {}'.format(i), round=self.round)
             self.tasks.append(task)
-        self.user = User.objects.create(username="TestUser", password="password",
-                                        first_name="Jozko", last_name="Mrkvicka",
-                                        graduation=timezone.now().year + 2)
-        self.coeff_prop_key = UserPropertyKey.objects.create(key_name=KMS_COEFFICIENT_PROP_NAME)
-        self.url = reverse('admin:submitted_tasks',
-                           kwargs={'user_pk': self.user.pk, 'round_pk': self.round.pk})
+        self.new_user = User.objects.create(username="newuser", password="password",
+                                            first_name="Jozko", last_name="Mrkvicka",
+                                            graduation=timezone.now().year + 2)
+        self.user_with_submits = User.objects.create(username="submituser", password="password",
+                                                     first_name="Janko", last_name="Hrasko",
+                                                     graduation=timezone.now().year + 2)
+        self.url_new = reverse('admin:submitted_tasks',
+                               kwargs={'user_pk': self.new_user.pk, 'round_pk': self.round.pk})
+        self.url_submits = reverse('admin:submitted_tasks',
+                                   kwargs={'user_pk': self.user_with_submits.pk,
+                                           'round_pk': self.round.pk})
         self.staff_user = User.objects.create_superuser('admin', 'mail@e.com', 'password')
+
+        for points in [0, 8, 9]:
+            Submit.objects.create(
+                task=self.tasks[7],
+                user=self.user_with_submits,
+                submit_type=SUBMIT_TYPE_DESCRIPTION,
+                points=points,
+                filepath='/riesenie.pdf',
+                time=self.round.end_time,
+            )
+        Submit.objects.create(
+            task=self.tasks[1],
+            user=self.user_with_submits,
+            submit_type=SUBMIT_TYPE_DESCRIPTION,
+            points=0,
+            filepath=SUBMIT_PAPER_FILEPATH,
+            testing_status=SUBMIT_STATUS_IN_QUEUE,
+            time=self.round.end_time,
+        )
 
     def test_correct_tasks_in_form(self):
         form = SubmittedTasksFrom(round=self.round)
         for i in range(1, 11):
             self.assertIn(str(i), form.fields.keys())
 
-    def test_add_new_submits(self):
+    def test_create_new_submits(self):
         data = {
             '2': 'on',
             '3': 'on',
             '5': 'on',
         }
         self.client.force_login(self.staff_user)
-        response = self.client.post(self.url, data, follow=True)
+        response = self.client.post(self.url_new, data, follow=True)
         self.assertEqual(response.status_code, 200)
         for task_number in data.keys():
             self.assertGreater(Submit.objects.filter(
-                user=self.user, task__number=task_number, points=0,
+                user=self.new_user, task__number=task_number, points=0,
                 submit_type=SUBMIT_TYPE_DESCRIPTION,
                 testing_status=SUBMIT_STATUS_IN_QUEUE).count(), 0)
 
+    def test_add_subits_to_existing_submits(self):
+        data = {
+            '1': 'on',
+            '4': 'on',
+            '7': 'on',
+        }
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_submits, data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        for task_number in data.keys():
+            self.assertGreater(Submit.objects.filter(
+                user=self.user_with_submits, task__number=task_number,
+                submit_type=SUBMIT_TYPE_DESCRIPTION).count(), 0)
+
     def test_round_change(self):
         self.client.force_login(self.staff_user)
-        respose = self.client.post(self.url, {'round': '1'})
+        respose = self.client.post(self.url_new, {'round': '1'})
         self.assertEqual(respose.status_code, 200)
         self.assertEqual(respose.context['round'].pk, 1)
+
+    def test_delete_paprer_submit(self):
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_submits, {'7': 'on'}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Submit.objects.filter(
+            task=self.tasks[1], user=self.user_with_submits, submit_type=SUBMIT_TYPE_DESCRIPTION,
+            filepath=SUBMIT_PAPER_FILEPATH,
+        ).count(), 0)
+
+    def test_not_delete_electronic_submit(self):
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_submits, {'1': 'on'}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Submit.objects.filter(
+            task=self.tasks[7], user=self.user_with_submits, submit_type=SUBMIT_TYPE_DESCRIPTION,
+        ).count(), 3)
+
+    def test_add_and_delete_submits(self):
+        data = {
+            '2': 'on',
+            '3': 'on',
+            '4': 'on',
+            '7': 'on',
+        }
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_submits, data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        for task_number in data.keys():
+            self.assertGreater(Submit.objects.filter(
+                user=self.user_with_submits, task__number=task_number,
+                submit_type=SUBMIT_TYPE_DESCRIPTION).count(), 0)
+        self.assertEqual(Submit.objects.filter(
+            user=self.user_with_submits, task__number=1,
+            submit_type=SUBMIT_TYPE_DESCRIPTION).count(), 0)
