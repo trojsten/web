@@ -19,7 +19,7 @@ You are viewing submits for round:
 <form method="post" action="{% url 'admin:submitted_tasks' user.pk round.pk%}"> {% csrf_token %}
     <table>
         <tr>
-        <td> {{ roundform.as_p }} </td>
+        <td> {{ round_form.as_p }} </td>
         <td> <input type="submit" text="Save" value="{% trans 'Change round' %}"/> </td>
         </tr>
     </table>
