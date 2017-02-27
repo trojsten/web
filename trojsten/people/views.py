@@ -8,11 +8,13 @@ from social.apps.django_app.default.models import UserSocialAuth
 
 from trojsten.contests.models import Competition, Task, Round
 from trojsten.people.models import User
+from trojsten.reviews.helpers import edit_review
 from trojsten.submit.constants import SUBMIT_TYPE_DESCRIPTION, SUBMIT_STATUS_IN_QUEUE,\
-    SUBMIT_PAPER_FILEPATH
+    SUBMIT_PAPER_FILEPATH, SUBMIT_STATUS_REVIEWED
 from trojsten.submit.models import Submit
 from .forms import SubmittedTasksForm, RoundSelectForm
 from .models import UserProperty
+from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 
 
 class VisibleUserPropForm(forms.ModelForm):
@@ -93,18 +95,25 @@ def submitted_tasks(request, user_pk, round_pk):
             if form.is_valid():
                 data = form.cleaned_data
                 for task in Task.objects.filter(round=round):
-                    if data[str(task.number)]:
-                        exists = Submit.objects.filter(
+                    value = data[str(task.number)]
+                    if len(value) > 0:
+                        points = 0 if value == DEENVELOPING_NOT_REVIEWED_SYMBOL else int(value)
+                        submit = Submit.objects.filter(
                             task=task,
                             user=user,
                             submit_type=SUBMIT_TYPE_DESCRIPTION,
-                        ).exists()
-                        if not exists:
+                        ).order_by('-time').first()
+                        if submit:
+                            if value != DEENVELOPING_NOT_REVIEWED_SYMBOL:
+                                submit.points = points
+                                submit.testing_status = SUBMIT_STATUS_REVIEWED
+                                submit.save()
+                        else:
                             submit = Submit.objects.create(
                                 task=task,
                                 user=user,
                                 submit_type=SUBMIT_TYPE_DESCRIPTION,
-                                points=0,
+                                points=points,
                                 filepath=SUBMIT_PAPER_FILEPATH,
                                 testing_status=SUBMIT_STATUS_IN_QUEUE,
                             )
@@ -118,12 +127,16 @@ def submitted_tasks(request, user_pk, round_pk):
                             filepath=SUBMIT_PAPER_FILEPATH,
                         ).delete()
                 return redirect('admin:people_user_change', user.pk)
+    else:
+        form = SubmittedTasksForm(round)
+        for submit in Submit.objects.filter(task__round=round, user=user).order_by('time'):
+            if submit.testing_status == SUBMIT_STATUS_REVIEWED:
+                form.initial[str(submit.task.number)] = str(int(submit.points))
+            else:
+                form.initial[str(submit.task.number)] = DEENVELOPING_NOT_REVIEWED_SYMBOL
 
-    form = SubmittedTasksForm(round)
     round_form = RoundSelectForm()
     round_form.initial['round'] = round
-    for submit in Submit.objects.filter(task__round=round, user=user):
-        form.initial[str(submit.task.number)] = True
     context = {
         'round': round,
         'form': form,
