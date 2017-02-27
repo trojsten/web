@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from ksp_login.forms import UserProfileForm, get_profile_forms
 from social.apps.django_app.default.models import UserSocialAuth
 
@@ -99,7 +100,7 @@ def submitted_tasks(request, user_pk, round_pk):
                             submit_type=SUBMIT_TYPE_DESCRIPTION,
                         ).count() > 0
                         if not exists:
-                            Submit.objects.create(
+                            submit = Submit.objects.create(
                                 task=task,
                                 user=user,
                                 submit_type=SUBMIT_TYPE_DESCRIPTION,
@@ -107,6 +108,8 @@ def submitted_tasks(request, user_pk, round_pk):
                                 filepath=SUBMIT_PAPER_FILEPATH,
                                 testing_status=SUBMIT_STATUS_IN_QUEUE,
                             )
+                            submit.time = round.end_time + timezone.timedelta(seconds=-1)
+                            submit.save()
                     else:
                         Submit.objects.filter(
                             task=task,
