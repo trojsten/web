@@ -429,11 +429,10 @@ class MergeForm(forms.Form):
         ]))
 
 
-class SubmittedTasksFrom(forms.Form):
+class SubmittedTasksForm(forms.Form):
 
-    def __init__(self, *args, **kwargs):
-        round = kwargs.pop('round')
-        super(SubmittedTasksFrom, self).__init__(*args, **kwargs)
+    def __init__(self, round, *args, **kwargs):
+        super(SubmittedTasksForm, self).__init__(*args, **kwargs)
         for task in Task.objects.filter(round=round).order_by('number'):
             self.fields[str(task.number)] = forms.BooleanField(required=False)
 

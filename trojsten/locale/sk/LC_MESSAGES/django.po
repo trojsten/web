@@ -415,8 +415,8 @@ msgid ""
 "                "
 msgstr ""
 "\n"
-"                    Heslo si môžeš zmeniť <a href=\"%(passwd_url)s\">tu</"
-"a>.\n"
+"                    Heslo si môžeš zmeniť <a href=\"%(passwd_url)s"
+"\">tu</a>.\n"
 "                "
 
 #: reviews/forms.py:47

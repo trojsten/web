@@ -32,4 +32,4 @@ SUBMIT_VERBOSE_RESPONSE = {
     'IGN': _('Ignored')
 }
 
-SUBMIT_PAPER_FILEPATH = '/var/www/trojstenweb/submits/submits/papierove.pdf'
+SUBMIT_PAPER_FILEPATH = '<PAPIEROVE>'

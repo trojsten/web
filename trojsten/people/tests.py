@@ -19,7 +19,7 @@ from trojsten.submit.constants import SUBMIT_STATUS_IN_QUEUE, SUBMIT_TYPE_DESCRI
 from trojsten.submit.models import Submit
 
 from . import constants
-from .forms import TrojstenUserChangeForm, TrojstenUserCreationForm, SubmittedTasksFrom
+from .forms import TrojstenUserChangeForm, TrojstenUserCreationForm, SubmittedTasksForm
 from .helpers import get_similar_users, merge_users
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
 
@@ -378,7 +378,7 @@ class SettingsViewTests(TestCase):
         self.assertContains(response, self.kaspar_id)
 
 
-class EnvelopingTests(TestCase):
+class DeenvelopingTests(TestCase):
     def setUp(self):
         group = Group.objects.create(name='staff')
         competition = Competition.objects.create(name='TestCompetition', pk=7, organizers_group=group)
@@ -429,7 +429,7 @@ class EnvelopingTests(TestCase):
         )
 
     def test_correct_tasks_in_form(self):
-        form = SubmittedTasksFrom(round=self.round)
+        form = SubmittedTasksForm(round=self.round)
         for i in range(1, 11):
             self.assertIn(str(i), form.fields.keys())
 

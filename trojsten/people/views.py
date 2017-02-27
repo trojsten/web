@@ -11,7 +11,7 @@ from trojsten.people.models import User
 from trojsten.submit.constants import SUBMIT_TYPE_DESCRIPTION, SUBMIT_STATUS_IN_QUEUE,\
     SUBMIT_PAPER_FILEPATH
 from trojsten.submit.models import Submit
-from .forms import SubmittedTasksFrom, RoundSelectForm
+from .forms import SubmittedTasksForm, RoundSelectForm
 from .models import UserProperty
 
 
@@ -85,11 +85,11 @@ def submitted_tasks(request, user_pk, round_pk):
     user = get_object_or_404(User, pk=user_pk)
     round = get_object_or_404(Round, pk=round_pk)
     if request.method == 'POST':
-        roundform = RoundSelectForm(request.POST)
-        if roundform.is_valid():
-            round = roundform.cleaned_data['round']
+        round_form = RoundSelectForm(request.POST)
+        if round_form.is_valid():
+            round = round_form.cleaned_data['round']
         else:
-            form = SubmittedTasksFrom(request.POST, round=round)
+            form = SubmittedTasksForm(round, request.POST)
             if form.is_valid():
                 data = form.cleaned_data
                 for task in Task.objects.filter(round=round):
@@ -98,7 +98,7 @@ def submitted_tasks(request, user_pk, round_pk):
                             task=task,
                             user=user,
                             submit_type=SUBMIT_TYPE_DESCRIPTION,
-                        ).count() > 0
+                        ).exists()
                         if not exists:
                             submit = Submit.objects.create(
                                 task=task,
@@ -118,15 +118,16 @@ def submitted_tasks(request, user_pk, round_pk):
                             filepath=SUBMIT_PAPER_FILEPATH,
                         ).delete()
                 return redirect('admin:people_user_change', user.pk)
-    form = SubmittedTasksFrom(round=round)
-    roundform = RoundSelectForm()
-    roundform.initial['round'] = round
+
+    form = SubmittedTasksForm(round)
+    round_form = RoundSelectForm()
+    round_form.initial['round'] = round
     for submit in Submit.objects.filter(task__round=round, user=user):
         form.initial[str(submit.task.number)] = True
     context = {
         'round': round,
         'form': form,
-        'roundform': roundform,
+        'round_form': round_form,
         'user': user
     }
     return render(
