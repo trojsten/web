@@ -86,6 +86,7 @@ def settings(request, settings_form=UserProfileForm):
 def submitted_tasks(request, user_pk, round_pk):
     user = get_object_or_404(User, pk=user_pk)
     round = get_object_or_404(Round, pk=round_pk)
+    form = None
     if request.method == 'POST':
         round_form = RoundSelectForm(request.POST)
         if round_form.is_valid():
@@ -127,7 +128,7 @@ def submitted_tasks(request, user_pk, round_pk):
                             filepath=SUBMIT_PAPER_FILEPATH,
                         ).delete()
                 return redirect('admin:people_user_change', user.pk)
-    else:
+    if not form:
         form = SubmittedTasksForm(round)
         for submit in Submit.objects.filter(task__round=round, user=user).order_by('time'):
             if submit.testing_status == SUBMIT_STATUS_REVIEWED:
