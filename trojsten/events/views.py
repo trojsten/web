@@ -125,11 +125,13 @@ class EventListView(ListView):
     template_name = "trojsten/events/event_list.html"
     model = EventType
     context_object_name = 'event_types'
-    queryset = EventType.objects.current_site_only().prefetch_related('event_set')
 
     # Hodnoty sa pridaju v dispatch()
     article = None
     urlpath = None
+
+    def get_queryset(self):
+        return EventType.objects.current_site_only().prefetch_related('event_set')
 
     @method_decorator(get_article(can_read=True))
     def dispatch(self, request, article, *args, **kwargs):
@@ -150,9 +152,11 @@ event_list = EventListView.as_view()
 
 
 class CampEventListView(EventListView):
-    queryset = EventType.objects.current_site_only().filter(
-        is_camp=True
-    ).prefetch_related('event_set')
+
+    def get_queryset(self):
+        return EventType.objects.current_site_only().filter(
+            is_camp=True
+        ).prefetch_related('event_set')
 
 
 camp_event_list = CampEventListView.as_view()
