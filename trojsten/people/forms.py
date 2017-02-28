@@ -10,7 +10,11 @@ from social.apps.django_app.utils import setting
 
 from trojsten.contests.models import Task, Round, Competition
 from trojsten.people.models import Address, DuplicateUser, User
+from trojsten.submit.constants import SUBMIT_TYPE_DESCRIPTION, SUBMIT_STATUS_IN_QUEUE,\
+    SUBMIT_PAPER_FILEPATH, SUBMIT_STATUS_REVIEWED
+from trojsten.submit.models import Submit
 from . import constants
+from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .helpers import get_similar_users
 
 
@@ -434,6 +438,7 @@ class SubmittedTasksForm(forms.Form):
     def __init__(self, round, *args, **kwargs):
         super(SubmittedTasksForm, self).__init__(*args, **kwargs)
         self.max_points = {}
+        self.round = round
         for task in Task.objects.filter(round=round).order_by('number'):
             self.fields[str(task.number)] = forms.CharField(max_length=6, required=False)
             self.max_points[task.number] = task.description_points
@@ -455,6 +460,42 @@ class SubmittedTasksForm(forms.Form):
                                        _('The value has to be number or {}.')
                                        .format(constants.DEENVELOPING_NOT_REVIEWED_SYMBOL))
         return cleaned_data
+
+    def save(self, user):
+        for task in Task.objects.filter(round=self.round):
+            value = self.cleaned_data[str(task.number)]
+            if len(value) > 0:
+                points = 0 if value == DEENVELOPING_NOT_REVIEWED_SYMBOL else float(value)
+                status = SUBMIT_STATUS_IN_QUEUE if value == DEENVELOPING_NOT_REVIEWED_SYMBOL \
+                    else SUBMIT_STATUS_REVIEWED
+                submit = Submit.objects.filter(
+                    task=task,
+                    user=user,
+                    submit_type=SUBMIT_TYPE_DESCRIPTION,
+                ).order_by('-time').first()
+                if submit:
+                    if value != DEENVELOPING_NOT_REVIEWED_SYMBOL:
+                        submit.points = points
+                        submit.testing_status = SUBMIT_STATUS_REVIEWED
+                        submit.save()
+                else:
+                    submit = Submit.objects.create(
+                        task=task,
+                        user=user,
+                        submit_type=SUBMIT_TYPE_DESCRIPTION,
+                        points=points,
+                        filepath=SUBMIT_PAPER_FILEPATH,
+                        testing_status=status,
+                    )
+                    submit.time = self.round.end_time + timezone.timedelta(seconds=-1)
+                    submit.save()
+            else:
+                Submit.objects.filter(
+                    task=task,
+                    user=user,
+                    submit_type=SUBMIT_TYPE_DESCRIPTION,
+                    filepath=SUBMIT_PAPER_FILEPATH,
+                ).delete()
 
 
 class RoundSelectForm(forms.Form):
