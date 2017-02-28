@@ -24,11 +24,12 @@ You are viewing submits for round:
         </tr>
     </table>
 </form>
-{% blocktrans %}
-Check which tasks has the competitor sent. If you want to delete submits, leave the corresponding
-checkboxes empty. However, in this way, only paper submits can be deleted.
+{% blocktrans with symbol as symbol %}
+Fill which tasks has the competitor sent. You can fill in the points or {{ symbol }}
+for unreviewed tasks. If you want to delete submits, leave the corresponding
+fields empty. However, in this way, only paper unreviewed submits can be deleted.
 <br>
-You can go down through the checkboxes using the tab-key and check the boxes with spacebar.
+You can go down through the checkboxes using the tab-key.
 {% endblocktrans %}
 <form method="post" action="{% url 'admin:submitted_tasks' user.pk round.pk%}"> {% csrf_token %}
     <table>

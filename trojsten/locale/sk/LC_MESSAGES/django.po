@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-26 13:19+0100\n"
+"POT-Creation-Date: 2017-02-28 21:03+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -255,7 +255,17 @@ msgstr ""
 msgid "The two password fields didn't match."
 msgstr ""
 
-#: people/forms.py:445
+#: people/forms.py:450
+msgid "Points have to be non-negative and at most {}."
+msgstr "Body musia byť nezáporné a najviac {}"
+
+#: people/forms.py:455
+#, fuzzy
+#| msgid "The value has to be integer or {}."
+msgid "The value has to be number or {}."
+msgstr "Hodnota musí byť číslo alebo {}"
+
+#: people/forms.py:464
 msgid "Round"
 msgstr "Kolo"
 
@@ -330,22 +340,24 @@ msgid "Change round"
 msgstr "Zmeň kolo"
 
 #: people/templates/admin/people/submitted_tasks.html:27
+#, python-format
 msgid ""
 "\n"
-"Check which tasks has the competitor sent. If you want to delete submits, "
-"leave the corresponding\n"
-"checkboxes empty. However, in this way, only paper submits can be deleted.\n"
+"Fill which tasks has the competitor sent. You can fill in the points or "
+"%(symbol)s\n"
+"for unreviewed tasks. If you want to delete submits, leave the "
+"corresponding\n"
+"fields empty. However, in this way, only paper unreviewed submits can be "
+"deleted.\n"
 "<br>\n"
-"You can go down through the checkboxes using the tab-key and check the boxes "
-"with spacebar.\n"
+"You can go down through the checkboxes using the tab-key.\n"
 msgstr ""
 "\n"
-"Zaškrtni úlohy, ktoré riešiteľ poslal. Ak chceš zmazať nejaké riešenia, "
-"ponechaj odpovedajúce checkboxy\n"
-"prázdne. Avšak týmto spôsobom možno zmazať len papierové riešeia.\n"
+"Vyplň, ktoré úlohy riešeiteľ poslal. Môžeš mu vyplniť body alebo %(symbol)s\n"
+"pre neopravené úlohy. Ak cheš zmazať nejaké riešenia, nechaj odpovedajúce\n"
+"políčko prázdne. Avšak týmto spôsobom môžeš zmazať len papierové riešenia\n"
 "<br>\n"
-"Cez políčka môžeš prechádzať pomocou tabulátora a zaškrkávať ich "
-"medzerníkom.\n"
+"Políčkami môžeš prechádzať pomocou tabulátora.\n"
 
 #: people/templates/trojsten/people/settings.html:10
 #: people/templates/trojsten/people/settings.html:13

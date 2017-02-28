@@ -144,7 +144,8 @@ def submitted_tasks(request, user_pk, round_pk):
         'round': round,
         'form': form,
         'round_form': round_form,
-        'user': user
+        'user': user,
+        'symbol': DEENVELOPING_NOT_REVIEWED_SYMBOL,
     }
     return render(
         request, 'admin/people/submitted_tasks.html', context

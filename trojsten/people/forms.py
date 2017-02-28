@@ -452,7 +452,7 @@ class SubmittedTasksForm(forms.Form):
                 except ValueError:
                     if value != constants.DEENVELOPING_NOT_REVIEWED_SYMBOL:
                         self.add_error(task_number,
-                                       _('The value has to be integer or {}.')
+                                       _('The value has to be number or {}.')
                                        .format(constants.DEENVELOPING_NOT_REVIEWED_SYMBOL))
         return cleaned_data
 
