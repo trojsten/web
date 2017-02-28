@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import datetime
 import random
+from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -518,14 +519,14 @@ class DeenvelopingTests(TestCase):
 
     def test_submit_new_points(self):
         self.client.force_login(self.staff_user)
-        response = self.client.post(self.url_new, {'1': '7', '2':'4.47'}, follow=True)
+        response = self.client.post(self.url_new, {'1': '7', '2': '4.47'}, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Submit.objects.filter(
             user=self.new_user, task=self.tasks[1], points=7,
             submit_type=SUBMIT_TYPE_DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
         ).count(), 1)
         self.assertEqual(Submit.objects.filter(
-            user=self.new_user, task=self.tasks[2], points=4.47,
+            user=self.new_user, task=self.tasks[2], points=Decimal('4.47'),
             submit_type=SUBMIT_TYPE_DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
         ).count(), 1)
 
