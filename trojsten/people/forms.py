@@ -442,7 +442,7 @@ class SubmittedTasksForm(forms.Form):
         for task in Task.objects.filter(round=round).order_by('number'):
             self.fields[str(task.number)] = forms.CharField(max_length=6, required=False)
             self.max_points[task.number] = task.description_points
-            
+
     def clean(self):
         cleaned_data = super(SubmittedTasksForm, self).clean()
         for task_number in cleaned_data.keys():
@@ -474,10 +474,10 @@ class SubmittedTasksForm(forms.Form):
                     submit_type=SUBMIT_TYPE_DESCRIPTION,
                 ).order_by('-time').first()
                 if submit:
-                    if value != DEENVELOPING_NOT_REVIEWED_SYMBOL:
-                        submit.points = points
-                        submit.testing_status = SUBMIT_STATUS_REVIEWED
-                        submit.save()
+                    # if value != DEENVELOPING_NOT_REVIEWED_SYMBOL:
+                    submit.points = points
+                    submit.testing_status = status
+                    submit.save()
                 else:
                     submit = Submit.objects.create(
                         task=task,
