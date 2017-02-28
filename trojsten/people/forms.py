@@ -474,7 +474,6 @@ class SubmittedTasksForm(forms.Form):
                     submit_type=SUBMIT_TYPE_DESCRIPTION,
                 ).order_by('-time').first()
                 if submit:
-                    # if value != DEENVELOPING_NOT_REVIEWED_SYMBOL:
                     submit.points = points
                     submit.testing_status = status
                     submit.save()

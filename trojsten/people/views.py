@@ -2,19 +2,16 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils import timezone
 from ksp_login.forms import UserProfileForm, get_profile_forms
 from social.apps.django_app.default.models import UserSocialAuth
 
-from trojsten.contests.models import Competition, Task, Round
+from trojsten.contests.models import Competition, Round
 from trojsten.people.models import User
-from trojsten.reviews.helpers import edit_review
-from trojsten.submit.constants import SUBMIT_TYPE_DESCRIPTION, SUBMIT_STATUS_IN_QUEUE,\
-    SUBMIT_PAPER_FILEPATH, SUBMIT_STATUS_REVIEWED
+from trojsten.submit.constants import SUBMIT_TYPE_DESCRIPTION, SUBMIT_STATUS_REVIEWED
 from trojsten.submit.models import Submit
+from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .forms import SubmittedTasksForm, RoundSelectForm
 from .models import UserProperty
-from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 
 
 class VisibleUserPropForm(forms.ModelForm):
