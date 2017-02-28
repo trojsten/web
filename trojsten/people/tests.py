@@ -15,10 +15,12 @@ from django.utils import timezone
 from trojsten.contests import constants as contests_constants
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.schools.models import School
-from trojsten.submit.constants import SUBMIT_STATUS_IN_QUEUE, SUBMIT_TYPE_DESCRIPTION, SUBMIT_PAPER_FILEPATH
+from trojsten.submit.constants import SUBMIT_STATUS_IN_QUEUE, SUBMIT_TYPE_DESCRIPTION,\
+    SUBMIT_PAPER_FILEPATH, SUBMIT_STATUS_REVIEWED
 from trojsten.submit.models import Submit
 
 from . import constants
+from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL as new
 from .forms import TrojstenUserChangeForm, TrojstenUserCreationForm, SubmittedTasksForm
 from .helpers import get_similar_users, merge_users
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
@@ -394,7 +396,8 @@ class DeenvelopingTests(TestCase):
                                           solutions_visible=False, start_time=start, end_time=end)
         self.tasks = [None]
         for i in range(1, 11):
-            task = Task.objects.create(number=i, name='Test task {}'.format(i), round=self.round)
+            task = Task.objects.create(number=i, name='Test task {}'.format(i),
+                                       round=self.round, description_points=9)
             self.tasks.append(task)
         self.new_user = User.objects.create(username="newuser", password="password",
                                             first_name="Jozko", last_name="Mrkvicka",
@@ -429,15 +432,25 @@ class DeenvelopingTests(TestCase):
         )
 
     def test_correct_tasks_in_form(self):
-        form = SubmittedTasksForm(round=self.round)
+        form = SubmittedTasksForm(self.round)
         for i in range(1, 11):
             self.assertIn(str(i), form.fields.keys())
 
+    def test_form_clean(self):
+        form = SubmittedTasksForm(self.round, data={'1': 'xxx'})
+        self.assertFalse(form.is_valid())
+        form = SubmittedTasksForm(self.round, data={'1': '-42'})
+        self.assertFalse(form.is_valid())
+        form = SubmittedTasksForm(self.round, data={'1': '47'})
+        self.assertFalse(form.is_valid())
+        form = SubmittedTasksForm(self.round, data={'1': '7'})
+        self.assertTrue(form.is_valid())
+
     def test_create_new_submits(self):
         data = {
-            '2': 'on',
-            '3': 'on',
-            '5': 'on',
+            '2': new,
+            '3': new,
+            '5': new,
         }
         self.client.force_login(self.staff_user)
         response = self.client.post(self.url_new, data, follow=True)
@@ -450,9 +463,9 @@ class DeenvelopingTests(TestCase):
 
     def test_add_subits_to_existing_submits(self):
         data = {
-            '1': 'on',
-            '4': 'on',
-            '7': 'on',
+            '1': new,
+            '4': new,
+            '7': new,
         }
         self.client.force_login(self.staff_user)
         response = self.client.post(self.url_submits, data, follow=True)
@@ -470,7 +483,7 @@ class DeenvelopingTests(TestCase):
 
     def test_delete_paprer_submit(self):
         self.client.force_login(self.staff_user)
-        response = self.client.post(self.url_submits, {'7': 'on'}, follow=True)
+        response = self.client.post(self.url_submits, {'7': new}, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Submit.objects.filter(
             task=self.tasks[1], user=self.user_with_submits, submit_type=SUBMIT_TYPE_DESCRIPTION,
@@ -479,7 +492,7 @@ class DeenvelopingTests(TestCase):
 
     def test_not_delete_electronic_submit(self):
         self.client.force_login(self.staff_user)
-        response = self.client.post(self.url_submits, {'1': 'on'}, follow=True)
+        response = self.client.post(self.url_submits, {'1': new}, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Submit.objects.filter(
             task=self.tasks[7], user=self.user_with_submits, submit_type=SUBMIT_TYPE_DESCRIPTION,
@@ -487,10 +500,10 @@ class DeenvelopingTests(TestCase):
 
     def test_add_and_delete_submits(self):
         data = {
-            '2': 'on',
-            '3': 'on',
-            '4': 'on',
-            '7': 'on',
+            '2': new,
+            '3': new,
+            '4': new,
+            '7': new,
         }
         self.client.force_login(self.staff_user)
         response = self.client.post(self.url_submits, data, follow=True)
@@ -502,3 +515,40 @@ class DeenvelopingTests(TestCase):
         self.assertEqual(Submit.objects.filter(
             user=self.user_with_submits, task__number=1,
             submit_type=SUBMIT_TYPE_DESCRIPTION).count(), 0)
+
+    def test_submit_new_points(self):
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_new, {'1': '7', '2':'4.47'}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Submit.objects.filter(
+            user=self.new_user, task=self.tasks[1], points=7,
+            submit_type=SUBMIT_TYPE_DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
+        ).count(), 1)
+        self.assertEqual(Submit.objects.filter(
+            user=self.new_user, task=self.tasks[2], points=4.47,
+            submit_type=SUBMIT_TYPE_DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
+        ).count(), 1)
+
+    def test_add_submit_points(self):
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_submits, {'7': '7'}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Submit.objects.filter(
+            user=self.user_with_submits, task=self.tasks[7], points=7,
+            submit_type=SUBMIT_TYPE_DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
+        ).count(), 1)
+
+    def test_edit_submit_points(self):
+        Submit.objects.create(
+            user=self.user_with_submits, task=self.tasks[10],
+            time=self.round.end_time + timezone.timedelta(seconds=-1),
+            filepath=SUBMIT_PAPER_FILEPATH, testing_status=SUBMIT_STATUS_REVIEWED,
+            submit_type=SUBMIT_TYPE_DESCRIPTION, points=4
+        )
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_submits, {'10': '9'}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Submit.objects.filter(
+            user=self.user_with_submits, task=self.tasks[10], points=9,
+            submit_type=SUBMIT_TYPE_DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
+        ).count(), 1)
