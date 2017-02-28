@@ -445,7 +445,7 @@ class SubmittedTasksForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(SubmittedTasksForm, self).clean()
-        for task_number in cleaned_data.keys():
+        for task_number in list(cleaned_data.keys()):
             value = cleaned_data[task_number]
             if len(value) > 0:
                 try:
