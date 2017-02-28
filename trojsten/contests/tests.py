@@ -8,6 +8,7 @@ from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
+from django.utils import timezone
 from django.utils.translation import activate
 from wiki.models import Article, ArticleRevision, URLPath
 
@@ -497,3 +498,30 @@ class TaskPeopleTests(TestCase):
         self.assertIn(self.reviewer2, reviewers)
         self.assertEqual(proofreaders, [self.proofreader])
         self.assertEqual(len(solvers), 0)
+
+
+class RoundManagerTests(TestCase):
+    def setUp(self):
+        self.competition = Competition.objects.create(name='TestCompetition')
+        self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        other_competition = Competition.objects.create(name='OtherCompetition')
+        semester = Semester.objects.create(number=1, name='Test semester',
+                                           competition=self.competition, year=1)
+        other_semester = Semester.objects.create(number=1, name='Other semester',
+                                                 competition=other_competition, year=1)
+        start = timezone.now() + timezone.timedelta(-8)
+        Round.objects.create(number=1, semester=semester, visible=True,
+                             solutions_visible=False, start_time=start,
+                             end_time=timezone.now() + timezone.timedelta(-2))
+        Round.objects.create(number=2, semester=semester, visible=True,
+                             solutions_visible=False, start_time=start,
+                             end_time=timezone.now() + timezone.timedelta(-1))
+        Round.objects.create(number=3, semester=semester, visible=True,
+                             solutions_visible=False, start_time=start,
+                             end_time=timezone.now() + timezone.timedelta(1))
+        Round.objects.create(number=2, semester=other_semester, visible=True,
+                             solutions_visible=False, start_time=start,
+                             end_time=timezone.now() + timezone.timedelta(-1))
+
+    def test_latest_finished_for_competition(self):
+        self.assertEqual(Round.objects.latest_finished_for_competition(self.competition).number, 2)
