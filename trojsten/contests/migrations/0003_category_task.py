@@ -12,7 +12,6 @@ class Migration(migrations.Migration):
     dependencies = [
         ('contests', '0002_auto_20160502_1646'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('tasks', '0009_auto_20160608_1143'),
     ]
 
     state_operations = [

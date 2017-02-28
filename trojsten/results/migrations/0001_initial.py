@@ -8,10 +8,9 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tasks', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('people', '0001_initial'),
-        ('contests', '0001_initial'),
+        ('contests', '0001_squashed_0003_auto_20160301_1436'),
     ]
 
     operations = [
