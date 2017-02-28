@@ -98,7 +98,9 @@ def submitted_tasks(request, user_pk, round_pk):
                 for task in Task.objects.filter(round=round):
                     value = data[str(task.number)]
                     if len(value) > 0:
-                        points = 0 if value == DEENVELOPING_NOT_REVIEWED_SYMBOL else int(value)
+                        points = 0 if value == DEENVELOPING_NOT_REVIEWED_SYMBOL else float(value)
+                        status = SUBMIT_STATUS_IN_QUEUE if value == DEENVELOPING_NOT_REVIEWED_SYMBOL \
+                            else SUBMIT_STATUS_REVIEWED
                         submit = Submit.objects.filter(
                             task=task,
                             user=user,
@@ -116,7 +118,7 @@ def submitted_tasks(request, user_pk, round_pk):
                                 submit_type=SUBMIT_TYPE_DESCRIPTION,
                                 points=points,
                                 filepath=SUBMIT_PAPER_FILEPATH,
-                                testing_status=SUBMIT_STATUS_IN_QUEUE,
+                                testing_status=status,
                             )
                             submit.time = round.end_time + timezone.timedelta(seconds=-1)
                             submit.save()
@@ -132,7 +134,7 @@ def submitted_tasks(request, user_pk, round_pk):
         form = SubmittedTasksForm(round)
         for submit in Submit.objects.filter(task__round=round, user=user).order_by('time'):
             if submit.testing_status == SUBMIT_STATUS_REVIEWED:
-                form.initial[str(submit.task.number)] = str(int(submit.points))
+                form.initial[str(submit.task.number)] = submit.points
             else:
                 form.initial[str(submit.task.number)] = DEENVELOPING_NOT_REVIEWED_SYMBOL
 

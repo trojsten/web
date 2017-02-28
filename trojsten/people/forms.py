@@ -435,7 +435,7 @@ class SubmittedTasksForm(forms.Form):
         super(SubmittedTasksForm, self).__init__(*args, **kwargs)
         self.max_points = {}
         for task in Task.objects.filter(round=round).order_by('number'):
-            self.fields[str(task.number)] = forms.CharField(max_length=4, required=False)
+            self.fields[str(task.number)] = forms.CharField(max_length=6, required=False)
             self.max_points[task.number] = task.description_points
             
     def clean(self):
@@ -443,18 +443,18 @@ class SubmittedTasksForm(forms.Form):
         for task_number in cleaned_data.keys():
             value = cleaned_data[task_number]
             if len(value) > 0:
-                if value.isdigit():
-                    if int(value) < 0 or int(value) > self.max_points[int(task_number)]:
+                try:
+                    points = float(value)
+                    if points < 0 or points > self.max_points[int(task_number)]:
                         self.add_error(task_number,
                                        _('Points have to be non-negative and at most {}.')
                                        .format(self.max_points[int(task_number)]))
-                else:
+                except ValueError:
                     if value != constants.DEENVELOPING_NOT_REVIEWED_SYMBOL:
                         self.add_error(task_number,
                                        _('The value has to be integer or {}.')
                                        .format(constants.DEENVELOPING_NOT_REVIEWED_SYMBOL))
         return cleaned_data
-
 
 
 class RoundSelectForm(forms.Form):
