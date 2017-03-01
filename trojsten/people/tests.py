@@ -21,7 +21,7 @@ from trojsten.submit.constants import SUBMIT_STATUS_IN_QUEUE, SUBMIT_TYPE_DESCRI
 from trojsten.submit.models import Submit
 
 from . import constants
-from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL as new
+from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .forms import TrojstenUserChangeForm, TrojstenUserCreationForm, SubmittedTasksForm
 from .helpers import get_similar_users, merge_users
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
@@ -449,9 +449,9 @@ class DeenvelopingTests(TestCase):
 
     def test_create_new_submits(self):
         data = {
-            '2': new,
-            '3': new,
-            '5': new,
+            '2': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '3': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '5': DEENVELOPING_NOT_REVIEWED_SYMBOL,
         }
         self.client.force_login(self.staff_user)
         response = self.client.post(self.url_new, data, follow=True)
@@ -464,9 +464,9 @@ class DeenvelopingTests(TestCase):
 
     def test_add_subits_to_existing_submits(self):
         data = {
-            '1': new,
-            '4': new,
-            '7': new,
+            '1': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '4': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '7': DEENVELOPING_NOT_REVIEWED_SYMBOL,
         }
         self.client.force_login(self.staff_user)
         response = self.client.post(self.url_submits, data, follow=True)
@@ -484,7 +484,8 @@ class DeenvelopingTests(TestCase):
 
     def test_delete_paprer_submit(self):
         self.client.force_login(self.staff_user)
-        response = self.client.post(self.url_submits, {'7': new}, follow=True)
+        response = self.client.post(self.url_submits,
+                                    {'7': DEENVELOPING_NOT_REVIEWED_SYMBOL}, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Submit.objects.filter(
             task=self.tasks[1], user=self.user_with_submits, submit_type=SUBMIT_TYPE_DESCRIPTION,
@@ -493,7 +494,8 @@ class DeenvelopingTests(TestCase):
 
     def test_not_delete_electronic_submit(self):
         self.client.force_login(self.staff_user)
-        response = self.client.post(self.url_submits, {'1': new}, follow=True)
+        response = self.client.post(self.url_submits,
+                                    {'1': DEENVELOPING_NOT_REVIEWED_SYMBOL}, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Submit.objects.filter(
             task=self.tasks[7], user=self.user_with_submits, submit_type=SUBMIT_TYPE_DESCRIPTION,
@@ -501,10 +503,10 @@ class DeenvelopingTests(TestCase):
 
     def test_add_and_delete_submits(self):
         data = {
-            '2': new,
-            '3': new,
-            '4': new,
-            '7': new,
+            '2': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '3': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '4': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '7': DEENVELOPING_NOT_REVIEWED_SYMBOL,
         }
         self.client.force_login(self.staff_user)
         response = self.client.post(self.url_submits, data, follow=True)
