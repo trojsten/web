@@ -1,12 +1,16 @@
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from ksp_login.forms import UserProfileForm, get_profile_forms
 from social.apps.django_app.default.models import UserSocialAuth
 
-from trojsten.people.models import User, UserProperty
-
+from trojsten.contests.models import Competition, Round
+from trojsten.people.models import User
+from trojsten.submit.constants import SUBMIT_TYPE_DESCRIPTION, SUBMIT_STATUS_REVIEWED
+from trojsten.submit.models import Submit
+from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
+from .forms import SubmittedTasksForm, RoundSelectForm
 from .models import UserProperty
 
 
@@ -74,3 +78,45 @@ def settings(request, settings_form=UserProfileForm):
         'forms': _forms,
         'user_props_form_set': user_props_form_set,
     })
+
+
+def submitted_tasks(request, user_pk, round_pk):
+    user = get_object_or_404(User, pk=user_pk)
+    round = get_object_or_404(Round, pk=round_pk)
+    form = None
+    if request.method == 'POST':
+        round_form = RoundSelectForm(request.POST)
+        if round_form.is_valid():
+            round = round_form.cleaned_data['round']
+        else:
+            form = SubmittedTasksForm(round, request.POST)
+            if form.is_valid():
+                form.save(user)
+                return redirect('admin:people_user_change', user.pk)
+    if not form:
+        form = SubmittedTasksForm(round)
+        for submit in Submit.objects.filter(task__round=round, user=user, submit_type=SUBMIT_TYPE_DESCRIPTION)\
+                .order_by('time'):
+            if submit.testing_status == SUBMIT_STATUS_REVIEWED:
+                form.initial[str(submit.task.number)] = submit.points
+            else:
+                form.initial[str(submit.task.number)] = DEENVELOPING_NOT_REVIEWED_SYMBOL
+
+    round_form = RoundSelectForm()
+    round_form.initial['round'] = round
+    context = {
+        'round': round,
+        'form': form,
+        'round_form': round_form,
+        'user': user,
+        'symbol': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+    }
+    return render(
+        request, 'admin/people/submitted_tasks.html', context
+    )
+
+
+def submitted_tasks_for_latest_round(request, user_pk):
+    competition = Competition.objects.current_site_only().first()
+    round = Round.objects.latest_finished_for_competition(competition)
+    return submitted_tasks(request, user_pk, round.pk)

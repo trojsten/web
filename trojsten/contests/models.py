@@ -64,6 +64,10 @@ class RoundManager(models.Manager):
             'semester__competition'
         )
 
+    def latest_finished_for_competition(self, competition):
+        return self.filter(semester__competition=competition, visible=True, end_time__lt=timezone.now())\
+            .order_by('-end_time').first()
+
 
 class CompetitionManager(models.Manager):
     def current_site_only(self):

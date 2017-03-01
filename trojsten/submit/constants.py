@@ -31,3 +31,5 @@ SUBMIT_VERBOSE_RESPONSE = {
     'SEC': _('Security exception'),
     'IGN': _('Ignored')
 }
+
+SUBMIT_PAPER_FILEPATH = '<PAPIEROVE>'

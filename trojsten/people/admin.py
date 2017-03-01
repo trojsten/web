@@ -17,6 +17,7 @@ from import_export import fields, resources
 from import_export.admin import ExportMixin
 
 from trojsten.contests.models import Competition, Semester
+from trojsten.people.urls import submitted_tasks_urls
 from trojsten.submit.models import Submit
 from trojsten.utils.utils import attribute_format
 
@@ -134,6 +135,7 @@ class AdminUserAddForm(ModelForm):
 
 
 class UserAdmin(ExportMixin, DefaultUserAdmin):
+    change_form_template = 'admin/people/submitted_tasks_button.html'
     list_display = ('username', 'first_name', 'last_name', 'email',
                     'get_school', 'graduation', 'get_is_staff', 'get_groups',
                     'is_active', 'get_properties')
@@ -203,6 +205,9 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
         return '<br />'.join(escape(force_text(x)) for x in obj.properties.all())
     get_properties.short_description = 'dodatočné vlastnosti'
     get_properties.allow_tags = True
+
+    def get_urls(self):
+        return submitted_tasks_urls + super(UserAdmin, self).get_urls()
 
 
 class DuplicateUserAdmin(admin.ModelAdmin):

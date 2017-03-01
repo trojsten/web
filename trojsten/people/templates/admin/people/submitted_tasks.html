@@ -1,0 +1,41 @@
+{% extends "admin/review_base.html" %}
+{% load i18n admin_urls admin_static admin_modify %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='people' %}">{% trans "People" %}</a>
+    &rsaquo; <a href="{% url 'admin:people_user_changelist' %}">{% trans "Users" %}</a>
+    &rsaquo; <a href="{% url 'admin:people_user_change' user.pk %}">{{ user }}</a>
+    &rsaquo; {% trans 'Submitted tasks' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<h1>{% trans "Tasks submitted by competitor" %} {{ user }}</h1>
+{% blocktrans %}
+You are viewing submits for round:
+{% endblocktrans %}
+<form method="post" action="{% url 'admin:submitted_tasks' user.pk round.pk%}"> {% csrf_token %}
+    <table>
+        <tr>
+        <td> {{ round_form.as_p }} </td>
+        <td> <input type="submit" text="Save" value="{% trans 'Change round' %}"/> </td>
+        </tr>
+    </table>
+</form>
+{% blocktrans with symbol as symbol %}
+Fill which tasks has the competitor sent. You can fill in the points or {{ symbol }}
+for unreviewed tasks. If you want to delete submits, leave the corresponding
+fields empty. However, in this way, only paper unreviewed submits can be deleted.
+<br>
+You can go down through the checkboxes using the tab-key.
+{% endblocktrans %}
+<form method="post" action="{% url 'admin:submitted_tasks' user.pk round.pk%}"> {% csrf_token %}
+    <table>
+        {{ form }}
+    </table>
+    <input type="submit" text="Save"/>
+</form>
+
+{% endblock %}

@@ -3,19 +3,26 @@ from __future__ import unicode_literals
 
 import datetime
 import random
+from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth.models import Group
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.http.request import HttpRequest
 from django.test import TestCase
+from django.utils import timezone
 
 from trojsten.contests import constants as contests_constants
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.schools.models import School
+from trojsten.submit.constants import SUBMIT_STATUS_IN_QUEUE, SUBMIT_TYPE_DESCRIPTION,\
+    SUBMIT_PAPER_FILEPATH, SUBMIT_STATUS_REVIEWED
+from trojsten.submit.models import Submit
 
 from . import constants
-from .forms import TrojstenUserChangeForm, TrojstenUserCreationForm
+from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
+from .forms import TrojstenUserChangeForm, TrojstenUserCreationForm, SubmittedTasksForm
 from .helpers import get_similar_users, merge_users
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
 
@@ -372,3 +379,179 @@ class SettingsViewTests(TestCase):
         self.assertContains(response, self.element_login)
         self.assertContains(response, 'supercoollogin')
         self.assertContains(response, self.kaspar_id)
+
+
+class DeenvelopingTests(TestCase):
+    def setUp(self):
+        group = Group.objects.create(name='staff')
+        competition = Competition.objects.create(name='TestCompetition', pk=7, organizers_group=group)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        semester = Semester.objects.create(number=1, name='Test semester', competition=competition,
+                                           year=1)
+        start = timezone.now() + timezone.timedelta(-8)
+        end = timezone.now() + timezone.timedelta(-2)
+        Round.objects.create(pk=1, number=1, semester=semester, visible=True,
+                             solutions_visible=False, start_time=start,
+                             end_time=end + timezone.timedelta(-1))
+        self.round = Round.objects.create(pk=2, number=2, semester=semester, visible=True,
+                                          solutions_visible=False, start_time=start, end_time=end)
+        self.tasks = [None]
+        for i in range(1, 11):
+            task = Task.objects.create(number=i, name='Test task {}'.format(i),
+                                       round=self.round, description_points=9)
+            self.tasks.append(task)
+        self.new_user = User.objects.create(username="newuser", password="password",
+                                            first_name="Jozko", last_name="Mrkvicka",
+                                            graduation=timezone.now().year + 2)
+        self.user_with_submits = User.objects.create(username="submituser", password="password",
+                                                     first_name="Janko", last_name="Hrasko",
+                                                     graduation=timezone.now().year + 2)
+        self.url_new = reverse('admin:submitted_tasks',
+                               kwargs={'user_pk': self.new_user.pk, 'round_pk': self.round.pk})
+        self.url_submits = reverse('admin:submitted_tasks',
+                                   kwargs={'user_pk': self.user_with_submits.pk,
+                                           'round_pk': self.round.pk})
+        self.staff_user = User.objects.create_superuser('admin', 'mail@e.com', 'password')
+
+        for points in [0, 8, 9]:
+            Submit.objects.create(
+                task=self.tasks[7],
+                user=self.user_with_submits,
+                submit_type=SUBMIT_TYPE_DESCRIPTION,
+                points=points,
+                filepath='/riesenie.pdf',
+                time=self.round.end_time,
+            )
+        Submit.objects.create(
+            task=self.tasks[1],
+            user=self.user_with_submits,
+            submit_type=SUBMIT_TYPE_DESCRIPTION,
+            points=0,
+            filepath=SUBMIT_PAPER_FILEPATH,
+            testing_status=SUBMIT_STATUS_IN_QUEUE,
+            time=self.round.end_time,
+        )
+
+    def test_correct_tasks_in_form(self):
+        form = SubmittedTasksForm(self.round)
+        for i in range(1, 11):
+            self.assertIn(str(i), form.fields.keys())
+
+    def test_form_clean(self):
+        form = SubmittedTasksForm(self.round, data={'1': 'xxx'})
+        self.assertFalse(form.is_valid())
+        form = SubmittedTasksForm(self.round, data={'1': '-42'})
+        self.assertFalse(form.is_valid())
+        form = SubmittedTasksForm(self.round, data={'1': '47'})
+        self.assertFalse(form.is_valid())
+        form = SubmittedTasksForm(self.round, data={'1': '7'})
+        self.assertTrue(form.is_valid())
+
+    def test_create_new_submits(self):
+        data = {
+            '2': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '3': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '5': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+        }
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_new, data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        for task_number in data.keys():
+            self.assertGreater(Submit.objects.filter(
+                user=self.new_user, task__number=task_number, points=0,
+                submit_type=SUBMIT_TYPE_DESCRIPTION,
+                testing_status=SUBMIT_STATUS_IN_QUEUE).count(), 0)
+
+    def test_add_subits_to_existing_submits(self):
+        data = {
+            '1': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '4': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '7': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+        }
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_submits, data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        for task_number in data.keys():
+            self.assertGreater(Submit.objects.filter(
+                user=self.user_with_submits, task__number=task_number,
+                submit_type=SUBMIT_TYPE_DESCRIPTION).count(), 0)
+
+    def test_round_change(self):
+        self.client.force_login(self.staff_user)
+        respose = self.client.post(self.url_new, {'round': '1'})
+        self.assertEqual(respose.status_code, 200)
+        self.assertEqual(respose.context['round'].pk, 1)
+
+    def test_delete_paprer_submit(self):
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_submits,
+                                    {'7': DEENVELOPING_NOT_REVIEWED_SYMBOL}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Submit.objects.filter(
+            task=self.tasks[1], user=self.user_with_submits, submit_type=SUBMIT_TYPE_DESCRIPTION,
+            filepath=SUBMIT_PAPER_FILEPATH,
+        ).count(), 0)
+
+    def test_not_delete_electronic_submit(self):
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_submits,
+                                    {'1': DEENVELOPING_NOT_REVIEWED_SYMBOL}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Submit.objects.filter(
+            task=self.tasks[7], user=self.user_with_submits, submit_type=SUBMIT_TYPE_DESCRIPTION,
+        ).count(), 3)
+
+    def test_add_and_delete_submits(self):
+        data = {
+            '2': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '3': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '4': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+            '7': DEENVELOPING_NOT_REVIEWED_SYMBOL,
+        }
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_submits, data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        for task_number in data.keys():
+            self.assertGreater(Submit.objects.filter(
+                user=self.user_with_submits, task__number=task_number,
+                submit_type=SUBMIT_TYPE_DESCRIPTION).count(), 0)
+        self.assertEqual(Submit.objects.filter(
+            user=self.user_with_submits, task__number=1,
+            submit_type=SUBMIT_TYPE_DESCRIPTION).count(), 0)
+
+    def test_submit_new_points(self):
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_new, {'1': '7', '2': '4.47'}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Submit.objects.filter(
+            user=self.new_user, task=self.tasks[1], points=7,
+            submit_type=SUBMIT_TYPE_DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
+        ).count(), 1)
+        self.assertEqual(Submit.objects.filter(
+            user=self.new_user, task=self.tasks[2], points=Decimal('4.47'),
+            submit_type=SUBMIT_TYPE_DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
+        ).count(), 1)
+
+    def test_add_submit_points(self):
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_submits, {'7': '7'}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Submit.objects.filter(
+            user=self.user_with_submits, task=self.tasks[7], points=7,
+            submit_type=SUBMIT_TYPE_DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
+        ).count(), 1)
+
+    def test_edit_submit_points(self):
+        Submit.objects.create(
+            user=self.user_with_submits, task=self.tasks[10],
+            time=self.round.end_time + timezone.timedelta(seconds=-1),
+            filepath=SUBMIT_PAPER_FILEPATH, testing_status=SUBMIT_STATUS_REVIEWED,
+            submit_type=SUBMIT_TYPE_DESCRIPTION, points=4
+        )
+        self.client.force_login(self.staff_user)
+        response = self.client.post(self.url_submits, {'10': '9'}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Submit.objects.filter(
+            user=self.user_with_submits, task=self.tasks[10], points=9,
+            submit_type=SUBMIT_TYPE_DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
+        ).count(), 1)

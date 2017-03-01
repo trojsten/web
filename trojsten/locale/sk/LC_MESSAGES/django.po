@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-12 14:04+0100\n"
+"POT-Creation-Date: 2017-02-28 21:03+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -52,55 +52,55 @@ msgid "Category doesn't correspond with competition."
 msgstr ""
 
 # pdf file names
-#: contests/models.py:239
+#: contests/models.py:243
 msgid "year"
 msgstr "ročník"
 
-#: contests/models.py:241
+#: contests/models.py:245
 msgid "round"
 msgstr "kolo"
 
-#: contests/models.py:243
+#: contests/models.py:247
 msgid "solutions"
 msgstr "vzoráky"
 
-#: contests/models.py:243
+#: contests/models.py:247
 msgid "tasks"
 msgstr "zadania"
 
-#: contests/models.py:382
+#: contests/models.py:386
 #, fuzzy
 #| msgid "tasks"
 msgid "task"
 msgstr "úloha"
 
-#: contests/models.py:385
+#: contests/models.py:389
 msgid "organizer"
 msgstr "vedúci"
 
-#: contests/models.py:388
+#: contests/models.py:392
 msgid "reviewer"
 msgstr "opravovateľ"
 
-#: contests/models.py:389
+#: contests/models.py:393
 #, fuzzy
 #| msgid "solution-writer"
 msgid "solution writer"
 msgstr "vzorákovač"
 
-#: contests/models.py:390
+#: contests/models.py:394
 msgid "proofreader"
 msgstr "recenzovač"
 
-#: contests/models.py:393
+#: contests/models.py:397
 msgid "role"
 msgstr "funkcia"
 
-#: contests/models.py:397
+#: contests/models.py:401
 msgid "Assigned user"
 msgstr "Pridelený človek"
 
-#: contests/models.py:398
+#: contests/models.py:402
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
 
@@ -143,27 +143,27 @@ msgstr ""
 msgid "Logout successful"
 msgstr ""
 
-#: people/admin.py:155
+#: people/admin.py:157
 msgid "Personal info"
 msgstr ""
 
-#: people/admin.py:158
+#: people/admin.py:160
 msgid "Address"
 msgstr ""
 
-#: people/admin.py:159
+#: people/admin.py:161
 msgid "School"
 msgstr ""
 
-#: people/admin.py:162
+#: people/admin.py:164
 msgid "Permissions"
 msgstr ""
 
-#: people/admin.py:165
+#: people/admin.py:167
 msgid "Important dates"
 msgstr ""
 
-#: people/admin.py:251
+#: people/admin.py:256
 msgid "Users merged succesfully."
 msgstr ""
 
@@ -255,7 +255,21 @@ msgstr ""
 msgid "The two password fields didn't match."
 msgstr ""
 
-#: people/models.py:225
+#: people/forms.py:450
+msgid "Points have to be non-negative and at most {}."
+msgstr "Body musia byť nezáporné a najviac {}."
+
+#: people/forms.py:455
+#, fuzzy
+#| msgid "The value has to be integer or {}."
+msgid "The value has to be number or {}."
+msgstr "Hodnota musí byť číslo alebo {}."
+
+#: people/forms.py:464
+msgid "Round"
+msgstr "Kolo"
+
+#: people/models.py:224
 msgid "Value \"{}\" does not match regex \"{}\"."
 msgstr ""
 
@@ -269,6 +283,7 @@ msgid "Merge"
 msgstr ""
 
 #: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:6
+#: people/templates/admin/people/submitted_tasks.html:6
 #: reviews/templates/admin/review_edit.html:6
 #: reviews/templates/admin/review_form.html:6
 #: reviews/templates/admin/zip_upload.html:6
@@ -281,7 +296,7 @@ msgid "Merge users %(user)s and %(candidate)s"
 msgstr ""
 
 #: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
-#: people/templates/trojsten/people/settings.html:90
+#: people/templates/trojsten/people/settings.html:93
 #: templates/ksp_login/parts/multiple_forms.html:11
 #: templates/ksp_login/parts/single_form.html:10
 msgid "Submit"
@@ -295,34 +310,84 @@ msgstr "Obnoviť"
 msgid "Cancel"
 msgstr "Zrušiť"
 
+#: people/templates/admin/people/submitted_tasks.html:7
+msgid "People"
+msgstr "Ľudia"
+
+#: people/templates/admin/people/submitted_tasks.html:8
+msgid "Users"
+msgstr "Používatelia"
+
+#: people/templates/admin/people/submitted_tasks.html:10
+#: people/templates/admin/people/submitted_tasks_button.html:6
+msgid "Submitted tasks"
+msgstr "Odovzdané úlohy"
+
+#: people/templates/admin/people/submitted_tasks.html:15
+msgid "Tasks submitted by competitor"
+msgstr "Úlohy odovzdané riešiteľom"
+
+#: people/templates/admin/people/submitted_tasks.html:16
+msgid ""
+"\n"
+"You are viewing submits for round:\n"
+msgstr ""
+"\n"
+"Prezeráš si odovzdané úlohy pre kolo:\n"
+
+#: people/templates/admin/people/submitted_tasks.html:23
+msgid "Change round"
+msgstr "Zmeň kolo"
+
+#: people/templates/admin/people/submitted_tasks.html:27
+#, python-format
+msgid ""
+"\n"
+"Fill which tasks has the competitor sent. You can fill in the points or "
+"%(symbol)s\n"
+"for unreviewed tasks. If you want to delete submits, leave the "
+"corresponding\n"
+"fields empty. However, in this way, only paper unreviewed submits can be "
+"deleted.\n"
+"<br>\n"
+"You can go down through the checkboxes using the tab-key.\n"
+msgstr ""
+"\n"
+"Vyplň, ktoré úlohy riešeiteľ poslal. Môžeš mu vyplniť body alebo %(symbol)s\n"
+"pre neopravené úlohy. Ak cheš zmazať nejaké riešenia, nechaj odpovedajúce\n"
+"políčko prázdne. Avšak týmto spôsobom môžeš zmazať len papierové riešenia\n"
+"<br>\n"
+"Políčkami môžeš prechádzať pomocou tabulátora.\n"
+
 #: people/templates/trojsten/people/settings.html:10
+#: people/templates/trojsten/people/settings.html:13
 #, fuzzy
 #| msgid "Account information"
 msgid "Account settings"
 msgstr "Informácie o účte"
 
-#: people/templates/trojsten/people/settings.html:17
+#: people/templates/trojsten/people/settings.html:20
 msgid "Profile"
 msgstr "Profil"
 
-#: people/templates/trojsten/people/settings.html:18
+#: people/templates/trojsten/people/settings.html:21
 msgid "Properties"
 msgstr "Vlastnosti"
 
-#: people/templates/trojsten/people/settings.html:20
-#: people/templates/trojsten/people/settings.html:22
+#: people/templates/trojsten/people/settings.html:23
+#: people/templates/trojsten/people/settings.html:25
 msgid "Login settings"
 msgstr "Nastavenia prihlasovania"
 
-#: people/templates/trojsten/people/settings.html:91
+#: people/templates/trojsten/people/settings.html:94
 msgid "Add property"
 msgstr "Pridať vlastnosť"
 
-#: people/templates/trojsten/people/settings.html:100
+#: people/templates/trojsten/people/settings.html:103
 msgid "You can use any of the following services to log in to your account."
 msgstr "Možete použiť ľubovoľnú z nasledujúcich služieb na prihlásenie."
 
-#: people/templates/trojsten/people/settings.html:121
+#: people/templates/trojsten/people/settings.html:124
 #: templates/ksp_login/login.html:4 templates/ksp_login/login.html:7
 #: templates/ksp_login/parts/include_javascript.html:15
 #: templates/ksp_login/parts/login_box.html:44
@@ -333,7 +398,7 @@ msgstr "Možete použiť ľubovoľnú z nasledujúcich služieb na prihlásenie.
 msgid "Log in"
 msgstr "Prihlásiť sa"
 
-#: people/templates/trojsten/people/settings.html:129
+#: people/templates/trojsten/people/settings.html:132
 #, python-format
 msgid ""
 "\n"
@@ -348,12 +413,12 @@ msgstr ""
 "stránke</a>.\n"
 "                "
 
-#: people/templates/trojsten/people/settings.html:134
+#: people/templates/trojsten/people/settings.html:137
 #: templates/ksp_login/password.html:5 templates/ksp_login/password.html:8
 msgid "Password change"
 msgstr "Zmena hesla"
 
-#: people/templates/trojsten/people/settings.html:137
+#: people/templates/trojsten/people/settings.html:140
 #, python-format
 msgid ""
 "\n"
