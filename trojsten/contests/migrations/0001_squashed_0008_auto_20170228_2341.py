@@ -8,29 +8,9 @@ import django.db.models.deletion
 import trojsten.utils.utils
 
 
-def fill_task_people(apps, schema_editor):
-    Task = apps.get_model('contests', 'Task')
-    TaskPeople = apps.get_model('contests', 'TaskPeople')
-    for task in Task.objects.all():
-        if task.reviewer:
-            TaskPeople.objects.create(
-                task=task,
-                user=task.reviewer,
-                role=constants.TASK_ROLE_REVIEWER
-            )
-
-
-def reverse_fill_task_people(apps, schema_editor):
-    TaskPeople = apps.get_model('contests', 'TaskPeople')
-    for line in TaskPeople.objects.all():
-        if line.role == constants.TASK_ROLE_REVIEWER and not line.task.reviewer:
-            line.task.reviewer = line.user
-            line.task.save()
-
-
 class Migration(migrations.Migration):
 
-    replaces = [(b'contests', '0001_squashed_0003_auto_20160301_1436'), (b'contests', '0003_category_task'), (b'contests', '0004_auto_20160910_1302'), (b'contests', '0005_auto_20160910_1317'), (b'contests', '0006_auto_20160925_1324'), (b'contests', '0007_auto_20161031_2313_squashed_0009_remove_task_reviewer'), (b'contests', '0008_auto_20170228_2341')]
+    replaces = [('contests', '0001_squashed_0003_auto_20160301_1436'), ('contests', '0003_category_task'), ('contests', '0004_auto_20160910_1302'), ('contests', '0005_auto_20160910_1317'), ('contests', '0006_auto_20160925_1324'), ('contests', '0007_auto_20161031_2313_squashed_0009_remove_task_reviewer'), ('contests', '0008_auto_20170228_2341')]
 
     initial = True
 
@@ -55,22 +35,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='Round',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.IntegerField(verbose_name='\u010d\xedslo')),
-                ('start_time', models.DateTimeField(default=trojsten.utils.utils.default_start_time, verbose_name='za\u010diatok')),
-                ('end_time', models.DateTimeField(default=trojsten.utils.utils.default_end_time, verbose_name='koniec')),
-                ('visible', models.BooleanField(verbose_name='vidite\u013enos\u0165')),
-                ('solutions_visible', models.BooleanField(verbose_name='vidite\u013enos\u0165 vzor\xe1kov')),
-                ('series', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contests.Series', verbose_name='s\xe9ria')),
-            ],
-            options={
-                'verbose_name': 'Kolo',
-                'verbose_name_plural': 'Kol\xe1',
-            },
-        ),
-        migrations.CreateModel(
             name='Semester',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -84,10 +48,26 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'S\xe9rie',
             },
         ),
+        migrations.CreateModel(
+            name='Round',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('number', models.IntegerField(verbose_name='\u010d\xedslo')),
+                ('start_time', models.DateTimeField(default=trojsten.utils.utils.default_start_time, verbose_name='za\u010diatok')),
+                ('end_time', models.DateTimeField(default=trojsten.utils.utils.default_end_time, verbose_name='koniec')),
+                ('visible', models.BooleanField(verbose_name='vidite\u013enos\u0165')),
+                ('solutions_visible', models.BooleanField(verbose_name='vidite\u013enos\u0165 vzor\xe1kov')),
+                ('semester', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contests.Semester', verbose_name='s\xe9ria')),
+            ],
+            options={
+                'verbose_name': 'Kolo',
+                'verbose_name_plural': 'Kol\xe1',
+            },
+        ),
         migrations.AddField(
             model_name='competition',
             name='sites',
-            field=models.ManyToManyField(to=b'sites.Site'),
+            field=models.ManyToManyField(to='sites.Site'),
         ),
         migrations.CreateModel(
             name='Category',
@@ -114,19 +94,13 @@ class Migration(migrations.Migration):
                 ('has_description', models.BooleanField(default=False, verbose_name='odovzd\xe1va sa popis')),
                 ('has_testablezip', models.BooleanField(default=False, verbose_name='odovzd\xe1va sa zip na testova\u010d')),
                 ('external_submit_link', models.CharField(blank=True, max_length=128, null=True, verbose_name='Odkaz na extern\xe9 odovzd\xe1vanie')),
-                ('categories', models.ManyToManyField(blank=True, to=b'contests.Category', verbose_name='kateg\xf3ria')),
-                ('reviewer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='opravovate\u013e')),
+                ('categories', models.ManyToManyField(blank=True, to='contests.Category', verbose_name='kateg\xf3ria')),
                 ('round', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contests.Round', verbose_name='kolo')),
             ],
             options={
                 'verbose_name': '\xdaloha',
                 'verbose_name_plural': '\xdalohy',
             },
-        ),
-        migrations.RenameField(
-            model_name='Round',
-            old_name='series',
-            new_name='semester',
         ),
         migrations.AlterModelOptions(
             name='semester',
@@ -154,14 +128,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Assigned user',
                 'verbose_name_plural': 'Pridelen\xed \u013eudia',
             },
-        ),
-        migrations.RunPython(
-            code=fill_task_people,
-            reverse_code=reverse_fill_task_people,
-        ),
-        migrations.RemoveField(
-            model_name='task',
-            name='reviewer',
         ),
         migrations.AlterModelOptions(
             name='taskpeople',
