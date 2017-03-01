@@ -10,11 +10,11 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contests', '0002_auto_20160502_1646'),
+        ('contests', '0001_squashed_0003_auto_20160301_1436'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
-    state_operations = [
+    operations = [
         migrations.CreateModel(
             name='Category',
             fields=[
@@ -49,8 +49,4 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': '\xdalohy',
             },
         ),
-    ]
-
-    operations = [
-        migrations.SeparateDatabaseAndState(state_operations=state_operations)
     ]
