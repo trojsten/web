@@ -257,13 +257,13 @@ msgstr ""
 
 #: people/forms.py:450
 msgid "Points have to be non-negative and at most {}."
-msgstr "Body musia byť nezáporné a najviac {}"
+msgstr "Body musia byť nezáporné a najviac {}."
 
 #: people/forms.py:455
 #, fuzzy
 #| msgid "The value has to be integer or {}."
 msgid "The value has to be number or {}."
-msgstr "Hodnota musí byť číslo alebo {}"
+msgstr "Hodnota musí byť číslo alebo {}."
 
 #: people/forms.py:464
 msgid "Round"
