@@ -4,6 +4,7 @@
 {% load ksp_login %}
 {% load utils %}
 {% load bootstrap %}
+{% load crispy_forms_tags %}
 {% load sekizai_tags %}
 {% load staticfiles %}
 
@@ -19,6 +20,7 @@
     <ul class="nav nav-tabs settings-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">{%  trans "Profile" %}</a></li>
         <li role="presentation"><a href="#props" aria-controls="properties" role="tab" data-toggle="tab">{% trans "Properties" %}</a></li>
+        <li role="presentation"><a href="#contests" aria-controls="contests" role="tab" data-toggle="tab">{% trans "Contests" %}</a></li>
         {% if SITE.is_login_provider %}
         <li role="presentation"><a href="#login" aria-controls="login settings" role="tab" data-toggle="tab">{% trans "Login settings" %}</a></li>
         {% else %}
@@ -95,6 +97,13 @@
                     </div>
                 </div>
             </form>
+        </div>
+
+        <div role="tabpanel" class="tab-pane fade" id="contests">
+        <p class="lead">
+            Vyber si súťaže ktoré chceš riešiť:
+        </p>
+        {% crispy competition_select_form %}
         </div>
 
         <div role="tabpanel" class="tab-pane fade" id="login">

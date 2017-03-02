@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 from django import forms
+from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import string_concat
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import string_concat
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
 
@@ -431,78 +435,3 @@ class MergeForm(forms.Form):
                 field_factory.get_prop_field(prop_key)
             ) for prop_key in prop_keys
         ]))
-
-
-class SubmittedTasksForm(forms.Form):
-
-    def __init__(self, round, *args, **kwargs):
-        super(SubmittedTasksForm, self).__init__(*args, **kwargs)
-        self.max_points = {}
-        self.round = round
-        for task in Task.objects.filter(round=round).order_by('number'):
-            self.fields[str(task.number)] = forms.CharField(max_length=6, required=False)
-            self.max_points[task.number] = task.description_points
-
-    def clean(self):
-        cleaned_data = super(SubmittedTasksForm, self).clean()
-        for task_number in list(cleaned_data.keys()):
-            value = cleaned_data[task_number]
-            if len(value) > 0:
-                try:
-                    points = float(value)
-                    if points < 0 or points > self.max_points[int(task_number)]:
-                        self.add_error(task_number,
-                                       _('Points have to be non-negative and at most {}.')
-                                       .format(self.max_points[int(task_number)]))
-                except ValueError:
-                    if value != constants.DEENVELOPING_NOT_REVIEWED_SYMBOL:
-                        self.add_error(task_number,
-                                       _('The value has to be number or {}.')
-                                       .format(constants.DEENVELOPING_NOT_REVIEWED_SYMBOL))
-        return cleaned_data
-
-    def save(self, user):
-        for task in Task.objects.filter(round=self.round):
-            value = self.cleaned_data[str(task.number)]
-            if len(value) > 0:
-                points = 0 if value == DEENVELOPING_NOT_REVIEWED_SYMBOL else float(value)
-                status = SUBMIT_STATUS_IN_QUEUE if value == DEENVELOPING_NOT_REVIEWED_SYMBOL \
-                    else SUBMIT_STATUS_REVIEWED
-                submit = Submit.objects.filter(
-                    task=task,
-                    user=user,
-                    submit_type=SUBMIT_TYPE_DESCRIPTION,
-                ).order_by('-time').first()
-                if submit:
-                    submit.points = points
-                    submit.testing_status = status
-                    submit.save()
-                else:
-                    submit = Submit.objects.create(
-                        task=task,
-                        user=user,
-                        submit_type=SUBMIT_TYPE_DESCRIPTION,
-                        points=points,
-                        filepath=SUBMIT_PAPER_FILEPATH,
-                        testing_status=status,
-                    )
-                    submit.time = self.round.end_time + timezone.timedelta(seconds=-1)
-                    submit.save()
-            else:
-                Submit.objects.filter(
-                    task=task,
-                    user=user,
-                    submit_type=SUBMIT_TYPE_DESCRIPTION,
-                    filepath=SUBMIT_PAPER_FILEPATH,
-                ).delete()
-
-
-class RoundSelectForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super(RoundSelectForm, self).__init__(*args, **kwargs)
-        self.fields['round'] = forms.ModelChoiceField(
-            label=_('Round'),
-            queryset=Round.objects.filter(
-                semester__competition__in=Competition.objects.current_site_only()
-            ).order_by('-end_time'),
-        )
