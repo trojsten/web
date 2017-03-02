@@ -14,7 +14,6 @@ class Migration(migrations.Migration):
     dependencies = [
         ('people', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('contests', '0001_squashed_0003_auto_20160301_1436'),
         ('contests', '0003_category_task'),
         ('schools', '0001_initial'),
     ]
