@@ -220,3 +220,15 @@ class BaseZipSet(BaseFormSet):
                 )
 
         os.remove(archive_path)
+
+
+class BasePointForm(forms.Form):
+    user = forms.ModelChoiceField(queryset=User.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        self.max_points = kwargs.pop('max_points')
+        super(BasePointForm, self).__init__(*args, **kwargs)
+        self.fields['points'] = forms.DecimalField(max_digits=5, decimal_places=2, required=False,
+                                                   min_value=0, max_value=self.max_points)
+        self.fields['reviewer_comment'] = forms.CharField(
+            required=False, widget=forms.Textarea(attrs={'rows': 1}))

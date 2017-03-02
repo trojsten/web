@@ -1,0 +1,48 @@
+{% extends "admin/review_base.html" %}
+{% load utils %}
+
+{% block title %}Submit points{% endblock %}
+
+
+{% block content %}
+<h1>Submit points</h1>
+<form method="post" action="" class="form-horizontal">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table class="table table-condensed task-list">
+    {% for form in formset %}
+        {% if forloop.first %}
+        <thead>
+        <tr>
+            {% for field in form %}
+            <th> {{ field.label }} </th>
+            {% endfor %}
+        </tr>
+        </thead>
+        {% endif %}
+        <tr>
+            {% for field in form %}
+            <td>
+                {% if field.name == "user" %}
+                    {% if field.value %}
+                        <label class="control-label">
+                            {{ field.field.choices|choice_text:field.value }}
+                        </label>
+                        <input type="hidden" name="{{ field.html_name }}" value="{{ field.value }}"/>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                {% else %}
+                    {{ field }}
+                {% endif %}
+                {% for error in field.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </table>
+    <input type="submit" text="Save"/>
+</form>
+{% endblock %}

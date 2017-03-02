@@ -6,6 +6,7 @@ from time import time
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.forms import formset_factory
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
@@ -17,12 +18,15 @@ from trojsten.reviews.constants import (RE_FILENAME, RE_SUBMIT_PK,
                                         REVIEW_POINTS_FILENAME,
                                         REVIEW_ERRORS_FILENAME)
 from trojsten.reviews.forms import (ReviewForm, UploadZipForm,
-                                    get_zip_form_set, reviews_upload_pattern)
+                                    get_zip_form_set, reviews_upload_pattern,
+                                    BasePointForm)
 from trojsten.reviews.helpers import (get_latest_submits_for_task,
                                       get_user_as_choices, submit_directory,
                                       submit_download_filename,
                                       submit_protocol_download_filename,
-                                      submit_source_download_filename)
+                                      submit_source_download_filename,
+                                      edit_review as edit_review_helper,
+                                      submit_review)
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 from trojsten.submit.models import Submit
 from trojsten.contests.models import Task
@@ -263,3 +267,42 @@ def zip_upload(request, task_pk):
     return render(
         request, 'admin/zip_upload.html', context
     )
+
+
+def submit_points(request, task_pk):
+    task = get_object_or_404(Task, pk=task_pk)
+    users = get_latest_submits_for_task(task)
+    PointsFormSet = formset_factory(BasePointForm, extra=0)
+    if request.method == "POST":
+        print request.POST
+        formset = PointsFormSet(request.POST, form_kwargs={'max_points': task.description_points})
+        if formset.is_valid():
+            for form_data in formset.cleaned_data:
+                user = form_data['user']
+                if user in users:
+                    value = users[user]
+                    if form_data['points'] is not None:
+                        if 'review' in value:
+                            edit_review_helper(None, None, value['review'], user,
+                                               form_data['points'], form_data['reviewer_comment'])
+                        else:
+                            submit_review(None, None, task, user,form_data['points'],
+                                          form_data['reviewer_comment'], value['description'])
+            return redirect('admin:review_task', task.pk)
+    else:
+        data = []
+        for user, value in users.iteritems():
+            form_data = {'user': user}
+            if 'review' in value:
+                form_data['points'] = value['review'].points
+                form_data['reviewer_comment'] = value['review'].reviewer_comment
+            data.append(form_data)
+        formset = PointsFormSet(initial=data, form_kwargs={'max_points': task.description_points})
+    names = {}
+    for user in users.keys():
+        names[user.pk] = user.get_full_name()
+    context = {
+        'formset': formset,
+        'names': names,
+    }
+    return render(request, 'admin/submit_points.html', context)
