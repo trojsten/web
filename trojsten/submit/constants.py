@@ -26,6 +26,7 @@ SUBMIT_VERBOSE_RESPONSE = {
     'WA': _('Wrong answer'),
     'CERR': _('Compilation error'),
     'TLE': _('Time limit exceeded'),
+    'MLE': _('Memory limit exceeded'),
     'OK': _('OK'),
     'EXC': _('Runtime exception'),
     'SEC': _('Security exception'),
