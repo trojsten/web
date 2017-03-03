@@ -46,10 +46,7 @@ def review_task(request, task_pk):
     form_set = None
 
     if request.method == 'POST':
-        print request.POST
-        print
         if request.POST.get('Upload', None):
-            print "upload"
             form = UploadZipForm(request.POST, request.FILES)
             if form.is_valid():
                 path_to_zip = form.save(request.user, task)
@@ -63,12 +60,8 @@ def review_task(request, task_pk):
                     )
                     return redirect('admin:review_submit_zip', task.pk)
         if 'points_submit' in request.POST:
-            print "points"
             form_set = PointsFormSet(request.POST, form_kwargs={'max_points': task.description_points})
-            print form_set.is_valid()
-            print form_set.errors
             if form_set.is_valid():
-                print "valid"
                 for form_data in form_set.cleaned_data:
                     user = form_data['user']
                     if user in users:
@@ -87,17 +80,13 @@ def review_task(request, task_pk):
         form = UploadZipForm()
     if not form_set:
         data = []
-        # form_set = PointsFormSet()
         for user in users_list:
             value = users[user]
             form_data = {'user': user}
             if 'review' in value:
                 form_data['points'] = value['review'].points
                 form_data['reviewer_comment'] = value['review'].reviewer_comment
-            # point_form = BasePointForm(initial=form_data, max_points=task.description_points)
-            # form_set.forms.append(point_form)
             data.append(form_data)
-            # users[user]['form'] = point_form
         form_set = PointsFormSet(initial=data, form_kwargs={'max_points': task.description_points})
     for i in range(0, len(users_list)):
         users[users_list[i]]['form'] = form_set.forms[i]
