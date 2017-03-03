@@ -223,11 +223,10 @@ class BaseZipSet(BaseFormSet):
 
 
 class BasePointForm(forms.Form):
-    user = forms.ModelChoiceField(queryset=User.objects.all())
-
     def __init__(self, *args, **kwargs):
         self.max_points = kwargs.pop('max_points')
         super(BasePointForm, self).__init__(*args, **kwargs)
+        self.fields['user'] = forms.ModelChoiceField(queryset=User.objects.all())
         self.fields['points'] = forms.DecimalField(max_digits=5, decimal_places=2, required=False,
                                                    min_value=0, max_value=self.max_points,
                                                    widget=forms.TextInput(attrs={'tabindex': '1'}))
