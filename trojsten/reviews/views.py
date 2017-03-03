@@ -19,7 +19,7 @@ from trojsten.reviews.constants import (RE_FILENAME, RE_SUBMIT_PK,
                                         REVIEW_ERRORS_FILENAME)
 from trojsten.reviews.forms import (ReviewForm, UploadZipForm,
                                     get_zip_form_set, reviews_upload_pattern,
-                                    BasePointForm)
+                                    BasePointForm, BasePointFormSet)
 from trojsten.reviews.helpers import (get_latest_submits_for_task,
                                       get_user_as_choices, submit_directory,
                                       submit_download_filename,
@@ -34,10 +34,7 @@ from trojsten.contests.models import Task
 
 def review_task(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
-    unordered_users = get_latest_submits_for_task(task)
-    users = OrderedDict(sorted(unordered_users.items(),
-                               key=lambda user: user[0].get_reverse_full_name()))
-    PointsFormSet = formset_factory(BasePointForm, extra=0)
+    PointsFormSet = formset_factory(BasePointForm, formset=BasePointFormSet, extra=0)
 
     if (not request.user.is_superuser and
             task.round.semester.competition.organizers_group not in
@@ -64,20 +61,14 @@ def review_task(request, task_pk):
         if 'points_submit' in request.POST:
             form_set = PointsFormSet(request.POST, form_kwargs={'max_points': task.description_points})
             if form_set.is_valid():
-                for form_data in form_set.cleaned_data:
-                    user = form_data['user']
-                    if user in users:
-                        value = users[user]
-                        if form_data['points'] is not None:
-                            if 'review' in value:
-                                edit_review_helper(None, None, value['review'], user,
-                                                   form_data['points'], form_data['reviewer_comment'])
-                            else:
-                                submit_review(None, None, task, user, form_data['points'],
-                                              form_data['reviewer_comment'], value['description'])
+                form_set.save(task)
                 return redirect('admin:review_task', task.pk)
 
+    unordered_users = get_latest_submits_for_task(task)
+    users = OrderedDict(sorted(unordered_users.items(),
+                               key=lambda user: user[0].get_reverse_full_name()))
     users_list = list(users.keys())
+
     if not form:
         form = UploadZipForm()
     if not form_set:
