@@ -1,6 +1,6 @@
 import os.path
 import zipfile
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from time import time
 
 from django.conf import settings
@@ -34,7 +34,9 @@ from trojsten.contests.models import Task
 
 def review_task(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
-    users = get_latest_submits_for_task(task)
+    unordered_users = get_latest_submits_for_task(task)
+    users = OrderedDict(sorted(unordered_users.items(),
+                               key=lambda user: user[0].get_reverse_full_name()))
     PointsFormSet = formset_factory(BasePointForm, extra=0)
 
     if (not request.user.is_superuser and
