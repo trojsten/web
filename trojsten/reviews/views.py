@@ -35,33 +35,78 @@ from trojsten.contests.models import Task
 def review_task(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     users = get_latest_submits_for_task(task)
+    PointsFormSet = formset_factory(BasePointForm, extra=0)
 
     if (not request.user.is_superuser and
             task.round.semester.competition.organizers_group not in
             request.user.groups.all()):
         raise PermissionDenied
 
+    form = None
+    form_set = None
+
     if request.method == 'POST':
-        form = UploadZipForm(request.POST, request.FILES)
+        print request.POST
+        print
+        if request.POST.get('Upload', None):
+            print "upload"
+            form = UploadZipForm(request.POST, request.FILES)
+            if form.is_valid():
+                path_to_zip = form.save(request.user, task)
 
-        if form.is_valid():
-            path_to_zip = form.save(request.user, task)
+                if path_to_zip:
+                    request.session['review_archive'] = path_to_zip
+                    messages.add_message(
+                        request,
+                        messages.SUCCESS,
+                        _('Successfully uploaded a zip file.')
+                    )
+                    return redirect('admin:review_submit_zip', task.pk)
+        if 'points_submit' in request.POST:
+            print "points"
+            form_set = PointsFormSet(request.POST, form_kwargs={'max_points': task.description_points})
+            print form_set.is_valid()
+            print form_set.errors
+            if form_set.is_valid():
+                print "valid"
+                for form_data in form_set.cleaned_data:
+                    user = form_data['user']
+                    if user in users:
+                        value = users[user]
+                        if form_data['points'] is not None:
+                            if 'review' in value:
+                                edit_review_helper(None, None, value['review'], user,
+                                                   form_data['points'], form_data['reviewer_comment'])
+                            else:
+                                submit_review(None, None, task, user, form_data['points'],
+                                              form_data['reviewer_comment'], value['description'])
+                return redirect('admin:review_task', task.pk)
 
-            if path_to_zip:
-                request.session['review_archive'] = path_to_zip
-                messages.add_message(
-                    request,
-                    messages.SUCCESS,
-                    _('Successfully uploaded a zip file.')
-                )
-                return redirect('admin:review_submit_zip', task.pk)
-    else:
+    users_list = list(users.keys())
+    if not form:
         form = UploadZipForm()
+    if not form_set:
+        data = []
+        # form_set = PointsFormSet()
+        for user in users_list:
+            value = users[user]
+            form_data = {'user': user}
+            if 'review' in value:
+                form_data['points'] = value['review'].points
+                form_data['reviewer_comment'] = value['review'].reviewer_comment
+            # point_form = BasePointForm(initial=form_data, max_points=task.description_points)
+            # form_set.forms.append(point_form)
+            data.append(form_data)
+            # users[user]['form'] = point_form
+        form_set = PointsFormSet(initial=data, form_kwargs={'max_points': task.description_points})
+    for i in range(0, len(users_list)):
+        users[users_list[i]]['form'] = form_set.forms[i]
 
     context = {
         'task': task,
         'users': users,
         'form': form,
+        'form_set': form_set,
     }
 
     return render(
@@ -267,42 +312,3 @@ def zip_upload(request, task_pk):
     return render(
         request, 'admin/zip_upload.html', context
     )
-
-
-def submit_points(request, task_pk):
-    task = get_object_or_404(Task, pk=task_pk)
-    users = get_latest_submits_for_task(task)
-    PointsFormSet = formset_factory(BasePointForm, extra=0)
-    if request.method == "POST":
-        print request.POST
-        formset = PointsFormSet(request.POST, form_kwargs={'max_points': task.description_points})
-        if formset.is_valid():
-            for form_data in formset.cleaned_data:
-                user = form_data['user']
-                if user in users:
-                    value = users[user]
-                    if form_data['points'] is not None:
-                        if 'review' in value:
-                            edit_review_helper(None, None, value['review'], user,
-                                               form_data['points'], form_data['reviewer_comment'])
-                        else:
-                            submit_review(None, None, task, user,form_data['points'],
-                                          form_data['reviewer_comment'], value['description'])
-            return redirect('admin:review_task', task.pk)
-    else:
-        data = []
-        for user, value in users.iteritems():
-            form_data = {'user': user}
-            if 'review' in value:
-                form_data['points'] = value['review'].points
-                form_data['reviewer_comment'] = value['review'].reviewer_comment
-            data.append(form_data)
-        formset = PointsFormSet(initial=data, form_kwargs={'max_points': task.description_points})
-    names = {}
-    for user in users.keys():
-        names[user.pk] = user.get_full_name()
-    context = {
-        'formset': formset,
-        'names': names,
-    }
-    return render(request, 'admin/submit_points.html', context)

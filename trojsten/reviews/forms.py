@@ -229,6 +229,7 @@ class BasePointForm(forms.Form):
         self.max_points = kwargs.pop('max_points')
         super(BasePointForm, self).__init__(*args, **kwargs)
         self.fields['points'] = forms.DecimalField(max_digits=5, decimal_places=2, required=False,
-                                                   min_value=0, max_value=self.max_points)
+                                                   min_value=0, max_value=self.max_points,
+                                                   widget=forms.TextInput(attrs={'tabindex': '1'}))
         self.fields['reviewer_comment'] = forms.CharField(
-            required=False, widget=forms.Textarea(attrs={'rows': 1}))
+            required=False, widget=forms.Textarea(attrs={'rows': 1, 'tabindex': 1}))
