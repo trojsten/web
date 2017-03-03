@@ -7,8 +7,7 @@ import trojsten.utils.utils
 
 
 class Migration(migrations.Migration):
-
-    replaces = [('contests', '0001_initial'), ('contests', '0002_auto_20160119_1100'), ('contests', '0003_auto_20160301_1436')]
+    initial = True
 
     dependencies = [
         ('sites', '0001_initial'),

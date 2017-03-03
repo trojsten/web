@@ -9,15 +9,11 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [('results', '0001_initial'), ('results', '0002_auto_20160607_1400'), ('results', '0003_auto_20160608_1143')]
-
     initial = True
 
     dependencies = [
         ('people', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('contests', '0001_squashed_0003_auto_20160301_1436'),
-        ('tasks', '0001_initial'),
         ('contests', '0003_category_task'),
         ('schools', '0001_initial'),
     ]

@@ -12,11 +12,11 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('tasks', '0007_auto_20160608_1051'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('contests', '0003_category_task'),
     ]
 
-    state_operations = [
+    operations = [
         migrations.CreateModel(
             name='Submit',
             fields=[
@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ('tester_response', models.CharField(blank=True, help_text='O\u010dak\xe1van\xe9 odpovede s\xfa OK, EXC, WA, SEC, TLE, IGN, CERR', max_length=10, verbose_name='odpove\u010f testova\u010da')),
                 ('protocol_id', models.CharField(blank=True, max_length=128, verbose_name='\u010d\xedslo protokolu')),
                 ('reviewer_comment', models.TextField(blank=True, verbose_name='koment\xe1r od opravovate\u013ea')),
-                ('task', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tasks.Task', verbose_name='\xfaloha')),
+                ('task', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contests.Task', verbose_name='\xfaloha')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='odovzd\xe1vate\u013e')),
             ],
             options={
@@ -37,8 +37,4 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Submity',
             },
         ),
-    ]
-
-    operations = [
-        migrations.SeparateDatabaseAndState(state_operations=state_operations)
     ]
