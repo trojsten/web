@@ -583,17 +583,7 @@ class PointFormSetTests(TestCase):
         self.user1 = User.objects.create_user(username='TestUser1', password='password',
                                               first_name='Jozko', last_name='Mrkvicka',
                                               graduation=year, pk=1)
-        self.user2 = User.objects.create_user(username='TestUser2', password='password',
-                                              first_name='Jozko', last_name='Hrasok',
-                                              graduation=year, pk=2)
-        self.staff = User.objects.create_user(username='TestStaff', password='password',
-                                              first_name='Jozko', last_name='Veduci',
-                                              graduation=2014)
-        self.staff.is_staff = True
-        self.staff.save()
 
-        group = Group.objects.create(name='Test Group')
-        group.user_set.add(self.staff)
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         semester = Semester.objects.create(
@@ -608,10 +598,6 @@ class PointFormSetTests(TestCase):
             task=self.task, user=self.user1, submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
             points=0, testing_status=submit_constants.SUBMIT_STATUS_IN_QUEUE
         )
-        # Submit.objects.create(
-        #     task=self.task, user=self.user2, submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
-        #     points=0, testing_status=submit_constants.SUBMIT_STATUS_IN_QUEUE
-        # )
         self.form_set_class = formset_factory(BasePointForm, BasePointFormSet, extra=0)
         self.data = {
             'form-TOTAL_FORMS': '1',
@@ -668,8 +654,7 @@ class PointFormSetTests(TestCase):
         self.assertTrue(form_set.is_valid())
         form_set.save(self.task)
         users = helpers.get_latest_submits_for_task(self.task)
-        self.assertEqual(users[self.user1]['review'].points, 7)
-        self.assertEqual(users[self.user1]['review'].reviewer_comment, 'First comment')
+        self.assertNotIn('review', users[self.user1])
 
     def test_invalid_negative_points(self):
         self.data['form-0-points'] = -47

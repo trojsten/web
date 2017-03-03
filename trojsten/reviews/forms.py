@@ -23,6 +23,7 @@ from unidecode import unidecode
 from trojsten.people.models import User
 from trojsten.reviews.constants import RE_FILENAME, RE_LAST_NAME, RE_SUBMIT_PK
 from trojsten.reviews.helpers import edit_review, submit_review, get_latest_submits_for_task
+from trojsten.submit.constants import SUBMIT_STATUS_IN_QUEUE
 from trojsten.submit.helpers import write_chunks_to_file
 
 reviews_upload_pattern = re.compile(
@@ -248,3 +249,9 @@ class BasePointFormSet(forms.BaseFormSet):
                     else:
                         submit_review(None, None, task, user, form_data['points'],
                                       form_data['reviewer_comment'], value['description'])
+                else:
+                    if 'review' in value:
+                        submit = value['review']
+                        submit.points = 0
+                        submit.testing_status = SUBMIT_STATUS_IN_QUEUE
+                        submit.save()
