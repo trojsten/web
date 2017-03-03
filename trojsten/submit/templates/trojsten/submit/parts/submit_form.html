@@ -1,14 +1,25 @@
 {% load bootstrap %}
 {% if task.has_description %}
-    <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=constants.SUBMIT_TYPE_DESCRIPTION %}">
-        {% csrf_token %}
-        <div class="form-group" style="min-width:50px;"><label>Popis</label></div>
-        {{ description_form | bootstrap_inline }}
-        <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
-        <input class="btn btn-primary" type="submit" value="Odovzdaj" />
-    </form>
+    {% if competition_ignored %}
+      <div class="alert alert-danger">
+        Na odovzdávanie popisu si musíš povoliť súťaž <em>{{ task.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
+      </div>
+    {% else %}
+      <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=constants.SUBMIT_TYPE_DESCRIPTION %}">
+          {% csrf_token %}
+          <div class="form-group" style="min-width:50px;"><label>Popis</label></div>
+          {{ description_form | bootstrap_inline }}
+          <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
+          <input class="btn btn-primary" type="submit" value="Odovzdaj" />
+      </form>
+    {% endif %}
 {% endif %}
 {% if task.has_source %}
+    {% if competition_ignored %}
+      <div class="alert alert-danger">
+        Tvoje riešenie sa neráta do výsledkovky. Ak to chceš zmeniť, povoľ si súťaž <em>{{ task.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
+      </div>
+    {% endif %}
     <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=constants.SUBMIT_TYPE_SOURCE %}">
         {% csrf_token %}
         <div class="form-group" style="min-width:50px;"><label>Kód</label></div>
@@ -18,6 +29,11 @@
     </form>
 {% endif %}
 {% if task.has_testablezip %}
+    {% if competition_ignored %}
+      <div class="alert alert-danger">
+        Tvoje riešenie sa neráta do výsledkovky. Ak to chceš zmeniť, povoľ si súťaž <em>{{ task.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
+      </div>
+    {% endif %}
     <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=constants.SUBMIT_TYPE_TESTABLE_ZIP %}">
         {% csrf_token %}
         <div class="form-group" style="min-width:50px;"><label>Zip</label></div>
@@ -26,8 +42,12 @@
         <input class="btn btn-primary" type="submit" value="Odovzdaj" />
     </form>
 {% endif %}
-
 {% if task.external_submit_link %}
+    {% if competition_ignored %}
+      <div class="alert alert-danger">
+        Tvoje riešenie sa neráta do výsledkovky. Ak to chceš zmeniť, povoľ si súťaž <em>{{ task.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
+      </div>
+    {% endif %}
     <p>Tento príklad sa odovzdáva na zvlášť stránke. </p>
     <a class="btn btn-primary" href="{{task.external_submit_link}}">Stránka s odovzdávaním</a>
 {% endif %}

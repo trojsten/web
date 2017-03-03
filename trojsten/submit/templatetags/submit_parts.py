@@ -11,10 +11,12 @@ register = template.Library()
 
 
 @register.inclusion_tag('trojsten/submit/parts/submit_form.html')
-def show_submit_form(task, redirect):
+def show_submit_form(task, user, redirect):
     """Renders submit form for specified task"""
     data = {}
     data['task'] = task
+    data['user_valid'] = user.is_valid_for_competition(task.round.semester.competition)
+    data['competition_ignored'] = user.is_competition_ignored(task.round.semester.competition)
     data['constants'] = constants
     data['redirect_to'] = redirect
     if task.has_source:
