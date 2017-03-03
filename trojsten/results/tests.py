@@ -10,7 +10,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from trojsten.contests.models import Competition, Round, Semester
-from trojsten.people.models import User
+from trojsten.people.models import User, UserPropertyKey
 from trojsten.submit.models import Submit
 from trojsten.contests.models import Task
 from trojsten.utils.test_utils import get_noexisting_id
@@ -23,9 +23,9 @@ class RecentResultsTest(TestCase):
         self.semester = Semester.objects.create(number=1, name='Test semester', competition=competition,
                                                 year=1)
         self.url = reverse('view_latest_results')
-        year = timezone.now().year + 2
+        self.year = timezone.now().year + 2
         self.user = User.objects.create(username="TestUser", password="password",
-                                        first_name="Jozko", last_name="Mrkvicka", graduation=year)
+                                        first_name="Jozko", last_name="Mrkvicka", graduation=self.year)
 
     def test_no_rounds(self):
         response = self.client.get(self.url)
@@ -89,6 +89,45 @@ class RecentResultsTest(TestCase):
 
         response = self.client.get("%s?show_staff=True" % self.url)
         self.assertContains(response, old_user.get_full_name())
+
+    def test_ignored_user(self):
+        user = User.objects.create(username="TestIgnoredUser", password="password",
+                                   first_name="Jozko", last_name="Starcek", graduation=self.year)
+        user.ignored_competitions.add(self.semester.competition)
+        start = timezone.now() + timezone.timedelta(-4)
+        end = timezone.now() + timezone.timedelta(4)
+        test_round = Round.objects.create(number=1, semester=self.semester, visible=True,
+                                          solutions_visible=True, start_time=start, end_time=end)
+        task = Task.objects.create(number=1, name='Test task 1', round=test_round)
+
+        submit = Submit.objects.create(task=task, user=user, submit_type=0, points=5)
+        submit.time = start + timezone.timedelta(0, 5)
+        submit.save()
+
+        response = self.client.get(self.url)
+        self.assertNotContains(response, user.get_full_name())
+
+        response = self.client.get("%s?show_staff=True" % self.url)
+        self.assertContains(response, user.get_full_name())
+
+    def test_invalid_user(self):
+        test_prop_key = UserPropertyKey.objects.create(key_name='Test property')
+        self.semester.competition.required_user_props.add(test_prop_key)
+        start = timezone.now() + timezone.timedelta(-4)
+        end = timezone.now() + timezone.timedelta(4)
+        test_round = Round.objects.create(number=1, semester=self.semester, visible=True,
+                                          solutions_visible=True, start_time=start, end_time=end)
+        task = Task.objects.create(number=1, name='Test task 1', round=test_round)
+
+        submit = Submit.objects.create(task=task, user=self.user, submit_type=0, points=5)
+        submit.time = start + timezone.timedelta(0, 5)
+        submit.save()
+
+        response = self.client.get(self.url)
+        self.assertNotContains(response, self.user.get_full_name())
+
+        response = self.client.get("%s?show_staff=True" % self.url)
+        self.assertContains(response, self.user.get_full_name())
 
 
 class ResultsTest(TestCase):

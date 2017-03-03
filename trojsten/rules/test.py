@@ -11,7 +11,8 @@ from trojsten.submit.models import Submit
 
 
 def get_row_for_user(tables, user, category):
-    for table in tables:
+    for table_object in tables:
+        table = table_object.table
         if table.tag.key == category:
             for row in table.rows:
                 if row.user == user:

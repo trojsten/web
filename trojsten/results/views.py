@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import namedtuple
 
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
@@ -27,6 +28,14 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
     context = {
         'table': table,
         'show_staff': is_true(request.GET.get('show_staff', False)),
+        'competition_ignored': (
+            request.user.is_anonymous() or
+            request.user.is_competition_ignored(round.semester.competition)
+        ),
+        'user_valid': (
+            request.user.is_anonymous() or
+            request.user.is_valid_for_competition(round.semester.competition)
+        ),
     }
     return render(
         request, 'trojsten/results/view_results.html', context
@@ -44,8 +53,20 @@ def view_latest_results(request):
 
     single_round = is_true(request.GET.get('single_round', False))
 
+    ResultTableObject = namedtuple(
+        'ResultTableObject', ['table', 'competition_ignored', 'user_valid']
+    )
+
     tables = [
-        get_results(result_tag.key, round, single_round)
+        ResultTableObject(
+            get_results(result_tag.key, round, single_round),
+            request.user.is_anonymous() or request.user.is_competition_ignored(
+                round.semester.competition
+            ),
+            request.user.is_anonymous() or request.user.is_valid_for_competition(
+                round.semester.competition
+            ),
+        )
         for round, result_tags in zip(rounds, get_results_tags_for_rounds(rounds))
         for result_tag in result_tags
     ]
