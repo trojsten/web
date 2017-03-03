@@ -583,7 +583,14 @@ class PointFormSetTests(TestCase):
         self.user1 = User.objects.create_user(username='TestUser1', password='password',
                                               first_name='Jozko', last_name='Mrkvicka',
                                               graduation=year, pk=1)
+        # self.staff = User.objects.create_user(username='TestStaff', password='password',
+        #                                       first_name='Jozko', last_name='Veduci',
+        #                                       graduation=2014)
+        # self.staff.is_staff = True
+        # self.staff.save()
 
+        group = Group.objects.create(name='Test Group')
+        # group.user_set.add(self.staff)
         competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         semester = Semester.objects.create(

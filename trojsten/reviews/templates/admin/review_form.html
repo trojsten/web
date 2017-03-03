@@ -40,16 +40,11 @@
     </thead>
     <tbody>
 {% for user, data in users.items %}
-    {% if data.form.user.value %}
     <tr>
     <td>
         <a href="{% url 'admin:submit_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a>
         <input type="hidden" name="{{ data.form.user.html_name }}" value="{{ data.form.user.value }}"/>
     </td>
-    {% else %}
-        {{ data.form.user }}
-        {{ data.form.errors }}
-    {% endif %}
     <td>
     {% if data.description %}
         <a href="{% url 'admin:submit_download' data.description.pk %}">{% trans 'Download' %}</a>
@@ -66,16 +61,10 @@
     {% endif %}
     </td>
     <td>
-        <!--{% if data.review %}-->
-        <!--{{ data.review.points }}-->
-        <!--{% endif %}-->
         {{ data.form.points }}
         {{ data.form.points.errors }}
     </td>
     <td>
-        <!--{% if data.review %}-->
-        <!--{{ data.review.reviewer_comment }}-->
-        <!--{% endif %}-->
         {{ data.form.reviewer_comment }}
         {{ data.reviewer_comment.points.errors }}
     </td>
@@ -104,7 +93,7 @@
     <table>
     {{ form }}
     </table>
-    <input type="submit" name="Upload"/>
+    <input type="submit" text="Upload" name="Upload"/>
 </form>
 
 {% endblock %}

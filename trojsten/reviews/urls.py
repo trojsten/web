@@ -12,7 +12,7 @@ task_review_urls = [
     url(r'^(?P<task_pk>[0-9]+)/review/zip_upload/$',
         admin.site.admin_view(zip_upload), name='review_submit_zip'),
     url(r'^(?P<task_pk>[0-9]+)/review/edit/(?P<submit_pk>[0-9]+)/',
-        admin.site.admin_view(edit_review), name='review_edit'),
+        admin.site.admin_view(edit_review), name='review_edit')
 ]
 
 submit_urls = [
