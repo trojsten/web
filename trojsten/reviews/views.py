@@ -62,6 +62,11 @@ def review_task(request, task_pk):
             form_set = PointsFormSet(request.POST, form_kwargs={'max_points': task.description_points})
             if form_set.is_valid():
                 form_set.save(task)
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    _('Points and comments were successfully updated.')
+                )
                 return redirect('admin:review_task', task.pk)
 
     unordered_users = get_latest_submits_for_task(task)
