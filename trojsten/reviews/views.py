@@ -1,8 +1,8 @@
-import os.path
 import zipfile
 from collections import defaultdict, OrderedDict
 from time import time
 
+import os.path
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -13,6 +13,7 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 from sendfile import sendfile
 
+from trojsten.contests.models import Task
 from trojsten.reviews.constants import (RE_FILENAME, RE_SUBMIT_PK,
                                         REVIEW_COMMENT_FILENAME,
                                         REVIEW_POINTS_FILENAME,
@@ -24,12 +25,9 @@ from trojsten.reviews.helpers import (get_latest_submits_for_task,
                                       get_user_as_choices, submit_directory,
                                       submit_download_filename,
                                       submit_protocol_download_filename,
-                                      submit_source_download_filename,
-                                      edit_review as edit_review_helper,
-                                      submit_review)
+                                      submit_source_download_filename)
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 from trojsten.submit.models import Submit
-from trojsten.contests.models import Task
 
 
 def review_task(request, task_pk):
