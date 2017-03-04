@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-03 18:35+0100\n"
+"POT-Creation-Date: 2017-03-04 21:59+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -269,7 +269,7 @@ msgstr "Hodnota musí byť číslo alebo {}."
 msgid "Round"
 msgstr "Kolo"
 
-#: people/models.py:227
+#: people/models.py:224
 msgid "Value \"{}\" does not match regex \"{}\"."
 msgstr ""
 
@@ -431,40 +431,40 @@ msgstr ""
 "\">tu</a>.\n"
 "                "
 
-#: reviews/forms.py:47
+#: reviews/forms.py:48
 #, python-format
-msgid "Súbor musí byť ZIP archív: %s"
-msgstr ""
+msgid "File must be a ZIP archive: %s"
+msgstr "Súbor musí byť ZIP archív: %s"
 
-#: reviews/forms.py:82
+#: reviews/forms.py:83
 msgid "Points are required"
-msgstr ""
+msgstr "Body sú povinné"
 
-#: reviews/forms.py:85
+#: reviews/forms.py:86
 msgid "User is required"
-msgstr ""
+msgstr "Používateľ je povinný"
 
-#: reviews/forms.py:90
+#: reviews/forms.py:91
 #, python-format
 msgid "User %s does not exist"
-msgstr ""
+msgstr "Používateľ %s neexistuje"
 
-#: reviews/forms.py:181
+#: reviews/forms.py:182
 #, python-format
 msgid "Invalid filename %s"
-msgstr ""
+msgstr "Neplatný názov súboru %s"
 
-#: reviews/forms.py:184
+#: reviews/forms.py:185
 msgid "Must have set points"
-msgstr ""
+msgstr "Musíš uviesť body"
 
-#: reviews/forms.py:202
+#: reviews/forms.py:203
 msgid "Assigned 2 or more files to the same user."
-msgstr ""
+msgstr "Rovnaký používateľ má priradené 2 alebo viac súborov."
 
 #: reviews/helpers.py:15
 msgid "You should upload a file or specify parent submit."
-msgstr ""
+msgstr "Mal by si nahrať súbor alebo špecifikovať predchádzajúci submit."
 
 #: reviews/templates/admin/review_edit.html:10
 #: reviews/templates/admin/review_form.html:10
@@ -476,107 +476,105 @@ msgid "Review"
 msgstr "Náhľad"
 
 #: reviews/templates/admin/review_edit.html:11
-#: reviews/templates/admin/review_form.html:62
+#: reviews/templates/admin/review_form.html:57
 msgid "Edit"
 msgstr "Upraviť"
 
 #: reviews/templates/admin/review_form.html:7
 #: reviews/templates/admin/zip_upload.html:7
 msgid "Contests"
-msgstr ""
+msgstr "Súťaže"
 
 #: reviews/templates/admin/review_form.html:8
 #: reviews/templates/admin/zip_upload.html:8
 msgid "Task"
-msgstr ""
+msgstr "Úloha"
 
 #: reviews/templates/admin/review_form.html:17
-#: reviews/templates/admin/review_form.html:91
+#: reviews/templates/admin/review_form.html:80
 msgid "Download all solutions"
 msgstr "Stiahnuť všetky riešenia"
 
-#: reviews/templates/admin/review_form.html:55
+#: reviews/templates/admin/review_form.html:50
 #: reviews/templates/admin/submit_form.html:12
 msgid "Download"
-msgstr ""
+msgstr "Stiahnuť"
 
-#: reviews/templates/admin/review_form.html:61
+#: reviews/templates/admin/review_form.html:56
 #: reviews/templates/admin/submit_form.html:9
 msgid "View"
 msgstr "Pozrieť"
 
-#: reviews/templates/admin/review_form.html:65
+#: reviews/templates/admin/review_form.html:60
 msgid "Add new review"
 msgstr "Pridaj opravenie"
 
-#: reviews/templates/admin/review_form.html:86
-msgid "Uptade points and comments"
+#: reviews/templates/admin/review_form.html:75
+msgid "Update points and comments"
 msgstr "Aktualizuj body a komentáre"
 
 #: reviews/templates/admin/submit_form.html:6
-#, fuzzy
-#| msgid "View"
 msgid "View task"
-msgstr "Pozrieť"
+msgstr "Pozrieť úlohu"
 
 #: reviews/templates/admin/zip_upload.html:11
 msgid "Upload Zip"
-msgstr ""
+msgstr "Nahraj Zip"
 
 #: reviews/templates/admin/zip_upload.html:31
 msgid "Filename"
-msgstr ""
+msgstr "Názov súboru"
 
 #: reviews/templates/admin/zip_upload.html:32
 msgid "User"
-msgstr ""
+msgstr "Riešiteľ"
 
 #: reviews/templates/admin/zip_upload.html:33
 msgid "Points"
-msgstr ""
+msgstr "Body"
 
 #: reviews/templates/admin/zip_upload.html:34
 msgid "Comment"
-msgstr ""
+msgstr "Komentár"
 
-#: reviews/views.py:58
+#: reviews/views.py:56
 msgid "Successfully uploaded a zip file."
-msgstr ""
+msgstr "Zip súbor bol úspešne nahraný"
 
-#: reviews/views.py:68
+#: reviews/views.py:66
 msgid "Points and comments were successfully updated."
 msgstr "Body a komentáre boli úspešne aktualizované"
 
-#: reviews/views.py:131
+#: reviews/views.py:129
 msgid "Successfully saved the review"
-msgstr ""
+msgstr "Opravenie bolo úspešne uložené"
 
-#: reviews/views.py:193
+#: reviews/views.py:191
 #, python-format
 msgid "Missing file of user %s"
-msgstr ""
+msgstr "Chýba súbor používateľa %s"
 
-#: reviews/views.py:206
+#: reviews/views.py:204
 #, python-format
 msgid "Missing source file of user %s"
-msgstr ""
+msgstr "Chýba zdrojový súbor používateľa %s"
 
-#: reviews/views.py:210
+#: reviews/views.py:208
 #, python-format
 msgid "Missing protocol file of user %s"
-msgstr ""
+msgstr "Chýba protokol používateľa %s"
 
-#: reviews/views.py:238
+#: reviews/views.py:236
 msgid "Problems with uploaded zip"
-msgstr ""
+msgstr "Problémy s nahratým zip-om"
 
-#: reviews/views.py:244
+#: reviews/views.py:242
 msgid "Ignore"
-msgstr ""
+msgstr "Ignorovať"
 
-#: reviews/views.py:287
+#: reviews/views.py:285
 msgid "Successfully finished reviewing this task!"
-msgstr ""
+msgstr "Úspešne dokončené opravovanie tejto úlohy!"
 
 #: settings/common.py:390
 msgid "Table of Contents"
@@ -597,7 +595,7 @@ msgstr "Prekročený časový limit"
 
 #: submit/constants.py:29
 msgid "Memory limit exceeded"
-msgstr "Prekročený časový limit"
+msgstr "Prekročený pamäťový limit"
 
 #: submit/constants.py:30
 msgid "OK"

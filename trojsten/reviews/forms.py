@@ -45,7 +45,7 @@ class UploadZipForm(forms.Form):
         if filename.endswith('.zip'):
             return cleaned_data
         else:
-            raise forms.ValidationError(_('Súbor musí byť ZIP archív: %s')
+            raise forms.ValidationError(_('File must be a ZIP archive: %s')
                                         % filename)
 
     def save(self, req_user, task):
