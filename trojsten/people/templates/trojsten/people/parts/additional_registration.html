@@ -1,4 +1,4 @@
-{% load sekizai_tags %}
+{% load sekizai_tags staticfiles %}
 
 {% if not request.user.is_anonymous and required_properties_by_competition %}
 <div class="modal fade in" tabindex="-1" role="dialog" id="additional_registration_modal">
@@ -28,7 +28,9 @@
             </li>
           {% endfor %}
         </ul>
-        <input type="checkbox"/ id="ignore_{{competition.pk}}"><label for="ignore_{{competition.pk}}">Nechcem sa zapojiť do súťaže {{ competition }}.</label>
+        <input type="checkbox" id="ignore_{{ competition.pk }}"
+               data-competition="{{ competition.pk }}" onchange="switch_competition_participation(this);"/>
+        <label for="ignore_{{ competition.pk }}">Nechcem sa zapojiť do súťaže {{ competition }}.</label>
         {% endfor %}
       </div>
       <div class="modal-footer">
@@ -38,6 +40,7 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 {% addtoblock "js" %}
+<script type="text/javascript" src="{% static "js/additional_registration.js"%}"></script>
 <script type="text/javascript">
     $(window).load(function(){
         $('#additional_registration_modal').modal('show');
