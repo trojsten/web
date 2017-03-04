@@ -69,7 +69,7 @@ def review_task(request, task_pk):
 
     unordered_users = get_latest_submits_for_task(task)
     users = OrderedDict(sorted(unordered_users.items(),
-                               key=(lambda user, _: (user.last_name, user.first_name))))
+                               key=lambda user: (user[0].last_name, user[0].first_name)))
     users_list = list(users.keys())
 
     if not form:
