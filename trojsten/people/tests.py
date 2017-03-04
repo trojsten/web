@@ -21,6 +21,7 @@ from trojsten.submit.constants import (SUBMIT_PAPER_FILEPATH,
                                        SUBMIT_STATUS_REVIEWED,
                                        SUBMIT_TYPE_DESCRIPTION)
 from trojsten.submit.models import Submit
+from trojsten.utils.test_utils import get_noexisting_id
 
 from . import constants
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
@@ -407,6 +408,55 @@ class UserTests(TestCase):
         competition.required_user_props.add(self.element_login)
         competition.required_user_props.add(self.tricko)
         self.assertFalse(self.user.is_valid_for_competition(competition))
+
+
+class PeopleApiTests(TestCase):
+    def setUp(self):
+        self.user = _create_random_user()
+        self.competition = Competition.objects.create()
+        self.url = reverse('people:switch_contest_participation')
+
+    def test_ignore_competition(self):
+        self.client.force_login(self.user)
+        self.client.post(self.url, {
+            'competition': str(self.competition.pk),
+            'value': 'true',
+        })
+        self.assertTrue(self.user.is_competition_ignored(self.competition))
+
+    def test_unignore_competition(self):
+        self.client.force_login(self.user)
+        self.client.post(self.url, {
+            'competition': str(self.competition.pk),
+            'value': 'false',
+        })
+        self.assertFalse(self.user.is_competition_ignored(self.competition))
+
+    def test_ignore_competition_invalid_competition(self):
+        self.client.force_login(self.user)
+        self.client.post(self.url, {
+            'competition': str(get_noexisting_id(Competition)),
+            'value': 'true',
+        })
+        self.assertFalse(self.user.is_competition_ignored(self.competition))
+
+        self.client.post(self.url, {
+            'value': 'true',
+        })
+        self.assertFalse(self.user.is_competition_ignored(self.competition))
+
+        self.client.post(self.url, {
+            'competition': "Hello",
+            'value': 'true',
+        })
+        self.assertFalse(self.user.is_competition_ignored(self.competition))
+
+    def test_ignore_competition_anonymous(self):
+        response = self.client.post(self.url, {
+            'competition': str(self.competition.pk),
+            'value': 'true',
+        })
+        self.assertEqual(response.status_code, 401)
 
 
 class DeenvelopingTests(TestCase):
