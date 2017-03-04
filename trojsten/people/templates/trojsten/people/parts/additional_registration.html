@@ -1,0 +1,47 @@
+{% load sekizai_tags %}
+
+{% if not request.user.is_anonymous and required_properties_by_competition %}
+<div class="modal fade in" tabindex="-1" role="dialog" id="additional_registration_modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Potrebujeme ešte zopár údajov</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          Na zapojenie do niektorých súťaží potrebujeme ešte nejaké údaje navyše okrem tých ktoré si zadal pri registrácii.
+          Pokiaľ ich nevyplníš, nebudeme ťa zobrazovať vo výsledkovej listine.
+        </p>
+        <p>
+          Pokiaľ nechceš aby sa ti zobrazovala táto hláška môžeš tiež zakliknúť "Nechcem sa zapojiť do súťaže".
+          Toto rozhodnutie môžeš neskôr zmeniť v nastaveniach v sekcii "Súťaže".
+        </p>
+        {% for competition, properties in required_properties_by_competition.items %}
+        <p>
+          V súťaži <em>{{ competition }}</em> potrebujeme ešte aby si vyplnil tieto údaje:
+        </p>
+        <ul>
+          {% for property in properties %}
+            <li>
+              {{ property }}
+            </li>
+          {% endfor %}
+        </ul>
+        <input type="checkbox"/ id="ignore_{{competition.pk}}"><label for="ignore_{{competition.pk}}">Nechcem sa zapojiť do súťaže {{ competition }}.</label>
+        {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% addtoblock "js" %}
+<script type="text/javascript">
+    $(window).load(function(){
+        $('#additional_registration_modal').modal('show');
+    });
+</script>
+{% endaddtoblock %}
+{% endif %}
