@@ -470,10 +470,8 @@ msgstr "Mal by si nahrať súbor alebo špecifikovať predchádzajúci submit."
 #: reviews/templates/admin/review_form.html:10
 #: reviews/templates/admin/task_review.html:6
 #: reviews/templates/admin/zip_upload.html:10
-#, fuzzy
-#| msgid "Preview"
 msgid "Review"
-msgstr "Náhľad"
+msgstr "Opravovanie"
 
 #: reviews/templates/admin/review_edit.html:11
 #: reviews/templates/admin/review_form.html:57
