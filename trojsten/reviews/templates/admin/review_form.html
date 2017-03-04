@@ -15,6 +15,9 @@
 <h1>Opravovanie úlohy: {{ task }}</h1>
 <h2>Riešitelia úlohy</h2>
 <a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Download all solutions' %}</a><br/><br/>
+<form method="post" action="" class="form-horizontal">
+{% csrf_token %}
+{{ form_set.management_form }}
 <table>
     <thead>
         <tr>
@@ -38,7 +41,10 @@
     <tbody>
 {% for user, data in users.items %}
     <tr>
-    <td><a href="{% url 'admin:submit_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a></td>
+    <td>
+        <a href="{% url 'admin:submit_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a>
+        <input type="hidden" name="{{ data.form.user.html_name }}" value="{{ data.form.user.value }}"/>
+    </td>
     <td>
     {% if data.description %}
         <a href="{% url 'admin:submit_download' data.description.pk %}">{% trans 'Download' %}</a>
@@ -54,20 +60,20 @@
         <a href="{% url 'admin:review_edit' task.pk data.description.pk %}">{% trans 'Add new review' %}</a>
     {% endif %}
     </td>
-        <td>
-            {% if data.review %}
-            {{ data.review.points }}
-            {% endif %}
-        </td>
-        <td>
-            {% if data.review %}
-            {{ data.review.reviewer_comment }}
-            {% endif %}
-        </td>
+    <td>
+        {{ data.form.points }}
+        {{ data.form.points.errors }}
+    </td>
+    <td>
+        {{ data.form.reviewer_comment }}
+        {{ data.reviewer_comment.points.errors }}
+    </td>
     </tr>
 {% endfor %}
     </tbody>
 </table>
+<input type="submit" name="points_submit" value="{% trans 'Update points and comments' %}"/>
+</form>
 
 <br/>
 <h2>Nahrať opravené riešenia v ZIP archíve</h2>
@@ -87,7 +93,7 @@
     <table>
     {{ form }}
     </table>
-    <input type="submit" text="Upload"/>
+    <input type="submit" text="Upload" name="Upload"/>
 </form>
 
 {% endblock %}

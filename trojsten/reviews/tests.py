@@ -7,6 +7,7 @@ import shutil
 import sys
 import tempfile
 import zipfile
+
 from os import path
 try:
     from urllib.request import quote, unquote
@@ -17,6 +18,7 @@ from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
+from django.forms import formset_factory
 from django.test import TestCase, override_settings
 from django.utils import timezone
 from django.utils.text import slugify
@@ -25,7 +27,7 @@ from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
 from trojsten.reviews import constants as review_constants
 from trojsten.reviews import helpers
-from trojsten.reviews.forms import ZipForm
+from trojsten.reviews.forms import ZipForm, BasePointForm, BasePointFormSet
 from trojsten.submit import constants as submit_constants
 from trojsten.submit.models import Submit
 from trojsten.utils.test_utils import get_noexisting_id
@@ -573,3 +575,95 @@ class ReviewEditTest(TestCase):
         self.submit.save()
         response = self.client.get(url)
         self.assertContains(response, multi_line_comment)
+
+
+class PointFormSetTests(TestCase):
+    def setUp(self):
+        year = timezone.now().year + 2
+        self.user1 = User.objects.create_user(username='TestUser1', password='password',
+                                              first_name='Jozko', last_name='Mrkvicka',
+                                              graduation=year, pk=1)
+        group = Group.objects.create(name='Test Group')
+        competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        semester = Semester.objects.create(
+            number=1, name='Test semester 1', year=1, competition=competition
+        )
+
+        test_round = Round.objects.create(number=1, semester=semester, solutions_visible=True,
+                                          visible=True)
+        self.task = Task.objects.create(number=2, name='TestTask2', round=test_round,
+                                        description_points=9)
+        Submit.objects.create(
+            task=self.task, user=self.user1, submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            points=0, testing_status=submit_constants.SUBMIT_STATUS_IN_QUEUE
+        )
+        self.form_set_class = formset_factory(BasePointForm, BasePointFormSet, extra=0)
+        self.data = {
+            'form-TOTAL_FORMS': '1',
+            'form-INITIAL_FORMS': '0',
+            'form-MAX_NUM_FORMS': '1000',
+            'form-0-user': '1',
+            'form-0-points': '',
+            'form-0-reviewer_comment': '',
+        }
+
+    def test_add_new_reviews(self):
+        self.data['form-0-points'] = 4
+        self.data['form-0-reviewer_comment'] = 'Nic moc'
+        form_set = self.form_set_class(self.data,
+                                       form_kwargs={'max_points': self.task.description_points})
+        self.assertTrue(form_set.is_valid())
+        form_set.save(self.task)
+        users = helpers.get_latest_submits_for_task(self.task)
+        self.assertEqual(users[self.user1]['review'].points, 4)
+        self.assertEqual(users[self.user1]['review'].reviewer_comment, 'Nic moc')
+
+    def test_edit_review(self):
+        Submit.objects.create(
+            task=self.task, user=self.user1, submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            points=7, testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            reviewer_comment='First comment'
+        )
+        self.data['form-0-points'] = 9
+        self.data['form-0-reviewer_comment'] = 'Second comment'
+        form_set = self.form_set_class(self.data,
+                                       form_kwargs={'max_points': self.task.description_points})
+        self.assertTrue(form_set.is_valid())
+        form_set.save(self.task)
+        users = helpers.get_latest_submits_for_task(self.task)
+        self.assertEqual(users[self.user1]['review'].points, 9)
+        self.assertEqual(users[self.user1]['review'].reviewer_comment, 'Second comment')
+
+    def test_empty_points(self):
+        form_set = self.form_set_class(self.data,
+                                       form_kwargs={'max_points': self.task.description_points})
+        self.assertTrue(form_set.is_valid())
+        form_set.save(self.task)
+        users = helpers.get_latest_submits_for_task(self.task)
+        self.assertNotIn('review', users[self.user1])
+
+    def test_empty_points_with_review(self):
+        Submit.objects.create(
+            task=self.task, user=self.user1, submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            points=7, testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            reviewer_comment='First comment'
+        )
+        form_set = self.form_set_class(self.data,
+                                       form_kwargs={'max_points': self.task.description_points})
+        self.assertTrue(form_set.is_valid())
+        form_set.save(self.task)
+        users = helpers.get_latest_submits_for_task(self.task)
+        self.assertNotIn('review', users[self.user1])
+
+    def test_invalid_negative_points(self):
+        self.data['form-0-points'] = -47
+        form_set = self.form_set_class(self.data,
+                                       form_kwargs={'max_points': self.task.description_points})
+        self.assertFalse(form_set.is_valid())
+
+    def test_invalid_too_many_points(self):
+        self.data['form-0-points'] = 47
+        form_set = self.form_set_class(self.data,
+                                       form_kwargs={'max_points': self.task.description_points})
+        self.assertFalse(form_set.is_valid())

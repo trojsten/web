@@ -1,23 +1,26 @@
-import os.path
 import zipfile
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from time import time
 
+import os.path
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.forms import formset_factory
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 from sendfile import sendfile
 
+from trojsten.contests.models import Task
 from trojsten.reviews.constants import (RE_FILENAME, RE_SUBMIT_PK,
                                         REVIEW_COMMENT_FILENAME,
                                         REVIEW_POINTS_FILENAME,
                                         REVIEW_ERRORS_FILENAME)
 from trojsten.reviews.forms import (ReviewForm, UploadZipForm,
-                                    get_zip_form_set, reviews_upload_pattern)
+                                    get_zip_form_set, reviews_upload_pattern,
+                                    BasePointForm, BasePointFormSet)
 from trojsten.reviews.helpers import (get_latest_submits_for_task,
                                       get_user_as_choices, submit_directory,
                                       submit_download_filename,
@@ -25,39 +28,70 @@ from trojsten.reviews.helpers import (get_latest_submits_for_task,
                                       submit_source_download_filename)
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 from trojsten.submit.models import Submit
-from trojsten.contests.models import Task
 
 
 def review_task(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
-    users = get_latest_submits_for_task(task)
+    PointsFormSet = formset_factory(BasePointForm, formset=BasePointFormSet, extra=0)
 
     if (not request.user.is_superuser and
             task.round.semester.competition.organizers_group not in
             request.user.groups.all()):
         raise PermissionDenied
 
+    form = None
+    form_set = None
+
     if request.method == 'POST':
-        form = UploadZipForm(request.POST, request.FILES)
+        if request.POST.get('Upload', None):
+            form = UploadZipForm(request.POST, request.FILES)
+            if form.is_valid():
+                path_to_zip = form.save(request.user, task)
 
-        if form.is_valid():
-            path_to_zip = form.save(request.user, task)
-
-            if path_to_zip:
-                request.session['review_archive'] = path_to_zip
+                if path_to_zip:
+                    request.session['review_archive'] = path_to_zip
+                    messages.add_message(
+                        request,
+                        messages.SUCCESS,
+                        _('Successfully uploaded a zip file.')
+                    )
+                    return redirect('admin:review_submit_zip', task.pk)
+        if 'points_submit' in request.POST:
+            form_set = PointsFormSet(request.POST, form_kwargs={'max_points': task.description_points})
+            if form_set.is_valid():
+                form_set.save(task)
                 messages.add_message(
                     request,
                     messages.SUCCESS,
-                    _('Successfully uploaded a zip file.')
+                    _('Points and comments were successfully updated.')
                 )
-                return redirect('admin:review_submit_zip', task.pk)
-    else:
+                return redirect('admin:review_task', task.pk)
+
+    unordered_users = get_latest_submits_for_task(task)
+    users = OrderedDict(sorted(unordered_users.items(),
+                               key=lambda user: (user[0].last_name, user[0].first_name)))
+    users_list = list(users.keys())
+
+    if not form:
         form = UploadZipForm()
+    if not form_set:
+        data = []
+        for user in users_list:
+            value = users[user]
+            form_data = {'user': user}
+            if 'review' in value:
+                form_data['points'] = value['review'].points
+                form_data['reviewer_comment'] = value['review'].reviewer_comment
+            data.append(form_data)
+        form_set = PointsFormSet(initial=data, form_kwargs={'max_points': task.description_points})
+    for i in range(0, len(users_list)):
+        users[users_list[i]]['form'] = form_set.forms[i]
 
     context = {
         'task': task,
         'users': users,
         'form': form,
+        'form_set': form_set,
     }
 
     return render(

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-28 21:03+0100\n"
+"POT-Creation-Date: 2017-03-04 21:59+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -133,9 +133,9 @@ msgstr "%(count)s minúta"
 msgid "%(count)d second"
 msgstr "%(count)s sekunda"
 
-#: events/forms.py:47 people/forms.py:75 people/forms.py:83 people/forms.py:91
-#: people/forms.py:100 people/forms.py:110 people/forms.py:120
-#: people/forms.py:130
+#: events/forms.py:47 people/forms.py:79 people/forms.py:87 people/forms.py:95
+#: people/forms.py:104 people/forms.py:114 people/forms.py:124
+#: people/forms.py:134
 msgid "This field is required."
 msgstr ""
 
@@ -167,55 +167,55 @@ msgstr ""
 msgid "Users merged succesfully."
 msgstr ""
 
-#: people/forms.py:19 people/forms.py:38
+#: people/forms.py:23 people/forms.py:42
 msgid "Street"
 msgstr "Ulica"
 
-#: people/forms.py:20 people/forms.py:39
+#: people/forms.py:24 people/forms.py:43
 msgid "Town"
 msgstr "Mesto"
 
-#: people/forms.py:22 people/forms.py:41
+#: people/forms.py:26 people/forms.py:45
 msgid "Postal code"
 msgstr "PSČ"
 
-#: people/forms.py:24 people/forms.py:43
+#: people/forms.py:28 people/forms.py:47
 msgid "Country"
 msgstr "Krajina"
 
-#: people/forms.py:27
+#: people/forms.py:31
 msgid "home"
 msgstr "domov"
 
-#: people/forms.py:28
+#: people/forms.py:32
 msgid "school"
 msgstr "do školy"
 
-#: people/forms.py:29
+#: people/forms.py:33
 msgid "other address (e. g. to a dormitory)"
 msgstr "na inú adresu (napr. na internát)"
 
-#: people/forms.py:33
+#: people/forms.py:37
 msgid "Correspondence address"
 msgstr "Korešpondenčná adresa"
 
-#: people/forms.py:34
+#: people/forms.py:38
 msgid "Choose, where you want to accept mails."
 msgstr "Vyber, kam ti máme posielať poštu."
 
-#: people/forms.py:60
+#: people/forms.py:64
 msgid "Gender"
 msgstr "Pohlavie"
 
-#: people/forms.py:141
+#: people/forms.py:145
 msgid "Your graduation year is too far in the past."
 msgstr "Tvoj rok maturity je príliš ďaleko v minulosti."
 
-#: people/forms.py:147
+#: people/forms.py:151
 msgid "Your graduation year is too far in the future."
 msgstr "Tvoj rok maturity je príliš ďaleko v budúcnosti."
 
-#: people/forms.py:159
+#: people/forms.py:163
 msgid ""
 "We cannot send you correspondence to school when you don't choose any "
 "school. If your school is not in the list write us in an e-mail that you "
@@ -225,19 +225,19 @@ msgstr ""
 "tvoja škola nenachádza v zozname, napíš v e-maili, že ti máme posielať poštu "
 "na školu"
 
-#: people/forms.py:258
+#: people/forms.py:262
 msgid "Password"
 msgstr "Heslo"
 
-#: people/forms.py:260
+#: people/forms.py:264
 msgid "Password confirmation"
 msgstr "Potvrdenie hesla"
 
-#: people/forms.py:261
+#: people/forms.py:265
 msgid "Enter the same password as above, for verification."
 msgstr "Zadaj rovnaké heslo ako vyššie pre jeho overenie"
 
-#: people/forms.py:294
+#: people/forms.py:298
 msgid ""
 "We recommend choosing a strong passphrase but we don't enforce any "
 "ridiculous constraints on your passwords."
@@ -245,27 +245,27 @@ msgstr ""
 "Odporúčame ti vybrať silné heslo, ale nebudeme od teba vyžadovať žiadne "
 "smiešne požiadavky"
 
-#: people/forms.py:302
+#: people/forms.py:306
 msgid ""
 "Since you're logging in using an external provider, this field is optional; "
 "however, by supplying it, you will be able to log in using a password. "
 msgstr ""
 
-#: people/forms.py:312
+#: people/forms.py:316
 msgid "The two password fields didn't match."
 msgstr ""
 
-#: people/forms.py:450
+#: people/forms.py:455
 msgid "Points have to be non-negative and at most {}."
 msgstr "Body musia byť nezáporné a najviac {}."
 
-#: people/forms.py:455
+#: people/forms.py:460
 #, fuzzy
 #| msgid "The value has to be integer or {}."
 msgid "The value has to be number or {}."
 msgstr "Hodnota musí byť číslo alebo {}."
 
-#: people/forms.py:464
+#: people/forms.py:504
 msgid "Round"
 msgstr "Kolo"
 
@@ -431,146 +431,150 @@ msgstr ""
 "\">tu</a>.\n"
 "                "
 
-#: reviews/forms.py:47
+#: reviews/forms.py:48
 #, python-format
-msgid "Súbor musí byť ZIP archív: %s"
-msgstr ""
+msgid "File must be a ZIP archive: %s"
+msgstr "Súbor musí byť ZIP archív: %s"
 
-#: reviews/forms.py:82
+#: reviews/forms.py:83
 msgid "Points are required"
-msgstr ""
+msgstr "Body sú povinné"
 
-#: reviews/forms.py:85
+#: reviews/forms.py:86
 msgid "User is required"
-msgstr ""
+msgstr "Používateľ je povinný"
 
-#: reviews/forms.py:90
+#: reviews/forms.py:91
 #, python-format
 msgid "User %s does not exist"
-msgstr ""
+msgstr "Používateľ %s neexistuje"
 
-#: reviews/forms.py:181
+#: reviews/forms.py:182
 #, python-format
 msgid "Invalid filename %s"
-msgstr ""
+msgstr "Neplatný názov súboru %s"
 
-#: reviews/forms.py:184
+#: reviews/forms.py:185
 msgid "Must have set points"
-msgstr ""
+msgstr "Musíš uviesť body"
 
-#: reviews/forms.py:202
+#: reviews/forms.py:203
 msgid "Assigned 2 or more files to the same user."
-msgstr ""
+msgstr "Rovnaký používateľ má priradené 2 alebo viac súborov."
 
 #: reviews/helpers.py:15
 msgid "You should upload a file or specify parent submit."
-msgstr ""
+msgstr "Mal by si nahrať súbor alebo špecifikovať predchádzajúci submit."
 
 #: reviews/templates/admin/review_edit.html:10
 #: reviews/templates/admin/review_form.html:10
 #: reviews/templates/admin/task_review.html:6
 #: reviews/templates/admin/zip_upload.html:10
-#, fuzzy
-#| msgid "Preview"
 msgid "Review"
-msgstr "Náhľad"
+msgstr "Opravovanie"
 
 #: reviews/templates/admin/review_edit.html:11
-#: reviews/templates/admin/review_form.html:51
+#: reviews/templates/admin/review_form.html:57
 msgid "Edit"
 msgstr "Upraviť"
 
 #: reviews/templates/admin/review_form.html:7
 #: reviews/templates/admin/zip_upload.html:7
 msgid "Contests"
-msgstr ""
+msgstr "Súťaže"
 
 #: reviews/templates/admin/review_form.html:8
 #: reviews/templates/admin/zip_upload.html:8
 msgid "Task"
-msgstr ""
+msgstr "Úloha"
 
 #: reviews/templates/admin/review_form.html:17
-#: reviews/templates/admin/review_form.html:74
+#: reviews/templates/admin/review_form.html:80
 msgid "Download all solutions"
-msgstr ""
-
-#: reviews/templates/admin/review_form.html:44
-#: reviews/templates/admin/submit_form.html:12
-msgid "Download"
-msgstr ""
+msgstr "Stiahnuť všetky riešenia"
 
 #: reviews/templates/admin/review_form.html:50
+#: reviews/templates/admin/submit_form.html:12
+msgid "Download"
+msgstr "Stiahnuť"
+
+#: reviews/templates/admin/review_form.html:56
 #: reviews/templates/admin/submit_form.html:9
 msgid "View"
 msgstr "Pozrieť"
 
-#: reviews/templates/admin/review_form.html:54
+#: reviews/templates/admin/review_form.html:60
 msgid "Add new review"
-msgstr ""
+msgstr "Pridaj opravenie"
+
+#: reviews/templates/admin/review_form.html:75
+msgid "Update points and comments"
+msgstr "Aktualizuj body a komentáre"
 
 #: reviews/templates/admin/submit_form.html:6
-#, fuzzy
-#| msgid "View"
 msgid "View task"
-msgstr "Pozrieť"
+msgstr "Pozrieť úlohu"
 
 #: reviews/templates/admin/zip_upload.html:11
 msgid "Upload Zip"
-msgstr ""
+msgstr "Nahraj Zip"
 
 #: reviews/templates/admin/zip_upload.html:31
 msgid "Filename"
-msgstr ""
+msgstr "Názov súboru"
 
 #: reviews/templates/admin/zip_upload.html:32
 msgid "User"
-msgstr ""
+msgstr "Používateľ"
 
 #: reviews/templates/admin/zip_upload.html:33
 msgid "Points"
-msgstr ""
+msgstr "Body"
 
 #: reviews/templates/admin/zip_upload.html:34
 msgid "Comment"
-msgstr ""
+msgstr "Komentár"
 
-#: reviews/views.py:51
+#: reviews/views.py:56
 msgid "Successfully uploaded a zip file."
-msgstr ""
+msgstr "Zip súbor bol úspešne nahraný"
 
-#: reviews/views.py:95
+#: reviews/views.py:66
+msgid "Points and comments were successfully updated."
+msgstr "Body a komentáre boli úspešne aktualizované"
+
+#: reviews/views.py:129
 msgid "Successfully saved the review"
-msgstr ""
+msgstr "Opravenie bolo úspešne uložené"
 
-#: reviews/views.py:157
+#: reviews/views.py:191
 #, python-format
 msgid "Missing file of user %s"
-msgstr ""
+msgstr "Chýba súbor používateľa %s"
 
-#: reviews/views.py:170
+#: reviews/views.py:204
 #, python-format
 msgid "Missing source file of user %s"
-msgstr ""
-
-#: reviews/views.py:174
-#, python-format
-msgid "Missing protocol file of user %s"
-msgstr ""
-
-#: reviews/views.py:202
-msgid "Problems with uploaded zip"
-msgstr ""
+msgstr "Chýba zdrojový súbor používateľa %s"
 
 #: reviews/views.py:208
+#, python-format
+msgid "Missing protocol file of user %s"
+msgstr "Chýba protokol používateľa %s"
+
+#: reviews/views.py:236
+msgid "Problems with uploaded zip"
+msgstr "Problémy s nahratým zip-om"
+
+#: reviews/views.py:242
 msgid "Ignore"
-msgstr ""
+msgstr "Ignorovať"
 
-#: reviews/views.py:251
+#: reviews/views.py:285
 msgid "Successfully finished reviewing this task!"
-msgstr ""
+msgstr "Úspešne dokončené opravovanie tejto úlohy!"
 
-#: settings/common.py:391
+#: settings/common.py:390
 msgid "Table of Contents"
 msgstr ""
 
@@ -588,18 +592,22 @@ msgid "Time limit exceeded"
 msgstr "Prekročený časový limit"
 
 #: submit/constants.py:29
+msgid "Memory limit exceeded"
+msgstr "Prekročený pamäťový limit"
+
+#: submit/constants.py:30
 msgid "OK"
 msgstr "OK"
 
-#: submit/constants.py:30
+#: submit/constants.py:31
 msgid "Runtime exception"
 msgstr "Chyba počas behu programu"
 
-#: submit/constants.py:31
+#: submit/constants.py:32
 msgid "Security exception"
 msgstr "Pokus o narušenie bezpečnosti"
 
-#: submit/constants.py:32
+#: submit/constants.py:33
 msgid "Ignored"
 msgstr ""
 

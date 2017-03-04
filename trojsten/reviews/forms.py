@@ -22,7 +22,8 @@ from unidecode import unidecode
 
 from trojsten.people.models import User
 from trojsten.reviews.constants import RE_FILENAME, RE_LAST_NAME, RE_SUBMIT_PK
-from trojsten.reviews.helpers import edit_review, submit_review
+from trojsten.reviews.helpers import edit_review, submit_review, get_latest_submits_for_task
+from trojsten.submit.constants import SUBMIT_STATUS_IN_QUEUE
 from trojsten.submit.helpers import write_chunks_to_file
 
 reviews_upload_pattern = re.compile(
@@ -44,7 +45,7 @@ class UploadZipForm(forms.Form):
         if filename.endswith('.zip'):
             return cleaned_data
         else:
-            raise forms.ValidationError(_('Súbor musí byť ZIP archív: %s')
+            raise forms.ValidationError(_('File must be a ZIP archive: %s')
                                         % filename)
 
     def save(self, req_user, task):
@@ -220,3 +221,37 @@ class BaseZipSet(BaseFormSet):
                 )
 
         os.remove(archive_path)
+
+
+class BasePointForm(forms.Form):
+    def __init__(self, max_points, *args, **kwargs):
+        self.max_points = max_points
+        super(BasePointForm, self).__init__(*args, **kwargs)
+        self.fields['user'] = forms.ModelChoiceField(queryset=User.objects.all())
+        self.fields['points'] = forms.DecimalField(max_digits=5, decimal_places=2, required=False,
+                                                   min_value=0, max_value=self.max_points,
+                                                   widget=forms.TextInput(attrs={'tabindex': '1'}))
+        self.fields['reviewer_comment'] = forms.CharField(
+            required=False, widget=forms.Textarea(attrs={'rows': 1, 'tabindex': 1}))
+
+
+class BasePointFormSet(forms.BaseFormSet):
+    def save(self, task):
+        users = get_latest_submits_for_task(task)
+        for form_data in self.cleaned_data:
+            user = form_data['user']
+            if user in users:
+                value = users[user]
+                if form_data['points'] is not None:
+                    if 'review' in value:
+                        edit_review(None, None, value['review'], user,
+                                    form_data['points'], form_data['reviewer_comment'])
+                    else:
+                        submit_review(None, None, task, user, form_data['points'],
+                                      form_data['reviewer_comment'], value['description'])
+                else:
+                    if 'review' in value:
+                        submit = value['review']
+                        submit.points = 0
+                        submit.testing_status = SUBMIT_STATUS_IN_QUEUE
+                        submit.save()
