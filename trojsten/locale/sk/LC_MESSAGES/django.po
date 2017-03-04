@@ -527,7 +527,7 @@ msgstr "Názov súboru"
 
 #: reviews/templates/admin/zip_upload.html:32
 msgid "User"
-msgstr "Riešiteľ"
+msgstr "Používateľ"
 
 #: reviews/templates/admin/zip_upload.html:33
 msgid "Points"
