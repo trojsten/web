@@ -145,9 +145,6 @@ class User(AbstractUser):
         address.recipient = '%s %s' % (self.first_name, self.last_name)
         return address
 
-    def get_reverse_full_name(self):
-        return self.last_name + ' ' + self.first_name
-
     def __str__(self):
         return '%s (%s)' % (self.username, self.get_full_name())
 
