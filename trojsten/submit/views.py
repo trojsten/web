@@ -10,7 +10,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
-from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
+                         HttpResponseForbidden)
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html
 from rest_framework.decorators import api_view, permission_classes
@@ -18,13 +19,13 @@ from rest_framework.response import Response as APIResponse
 from sendfile import sendfile
 from unidecode import unidecode
 
-from trojsten.contests.models import Competition, Round
-from trojsten.contests.models import Task
+from trojsten.contests.models import Competition, Round, Task
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
                                    TestableZipSubmitForm)
 from trojsten.submit.helpers import (get_path, process_submit, update_submit,
                                      write_chunks_to_file)
 from trojsten.submit.templatetags.submit_parts import submitclass
+
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
@@ -316,6 +317,8 @@ def task_submit_post(request, task_id, submit_type):
 
     # File won't be sent to tester
     elif submit_type == constants.SUBMIT_TYPE_DESCRIPTION:
+        if request.user.is_competition_ignored(task.round.semester.competition):
+            return HttpResponseForbidden()
         form = DescriptionSubmitForm(request.POST, request.FILES)
         if form.is_valid():
             # Description submit id's are currently timestamps
