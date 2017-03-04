@@ -1,6 +1,6 @@
 {% load sekizai_tags staticfiles %}
 
-{% if not request.user.is_anonymous and required_properties_by_competition %}
+{% if not dont_show_additional_registration_dialog and not request.user.is_anonymous and required_properties_by_competition %}
 <div class="modal fade in" tabindex="-1" role="dialog" id="additional_registration_modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -14,7 +14,7 @@
           Pokiaľ ich nevyplníš, nebudeme ťa zobrazovať vo výsledkovej listine.
         </p>
         <p>
-          Pokiaľ nechceš aby sa ti zobrazovala táto hláška môžeš tiež zakliknúť "Nechcem sa zapojiť do súťaže".
+          Pokiaľ nechceš, aby sa ti zobrazovala táto hláška môžeš tiež zakliknúť "Nechcem sa zapojiť do súťaže".
           Toto rozhodnutie môžeš neskôr zmeniť v nastaveniach v sekcii "Súťaže".
         </p>
         {% for competition, properties in required_properties_by_competition.items %}
@@ -34,7 +34,8 @@
         {% endfor %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Zavrieť</button>
+        <a href="{% url 'additional_registration' %}" class="btn btn-primary">Vyplniť údaje</a>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

@@ -1,0 +1,21 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% load i18n %}
+{% load ksp_login %}
+{% load utils %}
+{% load bootstrap %}
+{% load crispy_forms_tags %}
+{% load sekizai_tags %}
+{% load staticfiles %}
+
+{% block title %}{% trans "Additional Registration" %}{% endblock %}
+
+{% block page_header %}
+<h1>{% trans "Additional Registration" %}</h1>
+{% endblock %}
+
+{% block page_content %}
+<div>
+  {% crispy form %}
+</div>
+{% endblock %}

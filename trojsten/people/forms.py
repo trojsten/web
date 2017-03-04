@@ -545,3 +545,28 @@ class IgnoreCompetitionForm(forms.Form):
             self.user.ignored_competitions.remove(c)
         for c in ignored_competitions:
             self.user.ignored_competitions.add(c)
+
+
+class AdditionalRegistrationForm(forms.Form):
+    def __init__(self, prop_keys, *args, **kwargs):
+        super(AdditionalRegistrationForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-md-4'
+        self.helper.field_class = 'col-md-8'
+        self.helper.add_input(layout.Submit('submit', _('Submit')))
+
+        self.fields.update(OrderedDict([
+            (
+                '%s%s' % (constants.USER_PROP_PREFIX, prop_key.pk),
+                forms.CharField(
+                    label=prop_key.key_name,
+                    widget=forms.widgets.Textarea(attrs={'class': 'col-sm-12 form-control', 'rows': 1})
+                )
+            ) for prop_key in prop_keys
+        ]))
+
+    @transaction.atomic
+    def save(self):
+        pass

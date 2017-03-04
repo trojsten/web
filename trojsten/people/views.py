@@ -7,12 +7,14 @@ from social.apps.django_app.default.models import UserSocialAuth
 
 from trojsten.contests.models import Competition, Round
 from trojsten.people.models import User
-from trojsten.submit.constants import SUBMIT_TYPE_DESCRIPTION, SUBMIT_STATUS_REVIEWED
+from trojsten.submit.constants import (SUBMIT_STATUS_REVIEWED,
+                                       SUBMIT_TYPE_DESCRIPTION)
 from trojsten.submit.models import Submit
+
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
-from .forms import SubmittedTasksForm, RoundSelectForm
+from .forms import (AdditionalRegistrationForm, IgnoreCompetitionForm,
+                    RoundSelectForm, SubmittedTasksForm)
 from .models import UserProperty
-from .forms import IgnoreCompetitionForm
 
 
 class VisibleUserPropForm(forms.ModelForm):
@@ -23,7 +25,7 @@ class VisibleUserPropForm(forms.ModelForm):
         self.fields['key'].queryset = self.fields['key'].queryset.filter(hidden=False)
 
 
-def _get_user_props_formset(is_staff=False):
+def _get_user_props_formset(is_staff=False, **kwargs):
     form_class = forms.ModelForm if is_staff else VisibleUserPropForm
 
     return forms.inlineformset_factory(
@@ -34,6 +36,7 @@ def _get_user_props_formset(is_staff=False):
             'value': forms.widgets.Textarea(attrs={'class': 'col-sm-12 form-control', 'rows': 1})
         },
         extra=0,
+        **kwargs
     )
 
 
@@ -130,3 +133,30 @@ def submitted_tasks_for_latest_round(request, user_pk):
     competition = Competition.objects.current_site_only().first()
     round = Round.objects.latest_finished_for_competition(competition)
     return submitted_tasks(request, user_pk, round.pk)
+
+
+@login_required
+def additional_registration(request):
+    user = request.user
+    competitions = Competition.objects.current_site_only()
+    competitions_action_required = filter(
+        lambda c: not user.is_competition_ignored(c) and not user.is_valid_for_competition(c),
+        competitions,
+    )
+    required_properties = set(reduce(
+        (lambda x, y: x | y),
+        (set(competition.required_user_props.all()) for competition in competitions_action_required),
+        set()
+    )) - set(user.properties.all())
+
+    if request.method == 'POST':
+        form = AdditionalRegistrationForm(required_properties, request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('additional_registration'))
+    else:
+        form = AdditionalRegistrationForm(required_properties)
+
+    context = {'form': form, 'dont_show_additional_registration_dialog': True}
+
+    return render(request, 'trojsten/people/additional_registration.html', context)
