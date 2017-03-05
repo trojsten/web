@@ -8,10 +8,10 @@
 {% load sekizai_tags %}
 {% load staticfiles %}
 
-{% block title %}{% trans "Additional Registration" %}{% endblock %}
+{% block title %}{% trans "Complete Registration" %}{% endblock %}
 
 {% block page_header %}
-<h1>{% trans "Additional Registration" %}</h1>
+<h1>{% trans "Complete Registration" %}</h1>
 {% endblock %}
 
 {% block page_content %}
@@ -20,7 +20,7 @@
     {% crispy form %}
   {% else %}
     <div class="alert alert-success">
-      Momentálne máš vyplnené všetky potrebné údaje.
+      {% trans 'You have already filled all required properties.' %}
     </div>
   {% endif %}
 </div>

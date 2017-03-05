@@ -1,4 +1,4 @@
-{% load sekizai_tags staticfiles %}
+{% load sekizai_tags staticfiles i18n %}
 
 {% if not dont_show_additional_registration_dialog and not request.user.is_anonymous and required_properties_by_competition %}
 <div class="modal fade in" tabindex="-1" role="dialog" id="additional_registration_modal">
@@ -6,20 +6,20 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Potrebujeme ešte zopár údajov</h4>
+        <h4 class="modal-title">{% trans 'We need a little more information' %}</h4>
       </div>
       <div class="modal-body">
         <p>
-          Na zapojenie do niektorých súťaží potrebujeme ešte nejaké údaje navyše okrem tých ktoré si zadal pri registrácii.
-          Pokiaľ ich nevyplníš, nebudeme ťa zobrazovať vo výsledkovej listine.
+          {% blocktrans %}To participate in some competitions, we need you to fill some more data in addition to those you have filled during registration.
+          Until you fill them, we will not show you in the scoreboard.{% endblocktrans %}
         </p>
         <p>
-          Pokiaľ nechceš, aby sa ti zobrazovala táto hláška môžeš tiež zakliknúť "Nechcem sa zapojiť do súťaže".
-          Toto rozhodnutie môžeš neskôr zmeniť v nastaveniach v sekcii "Súťaže".
+          {% blocktrans %}If you want to prevent this message from showing, you may check "I do not want to participate in competition".
+          You can change this later in "Contest" section in Settings.{% endblocktrans %}
         </p>
         {% for competition, properties in required_properties_by_competition.items %}
         <p>
-          V súťaži <em>{{ competition }}</em> potrebujeme ešte aby si vyplnil tieto údaje:
+          {% blocktrans %}To participate in competition <em>{{ competition }}</em> you need to fill:{% endblocktrans %}
         </p>
         <ul>
           {% for property in properties %}
@@ -30,12 +30,12 @@
         </ul>
         <input type="checkbox" id="ignore_{{ competition.pk }}"
                data-competition="{{ competition.pk }}" onchange="switch_competition_participation(this);"/>
-        <label for="ignore_{{ competition.pk }}">Nechcem sa zapojiť do súťaže {{ competition }}.</label>
+        <label for="ignore_{{ competition.pk }}">{% blocktrans %}I do not want to participate in competition {{ competition }}.{% endblocktrans %}</label>
         {% endfor %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Zavrieť</button>
-        <a href="{% url 'additional_registration' %}" class="btn btn-primary">Vyplniť údaje</a>
+        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Close' %}</button>
+        <a href="{% url 'additional_registration' %}" class="btn btn-primary">{% trans 'Fill data' %}</a>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

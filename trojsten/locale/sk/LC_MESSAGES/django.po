@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-05 15:28+0100\n"
+"POT-Creation-Date: 2017-03-05 20:18+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -133,9 +133,9 @@ msgstr "%(count)s minúta"
 msgid "%(count)d second"
 msgstr "%(count)s sekunda"
 
-#: events/forms.py:47 people/forms.py:85 people/forms.py:93 people/forms.py:101
-#: people/forms.py:110 people/forms.py:120 people/forms.py:130
-#: people/forms.py:140
+#: events/forms.py:47 people/forms.py:86 people/forms.py:94 people/forms.py:102
+#: people/forms.py:111 people/forms.py:121 people/forms.py:131
+#: people/forms.py:141
 msgid "This field is required."
 msgstr "Toto pole je povinné."
 
@@ -167,55 +167,55 @@ msgstr ""
 msgid "Users merged succesfully."
 msgstr ""
 
-#: people/forms.py:29 people/forms.py:48
+#: people/forms.py:30 people/forms.py:49
 msgid "Street"
 msgstr "Ulica"
 
-#: people/forms.py:30 people/forms.py:49
+#: people/forms.py:31 people/forms.py:50
 msgid "Town"
 msgstr "Mesto"
 
-#: people/forms.py:32 people/forms.py:51
+#: people/forms.py:33 people/forms.py:52
 msgid "Postal code"
 msgstr "PSČ"
 
-#: people/forms.py:34 people/forms.py:53
+#: people/forms.py:35 people/forms.py:54
 msgid "Country"
 msgstr "Krajina"
 
-#: people/forms.py:37
+#: people/forms.py:38
 msgid "home"
 msgstr "domov"
 
-#: people/forms.py:38
+#: people/forms.py:39
 msgid "school"
 msgstr "do školy"
 
-#: people/forms.py:39
+#: people/forms.py:40
 msgid "other address (e. g. to a dormitory)"
 msgstr "na inú adresu (napr. na internát)"
 
-#: people/forms.py:43
+#: people/forms.py:44
 msgid "Correspondence address"
 msgstr "Korešpondenčná adresa"
 
-#: people/forms.py:44
+#: people/forms.py:45
 msgid "Choose, where you want to accept mails."
 msgstr "Vyber, kam ti máme posielať poštu."
 
-#: people/forms.py:70
+#: people/forms.py:71
 msgid "Gender"
 msgstr "Pohlavie"
 
-#: people/forms.py:151
+#: people/forms.py:152
 msgid "Your graduation year is too far in the past."
 msgstr "Tvoj rok maturity je príliš ďaleko v minulosti."
 
-#: people/forms.py:157
+#: people/forms.py:158
 msgid "Your graduation year is too far in the future."
 msgstr "Tvoj rok maturity je príliš ďaleko v budúcnosti."
 
-#: people/forms.py:169
+#: people/forms.py:170
 msgid ""
 "We cannot send you correspondence to school when you don't choose any "
 "school. If your school is not in the list write us in an e-mail that you "
@@ -225,19 +225,19 @@ msgstr ""
 "tvoja škola nenachádza v zozname, napíš v e-maili, že ti máme posielať poštu "
 "na školu"
 
-#: people/forms.py:268
+#: people/forms.py:269
 msgid "Password"
 msgstr "Heslo"
 
-#: people/forms.py:270
+#: people/forms.py:271
 msgid "Password confirmation"
 msgstr "Potvrdenie hesla"
 
-#: people/forms.py:271
+#: people/forms.py:272
 msgid "Enter the same password as above, for verification."
 msgstr "Zadaj rovnaké heslo ako vyššie pre jeho overenie"
 
-#: people/forms.py:304
+#: people/forms.py:305
 msgid ""
 "We recommend choosing a strong passphrase but we don't enforce any "
 "ridiculous constraints on your passwords."
@@ -245,31 +245,31 @@ msgstr ""
 "Odporúčame ti vybrať silné heslo, ale nebudeme od teba vyžadovať žiadne "
 "smiešne požiadavky"
 
-#: people/forms.py:312
+#: people/forms.py:313
 msgid ""
 "Since you're logging in using an external provider, this field is optional; "
 "however, by supplying it, you will be able to log in using a password. "
 msgstr ""
 
-#: people/forms.py:322
+#: people/forms.py:323
 msgid "The two password fields didn't match."
 msgstr ""
 
-#: people/forms.py:461
+#: people/forms.py:462
 msgid "Points have to be non-negative and at most {}."
 msgstr "Body musia byť nezáporné a najviac {}."
 
-#: people/forms.py:466
+#: people/forms.py:467
 #, fuzzy
 #| msgid "The value has to be integer or {}."
 msgid "The value has to be number or {}."
 msgstr "Hodnota musí byť číslo alebo {}."
 
-#: people/forms.py:510
+#: people/forms.py:511
 msgid "Round"
 msgstr "Kolo"
 
-#: people/forms.py:524
+#: people/forms.py:525 people/forms.py:563
 #: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
 #: people/templates/trojsten/people/settings.html:95
 #: templates/ksp_login/parts/multiple_forms.html:11
@@ -360,12 +360,69 @@ msgstr ""
 "<br>\n"
 "Políčkami môžeš prechádzať pomocou tabulátora.\n"
 
+# Login
+#: people/templates/trojsten/people/additional_registration.html:11
+#: people/templates/trojsten/people/additional_registration.html:14
+#, fuzzy
+#| msgid "Registration"
+msgid "Complete Registration"
+msgstr "Dodatočná Registrácia"
+
+#: people/templates/trojsten/people/additional_registration.html:23
+msgid "You have already filled all required properties."
+msgstr "Momentálne máš vyplnené všetky potrebné údaje."
+
+#: people/templates/trojsten/people/parts/additional_registration.html:9
+msgid "We need a little more information"
+msgstr "Potrebujeme ešte zopár údajov"
+
+#: people/templates/trojsten/people/parts/additional_registration.html:13
+msgid ""
+"To participate in some competitions, we need you to fill some more data in "
+"addition to those you have filled during registration.\n"
+"          Until you fill them, we will not show you in the scoreboard."
+msgstr ""
+"Na zapojenie do niektorých súťaží potrebujeme ešte aby si vyplnil nejaké "
+"údaje navyše okrem tých ktoré si zadal pri registrácii. Pokiaľ ich "
+"nevyplníš, nebudeme ťa zobrazovať vo výsledkovej listine."
+
+#: people/templates/trojsten/people/parts/additional_registration.html:17
+msgid ""
+"If you want to prevent this message from showing, you may check \"I do not "
+"want to participate in competition\".\n"
+"          You can change this later in \"Contest\" section in Settings."
+msgstr ""
+"Pokiaľ nechceš, aby sa ti zobrazovala táto hláška môžeš tiež zakliknúť "
+"\"Nechcem sa zapojiť do súťaže\". Toto rozhodnutie môžeš neskôr zmeniť v "
+"nastaveniach v sekcii \"Súťaže\"."
+
+#: people/templates/trojsten/people/parts/additional_registration.html:22
+#, python-format
+msgid ""
+"To participate in competition <em>%(competition)s</em> you need to fill:"
+msgstr ""
+"V súťaži <em>%(competition)s</em> potrebujeme ešte aby si vyplnil tieto "
+"údaje:"
+
+#: people/templates/trojsten/people/parts/additional_registration.html:33
+#, python-format
+msgid "I do not want to participate in competition %(competition)s."
+msgstr "Nechcem sa zapojiť do súťaže %(competition)s."
+
+#: people/templates/trojsten/people/parts/additional_registration.html:37
+msgid "Close"
+msgstr "Zavrieť"
+
+#: people/templates/trojsten/people/parts/additional_registration.html:38
+msgid "Fill data"
+msgstr "Vyplniť údaje"
+
 #: people/templates/trojsten/people/settings.html:11
 #: people/templates/trojsten/people/settings.html:14
 #, fuzzy
 #| msgid "Account information"
 msgid "Account settings"
-msgstr "Informácie o účte"
+msgstr "Nastavenia účtu"
 
 #: people/templates/trojsten/people/settings.html:21
 msgid "Profile"
@@ -389,6 +446,10 @@ msgstr "Nastavenia prihlasovania"
 #: people/templates/trojsten/people/settings.html:96
 msgid "Add property"
 msgstr "Pridať vlastnosť"
+
+#: people/templates/trojsten/people/settings.html:104
+msgid "Choose which competitions would you like to participate in:"
+msgstr "Vyber si súťaže ktoré chceš riešiť:"
 
 #: people/templates/trojsten/people/settings.html:112
 msgid "You can use any of the following services to log in to your account."
