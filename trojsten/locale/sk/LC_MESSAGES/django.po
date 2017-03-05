@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-04 21:59+0100\n"
+"POT-Creation-Date: 2017-03-05 15:28+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -52,55 +52,55 @@ msgid "Category doesn't correspond with competition."
 msgstr ""
 
 # pdf file names
-#: contests/models.py:243
+#: contests/models.py:246
 msgid "year"
 msgstr "ročník"
 
-#: contests/models.py:245
+#: contests/models.py:248
 msgid "round"
 msgstr "kolo"
 
-#: contests/models.py:247
+#: contests/models.py:250
 msgid "solutions"
 msgstr "vzoráky"
 
-#: contests/models.py:247
+#: contests/models.py:250
 msgid "tasks"
 msgstr "zadania"
 
-#: contests/models.py:386
+#: contests/models.py:389
 #, fuzzy
 #| msgid "tasks"
 msgid "task"
 msgstr "úloha"
 
-#: contests/models.py:389
+#: contests/models.py:392
 msgid "organizer"
 msgstr "vedúci"
 
-#: contests/models.py:392
+#: contests/models.py:395
 msgid "reviewer"
 msgstr "opravovateľ"
 
-#: contests/models.py:393
+#: contests/models.py:396
 #, fuzzy
 #| msgid "solution-writer"
 msgid "solution writer"
 msgstr "vzorákovač"
 
-#: contests/models.py:394
+#: contests/models.py:397
 msgid "proofreader"
 msgstr "recenzovač"
 
-#: contests/models.py:397
+#: contests/models.py:400
 msgid "role"
 msgstr "funkcia"
 
-#: contests/models.py:401
+#: contests/models.py:404
 msgid "Assigned user"
 msgstr "Pridelený človek"
 
-#: contests/models.py:402
+#: contests/models.py:405
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
 
@@ -133,11 +133,11 @@ msgstr "%(count)s minúta"
 msgid "%(count)d second"
 msgstr "%(count)s sekunda"
 
-#: events/forms.py:47 people/forms.py:79 people/forms.py:87 people/forms.py:95
-#: people/forms.py:104 people/forms.py:114 people/forms.py:124
-#: people/forms.py:134
+#: events/forms.py:47 people/forms.py:85 people/forms.py:93 people/forms.py:101
+#: people/forms.py:110 people/forms.py:120 people/forms.py:130
+#: people/forms.py:140
 msgid "This field is required."
-msgstr ""
+msgstr "Toto pole je povinné."
 
 #: login/views.py:29
 msgid "Logout successful"
@@ -167,55 +167,55 @@ msgstr ""
 msgid "Users merged succesfully."
 msgstr ""
 
-#: people/forms.py:23 people/forms.py:42
+#: people/forms.py:29 people/forms.py:48
 msgid "Street"
 msgstr "Ulica"
 
-#: people/forms.py:24 people/forms.py:43
+#: people/forms.py:30 people/forms.py:49
 msgid "Town"
 msgstr "Mesto"
 
-#: people/forms.py:26 people/forms.py:45
+#: people/forms.py:32 people/forms.py:51
 msgid "Postal code"
 msgstr "PSČ"
 
-#: people/forms.py:28 people/forms.py:47
+#: people/forms.py:34 people/forms.py:53
 msgid "Country"
 msgstr "Krajina"
 
-#: people/forms.py:31
+#: people/forms.py:37
 msgid "home"
 msgstr "domov"
 
-#: people/forms.py:32
+#: people/forms.py:38
 msgid "school"
 msgstr "do školy"
 
-#: people/forms.py:33
+#: people/forms.py:39
 msgid "other address (e. g. to a dormitory)"
 msgstr "na inú adresu (napr. na internát)"
 
-#: people/forms.py:37
+#: people/forms.py:43
 msgid "Correspondence address"
 msgstr "Korešpondenčná adresa"
 
-#: people/forms.py:38
+#: people/forms.py:44
 msgid "Choose, where you want to accept mails."
 msgstr "Vyber, kam ti máme posielať poštu."
 
-#: people/forms.py:64
+#: people/forms.py:70
 msgid "Gender"
 msgstr "Pohlavie"
 
-#: people/forms.py:145
+#: people/forms.py:151
 msgid "Your graduation year is too far in the past."
 msgstr "Tvoj rok maturity je príliš ďaleko v minulosti."
 
-#: people/forms.py:151
+#: people/forms.py:157
 msgid "Your graduation year is too far in the future."
 msgstr "Tvoj rok maturity je príliš ďaleko v budúcnosti."
 
-#: people/forms.py:163
+#: people/forms.py:169
 msgid ""
 "We cannot send you correspondence to school when you don't choose any "
 "school. If your school is not in the list write us in an e-mail that you "
@@ -225,19 +225,19 @@ msgstr ""
 "tvoja škola nenachádza v zozname, napíš v e-maili, že ti máme posielať poštu "
 "na školu"
 
-#: people/forms.py:262
+#: people/forms.py:268
 msgid "Password"
 msgstr "Heslo"
 
-#: people/forms.py:264
+#: people/forms.py:270
 msgid "Password confirmation"
 msgstr "Potvrdenie hesla"
 
-#: people/forms.py:265
+#: people/forms.py:271
 msgid "Enter the same password as above, for verification."
 msgstr "Zadaj rovnaké heslo ako vyššie pre jeho overenie"
 
-#: people/forms.py:298
+#: people/forms.py:304
 msgid ""
 "We recommend choosing a strong passphrase but we don't enforce any "
 "ridiculous constraints on your passwords."
@@ -245,31 +245,39 @@ msgstr ""
 "Odporúčame ti vybrať silné heslo, ale nebudeme od teba vyžadovať žiadne "
 "smiešne požiadavky"
 
-#: people/forms.py:306
+#: people/forms.py:312
 msgid ""
 "Since you're logging in using an external provider, this field is optional; "
 "however, by supplying it, you will be able to log in using a password. "
 msgstr ""
 
-#: people/forms.py:316
+#: people/forms.py:322
 msgid "The two password fields didn't match."
 msgstr ""
 
-#: people/forms.py:455
+#: people/forms.py:461
 msgid "Points have to be non-negative and at most {}."
 msgstr "Body musia byť nezáporné a najviac {}."
 
-#: people/forms.py:460
+#: people/forms.py:466
 #, fuzzy
 #| msgid "The value has to be integer or {}."
 msgid "The value has to be number or {}."
 msgstr "Hodnota musí byť číslo alebo {}."
 
-#: people/forms.py:504
+#: people/forms.py:510
 msgid "Round"
 msgstr "Kolo"
 
-#: people/models.py:224
+#: people/forms.py:524
+#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
+#: people/templates/trojsten/people/settings.html:95
+#: templates/ksp_login/parts/multiple_forms.html:11
+#: templates/ksp_login/parts/single_form.html:10
+msgid "Submit"
+msgstr "Odoslať"
+
+#: people/models.py:234
 msgid "Value \"{}\" does not match regex \"{}\"."
 msgstr ""
 
@@ -294,13 +302,6 @@ msgstr ""
 #, python-format
 msgid "Merge users %(user)s and %(candidate)s"
 msgstr ""
-
-#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
-#: people/templates/trojsten/people/settings.html:93
-#: templates/ksp_login/parts/multiple_forms.html:11
-#: templates/ksp_login/parts/single_form.html:10
-msgid "Submit"
-msgstr "Odoslať"
 
 #: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:32
 msgid "Reset"
@@ -359,35 +360,41 @@ msgstr ""
 "<br>\n"
 "Políčkami môžeš prechádzať pomocou tabulátora.\n"
 
-#: people/templates/trojsten/people/settings.html:10
-#: people/templates/trojsten/people/settings.html:13
+#: people/templates/trojsten/people/settings.html:11
+#: people/templates/trojsten/people/settings.html:14
 #, fuzzy
 #| msgid "Account information"
 msgid "Account settings"
 msgstr "Informácie o účte"
 
-#: people/templates/trojsten/people/settings.html:20
+#: people/templates/trojsten/people/settings.html:21
 msgid "Profile"
 msgstr "Profil"
 
-#: people/templates/trojsten/people/settings.html:21
+#: people/templates/trojsten/people/settings.html:22
 msgid "Properties"
 msgstr "Vlastnosti"
 
 #: people/templates/trojsten/people/settings.html:23
+#: reviews/templates/admin/review_form.html:7
+#: reviews/templates/admin/zip_upload.html:7
+msgid "Contests"
+msgstr "Súťaže"
+
 #: people/templates/trojsten/people/settings.html:25
+#: people/templates/trojsten/people/settings.html:27
 msgid "Login settings"
 msgstr "Nastavenia prihlasovania"
 
-#: people/templates/trojsten/people/settings.html:94
+#: people/templates/trojsten/people/settings.html:96
 msgid "Add property"
 msgstr "Pridať vlastnosť"
 
-#: people/templates/trojsten/people/settings.html:103
+#: people/templates/trojsten/people/settings.html:112
 msgid "You can use any of the following services to log in to your account."
 msgstr "Možete použiť ľubovoľnú z nasledujúcich služieb na prihlásenie."
 
-#: people/templates/trojsten/people/settings.html:124
+#: people/templates/trojsten/people/settings.html:133
 #: templates/ksp_login/login.html:4 templates/ksp_login/login.html:7
 #: templates/ksp_login/parts/include_javascript.html:15
 #: templates/ksp_login/parts/login_box.html:44
@@ -398,7 +405,7 @@ msgstr "Možete použiť ľubovoľnú z nasledujúcich služieb na prihlásenie.
 msgid "Log in"
 msgstr "Prihlásiť sa"
 
-#: people/templates/trojsten/people/settings.html:132
+#: people/templates/trojsten/people/settings.html:141
 #, python-format
 msgid ""
 "\n"
@@ -413,12 +420,12 @@ msgstr ""
 "stránke</a>.\n"
 "                "
 
-#: people/templates/trojsten/people/settings.html:137
+#: people/templates/trojsten/people/settings.html:146
 #: templates/ksp_login/password.html:5 templates/ksp_login/password.html:8
 msgid "Password change"
 msgstr "Zmena hesla"
 
-#: people/templates/trojsten/people/settings.html:140
+#: people/templates/trojsten/people/settings.html:149
 #, python-format
 msgid ""
 "\n"
@@ -427,8 +434,8 @@ msgid ""
 "                "
 msgstr ""
 "\n"
-"                    Heslo si môžeš zmeniť <a href=\"%(passwd_url)s"
-"\">tu</a>.\n"
+"                    Heslo si môžeš zmeniť <a href=\"%(passwd_url)s\">tu</"
+"a>.\n"
 "                "
 
 #: reviews/forms.py:48
@@ -477,11 +484,6 @@ msgstr "Opravovanie"
 #: reviews/templates/admin/review_form.html:57
 msgid "Edit"
 msgstr "Upraviť"
-
-#: reviews/templates/admin/review_form.html:7
-#: reviews/templates/admin/zip_upload.html:7
-msgid "Contests"
-msgstr "Súťaže"
 
 #: reviews/templates/admin/review_form.html:8
 #: reviews/templates/admin/zip_upload.html:8
