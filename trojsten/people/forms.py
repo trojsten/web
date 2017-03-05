@@ -1,18 +1,24 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
 
+from crispy_forms import layout
+from crispy_forms.helper import FormHelper
 from django import forms
+from django.db import transaction
 from django.utils import timezone
-from django.utils.translation import string_concat
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import string_concat
 from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
 
-from trojsten.contests.models import Task, Round, Competition
+from trojsten.contests.models import Competition, Round, Task
 from trojsten.people.models import Address, DuplicateUser, User
-from trojsten.submit.constants import SUBMIT_TYPE_DESCRIPTION, SUBMIT_STATUS_IN_QUEUE,\
-    SUBMIT_PAPER_FILEPATH, SUBMIT_STATUS_REVIEWED
+from trojsten.submit.constants import (SUBMIT_PAPER_FILEPATH,
+                                       SUBMIT_STATUS_IN_QUEUE,
+                                       SUBMIT_STATUS_REVIEWED,
+                                       SUBMIT_TYPE_DESCRIPTION)
 from trojsten.submit.models import Submit
+
 from . import constants
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .helpers import get_similar_users
@@ -506,3 +512,36 @@ class RoundSelectForm(forms.Form):
                 semester__competition__in=Competition.objects.current_site_only()
             ).order_by('-end_time'),
         )
+
+
+class IgnoreCompetitionForm(forms.Form):
+
+    def __init__(self, user, *args, **kwargs):
+        super(IgnoreCompetitionForm, self).__init__(*args, **kwargs)
+        self.user = user
+
+        self.helper = FormHelper()
+        self.helper.add_input(layout.Submit('contests_submit', _('Submit')))
+        self.helper.form_show_labels = False
+
+        competitions = Competition.objects.all()
+        self.fields['competitions'] = forms.MultipleChoiceField(
+            choices=[(c.pk, c.name) for c in competitions],
+            initial=[c.pk for c in competitions if not self.user.is_competition_ignored(c)],
+            widget=forms.CheckboxSelectMultiple,
+        )
+
+    @transaction.atomic
+    def save(self):
+        competitions = set(Competition.objects.all())
+        participating_competitions_pk = set(map(int, self.cleaned_data['competitions']))
+        participating_competitions = set(filter(
+            lambda c: c.pk in participating_competitions_pk, competitions
+        ))
+        ignored_competitions = [
+            c for c in Competition.objects.all() if c not in participating_competitions
+        ]
+        for c in participating_competitions:
+            self.user.ignored_competitions.remove(c)
+        for c in ignored_competitions:
+            self.user.ignored_competitions.add(c)

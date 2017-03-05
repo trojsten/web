@@ -15,7 +15,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 from unidecode import unidecode
 
-from trojsten.people.models import User
+from trojsten.people.models import User, UserPropertyKey
 from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
 from trojsten.submit import constants as submit_constants
@@ -86,6 +86,9 @@ class Competition(models.Model):
     organizers_group = models.ForeignKey(Group, null=True, verbose_name='skupina vedúcich')
     primary_school_only = models.BooleanField(
         default=False, verbose_name='súťaž je iba pre základoškolákov'
+    )
+    required_user_props = models.ManyToManyField(
+        UserPropertyKey, verbose_name='Povinné vlastnosti človeka'
     )
 
     @property

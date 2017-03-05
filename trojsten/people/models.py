@@ -101,6 +101,8 @@ class User(AbstractUser):
     graduation = models.IntegerField(null=True,
                                      verbose_name='rok maturity',
                                      help_text='Povinné pre žiakov.')
+    ignored_competitions = models.ManyToManyField('contests.Competition',
+                                                  verbose_name='ignorované súťaže')
 
     objects = UserManager()
 
@@ -144,6 +146,14 @@ class User(AbstractUser):
         address = self.school.get_mailing_address()
         address.recipient = '%s %s' % (self.first_name, self.last_name)
         return address
+
+    def is_valid_for_competition(self, competition):
+        required_props = competition.required_user_props.all()
+        user_props = self.get_properties().keys()
+        return all(map(lambda prop: prop in user_props, required_props))
+
+    def is_competition_ignored(self, competition):
+        return self.ignored_competitions.filter(pk=competition.pk).exists()
 
     def __str__(self):
         return '%s (%s)' % (self.username, self.get_full_name())

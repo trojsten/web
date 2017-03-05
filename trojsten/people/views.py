@@ -12,6 +12,7 @@ from trojsten.submit.models import Submit
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .forms import SubmittedTasksForm, RoundSelectForm
 from .models import UserProperty
+from .forms import IgnoreCompetitionForm
 
 
 class VisibleUserPropForm(forms.ModelForm):
@@ -51,6 +52,7 @@ def settings(request, settings_form=UserProfileForm):
 
     _forms = None
     user_props_form_set = None
+    competition_select_form = None
 
     if request.method == "POST":
         if request.POST.get('user_props_submit', None):
@@ -58,6 +60,11 @@ def settings(request, settings_form=UserProfileForm):
             if user_props_form_set.is_valid():
                 user_props_form_set.save()
                 return redirect(reverse('account_settings') + '#props')
+        elif request.POST.get('contests_submit', None):
+            competition_select_form = IgnoreCompetitionForm(request.user, request.POST)
+            if competition_select_form.is_valid():
+                competition_select_form.save()
+                return redirect(reverse('account_settings') + '#contests')
         else:
             _forms = [form(request.POST, user=request.user)
                       for form in form_classes]
@@ -72,11 +79,14 @@ def settings(request, settings_form=UserProfileForm):
         user_props_form_set = UserPropsFormSet(
             instance=request.user, queryset=UserProperty.objects.visible(request.user)
         )
+    if not competition_select_form:
+        competition_select_form = IgnoreCompetitionForm(user=request.user)
 
     return render(request, 'trojsten/people/settings.html', {
         'account_associations': UserSocialAuth.get_social_auth_for_user(request.user),
         'forms': _forms,
         'user_props_form_set': user_props_form_set,
+        'competition_select_form': competition_select_form,
     })
 
 

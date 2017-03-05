@@ -16,13 +16,16 @@ from django.utils import timezone
 from trojsten.contests import constants as contests_constants
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.schools.models import School
-from trojsten.submit.constants import SUBMIT_STATUS_IN_QUEUE, SUBMIT_TYPE_DESCRIPTION,\
-    SUBMIT_PAPER_FILEPATH, SUBMIT_STATUS_REVIEWED
+from trojsten.submit.constants import (SUBMIT_PAPER_FILEPATH,
+                                       SUBMIT_STATUS_IN_QUEUE,
+                                       SUBMIT_STATUS_REVIEWED,
+                                       SUBMIT_TYPE_DESCRIPTION)
 from trojsten.submit.models import Submit
 
 from . import constants
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
-from .forms import TrojstenUserChangeForm, TrojstenUserCreationForm, SubmittedTasksForm
+from .forms import (SubmittedTasksForm, TrojstenUserChangeForm,
+                    TrojstenUserCreationForm)
 from .helpers import get_similar_users, merge_users
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
 
@@ -379,6 +382,31 @@ class SettingsViewTests(TestCase):
         self.assertContains(response, self.element_login)
         self.assertContains(response, 'supercoollogin')
         self.assertContains(response, self.kaspar_id)
+
+
+class UserTests(TestCase):
+    def setUp(self):
+        self.user = _create_random_user()
+        self.element_login = UserPropertyKey.objects.create(
+            key_name='Login na elementa', hidden=True)
+        self.kaspar_id = UserPropertyKey.objects.create(key_name='kaspar_id', hidden=True)
+        self.mobil = UserPropertyKey.objects.create(key_name='Mobil')
+        self.tricko = UserPropertyKey.objects.create(key_name='Veľkosť trička')
+        UserProperty.objects.create(user=self.user, key=self.element_login, value='supercoollogin')
+        UserProperty.objects.create(user=self.user, key=self.mobil, value='+471234567890')
+        UserProperty.objects.create(user=self.user, key=self.kaspar_id, value='1234')
+
+    def test_valid_for_competition(self):
+        competition = Competition.objects.create()
+        competition.required_user_props.add(self.kaspar_id)
+        competition.required_user_props.add(self.mobil)
+        self.assertTrue(self.user.is_valid_for_competition(competition))
+
+    def test_not_valid_for_competition(self):
+        competition = Competition.objects.create()
+        competition.required_user_props.add(self.element_login)
+        competition.required_user_props.add(self.tricko)
+        self.assertFalse(self.user.is_valid_for_competition(competition))
 
 
 class DeenvelopingTests(TestCase):

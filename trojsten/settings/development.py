@@ -5,6 +5,7 @@ from trojsten.settings.common import *
 ALLOWED_HOSTS = []
 DEBUG = True
 SUBMIT_DEBUG = True
+CRISPY_FAIL_SILENTLY = not DEBUG
 SENDFILE_BACKEND = 'sendfile.backends.development'
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 SITE_ID = int(env('TROJSTENWEB_DEVELOPMENT_SITE_ID', 1))
