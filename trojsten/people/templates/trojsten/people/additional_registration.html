@@ -16,6 +16,12 @@
 
 {% block page_content %}
 <div>
-  {% crispy form %}
+  {% if form %}
+    {% crispy form %}
+  {% else %}
+    <div class="alert alert-success">
+      Momentálne máš vyplnené všetky potrebné údaje.
+    </div>
+  {% endif %}
 </div>
 {% endblock %}

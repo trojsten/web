@@ -17,7 +17,9 @@ def show_competition_registration(context):
         competitions,
     )
     required_properties_by_competition = {
-        competition: set(competition.required_user_props.all()) - set(user.properties.all())
+        competition: set(competition.required_user_props.all()) - set(
+            map(lambda prop: prop.key, user.properties.all())
+        )
         for competition in competitions_action_required
     }
 

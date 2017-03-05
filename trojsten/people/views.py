@@ -149,15 +149,17 @@ def additional_registration(request):
         (lambda x, y: x | y),
         (set(competition.required_user_props.all()) for competition in competitions_action_required),
         set()
-    )) - set(user.properties.all())
+    )) - set(map(lambda prop: prop.key, user.properties.all()))
 
-    if request.method == 'POST':
-        form = AdditionalRegistrationForm(required_properties, request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse('additional_registration'))
-    else:
-        form = AdditionalRegistrationForm(required_properties)
+    form = None
+    if required_properties:
+        if request.method == 'POST':
+            form = AdditionalRegistrationForm(request.user, required_properties, request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect(reverse('additional_registration'))
+        else:
+            form = AdditionalRegistrationForm(request.user, required_properties)
 
     context = {'form': form, 'dont_show_additional_registration_dialog': True}
 
