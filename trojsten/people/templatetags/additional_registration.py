@@ -1,6 +1,6 @@
 from django import template
 
-from trojsten.contests.models import Competition
+from trojsten.people.helpers import get_required_properties_by_competition
 
 register = template.Library()
 
@@ -11,17 +11,5 @@ def show_competition_registration(context):
     if user.is_anonymous():
         return context
 
-    competitions = Competition.objects.current_site_only()
-    competitions_action_required = filter(
-        lambda c: not user.is_competition_ignored(c) and not user.is_valid_for_competition(c),
-        competitions,
-    )
-    required_properties_by_competition = {
-        competition: set(competition.required_user_props.all()) - set(
-            map(lambda prop: prop.key, user.properties.all())
-        )
-        for competition in competitions_action_required
-    }
-
-    context['required_properties_by_competition'] = required_properties_by_competition
+    context['required_properties_by_competition'] = get_required_properties_by_competition(user)
     return context

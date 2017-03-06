@@ -1,5 +1,3 @@
-from functools import reduce
-
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -16,6 +14,7 @@ from trojsten.submit.models import Submit
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .forms import (AdditionalRegistrationForm, IgnoreCompetitionForm,
                     RoundSelectForm, SubmittedTasksForm)
+from .helpers import get_required_properties
 from .models import UserProperty
 
 
@@ -140,16 +139,7 @@ def submitted_tasks_for_latest_round(request, user_pk):
 @login_required
 def additional_registration(request):
     user = request.user
-    competitions = Competition.objects.current_site_only()
-    competitions_action_required = filter(
-        lambda c: not user.is_competition_ignored(c) and not user.is_valid_for_competition(c),
-        competitions,
-    )
-    required_properties = set(reduce(
-        (lambda x, y: x | y),
-        (set(competition.required_user_props.all()) for competition in competitions_action_required),
-        set()
-    )) - set(map(lambda prop: prop.key, user.properties.all()))
+    required_properties = get_required_properties(user)
 
     form = None
     if required_properties:

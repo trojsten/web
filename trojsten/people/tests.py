@@ -25,9 +25,11 @@ from trojsten.utils.test_utils import get_noexisting_id
 
 from . import constants
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
-from .forms import (SubmittedTasksForm, TrojstenUserChangeForm,
-                    TrojstenUserCreationForm)
-from .helpers import get_similar_users, merge_users
+from .forms import (AdditionalRegistrationForm, SubmittedTasksForm,
+                    TrojstenUserChangeForm, TrojstenUserCreationForm)
+from .helpers import (get_required_properties,
+                      get_required_properties_by_competition,
+                      get_similar_users, merge_users)
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
 
 
@@ -633,3 +635,105 @@ class DeenvelopingTests(TestCase):
             user=self.user_with_submits, task=self.tasks[10], points=9,
             submit_type=SUBMIT_TYPE_DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
         ).count(), 1)
+
+
+class AdditionalRegistrationFormTest(TestCase):
+    def setUp(self):
+        self.user = _create_random_user()
+        self.key1 = UserPropertyKey.objects.create(key_name='key1', regex='[0-9]+')
+        self.key2 = UserPropertyKey.objects.create(key_name='key2')
+        self.key3 = UserPropertyKey.objects.create(key_name='key3')
+        self.key4 = UserPropertyKey.objects.create(key_name='key4')
+        self.key5 = UserPropertyKey.objects.create(key_name='key5')
+
+    def test_field_name(self):
+        self.assertEqual('user_prop_%s' % self.key1.pk, AdditionalRegistrationForm._field_name(self.key1))
+
+    def test_form_fields(self):
+        keys = [self.key1, self.key2, self.key3, self.key4]
+        form = AdditionalRegistrationForm(self.user, keys)
+        self.assertListEqual(list(map(lambda k: AdditionalRegistrationForm._field_name(k), keys)), form.fields.keys())
+
+    def test_clean_bad_regex(self):
+        keys = [self.key1]
+        form = AdditionalRegistrationForm(
+            self.user, keys, {
+                AdditionalRegistrationForm._field_name(self.key1): 'hello'
+            }
+        )
+        self.assertFalse(form.is_valid())
+
+    def test_clean_missing_value(self):
+        keys = [self.key2, self.key3]
+        form = AdditionalRegistrationForm(
+            self.user, keys, {
+                AdditionalRegistrationForm._field_name(self.key2): 'hello'
+            }
+        )
+        self.assertFalse(form.is_valid())
+
+    def test_clean(self):
+        keys = [self.key1, self.key2, self.key3]
+        form = AdditionalRegistrationForm(
+            self.user, keys, {
+                AdditionalRegistrationForm._field_name(self.key1): '47',
+                AdditionalRegistrationForm._field_name(self.key2): 'hello',
+                AdditionalRegistrationForm._field_name(self.key3): 'world',
+            }
+        )
+        self.assertTrue(form.is_valid())
+
+    def test_save(self):
+        keys = [self.key1, self.key2, self.key3]
+        form = AdditionalRegistrationForm(
+            self.user, keys, {
+                AdditionalRegistrationForm._field_name(self.key1): '47',
+                AdditionalRegistrationForm._field_name(self.key2): 'hello',
+                AdditionalRegistrationForm._field_name(self.key3): 'world',
+            }
+        )
+        self.assertTrue(form.is_valid())
+        form.save()
+        self.assertEqual('47', self.user.properties.get(key=self.key1).value)
+        self.assertEqual('hello', self.user.properties.get(key=self.key2).value)
+        self.assertEqual('world', self.user.properties.get(key=self.key3).value)
+
+
+class AdditionalRegistrationHelpers(TestCase):
+    def setUp(self):
+        self.user = _create_random_user()
+        self.key1 = UserPropertyKey.objects.create(key_name='key1')
+        self.key2 = UserPropertyKey.objects.create(key_name='key2')
+        self.key3 = UserPropertyKey.objects.create(key_name='key3')
+        self.key4 = UserPropertyKey.objects.create(key_name='key4')
+        self.key5 = UserPropertyKey.objects.create(key_name='key5')
+        self.key6 = UserPropertyKey.objects.create(key_name='key6')
+        UserProperty.objects.create(user=self.user, key=self.key1, value='value1')
+        UserProperty.objects.create(user=self.user, key=self.key2, value='value2')
+        self.competition = Competition.objects.create()
+        self.competition.sites.add(settings.SITE_ID)
+        self.competition.required_user_props.add(self.key1)
+        self.competition.required_user_props.add(self.key3)
+        self.competition2 = Competition.objects.create()
+        self.competition2.sites.add(settings.SITE_ID)
+        self.competition2.required_user_props.add(self.key2)
+        self.competition2.required_user_props.add(self.key4)
+        self.competition2.required_user_props.add(self.key6)
+
+    def test_required_properties_by_competition(self):
+        self.assertDictEqual(
+            {
+                self.competition: {self.key3},
+                self.competition2: {self.key4, self.key6}
+            },
+            get_required_properties_by_competition(self.user)
+        )
+
+    def test_required_properties(self):
+        self.assertSetEqual(
+            {self.key3, self.key4, self.key6},
+            get_required_properties(self.user)
+        )
+
+
+# @TODO: View tests
