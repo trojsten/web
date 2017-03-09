@@ -12,6 +12,7 @@ from django.core.urlresolvers import reverse
 from django.http.request import HttpRequest
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 from trojsten.contests import constants as contests_constants
 from trojsten.contests.models import Competition, Round, Semester, Task
@@ -699,7 +700,7 @@ class AdditionalRegistrationFormTest(TestCase):
         self.assertEqual('world', self.user.properties.get(key=self.key3).value)
 
 
-class AdditionalRegistrationHelpers(TestCase):
+class AdditionalRegistrationHelpersTest(TestCase):
     def setUp(self):
         self.user = _create_random_user()
         self.key1 = UserPropertyKey.objects.create(key_name='key1')
@@ -737,3 +738,33 @@ class AdditionalRegistrationHelpers(TestCase):
 
 
 # @TODO: View tests
+class AdditionalRegistrationViewsTest(TestCase):
+    def setUp(self):
+        self.url = reverse('additional_registration')
+        self.user = _create_random_user()
+
+    def test_no_login(self):
+        response = self.client.get(self.url)
+        redirect_to = '%s?next=%s' % (settings.LOGIN_URL, self.url)
+        self.assertRedirects(response, redirect_to)
+
+    def test_all_set(self):
+        self.client.force_login(self.user)
+        response = self.client.get(self.url)
+        self.assertContains(response, _('You have already filled all required properties.'))
+
+    def test_props_required(self):
+        key1 = UserPropertyKey.objects.create(key_name='key1')
+        key2 = UserPropertyKey.objects.create(key_name='key2')
+        competition = Competition.objects.create()
+        competition.sites.add(settings.SITE_ID)
+        competition.required_user_props.add(key1)
+        competition2 = Competition.objects.create()
+        competition2.sites.add(settings.SITE_ID)
+        competition2.required_user_props.add(key2)
+        self.client.force_login(self.user)
+
+        response = self.client.get(self.url)
+
+        self.assertContains(response, key1.key_name)
+        self.assertContains(response, key2.key_name)
