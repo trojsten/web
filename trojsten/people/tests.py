@@ -653,7 +653,10 @@ class AdditionalRegistrationFormTest(TestCase):
     def test_form_fields(self):
         keys = [self.key1, self.key2, self.key3, self.key4]
         form = AdditionalRegistrationForm(self.user, keys)
-        self.assertListEqual(list(map(lambda k: AdditionalRegistrationForm._field_name(k), keys)), form.fields.keys())
+        self.assertListEqual(
+            list(map(lambda k: AdditionalRegistrationForm._field_name(k), keys)),
+            list(form.fields.keys())
+        )
 
     def test_clean_bad_regex(self):
         keys = [self.key1]
