@@ -57,7 +57,8 @@ class RoundManager(models.Manager):
         """Returns all visible running rounds for each competition
         """
         return self.visible(user, all_sites).filter(
-            end_time__gte=timezone.now()
+            (Q(second_end_time__isnull=False) & Q(second_end_time__gte=timezone.now())) |
+            (Q(second_end_time__isnull=True) & Q(end_time__gte=timezone.now()))
         ).order_by(
             '-end_time', '-number',
         ).select_related(
@@ -143,6 +144,9 @@ class Round(models.Model):
     end_time = models.DateTimeField(
         verbose_name='koniec', default=utils.default_end_time
     )
+    second_end_time = models.DateTimeField(
+        verbose_name='druhý koniec', blank=True, null=True, default=None,
+    )
     visible = models.BooleanField(verbose_name='viditeľnosť', default=False)
     solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov', default=False)
 
@@ -150,7 +154,8 @@ class Round(models.Model):
 
     @property
     def can_submit(self):
-        if timezone.now() <= self.end_time:
+        end = self.end_time if self.second_end_time is None else self.second_end_time
+        if timezone.now() <= end:
             return True
         return False
 

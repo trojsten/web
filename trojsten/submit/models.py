@@ -57,6 +57,8 @@ class SubmitManager(models.Manager):
             'user', 'task', 'submit_type'
         ).select_related('user__school', 'task')
 
+    # @FIXME: This is used for rendering points for each task at task_list view.
+    #  Displaying scores for tasks should be implemented in results/rules.
     def latest_for_user(self, tasks, user):
         """Returns latest submits which belong to specified tasks and user.
         Only one submit per submit type and task is returned.
@@ -65,6 +67,9 @@ class SubmitManager(models.Manager):
             user=user,
             task__in=tasks,
         ).filter(
+            (models.Q(task__round__second_end_time__isnull=False) &
+             models.Q(submit_type=submit_constants.SUBMIT_TYPE_SOURCE) &
+             models.Q(time__lte=models.F('task__round__second_end_time'))) |
             models.Q(time__lte=models.F('task__round__end_time')) |
             models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
         ).order_by(

@@ -5,7 +5,11 @@
     </script>
 {% endaddtoblock %}
 <div class="row roundprogressbar" id="progressbar-{{ round.id }}" data-id="{{ round.id }}" data-precision="{{ remaining|progress_time_precision }}" data-isresults={{ results }}>
-  <div class="col-md-5"><em>Koniec kola: {{ end }}</em></div>
+  {% if second_phase_running %}
+    <div class="col-md-5"><em>Doprogramovanie do: {{ end }}</em></div>
+  {% else %}
+    <div class="col-md-5"><em>Koniec kola: {{ end }}</em></div>
+  {% endif %}
   <div class="col-md-7">
     <div class="progress">
       <div class="progress-bar {{ progressbar_class }}" role="progressbar"
@@ -16,6 +20,12 @@
     </div>
   </div>
 </div>
+  {% if second_phase_running %}
+    <div class="alert alert-info">
+      Popisy už neodovzdávajte.
+      Ešte stále však <strong>môžete odosielať vaše programy</strong>, za ktoré dostanete časť bodov.
+    </div>
+  {% endif %}
 {% else %}
   {% if results %}
     <div class="alert alert-warning">Výsledky sú predbežné.</div>
