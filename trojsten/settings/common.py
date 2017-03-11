@@ -164,6 +164,7 @@ TEMPLATES = [
                 'ksp_login.context_processors.login_providers_both',
                 'trojsten.context_processors.current_site',
                 'trojsten.context_processors.version_string',
+                'trojsten.people.context_processors.additional_registration',
             ],
         }
     },

@@ -564,7 +564,7 @@ class AdditionalRegistrationForm(forms.Form):
 
         self.user = user
         self.prop_keys = prop_keys
-        self.fields.update(OrderedDict([
+        self.fields.update(OrderedDict(
             (
                 AdditionalRegistrationForm._field_name(prop_key),
                 forms.CharField(
@@ -573,7 +573,7 @@ class AdditionalRegistrationForm(forms.Form):
                     help_text=prop_key.regex,
                 )
             ) for prop_key in prop_keys
-        ]))
+        ))
 
     def clean(self):
         cleaned_data = super(AdditionalRegistrationForm, self).clean()

@@ -1,6 +1,6 @@
 {% load sekizai_tags staticfiles i18n %}
 
-{% if not dont_show_additional_registration_dialog and not request.user.is_anonymous and required_properties_by_competition %}
+{% if show_additional_registration_dialog and not request.user.is_anonymous and required_properties_by_competition %}
 <div class="modal fade in" tabindex="-1" role="dialog" id="additional_registration_modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

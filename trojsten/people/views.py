@@ -151,6 +151,6 @@ def additional_registration(request):
         else:
             form = AdditionalRegistrationForm(request.user, required_properties)
 
-    context = {'form': form, 'dont_show_additional_registration_dialog': True}
+    context = {'form': form, 'show_additional_registration_dialog': False}
 
     return render(request, 'trojsten/people/additional_registration.html', context)

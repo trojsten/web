@@ -92,8 +92,8 @@ def get_required_properties_by_competition(user):
 
 def get_required_properties(user):
     # Merge all sets into one
-    return set(reduce(
+    return reduce(
         lambda x, y: x | y,
         get_required_properties_by_competition(user).values(),
         set()
-    ))
+    )
