@@ -159,6 +159,10 @@ class Round(models.Model):
             return True
         return False
 
+    @property
+    def second_phase_running(self):
+        return self.second_end_time is not None and self.end_time < timezone.now() < self.second_end_time
+
     def get_base_path(self):
         round_dir = str(self.number)
         semester_dir = str(self.semester.number)

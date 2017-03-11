@@ -28,17 +28,7 @@ class KSPResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         """
         Returns the queryset of Submits that should be included in the results.
         """
-        rules = res_request.round.semester.competition.rules
-
-        submits = Submit.objects.filter(
-            task__in=self.get_task_queryset(res_request),
-        ).filter(
-            rules.get_Q_for_graded_submits()
-        ).order_by(
-            'user', 'task', 'submit_type', '-time', '-id',
-        ).distinct(
-            'user', 'task', 'submit_type'
-        ).select_related('user', 'user__school', 'task', 'task__round')
+        submits = super(KSPResultsGenerator, self).get_submit_queryset(res_request).select_related('task__round')
 
         penalized_submits = []
 
@@ -58,6 +48,13 @@ class KSPResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         return chain(submits, penalized_submits)
 
     def source_submit_points(self, previous_points, submit):
+        """
+        For all submits in submit queryset, the function `add_submit_to_row` is called.
+        Source points in KSP are computed from two submits, which demands this processing:
+        - user receives all points for the last submit before `round.end_time`
+        - for the last submit in the second phase of the round user can additionally receive
+          max(0, (points in second phase - previous points) / 2) points
+        """
         if submit.time < submit.task.round.end_time:
             return max(previous_points, submit.user_points, key=self._comp_cell_value)
         else:
@@ -68,17 +65,11 @@ class KSPResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             return previous_points + (submit.user_points - previous_points) / 2
 
     def add_submit_to_row(self, res_request, submit, row):
-        cell = row.cells_by_key[submit.task.number]
-        if submit.submit_type == submit_constants.SUBMIT_TYPE_DESCRIPTION:
-            if submit.testing_status == submit_constants.SUBMIT_STATUS_REVIEWED:
-                points = submit.user_points
-            else:
-                points = results_constants.UNKNOWN_POINTS_SYMBOL
-            cell.manual_points = max(cell.manual_points, points, key=self._comp_cell_value)
-        elif submit.submit_type == submit_constants.SUBMIT_TYPE_SOURCE:
+        if submit.submit_type == submit_constants.SUBMIT_TYPE_SOURCE:
+            cell = row.cells_by_key[submit.task.number]
             cell.auto_points = self.source_submit_points(cell.auto_points, submit)
         else:
-            cell.auto_points = max(cell.auto_points, submit.user_points, key=self._comp_cell_value)
+            super(KSPResultsGenerator, self).add_submit_to_row(res_request, submit, row)
 
 
 class KSPRules(CompetitionRules):

@@ -5,7 +5,7 @@
     </script>
 {% endaddtoblock %}
 <div class="row roundprogressbar" id="progressbar-{{ round.id }}" data-id="{{ round.id }}" data-precision="{{ remaining|progress_time_precision }}" data-isresults={{ results }}>
-  {% if second_phase_running %}
+  {% if round.second_phase_running %}
     <div class="col-md-5"><em>{% trans "Submit programs until" %}: {{ end }}</em></div>
   {% else %}
     <div class="col-md-5"><em>{% trans "End of the round" %}: {{ end }}</em></div>
@@ -20,7 +20,7 @@
     </div>
   </div>
 </div>
-  {% if second_phase_running %}
+  {% if round.second_phase_running %}
     <div class="alert alert-info">
       {% blocktrans %}
       Don't submit descriptions.

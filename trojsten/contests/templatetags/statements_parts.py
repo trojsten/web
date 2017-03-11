@@ -61,9 +61,7 @@ def show_round_list(user, competition):
 
 @register.inclusion_tag('trojsten/contests/parts/progress.html', takes_context=True)
 def show_progress(context, round, results=False):
-    second_phase_running = round.second_end_time is not None and \
-                           round.end_time < timezone.now() < round.second_end_time
-    if second_phase_running:
+    if round.second_phase_running:
         start = round.end_time
         end = round.second_end_time
     else:
@@ -84,7 +82,6 @@ def show_progress(context, round, results=False):
         'results': results,
         'start': start,
         'end': end,
-        'second_phase_running': second_phase_running,
         'full': full,
         'remaining': remaining,
         'elapsed': elapsed,

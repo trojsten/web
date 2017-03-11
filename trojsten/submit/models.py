@@ -67,9 +67,11 @@ class SubmitManager(models.Manager):
             user=user,
             task__in=tasks,
         ).filter(
-            (models.Q(task__round__second_end_time__isnull=False) &
-             models.Q(submit_type=submit_constants.SUBMIT_TYPE_SOURCE) &
-             models.Q(time__lte=models.F('task__round__second_end_time'))) |
+            (
+                models.Q(task__round__second_end_time__isnull=False) &
+                models.Q(submit_type=submit_constants.SUBMIT_TYPE_SOURCE) &
+                models.Q(time__lte=models.F('task__round__second_end_time'))
+            ) |
             models.Q(time__lte=models.F('task__round__end_time')) |
             models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
         ).order_by(
