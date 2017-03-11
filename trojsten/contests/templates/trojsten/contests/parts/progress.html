@@ -1,4 +1,4 @@
-{% load statements_parts sekizai_tags staticfiles %}
+{% load statements_parts sekizai_tags staticfiles i18n %}
 {% if remaining.days >= 0 %}
 {% addtoblock "js" %}
     <script type="text/javascript" src="{% static "js/roundprogressbar.js" %}">
@@ -6,9 +6,9 @@
 {% endaddtoblock %}
 <div class="row roundprogressbar" id="progressbar-{{ round.id }}" data-id="{{ round.id }}" data-precision="{{ remaining|progress_time_precision }}" data-isresults={{ results }}>
   {% if second_phase_running %}
-    <div class="col-md-5"><em>Doprogramovanie do: {{ end }}</em></div>
+    <div class="col-md-5"><em>{% trans "Submit programs until" %}: {{ end }}</em></div>
   {% else %}
-    <div class="col-md-5"><em>Koniec kola: {{ end }}</em></div>
+    <div class="col-md-5"><em>{% trans "End of the round" %}: {{ end }}</em></div>
   {% endif %}
   <div class="col-md-7">
     <div class="progress">
@@ -22,19 +22,21 @@
 </div>
   {% if second_phase_running %}
     <div class="alert alert-info">
-      Popisy už neodovzdávajte.
-      Ešte stále však <strong>môžete odosielať vaše programy</strong>, za ktoré dostanete časť bodov.
+      {% blocktrans %}
+      Don't submit descriptions.
+      You can still <strong>submit your programs</strong> and receive points for them.
+      {% endblocktrans %}
     </div>
   {% endif %}
 {% else %}
   {% if results %}
-    <div class="alert alert-warning">Výsledky sú predbežné.</div>
+    <div class="alert alert-warning">{% trans "The results are preliminary." %}</div>
   {% else %}
   <div class="alert alert-info" role="alert">
-    Kolo už skončilo.
+        {% trans "The round has finished." %}
     {% if task and task.round.solutions_visible %}
         <a href="{% url 'solution_statement' task_id=task.id %}" class="alert-link">
-            Pozrieť vzorové riešenie.
+        {% trans "View the solution." %}
         </a>
     {% endif %}
   </div>
