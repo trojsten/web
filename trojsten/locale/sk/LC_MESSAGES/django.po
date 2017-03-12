@@ -449,7 +449,7 @@ msgstr "Pridať vlastnosť"
 
 #: people/templates/trojsten/people/settings.html:104
 msgid "Choose which competitions would you like to participate in:"
-msgstr "Vyber si súťaže ktoré chceš riešiť:"
+msgstr "Vyber si súťaže, ktoré chceš riešiť:"
 
 #: people/templates/trojsten/people/settings.html:112
 msgid "You can use any of the following services to log in to your account."
