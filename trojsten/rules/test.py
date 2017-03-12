@@ -55,7 +55,7 @@ class KMSRulesTest(TestCase):
 
         self.url = reverse('view_latest_results')
 
-    def create_submits(self, user, points):
+    def _create_submits(self, user, points):
         for i in range(len(points)):
             if points[i] >= 0:
                 submit = Submit.objects.create(task=self.tasks[i], user=user,
@@ -67,7 +67,7 @@ class KMSRulesTest(TestCase):
         points = [9, 7, 0, 8, 4, 5, 4]
         active = [True] * 7
         active[2] = False
-        self.create_submits(self.user, points)
+        self._create_submits(self.user, points)
 
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
@@ -82,7 +82,7 @@ class KMSRulesTest(TestCase):
     def test_tasks_coefficients_alfa(self):
         UserProperty.objects.create(user=self.user, key=self.coeff_prop_key, value=3)
         points = [1, 2, 3, 4, 5, 6, 7]
-        self.create_submits(self.user, points)
+        self._create_submits(self.user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
         row = get_row_for_user(response.context['tables'], self.user, KMS_ALFA)
@@ -95,7 +95,7 @@ class KMSRulesTest(TestCase):
     def test_tasks_coefficients_beta(self):
         UserProperty.objects.create(user=self.user, key=self.coeff_prop_key, value=7)
         points = [-1, -1, -1, 3, 4, 5, 6, 7, 8]
-        self.create_submits(self.user, points)
+        self._create_submits(self.user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
         row = get_row_for_user(response.context['tables'], self.user, KMS_BETA)
@@ -107,7 +107,7 @@ class KMSRulesTest(TestCase):
     def test_beta_only_user(self):
         UserProperty.objects.create(user=self.user, key=self.coeff_prop_key, value=7)
         points = [-1, -1, 2, 3, 4, 5, 6, 7, 8]
-        self.create_submits(self.user, points)
+        self._create_submits(self.user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
         row_beta = get_row_for_user(response.context['tables'], self.user, KMS_BETA)
@@ -118,7 +118,7 @@ class KMSRulesTest(TestCase):
     def test_alfa_only_user(self):
         UserProperty.objects.create(user=self.user, key=self.coeff_prop_key, value=1)
         points = [1, 2, 3, 4, 5]
-        self.create_submits(self.user, points)
+        self._create_submits(self.user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
         row_beta = get_row_for_user(response.context['tables'], self.user, KMS_BETA)
@@ -129,7 +129,7 @@ class KMSRulesTest(TestCase):
     def test_alfa_beta_user(self):
         UserProperty.objects.create(user=self.user, key=self.coeff_prop_key, value=1)
         points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 9]
-        self.create_submits(self.user, points)
+        self._create_submits(self.user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
         row_beta = get_row_for_user(response.context['tables'], self.user, KMS_BETA)
@@ -167,7 +167,7 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
 
         self.url = reverse('view_latest_results')
 
-    def create_submits(self, submit_definitions):
+    def _create_submits(self, submit_definitions):
         for task_number, submit_type, submit_time, points in submit_definitions:
             submit = Submit.objects.create(task=self.tasks[task_number-1], user=self.user,
                                            submit_type=submit_type, points=points)
@@ -176,26 +176,26 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
                 submit.testing_status = 'reviewed'
             submit.save()
 
-    def get_point_cells_for_tasks(self):
+    def _get_point_cells_for_tasks(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         row = get_row_for_user(response.context['tables'], self.user, KSP_Z)
         return row.cells_by_key
 
     def test_submits_in_first_phase(self):
-        self.create_submits([
+        self._create_submits([
             (1, SOURCE, self.start + timezone.timedelta(days=1), 10),
             (2, SOURCE, self.start + timezone.timedelta(days=2), 8)
         ])
 
-        cells = self.get_point_cells_for_tasks()
+        cells = self._get_point_cells_for_tasks()
         self.assertEqual(cells[1].points, '10')
         self.assertEqual(cells[2].points, '8')
         self.assertEqual(cells[3].points, '')
         self.assertEqual(cells['sum'].points, '18')
 
     def test_last_submit_in_first_phase(self):
-        self.create_submits([
+        self._create_submits([
             (1, SOURCE, self.start + timezone.timedelta(days=1), 7),
             (1, SOURCE, self.start + timezone.timedelta(days=2), 9),
             (1, SOURCE, self.start + timezone.timedelta(days=3), 6),
@@ -204,32 +204,32 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
             (2, SOURCE, self.start + timezone.timedelta(days=4), 2),
         ])
 
-        cells = self.get_point_cells_for_tasks()
+        cells = self._get_point_cells_for_tasks()
         self.assertEqual(cells[1].points, '6')
         self.assertEqual(cells[2].points, '2')
 
     def test_submits_in_second_phase(self):
-        self.create_submits([
+        self._create_submits([
             (1, SOURCE, self.end + timezone.timedelta(days=1), 7),
             (2, SOURCE, self.end + timezone.timedelta(days=2), 4)
         ])
 
-        cells = self.get_point_cells_for_tasks()
+        cells = self._get_point_cells_for_tasks()
         self.assertEqual(cells[1].points, '3.5')
         self.assertEqual(cells[2].points, '2')
         self.assertEqual(cells[3].points, '')
         self.assertEqual(cells['sum'].points, '5.5')
 
     def test_last_submit_in_second_phase(self):
-        self.create_submits([
+        self._create_submits([
             (1, SOURCE, self.end + timezone.timedelta(days=1), 8),
             (1, SOURCE, self.end + timezone.timedelta(days=2), 3),
         ])
-        cells = self.get_point_cells_for_tasks()
+        cells = self._get_point_cells_for_tasks()
         self.assertEqual(cells[1].points, '1.5')
 
     def test_submits_after_round_end(self):
-        self.create_submits([
+        self._create_submits([
             (1, SOURCE, self.start + timezone.timedelta(days=1), 7),
             (1, SOURCE, self.second_end + timezone.timedelta(seconds=1), 10),
             (1, SOURCE, self.second_end + timezone.timedelta(days=1), 10),
@@ -239,13 +239,13 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
             (3, SOURCE, self.end + timezone.timedelta(seconds=1), 9),
             (3, SOURCE, self.second_end + timezone.timedelta(seconds=1), 10),
         ])
-        cells = self.get_point_cells_for_tasks()
+        cells = self._get_point_cells_for_tasks()
         self.assertEqual(cells[1].points, '7')
         self.assertEqual(cells[2].points, '')
         self.assertEqual(cells[3].points, '4.50')
 
     def test_submits_in_all_phases(self):
-        self.create_submits([
+        self._create_submits([
             (1, SOURCE, self.start + timezone.timedelta(days=1), 6),
             (1, SOURCE, self.end + timezone.timedelta(days=1), 9),
             (1, SOURCE, self.second_end + timezone.timedelta(days=1), 10),
@@ -259,13 +259,13 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
             (3, SOURCE, self.second_end + timezone.timedelta(days=1), 20)
         ])
 
-        cells = self.get_point_cells_for_tasks()
+        cells = self._get_point_cells_for_tasks()
         self.assertEqual(cells[1].points, '7.5')
         self.assertEqual(cells[2].points, '6')
         self.assertEqual(cells[3].points, '{:.3f}'.format(4.32 + 6.57/2))
 
     def test_fewer_points_in_second_phase(self):
-        self.create_submits([
+        self._create_submits([
             (1, SOURCE, self.start + timezone.timedelta(days=1), 7),
             (1, SOURCE, self.end + timezone.timedelta(days=1), 4),
             (1, SOURCE, self.second_end + timezone.timedelta(days=1), 10),
@@ -275,12 +275,12 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
             (2, SOURCE, self.second_end + timezone.timedelta(days=1), 5),
         ])
 
-        cells = self.get_point_cells_for_tasks()
+        cells = self._get_point_cells_for_tasks()
         self.assertEqual(cells[1].points, '7')
         self.assertEqual(cells[2].points, '10')
 
     def test_submits_with_desriptions(self):
-        self.create_submits([
+        self._create_submits([
             (1, SOURCE, self.start + timezone.timedelta(days=1), 6),
             (1, SOURCE, self.end + timezone.timedelta(days=1), 8),
             (1, SOURCE, self.second_end + timezone.timedelta(days=1), 10),
@@ -293,7 +293,7 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
             (2, DESCRIPTION, self.second_end + timezone.timedelta(days=1), 9),
         ])
 
-        cells = self.get_point_cells_for_tasks()
+        cells = self._get_point_cells_for_tasks()
         self.assertEqual(cells[1].auto_points, '7')
         self.assertEqual(cells[1].manual_points, '5')
         self.assertEqual(cells[1].points, '12')
@@ -306,7 +306,7 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
         self.round.second_end_time = None
         self.round.save()
 
-        self.create_submits([
+        self._create_submits([
             (1, SOURCE, self.start + timezone.timedelta(days=1), 2),
             (1, SOURCE, self.start + timezone.timedelta(days=2), 6),
             (1, SOURCE, self.end + timezone.timedelta(days=1), 10),
@@ -319,7 +319,7 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
             (2, DESCRIPTION, self.end + timezone.timedelta(days=10), 9),
         ])
 
-        cells = self.get_point_cells_for_tasks()
+        cells = self._get_point_cells_for_tasks()
         self.assertEqual(cells[1].auto_points, '6')
         self.assertEqual(cells[1].manual_points, '4')
         self.assertEqual(cells[1].points, '10')
