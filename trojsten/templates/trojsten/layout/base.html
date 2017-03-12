@@ -51,6 +51,7 @@
       </script>
       <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="{% static "js/"|add:SITE.folder|add:"/analytics.js" %}" type="text/javascript"></script>
+      <script src="{% static "js/fb_pixel.js" %}" type="text/javascript"></script>
       {% include "ksp_login/parts/include_javascript.html" %}
     {% endblock %}
     {% render_block "js" %}
