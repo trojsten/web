@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-05 15:28+0100\n"
+"POT-Creation-Date: 2017-03-12 01:18+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -52,81 +52,115 @@ msgid "Category doesn't correspond with competition."
 msgstr ""
 
 # pdf file names
-#: contests/models.py:246
+#: contests/models.py:255
 msgid "year"
 msgstr "ročník"
 
-#: contests/models.py:248
+#: contests/models.py:257
 msgid "round"
 msgstr "kolo"
 
-#: contests/models.py:250
+#: contests/models.py:259
 msgid "solutions"
 msgstr "vzoráky"
 
-#: contests/models.py:250
+#: contests/models.py:259
 msgid "tasks"
 msgstr "zadania"
 
-#: contests/models.py:389
+#: contests/models.py:398
 #, fuzzy
 #| msgid "tasks"
 msgid "task"
 msgstr "úloha"
 
-#: contests/models.py:392
+#: contests/models.py:401
 msgid "organizer"
 msgstr "vedúci"
 
-#: contests/models.py:395
+#: contests/models.py:404
 msgid "reviewer"
 msgstr "opravovateľ"
 
-#: contests/models.py:396
+#: contests/models.py:405
 #, fuzzy
 #| msgid "solution-writer"
 msgid "solution writer"
 msgstr "vzorákovač"
 
-#: contests/models.py:397
+#: contests/models.py:406
 msgid "proofreader"
 msgstr "recenzovač"
 
-#: contests/models.py:400
+#: contests/models.py:409
 msgid "role"
 msgstr "funkcia"
 
-#: contests/models.py:404
+#: contests/models.py:413
 msgid "Assigned user"
 msgstr "Pridelený človek"
 
-#: contests/models.py:405
+#: contests/models.py:414
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
 
+#: contests/templates/trojsten/contests/parts/progress.html:9
+msgid "Submit programs until"
+msgstr "Doprogramovanie do"
+
+#: contests/templates/trojsten/contests/parts/progress.html:11
+msgid "End of the round"
+msgstr "Koniec kola"
+
+#: contests/templates/trojsten/contests/parts/progress.html:25
+msgid ""
+"\n"
+"      Don't submit descriptions.\n"
+"      You can still <strong>submit your programs</strong> and receive points "
+"for them.\n"
+"      "
+msgstr ""
+"\n"
+"      Popisy už neodovzdávajte.\n"
+"      Ešte stále však <strong>môžete odosielať vaše programy</strong>, za "
+"ktoré dostanete časť bodov.\n"
+"      "
+
+#: contests/templates/trojsten/contests/parts/progress.html:33
+msgid "The results are preliminary."
+msgstr "Výsledky sú predbežné."
+
+#: contests/templates/trojsten/contests/parts/progress.html:36
+msgid "The round has finished."
+msgstr "Kolo už skončilo."
+
+#: contests/templates/trojsten/contests/parts/progress.html:39
+msgid "View the solution."
+msgstr "Pozrieť vzorové riešenie."
+
 # Task Statements
-#: contests/templatetags/statements_parts.py:93
+#: contests/templatetags/statements_parts.py:98
 #, fuzzy, python-format
 #| msgid "%(count)d day"
 #| msgid_plural "%(count)s days"
 msgid "%(count)d day"
 msgstr "%(count)s deň"
 
-#: contests/templatetags/statements_parts.py:96
+#: contests/templatetags/statements_parts.py:101
 #, fuzzy, python-format
 #| msgid "%(count)d hour"
 #| msgid_plural "%(count)s hours"
 msgid "%(count)d hour"
 msgstr "%(count)s hodina"
 
-#: contests/templatetags/statements_parts.py:99
+#: contests/templatetags/statements_parts.py:104
 #, fuzzy, python-format
 #| msgid "%(count)d minute"
 #| msgid_plural "%(count)s minutes"
 msgid "%(count)d minute"
 msgstr "%(count)s minúta"
 
-#: contests/templatetags/statements_parts.py:102
+#: contests/templatetags/statements_parts.py:107
 #, fuzzy, python-format
 #| msgid "%(count)d second"
 #| msgid_plural "%(count)s seconds"
