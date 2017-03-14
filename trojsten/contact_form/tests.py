@@ -22,7 +22,7 @@ class ContactFormTests(TestCase):
         data = {'name': 'Test',
                 'body': 'Test message',
                 'email': 'test@example.com'}
-        form = ContactForm(request=self.request(), data=data)
+        form = ContactForm(request=self.request(), captcha=False, data=data)
         self.assertRaises(ValueError, form.get_message_dict)
         self.assertRaises(ValueError, form.get_context)
 
@@ -32,6 +32,7 @@ class ContactFormTests(TestCase):
 
         """
         form = ContactForm(request=self.request(),
+                           captcha=False,
                            data=self.valid_data)
         self.assertTrue(form.is_valid())
 

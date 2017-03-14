@@ -230,6 +230,7 @@ INSTALLED_APPS = (
     'oauth2_provider',
     'corsheaders',
     'rest_framework',
+    'snowpenguin.django.recaptcha2',
 
     # django-wiki and its dependencies
     'django.contrib.humanize',
@@ -488,3 +489,6 @@ DEFAULT_COMPETITION_RULES = 'trojsten.rules.default.CompetitionRules'
 ELASTICSEARCH_TESTS = True
 
 DEFAULT_COUNTRY = 'Slovensko'
+
+RECAPTCHA_PRIVATE_KEY = env('TROJSTENWEB_RECAPTCHA_PRIVATE_KEY', '')
+RECAPTCHA_PUBLIC_KEY = env('TROJSTENWEB_RECAPTCHA_PUBLIC_KEY', '')
