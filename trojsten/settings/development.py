@@ -1,10 +1,13 @@
 from __future__ import absolute_import
+import os
 
 from trojsten.settings.common import *
 
 ALLOWED_HOSTS = []
 DEBUG = True
 SUBMIT_DEBUG = True
+# Disable captcha
+os.environ['RECAPTCHA_DISABLE'] = 'True'
 CRISPY_FAIL_SILENTLY = not DEBUG
 SENDFILE_BACKEND = 'sendfile.backends.development'
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
