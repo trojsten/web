@@ -1,5 +1,5 @@
 {% extends "trojsten/layout/base.html" %}
-{% load utils navigation_tags additional_registration %}
+{% load utils navigation_tags %}
 
 {% block page_layout %}
 <header>{% include "trojsten/layout/header.html" %}</header>
@@ -10,8 +10,6 @@
         <div class="page-header">
             {% block page_header %}{% endblock %}
         </div>
-
-        {% show_competition_registration %}
 
         {% if messages %}
         <!-- Messages for this instance -->

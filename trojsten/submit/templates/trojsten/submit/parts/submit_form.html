@@ -1,4 +1,5 @@
-{% load bootstrap %}
+{% load bootstrap additional_registration %}
+{% show_competition_registration %}
 {% if task.has_description %}
     {% if competition_ignored %}
       <div class="alert alert-danger">
