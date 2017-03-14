@@ -48,3 +48,7 @@ class ContactFormTests(TestCase):
         self.assertListEqual([
             '{}<{}>'.format(self.valid_data['name'], self.valid_data['email'])
         ], message.reply_to)
+
+    def test_captcha_field_present(self):
+        form = ContactForm(request=self.request(), captcha=True)
+        self.assertTrue('captcha' in form.fields)
