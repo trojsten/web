@@ -13,7 +13,6 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from unidecode import unidecode
 
-from trojsten.schools.models import School
 from . import constants
 
 
@@ -88,7 +87,7 @@ class User(AbstractUser):
                                         verbose_name='adresa korešpondencie')
     mail_to_school = models.BooleanField(default=False,
                                          verbose_name='posielať poštu do školy')
-    school = models.ForeignKey(School,
+    school = models.ForeignKey('schools.School',
                                null=True,
                                default=1,
                                verbose_name='škola',
