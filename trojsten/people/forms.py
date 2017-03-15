@@ -70,6 +70,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
             label=_('Gender'),
             choices=User.GENDER_CHOICES,
         )
+        self.fields['school'].initial = 1
 
     def get_initial_from_pipeline(self, pipeline_state):
         return None if not pipeline_state else {

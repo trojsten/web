@@ -89,7 +89,6 @@ class User(AbstractUser):
                                          verbose_name='posielať poštu do školy')
     school = models.ForeignKey('schools.School',
                                null=True,
-                               default=1,
                                verbose_name='škola',
                                help_text='Do políčka napíšte skratku, '
                                          'časť názvu alebo adresy školy a následne '
