@@ -13,7 +13,7 @@ def get_rounds_by_year(user, competition):
     ).order_by(
         '-semester__year', '-semester__number', '-number'
     ).select_related(
-        'semester__year', 'semester__competition'
+        'semester__competition'
     ).prefetch_related(
         'semester__competition__category_set',
     )
