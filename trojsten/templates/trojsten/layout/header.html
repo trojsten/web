@@ -22,7 +22,7 @@
       <div class="hidden-xs">
         {% include "trojsten/layout/social-buttons.html" %}
       </div>
-      {%if SITE.short_name = 'Wiki' %}
+      {% if SITE.short_name == 'Wiki' %}
         <div>
           <form class="navbar-form navbar-right" id="wiki-search-form" type="GET" action="/search/">
             <div class="input-group">
