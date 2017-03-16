@@ -71,7 +71,7 @@
             Kolo už skončilo. Ďalšie submity sa už nerátajú do výsledkovky.
         </div>
         {% endif %}
-        {% show_submit_form task request.path %}
+        {% show_submit_form task request.user request.path %}
         {% show_submit_list task request.user %}
         {% else %}
         <p class="text-danger">Na odovzdávanie sa musíš prihlásiť</p>

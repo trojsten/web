@@ -4,6 +4,7 @@ from collections import OrderedDict
 from crispy_forms import layout
 from crispy_forms.helper import FormHelper
 from django import forms
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -12,7 +13,7 @@ from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
 from social.apps.django_app.utils import setting
 
 from trojsten.contests.models import Competition, Round, Task
-from trojsten.people.models import Address, DuplicateUser, User
+from trojsten.people.models import Address, DuplicateUser, User, UserProperty
 from trojsten.submit.constants import (SUBMIT_PAPER_FILEPATH,
                                        SUBMIT_STATUS_IN_QUEUE,
                                        SUBMIT_STATUS_REVIEWED,
@@ -546,3 +547,51 @@ class IgnoreCompetitionForm(forms.Form):
             self.user.ignored_competitions.remove(c)
         for c in ignored_competitions:
             self.user.ignored_competitions.add(c)
+
+
+class AdditionalRegistrationForm(forms.Form):
+    @staticmethod
+    def _field_name(prop_key):
+        return '%s%s' % (constants.USER_PROP_PREFIX, prop_key.pk)
+
+    def __init__(self, user, prop_keys, *args, **kwargs):
+        super(AdditionalRegistrationForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-md-4'
+        self.helper.field_class = 'col-md-8'
+        self.helper.add_input(layout.Submit('submit', _('Submit')))
+
+        self.user = user
+        self.prop_keys = prop_keys
+        self.fields.update(OrderedDict(
+            (
+                AdditionalRegistrationForm._field_name(prop_key),
+                forms.CharField(
+                    label=prop_key.key_name,
+                    widget=forms.widgets.Textarea(attrs={'class': 'col-sm-12 form-control', 'rows': 1}),
+                    help_text=prop_key.regex,
+                )
+            ) for prop_key in prop_keys
+        ))
+
+    def clean(self):
+        cleaned_data = super(AdditionalRegistrationForm, self).clean()
+        for prop_key in self.prop_keys:
+            field_name = AdditionalRegistrationForm._field_name(prop_key)
+            cleaned_data[field_name] = UserProperty(
+                user=self.user,
+                key=prop_key,
+                value=cleaned_data.get(field_name),
+            )
+            try:
+                cleaned_data[field_name].clean()
+            except ValidationError as e:
+                self.add_error(field_name, e)
+        return cleaned_data
+
+    @transaction.atomic
+    def save(self):
+        for prop in self.cleaned_data.values():
+            prop.save()

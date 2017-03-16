@@ -1,0 +1,51 @@
+{% load sekizai_tags staticfiles i18n %}
+
+{% if not request.user.is_anonymous and required_properties_by_competition %}
+<div class="modal fade in" tabindex="-1" role="dialog" id="additional_registration_modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{% trans 'We need a little more information' %}</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          {% blocktrans %}To participate in some competitions, we need you to fill some more data in addition to those you have filled during registration.
+          Until you fill them, we will not show you in the scoreboard.{% endblocktrans %}
+        </p>
+        <p>
+          {% blocktrans %}If you want to prevent this message from showing, you may check "I do not want to participate in competition".
+          You can change this later in "Contest" section in Settings.{% endblocktrans %}
+        </p>
+        {% for competition, properties in required_properties_by_competition.items %}
+        <p>
+          {% blocktrans %}To participate in competition <em>{{ competition }}</em> you need to fill:{% endblocktrans %}
+        </p>
+        <ul>
+          {% for property in properties %}
+            <li>
+              {{ property }}
+            </li>
+          {% endfor %}
+        </ul>
+        <input type="checkbox" id="ignore_{{ competition.pk }}"
+               data-competition="{{ competition.pk }}" onchange="switch_competition_participation(this);"/>
+        <label for="ignore_{{ competition.pk }}">{% blocktrans %}I do not want to participate in competition {{ competition }}.{% endblocktrans %}</label>
+        {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Close' %}</button>
+        <a href="{% url 'additional_registration' %}" class="btn btn-primary">{% trans 'Fill data' %}</a>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% addtoblock "js" %}
+<script type="text/javascript" src="{% static "js/additional_registration.js"%}"></script>
+<script type="text/javascript">
+    $(window).load(function(){
+        $('#additional_registration_modal').modal('show');
+    });
+</script>
+{% endaddtoblock %}
+{% endif %}

@@ -8,6 +8,7 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from ksp_login import views as login_views
 
+import trojsten.people.api_urls as people_api
 import trojsten.login.views
 import trojsten.views
 from trojsten.contact_form.views import ContactFormView
@@ -30,6 +31,7 @@ urlpatterns = [
 # API
 urlpatterns += [
     url(r'^api/tips/', include(tips.urls, namespace='tips')),
+    url(r'^api/people/', include(people_api, namespace='people')),
 ]
 
 # Override default views in contact_form

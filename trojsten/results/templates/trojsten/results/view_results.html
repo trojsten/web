@@ -19,6 +19,11 @@
 {% if not results_are_final %}
     {% show_progress table.round results=True %}
 {% endif %}
+{% if competition_ignored %}
+    <div class="alert alert-danger">
+      Tvoje riešenia sa nerátajú do výsledkovky. Ak to chceš zmeniť, povoľ si súťaž <em>{{ table.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
+    </div>
+{% endif %}
 {% show_results_table table=table show_staff=show_staff%}
 {% include 'trojsten/results/parts/buttons.html' %}
 <h2>Vysvetlivky</h2>

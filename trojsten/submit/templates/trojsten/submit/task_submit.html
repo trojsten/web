@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block page_content %}
-    {% show_progress task.round%}
-    {% show_submit_form task request.path %}
+    {% show_progress task.round %}
+    {% show_submit_form task request.user request.path %}
     {% show_submit_list task request.user %}
 {% endblock %}

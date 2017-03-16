@@ -1,0 +1,27 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% load i18n %}
+{% load ksp_login %}
+{% load utils %}
+{% load bootstrap %}
+{% load crispy_forms_tags %}
+{% load sekizai_tags %}
+{% load staticfiles %}
+
+{% block title %}{% trans "Complete Registration" %}{% endblock %}
+
+{% block page_header %}
+<h1>{% trans "Complete Registration" %}</h1>
+{% endblock %}
+
+{% block page_content %}
+<div>
+  {% if form %}
+    {% crispy form %}
+  {% else %}
+    <div class="alert alert-success">
+      {% trans 'You have already filled all required properties.' %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

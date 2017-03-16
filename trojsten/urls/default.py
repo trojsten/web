@@ -1,21 +1,26 @@
 from __future__ import absolute_import
 
 import news.urls
-import trojsten.contests.urls
-import trojsten.contests.views
-import trojsten.login.views
-import trojsten.results.urls
-import trojsten.submit.urls
 from django.conf.urls import include, url
 from django.contrib import admin
 from django_nyt.urls import get_pattern as get_notify_pattern
 from wiki.urls import get_pattern as get_wiki_pattern
+
+import trojsten.contests.urls
+import trojsten.contests.views
+import trojsten.login.views
+import trojsten.people.views
+import trojsten.results.urls
+import trojsten.submit.urls
 
 from .common import urlpatterns as common_urlpatterns
 
 urlpatterns = common_urlpatterns + [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^ucet/', include('ksp_login.urls')),
+    url(r'^ucet/additional_registration/?$',
+        trojsten.people.views.additional_registration,
+        name='additional_registration'),
     url(r'^odovzdavanie/', include(trojsten.submit.urls)),
     url(r'^vysledky/', include(trojsten.results.urls)),
     url(r'^novinky/', include(news.urls)),
