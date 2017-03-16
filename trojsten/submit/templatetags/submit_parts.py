@@ -10,20 +10,20 @@ from ..models import Submit
 register = template.Library()
 
 
-@register.inclusion_tag('trojsten/submit/parts/submit_form.html')
-def show_submit_form(task, redirect):
+@register.inclusion_tag('trojsten/submit/parts/submit_form.html', takes_context=True)
+def show_submit_form(context, task, user, redirect):
     """Renders submit form for specified task"""
-    data = {}
-    data['task'] = task
-    data['constants'] = constants
-    data['redirect_to'] = redirect
+    context['task'] = task
+    context['competition_ignored'] = user.is_competition_ignored(task.round.semester.competition)
+    context['constants'] = constants
+    context['redirect_to'] = redirect
     if task.has_source:
-        data['source_form'] = SourceSubmitForm()
+        context['source_form'] = SourceSubmitForm()
     if task.has_description:
-        data['description_form'] = DescriptionSubmitForm()
+        context['description_form'] = DescriptionSubmitForm()
     if task.has_testablezip:
-        data['testablezip_form'] = TestableZipSubmitForm()
-    return data
+        context['testablezip_form'] = TestableZipSubmitForm()
+    return context
 
 
 @register.inclusion_tag('trojsten/submit/parts/submit_list.html')

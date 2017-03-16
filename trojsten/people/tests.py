@@ -12,6 +12,7 @@ from django.core.urlresolvers import reverse
 from django.http.request import HttpRequest
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 from trojsten.contests import constants as contests_constants
 from trojsten.contests.models import Competition, Round, Semester, Task
@@ -21,12 +22,15 @@ from trojsten.submit.constants import (SUBMIT_PAPER_FILEPATH,
                                        SUBMIT_STATUS_REVIEWED,
                                        SUBMIT_TYPE_DESCRIPTION)
 from trojsten.submit.models import Submit
+from trojsten.utils.test_utils import get_noexisting_id
 
 from . import constants
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
-from .forms import (SubmittedTasksForm, TrojstenUserChangeForm,
-                    TrojstenUserCreationForm)
-from .helpers import get_similar_users, merge_users
+from .forms import (AdditionalRegistrationForm, SubmittedTasksForm,
+                    TrojstenUserChangeForm, TrojstenUserCreationForm)
+from .helpers import (get_required_properties,
+                      get_required_properties_by_competition,
+                      get_similar_users, merge_users)
 from .models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
 
 
@@ -409,6 +413,55 @@ class UserTests(TestCase):
         self.assertFalse(self.user.is_valid_for_competition(competition))
 
 
+class PeopleApiTests(TestCase):
+    def setUp(self):
+        self.user = _create_random_user()
+        self.competition = Competition.objects.create()
+        self.url = reverse('people:switch_contest_participation')
+
+    def test_ignore_competition(self):
+        self.client.force_login(self.user)
+        self.client.post(self.url, {
+            'competition': str(self.competition.pk),
+            'value': 'true',
+        })
+        self.assertTrue(self.user.is_competition_ignored(self.competition))
+
+    def test_unignore_competition(self):
+        self.client.force_login(self.user)
+        self.client.post(self.url, {
+            'competition': str(self.competition.pk),
+            'value': 'false',
+        })
+        self.assertFalse(self.user.is_competition_ignored(self.competition))
+
+    def test_ignore_competition_invalid_competition(self):
+        self.client.force_login(self.user)
+        self.client.post(self.url, {
+            'competition': str(get_noexisting_id(Competition)),
+            'value': 'true',
+        })
+        self.assertFalse(self.user.is_competition_ignored(self.competition))
+
+        self.client.post(self.url, {
+            'value': 'true',
+        })
+        self.assertFalse(self.user.is_competition_ignored(self.competition))
+
+        self.client.post(self.url, {
+            'competition': "Hello",
+            'value': 'true',
+        })
+        self.assertFalse(self.user.is_competition_ignored(self.competition))
+
+    def test_ignore_competition_anonymous(self):
+        response = self.client.post(self.url, {
+            'competition': str(self.competition.pk),
+            'value': 'true',
+        })
+        self.assertEqual(response.status_code, 401)
+
+
 class DeenvelopingTests(TestCase):
     def setUp(self):
         group = Group.objects.create(name='staff')
@@ -583,3 +636,138 @@ class DeenvelopingTests(TestCase):
             user=self.user_with_submits, task=self.tasks[10], points=9,
             submit_type=SUBMIT_TYPE_DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED
         ).count(), 1)
+
+
+class AdditionalRegistrationFormTest(TestCase):
+    def setUp(self):
+        self.user = _create_random_user()
+        self.key1 = UserPropertyKey.objects.create(key_name='key1', regex='[0-9]+')
+        self.key2 = UserPropertyKey.objects.create(key_name='key2')
+        self.key3 = UserPropertyKey.objects.create(key_name='key3')
+        self.key4 = UserPropertyKey.objects.create(key_name='key4')
+        self.key5 = UserPropertyKey.objects.create(key_name='key5')
+
+    def test_field_name(self):
+        self.assertEqual('user_prop_%s' % self.key1.pk, AdditionalRegistrationForm._field_name(self.key1))
+
+    def test_form_fields(self):
+        keys = [self.key1, self.key2, self.key3, self.key4]
+        form = AdditionalRegistrationForm(self.user, keys)
+        self.assertListEqual(
+            list(map(lambda k: AdditionalRegistrationForm._field_name(k), keys)),
+            list(form.fields.keys())
+        )
+
+    def test_clean_bad_regex(self):
+        keys = [self.key1]
+        form = AdditionalRegistrationForm(
+            self.user, keys, {
+                AdditionalRegistrationForm._field_name(self.key1): 'hello'
+            }
+        )
+        self.assertFalse(form.is_valid())
+
+    def test_clean_missing_value(self):
+        keys = [self.key2, self.key3]
+        form = AdditionalRegistrationForm(
+            self.user, keys, {
+                AdditionalRegistrationForm._field_name(self.key2): 'hello'
+            }
+        )
+        self.assertFalse(form.is_valid())
+
+    def test_clean(self):
+        keys = [self.key1, self.key2, self.key3]
+        form = AdditionalRegistrationForm(
+            self.user, keys, {
+                AdditionalRegistrationForm._field_name(self.key1): '47',
+                AdditionalRegistrationForm._field_name(self.key2): 'hello',
+                AdditionalRegistrationForm._field_name(self.key3): 'world',
+            }
+        )
+        self.assertTrue(form.is_valid())
+
+    def test_save(self):
+        keys = [self.key1, self.key2, self.key3]
+        form = AdditionalRegistrationForm(
+            self.user, keys, {
+                AdditionalRegistrationForm._field_name(self.key1): '47',
+                AdditionalRegistrationForm._field_name(self.key2): 'hello',
+                AdditionalRegistrationForm._field_name(self.key3): 'world',
+            }
+        )
+        self.assertTrue(form.is_valid())
+        form.save()
+        self.assertEqual('47', self.user.properties.get(key=self.key1).value)
+        self.assertEqual('hello', self.user.properties.get(key=self.key2).value)
+        self.assertEqual('world', self.user.properties.get(key=self.key3).value)
+
+
+class AdditionalRegistrationHelpersTest(TestCase):
+    def setUp(self):
+        self.user = _create_random_user()
+        self.key1 = UserPropertyKey.objects.create(key_name='key1')
+        self.key2 = UserPropertyKey.objects.create(key_name='key2')
+        self.key3 = UserPropertyKey.objects.create(key_name='key3')
+        self.key4 = UserPropertyKey.objects.create(key_name='key4')
+        self.key5 = UserPropertyKey.objects.create(key_name='key5')
+        self.key6 = UserPropertyKey.objects.create(key_name='key6')
+        UserProperty.objects.create(user=self.user, key=self.key1, value='value1')
+        UserProperty.objects.create(user=self.user, key=self.key2, value='value2')
+        self.competition = Competition.objects.create()
+        self.competition.sites.add(settings.SITE_ID)
+        self.competition.required_user_props.add(self.key1)
+        self.competition.required_user_props.add(self.key3)
+        self.competition2 = Competition.objects.create()
+        self.competition2.sites.add(settings.SITE_ID)
+        self.competition2.required_user_props.add(self.key2)
+        self.competition2.required_user_props.add(self.key4)
+        self.competition2.required_user_props.add(self.key6)
+
+    def test_required_properties_by_competition(self):
+        self.assertDictEqual(
+            {
+                self.competition: {self.key3},
+                self.competition2: {self.key4, self.key6}
+            },
+            get_required_properties_by_competition(self.user)
+        )
+
+    def test_required_properties(self):
+        self.assertSetEqual(
+            {self.key3, self.key4, self.key6},
+            get_required_properties(self.user)
+        )
+
+
+# @TODO: View tests
+class AdditionalRegistrationViewsTest(TestCase):
+    def setUp(self):
+        self.url = reverse('additional_registration')
+        self.user = _create_random_user()
+
+    def test_no_login(self):
+        response = self.client.get(self.url)
+        redirect_to = '%s?next=%s' % (settings.LOGIN_URL, self.url)
+        self.assertRedirects(response, redirect_to)
+
+    def test_all_set(self):
+        self.client.force_login(self.user)
+        response = self.client.get(self.url)
+        self.assertContains(response, _('You have already filled all required properties.'))
+
+    def test_props_required(self):
+        key1 = UserPropertyKey.objects.create(key_name='key1')
+        key2 = UserPropertyKey.objects.create(key_name='key2')
+        competition = Competition.objects.create()
+        competition.sites.add(settings.SITE_ID)
+        competition.required_user_props.add(key1)
+        competition2 = Competition.objects.create()
+        competition2.sites.add(settings.SITE_ID)
+        competition2.required_user_props.add(key2)
+        self.client.force_login(self.user)
+
+        response = self.client.get(self.url)
+
+        self.assertContains(response, key1.key_name)
+        self.assertContains(response, key2.key_name)

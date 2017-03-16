@@ -89,7 +89,7 @@ class Competition(models.Model):
         default=False, verbose_name='súťaž je iba pre základoškolákov'
     )
     required_user_props = models.ManyToManyField(
-        UserPropertyKey, verbose_name='Povinné vlastnosti človeka'
+        UserPropertyKey, limit_choices_to={'hidden': False}, verbose_name='Povinné vlastnosti človeka'
     )
 
     @property

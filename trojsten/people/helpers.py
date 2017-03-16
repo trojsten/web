@@ -1,4 +1,8 @@
+from functools import reduce
+
 from django.db import transaction
+
+from trojsten.contests.models import Competition
 
 from .models import User, UserProperty, UserPropertyKey
 
@@ -70,3 +74,26 @@ def merge_users(target_user, source_user, src_selected_fields, src_selected_user
 
     source_user.delete()
     target_user.save()
+
+
+def get_required_properties_by_competition(user):
+    competitions = Competition.objects.current_site_only()
+    competitions_action_required = filter(
+        lambda c: not user.is_competition_ignored(c) and not user.is_valid_for_competition(c),
+        competitions,
+    )
+    return {
+        competition: set(competition.required_user_props.all()) - set(
+            map(lambda prop: prop.key, user.properties.all())
+        )
+        for competition in competitions_action_required
+    }
+
+
+def get_required_properties(user):
+    # Merge all sets into one
+    return reduce(
+        lambda x, y: x | y,
+        get_required_properties_by_competition(user).values(),
+        set()
+    )

@@ -4,7 +4,7 @@
 {% show_progress round%}
 {% for task in tasks %}
     <h3><a href="{% url 'task_statement' task_id=task.id %}">{{ task.number }}. {{task.name}}</a></h3>
-    {% show_submit_form task request.path %}
+    {% show_submit_form task request.user request.path %}
     {% if task.has_submit_list %}
         <div>
             <a href="{% url 'task_submit_page' task_id=task.id %}">Zoznam submitov</a>

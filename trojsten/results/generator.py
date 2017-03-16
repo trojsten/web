@@ -137,8 +137,13 @@ class ResultsGenerator(object):
         Exclusion based on the tasks and score should be done in
         `deactive_row_cells`.
         """
+        competition = res_request.round.semester.competition
         minimal_year = self.get_minimal_year_of_graduation(res_request, user)
-        return user.graduation >= minimal_year
+        return (
+            user.graduation >= minimal_year and
+            not user.is_competition_ignored(competition) and
+            user.is_valid_for_competition(competition)
+        )
 
     def get_minimal_year_of_graduation(self, res_request, user):
         """
