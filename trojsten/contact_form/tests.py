@@ -1,6 +1,10 @@
 from django.conf import settings
 from django.core import mail
+from django.core.urlresolvers import reverse
 from django.test import RequestFactory, TestCase
+from django.utils.translation import ugettext_lazy as _
+
+from trojsten.people.models import User
 
 from .forms import ContactForm
 
@@ -52,3 +56,19 @@ class ContactFormTests(TestCase):
     def test_captcha_field_present(self):
         form = ContactForm(request=self.request(), captcha=True)
         self.assertTrue('captcha' in form.fields)
+
+    def test_view_with_anonymous(self):
+        response = self.client.get(reverse('contact_form'))
+        self.assertContains(response, _('Name'))
+        self.assertContains(response, _('Email'))
+        self.assertContains(response, _('Message'))
+        self.assertContains(response, 'Captcha')
+
+    def test_view_with_logged_in(self):
+        user = User.objects.create()
+        self.client.force_login(user)
+        response = self.client.get(reverse('contact_form'))
+        self.assertContains(response, _('Name'))
+        self.assertContains(response, _('Email'))
+        self.assertContains(response, _('Message'))
+        self.assertNotContains(response, 'Captcha')
