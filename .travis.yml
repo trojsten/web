@@ -30,7 +30,7 @@ install:
   - bash -c 'cd trojsten; python ../manage.py compilemessages;'
 # command to run tests
 script:
-  - coverage run --source='./trojsten' --omit 'trojsten/settings/*' manage.py test
+  - coverage run --source='./trojsten' --omit 'trojsten/settings/*,trojsten/special/*' manage.py test
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t 1f124dcd-a10f-4773-90f7-6b5e304335ac
 sudo: false
