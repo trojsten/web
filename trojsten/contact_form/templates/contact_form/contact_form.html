@@ -1,8 +1,13 @@
 {% extends "trojsten/layout/main.html" %}
 {% load bootstrap %}
 {% load i18n %}
+{% load recaptcha2 %}
 
 {% block title %}Nahlásiť problém{% endblock title %}
+
+{% block extra_head %}
+{% recaptcha_init %}
+{% endblock %}
 
 {% block page_header %}
 <h1>Nahlásiť problém</h1>

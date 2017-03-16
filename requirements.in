@@ -1,3 +1,4 @@
+-e git+https://github.com/edoburu/django-fluent-comments.git@ed53e646d559cdc062d0016734122328152aa98a#egg=django_fluent_comments
 celery<4.0.0
 django-bootstrap-form
 django-bulk-update
@@ -9,17 +10,17 @@ django-crispy-forms
 django-dotenv
 django-easy-select2
 django-favicon
--e git+https://github.com/edoburu/django-fluent-comments.git@ed53e646d559cdc062d0016734122328152aa98a#egg=django_fluent_comments
 django-haystack
 django-import-export
 django-mathfilters
 django-oauth-toolkit
+django-recaptcha2
 django-sekizai
 django-sendfile
 django-sortedm2m
+django-threadedcomments
 django-tips
 django-trojsten-news
-django-threadedcomments
 Django<1.10
 djangorestframework
 ecdsa
