@@ -17,11 +17,22 @@ BIRTHDAY_PROP = 2
 KASPAR_ID_LABEL = "kaspar ID"
 KASPAR_NOTE_LABEL = "kaspar note"
 
-
 class Command(NoArgsCommand):
     help = 'Imports people and their related info from kaspar.'
 
+    def add_arguments(self, parser):
+        parser.add_argument('--wet_run',
+                            action='store_false',
+                            dest='dry',
+                            default=True,
+                            help='Actually write something to DB')
+
     def handle_noargs(self, **options):
+        self.similar_users = []
+        self.dry = options['dry']
+        if self.dry:
+            self.stdout.write("Running dry run!")
+
         self.verbosity = options['verbosity']
         self.kaspar = connections['kaspar']
         c = self.kaspar.cursor()
@@ -57,9 +68,21 @@ class Command(NoArgsCommand):
         for row in c:
             self.process_person(*row)
 
+        for conflict in self.similar_users:
+            self.stdout.write("Conflicts: %s" % str(conflict))
+        self.stdout.write("Conflict users: %d" % len(self.similar_users))
+
     @transaction.atomic
     def process_school(self, kaspar_id, abbr, name, addr_name, street,
                        city, zip_code):
+
+        if not abbr:
+            print("empty")
+            print(kaspar_id, abbr, name, street)
+            x = input()
+            self.school_id_map[kaspar_id] = None
+            return
+
         candidates = School.objects.filter(
             Q(abbreviation__iexact=abbr) |
             Q(abbreviation__iexact=abbr + '?')
@@ -87,12 +110,21 @@ class Command(NoArgsCommand):
     def create_school(self, kaspar_id, abbr, name, addr_name, street,
                       city, zip_code):
         abbr += '?'  # Question mark denotes schools needing review.
-        school = School.objects.create(abbreviation=abbr,
-                                       verbose_name=name,
-                                       addr_name=addr_name,
-                                       street=street,
-                                       city=city,
-                                       zip_code=zip_code)
+        school = None
+        if self.dry:
+            school = School(abbreviation=abbr,
+                            verbose_name=name,
+                            addr_name=addr_name,
+                            street=street,
+                            city=city,
+                            zip_code=zip_code)
+        else:
+            school = School.objects.create(abbreviation=abbr,
+                                           verbose_name=name,
+                                           addr_name=addr_name,
+                                           street=street,
+                                           city=city,
+                                           zip_code=zip_code)
         if self.verbosity >= 2:
             self.stdout.write("Created new school %s" % school)
         return school
@@ -105,7 +137,7 @@ class Command(NoArgsCommand):
             if self.verbosity >= 2:
                 self.stdout.write("Skipping user %s %s" % (first_name,
                                                            last_name))
-                return
+            return
 
         new_user_args = {
             'first_name': first_name,
@@ -139,17 +171,25 @@ class Command(NoArgsCommand):
         if self.verbosity >= 2:
             self.stdout.write("Creating user %s %s" % (first_name, last_name))
 
-        new_user = User.objects.create(**new_user_args)
-        self.man_id_map[man_id] = new_user
+        new_user = None
+        if self.dry:
+            new_user = User(**new_user_args)
+        else:
+            new_user = User.objects.create(**new_user_args)
+            new_user.properties.create(key=self.kaspar_id_key, value=man_id)
+            if note:
+                new_user.properties.create(key=self.kaspar_note_key, value=note)
 
-        new_user.properties.create(key=self.kaspar_id_key, value=man_id)
-        if note:
-            new_user.properties.create(key=self.kaspar_note_key, value=note)
         similar_users = get_similar_users(new_user)
         if len(similar_users):
+            names_of_similar = [(x.first_name, x.last_name ) for x in similar_users]
+            self.similar_users.append(((first_name, last_name), names_of_similar))
             if self.verbosity >= 2:
-                self.stdout.write('Similar users: %s' % str(similar_users))
-            DuplicateUser.objects.create(user=new_user)
+                self.stdout.write('Similar users: %s' % str(names_of_similar))
+            if self.dry:
+                pass
+            else:
+                DuplicateUser.objects.create(user=new_user)
 
     def parse_date(self, date_string):
         # Remove any whitespace inside the string.
