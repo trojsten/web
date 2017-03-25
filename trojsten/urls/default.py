@@ -28,7 +28,6 @@ urlpatterns = common_urlpatterns + [
     url(r'^archiv/$', trojsten.contests.views.archive, {'path': '/archiv'},
         name='archive'),
     url(r'^akcie/', include('trojsten.events.urls')),
-    url(r'^nahlasit-problem/', include('contact_form.urls')),
     url(r'^specialne/', include('trojsten.special.urls')),
     url(r'^komentare/', include('fluent_comments.urls')),
     url(r'^diskusie/', include('trojsten.threads.urls')),

@@ -38,6 +38,7 @@ urlpatterns += [
 urlpatterns += [
     url(r'^nahlasit-problem/$', ContactFormView.as_view(), name='contact_form'),
     url(r'^nahlasit-problem/sent/$', trojsten.views.contact_form_sent_redirect),
+    url(r'^nahlasit-problem/', include('contact_form.urls')),
 ]
 
 # Include django debug toolbar views
