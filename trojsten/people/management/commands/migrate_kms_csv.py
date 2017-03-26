@@ -13,7 +13,7 @@ from django.utils.six.moves import input
 
 from trojsten.people.helpers import get_similar_users
 from trojsten.people.models import DuplicateUser, School, User, UserPropertyKey
-from trojsten.people.management.commands.migrate_base_class import MigrateBaceCommand
+from trojsten.people.management.commands.migrate_base_class import *
 
 
 class Command(MigrateBaceCommand):
@@ -26,70 +26,53 @@ class Command(MigrateBaceCommand):
     def handle_noargs(self, **options):
         super(Command, self).handle_noargs(**options)
         base = options['file']
-        riesitelia_file = os.path.join(base, "riesitelia.csv")
-        riesitelia = csv.DictReader(open(riesitelia_file))
-        sustredenia_file = os.path.join(base, "sustredenia.csv")
-        sustredenia = csv.DictReader(open(sustredenia_file))
-        ucasti = defaultdict(int)
-        last_kontakt = {}
-        for sustredko in sustredenia:
-            idcko = sustredko['id_riesitela'].strip()
-            ucasti[idcko]+=1
-            if sustredko['rok']:
-                last_kontakt[idcko] = max(last_kontakt.get(idcko,0), int(sustredko['rok']))
+        participants_file = os.path.join(base, "riesitelia.csv")
+        participants = csv.DictReader(open(participants_file))
+        camps_file = os.path.join(base, "sustredenia.csv")
+        camps = csv.DictReader(open(camps_file))
+        camps_survived = defaultdict(int)
+        last_contact = {}
+        for camp in camps:
+            idd = camp['id_riesitela'].strip()
+            camps_survived[idd]+=1
+            if camp['rok']:
+                last_contact[idd] = max(last_contact.get(idd,0), int(camp['rok']))
 
 
-        skoly_file = os.path.join(base, "skoly.csv")
-        skoly = csv.DictReader(open(skoly_file))
-        for skola in skoly:
-            abbr = skola['skratka'].split(' ', 1)[0]
-            addr_name = skola['nazov'] + ", " + skola['ulica']
-            self.process_school(skola['id'], abbr, skola['nazov'], addr_name, skola['ulica'],
-                skola['mesto'], skola['PSC'])
+        schools_file = os.path.join(base, "skoly.csv")
+        schools = csv.DictReader(open(schools_file))
+        for school in schools:
+            abbr = school['skratka'].split(' ', 1)[0]
+            addr_name = school['nazov'] + ", " + school['ulica']
+            self.process_school(school['id'], abbr, school['nazov'], addr_name, school['ulica'],
+                school['mesto'], school['PSC'])
 
 
-        kms_id_key, _ = UserPropertyKey.objects.get_or_create(key_name="KMS ID")
-        kms_sustredka, _ = UserPropertyKey.objects.get_or_create(key_name="KMS sustredenia")
-        mobil, _ = UserPropertyKey.objects.get_or_create(key_name="Mobil")
-        trojsten_contact, _ = UserPropertyKey.objects.get_or_create(key_name="Posledny kontakt")
-
-
-        for l in riesitelia:
+        for l in participants:
             if not l['meno']:
                 continue
-            idcko = l['id']
-            last_kontakt[idcko] = max(last_kontakt.get(idcko,0), int(l['matura'])-3)
+            idd = l['id']
+            last_contact[idd] = max(last_contact.get(idd,0), int(l['matura'])-3)
             user = {
                 'first_name': l['meno'],
                 'last_name': l['priezvisko'],
                 'graduation': l['matura'],
                 'email': l['email'],
-                'birth_date': self.parse_date(l['datnar']),
+                'birth_date': self.parse_dash_date(l['datnar']),
                 'school_id': l['id_skoly']
             }
 
-            #TODO treba poparsovat adresy,
+            #TODO parse addresses from string.
             'adresa_domov'
             'adresa_kores'
 
             user_properties = [
-                (mobil, l['mobil']),
-                (kms_sustredka, ucasti[idcko]),
-                (trojsten_contact, last_kontakt[idcko])
+                (MOBIL_PROPERTY, l['mobil']),
+                (KMS_CAMPS_PROPERTY, camps_survived[idd]),
+                (LAST_CONTACT_PROPERTY, last_contact[idd])
             ]
-            self.process_person(user, user_properties, kms_id_key, int(l['id']))
+            self.process_person(user, user_properties, KMS_ID_PROPERTY, int(idd))
 
-        #TODO akcie, sustredenia
+        #TODO parse camps more precisely
         self.print_stats()
-
-
-
-    def parse_date(self, date_string):
-        # Remove any whitespace inside the string.
-        date_string = date_string.replace(' ', '')
-        if date_string == "0000-00-00":
-            return None
-        else:
-            return datetime.strptime(date_string, '%Y-%m-%d')
-
 
