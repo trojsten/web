@@ -14,13 +14,6 @@ import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
-# Kaspar property IDs
-EMAIL_PROP = 1
-BIRTHDAY_PROP = 2
-# Labels for auto-generated properties
-KASPAR_ID_LABEL = "kaspar ID"
-KASPAR_NOTE_LABEL = "kaspar note"
-
 class MigrateBaceCommand(NoArgsCommand):
     help = 'Base class for importing people.'
 
@@ -41,13 +34,16 @@ class MigrateBaceCommand(NoArgsCommand):
         self.school_id_map={}
 
     @transaction.atomic
+    def process_address(self, street, town, postal_code, country):
+        return Address.objects.create(street=street, town=town, postal_code=postal_code, country=country)
+
+
+    @transaction.atomic
     def process_school(self, old_id, abbr, name, addr_name, street,
                        city, zip_code):
 
+        # TODO improve this, do not work with abbreviations
         if not abbr:
-            print("empty")
-            print(old_id, abbr, name, street)
-            x = input()
             self.school_id_map[old_id] = None
             return
 
@@ -98,21 +94,16 @@ class MigrateBaceCommand(NoArgsCommand):
         return school
 
     @transaction.atomic
-    def process_person(self, user_args, user_properties, old_user_id_field, old_user_id):
+    def process_person(self, user_args, user_properties, old_user_id_field, old_user_id, address=None):
         """
             Args:
-                user_args (dict): will be uset for user constructor as is.
+                user_args (dict): will be used for user constructor as is. Except for school_id.
                 user_properties (list(tuple(UserPropertyKey, string))): will create additional user properties
                 old_user_id_field (UserPropertyKey): old field that contained oser id
                     (kaspar_id/ kms id ...), used for faster deduplication.
                 old_user_id (int/string): old id
             user_args can have
-            first_name
-            last_name
-            graduation
-            email
-            birth_date
-            school_id
+            first_name, last_name, graduation, email, birth_date, school_id
         """
         # If the user already exists in our database, skip.
         old_id_property = None
@@ -127,13 +118,12 @@ class MigrateBaceCommand(NoArgsCommand):
             if self.verbosity >= 2:
                 self.stdout.write("Skipping user %s %s" % (first_name,
                                                            last_name))
-            return
+            return None
 
         # The username needs to be unique, thus the ID.
-        user_args['username'] = u'{0:s}{1:s}{2:d}'.format(first_name, last_name, old_user_id),
+        user_args['username'] = u'{0:s}{1:s}_{2:s}'.format(first_name, last_name, str(old_user_id)),
         user_args['is_active'] = False
 
-        #TODO fix school
         if 'school_id' in user_args:
             school_id = user_args['school_id']
             del user_args['school_id']
@@ -146,11 +136,20 @@ class MigrateBaceCommand(NoArgsCommand):
         if self.dry:
             new_user = User(**user_args)
         else:
+            addr = None
+            if address:
+                addr = process_address(address['street'],
+                                       address['town'],
+                                       address['postal_code'],
+                                       address['country'])
+                user_args['home_address'] = addr
+
             new_user = User.objects.create(**user_args)
 
             if old_user_id:
                 new_user.properties.create(key=old_user_id_field, value=old_user_id)
 
+            user_properties = list(filter(lambda x: x, user_properties))
             for key, value in user_properties:
                 new_user.properties.create(key=key, value=value)
 
@@ -165,14 +164,63 @@ class MigrateBaceCommand(NoArgsCommand):
             else:
                 DuplicateUser.objects.create(user=new_user)
 
+        return new_user
+
     def print_stats(self):
         for conflict in self.similar_users:
             self.stdout.write("Conflicts: %s" % str(conflict))
 
         self.stdout.write("Conflict users: %d" % len(self.similar_users))
 
-    def parse_date(self, date_string):
+    def parse_dot_date(self, date_string):
         # Remove any whitespace inside the string.
         date_string = date_string.replace(' ', '')
         # Just hope that all dates are in the same format.
         return datetime.strptime(date_string, '%d.%m.%Y')
+
+    def parse_dash_date(self, date_string):
+        # Remove any whitespace inside the string.
+        date_string = date_string.replace(' ', '')
+        if date_string == "0000-00-00" or date_string == "NULL":
+            return None
+        else:
+            return datetime.strptime(date_string, '%Y-%m-%d')
+
+    def process_property(self, key_name):
+        #TODO handle regexp + hiddne, if does not exists, ask and create
+        #WARNING this is will create object in db even for dry run.
+        user_property, _ = UserPropertyKey.objects.get_or_create(key_name=key_name)
+        return user_property
+
+
+COMMAND = MigrateBaceCommand()
+
+CSV_ID_KEY = "csv ID"
+CSV_ID_PROPERTY = COMMAND.process_property(CSV_ID_KEY)
+MOBIL_KEY = "Mobil"
+MOBIL_PROPERTY = COMMAND.process_property(MOBIL_KEY)
+NICKNAME_KEY = "Prezyvka"
+NICKNAME_PROPERTY = COMMAND.process_property(NICKNAME_KEY)
+BIRTH_NAME_KEY = "Rodne Meno"
+BIRTH_NAME_PROPERTY = COMMAND.process_property(BIRTH_NAME_KEY)
+LAST_CONTACT_KEY = "Posledny kontakt"
+LAST_CONTACT_PROPERTY = COMMAND.process_property(LAST_CONTACT_KEY)
+
+FKS_ID_KEY = "FKS ID"
+FKS_ID_PROPERTY = COMMAND.process_property(FKS_ID_KEY)
+KMS_ID_KEY = "KMS ID"
+KMS_ID_PROPERTY = COMMAND.process_property(KMS_ID_KEY)
+KMS_CAMPS_KEY = "KMS sustredenia"
+KMS_CAMPS_PROPERTY = COMMAND.process_property(KMS_CAMPS_KEY)
+KASPAR_ID_KEY = "KSP ID"
+KASPAR_ID_PROPERTY = COMMAND.process_property(KASPAR_ID_KEY)
+KASPAR_NOTE_KEY = "KSP note"
+KASPAR_NOTE_PROPERTY = COMMAND.process_property(KASPAR_NOTE_KEY)
+KSP_CAMPS_KEY = "KSP sustredenia"
+KSP_CAMPS_PROPERTY = COMMAND.process_property(KSP_CAMPS_KEY)
+MEMORY_KEY = "Spomienky"
+MEMORY_PROPERTY = COMMAND.process_property(MEMORY_KEY)
+COMPANY_KEY = "Posobisko"
+COMPANY_PROPERTY = COMMAND.process_property(COMPANY_KEY)
+AFFILIATION_KEY = "Pozicia"
+AFFILIATION_PROPERTY = COMMAND.process_property(AFFILIATION_KEY)
