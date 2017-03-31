@@ -100,7 +100,7 @@ class Command(MigrateBaceCommand):
             }
 
             user_properties = [
-                (MOBIL_PROPERTY, person['telefon']),
+                (MOBIL_PROPERTY, person['telefon'].replace(" ", "").strip()),
                 (LAST_CONTACT_PROPERTY, last_contact[idd])
             ]
             self.process_person(user, user_properties, FKS_ID_PROPERTY, int(idd), address=parsed_address)

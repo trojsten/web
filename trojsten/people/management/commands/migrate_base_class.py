@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.utils.six.moves import input
 
 from trojsten.people.helpers import get_similar_users
-from trojsten.people.models import DuplicateUser, School, User, UserPropertyKey, UserProperty
+from trojsten.people.models import DuplicateUser, School, User, UserPropertyKey, UserProperty, Address
 
 import sys
 reload(sys)
@@ -51,7 +51,7 @@ class MigrateBaceCommand(NoArgsCommand):
             Q(abbreviation__iexact=abbr) |
             Q(abbreviation__iexact=abbr + '?')
         )
-        row = (abbr, name, addr_name, street, city, zip_code)
+        row = (abbr, name, addr_name, street, city, self.fix_string(zip_code))
         if len(candidates) == 1:
             if self.verbosity >= 2:
                 self.stdout.write("Matched %r to %s" % (row,
@@ -75,6 +75,10 @@ class MigrateBaceCommand(NoArgsCommand):
                       city, zip_code):
         abbr += '?'  # Question mark denotes schools needing review.
         school = None
+        if len(zip_code) > 10:
+            # Swiss zip codes
+            zip_code = 0
+
         if self.dry:
             school = School(abbreviation=abbr,
                             verbose_name=name,
@@ -121,7 +125,6 @@ class MigrateBaceCommand(NoArgsCommand):
             return None
 
         # The username needs to be unique, thus the ID.
-        user_args['username'] = u'{0:s}{1:s}_{2:s}'.format(first_name, last_name, str(old_user_id)),
         user_args['is_active'] = False
 
         if 'school_id' in user_args:
@@ -138,10 +141,10 @@ class MigrateBaceCommand(NoArgsCommand):
         else:
             addr = None
             if address:
-                addr = process_address(address['street'],
-                                       address['town'],
-                                       address['postal_code'],
-                                       address['country'])
+                addr = self.process_address(address['street'],
+                                           address['town'],
+                                           address['postal_code'],
+                                           address['country'])
                 user_args['home_address'] = addr
 
             new_user = User.objects.create(**user_args)
@@ -186,19 +189,21 @@ class MigrateBaceCommand(NoArgsCommand):
         else:
             return datetime.strptime(date_string, '%Y-%m-%d')
 
-    def process_property(self, key_name):
+    def process_property(self, key_name, regexp=None):
         #TODO handle regexp + hiddne, if does not exists, ask and create
         #WARNING this is will create object in db even for dry run.
         user_property, _ = UserPropertyKey.objects.get_or_create(key_name=key_name)
         return user_property
 
+    def fix_string(self, string):
+        return string.replace(" ", "").strip()
 
 COMMAND = MigrateBaceCommand()
 
 CSV_ID_KEY = "csv ID"
-CSV_ID_PROPERTY = COMMAND.process_property(CSV_ID_KEY)
+CSV_ID_PROPERTY = COMMAND.process_property(CSV_ID_KEY, "(.*_)?\d+")
 MOBIL_KEY = "Mobil"
-MOBIL_PROPERTY = COMMAND.process_property(MOBIL_KEY)
+MOBIL_PROPERTY = COMMAND.process_property(MOBIL_KEY, ".?.?\d*\\?")
 NICKNAME_KEY = "Prezyvka"
 NICKNAME_PROPERTY = COMMAND.process_property(NICKNAME_KEY)
 BIRTH_NAME_KEY = "Rodne Meno"
