@@ -19,6 +19,7 @@ from trojsten.people.management.commands.migrate_base_class import *
 EMAIL_PROP = 1
 BIRTHDAY_PROP = 2
 
+
 class Command(MigrateBaceCommand):
     help = 'Imports people and their related info from kaspar.'
 
@@ -39,8 +40,7 @@ class Command(MigrateBaceCommand):
         for row in c:
             self.process_school(*row)
 
-        #TODO sustredka
-
+        # TODO sustredka
 
         if self.verbosity >= 1:
             self.stdout.write("Dumping participations")
@@ -68,16 +68,14 @@ class Command(MigrateBaceCommand):
         for participant in c:
             man_id = participant[1]
             action = actions[participant[0]]
-            last_contact[man_id] = max(last_contact.get(man_id,0), action['end'].year)
+            last_contact[man_id] = max(last_contact.get(man_id, 0), action['end'].year)
             camps_survived[man_id] = camps_survived.get(man_id, 0) + 1
-
 
         if self.verbosity >= 1:
             self.stdout.write("Creating/retrieving required UserPropertyKeys...")
 
         if self.verbosity >= 1:
             self.stdout.write("Migrating people...")
-
 
         fields = ["man_id", "firstname", "lastname", "school_id", "finish", "note"]
         c.execute("""
@@ -88,7 +86,7 @@ class Command(MigrateBaceCommand):
         for l in c:
             l = dict(zip(fields, l))
             idcko = l['man_id']
-            last_contact[idcko] = max(last_contact.get(idcko,0), int(l['finish'])-3)
+            last_contact[idcko] = max(last_contact.get(idcko, 0), int(l['finish'])-3)
 
             user = {
                 'first_name': l['firstname'],
@@ -116,7 +114,7 @@ class Command(MigrateBaceCommand):
             user_properties = [
                 (LAST_CONTACT_PROPERTY, last_contact[idcko]),
                 (KASPAR_NOTE_PROPERTY, l['note']),
-                (KSP_CAMPS_PROPERTY, camps_survived.get(idcko,0))
+                (KSP_CAMPS_PROPERTY, camps_survived.get(idcko, 0))
             ]
             userObject = self.process_person(user, user_properties, KASPAR_ID_PROPERTY, int(idcko))
 

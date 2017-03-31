@@ -16,20 +16,6 @@ from trojsten.people.models import DuplicateUser, School, User, UserPropertyKey
 from trojsten.people.management.commands.migrate_base_class import *
 
 
-"""
-Restore the mysql database dump and run (replace <passwd> and <user>)
-Alternatively you can export these tables from phpAdmin.
-
-for tn in adresa osoba riesitel skola
-do
-mysql -u<user> -p<passwd> fks -B -e "select * from \`$tn\`;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' > $tn.csv
-done
-
-mysql -u<user> -p<passwd> fks -B -e "select riesitel_id, termin from seria as s, priklad as p, riesitel_priklady as rp, riesitel as r where s.id = p.seria_id and rp.priklad_id = p.id and rp.riesitel_id = r.id;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' > aktivita.csv
-"""
-
-#TODO vvysledkovky
-
 class Command(MigrateBaceCommand):
     help = 'Imports people and their related info from fks_csv.'
 
@@ -44,7 +30,7 @@ class Command(MigrateBaceCommand):
         participants = csv.DictReader(open(participants_file))
         idd = 0
         for l in participants:
-            idd+=1
+            idd += 1
             if not l['Meno']:
                 continue
 
@@ -62,11 +48,9 @@ class Command(MigrateBaceCommand):
                 (MEMORY_PROPERTY, l['spomienka']),
                 (LAST_CONTACT_PROPERTY, 2014),
             ]
-            #TODO Adresa
+            # TODO Adresa
 
-            self.process_person(user, user_properties, CSV_ID_PROPERTY, "30rokovFKS2_{0:d}".format(idd))
+            self.process_person(user, user_properties, CSV_ID_PROPERTY,
+                                "30rokovFKS2_{0:d}".format(idd))
 
         self.print_stats()
-
-
-

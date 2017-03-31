@@ -22,13 +22,18 @@ Alternatively you can export these tables from phpAdmin.
 
 for tn in adresa osoba riesitel skola
 do
-mysql -u<user> -p<passwd> fks -B -e "select * from \`$tn\`;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' > $tn.csv
+mysql -u<user> -p<passwd> fks -B -e "select * from \`$tn\`;"    \
+| sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' > $tn.csv
 done
 
-mysql -u<user> -p<passwd> fks -B -e "select riesitel_id, termin from seria as s, priklad as p, riesitel_priklady as rp, riesitel as r where s.id = p.seria_id and rp.priklad_id = p.id and rp.riesitel_id = r.id;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' > aktivita.csv
+mysql -u<user> -p<passwd> fks -B -e "   \
+select riesitel_id, termin \
+from seria as s, priklad as p, riesitel_priklady as rp, riesitel as r    \
+where s.id = p.seria_id and rp.priklad_id = p.id and rp.riesitel_id = r.id;" \
+| sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' > aktivita.csv
 """
+# TODO vvysledkovky
 
-#TODO vvysledkovky
 
 class Command(MigrateBaceCommand):
     help = 'Imports people and their related info from fks_csv.'
@@ -57,7 +62,7 @@ class Command(MigrateBaceCommand):
 
             addr_name = school['nazov'] + ", " + street
             self.process_school(school['id'], abbr, school['nazov'], addr_name, street,
-                addr['mesto'], addr['psc'])
+                                addr['mesto'], addr['psc'])
 
         activity_file = os.path.join(base, "aktivita.csv")
         activity = csv.DictReader(open(activity_file))
@@ -66,7 +71,6 @@ class Command(MigrateBaceCommand):
             idd = act['riesitel_id']
             date = self.parse_dash_date(act['termin'])
             last_contact[idd] = max(last_contact.get(idd, 0), date.year)
-
 
         people_file = os.path.join(base, "osoba.csv")
         people = csv.DictReader(open(people_file))
@@ -82,7 +86,7 @@ class Command(MigrateBaceCommand):
             idd = l['osoba_id']
             person = people_by_id[idd]
             matura = l['rok_maturity']
-            last_contact[idd] = max(last_contact.get(idd,0), int(matura)-3)
+            last_contact[idd] = max(last_contact.get(idd, 0), int(matura)-3)
             address = address_by_id[person['adresa_id']]
             parsed_address = {
                 'street': address['ulica'],
@@ -103,9 +107,7 @@ class Command(MigrateBaceCommand):
                 (MOBIL_PROPERTY, person['telefon'].replace(" ", "").strip()),
                 (LAST_CONTACT_PROPERTY, last_contact[idd])
             ]
-            self.process_person(user, user_properties, FKS_ID_PROPERTY, int(idd), address=parsed_address)
+            self.process_person(user, user_properties, FKS_ID_PROPERTY, int(idd),
+                                address=parsed_address)
 
         self.print_stats()
-
-
-

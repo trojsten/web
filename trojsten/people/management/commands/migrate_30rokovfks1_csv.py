@@ -16,20 +16,6 @@ from trojsten.people.models import DuplicateUser, School, User, UserPropertyKey
 from trojsten.people.management.commands.migrate_base_class import *
 
 
-"""
-Restore the mysql database dump and run (replace <passwd> and <user>)
-Alternatively you can export these tables from phpAdmin.
-
-for tn in adresa osoba riesitel skola
-do
-mysql -u<user> -p<passwd> fks -B -e "select * from \`$tn\`;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' > $tn.csv
-done
-
-mysql -u<user> -p<passwd> fks -B -e "select riesitel_id, termin from seria as s, priklad as p, riesitel_priklady as rp, riesitel as r where s.id = p.seria_id and rp.priklad_id = p.id and rp.riesitel_id = r.id;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' > aktivita.csv
-"""
-
-#TODO vvysledkovky
-
 class Command(MigrateBaceCommand):
     help = 'Imports people and their related info from fks_csv.'
 
@@ -45,23 +31,21 @@ class Command(MigrateBaceCommand):
 
         idd = 0
         for l in participants:
-            idd+=1
-            contacted = l['kontaktovany?']=='ano'
+            idd += 1
+            contacted = l['kontaktovany?'] == 'ano'
             user = {
                 'first_name': l['Meno'],
                 'last_name': l['Priezvisko'],
                 'email': l['Email'],
             }
             user_properties = [
-                (MOBIL_PROPERTY, l['Telefon'].replace(" ","").strip()),
+                (MOBIL_PROPERTY, l['Telefon'].replace(" ", "").strip()),
                 (BIRTH_NAME_PROPERTY, l['Rodne priezvisko']),
                 (NICKNAME_PROPERTY, l['Prezyvka']),
                 (LAST_CONTACT_PROPERTY, 2014 if contacted else False)
             ]
 
-            self.process_person(user, user_properties, CSV_ID_PROPERTY, "30rokovFKS1_{0:d}".format(idd))
+            self.process_person(user, user_properties, CSV_ID_PROPERTY,
+                                "30rokovFKS1_{0:d}".format(idd))
 
         self.print_stats()
-
-
-
