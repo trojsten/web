@@ -39,9 +39,8 @@ class Command(MigrateBaceCommand):
 
     def handle_noargs(self, **options):
         super(Command, self).handle_noargs(**options)
-        base = options['file']
+        participants_file = options['file']
 
-        participants_file = os.path.join(base, "FKS_30_rokov_1.csv")
         participants = csv.DictReader(open(participants_file))
 
         idd = 0
@@ -54,7 +53,7 @@ class Command(MigrateBaceCommand):
                 'email': l['Email'],
             }
             user_properties = [
-                (MOBIL_PROPERTY, l['Telefon']),
+                (MOBIL_PROPERTY, l['Telefon'].replace(" ","").strip()),
                 (BIRTH_NAME_PROPERTY, l['Rodne priezvisko']),
                 (NICKNAME_PROPERTY, l['Prezyvka']),
                 (LAST_CONTACT_PROPERTY, 2014 if contacted else False)

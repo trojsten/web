@@ -67,7 +67,7 @@ class Command(MigrateBaceCommand):
             'adresa_kores'
 
             user_properties = [
-                (MOBIL_PROPERTY, l['mobil']),
+                (MOBIL_PROPERTY, l['mobil'].replace(" ", "").strip()),
                 (KMS_CAMPS_PROPERTY, camps_survived[idd]),
                 (LAST_CONTACT_PROPERTY, last_contact[idd])
             ]

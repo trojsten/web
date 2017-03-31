@@ -41,17 +41,6 @@ class Command(MigrateBaceCommand):
 
         #TODO sustredka
 
-        if self.verbosity >= 1:
-            self.stdout.write("Dumping veducis")
-
-        c.execute("""
-            SELECT man_id
-            FROM veduci
-        """)
-
-        veduci = set()
-        for l in c:
-            veduci.add(l[0])
 
         if self.verbosity >= 1:
             self.stdout.write("Dumping participations")
@@ -130,8 +119,5 @@ class Command(MigrateBaceCommand):
                 (KSP_CAMPS_PROPERTY, camps_survived.get(idcko,0))
             ]
             userObject = self.process_person(user, user_properties, KASPAR_ID_PROPERTY, int(idcko))
-            if idcko in veduci:
-                #TODO userObject add to group veduci
-                pass
 
         self.print_stats()
