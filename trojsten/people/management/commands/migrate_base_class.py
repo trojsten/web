@@ -14,6 +14,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
+
 class MigrateBaceCommand(NoArgsCommand):
     help = 'Base class for importing people.'
 
@@ -31,12 +32,11 @@ class MigrateBaceCommand(NoArgsCommand):
 
         self.verbosity = options['verbosity']
         self.similar_users = []
-        self.school_id_map={}
+        self.school_id_map = {}
 
     @transaction.atomic
     def process_address(self, street, town, postal_code, country):
         return Address.objects.create(street=street, town=town, postal_code=postal_code, country=country)
-
 
     @transaction.atomic
     def process_school(self, old_id, abbr, name, addr_name, street,
@@ -102,7 +102,8 @@ class MigrateBaceCommand(NoArgsCommand):
         """
             Args:
                 user_args (dict): will be used for user constructor as is. Except for school_id.
-                user_properties (list(tuple(UserPropertyKey, string))): will create additional user properties
+                user_properties (list(tuple(UserPropertyKey, string))):
+                    will create additional user properties
                 old_user_id_field (UserPropertyKey): old field that contained oser id
                     (kaspar_id/ kms id ...), used for faster deduplication.
                 old_user_id (int/string): old id
@@ -142,9 +143,9 @@ class MigrateBaceCommand(NoArgsCommand):
             addr = None
             if address:
                 addr = self.process_address(address['street'],
-                                           address['town'],
-                                           address['postal_code'],
-                                           address['country'])
+                                            address['town'],
+                                            address['postal_code'],
+                                            address['country'])
                 user_args['home_address'] = addr
 
             new_user = User.objects.create(**user_args)
@@ -158,7 +159,7 @@ class MigrateBaceCommand(NoArgsCommand):
 
         similar_users = get_similar_users(new_user)
         if len(similar_users):
-            names_of_similar = [(x.first_name, x.last_name ) for x in similar_users]
+            names_of_similar = [(x.first_name, x.last_name) for x in similar_users]
             self.similar_users.append(((first_name, last_name), names_of_similar))
             if self.verbosity >= 2:
                 self.stdout.write('Similar users: %s' % str(names_of_similar))
@@ -190,8 +191,8 @@ class MigrateBaceCommand(NoArgsCommand):
             return datetime.strptime(date_string, '%Y-%m-%d')
 
     def process_property(self, key_name, regexp=None):
-        #TODO handle regexp + hiddne, if does not exists, ask and create
-        #WARNING this is will create object in db even for dry run.
+        # TODO handle regexp + hiddne, if does not exists, ask and create
+        # WARNING this is will create object in db even for dry run.
         user_property, _ = UserPropertyKey.objects.get_or_create(key_name=key_name)
         return user_property
 

@@ -15,6 +15,17 @@ from trojsten.people.helpers import get_similar_users
 from trojsten.people.models import DuplicateUser, School, User, UserPropertyKey
 from trojsten.people.management.commands.migrate_base_class import *
 
+"""
+Restore the mysql database dump and run (replace <passwd> and <user>)
+Alternatively you can export these tables from phpAdmin.
+
+for tn in akcie riesitelia skoly sustredenia
+do
+mysql -u<user> -p<passwd> fks -B -e "select * from \`$tn\`;" \
+| sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' > $tn.csv
+done
+"""
+
 
 class Command(MigrateBaceCommand):
     help = 'Imports people and their related info from kms_csv.'
@@ -34,10 +45,9 @@ class Command(MigrateBaceCommand):
         last_contact = {}
         for camp in camps:
             idd = camp['id_riesitela'].strip()
-            camps_survived[idd]+=1
+            camps_survived[idd] += 1
             if camp['rok']:
-                last_contact[idd] = max(last_contact.get(idd,0), int(camp['rok']))
-
+                last_contact[idd] = max(last_contact.get(idd, 0), int(camp['rok']))
 
         schools_file = os.path.join(base, "skoly.csv")
         schools = csv.DictReader(open(schools_file))
@@ -45,14 +55,13 @@ class Command(MigrateBaceCommand):
             abbr = school['skratka'].split(' ', 1)[0]
             addr_name = school['nazov'] + ", " + school['ulica']
             self.process_school(school['id'], abbr, school['nazov'], addr_name, school['ulica'],
-                school['mesto'], school['PSC'])
-
+                                school['mesto'], school['PSC'])
 
         for l in participants:
             if not l['meno']:
                 continue
             idd = l['id']
-            last_contact[idd] = max(last_contact.get(idd,0), int(l['matura'])-3)
+            last_contact[idd] = max(last_contact.get(idd, 0), int(l['matura'])-3)
             user = {
                 'first_name': l['meno'],
                 'last_name': l['priezvisko'],
@@ -62,7 +71,7 @@ class Command(MigrateBaceCommand):
                 'school_id': l['id_skoly']
             }
 
-            #TODO parse addresses from string.
+            # TODO parse addresses from string.
             'adresa_domov'
             'adresa_kores'
 
@@ -73,6 +82,5 @@ class Command(MigrateBaceCommand):
             ]
             self.process_person(user, user_properties, KMS_ID_PROPERTY, int(idd))
 
-        #TODO parse camps more precisely
+        # TODO parse camps more precisely
         self.print_stats()
-
