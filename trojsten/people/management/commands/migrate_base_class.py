@@ -1,16 +1,18 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
+from imp import reload
+from collections import defaultdict
+import sys
 
 from django.core.management.base import NoArgsCommand
-from django.db import connections, transaction
+from django.db import transaction
 from django.db.models import Q
 from django.utils.six.moves import input
 
 from trojsten.people.helpers import get_similar_users
 from trojsten.people.models import DuplicateUser, School, User, UserPropertyKey, UserProperty, Address
 
-import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -24,15 +26,54 @@ class MigrateBaceCommand(NoArgsCommand):
                             dest='dry',
                             default=True,
                             help='Actually write something to DB')
+        parser.add_argument('--fast',
+                            action='store_true',
+                            dest='fast',
+                            default=False,
+                            help='Create only a few users')
 
     def handle_noargs(self, **options):
         self.dry = options['dry']
+        self.fast = options['fast']
+        self.done_users = 0
+        self.done_schools = 0
         if self.dry:
             self.stdout.write("Running dry run!")
 
         self.verbosity = options['verbosity']
         self.similar_users = []
         self.school_id_map = {}
+        self.last_contact = defaultdict(list)
+
+        CSV_ID_KEY = "csv ID"
+        self.CSV_ID_PROPERTY = self.process_property(CSV_ID_KEY, "(.{1,20}_)?\d+")
+        MOBIL_KEY = "Mobil"
+        self.MOBIL_PROPERTY = self.process_property(MOBIL_KEY, "\+?\d+\/?\d+")
+        NICKNAME_KEY = "Prezyvka"
+        self.NICKNAME_PROPERTY = self.process_property(NICKNAME_KEY, ".{1,30}")
+        BIRTH_NAME_KEY = "Rodne Meno"
+        self.BIRTH_NAME_PROPERTY = self.process_property(BIRTH_NAME_KEY, ".{1,30}")
+        LAST_CONTACT_KEY = "Posledny kontakt"
+        # TODO  fix False and stupid values
+        self.LAST_CONTACT_PROPERTY = self.process_property(LAST_CONTACT_KEY, "\d\d\d\d")
+        FKS_ID_KEY = "FKS ID"
+        self.FKS_ID_PROPERTY = self.process_property(FKS_ID_KEY, "\d+")
+        KMS_ID_KEY = "KMS ID"
+        self.KMS_ID_PROPERTY = self.process_property(KMS_ID_KEY, "\d+")
+        KMS_CAMPS_KEY = "KMS sustredenia"
+        self.KMS_CAMPS_PROPERTY = self.process_property(KMS_CAMPS_KEY, "\d+")
+        KASPAR_ID_KEY = "KSP ID"
+        self.KASPAR_ID_PROPERTY = self.process_property(KASPAR_ID_KEY, "\d+")
+        KASPAR_NOTE_KEY = "KSP note"
+        self.KASPAR_NOTE_PROPERTY = self.process_property(KASPAR_NOTE_KEY, ".*")
+        KSP_CAMPS_KEY = "KSP sustredenia"
+        self.KSP_CAMPS_PROPERTY = self.process_property(KSP_CAMPS_KEY, "\d+")
+        MEMORY_KEY = "Spomienky"
+        self.MEMORY_PROPERTY = self.process_property(MEMORY_KEY, ".*")
+        COMPANY_KEY = "Posobisko"
+        self.COMPANY_PROPERTY = self.process_property(COMPANY_KEY, ".*")
+        AFFILIATION_KEY = "Pozicia"
+        self.AFFILIATION_PROPERTY = self.process_property(AFFILIATION_KEY, ".*")
 
     @transaction.atomic
     def process_address(self, street, town, postal_code, country):
@@ -42,6 +83,9 @@ class MigrateBaceCommand(NoArgsCommand):
     def process_school(self, old_id, abbr, name, addr_name, street,
                        city, zip_code):
 
+        self.done_schools += 1
+        if self.fast and self.done_schools > 100:
+            return None
         # TODO improve this, do not work with abbreviations
         if not abbr:
             self.school_id_map[old_id] = None
@@ -111,6 +155,10 @@ class MigrateBaceCommand(NoArgsCommand):
             first_name, last_name, graduation, email, birth_date, school_id
         """
         # If the user already exists in our database, skip.
+        self.done_users += 1
+        if self.fast and self.done_users > 100:
+            return None
+
         old_id_property = None
         if old_user_id:
             old_id_property = UserProperty.objects.filter(key=old_user_id_field, value=old_user_id)
@@ -150,8 +198,14 @@ class MigrateBaceCommand(NoArgsCommand):
 
             new_user = User.objects.create(**user_args)
 
-            if old_user_id:
-                new_user.properties.create(key=old_user_id_field, value=old_user_id)
+            new_user.properties.create(key=old_user_id_field, value=old_user_id)
+
+            # TODO last_contacted
+            if old_user_id in self.last_contact:
+                contacts = self.last_contact[old_user_id]
+                valid_contacts = filter(lambda c: 1900 < c and c < 2017, contacts)
+                if valid_contacts:
+                    user_properties.append([self.LAST_CONTACT_PROPERTY, max(valid_contacts)])
 
             user_properties = list(filter(lambda x: x, user_properties))
             for key, value in user_properties:
@@ -191,42 +245,15 @@ class MigrateBaceCommand(NoArgsCommand):
             return datetime.strptime(date_string, '%Y-%m-%d')
 
     def process_property(self, key_name, regexp=None):
-        # TODO handle regexp + hiddne, if does not exists, ask and create
-        # WARNING this is will create object in db even for dry run.
-        user_property, _ = UserPropertyKey.objects.get_or_create(key_name=key_name)
+        user_property = UserPropertyKey.objects.filter(key_name=key_name)
+        if not user_property.exists():
+            if self.dry:
+                user_property = UserPropertyKey(key_name=key_name, regex=regexp)
+            else:
+                user_property = UserPropertyKey.objects.create(key_name=key_name, regex=regexp)
+        else:
+            user_property = user_property.first()
         return user_property
 
     def fix_string(self, string):
         return string.replace(" ", "").strip()
-
-COMMAND = MigrateBaceCommand()
-
-CSV_ID_KEY = "csv ID"
-CSV_ID_PROPERTY = COMMAND.process_property(CSV_ID_KEY, "(.*_)?\d+")
-MOBIL_KEY = "Mobil"
-MOBIL_PROPERTY = COMMAND.process_property(MOBIL_KEY, ".?.?\d*\\?")
-NICKNAME_KEY = "Prezyvka"
-NICKNAME_PROPERTY = COMMAND.process_property(NICKNAME_KEY)
-BIRTH_NAME_KEY = "Rodne Meno"
-BIRTH_NAME_PROPERTY = COMMAND.process_property(BIRTH_NAME_KEY)
-LAST_CONTACT_KEY = "Posledny kontakt"
-LAST_CONTACT_PROPERTY = COMMAND.process_property(LAST_CONTACT_KEY)
-
-FKS_ID_KEY = "FKS ID"
-FKS_ID_PROPERTY = COMMAND.process_property(FKS_ID_KEY)
-KMS_ID_KEY = "KMS ID"
-KMS_ID_PROPERTY = COMMAND.process_property(KMS_ID_KEY)
-KMS_CAMPS_KEY = "KMS sustredenia"
-KMS_CAMPS_PROPERTY = COMMAND.process_property(KMS_CAMPS_KEY)
-KASPAR_ID_KEY = "KSP ID"
-KASPAR_ID_PROPERTY = COMMAND.process_property(KASPAR_ID_KEY)
-KASPAR_NOTE_KEY = "KSP note"
-KASPAR_NOTE_PROPERTY = COMMAND.process_property(KASPAR_NOTE_KEY)
-KSP_CAMPS_KEY = "KSP sustredenia"
-KSP_CAMPS_PROPERTY = COMMAND.process_property(KSP_CAMPS_KEY)
-MEMORY_KEY = "Spomienky"
-MEMORY_PROPERTY = COMMAND.process_property(MEMORY_KEY)
-COMPANY_KEY = "Posobisko"
-COMPANY_PROPERTY = COMMAND.process_property(COMPANY_KEY)
-AFFILIATION_KEY = "Pozicia"
-AFFILIATION_PROPERTY = COMMAND.process_property(AFFILIATION_KEY)

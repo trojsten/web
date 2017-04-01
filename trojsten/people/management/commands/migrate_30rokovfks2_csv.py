@@ -1,19 +1,8 @@
 from __future__ import unicode_literals
 
 import csv
-from collections import defaultdict
-from datetime import datetime
-import os
 
-
-from django.core.management.base import NoArgsCommand
-from django.db import connections, transaction
-from django.db.models import Q
-from django.utils.six.moves import input
-
-from trojsten.people.helpers import get_similar_users
-from trojsten.people.models import DuplicateUser, School, User, UserPropertyKey
-from trojsten.people.management.commands.migrate_base_class import *
+from trojsten.people.management.commands.migrate_base_class import MigrateBaceCommand
 
 
 class Command(MigrateBaceCommand):
@@ -31,26 +20,27 @@ class Command(MigrateBaceCommand):
         idd = 0
         for l in participants:
             idd += 1
+            csv_id = "30rokovFKS2_{0:d}".format(idd)
             if not l['Meno']:
                 continue
 
+            self.last_contact[csv_id].append(2014)
             user = {
                 'first_name': l['Meno'],
                 'last_name': l['Priezvisko'],
                 'email': l['E-mail'],
             }
             user_properties = [
-                (MOBIL_PROPERTY, l['Telefon'].replace(" ", "").strip()),
-                (BIRTH_NAME_PROPERTY, l['Rodne priezvisko']),
-                (NICKNAME_PROPERTY, l['Prezyvka']),
-                (COMPANY_PROPERTY, l['Posobisko']),
-                (AFFILIATION_PROPERTY, l['Pozicia']),
-                (MEMORY_PROPERTY, l['spomienka']),
-                (LAST_CONTACT_PROPERTY, 2014),
+                (self.MOBIL_PROPERTY, l['Telefon'].replace(" ", "").strip()),
+                (self.BIRTH_NAME_PROPERTY, l['Rodne priezvisko']),
+                (self.NICKNAME_PROPERTY, l['Prezyvka']),
+                (self.COMPANY_PROPERTY, l['Posobisko']),
+                (self.AFFILIATION_PROPERTY, l['Pozicia']),
+                (self.MEMORY_PROPERTY, l['spomienka'])
             ]
             # TODO Adresa
 
-            self.process_person(user, user_properties, CSV_ID_PROPERTY,
-                                "30rokovFKS2_{0:d}".format(idd))
+            self.process_person(user, user_properties, self.CSV_ID_PROPERTY,
+                                csv_id)
 
         self.print_stats()

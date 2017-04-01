@@ -2,18 +2,9 @@ from __future__ import unicode_literals
 
 import csv
 from collections import defaultdict
-from datetime import datetime
 import os
 
-
-from django.core.management.base import NoArgsCommand
-from django.db import connections, transaction
-from django.db.models import Q
-from django.utils.six.moves import input
-
-from trojsten.people.helpers import get_similar_users
-from trojsten.people.models import DuplicateUser, School, User, UserPropertyKey
-from trojsten.people.management.commands.migrate_base_class import *
+from trojsten.people.management.commands.migrate_base_class import MigrateBaceCommand
 
 """
 Restore the mysql database dump and run (replace <passwd> and <user>)
@@ -42,12 +33,11 @@ class Command(MigrateBaceCommand):
         camps_file = os.path.join(base, "sustredenia.csv")
         camps = csv.DictReader(open(camps_file))
         camps_survived = defaultdict(int)
-        last_contact = {}
         for camp in camps:
             idd = camp['id_riesitela'].strip()
             camps_survived[idd] += 1
             if camp['rok']:
-                last_contact[idd] = max(last_contact.get(idd, 0), int(camp['rok']))
+                self.last_contact[idd].append(int(camp['rok']))
 
         schools_file = os.path.join(base, "skoly.csv")
         schools = csv.DictReader(open(schools_file))
@@ -61,7 +51,7 @@ class Command(MigrateBaceCommand):
             if not l['meno']:
                 continue
             idd = l['id']
-            last_contact[idd] = max(last_contact.get(idd, 0), int(l['matura'])-3)
+            self.last_contact[idd].append(int(l['matura'])-3)
             user = {
                 'first_name': l['meno'],
                 'last_name': l['priezvisko'],
@@ -76,11 +66,10 @@ class Command(MigrateBaceCommand):
             'adresa_kores'
 
             user_properties = [
-                (MOBIL_PROPERTY, l['mobil'].replace(" ", "").strip()),
-                (KMS_CAMPS_PROPERTY, camps_survived[idd]),
-                (LAST_CONTACT_PROPERTY, last_contact[idd])
+                (self.MOBIL_PROPERTY, l['mobil'].replace(" ", "").strip()),
+                (self.KMS_CAMPS_PROPERTY, camps_survived[idd])
             ]
-            self.process_person(user, user_properties, KMS_ID_PROPERTY, int(idd))
+            self.process_person(user, user_properties, self.KMS_ID_PROPERTY, idd)
 
         # TODO parse camps more precisely
         self.print_stats()
