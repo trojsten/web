@@ -1,19 +1,7 @@
 from __future__ import unicode_literals
 
-import csv
-from collections import defaultdict
-from datetime import datetime
-import os
-
-
-from django.core.management.base import NoArgsCommand
-from django.db import connections, transaction
-from django.db.models import Q
-from django.utils.six.moves import input
-
-from trojsten.people.helpers import get_similar_users
-from trojsten.people.models import DuplicateUser, School, User, UserPropertyKey
-from trojsten.people.management.commands.migrate_base_class import *
+from django.db import connections
+from trojsten.people.management.commands.migrate_base_class import MigrateBaceCommand
 
 # Kaspar property IDs
 EMAIL_PROP = 1
@@ -63,12 +51,11 @@ class Command(MigrateBaceCommand):
             FROM participants
         """)
 
-        last_contact = {}
         camps_survived = {}
         for participant in c:
             man_id = participant[1]
             action = actions[participant[0]]
-            last_contact[man_id] = max(last_contact.get(man_id, 0), action['end'].year)
+            self.last_contact[man_id].append(int(action['end'].year))
             camps_survived[man_id] = camps_survived.get(man_id, 0) + 1
 
         if self.verbosity >= 1:
@@ -86,7 +73,7 @@ class Command(MigrateBaceCommand):
         for l in c:
             l = dict(zip(fields, l))
             idcko = l['man_id']
-            last_contact[idcko] = max(last_contact.get(idcko, 0), int(l['finish'])-3)
+            self.last_contact[idcko].append(int(l['finish'])-3)
 
             user = {
                 'first_name': l['firstname'],
@@ -112,10 +99,9 @@ class Command(MigrateBaceCommand):
             cc.close()
 
             user_properties = [
-                (LAST_CONTACT_PROPERTY, last_contact[idcko]),
-                (KASPAR_NOTE_PROPERTY, l['note']),
-                (KSP_CAMPS_PROPERTY, camps_survived.get(idcko, 0))
+                (self.KASPAR_NOTE_PROPERTY, l['note']),
+                (self.KSP_CAMPS_PROPERTY, camps_survived.get(idcko, 0))
             ]
-            userObject = self.process_person(user, user_properties, KASPAR_ID_PROPERTY, int(idcko))
+            self.process_person(user, user_properties, self.KASPAR_ID_PROPERTY, idcko)
 
         self.print_stats()

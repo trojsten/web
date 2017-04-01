@@ -1,19 +1,9 @@
 from __future__ import unicode_literals
 
 import csv
-from collections import defaultdict
-from datetime import datetime
 import os
 
-
-from django.core.management.base import NoArgsCommand
-from django.db import connections, transaction
-from django.db.models import Q
-from django.utils.six.moves import input
-
-from trojsten.people.helpers import get_similar_users
-from trojsten.people.models import DuplicateUser, School, User, UserPropertyKey
-from trojsten.people.management.commands.migrate_base_class import *
+from trojsten.people.management.commands.migrate_base_class import MigrateBaceCommand
 
 
 """
@@ -66,11 +56,10 @@ class Command(MigrateBaceCommand):
 
         activity_file = os.path.join(base, "aktivita.csv")
         activity = csv.DictReader(open(activity_file))
-        last_contact = {}
         for act in activity:
             idd = act['riesitel_id']
             date = self.parse_dash_date(act['termin'])
-            last_contact[idd] = max(last_contact.get(idd, 0), date.year)
+            self.last_contact[idd].append(int(date.year))
 
         people_file = os.path.join(base, "osoba.csv")
         people = csv.DictReader(open(people_file))
@@ -86,7 +75,7 @@ class Command(MigrateBaceCommand):
             idd = l['osoba_id']
             person = people_by_id[idd]
             matura = l['rok_maturity']
-            last_contact[idd] = max(last_contact.get(idd, 0), int(matura)-3)
+            self.last_contact[idd].append(int(matura)-3)
             address = address_by_id[person['adresa_id']]
             parsed_address = {
                 'street': address['ulica'],
@@ -104,10 +93,9 @@ class Command(MigrateBaceCommand):
             }
 
             user_properties = [
-                (MOBIL_PROPERTY, person['telefon'].replace(" ", "").strip()),
-                (LAST_CONTACT_PROPERTY, last_contact[idd])
+                (self.MOBIL_PROPERTY, person['telefon'].replace(" ", "").strip())
             ]
-            self.process_person(user, user_properties, FKS_ID_PROPERTY, int(idd),
+            self.process_person(user, user_properties, self.FKS_ID_PROPERTY, idd,
                                 address=parsed_address)
 
         self.print_stats()
