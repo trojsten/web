@@ -83,7 +83,7 @@ class KMSSite(BaseSite):
     folder = 'kms'
     facebook_page = 'https://www.facebook.com/pages/KMS/144730632208936'
     googleplus_page = 'http://kms.sk'
-    theme_color = '#8c3be3'
+    theme_color = '#4a6fd8'
     organizers_email = 'kms@kms.sk'
 
 
