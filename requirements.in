@@ -34,4 +34,4 @@ pymdown-extensions
 python-social-auth==0.2.21
 pytz
 Unidecode
-wiki
+-e git+https://github.com/trojsten/django-wiki@b5f26808e14e31cbcaae173e27ef1bf5683aba54#egg=wiki
