@@ -30,11 +30,12 @@ class Command(MigrateBaceCommand):
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
-        parser.add_argument('file', type=str)
+        parser.add_argument('csv_directory', type=str,
+                            help="Directory containing all csv files.")
 
     def handle_noargs(self, **options):
         super(Command, self).handle_noargs(**options)
-        base = options['file']
+        base = options['csv_directory']
 
         addresses_file = os.path.join(base, "adresa.csv")
         addresses = csv.DictReader(open(addresses_file))
