@@ -5,12 +5,14 @@
 #    pip-compile --output-file requirements.devel.txt requirements.in requirements2.in requirements.devel.in
 #
 -e git+https://github.com/edoburu/django-fluent-comments.git@ed53e646d559cdc062d0016734122328152aa98a#egg=django_fluent_comments
+-e git+https://github.com/django-wiki/django-wiki.git@releases/0.2.3#egg=wiki
 akismet==0.2.0
 amqp==1.4.9               # via kombu
 anyjson==0.3.3            # via kombu
+appdirs==1.4.3            # via setuptools
 asn1crypto==0.22.0        # via cryptography
 billiard==3.3.0.23        # via celery
-bleach==1.5.0             # via wiki
+bleach==1.5.0
 bumpversion==0.5.3
 celery==3.1.25
 cffi==1.9.1               # via cryptography
@@ -34,8 +36,8 @@ django-favicon==0.1.3
 django-haystack==2.6.0
 django-import-export==0.5.1
 django-mathfilters==0.4.0
-django-mptt==0.8.7        # via wiki
-django-nyt==1.0b1         # via wiki
+django-mptt==0.8.7
+django-nyt==1.0b1
 django-oauth-toolkit==0.12.0
 django-recaptcha2==1.0.0
 django-sekizai==0.10.0
@@ -60,13 +62,13 @@ importlib==1.0.4
 ipaddress==1.0.18         # via cryptography
 kombu==3.0.37             # via celery
 ksp-login==0.4.2
-markdown==2.6.8           # via django-tips, django-trojsten-news, pymdown-extensions, wiki
+markdown==2.6.8           # via django-tips, django-trojsten-news, pymdown-extensions
 ndg-httpsclient==0.4.2
 oauthlib==2.0.1           # via django-oauth-toolkit, python-social-auth, requests-oauthlib
 olefile==0.44             # via pillow
-packaging==16.8           # via cryptography
+packaging==16.8           # via cryptography, setuptools
 paramiko==2.1.2           # via fabric
-pillow==4.0.0             # via wiki
+pillow==4.0.0
 pip-tools==1.8.0
 psycopg2==2.7.1
 pyasn1==0.2.3             # via paramiko
@@ -81,10 +83,12 @@ python-social-auth==0.2.21
 pytz==2016.10
 requests-oauthlib==0.8.0  # via python-social-auth
 requests==2.13.0          # via django-recaptcha2, python-social-auth, requests-oauthlib
-six==1.10.0               # via bleach, cryptography, django-nyt, django-oauth-toolkit, html5lib, packaging, pip-tools, pyopenssl, python-social-auth, wiki
-sorl-thumbnail==12.3      # via wiki
+six==1.10.0               # via bleach, cryptography, django-nyt, django-oauth-toolkit, html5lib, packaging, pip-tools, pyopenssl, python-social-auth, setuptools
+sorl-thumbnail==12.3
 sqlparse==0.2.3
 tablib==0.11.4            # via django-import-export
 unidecode==0.4.20
 urllib3==1.20             # via elasticsearch
-wiki==0.2.3
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools                # via cryptography
