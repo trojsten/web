@@ -34,4 +34,4 @@ pymdown-extensions
 python-social-auth==0.2.21
 pytz
 Unidecode
-wiki==0.2.3
+-e git+https://github.com/django-wiki/django-wiki.git@releases/0.2.3#egg=wiki
