@@ -30,7 +30,7 @@ first
 ksp-login>0.4
 psycopg2
 pycrypto
-pymdown-extensions
+pymdown-extensions<3.0
 python-social-auth==0.2.21
 pytz
 Unidecode
