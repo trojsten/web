@@ -8,6 +8,7 @@
 akismet==0.2.0
 amqp==1.4.9               # via kombu
 anyjson==0.3.3            # via kombu
+appdirs==1.4.3            # via setuptools
 asn1crypto==0.22.0        # via cryptography
 billiard==3.3.0.23        # via celery
 bleach==1.5.0             # via wiki
@@ -59,7 +60,7 @@ markdown==2.6.8           # via django-tips, django-trojsten-news, pymdown-exten
 ndg-httpsclient==0.4.2
 oauthlib==2.0.1           # via django-oauth-toolkit, python-social-auth, requests-oauthlib
 olefile==0.44             # via pillow
-packaging==16.8           # via cryptography
+packaging==16.8           # via cryptography, setuptools
 pillow==4.0.0             # via wiki
 psycopg2==2.7.1
 pycparser==2.17           # via cffi
@@ -73,9 +74,12 @@ python-social-auth==0.2.21
 pytz==2016.10
 requests-oauthlib==0.8.0  # via python-social-auth
 requests==2.13.0          # via django-recaptcha2, python-social-auth, requests-oauthlib
-six==1.10.0               # via bleach, cryptography, django-nyt, django-oauth-toolkit, html5lib, packaging, pyopenssl, python-social-auth, wiki
+six==1.10.0               # via bleach, cryptography, django-nyt, django-oauth-toolkit, html5lib, packaging, pyopenssl, python-social-auth, setuptools, wiki
 sorl-thumbnail==12.3      # via wiki
 tablib==0.11.4            # via django-import-export
 unidecode==0.4.20
 urllib3==1.20             # via elasticsearch
-wiki==0.2.3
+wiki==0.2.4
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools                # via cryptography
