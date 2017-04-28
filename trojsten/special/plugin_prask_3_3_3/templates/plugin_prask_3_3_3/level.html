@@ -1,0 +1,15 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% block title %}Pofiderné kasíno{% endblock %}
+
+{% block page_header %}
+  <h1>Pofiderné kasíno</h1>
+{% endblock %}
+
+{% block page_content %}
+  {% if created %}
+    <p>Gratulujeme! Body ti boli zarátané.</p>
+  {% else %}
+    <p>Tento link si už raz navštívil(a)!</p>
+  {% endif %}
+{% endblock %}

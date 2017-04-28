@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^prask/2/3/3/', include('trojsten.special.plugin_prask_2_3_3.urls')),
     url(r'^prask/2/4/1/', include('trojsten.special.plugin_prask_2_4_1.urls')),
     url(r'^prask/2/4/3/', include('trojsten.special.plugin_prask_2_4_3.urls')),
+    url(r'^prask/3/3/3/', include('trojsten.special.plugin_prask_3_3_3.urls')),
 ]
