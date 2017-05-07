@@ -38,10 +38,16 @@
 {% for organizer in event.organizers %}
     <tr {% if user == organizer %}class="active"{% endif %}>
         <td colspan="2">{{ organizer.get_full_name }}</td>
-        <td><abbr title="Fakulta Matematiky, Fyziky a Informatiky Univerzity Komenského"
+        <td>
+        {% if organizer.school.has_abbreviation %}
+            <abbr title="{{ organizer.school.verbose_name }}"
                   data-toggle="tooltip" data-placement="top">
-            FMFI UK
-        </abbr></td>
+                {{ organizer.school.abbreviation }}
+            </abbr>
+        {% else %}
+            {{ organizer.school.verbose_name }}
+        {% endif %}
+        </td>
     </tr>
 {% endfor %}
 </table>
