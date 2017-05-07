@@ -31,9 +31,7 @@
   {% endif %}
 </div>
 {% else %}
-  {% if results %}
-    <div class="alert alert-warning">{% trans "The results are preliminary." %}</div>
-  {% else %}
+  {% if not results %}
   <div class="alert alert-info" role="alert">
         {% trans "The round has finished." %}
     {% if task and task.round.solutions_visible %}
