@@ -61,16 +61,6 @@ class RecentResultsTest(TestCase):
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertContains(response, self.user.get_full_name())
 
-    def test_closed_round(self):
-        start = timezone.now() + timezone.timedelta(-8)
-        end = timezone.now() + timezone.timedelta(-4)
-        Round.objects.create(number=1, semester=self.semester, visible=True, solutions_visible=True,
-                             start_time=start, end_time=end)
-
-        response = self.client.get(self.url)
-        # @ToDo: translations
-        self.assertContains(response, 'Výsledky sú predbežné.')
-
     def test_old_user(self):
         old_user = User.objects.create(username="TestOldUser", password="password",
                                        first_name="Jozko", last_name="Starcek", graduation=2010)
