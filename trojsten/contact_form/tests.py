@@ -47,8 +47,8 @@ class ContactFormTests(TestCase):
         self.assertTrue(self.valid_data['body'] in message.body)
         self.assertEqual(settings.DEFAULT_FROM_EMAIL,
                          message.from_email)
-        self.assertEqual(form.recipient_list,
-                         message.recipients())
+        self.assertEqual(settings.CONTACT_FORM_RECIPIENTS,
+                         tuple(message.recipients()))
         self.assertListEqual([
             '{}<{}>'.format(self.valid_data['name'], self.valid_data['email'])
         ], message.reply_to)
