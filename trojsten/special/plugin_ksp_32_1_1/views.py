@@ -36,7 +36,7 @@ def main(request, level=1):
         "try_count": userlevel.try_count,
         "try_count_ending":
         {1: '', 2: 'y', 3: 'y', 4: 'y'}.get(userlevel.try_count, 'ov'),
-    }, current_app=request.resolver_match.namespace)
+    })
 
 
 @login_required()
@@ -75,4 +75,5 @@ def run(request, level=1):
             "next_url": reverse('plugin_zwarte:run', args=(level,),
                                 current_app=request.resolver_match.namespace)
         }),
-        content_type="application/json",)
+        content_type="application/json",
+    )

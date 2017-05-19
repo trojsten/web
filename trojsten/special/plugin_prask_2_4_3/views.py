@@ -22,4 +22,4 @@ def solved(request, level):
     return render(request, 'plugin_prask_2_4_3/level.html', {
         "created": created,
         "backlink": backlink,
-    }, current_app=request.resolver_match.namespace)
+    })
