@@ -15,4 +15,4 @@ def solved(request, level):
 
     return render(request, 'plugin_prask_2_1_3/level.html', {
         "created": created,
-    }, current_app=request.resolver_match.namespace)
+    })
