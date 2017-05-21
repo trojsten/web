@@ -34,7 +34,7 @@
             {% if not results_are_final %}
                 {% show_progress table.round results=True %}
             {% endif %}
-            {% if table_object.competition_ignored %}
+            {% if table_object.competition_ignored and not request.user.is_anonymous %}
                 <div class="alert alert-danger">
                   Tvoje riešenia sa nerátajú do výsledkovky. Ak to chceš zmeniť, povoľ si súťaž <em>{{ table.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
                 </div>
