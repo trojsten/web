@@ -14,20 +14,20 @@ MIDDLEWARE_CLASSES += (
 )
 
 AUTHENTICATION_BACKENDS = tuple(env('TROJSTENWEB_AUTHENTICATION_BACKENDS', ';'.join((
-    'social.backends.google.GoogleOpenId',
+    'social_core.backends.google.GoogleOpenId',
     'ksp_login.backends.LaunchpadAuth',
-    'social.backends.open_id.OpenIdAuth',
+    'social_core.backends.open_id.OpenIdAuth',
 ))).split(';')) + (
     'oauth2_provider.backends.OAuth2Backend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
 SOCIAL_AUTH_PIPELINE = (
-    'social.pipeline.social_auth.social_details',
-    'social.pipeline.social_auth.social_uid',
-    'social.pipeline.social_auth.auth_allowed',
-    'social.pipeline.social_auth.social_user',
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
     'ksp_login.pipeline.register_user',
-    'social.pipeline.social_auth.associate_user',
-    'social.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
 )

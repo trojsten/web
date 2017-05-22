@@ -9,8 +9,7 @@ from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import string_concat
-from ksp_login import SOCIAL_AUTH_PARTIAL_PIPELINE_KEY
-from social.apps.django_app.utils import setting
+from ksp_login.utils import get_partial_pipeline
 
 from trojsten.contests.models import Competition, Round, Task
 from trojsten.people.models import Address, DuplicateUser, User, UserProperty
@@ -25,6 +24,7 @@ from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .helpers import get_similar_users
 
 
+# TODO: reuse code from ksp_login
 class TrojstenUserBaseForm(forms.ModelForm):
     required_css_class = 'required'
     street = forms.CharField(max_length=70, label=_('Street'))
@@ -75,10 +75,10 @@ class TrojstenUserBaseForm(forms.ModelForm):
 
     def get_initial_from_pipeline(self, pipeline_state):
         return None if not pipeline_state else {
-            'username': pipeline_state['details']['username'],
-            'first_name': pipeline_state['details']['first_name'],
-            'last_name': pipeline_state['details']['last_name'],
-            'email': pipeline_state['details']['email'],
+            'username': pipeline_state.kwargs['details']['username'],
+            'first_name': pipeline_state.kwargs['details']['first_name'],
+            'last_name': pipeline_state.kwargs['details']['last_name'],
+            'email': pipeline_state.kwargs['details']['email'],
         }
 
     def clean_email(self):
@@ -287,18 +287,11 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
             del kwargs['request']
         except KeyError:
             raise TypeError("Argument 'request' missing.")
-        try:
-            pipeline_state = request.session[setting(
-                'SOCIAL_AUTH_PARTIAL_PIPELINE_KEY',
-                SOCIAL_AUTH_PARTIAL_PIPELINE_KEY,
-            )]
-            pipeline_state = pipeline_state['kwargs']
-            self.password_required = False
-        except KeyError:
-            self.password_required = True
-            pipeline_state = None
+        partial = get_partial_pipeline(request)
         if not args and 'initial' not in kwargs:
-            kwargs['initial'] = self.get_initial_from_pipeline(pipeline_state)
+            kwargs['initial'] = self.get_initial_from_pipeline(partial)
+        # In a partial social pipeline, passwords are not required.
+        self.password_required = not partial
 
         super(TrojstenUserCreationForm, self).__init__(*args, **kwargs)
 

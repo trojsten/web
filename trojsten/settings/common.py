@@ -184,7 +184,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 )
 
 ROOT_URLCONF = 'trojsten.urls.default'
@@ -219,7 +219,7 @@ INSTALLED_APPS = (
     'news',
     'tips',
     'django.contrib.admin',
-    'social.apps.django_app.default',
+    'social_django',
     'ksp_login',
     'bootstrapform',
     'easy_select2',
@@ -330,13 +330,13 @@ AUTHENTICATION_BACKENDS = LOGIN_PROVIDERS + (
 )
 
 SOCIAL_AUTH_PIPELINE = (
-    'social.pipeline.social_auth.social_details',
-    'social.pipeline.social_auth.social_uid',
-    'social.pipeline.social_auth.auth_allowed',
-    'social.pipeline.social_auth.social_user',
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
     'trojsten.login.pipeline.associate_by_uid',
-    'social.pipeline.social_auth.associate_user',
-    'social.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
 )
 
 PROVIDER_OVERRIDE_DICT = json.loads(env('TROJSTENWEB_AUTHENTICATION_PROVIDER_OVERRIDE_DICT', '{}'))

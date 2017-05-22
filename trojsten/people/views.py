@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect, render
 from ksp_login.forms import UserProfileForm, get_profile_forms
-from social.apps.django_app.default.models import UserSocialAuth
+from social_django.models import UserSocialAuth
 
 from trojsten.contests.models import Competition, Round
 from trojsten.people.models import User
