@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from contact_form import forms as contact_forms
 from django import forms
+from django.conf import settings
 from django.core.mail import EmailMessage
 from django.utils.translation import ugettext_lazy as _
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
@@ -17,7 +18,7 @@ class ContactForm(contact_forms.ContactForm):
 
     def __init__(self, captcha, *args, **kwargs):
         super(ContactForm, self).__init__(*args, **kwargs)
-        self.to = self.recipient_list
+        self.to = settings.CONTACT_FORM_RECIPIENTS
         self.fields['name'].label = _('Name')
         self.fields['email'].label = _('Email')
         self.fields['body'].label = _('Message')

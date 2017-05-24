@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core import mail
 from django.core.urlresolvers import reverse
-from django.test import RequestFactory, TestCase
+from django.test import RequestFactory, TestCase, override_settings
 from django.utils.translation import ugettext_lazy as _
 
 from trojsten.people.models import User
@@ -30,6 +30,7 @@ class ContactFormTests(TestCase):
         self.assertRaises(ValueError, form.get_message_dict)
         self.assertRaises(ValueError, form.get_context)
 
+    @override_settings(CONTACT_FORM_RECIPIENTS=('roots@example.com', ))
     def test_send(self):
         """
         Valid form can and does in fact send email.
@@ -47,8 +48,8 @@ class ContactFormTests(TestCase):
         self.assertTrue(self.valid_data['body'] in message.body)
         self.assertEqual(settings.DEFAULT_FROM_EMAIL,
                          message.from_email)
-        self.assertEqual(form.recipient_list,
-                         message.recipients())
+        self.assertEqual(settings.CONTACT_FORM_RECIPIENTS,
+                         tuple(message.recipients()))
         self.assertListEqual([
             '{}<{}>'.format(self.valid_data['name'], self.valid_data['email'])
         ], message.reply_to)
