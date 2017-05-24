@@ -85,7 +85,7 @@ class TaskByYearSubFilter(admin.SimpleListFilter):
                     'round__semester__competition__id__exact'
                 ]
             )
-        tasks = tasks.select_related('round__semester__year')
+        tasks = tasks.select_related('round__semester')
         tasks = tasks.distinct('round__semester__year').order_by(
             '-round__semester__year')
         years = (x.round.semester.year for x in tasks.all())
