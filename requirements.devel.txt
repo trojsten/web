@@ -7,85 +7,94 @@
 amqp==1.4.9               # via kombu
 anyjson==0.3.3            # via kombu
 asn1crypto==0.22.0        # via cryptography
+bcrypt==3.1.3             # via paramiko
 billiard==3.3.0.23        # via celery
 bleach==1.5.0             # via wiki
 bumpversion==0.5.3
 celery==3.1.25
-cffi==1.10.0              # via cryptography
+certifi==2017.4.17        # via requests
+cffi==1.10.0              # via bcrypt, cryptography, pynacl
+chardet==3.0.4            # via requests
 click==6.7                # via pip-tools
-coverage==4.3.4
-cryptography==1.8.1       # via paramiko, pyopenssl
+coverage==4.4.1
+cryptography==1.9         # via paramiko, pyopenssl
 diff-match-patch==20121119  # via django-import-export
 django-autoslug==1.9.3    # via django-trojsten-news
 django-bootstrap-form==3.2.1
-django-braces==1.11.0     # via django-oauth-toolkit
-django-bulk-update==1.1.10
+django-bulk-update==2.1.0
 django-classy-tags==0.8.0
-django-contact-form==1.3
+django-contact-form==1.4.1
 django-contrib-comments==1.8.0
-django-cors-headers==2.0.2
+django-cors-headers==2.1.0
 django-crispy-forms==1.6.1
-django-debug-toolbar==1.7
+django-debug-toolbar==1.8
 django-dotenv==1.4.1
 django-easy-select2==1.3.4
 django-favicon==0.1.3
 django-fluent-comments==1.4.1
-django-haystack==2.6.0
+django-haystack==2.6.1
 django-import-export==0.5.1
 django-mathfilters==0.4.0
 django-mptt==0.8.7        # via wiki
-django-nyt==1.0b2         # via wiki
-django-oauth-toolkit==0.12.0
+django-nyt==1.0b5         # via wiki
+django-oauth-toolkit==1.0.0
 django-recaptcha2==1.0.0
 django-sekizai==0.10.0
 django-sendfile==0.3.11
-django-sortedm2m==1.3.3
+django-sortedm2m==1.4.0
 django-tag-parser==3.1    # via django-fluent-comments
 django-taggit==0.22.1     # via django-trojsten-news
 django-threadedcomments==1.1
 django-tips==0.5.0
 django-trojsten-news==0.1.3
-django==1.10.7
-djangorestframework==3.6.2
+django==1.10.7            # via django-bootstrap-form, django-bulk-update, django-classy-tags, django-contrib-comments, django-debug-toolbar, django-haystack, django-nyt, django-oauth-toolkit, django-recaptcha2, django-sendfile, django-tips, django-trojsten-news, ksp-login, wiki
+djangorestframework==3.6.3
 ecdsa==0.13
-elasticsearch==5.3.0
+elasticsearch==5.4.0
 enum34==1.1.6             # via cryptography
+et-xmlfile==1.0.1         # via openpyxl
 fabric==1.13.2
 fake-factory==9999.9.9
 first==2.0.1
 html5lib==0.9999999       # via bleach
-idna==2.5                 # via cryptography
+idna==2.5                 # via cryptography, requests
 importlib==1.0.4
 ipaddress==1.0.18         # via cryptography
+jdcal==1.3                # via openpyxl
 kombu==3.0.37             # via celery
 ksp-login==0.5.0
 markdown==2.6.8           # via django-tips, django-trojsten-news, pymdown-extensions, wiki
 ndg-httpsclient==0.4.2
-oauthlib==2.0.1           # via django-oauth-toolkit, requests-oauthlib, social-auth-core
+oauthlib==2.0.2           # via django-oauth-toolkit, requests-oauthlib, social-auth-core
+odfpy==1.3.5              # via tablib
 olefile==0.44             # via pillow
-packaging==16.8           # via cryptography
-paramiko==2.1.2           # via fabric
+openpyxl==2.4.8           # via tablib
+paramiko==2.2.1           # via fabric
 pillow==4.1.1             # via wiki
 pip-tools==1.9.0
 psycopg2==2.7.1
 pyasn1==0.2.3             # via paramiko
 pycparser==2.17           # via cffi
 pycrypto==2.6.1
-pyjwt==1.5.0              # via social-auth-core
+pyjwt==1.5.2              # via social-auth-core
 pymdown-extensions==2.0
+pynacl==1.1.2             # via paramiko
 pyopenssl==17.0.0         # via ndg-httpsclient
-pyparsing==2.2.0          # via packaging
 python-akismet==0.3.0     # via django-fluent-comments
 python-openid==2.2.5      # via social-auth-core
 pytz==2017.2
+pyyaml==3.12              # via tablib
 requests-oauthlib==0.8.0  # via social-auth-core
-requests==2.13.0          # via django-recaptcha2, python-akismet, requests-oauthlib, social-auth-core
-six==1.10.0               # via bleach, cryptography, django-nyt, django-oauth-toolkit, html5lib, packaging, pip-tools, pyopenssl, social-auth-app-django, social-auth-core, wiki
+requests==2.18.1          # via django-oauth-toolkit, django-recaptcha2, python-akismet, requests-oauthlib, social-auth-core
+six==1.10.0               # via bcrypt, bleach, cryptography, django-nyt, html5lib, pip-tools, pynacl, pyopenssl, social-auth-app-django, social-auth-core, wiki
 social-auth-app-django==1.2.0  # via ksp-login
-social-auth-core==1.3.0   # via ksp-login, social-auth-app-django
+social-auth-core==1.4.0   # via ksp-login, social-auth-app-django
 sorl-thumbnail==12.3      # via wiki
 sqlparse==0.2.3
-tablib==0.11.4            # via django-import-export
+tablib==0.11.5            # via django-import-export
+unicodecsv==0.14.1        # via tablib
 unidecode==0.4.20
-urllib3==1.21.1           # via elasticsearch
+urllib3==1.21.1           # via elasticsearch, requests
 wiki==0.2.4
+xlrd==1.0.0               # via tablib
+xlwt==1.2.0               # via tablib
