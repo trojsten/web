@@ -15,9 +15,13 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
     """Displays results for specified round_ids and category_id
     """
     round = get_object_or_404(
-        Round.objects.visible(request.user)
-            .select_related('semester__competition')
-            .prefetch_related('semester__competition__required_user_props'),
+        Round.objects.visible(
+            request.user
+        ).select_related(
+            'semester__competition'
+        ).prefetch_related(
+            'semester__competition__required_user_props'
+        ),
         pk=round_id,
     )
     single_round = is_true(request.GET.get('single_round', False))
@@ -50,9 +54,13 @@ def view_latest_results(request):
     rounds = [
         round
         for competition in Competition.objects.current_site_only()
-        for round in competition.rules.get_actual_result_rounds(competition)
-            .select_related('semester__competition')
-            .prefetch_related('semester__competition__required_user_props')
+        for round in competition.rules.get_actual_result_rounds(
+            competition
+        ).select_related(
+            'semester__competition'
+        ).prefetch_related(
+            'semester__competition__required_user_props'
+        )
     ]
 
     single_round = is_true(request.GET.get('single_round', False))
