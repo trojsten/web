@@ -151,7 +151,7 @@ class User(AbstractUser):
         return all(map(lambda prop: prop in user_props, required_props))
 
     def is_competition_ignored(self, competition):
-        return self.ignored_competitions.filter(pk=competition.pk).exists()
+        return competition in self.ignored_competitions.all()
 
     def __str__(self):
         return '%s (%s)' % (self.username, self.get_full_name())
@@ -177,6 +177,9 @@ User._meta.get_field('username').blank = True
 
 
 class UserPropertyManager(models.Manager):
+    def get_queryset(self):
+        return super(UserPropertyManager, self).get_queryset().select_related('key')
+
     def visible(self, user):
         if user.is_staff:
             return self.get_queryset()
