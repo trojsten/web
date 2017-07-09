@@ -34,7 +34,7 @@
     {% is_organizer competition=submit.task.round.semester.competition as is_organizer %}
     {% if is_organizer %}
         <li class="pull-right">
-            <a href="{% url 'admin:submit_submit_change' submit.id %}">
+            <a href="{% url 'admin:old_submit_submit_change' submit.id %}">
                 <span class="glyphicon glyphicon-pencil"></span> Upraviť
             </a>
         </li>
