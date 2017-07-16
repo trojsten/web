@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('submit', '0003_externalsubmittoken'),
+        ('old_submit', '0003_externalsubmittoken'),
     ]
 
     operations = [

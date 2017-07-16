@@ -42,7 +42,7 @@
 {% for user, data in users.items %}
     <tr>
     <td>
-        <a href="{% url 'admin:submit_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a>
+        <a href="{% url 'admin:old_submit_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a>
         <input type="hidden" name="{{ data.form.user.html_name }}" value="{{ data.form.user.value }}"/>
     </td>
     <td>
@@ -53,7 +53,7 @@
 
     <td>
     {% if data.review %}
-        <a href="{% url 'admin:submit_submit_change' data.review.pk %}">{% trans 'View' %}</a>
+        <a href="{% url 'admin:old_submit_submit_change' data.review.pk %}">{% trans 'View' %}</a>
         <a href="{% url 'admin:review_edit' task.pk data.review.pk %}">{% trans 'Edit' %}</a>
     {% endif %}
     {% if data.description %}
