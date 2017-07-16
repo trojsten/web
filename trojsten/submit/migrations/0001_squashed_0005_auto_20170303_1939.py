@@ -9,12 +9,12 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [(b'old_submit', '0001_initial'), (b'old_submit', '0002_auto_20160608_1143'), (b'old_submit', '0003_externalsubmittoken'), (b'old_submit', '0004_auto_20170108_1728'), (b'old_submit', '0005_auto_20170303_1939')]
+    replaces = [('old_submit', '0001_initial'), ('old_submit', '0002_auto_20160608_1143'), ('old_submit', '0003_externalsubmittoken'), ('old_submit', '0004_auto_20170108_1728'), ('old_submit', '0005_auto_20170303_1939')]
 
     initial = True
 
     dependencies = [
-        ('contests', '0003_category_task'),        
+        ('contests', '0003_category_task'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('contests', '0006_auto_20160925_1324'),
     ]

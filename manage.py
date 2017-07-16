@@ -9,7 +9,7 @@ from django.db import connection
 
 # TODO(mio): Remove this once it's deployed everywhere.
 def rename_submit_app_in_db():
-    check_sql = "SELECT * FROM django_content_type WHERE app_label = 'submit';"
+    check_sql = "SELECT * FROM django_content_type WHERE app_label = 'old_submit';"
     sql = textwrap.dedent("""\
         BEGIN;
         UPDATE django_migrations SET app = 'old_submit' WHERE app = 'submit';
@@ -19,7 +19,7 @@ def rename_submit_app_in_db():
         COMMIT;""")
     with connection.cursor() as cursor:
         cursor.execute(check_sql)
-        if cursor.rowcount > 0:
+        if cursor.rowcount == 0:
             cursor.execute(sql)
 
 
