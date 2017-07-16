@@ -19,13 +19,16 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin,
                           ResultsGenerator):
     @staticmethod
     def get_user_coefficient(user):
-        coefficient_prop = user.properties.filter(key__key_name=KMS_COEFFICIENT_PROP_NAME).first()
-        return int(coefficient_prop.value) if coefficient_prop else 0
+        # As the user properties are prefetched, it is faster to find KMS coefficient in Python
+        # than it would be by using `filter`, which would generate new query for each user
+        coefficient_prop = [prop for prop in list(user.properties.all())
+                            if prop.key.key_name == KMS_COEFFICIENT_PROP_NAME]
+        return int(coefficient_prop[0].value) if coefficient_prop else 0
 
     def run(self, res_request):
         res_request.has_submit_in_beta = set()
         for submit in Submit.objects.filter(task__round__semester=res_request.round.semester,
-                                            task__number__in=[8, 9, 10]):
+                                            task__number__in=[8, 9, 10]).select_related('user'):
             res_request.has_submit_in_beta.add(submit.user)
         return super(KMSResultsGenerator, self).run(res_request)
 
