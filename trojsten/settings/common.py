@@ -207,6 +207,7 @@ INSTALLED_APPS = (
     'trojsten.events',
     'trojsten.submit.apps.SubmitConfig',
     'trojsten.results',
+    'trojsten.rules',
     'trojsten.reviews',
     'trojsten.menu',
     'trojsten.threads',

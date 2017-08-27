@@ -8,7 +8,7 @@ import trojsten.submit.constants as submit_constants
 from trojsten.contests.models import Competition, Semester, Round, Task, Category
 from trojsten.people.models import User, UserProperty, UserPropertyKey
 from trojsten.rules.kms import KMS_ALFA, KMS_BETA, KMS_COEFFICIENT_PROP_NAME
-from trojsten.rules.ksp import KSP_O, KSP_Z
+from trojsten.rules.ksp import KSP_ALL
 from trojsten.submit.models import Submit
 
 SOURCE = submit_constants.SUBMIT_TYPE_SOURCE
@@ -150,14 +150,11 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
         self.round = Round.objects.create(number=1, semester=self.semester, visible=True, solutions_visible=False,
                                           start_time=self.start, end_time=self.end, second_end_time=self.second_end)
 
-        category_z = Category.objects.create(name=KSP_Z, competition=competition)
-        category_o = Category.objects.create(name=KSP_O, competition=competition)
-
         self.tasks = []
         for i in range(1, 4):
-            self.tasks.append(Task.objects.create(number=i, name='Test task {}'.format(i), round=self.round))
-            self.tasks[-1].categories = [category_z, category_o]
-            self.tasks[-1].save()
+            task = Task.objects.create(number=i, name='Test task {}'.format(i), round=self.round)
+            task.save()
+            self.tasks.append(task)
 
         self.tasks[2].integer_source_points = False
         self.tasks[2].save()
@@ -180,7 +177,7 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
     def _get_point_cells_for_tasks(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        row = get_row_for_user(response.context['tables'], self.user, KSP_Z)
+        row = get_row_for_user(response.context['tables'], self.user, KSP_ALL)
         return row.cells_by_key
 
     def test_submits_in_first_phase(self):
