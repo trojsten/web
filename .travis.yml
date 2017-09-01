@@ -4,8 +4,6 @@ python:
   - "3.5"
 env:
   - DJANGO_VERSION='>=1.10,<1.11'
-services:
-  - elasticsearch
 # To ensure, that elasticsearch is available
 before_script:
   - sleep 10
@@ -20,6 +18,9 @@ matrix:
 
 
 install:
+  - wget https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.4.6/elasticsearch-2.4.6.tar.gz
+  - tar -xzf elasticsearch-2.4.6.tar.gz
+  - ./elasticsearch-2.4.6/bin/elasticsearch &
   - pip install --upgrade pip pip-tools
   - if [[ $TRAVIS_PYTHON_VERSION != 2.7 ]]; then rm requirements.txt; pip-compile requirements.in -o requirements.txt; fi
   - pip install -r requirements.txt;
@@ -29,6 +30,7 @@ install:
   - bash -c 'cd trojsten; python ../manage.py compilemessages;'
 # command to run tests
 script:
+  - wget -q --waitretry=1 --retry-connrefused -T 10 -O - http://127.0.0.1:9200
   - coverage run --source='./trojsten' --omit 'trojsten/settings/*,trojsten/special/*' manage.py test
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t 1f124dcd-a10f-4773-90f7-6b5e304335ac
