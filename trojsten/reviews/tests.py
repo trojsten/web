@@ -319,7 +319,7 @@ class DownloadLatestSubmits(TestCase):
         )
         submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
         submit.save()
-        submit_file = helpers.submit_download_filename(submit)
+        submit_file = '000_' + helpers.submit_download_filename(submit)
 
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={'task_pk': self.task.id})

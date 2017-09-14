@@ -1,5 +1,6 @@
 celery<4.0.0
 certifi==2015.04.28
+czech_sort
 django-bootstrap-form
 django-bulk-update
 django-classy-tags

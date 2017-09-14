@@ -1,6 +1,8 @@
 import os
+from collections import OrderedDict
 from time import time
 
+import czech_sort
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from unidecode import unidecode
@@ -96,7 +98,11 @@ def get_latest_submits_for_task(task):
         elif submits_by_user[submit.user]['review'].time < submit.time:
             submits_by_user[submit.user]['review'] = submit
 
-    return submits_by_user
+    return OrderedDict(sorted(submits_by_user.items(),
+                               key=lambda x: (czech_sort.key(x[0].last_name),
+                                              czech_sort.key(x[0].first_name))))
+                              # key=lambda x: (unidecode(x[0].last_name),
+                              #                unidecode(x[0].first_name))))
 
 
 def get_user_as_choices(task):

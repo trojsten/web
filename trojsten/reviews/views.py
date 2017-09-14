@@ -1,8 +1,8 @@
+import os.path
 import zipfile
-from collections import defaultdict, OrderedDict
+from collections import defaultdict
 from time import time
 
-import os.path
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -67,9 +67,13 @@ def review_task(request, task_pk):
                 )
                 return redirect('admin:review_task', task.pk)
 
-    unordered_users = get_latest_submits_for_task(task)
-    users = OrderedDict(sorted(unordered_users.items(),
-                               key=lambda user: (user[0].last_name, user[0].first_name)))
+    users = get_latest_submits_for_task(task)
+    # unordered_users = get_latest_submits_for_task(task)
+    # users = OrderedDict(sorted(unordered_users.items(),
+    #                            # key=lambda x: (czech_sort.key(x[0].last_name),
+    #                            #                czech_sort.key(x[0].first_name))))
+    #                            key=lambda x: (unidecode(x[0].last_name),
+    #                                           unidecode(x[0].first_name))))
     users_list = list(users.keys())
 
     if not form:
@@ -183,19 +187,20 @@ def download_latest_submits(request, task_pk):
     errors = []
 
     with zipfile.ZipFile(path, 'w') as zipper:
-        for user in submits:
+        for i, user in enumerate(submits):
+            prefix = '%03d_' % i
             if 'description' in user:
                 submit = user['description']
                 description_submit_id = submit.pk
                 if not os.path.isfile(submit.filepath):
                     errors += [_('Missing file of user %s') % submit.user.get_full_name()]
                 else:
-                    zipper.write(submit.filepath, submit_download_filename(submit))
+                    zipper.write(submit.filepath, prefix + submit_download_filename(submit))
                 last_review_points = str(int(user['review'].points)) if 'review' in user else ''
                 last_review_comment = user['review'].reviewer_comment if 'review' in user else ''
-                zipper.writestr(submit_directory(submit) + REVIEW_POINTS_FILENAME,
+                zipper.writestr(prefix + submit_directory(submit) + REVIEW_POINTS_FILENAME,
                                 last_review_points)
-                zipper.writestr(submit_directory(submit) + REVIEW_COMMENT_FILENAME,
+                zipper.writestr(prefix + submit_directory(submit) + REVIEW_COMMENT_FILENAME,
                                 last_review_comment.encode('utf-8'))
 
             if 'sources' in user:
@@ -203,12 +208,12 @@ def download_latest_submits(request, task_pk):
                     if not os.path.isfile(submit.filepath):
                         errors += [_('Missing source file of user %s') % submit.user.get_full_name()]
                     else:
-                        zipper.write(submit.filepath, submit_source_download_filename(submit, description_submit_id))
+                        zipper.write(prefix + submit.filepath, submit_source_download_filename(submit, description_submit_id))
                     if not os.path.isfile(submit.protocol_path):
                         errors += [_('Missing protocol file of user %s') % submit.user.get_full_name()]
                     else:
                         zipper.write(
-                            submit.protocol_path,
+                            prefix + submit.protocol_path,
                             submit_protocol_download_filename(submit, description_submit_id)
                         )
 
