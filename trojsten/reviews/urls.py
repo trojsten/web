@@ -2,11 +2,15 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from trojsten.reviews.views import (download_latest_submits, edit_review,
-                                    review_task, submit_download, zip_upload)
+                                    review_task, submit_download, zip_upload,
+                                    download_latest_reviewed_submits)
 
 task_review_urls = [
     url(r'^(?P<task_pk>[0-9]+)/download_latest_submits$',
         admin.site.admin_view(download_latest_submits), name='download_latest_submits'),
+    url(r'^(?P<task_pk>[0-9]+)/download_latest_reviewed_submits$',
+        admin.site.admin_view(download_latest_reviewed_submits),
+        name='download_latest_reviewed_submits'),
     url(r'^(?P<task_pk>[0-9]+)/review/$',
         admin.site.admin_view(review_task), name='review_task'),
     url(r'^(?P<task_pk>[0-9]+)/review/zip_upload/$',

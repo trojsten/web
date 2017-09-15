@@ -14,7 +14,10 @@
 {% block content %}
 <h1>Opravovanie úlohy: {{ task }}</h1>
 <h2>Riešitelia úlohy</h2>
-<a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Download all solutions' %}</a><br/><br/>
+<a href="{% url 'admin:download_latest_submits' task.pk %}">
+    {% trans 'Download all solutions (originals from competitors)' %}</a><br/><br/>
+<a href="{% url 'admin:download_latest_reviewed_submits' task.pk %}">
+    {% trans 'Download all reviewed solutions' %}</a><br/><br/>
 <form method="post" action="" class="form-horizontal">
 {% csrf_token %}
 {{ form_set.management_form }}
