@@ -32,4 +32,4 @@ Session.vim
 *.iml
 
 # db dump
-archiv.ksp.sk/*
+*archiv.ksp.sk/*
