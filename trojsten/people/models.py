@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 import re
 
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone

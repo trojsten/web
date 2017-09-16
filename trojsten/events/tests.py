@@ -215,6 +215,13 @@ class EventParticipantsTest(TestCase):
         response = self.client.get(self.part_list_url)
         self.assertNotContains(response, user.get_full_name())
 
+    def test_participant_substitute_not_going(self):
+        user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
+                                   password="pass", graduation=self.grad_year)
+        EventParticipant.objects.create(event=self.event, user=user, going=False, type=1)
+        response = self.client.get(self.part_list_url)
+        self.assertNotContains(response, user.get_full_name())
+
     def test_event_has_staff(self):
         staff_user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
                                          password="pass", graduation=2000)
@@ -223,12 +230,12 @@ class EventParticipantsTest(TestCase):
         response = self.client.get(self.part_list_url)
         self.assertContains(response, staff_user.get_full_name())
 
-    def test_participant_substitute_not_display(self):
+    def test_participant_substitute_display(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
                                    password="pass", graduation=self.grad_year)
         EventParticipant.objects.create(event=self.event, user=user, going=True, type=1)
         response = self.client.get(self.part_list_url)
-        self.assertNotContains(response, user.get_full_name())
+        self.assertContains(response, user.get_full_name())
 
 
 class EventRegistrationTest(TestCase):

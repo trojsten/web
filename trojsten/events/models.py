@@ -115,11 +115,13 @@ class Event(models.Model):
 
     @property
     def participants(self):
+        """Returns a list of EventParticipant, which are not organisers and are going to the Event."""
         return self.eventparticipant_set.filter(going=True).exclude(type=EventParticipant.ORGANIZER).select_related(
             'user')
 
     @property
     def organizers(self):
+        """Returns a list of EventParticipant organizing the Event."""
         return self.eventparticipant_set.filter(type=EventParticipant.ORGANIZER).select_related(
             'user')
 
