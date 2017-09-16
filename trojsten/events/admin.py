@@ -25,7 +25,7 @@ class LinkAdmin(admin.ModelAdmin):
     list_display = ('title', 'url')
 
 
-class ParticipantInvitationInline(admin.TabularInline):
+class EventParticipantInline(admin.TabularInline):
     form = select2_modelform(EventParticipant)
     model = EventParticipant
     extra = 1
@@ -34,7 +34,7 @@ class ParticipantInvitationInline(admin.TabularInline):
     verbose_name_plural = 'účastníci'
 
     def get_queryset(self, request):
-        qs = super(ParticipantInvitationInline, self).get_queryset(request)
+        qs = super(EventParticipantInline, self).get_queryset(request)
         return qs.exclude(type=EventParticipant.ORGANIZER)
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
@@ -44,11 +44,11 @@ class ParticipantInvitationInline(admin.TabularInline):
                 if choice[0] != EventParticipant.ORGANIZER
             ]
         return super(
-            ParticipantInvitationInline, self
+            EventParticipantInline, self
         ).formfield_for_choice_field(db_field, request, **kwargs)
 
 
-class OrganizerInvitationInline(admin.TabularInline):
+class EventOrganizerInline(admin.TabularInline):
     form = select2_modelform(EventParticipant)
     model = EventOrganizer
     fields = ('user', )
@@ -59,7 +59,7 @@ class EventAdmin(admin.ModelAdmin):
     form = select2_modelform(Event)
     list_display = ('name', 'type', 'place', 'start_time', 'end_time', 'registration_deadline')
     inlines = [
-        ParticipantInvitationInline, OrganizerInvitationInline
+        EventParticipantInline, EventOrganizerInline
     ]
 
     def get_queryset(self, request):
@@ -70,7 +70,7 @@ class EventAdmin(admin.ModelAdmin):
         )
 
 
-class InvitedUsersExport(resources.ModelResource):
+class EventParticipantExport(resources.ModelResource):
     type = fields.Field()
 
     street = fields.Field()
@@ -127,20 +127,20 @@ class InvitedUsersExport(resources.ModelResource):
                 self.fields[access_method_name] = fields.Field(column_name=property_key.key_name)
                 setattr(self, 'dehydrate_%s' % access_method_name, create_access_method(property_key))
 
-        return super(InvitedUsersExport, self).export(queryset)
+        return super(EventParticipantExport, self).export(queryset)
 
 
-class InvitationAdmin(ExportMixin, admin.ModelAdmin):
+class EventParticipantAdmin(ExportMixin, admin.ModelAdmin):
     form = select2_modelform(EventParticipant)
     list_display = ('event', 'user', 'type', 'going')
-    resource_class = InvitedUsersExport
+    resource_class = EventParticipantExport
     list_filter = ('event', 'going')
 
     def get_queryset(self, request):
         user_groups = request.user.groups.all()
         events_type_lst = EventType.objects.filter(organizers_group__in=user_groups)
         events_lst = Event.objects.filter(type__in=events_type_lst)
-        return super(InvitationAdmin, self).get_queryset(request).filter(
+        return super(EventParticipantAdmin, self).get_queryset(request).filter(
             event__in=events_lst
         )
 
@@ -150,4 +150,4 @@ admin.site.register(Link, LinkAdmin)
 admin.site.register(EventPlace)
 admin.site.register(Registration)
 admin.site.register(Event, EventAdmin)
-admin.site.register(EventParticipant, InvitationAdmin)
+admin.site.register(EventParticipant, EventParticipantAdmin)
