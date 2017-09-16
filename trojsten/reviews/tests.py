@@ -591,13 +591,16 @@ class PointFormSetTests(TestCase):
         )
 
         test_round = Round.objects.create(number=1, semester=semester, solutions_visible=True,
-                                          visible=True)
+                                          visible=True, start_time=timezone.now() + timezone.timedelta(-4),
+                                          end_time=timezone.now() + timezone.timedelta(-1))
         self.task = Task.objects.create(number=2, name='TestTask2', round=test_round,
                                         description_points=9)
-        Submit.objects.create(
+        submit = Submit.objects.create(
             task=self.task, user=self.user1, submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
             points=0, testing_status=submit_constants.SUBMIT_STATUS_IN_QUEUE
         )
+        submit.time = test_round.end_time + timezone.timedelta(hours=-1)
+        submit.save()
         self.form_set_class = formset_factory(BasePointForm, BasePointFormSet, extra=0)
         self.data = {
             'form-TOTAL_FORMS': '1',
