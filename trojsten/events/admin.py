@@ -9,7 +9,7 @@ from easy_select2 import select2_modelform
 from import_export import fields, resources
 from import_export.admin import ExportMixin
 
-from .models import Event, EventType, Invitation, OrganizerInvitation, Link, Place, Registration
+from .models import Event, EventType, EventParticipant, EventOrganizer, Link, EventPlace, Registration
 
 
 class EventTypeAdmin(admin.ModelAdmin):
@@ -26,8 +26,8 @@ class LinkAdmin(admin.ModelAdmin):
 
 
 class ParticipantInvitationInline(admin.TabularInline):
-    form = select2_modelform(Invitation)
-    model = Invitation
+    form = select2_modelform(EventParticipant)
+    model = EventParticipant
     extra = 1
     fields = ('user', 'type'),
     verbose_name = 'účastník'
@@ -35,13 +35,13 @@ class ParticipantInvitationInline(admin.TabularInline):
 
     def get_queryset(self, request):
         qs = super(ParticipantInvitationInline, self).get_queryset(request)
-        return qs.exclude(type=Invitation.ORGANIZER)
+        return qs.exclude(type=EventParticipant.ORGANIZER)
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
         if db_field.name == 'type':
             kwargs['choices'] = [
                 choice for choice in db_field.get_choices(include_blank=False)
-                if choice[0] != Invitation.ORGANIZER
+                if choice[0] != EventParticipant.ORGANIZER
             ]
         return super(
             ParticipantInvitationInline, self
@@ -49,8 +49,8 @@ class ParticipantInvitationInline(admin.TabularInline):
 
 
 class OrganizerInvitationInline(admin.TabularInline):
-    form = select2_modelform(Invitation)
-    model = OrganizerInvitation
+    form = select2_modelform(EventParticipant)
+    model = EventOrganizer
     fields = ('user', )
     extra = 1
 
@@ -79,7 +79,7 @@ class InvitedUsersExport(resources.ModelResource):
     country = fields.Field()
 
     class Meta:
-        model = Invitation
+        model = EventParticipant
         export_order = fields = [
             'user__first_name', 'user__last_name', 'user__birth_date', 'user__email',
             'street', 'town', 'postal_code', 'country',
@@ -131,7 +131,7 @@ class InvitedUsersExport(resources.ModelResource):
 
 
 class InvitationAdmin(ExportMixin, admin.ModelAdmin):
-    form = select2_modelform(Invitation)
+    form = select2_modelform(EventParticipant)
     list_display = ('event', 'user', 'type', 'going')
     resource_class = InvitedUsersExport
     list_filter = ('event', 'going')
@@ -147,7 +147,7 @@ class InvitationAdmin(ExportMixin, admin.ModelAdmin):
 
 admin.site.register(EventType, EventTypeAdmin)
 admin.site.register(Link, LinkAdmin)
-admin.site.register(Place)
+admin.site.register(EventPlace)
 admin.site.register(Registration)
 admin.site.register(Event, EventAdmin)
-admin.site.register(Invitation, InvitationAdmin)
+admin.site.register(EventParticipant, InvitationAdmin)

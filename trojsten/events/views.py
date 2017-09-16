@@ -17,7 +17,7 @@ from django.views.generic.list import ListView
 from wiki.decorators import get_article
 
 from .forms import RegistrationForm
-from .models import Event, EventType, Invitation
+from .models import Event, EventType, EventParticipant
 
 
 class ParticipantsAndOrganizersListView(DetailView):
@@ -62,10 +62,10 @@ class RegistrationView(FormView):
         if not event.registration:
             raise Http404
         try:
-            kwargs['invite'] = Invitation.objects.select_related(
+            kwargs['invite'] = EventParticipant.objects.select_related(
                 'event__registration', 'user'
             ).get(user=self.request.user, event=event)
-        except Invitation.DoesNotExist:
+        except EventParticipant.DoesNotExist:
             raise PermissionDenied()
         return kwargs
 
@@ -111,7 +111,7 @@ class EventView(DetailView):
         context['invited'] = (
             self.request.user.is_authenticated() and
             context['event'].registration and
-            Invitation.objects.select_related(
+            EventParticipant.objects.select_related(
                 'event__registration', 'user'
             ).filter(user=self.request.user, event=context['event']).exists()
         )

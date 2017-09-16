@@ -17,14 +17,14 @@ from . import constants
 
 
 class UserManager(DjangoUserManager):
-    def invited_to(self, event, invitation_type=None, going_only=False):
+    def invited_to(self, event, eventparticipant_type=None, going_only=False):
         filters = {
-            'invitation__event': event
+            'eventparticipant__event': event
         }
-        if invitation_type is not None:
-            filters['invitation__type'] = invitation_type
+        if eventparticipant_type is not None:
+            filters['eventparticipant__type'] = eventparticipant_type
         if going_only:
-            filters['invitation__going'] = True
+            filters['eventparticipant__going'] = True
 
         return self.filter(**filters).select_related('school')
 
