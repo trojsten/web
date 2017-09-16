@@ -6,19 +6,13 @@
 
 {% block stylesheets %}
 {{ block.super }}
-<link rel="stylesheet" href="{% static "css/prettify.css" %}" type="text/css" />
+<link rel="stylesheet" href="{% static "css/highlightjs.css" %}" type="text/css" />
 {% endblock %}
 
 {% block javascript %}
 {{ block.super }}
-<script src="{% static "js/prettify/prettify.js" %}" type="text/javascript"></script>
-<script>
-    !function ($) {
-       $(function(){
-           window.prettyPrint && prettyPrint()
-       })
-    }(window.jQuery)
-</script>
+<script src="{% static "js/highlight.pack.js" %}" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 {% endblock %}
 
 {% block page_header %}
@@ -48,7 +42,7 @@
     </div>
     <h3>Odovzdaný program</h3>
     {% if fileReady %}
-        <pre class="prettyprint">{{ data }}</pre>
+        <pre><code>{{ data }}</code></pre>
     {% else %}
         Zdrojový kód programu nie je dostupný
     {% endif %}
