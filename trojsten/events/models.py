@@ -26,7 +26,7 @@ class EventType(models.Model):
     Type of event e.g. camp
     """
     name = models.CharField(max_length=100, verbose_name='názov')
-    sites = models.ManyToManyField(Site)
+    sites = models.ManyToManyField(Site, blank=True)
     organizers_group = models.ForeignKey(
         Group, verbose_name='skupina vedúcich'
     )
@@ -153,7 +153,7 @@ class EventParticipant(models.Model):
     type = models.SmallIntegerField(
         choices=TYPE_CHOICES, default=PARTICIPANT, verbose_name='typ pozvania'
     )
-    going = models.NullBooleanField(verbose_name='zúčastnil sa')
+    going = models.BooleanField(default=True, verbose_name='zúčastnil sa')
 
     class Meta:
         verbose_name = 'pozvánka'

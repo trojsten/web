@@ -29,7 +29,7 @@ class ParticipantInvitationInline(admin.TabularInline):
     form = select2_modelform(EventParticipant)
     model = EventParticipant
     extra = 1
-    fields = ('user', 'type'),
+    fields = ('user', 'type', 'going'),
     verbose_name = 'účastník'
     verbose_name_plural = 'účastníci'
 
