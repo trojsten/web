@@ -13,4 +13,5 @@ class KSPLevelAdmin (admin.ModelAdmin):
         ('source_camp', admin.RelatedOnlyFieldListFilter),
     )
 
+
 admin.site.register(KSPLevel, KSPLevelAdmin)

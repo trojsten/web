@@ -37,11 +37,7 @@ class KSPResultsGenerator(ResultsGenerator):
 
     def is_user_active(self, res_request, user):
         """Deactivate users with level higher than level of the results table."""
-        # TODO: Maybe deactivate users we don't want to show based on their points / submits.
-        # Do this after users' results evaluation but before rank computation: overload calculate_row_ranks?
-        # It is much faster (2x) to deactivate them than to filter them in the start of the results computation,
-        # since for filtering, also all submits would have to be processed.
-        active = super(KSPResultsGenerator, self)
+        active = super(KSPResultsGenerator, self).is_user_active(res_request, user)
         if self.tag.key != KSP_ALL:
             active = active and (res_request.user_levels[user.pk] <= self.get_results_level())
         return active
@@ -93,6 +89,22 @@ class KSPResultsGenerator(ResultsGenerator):
 
     def deactivate_row_cells(self, res_request, row, cols):
         user_level = res_request.user_levels[row.user.pk]
+
+        # Deactivate users who are in the results table of a higher level (L) but don't have any submits
+        # for tasks L+3 and L+4. This makes level result tables cleaner but it doesn't exclude any winners
+        # (because to win you have to have at least 150 points from 200 possible and for that you have to have
+        # submits for these tasks).
+        if self.tag.key != KSP_ALL and user_level < self.get_results_level():
+            active_in_previous_round = False
+            if not res_request.single_round:
+                row_from_previous_round = res_request.get_previous_row_for_user(row.user)
+                active_in_previous_round = False if row_from_previous_round is None else row_from_previous_round.active
+
+            task_cells = [row.cells_by_key[self.get_results_level() + i] for i in (3, 4)]
+            current_round_points = sum(self.get_cell_total(res_request, cell) for cell in task_cells)
+
+            if not active_in_previous_round and current_round_points == 0:
+                row.active = False
 
         # Don't count tasks below your level
         for task_number in row.cells_by_key:
