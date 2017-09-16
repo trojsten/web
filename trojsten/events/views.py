@@ -7,7 +7,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from wiki.decorators import get_article
 
-from .models import Event, EventType, EventParticipant
+from .models import Event, EventType
 
 
 class ParticipantsAndOrganizersListView(DetailView):
@@ -25,17 +25,6 @@ class EventView(DetailView):
     model = Event
     context_object_name = 'event'
     pk_url_kwarg = 'event_id'
-
-    def get_context_data(self, **kwargs):
-        context = super(EventView, self).get_context_data(**kwargs)
-        context['invited'] = (
-            self.request.user.is_authenticated() and
-            context['event'].registration and
-            EventParticipant.objects.select_related(
-                'event__registration', 'user'
-            ).filter(user=self.request.user, event=context['event']).exists()
-        )
-        return context
 
 
 event_detail = EventView.as_view()
