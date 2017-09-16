@@ -9,7 +9,8 @@ from trojsten.rules.ksp_levels import prepare_events, level_updates_from_camp_at
 
 
 class Command(BaseCommand):
-    help = 'Deletes KSP levels of all users and calculates new levels by simulating history (past camps and semesters).'
+    help = 'Deletes KSP levels of all users and calculates new levels ' \
+           'by simulating history (past camps and semesters).'
     # TODO: Maybe add command that incrementally updates levels as a result of the most recent events or automate
     # level updates.
 

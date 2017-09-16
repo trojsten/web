@@ -67,4 +67,5 @@ class KSPLevel(models.Model):
     objects = KSPLevelManager()
 
     def __str__(self):
-        return 'Level {} for {} after semester {}'.format(self.new_level, self.user, self.last_semester_before_level_up)
+        return 'Level {} for {} after semester {}'.format(
+            self.new_level, self.user, self.last_semester_before_level_up)
