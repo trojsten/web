@@ -20,16 +20,16 @@ KSP_L1, KSP_L2, KSP_L3, KSP_L4 = 'KSP_L1', 'KSP_L2', 'KSP_L3', 'KSP_L4'
 
 
 class KSPResultsGenerator(ResultsGenerator):
-    def get_results_level(self, level_for_all):
-        """Returns the level of current results table or 'level_for_all' in case of KSP_ALL table."""
-        return level_for_all if self.tag.key == KSP_ALL else int(self.tag.key[-1])
+    def get_results_level(self):
+        """Returns the level of current results table."""
+        return int(self.tag.key[-1])
 
     def get_task_queryset(self, res_request):
         """In KSP_LX results table, there are results for tasks X-8."""
-        return Task.objects.filter(
-            round=res_request.round,
-            number__gte=self.get_results_level(level_for_all=1)
-        ).order_by('number')
+        tasks = Task.objects.filter(round=res_request.round).order_by('number')
+        if self.tag.key != KSP_ALL:
+            tasks = tasks.filter(number__gte=self.get_results_level())
+        return tasks
 
     def run(self, res_request):
         res_request.user_levels = KSPLevel.objects.for_users_in_semester_as_dict(res_request.round.semester.pk)
@@ -42,9 +42,9 @@ class KSPResultsGenerator(ResultsGenerator):
         # It is much faster (2x) to deactivate them than to filter them in the start of the results computation,
         # since for filtering, also all submits would have to be processed.
         active = super(KSPResultsGenerator, self)
-        maximum_eligible_user_level = self.get_results_level(level_for_all=4)
-        levels_are_ok = (res_request.user_levels[user.pk] <= maximum_eligible_user_level)
-        return active and levels_are_ok
+        if self.tag.key != KSP_ALL:
+            active = active and (res_request.user_levels[user.pk] <= self.get_results_level())
+        return active
 
     def get_submit_queryset(self, res_request):
         """Returns the queryset of Submits that should be included in the results."""
