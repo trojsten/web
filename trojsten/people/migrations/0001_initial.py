@@ -38,9 +38,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'pou\u017e\xedvate\u013e',
                 'verbose_name_plural': 'pou\u017e\xedvatelia',
             },
-            managers=[
-                ('objects', trojsten.people.models.UserManager()),
-            ],
         ),
         migrations.CreateModel(
             name='Address',

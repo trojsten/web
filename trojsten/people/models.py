@@ -16,19 +16,6 @@ from unidecode import unidecode
 from . import constants
 
 
-class UserManager(DjangoUserManager):
-    def invited_to(self, event, eventparticipant_type=None, going_only=False):
-        filters = {
-            'eventparticipant__event': event
-        }
-        if eventparticipant_type is not None:
-            filters['eventparticipant__type'] = eventparticipant_type
-        if going_only:
-            filters['eventparticipant__going'] = True
-
-        return self.filter(**filters).select_related('school')
-
-
 class AbstractAddress(models.Model):
     street = models.CharField(max_length=70, verbose_name='ulica')
     town = models.CharField(max_length=64, db_index=True, verbose_name='mesto')
@@ -101,8 +88,6 @@ class User(AbstractUser):
                                      help_text='Povinné pre žiakov.')
     ignored_competitions = models.ManyToManyField('contests.Competition',
                                                   verbose_name='ignorované súťaže')
-
-    objects = UserManager()
 
     def is_in_group(self, group):
         return self.is_superuser or self.groups.filter(pk=group.pk).exists()
