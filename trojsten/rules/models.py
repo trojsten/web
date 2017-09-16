@@ -62,7 +62,7 @@ class KSPLevel(models.Model):
     new_level = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
     source_semester = models.ForeignKey(Semester, blank=True, null=True, related_name='caused_level_ups')
     source_camp = models.ForeignKey(Event, blank=True, null=True)
-    last_semester_before_level_up = models.ForeignKey(Semester, related_name='previous_semester_level_ups')
+    last_semester_before_level_up = models.ForeignKey(Semester, related_name='next_semester_level_ups')
 
     objects = KSPLevelManager()
 

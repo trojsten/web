@@ -94,9 +94,7 @@ def level_updates_from_semester_results(semester, score_limits_for_levels=defaul
         for row in table.rows:
             if not row.active:
                 continue
-            if int(row.rank) > 5:
-                break
-            if int(row.total) < score_limits_for_levels[table_level]:
+            if int(row.rank) > 5 or int(row.total) < score_limits_for_levels[table_level]:
                 break
             level_up = KSPLevel.objects.create(
                 user=row.user,

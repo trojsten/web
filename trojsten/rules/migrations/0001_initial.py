@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('new_level', models.IntegerField(validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(4)])),
-                ('last_semester_before_level_up', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='previous_semester_level_ups', to='contests.Semester')),
+                ('last_semester_before_level_up', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='next_semester_level_ups', to='contests.Semester')),
                 ('source_camp', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='events.Event')),
                 ('source_semester', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='caused_level_ups', to='contests.Semester')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),

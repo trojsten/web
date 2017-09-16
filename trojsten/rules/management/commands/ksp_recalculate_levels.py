@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from builtins import str
+
 from django.core.management.base import BaseCommand
 
 from trojsten.rules.models import KSPLevel
@@ -22,12 +24,13 @@ class Command(BaseCommand):
                 continue
             updates = list()
             if event.semester is not None:
+                self.stdout.write(str(event.semester))
                 updates = level_updates_from_semester_results(event.semester)
             elif event.camp is not None:
+                self.stdout.write(str(event.camp))
                 updates = level_updates_from_camp_attendance(event.camp, event.associated_semester,
                                                              event.last_semester_before_level_up)
-            print(event)
-            print('\n'.join(map(unicode, updates)))
+            self.stdout.write('\n'.join(map(str, updates)))
 
             for update in updates:
                 update.save()

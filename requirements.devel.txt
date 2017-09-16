@@ -55,6 +55,7 @@ et-xmlfile==1.0.1         # via openpyxl
 fabric==1.14.0
 fake-factory==9999.9.9
 first==2.0.1
+future==0.16.0
 html5lib==0.9999999       # via bleach
 idna==2.6                 # via cryptography
 importlib==1.0.4

@@ -49,6 +49,7 @@ enum34==1.1.6             # via cryptography
 et-xmlfile==1.0.1         # via openpyxl
 fake-factory==9999.9.9
 first==2.0.1
+future==0.16.0
 html5lib==0.9999999       # via bleach
 idna==2.6                 # via cryptography
 importlib==1.0.4
