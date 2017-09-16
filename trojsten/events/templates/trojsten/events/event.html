@@ -29,13 +29,7 @@
 {{ event.rendered_text }}
 
 <div>
-{% if invited %}
-    <a href="{% url 'event_registration' event.id %}" class="btn btn-primary col-md-2 col-sm-3 col-xs-12">Prihláška</a>
-{% endif %}
 <a href="{% url 'participants_list' event.id %}" class="btn btn-default col-md-3 col-sm-4 col-xs-12">Zoznam účastníkov</a>
-{% for link in event.links.all %}
-    <a href="{{ link.url }}" class="btn btn-default col-md-2 col-sm-3 col-xs-12">{{ link.title }}</a>
-{% endfor %}
 </div>
 
 {% endblock %}
