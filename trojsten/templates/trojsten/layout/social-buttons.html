@@ -1,4 +1,4 @@
-<ul id="social-buttons" class="nav navbar-nav navbar-right">
+<ul id="social-buttons" class="nav navbar-nav navbar-right hidden-xs">
   <li class="social-button">
       <div id="fb-root"></div>
       <script>
@@ -10,20 +10,5 @@
       }(document));
       </script>
       <div class="fb-like" data-href="{{ SITE.facebook_page }}" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div>
-  </li>
-
-   <li class="social-button">
-      <!-- Umiestnite túto značku tam, kde sa má vykresliť miniaplikácia tlačidlo +1. -->
-      <div class="g-plusone" data-size="medium" data-href="{{ SITE.googleplus_page }}"></div>
-      <!-- Umiestnite túto značku za poslednú značku tlačidlo +1. -->
-      <script type="text/javascript">
-        window.___gcfg = {lang: 'sk'};
-
-        (function() {
-          var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-          po.src = 'https://apis.google.com/js/platform.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-        })();
-      </script>
   </li>
 </ul>

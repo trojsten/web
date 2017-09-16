@@ -19,9 +19,7 @@
         {% endfor %}
       </ul>
       {% include "ksp_login/parts/login_box.html" %}
-      <div class="hidden-xs">
-        {% include "trojsten/layout/social-buttons.html" %}
-      </div>
+      {% include "trojsten/layout/social-buttons.html" %}
       {% if SITE.short_name == 'Wiki' %}
         <div>
           <form class="navbar-form navbar-right" id="wiki-search-form" type="GET" action="/search/">
