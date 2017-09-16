@@ -3,13 +3,13 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import force_text
 from easy_select2 import select2_modelform
 from import_export import fields, resources
 from import_export.admin import ExportMixin
 
-from .models import Event, EventType, EventParticipant, EventOrganizer, Link, EventPlace, Registration
+from .models import (Event, EventOrganizer, EventParticipant, EventPlace,
+                     EventType)
 
 
 class EventTypeAdmin(admin.ModelAdmin):
@@ -19,10 +19,6 @@ class EventTypeAdmin(admin.ModelAdmin):
     def get_sites(self, obj):
         return ', '.join(force_text(x) for x in obj.sites.all())
     get_sites.short_description = 'zobraziť na'
-
-
-class LinkAdmin(admin.ModelAdmin):
-    list_display = ('title', 'url')
 
 
 class EventParticipantInline(admin.TabularInline):
@@ -57,7 +53,7 @@ class EventOrganizerInline(admin.TabularInline):
 
 class EventAdmin(admin.ModelAdmin):
     form = select2_modelform(Event)
-    list_display = ('name', 'type', 'place', 'start_time', 'end_time', 'registration_deadline')
+    list_display = ('name', 'type', 'place', 'start_time', 'end_time')
     inlines = [
         EventParticipantInline, EventOrganizerInline
     ]
@@ -106,35 +102,12 @@ class EventParticipantExport(resources.ModelResource):
         address = obj.user.get_mailing_address()
         return '' if address is None else address.country
 
-    def export(self, queryset=None):
-        """
-        Overrides export to add columns with additional user properties
-        required in event registration form.
-        """
-        def create_access_method(prop_key):
-            def returned_method(obj):
-                try:
-                    return obj.user.properties.get(key=prop_key).value
-                except ObjectDoesNotExist:
-                    return ''
-            return returned_method
-
-        if queryset and not (queryset.first().event.registration is None):
-            property_keys = queryset.first().event.registration.required_user_properties.all()
-            for property_key in property_keys:
-                access_method_name = 'property_%i' % property_key.id
-                self._meta.export_order.append(access_method_name)
-                self.fields[access_method_name] = fields.Field(column_name=property_key.key_name)
-                setattr(self, 'dehydrate_%s' % access_method_name, create_access_method(property_key))
-
-        return super(EventParticipantExport, self).export(queryset)
-
 
 class EventParticipantAdmin(ExportMixin, admin.ModelAdmin):
     form = select2_modelform(EventParticipant)
     list_display = ('event', 'user', 'type', 'going')
     resource_class = EventParticipantExport
-    list_filter = ('event', 'going')
+    list_filter = ('event', 'going', 'type')
 
     def get_queryset(self, request):
         user_groups = request.user.groups.all()
@@ -146,8 +119,6 @@ class EventParticipantAdmin(ExportMixin, admin.ModelAdmin):
 
 
 admin.site.register(EventType, EventTypeAdmin)
-admin.site.register(Link, LinkAdmin)
 admin.site.register(EventPlace)
-admin.site.register(Registration)
 admin.site.register(Event, EventAdmin)
 admin.site.register(EventParticipant, EventParticipantAdmin)

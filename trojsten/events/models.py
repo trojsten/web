@@ -43,20 +43,6 @@ class EventType(models.Model):
 
 
 @python_2_unicode_compatible
-class Link(models.Model):
-    title = models.CharField(max_length=100, verbose_name='titulok')
-    name = models.CharField(max_length=300, verbose_name='meno')
-    url = models.URLField(max_length=300)
-
-    class Meta:
-        verbose_name = 'odkaz'
-        verbose_name_plural = 'odkazy'
-
-    def __str__(self):
-        return '%s(%s)' % (self.name, self.url)
-
-
-@python_2_unicode_compatible
 class EventPlace(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
     address = models.ForeignKey('people.Address', null=True, blank=True)
@@ -70,47 +56,15 @@ class EventPlace(models.Model):
 
 
 @python_2_unicode_compatible
-class Registration(models.Model):
-    name = models.CharField(max_length=100, verbose_name='názov')
-    text = models.TextField(help_text='Obsah bude prehnaný <a '
-                                      'href="http://en.wikipedia.org/wiki/Markdown">'
-                                      'Markdownom</a>.')
-    required_user_properties = models.ManyToManyField(
-        'people.UserPropertyKey', verbose_name='povinné údaje',
-        blank=True, related_name='+',
-    )
-
-    class Meta:
-        verbose_name = 'Prihláška'
-        verbose_name_plural = 'Prihlášky'
-
-    def __str__(self):
-        return self.name
-
-    @property
-    def rendered_text(self):
-        return mark_safe(markdown(self.text, safe_mode=False))
-
-
-@python_2_unicode_compatible
 class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
     type = models.ForeignKey(EventType, verbose_name='typ akcie')
-    registration = models.ForeignKey(
-        Registration, null=True, blank=True, verbose_name='prihláška'
-    )
     place = models.ForeignKey(EventPlace, verbose_name='miesto')
     start_time = models.DateTimeField(verbose_name='čas začiatku')
     end_time = models.DateTimeField(verbose_name='čas konca')
-    registration_deadline = models.DateTimeField(
-        verbose_name='deadline pre registráciu', blank=True, null=True
-    )
     text = models.TextField(help_text='Obsah bude prehnaný <a '
                                       'href="http://en.wikipedia.org/wiki/Markdown">'
                                       'Markdownom</a>.', default='', blank=True)
-    links = models.ManyToManyField(
-        Link, blank=True, verbose_name='zoznam odkazov'
-    )
     semester = models.ForeignKey(Semester, blank=True, null=True, verbose_name='semester')
 
     @property
@@ -156,8 +110,8 @@ class EventParticipant(models.Model):
     going = models.BooleanField(default=True, verbose_name='zúčastnil sa')
 
     class Meta:
-        verbose_name = 'pozvánka'
-        verbose_name_plural = 'pozvánky'
+        verbose_name = 'účastník akcie'
+        verbose_name_plural = 'účastníci akcie'
         unique_together = ('event', 'user')
 
     def __str__(self):
@@ -178,9 +132,10 @@ class EventOrganizer(EventParticipant):
 
     class Meta:
         proxy = True
-        verbose_name = 'vedúci'
-        verbose_name_plural = 'vedúci'
+        verbose_name = 'vedúci akcie'
+        verbose_name_plural = 'vedúci akcie'
 
     def save(self, *args, **kwargs):
         self.type = EventParticipant.ORGANIZER
+        self.going = True
         super(EventOrganizer, self).save(*args, **kwargs)

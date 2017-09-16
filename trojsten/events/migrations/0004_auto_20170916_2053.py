@@ -21,6 +21,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='eventparticipant',
             name='going',
+            field=models.BooleanField(default=False, verbose_name='z\xfa\u010dastnil sa'),
+        ),
+        migrations.AlterField(
+            model_name='eventparticipant',
+            name='going',
             field=models.BooleanField(default=True, verbose_name='z\xfa\u010dastnil sa'),
         ),
         migrations.AlterField(
