@@ -132,8 +132,8 @@ class EventOrganizer(EventParticipant):
 
     class Meta:
         proxy = True
-        verbose_name = 'vedúci'
-        verbose_name_plural = 'vedúci'
+        verbose_name = 'vedúci akcie'
+        verbose_name_plural = 'vedúci akcie'
 
     def save(self, *args, **kwargs):
         self.type = EventParticipant.ORGANIZER
