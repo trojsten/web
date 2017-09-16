@@ -29,7 +29,7 @@ elasticsearch
 fake-factory
 first
 ksp-login>=0.5
-psycopg2
+psycopg2>=2.7.3.1
 pycrypto
 pymdown-extensions<3.0
 pytz
