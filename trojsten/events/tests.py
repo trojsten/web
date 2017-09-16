@@ -12,7 +12,7 @@ from wiki.models import Article, ArticleRevision, URLPath
 from trojsten.people.models import User
 from trojsten.utils.test_utils import get_noexisting_id
 
-from .models import Event, EventType, Invitation, Place, Registration
+from .models import Event, EventType, EventParticipant, EventPlace, Registration
 
 
 class EventListTest(TestCase):
@@ -45,7 +45,7 @@ class EventListTest(TestCase):
         self.type_not_camp.sites.add(site)
         self.type_camp.sites.add(site)
 
-        self.place = Place.objects.create(name="Camp place")
+        self.place = EventPlace.objects.create(name="Camp place")
         self.start_time = timezone.now()
         self.end_time = timezone.now() + timezone.timedelta(5)
 
@@ -96,7 +96,7 @@ class EventTest(TestCase):
                                                   organizers_group=group, is_camp=True)
         self.type_camp.sites.add(site)
 
-        self.place = Place.objects.create(name="Camp place")
+        self.place = EventPlace.objects.create(name="Camp place")
         self.start_time = timezone.now()
         self.end_time = timezone.now() + timezone.timedelta(5)
         self.grad_year = timezone.now().year
@@ -126,7 +126,7 @@ class EventTest(TestCase):
                                                 graduation=self.grad_year)
         user_not_invited = User.objects.create_user(username="notinvited",
                                                     graduation=self.grad_year)
-        Invitation.objects.create(event=event, user=user_invited, type=0)
+        EventParticipant.objects.create(event=event, user=user_invited, type=0)
         url = reverse('event_detail', kwargs={'event_id': event.id})
         self.client.force_login(user_invited)
         response = self.client.get(url)
@@ -144,7 +144,7 @@ class EventTest(TestCase):
                                      end_time=self.end_time, registration=registration)
         sub_invited = User.objects.create_user(username="invited",
                                                graduation=self.grad_year)
-        Invitation.objects.create(event=event, user=sub_invited, type=1)
+        EventParticipant.objects.create(event=event, user=sub_invited, type=1)
         url = reverse('event_detail', kwargs={'event_id': event.id})
         self.client.force_login(sub_invited)
         response = self.client.get(url)
@@ -158,7 +158,7 @@ class EventTest(TestCase):
                                      end_time=self.end_time, registration=registration)
         staff_invited = User.objects.create_user(username="invited",
                                                  graduation=self.grad_year)
-        Invitation.objects.create(event=event, user=staff_invited, type=2)
+        EventParticipant.objects.create(event=event, user=staff_invited, type=2)
         url = reverse('event_detail', kwargs={'event_id': event.id})
         self.client.force_login(staff_invited)
         response = self.client.get(url)
@@ -186,7 +186,7 @@ class EventParticipantsTest(TestCase):
                                              organizers_group=self.group, is_camp=True)
         type_camp.sites.add(site)
 
-        place = Place.objects.create(name="Miesto")
+        place = EventPlace.objects.create(name="Miesto")
         start_time = timezone.now()
         end_time = timezone.now() + timezone.timedelta(5)
 
@@ -204,14 +204,21 @@ class EventParticipantsTest(TestCase):
     def test_event_has_participants(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
                                    password="pass", graduation=self.grad_year)
-        Invitation.objects.create(event=self.event, user=user, going=True)
+        EventParticipant.objects.create(event=self.event, user=user, going=True)
         response = self.client.get(self.part_list_url)
         self.assertContains(response, user.get_full_name())
 
     def test_participant_not_going(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
                                    password="pass", graduation=self.grad_year)
-        Invitation.objects.create(event=self.event, user=user, going=False)
+        EventParticipant.objects.create(event=self.event, user=user, going=False)
+        response = self.client.get(self.part_list_url)
+        self.assertNotContains(response, user.get_full_name())
+
+    def test_participant_substitute_not_going(self):
+        user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
+                                   password="pass", graduation=self.grad_year)
+        EventParticipant.objects.create(event=self.event, user=user, going=False, type=1)
         response = self.client.get(self.part_list_url)
         self.assertNotContains(response, user.get_full_name())
 
@@ -219,16 +226,16 @@ class EventParticipantsTest(TestCase):
         staff_user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
                                          password="pass", graduation=2000)
         self.group.user_set.add(staff_user)
-        Invitation.objects.create(event=self.event, user=staff_user, going=True, type=2)
+        EventParticipant.objects.create(event=self.event, user=staff_user, going=True, type=2)
         response = self.client.get(self.part_list_url)
         self.assertContains(response, staff_user.get_full_name())
 
-    def test_participant_substitute_not_display(self):
+    def test_participant_substitute_display(self):
         user = User.objects.create(username="jozko", first_name="Jozko", last_name="Mrkvicka",
                                    password="pass", graduation=self.grad_year)
-        Invitation.objects.create(event=self.event, user=user, going=True, type=1)
+        EventParticipant.objects.create(event=self.event, user=user, going=True, type=1)
         response = self.client.get(self.part_list_url)
-        self.assertNotContains(response, user.get_full_name())
+        self.assertContains(response, user.get_full_name())
 
 
 class EventRegistrationTest(TestCase):
@@ -241,7 +248,7 @@ class EventRegistrationTest(TestCase):
                                               organizers_group=self.group, is_camp=True)
         event_type.sites.add(site)
 
-        place = Place.objects.create(name="Miesto")
+        place = EventPlace.objects.create(name="Miesto")
         start_time = timezone.now()
         end_time = timezone.now() + timezone.timedelta(5)
         registration = Registration.objects.create(name="Registracia", text="")
@@ -274,7 +281,7 @@ class EventRegistrationTest(TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_registration_participant(self):
-        Invitation.objects.create(event=self.event, user=self.user, type=0)
+        EventParticipant.objects.create(event=self.event, user=self.user, type=0)
         self.client.force_login(self.user)
         response = self.client.get(self.event_reg_url)
         self.assertContains(response, self.event.name)
@@ -282,7 +289,7 @@ class EventRegistrationTest(TestCase):
         self.assertContains(response, "účastník")
 
     def test_registration_sub(self):
-        Invitation.objects.create(event=self.event, user=self.user, type=1)
+        EventParticipant.objects.create(event=self.event, user=self.user, type=1)
         self.client.force_login(self.user)
         response = self.client.get(self.event_reg_url)
         self.assertContains(response, self.event.name)
@@ -290,7 +297,7 @@ class EventRegistrationTest(TestCase):
         self.assertContains(response, "náhradník")
 
     def test_registration_staff(self):
-        Invitation.objects.create(event=self.event, user=self.user, type=2)
+        EventParticipant.objects.create(event=self.event, user=self.user, type=2)
         self.client.force_login(self.user)
         response = self.client.get(self.event_reg_url)
         self.assertContains(response, self.event.name)

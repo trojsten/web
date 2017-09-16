@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 import re
 
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
@@ -14,19 +13,6 @@ from django.utils.translation import ugettext_lazy as _
 from unidecode import unidecode
 
 from . import constants
-
-
-class UserManager(DjangoUserManager):
-    def invited_to(self, event, invitation_type=None, going_only=False):
-        filters = {
-            'invitation__event': event
-        }
-        if invitation_type is not None:
-            filters['invitation__type'] = invitation_type
-        if going_only:
-            filters['invitation__going'] = True
-
-        return self.filter(**filters).select_related('school')
 
 
 class AbstractAddress(models.Model):
@@ -101,8 +87,6 @@ class User(AbstractUser):
                                      help_text='Povinné pre žiakov.')
     ignored_competitions = models.ManyToManyField('contests.Competition',
                                                   verbose_name='ignorované súťaže')
-
-    objects = UserManager()
 
     def is_in_group(self, group):
         return self.is_superuser or self.groups.filter(pk=group.pk).exists()
