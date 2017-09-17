@@ -1,4 +1,11 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
+import datetime
+
 from django.conf import settings
+from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -6,8 +13,11 @@ from django.utils import timezone
 
 import trojsten.submit.constants as submit_constants
 from trojsten.contests.models import Competition, Semester, Round, Task, Category
-from trojsten.people.models import User, UserProperty, UserPropertyKey
-from trojsten.rules.kms import KMS_ALFA, KMS_BETA, KMS_COEFFICIENT_PROP_NAME
+from trojsten.events.models import EventParticipant, Event, EventType, EventPlace
+from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
+from trojsten.people.models import User
+from trojsten.rules.kms import KMS_ALFA, KMS_BETA, KMS_CAMP_TYPE,\
+    KMS_MO_FINALS_TYPE, COEFFICIENT_COLUMN_KEY, KMSResultsGenerator, KMSRules
 from trojsten.rules.ksp import KSP_ALL, KSP_L1, KSP_L2, KSP_L3, KSP_L4
 from trojsten.rules.models import KSPLevel
 from trojsten.submit.models import Submit
@@ -26,23 +36,147 @@ def get_row_for_user(tables, user, tag_key):
     return None
 
 
+class KMSCoefficientTest(TestCase):
+    def setUp(self):
+        time = datetime.datetime(2047, 4, 7, 12, 47)
+        self.time = timezone.make_aware(time)
+
+        group = Group.objects.create(name="skupina")
+        self.place = EventPlace.objects.create(name='Horna dolna')
+        self.type_camp = EventType.objects.create(name=KMS_CAMP_TYPE, organizers_group=group,
+                                                  is_camp=True)
+        self.type_mo = EventType.objects.create(name=KMS_MO_FINALS_TYPE, organizers_group=group,
+                                                is_camp=False)
+
+        competition = Competition.objects.create(name='TestCompetition', pk=4)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.semesters = []
+        self.camps = []
+        self.mo_finals = []
+        for (year, semester_number) in [(1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2)]:
+            self.semesters.append(Semester.objects.create(
+                year=year, number=semester_number,
+                name='Test semester', competition=competition
+            ))
+            self.camps.append(Event.objects.create(
+                name='KMS camp alpha', type=self.type_camp, semester=self.semesters[-1],
+                place=self.place, start_time=self.time, end_time=self.time
+            ))
+            if semester_number == 2:
+                self.mo_finals.append(Event.objects.create(
+                    name='CKMO', type=self.type_mo, place=self.place,
+                    start_time=self.time + timezone.timedelta((year - 3) * 366),
+                    end_time=self.time + timezone.timedelta((year - 3) * 366)
+                ))
+        self.current_semester = self.semesters[-1]
+        self.start = self.time + timezone.timedelta(2)
+        self.end = self.time + timezone.timedelta(4)
+        self.round = Round.objects.create(
+            number=1, semester=self.current_semester, visible=True,
+            solutions_visible=False, start_time=self.start, end_time=self.end
+        )
+
+        graduation_year = self.round.end_time.year + int(self.round.end_time.month > SCHOOL_YEAR_END_MONTH)
+        self.test_user = User.objects.create(
+            username="test_user", password="password", first_name="Jozko",
+            last_name="Mrkvicka", graduation=graduation_year + 3
+        )
+        self.tag = KMSRules.RESULTS_TAGS[KMS_BETA]
+
+    def test_year_only(self):
+        # Coefficient = 3: year = 3, successful semesters = 0, mo = 0
+        self.test_user.graduation -= 2
+        self.test_user.save()
+        generator = KMSResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
+
+    def test_camps_only(self):
+        # Coefficient = 3: year = 1, successful semesters = 2, mo = 0
+        EventParticipant.objects.create(event=self.camps[5], user=self.test_user,
+                                        type=EventParticipant.PARTICIPANT, going=True)
+        EventParticipant.objects.create(event=self.camps[4], user=self.test_user,
+                                        type=EventParticipant.PARTICIPANT, going=True)
+        generator = KMSResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
+
+    def test_camps_mo(self):
+        # Coefficient = 7: year = 4, successful semesters = 1, mo = 2
+        self.test_user.graduation -= 3
+        self.test_user.save()
+        EventParticipant.objects.create(event=self.camps[5], user=self.test_user,
+                                        type=EventParticipant.PARTICIPANT, going=True)
+        EventParticipant.objects.create(event=self.mo_finals[1], user=self.test_user,
+                                        type=EventParticipant.PARTICIPANT, going=True)
+        EventParticipant.objects.create(event=self.mo_finals[0], user=self.test_user,
+                                        type=EventParticipant.PARTICIPANT, going=True)
+        generator = KMSResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 7)
+
+    def test_invited_to_both_camps(self):
+        # Coefficient = 2: year = 1, successful semesters = 1, mo = 0
+        beta_camp = Event.objects.create(
+            name='KMS camp beta', type=self.type_camp, semester=self.semesters[4],
+            place=self.place, start_time=self.time, end_time=self.time
+        )
+        EventParticipant.objects.create(event=self.camps[4], user=self.test_user,
+                                        type=EventParticipant.PARTICIPANT, going=False)
+        EventParticipant.objects.create(event=beta_camp, user=self.test_user,
+                                        type=EventParticipant.PARTICIPANT, going=True)
+        generator = KMSResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 2)
+
+    def test_ignore_mo_in_same_semester(self):
+        # year = 1, successful semesters = 0, mo = 2, coefficient = 3
+        for mo_finals in self.mo_finals:
+            EventParticipant.objects.create(event=mo_finals, user=self.test_user,
+                                            type=EventParticipant.PARTICIPANT, going=True)
+        generator = KMSResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
+
+    def test_ignore_not_going_reserve(self):
+        # Coefficient = 1: year = 1, successful semesters = 0, mo = 0
+        EventParticipant.objects.create(event=self.camps[4], user=self.test_user,
+                                        type=EventParticipant.RESERVE, going=False)
+        generator = KMSResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
+
+    def test_count_not_going_participant(self):
+        # Coefficient = 2: year = 1, successful semesters = 1, mo = 0
+        EventParticipant.objects.create(event=self.camps[4], user=self.test_user,
+                                        type=EventParticipant.PARTICIPANT, going=False)
+        generator = KMSResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 2)
+
+    def test_many_camps(self):
+        # Coefficient = 5: year = 1, successful semesters = 5, mo = 0
+        for i in range(5):
+            EventParticipant.objects.create(event=self.camps[i], user=self.test_user,
+                                            type=EventParticipant.PARTICIPANT, going=True)
+        generator = KMSResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 5)
+
+
 class KMSRulesTest(TestCase):
     def setUp(self):
-        competition = Competition.objects.create(name='TestCompetition', pk=7)
-        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        self.semester = Semester.objects.create(number=1, name='Test semester', competition=competition,
-                                                year=1)
-        self.start = timezone.now() + timezone.timedelta(-8)
-        self.end = timezone.now() + timezone.timedelta(-2)
-        round = Round.objects.create(number=1, semester=self.semester, visible=True,
-                                     solutions_visible=False, start_time=self.start, end_time=self.end)
+        time = datetime.datetime(2004, 4, 7, 12, 47)
+        self.time = timezone.make_aware(time)
+        self.competition = Competition.objects.create(name='TestCompetition', pk=7)
+        self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.competition.save()
+        self.semester = Semester.objects.create(number=1, name='Test semester',
+                                                competition=self.competition, year=47)
+        self.start = self.time + timezone.timedelta(-4)
+        self.end = self.time + timezone.timedelta(4)
+        self.round = Round.objects.create(number=1, semester=self.semester, visible=True,
+                                          solutions_visible=False, start_time=self.start, end_time=self.end)
 
-        category_alfa = Category.objects.create(name=KMS_ALFA, competition=competition)
-        category_beta = Category.objects.create(name=KMS_BETA, competition=competition)
+        category_alfa = Category.objects.create(name=KMS_ALFA, competition=self.competition)
+        category_beta = Category.objects.create(name=KMS_BETA, competition=self.competition)
 
         self.tasks = []
         for i in range(1, 11):
-            self.tasks.append(Task.objects.create(number=i, name='Test task {}'.format(i), round=round))
+            self.tasks.append(Task.objects.create(number=i, name='Test task {}'.format(i),
+                                                  round=self.round))
             cat = []
             if i <= 7:
                 cat += [category_alfa]
@@ -51,11 +185,6 @@ class KMSRulesTest(TestCase):
             self.tasks[-1].categories = cat
             self.tasks[-1].save()
 
-        year = timezone.now().year + 2
-        self.user = User.objects.create(username="TestUser", password="password",
-                                        first_name="Jozko", last_name="Mrkvicka", graduation=year)
-        self.coeff_prop_key = UserPropertyKey.objects.create(key_name=KMS_COEFFICIENT_PROP_NAME)
-
         self.url = reverse('view_latest_results')
 
     def _create_submits(self, user, points):
@@ -63,32 +192,57 @@ class KMSRulesTest(TestCase):
             if points[i] >= 0:
                 submit = Submit.objects.create(task=self.tasks[i], user=user,
                                                submit_type=1, points=points[i], testing_status='reviewed')
-                submit.time = self.start + timezone.timedelta(days=2)
+                submit.time = self.end + timezone.timedelta(-1)
                 submit.save()
+
+    def _create_user_with_coefficient(self, coefficient):
+        graduation_year = self.round.end_time.year + 3 + int(self.round.end_time.month > SCHOOL_YEAR_END_MONTH)
+        if coefficient < 4:
+            graduation_year -= coefficient - 1
+        else:
+            graduation_year -= 3
+            type_mo = EventType.objects.create(name=KMS_MO_FINALS_TYPE, is_camp=False,
+                                               organizers_group=Group.objects.create(name="skupina"))
+            place = EventPlace.objects.create(name='Horna dolna')
+        user = User.objects.create(
+            username="test_user", password="password", first_name="Jozko",
+            last_name="Mrkvicka", graduation=graduation_year
+        )
+        for i in range(coefficient - 4):
+            ckmo = Event.objects.create(
+                name='CKMO', type=type_mo, place=place,
+                start_time=self.time, end_time=self.time + timezone.timedelta(-i * 366)
+            )
+            EventParticipant.objects.create(
+                event=ckmo, user=user, type=EventParticipant.PARTICIPANT, going=True
+            )
+        return user
 
     def test_only_best_five(self):
         points = [9, 7, 0, 8, 4, 5, 4]
         active = [True] * 7
         active[2] = False
-        self._create_submits(self.user, points)
+        user = self._create_user_with_coefficient(1)
+        self._create_submits(user, points)
 
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        row = get_row_for_user(response.context['tables'], self.user, KMS_ALFA)
+        row = get_row_for_user(response.context['tables'], user, KMS_ALFA)
+        self.assertEqual(row.cells_by_key[COEFFICIENT_COLUMN_KEY].points, '1')
         self.assertEqual(row.cells_by_key['sum'].points, '33')
         for i in range(1, 8):
-            self.assertEqual(row.cells_by_key[i].points, str(points[i-1]))
+            self.assertEqual(row.cells_by_key[i].points, str(points[i - 1]))
             if i not in [5, 7]:
-                self.assertEqual(row.cells_by_key[i].active, active[i-1])
+                self.assertEqual(row.cells_by_key[i].active, active[i - 1])
         self.assertTrue(row.cells_by_key[5].active ^ row.cells_by_key[7].active)
 
     def test_tasks_coefficients_alfa(self):
-        UserProperty.objects.create(user=self.user, key=self.coeff_prop_key, value=3)
         points = [1, 2, 3, 4, 5, 6, 7]
-        self._create_submits(self.user, points)
+        user = self._create_user_with_coefficient(3)
+        self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        row = get_row_for_user(response.context['tables'], self.user, KMS_ALFA)
+        row = get_row_for_user(response.context['tables'], user, KMS_ALFA)
         for i in range(1, 3):
             self.assertFalse(row.cells_by_key[i].active)
         for i in range(3, 8):
@@ -96,47 +250,47 @@ class KMSRulesTest(TestCase):
         self.assertEqual(row.cells_by_key['sum'].points, '25')
 
     def test_tasks_coefficients_beta(self):
-        UserProperty.objects.create(user=self.user, key=self.coeff_prop_key, value=7)
         points = [-1, -1, -1, 3, 4, 5, 6, 7, 8]
-        self._create_submits(self.user, points)
+        user = self._create_user_with_coefficient(7)
+        self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        row = get_row_for_user(response.context['tables'], self.user, KMS_BETA)
+        row = get_row_for_user(response.context['tables'], user, KMS_BETA)
         self.assertFalse(row.cells_by_key[4].active)
         for i in range(5, 10):
             self.assertTrue(row.cells_by_key[i].active)
         self.assertEqual(row.cells_by_key['sum'].points, '30')
 
     def test_beta_only_user(self):
-        UserProperty.objects.create(user=self.user, key=self.coeff_prop_key, value=7)
         points = [-1, -1, 2, 3, 4, 5, 6, 7, 8]
-        self._create_submits(self.user, points)
+        user = self._create_user_with_coefficient(7)
+        self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        row_beta = get_row_for_user(response.context['tables'], self.user, KMS_BETA)
-        row_alfa = get_row_for_user(response.context['tables'], self.user, KMS_ALFA)
+        row_beta = get_row_for_user(response.context['tables'], user, KMS_BETA)
+        row_alfa = get_row_for_user(response.context['tables'], user, KMS_ALFA)
         self.assertTrue(row_beta.active)
         self.assertFalse(row_alfa.active)
 
     def test_alfa_only_user(self):
-        UserProperty.objects.create(user=self.user, key=self.coeff_prop_key, value=1)
         points = [1, 2, 3, 4, 5]
-        self._create_submits(self.user, points)
+        user = self._create_user_with_coefficient(1)
+        self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        row_beta = get_row_for_user(response.context['tables'], self.user, KMS_BETA)
-        row_alfa = get_row_for_user(response.context['tables'], self.user, KMS_ALFA)
+        row_beta = get_row_for_user(response.context['tables'], user, KMS_BETA)
+        row_alfa = get_row_for_user(response.context['tables'], user, KMS_ALFA)
         self.assertTrue(row_alfa.active)
         self.assertFalse(row_beta.active)
 
     def test_alfa_beta_user(self):
-        UserProperty.objects.create(user=self.user, key=self.coeff_prop_key, value=1)
         points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 9]
-        self._create_submits(self.user, points)
+        user = self._create_user_with_coefficient(1)
+        self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        row_beta = get_row_for_user(response.context['tables'], self.user, KMS_BETA)
-        row_alfa = get_row_for_user(response.context['tables'], self.user, KMS_ALFA)
+        row_beta = get_row_for_user(response.context['tables'], user, KMS_BETA)
+        row_alfa = get_row_for_user(response.context['tables'], user, KMS_ALFA)
         self.assertEqual(row_alfa.cells_by_key['sum'].points, '25')
         self.assertEqual(row_beta.cells_by_key['sum'].points, '39')
 
