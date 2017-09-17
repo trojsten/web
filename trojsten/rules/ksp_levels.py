@@ -2,9 +2,6 @@
 # Calculates history of KSP levels.
 # Supports updates with finished semester or camp.
 
-# TODO: Set initial levels based on old submits. In the old results, tasks had 10, 10, 10, 15, 15, 20, 20, 20 points.
-# To get relevant historic results, limits must be set in dependence on the max. score.
-
 from collections import namedtuple, defaultdict
 
 from django.db.models import Q
@@ -90,7 +87,7 @@ def level_updates_from_semester_results(semester, level_up_score_limits_for_tabl
                 continue
             if int(row.rank) > 5 or float(row.total) < level_up_score_limits_for_table_levels[table_level]:
                 break
-            level_up = KSPLevel.objects.create(
+            level_up = KSPLevel(
                 user=row.user,
                 new_level=min(4, table_level + 1),
                 source_semester=semester,
@@ -131,7 +128,7 @@ def level_updates_from_camp_attendance(camp, associated_semester, last_semester_
             continue
         if float(row.total) < level_up_score_limits_for_user_levels[user_levels[row.user.pk]]:
             break
-        level_up = KSPLevel.objects.create(
+        level_up = KSPLevel(
             user=row.user,
             new_level=min(4, user_levels[row.user.pk] + 1),
             source_camp=camp,
