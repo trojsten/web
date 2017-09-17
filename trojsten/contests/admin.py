@@ -167,6 +167,14 @@ class TaskAdmin(admin.ModelAdmin):
                                   description='súťaž',
                                   order='round__semester__competition')
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        user_groups = request.user.groups.all()
+        if db_field.name == 'round':
+            kwargs['queryset'] = Round.objects.filter(
+                semester__competition__organizers_group__in=user_groups
+            ).order_by('-end_time')
+        return super(TaskAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
     def get_urls(self):
         return task_review_urls + super(TaskAdmin, self).get_urls()
 

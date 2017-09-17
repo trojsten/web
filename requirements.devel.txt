@@ -17,6 +17,7 @@ cffi==1.11.0              # via bcrypt, cryptography, pynacl
 click==6.7                # via pip-tools
 coverage==4.4.1
 cryptography==2.0.3       # via paramiko, pyopenssl
+czech-sort==0.4
 diff-match-patch==20121119  # via django-import-export
 django-autoslug==1.9.3    # via django-trojsten-news
 django-bootstrap-form==3.3
