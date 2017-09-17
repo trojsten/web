@@ -10,7 +10,7 @@ from collections import namedtuple, defaultdict
 from django.db.models import Q
 
 from trojsten.contests.models import Round, Competition
-from trojsten.events.models import Event, Invitation
+from trojsten.events.models import Event, EventParticipant
 from trojsten.results.manager import get_results
 from trojsten.rules.models import KSPLevel
 
@@ -45,7 +45,7 @@ def prepare_events():
         type__is_camp=True
     ).filter(
         type__sites__in=[ksp_site_id]
-    ).order_by('start_time')
+    ).order_by('start_time').select_related('semester')
 
     camps = []
     for camp_object in camp_objects:
@@ -53,29 +53,20 @@ def prepare_events():
             start_time=camp_object.start_time,
             semester=None,
             camp=camp_object,
-            associated_semester=None,
+            associated_semester=camp_object.semester,
             last_semester_before_level_up=None
         ))
 
     events = sorted(semesters + camps)
 
-    # Find associated semester for each camp.
-    # If camp is at i-th position, i-1: current semester, i-2: previous camp, i-3: previous semester.
+    # Find last semester before level up for each camp.
     for i in range(len(events)):
         if events[i].camp is not None:
-            # TODO: Make camps hold reference to associated semester in database model.
-            associated_semester = None
-            if i - 3 >= 0 and events[i - 3].semester is not None:
-                associated_semester = events[i - 3].semester
-
-            last_semester_before_level_up = None
+            # If camp is at i-th position, at (i-1)-th position should be the current semester.
             if i - 1 >= 0 and events[i - 1].semester is not None:
-                last_semester_before_level_up = events[i - 1].semester
-
-            events[i] = events[i]._replace(
-                associated_semester=associated_semester,
-                last_semester_before_level_up=last_semester_before_level_up,
-            )
+                events[i] = events[i]._replace(
+                    last_semester_before_level_up=events[i - 1].semester,
+                )
 
     return events
 
@@ -114,8 +105,8 @@ def level_updates_from_camp_attendance(camp, associated_semester, last_semester_
     All participants who were invited for their success in KSP (reached at least 100 points)
     will receive a levelling boost (associated_semester_competitor_level + 1) for the next semester.
     """
-    invited_users_pks = Invitation.objects.filter(
-        Q(type=Invitation.PARTICIPANT) | Q(type=Invitation.RESERVE),
+    invited_users_pks = EventParticipant.objects.filter(
+        Q(type=EventParticipant.PARTICIPANT) | Q(type=EventParticipant.RESERVE),
         event=camp,
         going=True,
     ).values_list('user__pk', flat=True)
