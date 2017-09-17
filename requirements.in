@@ -22,7 +22,7 @@ django-sortedm2m
 django-threadedcomments
 django-tips
 django-trojsten-news
-Django<1.11
+Django<2
 djangorestframework
 ecdsa
 elasticsearch
@@ -35,4 +35,4 @@ pymdown-extensions<3.0
 pytz
 requests<=2.15
 Unidecode
-wiki==0.2.4
+wiki>=0.3<0.4
