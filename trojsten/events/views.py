@@ -2,22 +2,12 @@
 
 from __future__ import unicode_literals
 
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
-from django.db import transaction
-from django.http import Http404
-from django.shortcuts import get_object_or_404, redirect
-from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from wiki.decorators import get_article
 
-from .forms import RegistrationForm
-from .models import Event, EventType, EventParticipant
+from .models import Event, EventType
 
 
 class ParticipantsAndOrganizersListView(DetailView):
@@ -30,92 +20,11 @@ class ParticipantsAndOrganizersListView(DetailView):
 participants_organizers_list = ParticipantsAndOrganizersListView.as_view()
 
 
-class RegistrationView(FormView):
-    template_name = "trojsten/events/registration.html"
-    form_class = RegistrationForm
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(RegistrationView, self).dispatch(*args, **kwargs)
-
-    def get_success_url(self):
-        return reverse(
-            'event_registration',
-            kwargs={'event_id': self.kwargs.get('event_id')},
-        )
-
-    def get_context_data(self, **kwargs):
-        context = super(RegistrationView, self).get_context_data(**kwargs)
-        context['show_form'] = context['form'].invite.going is None
-        context['after_deadline'] = (
-            False if context['form'].invite.event.registration_deadline is None else
-            context['form'].invite.event.registration_deadline < timezone.now()
-        )
-        return context
-
-    def get_form_kwargs(self):
-        """
-        Returns the keyword arguments for instantiating the form.
-        """
-        kwargs = super(RegistrationView, self).get_form_kwargs()
-        event = get_object_or_404(Event, pk=self.kwargs.get('event_id', None))
-        if not event.registration:
-            raise Http404
-        try:
-            kwargs['invite'] = EventParticipant.objects.select_related(
-                'event__registration', 'user'
-            ).get(user=self.request.user, event=event)
-        except EventParticipant.DoesNotExist:
-            raise PermissionDenied()
-        return kwargs
-
-    @method_decorator(transaction.atomic)
-    def form_valid(self, form):
-        if form.invite.going is not None:
-            messages.add_message(
-                self.request,
-                messages.ERROR,
-                'Prihláška nebola spracovaná, pretože bola vyplnená už predtým.',
-            )
-            return redirect(self.get_success_url())
-        form.invite.going = form.cleaned_data['going']
-        form.invite.save()
-        if form.invite.going:
-            for prop in form.invite.event.registration.required_user_properties.all():
-                user_prop, _ = self.request.user.properties.get_or_create(
-                    key=prop,
-                )
-                user_prop.value = form.cleaned_data[
-                    RegistrationForm.PROPERTY_FIELD_NAME_TEMPLATE % prop.id
-                ]
-                user_prop.save()
-        messages.add_message(
-            self.request,
-            messages.SUCCESS,
-            'Ďakujeme, prihláška bola spracovaná.',
-        )
-        return super(RegistrationView, self).form_valid(form)
-
-
-registration = RegistrationView.as_view()
-
-
 class EventView(DetailView):
     template_name = "trojsten/events/event.html"
     model = Event
     context_object_name = 'event'
     pk_url_kwarg = 'event_id'
-
-    def get_context_data(self, **kwargs):
-        context = super(EventView, self).get_context_data(**kwargs)
-        context['invited'] = (
-            self.request.user.is_authenticated() and
-            context['event'].registration and
-            EventParticipant.objects.select_related(
-                'event__registration', 'user'
-            ).filter(user=self.request.user, event=context['event']).exists()
-        )
-        return context
 
 
 event_detail = EventView.as_view()
