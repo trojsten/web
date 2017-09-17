@@ -10,6 +10,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.html import mark_safe
 from markdown import markdown
 
+from trojsten.contests.models import Semester
+
 
 class EventTypeManager(models.Manager):
     def current_site_only(self):
@@ -63,6 +65,7 @@ class Event(models.Model):
     text = models.TextField(help_text='Obsah bude prehnaný <a '
                                       'href="http://en.wikipedia.org/wiki/Markdown">'
                                       'Markdownom</a>.', default='', blank=True)
+    semester = models.ForeignKey(Semester, blank=True, null=True, verbose_name='semester')
 
     @property
     def participants(self):

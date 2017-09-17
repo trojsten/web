@@ -15,7 +15,6 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 from unidecode import unidecode
 
-from trojsten.events.models import Event
 from trojsten.people.models import User, UserPropertyKey
 from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
@@ -116,7 +115,6 @@ class Semester(models.Model):
     name = models.CharField(max_length=32, verbose_name='názov', blank=True)
     number = models.IntegerField(verbose_name='číslo části')
     year = models.IntegerField(verbose_name='ročník')
-    camp = models.ForeignKey(Event, null=True, blank=True, verbose_name='sústredenie')
 
     class Meta:
         verbose_name = 'Časť'
