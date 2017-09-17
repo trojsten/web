@@ -35,9 +35,6 @@ except ImportError:
 
 
 class UploadZipFormTests(TestCase):
-    def setUp(self):
-        pass
-
     def test_only_zip_extension_is_valid(self):
         z = UploadZipForm(data={}, files={'file': SimpleUploadedFile("file.wtf", b"abc")})
         self.assertFalse(z.is_valid())
