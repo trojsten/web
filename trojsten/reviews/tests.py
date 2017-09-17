@@ -7,16 +7,12 @@ import shutil
 import sys
 import tempfile
 import zipfile
-
 from os import path
-try:
-    from urllib.request import quote, unquote
-except ImportError:
-    from urllib import quote, unquote
 
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.forms import formset_factory
 from django.test import TestCase, override_settings
@@ -27,7 +23,7 @@ from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
 from trojsten.reviews import constants as review_constants
 from trojsten.reviews import helpers
-from trojsten.reviews.forms import ZipForm, BasePointForm, BasePointFormSet
+from trojsten.reviews.forms import ZipForm, BasePointForm, BasePointFormSet, UploadZipForm
 from trojsten.submit import constants as submit_constants
 from trojsten.submit.models import Submit
 from trojsten.utils.test_utils import get_noexisting_id
@@ -38,8 +34,24 @@ except ImportError:
     from urllib import quote, unquote
 
 
-class ReviewZipFormTests(TestCase):
+class UploadZipFormTests(TestCase):
+    def setUp(self):
+        pass
 
+    def test_only_zip_extension_is_valid(self):
+        z = UploadZipForm(data={}, files={'file': SimpleUploadedFile("file.wtf", b"abc")})
+        self.assertFalse(z.is_valid())
+
+    def test_zip_extension_check_is_case_insensitive(self):
+        z = UploadZipForm(data={}, files={'file': SimpleUploadedFile("file.ZIP", b"abc")})
+        self.assertTrue(z.is_valid())
+
+    def test_no_zip_file_uploaded_is_handled_correctly(self):
+        z = UploadZipForm(data={}, files={})
+        self.assertFalse(z.is_valid())
+
+
+class ReviewZipFormTests(TestCase):
     def setUp(self):
         self.choices = [(47, 'Meno Priezvisko')]
         self.test_str = u'ľščťžýáíéúňďôä'
@@ -97,7 +109,6 @@ class ReviewZipFormTests(TestCase):
 
 
 class ReviewTest(TestCase):
-
     def setUp(self):
         year = timezone.now().year + 2
         self.user = User.objects.create_user(username='TestUser', password='password',
@@ -226,7 +237,6 @@ class ReviewTest(TestCase):
     SUBMIT_PATH=tempfile.mkdtemp(dir=path.join(path.dirname(__file__), 'test_data')),
 )
 class DownloadLatestSubmits(TestCase):
-
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree(settings.SUBMIT_PATH)
@@ -475,7 +485,6 @@ class DownloadLatestSubmits(TestCase):
 
 
 class ReviewEditTest(TestCase):
-
     def setUp(self):
         year = timezone.now().year + 2
         self.user = User.objects.create_user(username='TestUser', password='password',
