@@ -480,6 +480,66 @@ class DownloadLatestSubmits(TestCase):
         zipped_file.close()
         f.close()
 
+    def test_download_originals_exclude_review(self):
+        submit = Submit.objects.create(
+            task=self.task, user=self.user, points=0,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt')
+        )
+        submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
+        submit.save()
+        submit_file = helpers.submit_download_filename(submit, 0)
+
+        review = Submit.objects.create(
+            task=self.task, user=self.user, points=5,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'review.txt')
+        )
+        review_file = helpers.submit_download_filename(review, 0)
+
+        self.client.force_login(self.staff)
+        url = reverse(self.url_name, kwargs={'task_pk': self.task.id})
+        response = self.client.get(url)
+        f = io.BytesIO(b''.join(response.streaming_content))
+        zipped_file = zipfile.ZipFile(f, 'a')
+
+        self.assertIsNone(zipped_file.testzip())
+        self.assertIn(submit_file, zipped_file.namelist())
+        self.assertNotIn(review_file, zipped_file.namelist())
+        zipped_file.close()
+        f.close()
+
+    def test_download_reviewed_include_review(self):
+        submit = Submit.objects.create(
+            task=self.task, user=self.user, points=0,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'description.txt')
+        )
+        submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
+        submit.save()
+        submit_file = helpers.submit_download_filename(submit, 0)
+
+        review = Submit.objects.create(
+            task=self.task, user=self.user, points=5,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            filepath=path.join(path.dirname(__file__), 'test_data', 'submits', 'review.txt')
+        )
+        review_file = helpers.submit_download_filename(review, 0)
+
+        self.client.force_login(self.staff)
+        url = reverse('admin:download_latest_reviewed_submits', kwargs={'task_pk': self.task.id})
+        response = self.client.get(url)
+        f = io.BytesIO(b''.join(response.streaming_content))
+        zipped_file = zipfile.ZipFile(f, 'a')
+
+        self.assertIsNone(zipped_file.testzip())
+        self.assertNotIn(submit_file, zipped_file.namelist())
+        self.assertIn(review_file, zipped_file.namelist())
+        zipped_file.close()
+        f.close()
+
 
 class ReviewEditTest(TestCase):
     def setUp(self):

@@ -99,8 +99,8 @@ def get_latest_submits_for_task(task):
             submits_by_user[submit.user]['review'] = submit
 
     return OrderedDict(sorted(submits_by_user.items(),
-                               key=lambda x: (czech_sort.key(x[0].last_name),
-                                              czech_sort.key(x[0].first_name))))
+                              key=lambda x: (czech_sort.key(x[0].last_name),
+                                             czech_sort.key(x[0].first_name))))
 
 
 def get_user_as_choices(task):

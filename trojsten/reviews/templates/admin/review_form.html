@@ -13,11 +13,15 @@
 
 {% block content %}
 <h1>Opravovanie úlohy: {{ task }}</h1>
-<h2>Riešitelia úlohy</h2>
+<h2>Stiahnuť riešenia</h2>
 <a href="{% url 'admin:download_latest_submits' task.pk %}">
-    {% trans 'Download all solutions (originals from competitors)' %}</a><br/><br/>
+    {% trans 'Download all original solutions' %}
+</a> {% trans ' (it downloads last submitted solution for each competitor)' %} <br/><br/>
 <a href="{% url 'admin:download_latest_reviewed_submits' task.pk %}">
-    {% trans 'Download all reviewed solutions' %}</a><br/><br/>
+    {% trans 'Download all reviewed solutions' %}
+</a> {% trans ' (it downloads reviewed solutions for each competitor if there is any)' %} <br/><br/>
+
+<h2>Riešitelia úlohy</h2>
 <form method="post" action="" class="form-horizontal">
 {% csrf_token %}
 {{ form_set.management_form }}
@@ -80,7 +84,6 @@
 
 <br/>
 <h2>Nahrať opravené riešenia v ZIP archíve</h2>
-<a href="{% url 'admin:download_latest_submits' task.pk %}">{% trans 'Download all solutions' %}</a><br/><br/>
 <p>
     Kliknutím na odkaz nad týmto textom si môžeš stiahnuť riešenia všetkých
     riešiteľov zabalené do ZIP archívu. Po rozbalení môžeš priamo upravovať

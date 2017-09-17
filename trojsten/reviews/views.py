@@ -1,6 +1,6 @@
 import os.path
 import zipfile
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict
 from time import time
 
 from django.conf import settings
@@ -68,12 +68,6 @@ def review_task(request, task_pk):
                 return redirect('admin:review_task', task.pk)
 
     users = get_latest_submits_for_task(task)
-    # unordered_users = get_latest_submits_for_task(task)
-    # users = OrderedDict(sorted(unordered_users.items(),
-    #                            # key=lambda x: (czech_sort.key(x[0].last_name),
-    #                            #                czech_sort.key(x[0].first_name))))
-    #                            key=lambda x: (unidecode(x[0].last_name),
-    #                                           unidecode(x[0].first_name))))
     users_list = list(users.keys())
 
     if not form:
@@ -255,7 +249,7 @@ def zip_upload(request, task_pk):
 
         users = [('None', _('Ignore'))] + get_user_as_choices(task)
         initial = [{'filename': file} for file in filelist]
-        user_data = defaultdict(dict)
+        user_data = OrderedDict()
 
         for form_data in initial:
             match = reviews_upload_pattern.match(form_data['filename'])
@@ -265,6 +259,8 @@ def zip_upload(request, task_pk):
             pk = match.group(RE_SUBMIT_PK)
             if Submit.objects.filter(pk=pk).exists():
                 user_pk = Submit.objects.get(pk=pk).user.pk
+                if user_pk not in user_data:
+                    user_data[user_pk] = {}
                 user_data[user_pk]['user'] = user_pk
                 if match.group(RE_FILENAME) == REVIEW_POINTS_FILENAME:
                     try:
