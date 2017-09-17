@@ -1,6 +1,8 @@
 import os
+from collections import OrderedDict
 from time import time
 
+import czech_sort
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from unidecode import unidecode
@@ -96,7 +98,9 @@ def get_latest_submits_for_task(task):
         elif submits_by_user[submit.user]['review'].time < submit.time:
             submits_by_user[submit.user]['review'] = submit
 
-    return submits_by_user
+    return OrderedDict(sorted(submits_by_user.items(),
+                              key=lambda x: (czech_sort.key(x[0].last_name),
+                                             czech_sort.key(x[0].first_name))))
 
 
 def get_user_as_choices(task):
@@ -106,31 +110,35 @@ def get_user_as_choices(task):
     ]
 
 
-def submit_directory(submit):
-    return '%s_%s/' % (
+def submit_directory(submit, order=0):
+    return '%03d_%s_%s/' % (
+        order,
         unidecode(submit.user.get_full_name().lower().replace(' ', '_')),
         submit.pk
     )
 
 
-def submit_download_filename(submit):
-    return '%s_%s/%s' % (
+def submit_download_filename(submit, order=0):
+    return '%03d_%s_%s/%s' % (
+        order,
         unidecode(submit.user.get_full_name().lower().replace(' ', '_')),
         submit.pk,
         submit.filename.split('-', 2)[-1]
     )
 
 
-def submit_source_download_filename(submit, description_submit_id):
-    return '%s_%s/source/%s' % (
+def submit_source_download_filename(submit, description_submit_id, order=0):
+    return '%03d_%s_%s/source/%s' % (
+        order,
         unidecode(submit.user.get_full_name().lower().replace(' ', '_')),
         description_submit_id,
         submit.filename
     )
 
 
-def submit_protocol_download_filename(submit, description_submit_id):
-    return '%s_%s/source/%s' % (
+def submit_protocol_download_filename(submit, description_submit_id, order=0):
+    return '%03d_%s_%s/source/%s' % (
+        order,
         unidecode(submit.user.get_full_name().lower().replace(' ', '_')),
         description_submit_id,
         os.path.basename(submit.protocol_path)
