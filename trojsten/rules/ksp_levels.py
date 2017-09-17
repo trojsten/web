@@ -20,10 +20,10 @@ ResultsAffectingEvent = namedtuple('ResultsAffectingEvent',
                                    'start_time, semester, camp, associated_semester, last_semester_before_level_up')
 
 
-def prepare_events():
+def prepare_events(latest_event_start_date):
     """Produces a list of all ResultsAffectingEvents sorted by their start dates."""
     last_rounds = Round.objects.filter(
-        semester__competition__name='KSP'
+        semester__competition__name='KSP', start_time__lte=latest_event_start_date
     ).order_by(
         'semester', 'start_time', 'pk'
     ).distinct(
@@ -42,7 +42,7 @@ def prepare_events():
 
     ksp_site_id = Competition.objects.get(name='KSP').sites.first().id
     camp_objects = Event.objects.filter(
-        type__is_camp=True
+        type__is_camp=True, start_time__lte=latest_event_start_date
     ).filter(
         type__sites__in=[ksp_site_id]
     ).order_by('start_time').select_related('semester')
@@ -71,11 +71,14 @@ def prepare_events():
     return events
 
 
-def level_updates_from_semester_results(semester, score_limits_for_levels=defaultdict(lambda: 150)):
+def level_updates_from_semester_results(semester, level_up_score_limits_for_table_levels=None):
     """
     Returns a list of LevelUpRecords for users whose level should be updated.
     First 5 competitors from each level get a levelling boost (results_table_level + 1) for the next semester.
     """
+    if level_up_score_limits_for_table_levels is None:
+        level_up_score_limits_for_table_levels = defaultdict(lambda: 150)
+
     round = Round.objects.filter(semester=semester).order_by('number').last()
     # TODO: Get frozen results table if available.
     result_tables = [(get_results('KSP_L{}'.format(level), round, single_round=False), level) for level in range(1, 4)]
@@ -85,7 +88,7 @@ def level_updates_from_semester_results(semester, score_limits_for_levels=defaul
         for row in table.rows:
             if not row.active:
                 continue
-            if int(row.rank) > 5 or int(row.total) < score_limits_for_levels[table_level]:
+            if int(row.rank) > 5 or float(row.total) < level_up_score_limits_for_table_levels[table_level]:
                 break
             level_up = KSPLevel.objects.create(
                 user=row.user,
@@ -99,12 +102,15 @@ def level_updates_from_semester_results(semester, score_limits_for_levels=defaul
 
 
 def level_updates_from_camp_attendance(camp, associated_semester, last_semester_before_level_up,
-                                       score_limits_for_levels=defaultdict(lambda: 100)):
+                                       level_up_score_limits_for_user_levels=None):
     """
     Returns a list of LevelUpRecords for users whose level should be updated.
     All participants who were invited for their success in KSP (reached at least 100 points)
     will receive a levelling boost (associated_semester_competitor_level + 1) for the next semester.
     """
+    if level_up_score_limits_for_user_levels is None:
+        level_up_score_limits_for_user_levels = defaultdict(lambda: 100)
+
     invited_users_pks = EventParticipant.objects.filter(
         Q(type=EventParticipant.PARTICIPANT) | Q(type=EventParticipant.RESERVE),
         event=camp,
@@ -115,6 +121,7 @@ def level_updates_from_camp_attendance(camp, associated_semester, last_semester_
     user_levels = KSPLevel.objects.for_users_in_semester_as_dict(associated_semester.pk, invited_users_pks)
 
     last_round = Round.objects.filter(semester=associated_semester).order_by('number').last()
+
     # TODO: Get frozen results table if available.
     results_table = get_results('KSP_ALL', last_round, single_round=False)
 
@@ -122,7 +129,7 @@ def level_updates_from_camp_attendance(camp, associated_semester, last_semester_
     for row in results_table.rows:
         if row.user.pk not in invited_users_pks_set:
             continue
-        if int(row.total) < score_limits_for_levels[user_levels[row.user.pk]]:
+        if float(row.total) < level_up_score_limits_for_user_levels[user_levels[row.user.pk]]:
             break
         level_up = KSPLevel.objects.create(
             user=row.user,

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.core.management.base import BaseCommand
 from django.utils.six import text_type
+from django.utils import timezone
 
 from trojsten.rules.models import KSPLevel
 from trojsten.rules.ksp_levels import prepare_events, level_updates_from_camp_attendance, \
@@ -18,7 +19,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         KSPLevel.objects.all().delete()
 
-        for event in prepare_events():
+        # Events before the end of the school year 2016/2017
+        for event in prepare_events(timezone.datetime(year=2017, month=6, day=30,
+                                                      tzinfo=timezone.get_default_timezone())):
             if event.associated_semester is None:
                 continue
             updates = list()
