@@ -16,6 +16,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from trojsten.contests import constants as contests_constants
 from trojsten.contests.models import Competition, Round, Semester, Task
+from trojsten.people.views import _get_user_props_formset
 from trojsten.schools.models import School
 from trojsten.submit.constants import (SUBMIT_PAPER_FILEPATH,
                                        SUBMIT_STATUS_IN_QUEUE,
@@ -771,3 +772,21 @@ class AdditionalRegistrationViewsTest(TestCase):
 
         self.assertContains(response, key1.key_name)
         self.assertContains(response, key2.key_name)
+
+
+class UserPropsFormSetTests(TestCase):
+    def setUp(self):
+        self.user = _create_random_user()
+
+    def test_empty_key_is_not_valid(self):
+        f = _get_user_props_formset(True)(data={
+            'properties-TOTAL_FORMS': 1,
+            'properties-INITIAL_FORMS': 0,
+            'properties-MIN_NUM_FORMS': 0,
+            'properties-MAX_NUM_FORMS': 1000,
+            'properties-0-key': '',
+            'properties-0-value': 'abc',
+            'properties-0-id': '',
+            'properties-0-user': self.user.id
+        })
+        self.assertFalse(f.is_valid())
