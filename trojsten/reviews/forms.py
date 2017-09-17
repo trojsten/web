@@ -41,12 +41,15 @@ class UploadZipForm(forms.Form):
     def clean(self):
         cleaned_data = super(UploadZipForm, self).clean()
 
-        filename = cleaned_data['file'].name
-        if filename.endswith('.zip'):
-            return cleaned_data
+        if 'file' in cleaned_data:
+            filename = cleaned_data['file'].name
+            if filename.lower().endswith('.zip'):
+                return cleaned_data
+            else:
+                raise forms.ValidationError(_('File must be a ZIP archive: %s')
+                                            % filename)
         else:
-            raise forms.ValidationError(_('File must be a ZIP archive: %s')
-                                        % filename)
+            return False
 
     def save(self, req_user, task):
         filecontent = self.cleaned_data['file']
