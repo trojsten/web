@@ -22,7 +22,7 @@ class SubmitAdmin(admin.ModelAdmin):
     list_display = ('get_task_name', 'get_task_number',
                     'get_round', 'get_semester', 'get_year', 'get_competition', 'get_categories',
                     'user', 'time', 'get_points', 'submit_type', 'testing_status', 'filepath',)
-    list_filter = ('task__round__semester__competition',)
+    list_filter = ('task__round__semester__competition', 'testing_status', 'submit_type')
     search_fields = ('user__username', 'task__name',)
 
     get_points = attribute_format(

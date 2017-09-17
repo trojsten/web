@@ -214,10 +214,13 @@ class UserProperty(models.Model):
         unique_together = ('user', 'key')
 
     def clean(self):
-        if self.key.regex and not re.match(self.key.regex, self.value):
-            raise ValidationError(
-                _('Value "{}" does not match regex "{}".').format(self.value, self.key.regex)
-            )
+        try:
+            if self.key.regex and not re.match(self.key.regex, self.value):
+                raise ValidationError(
+                    _('Value "{}" does not match regex "{}".').format(self.value, self.key.regex)
+                )
+        except UserProperty.key.RelatedObjectDoesNotExist:
+            return False
 
 
 @python_2_unicode_compatible
