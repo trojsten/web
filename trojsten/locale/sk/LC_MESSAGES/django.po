@@ -1,27 +1,27 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-12 01:18+0100\n"
+"POT-Creation-Date: 2017-09-17 02:21+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#: contact_form/forms.py:13
+#: contact_form/forms.py:15
 msgid "Subject"
 msgstr "Predmet"
 
-#: contact_form/forms.py:20
+#: contact_form/forms.py:22 contact_form/tests.py:63 contact_form/tests.py:72
 msgid "Name"
 msgstr "Meno"
 
-#: contact_form/forms.py:21
+#: contact_form/forms.py:23 contact_form/tests.py:64 contact_form/tests.py:73
 msgid "Email"
 msgstr "E-mail"
 
-#: contact_form/forms.py:22
+#: contact_form/forms.py:24 contact_form/tests.py:65 contact_form/tests.py:74
 msgid "Message"
 msgstr "Správa"
 
-#: contact_form/templates/contact_form/contact_form.html:14
+#: contact_form/templates/contact_form/contact_form.html:19
 #, python-format
 msgid ""
 "\n"
@@ -39,7 +39,7 @@ msgstr ""
 "alebo priamo vedúcemu uvedenému pri úlohe.\n"
 "    "
 
-#: contact_form/templates/contact_form/contact_form.html:24
+#: contact_form/templates/contact_form/contact_form.html:29
 msgid ""
 "If you have found any problem with our web site, please let us know using "
 "the following form."
@@ -104,15 +104,15 @@ msgstr "Pridelený človek"
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
 
-#: contests/templates/trojsten/contests/parts/progress.html:9
+#: contests/templates/trojsten/contests/parts/progress.html:10
 msgid "Submit programs until"
 msgstr "Doprogramovanie do"
 
-#: contests/templates/trojsten/contests/parts/progress.html:11
+#: contests/templates/trojsten/contests/parts/progress.html:12
 msgid "End of the round"
 msgstr "Koniec kola"
 
-#: contests/templates/trojsten/contests/parts/progress.html:25
+#: contests/templates/trojsten/contests/parts/progress.html:26
 msgid ""
 "\n"
 "      Don't submit descriptions.\n"
@@ -125,10 +125,6 @@ msgstr ""
 "      Ešte stále však <strong>môžete odosielať vaše programy</strong>, za "
 "ktoré dostanete časť bodov.\n"
 "      "
-
-#: contests/templates/trojsten/contests/parts/progress.html:33
-msgid "The results are preliminary."
-msgstr "Výsledky sú predbežné."
 
 #: contests/templates/trojsten/contests/parts/progress.html:36
 msgid "The round has finished."
@@ -166,12 +162,6 @@ msgstr "%(count)s minúta"
 #| msgid_plural "%(count)s seconds"
 msgid "%(count)d second"
 msgstr "%(count)s sekunda"
-
-#: events/forms.py:47 people/forms.py:86 people/forms.py:94 people/forms.py:102
-#: people/forms.py:111 people/forms.py:121 people/forms.py:131
-#: people/forms.py:141
-msgid "This field is required."
-msgstr "Toto pole je povinné."
 
 #: login/views.py:29
 msgid "Logout successful"
@@ -241,15 +231,21 @@ msgstr "Vyber, kam ti máme posielať poštu."
 msgid "Gender"
 msgstr "Pohlavie"
 
-#: people/forms.py:152
+#: people/forms.py:87 people/forms.py:95 people/forms.py:103
+#: people/forms.py:112 people/forms.py:122 people/forms.py:132
+#: people/forms.py:142
+msgid "This field is required."
+msgstr "Toto pole je povinné."
+
+#: people/forms.py:153
 msgid "Your graduation year is too far in the past."
 msgstr "Tvoj rok maturity je príliš ďaleko v minulosti."
 
-#: people/forms.py:158
+#: people/forms.py:159
 msgid "Your graduation year is too far in the future."
 msgstr "Tvoj rok maturity je príliš ďaleko v budúcnosti."
 
-#: people/forms.py:170
+#: people/forms.py:171
 msgid ""
 "We cannot send you correspondence to school when you don't choose any "
 "school. If your school is not in the list write us in an e-mail that you "
@@ -259,19 +255,19 @@ msgstr ""
 "tvoja škola nenachádza v zozname, napíš v e-maili, že ti máme posielať poštu "
 "na školu"
 
-#: people/forms.py:269
+#: people/forms.py:270
 msgid "Password"
 msgstr "Heslo"
 
-#: people/forms.py:271
+#: people/forms.py:272
 msgid "Password confirmation"
 msgstr "Potvrdenie hesla"
 
-#: people/forms.py:272
+#: people/forms.py:273
 msgid "Enter the same password as above, for verification."
 msgstr "Zadaj rovnaké heslo ako vyššie pre jeho overenie"
 
-#: people/forms.py:305
+#: people/forms.py:299
 msgid ""
 "We recommend choosing a strong passphrase but we don't enforce any "
 "ridiculous constraints on your passwords."
@@ -279,31 +275,31 @@ msgstr ""
 "Odporúčame ti vybrať silné heslo, ale nebudeme od teba vyžadovať žiadne "
 "smiešne požiadavky"
 
-#: people/forms.py:313
+#: people/forms.py:307
 msgid ""
 "Since you're logging in using an external provider, this field is optional; "
 "however, by supplying it, you will be able to log in using a password. "
 msgstr ""
 
-#: people/forms.py:323
+#: people/forms.py:317
 msgid "The two password fields didn't match."
 msgstr ""
 
-#: people/forms.py:462
+#: people/forms.py:456
 msgid "Points have to be non-negative and at most {}."
 msgstr "Body musia byť nezáporné a najviac {}."
 
-#: people/forms.py:467
+#: people/forms.py:461
 #, fuzzy
 #| msgid "The value has to be integer or {}."
 msgid "The value has to be number or {}."
 msgstr "Hodnota musí byť číslo alebo {}."
 
-#: people/forms.py:511
+#: people/forms.py:505
 msgid "Round"
 msgstr "Kolo"
 
-#: people/forms.py:525 people/forms.py:563
+#: people/forms.py:519 people/forms.py:557
 #: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
 #: people/templates/trojsten/people/settings.html:95
 #: templates/ksp_login/parts/multiple_forms.html:11
@@ -311,7 +307,7 @@ msgstr "Kolo"
 msgid "Submit"
 msgstr "Odoslať"
 
-#: people/models.py:234
+#: people/models.py:219
 msgid "Value \"{}\" does not match regex \"{}\"."
 msgstr ""
 
@@ -403,6 +399,7 @@ msgid "Complete Registration"
 msgstr "Dodatočná Registrácia"
 
 #: people/templates/trojsten/people/additional_registration.html:23
+#: people/tests.py:757
 msgid "You have already filled all required properties."
 msgstr "Momentálne máš vyplnené všetky potrebné údaje."
 
@@ -564,7 +561,7 @@ msgstr "Musíš uviesť body"
 msgid "Assigned 2 or more files to the same user."
 msgstr "Rovnaký používateľ má priradené 2 alebo viac súborov."
 
-#: reviews/helpers.py:15
+#: reviews/helpers.py:17
 msgid "You should upload a file or specify parent submit."
 msgstr "Mal by si nahrať súbor alebo špecifikovať predchádzajúci submit."
 
@@ -576,7 +573,7 @@ msgid "Review"
 msgstr "Opravovanie"
 
 #: reviews/templates/admin/review_edit.html:11
-#: reviews/templates/admin/review_form.html:57
+#: reviews/templates/admin/review_form.html:64
 msgid "Edit"
 msgstr "Upraviť"
 
@@ -585,26 +582,37 @@ msgstr "Upraviť"
 msgid "Task"
 msgstr "Úloha"
 
-#: reviews/templates/admin/review_form.html:17
-#: reviews/templates/admin/review_form.html:80
-msgid "Download all solutions"
-msgstr "Stiahnuť všetky riešenia"
+#: reviews/templates/admin/review_form.html:18
+msgid "Download all original solutions"
+msgstr "Stiahnuť všetky pôvodné riešenia"
 
-#: reviews/templates/admin/review_form.html:50
+#: reviews/templates/admin/review_form.html:19
+msgid " (it downloads last submitted solution for each competitor)"
+msgstr " (stiahne pre každého užívateľa posledné odovzdané riešenie)"
+
+#: reviews/templates/admin/review_form.html:21
+msgid "Download all reviewed solutions"
+msgstr "Stiahnuť všetky opravené riešenia"
+
+#: reviews/templates/admin/review_form.html:22
+msgid " (it downloads reviewed solutions for each competitor if there is any)"
+msgstr " (stiahne pre každého užívateľa opravené riešenie, ak je opravené)"
+
+#: reviews/templates/admin/review_form.html:57
 #: reviews/templates/admin/submit_form.html:12
 msgid "Download"
 msgstr "Stiahnuť"
 
-#: reviews/templates/admin/review_form.html:56
+#: reviews/templates/admin/review_form.html:63
 #: reviews/templates/admin/submit_form.html:9
 msgid "View"
 msgstr "Pozrieť"
 
-#: reviews/templates/admin/review_form.html:60
+#: reviews/templates/admin/review_form.html:67
 msgid "Add new review"
 msgstr "Pridaj opravenie"
 
-#: reviews/templates/admin/review_form.html:75
+#: reviews/templates/admin/review_form.html:82
 msgid "Update points and comments"
 msgstr "Aktualizuj body a komentáre"
 
@@ -640,16 +648,16 @@ msgstr "Zip súbor bol úspešne nahraný"
 msgid "Points and comments were successfully updated."
 msgstr "Body a komentáre boli úspešne aktualizované"
 
-#: reviews/views.py:129
+#: reviews/views.py:127
 msgid "Successfully saved the review"
 msgstr "Opravenie bolo úspešne uložené"
 
-#: reviews/views.py:191
+#: reviews/views.py:190
 #, python-format
 msgid "Missing file of user %s"
 msgstr "Chýba súbor používateľa %s"
 
-#: reviews/views.py:204
+#: reviews/views.py:203
 #, python-format
 msgid "Missing source file of user %s"
 msgstr "Chýba zdrojový súbor používateľa %s"
@@ -659,19 +667,19 @@ msgstr "Chýba zdrojový súbor používateľa %s"
 msgid "Missing protocol file of user %s"
 msgstr "Chýba protokol používateľa %s"
 
-#: reviews/views.py:236
+#: reviews/views.py:244
 msgid "Problems with uploaded zip"
 msgstr "Problémy s nahratým zip-om"
 
-#: reviews/views.py:242
+#: reviews/views.py:250
 msgid "Ignore"
 msgstr "Ignorovať"
 
-#: reviews/views.py:285
+#: reviews/views.py:295
 msgid "Successfully finished reviewing this task!"
 msgstr "Úspešne dokončené opravovanie tejto úlohy!"
 
-#: settings/common.py:390
+#: settings/common.py:392
 msgid "Table of Contents"
 msgstr ""
 
