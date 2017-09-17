@@ -110,35 +110,35 @@ def get_user_as_choices(task):
     ]
 
 
-def submit_directory(submit, order):
-    return '%s_%s_%s/' % (
-        '%03d' % order,
+def submit_directory(submit, order=0):
+    return '%03d_%s_%s/' % (
+        order,
         unidecode(submit.user.get_full_name().lower().replace(' ', '_')),
         submit.pk
     )
 
 
-def submit_download_filename(submit, order):
-    return '%s_%s_%s/%s' % (
-        '%03d' % order,
+def submit_download_filename(submit, order=0):
+    return '%03d_%s_%s/%s' % (
+        order,
         unidecode(submit.user.get_full_name().lower().replace(' ', '_')),
         submit.pk,
         submit.filename.split('-', 2)[-1]
     )
 
 
-def submit_source_download_filename(submit, description_submit_id, order):
-    return '%s_%s_%s/source/%s' % (
-        '%03d' % order,
+def submit_source_download_filename(submit, description_submit_id, order=0):
+    return '%03d_%s_%s/source/%s' % (
+        order,
         unidecode(submit.user.get_full_name().lower().replace(' ', '_')),
         description_submit_id,
         submit.filename
     )
 
 
-def submit_protocol_download_filename(submit, description_submit_id, order):
-    return '%s_%s_%s/source/%s' % (
-        '%03d' % order,
+def submit_protocol_download_filename(submit, description_submit_id, order=0):
+    return '%03d_%s_%s/source/%s' % (
+        order,
         unidecode(submit.user.get_full_name().lower().replace(' ', '_')),
         description_submit_id,
         os.path.basename(submit.protocol_path)

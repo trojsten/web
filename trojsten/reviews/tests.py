@@ -480,7 +480,7 @@ class DownloadLatestSubmits(TestCase):
         zipped_file.close()
         f.close()
 
-    def test_download_originals_exclude_review(self):
+    def test_exclude_review_in_download_latest_submits(self):
         submit = Submit.objects.create(
             task=self.task, user=self.user, points=0,
             submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
@@ -510,7 +510,7 @@ class DownloadLatestSubmits(TestCase):
         zipped_file.close()
         f.close()
 
-    def test_download_reviewed_include_review(self):
+    def test_include_review_in_download_latest_reviewed_submits(self):
         submit = Submit.objects.create(
             task=self.task, user=self.user, points=0,
             submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
