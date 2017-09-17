@@ -8,20 +8,22 @@ import trojsten.submit.constants as submit_constants
 from trojsten.contests.models import Competition, Semester, Round, Task, Category
 from trojsten.people.models import User, UserProperty, UserPropertyKey
 from trojsten.rules.kms import KMS_ALFA, KMS_BETA, KMS_COEFFICIENT_PROP_NAME
-from trojsten.rules.ksp import KSP_ALL
+from trojsten.rules.ksp import KSP_ALL, KSP_L1, KSP_L2, KSP_L3, KSP_L4
+from trojsten.rules.models import KSPLevel
 from trojsten.submit.models import Submit
 
 SOURCE = submit_constants.SUBMIT_TYPE_SOURCE
 DESCRIPTION = submit_constants.SUBMIT_TYPE_DESCRIPTION
 
 
-def get_row_for_user(tables, user, category):
+def get_row_for_user(tables, user, tag_key):
     for table_object in tables:
         table = table_object.table
-        if table.tag.key == category:
+        if table.tag.key == tag_key:
             for row in table.rows:
                 if row.user == user:
                     return row
+    return None
 
 
 class KMSRulesTest(TestCase):
@@ -139,10 +141,13 @@ class KMSRulesTest(TestCase):
         self.assertEqual(row_beta.cells_by_key['sum'].points, '39')
 
 
-class KSPRulesSubmitsAfterDeadlineTest(TestCase):
+class KSPRulesOneUserTest(TestCase):
     def setUp(self):
         competition = Competition.objects.create(name='TestKSP', pk=2)  # pk = 2 sets rules to KSPRules
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.last_semester_before_level_up = Semester.objects.create(
+            number=1, name='Used for setting levels', competition=competition, year=0
+        )
         self.semester = Semester.objects.create(number=1, name='Test semester', competition=competition, year=1)
         self.start = timezone.now() - timezone.timedelta(days=21)
         self.end = timezone.now() - timezone.timedelta(days=14)
@@ -151,7 +156,7 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
                                           start_time=self.start, end_time=self.end, second_end_time=self.second_end)
 
         self.tasks = []
-        for i in range(1, 4):
+        for i in range(1, 9):
             task = Task.objects.create(number=i, name='Test task {}'.format(i), round=self.round)
             task.save()
             self.tasks.append(task)
@@ -165,6 +170,23 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
 
         self.url = reverse('view_latest_results')
 
+    def _set_user_level_to(self, level):
+        KSPLevel.objects.all().delete()
+        KSPLevel.objects.create(user=self.user, new_level=level,
+                                last_semester_before_level_up=self.last_semester_before_level_up)
+
+    def test_set_and_get_user_level(self):
+        level = KSPLevel.objects.for_user_in_semester(self.semester.pk, self.user.pk)
+        self.assertEqual(level, 1)
+
+        self._set_user_level_to(4)
+        level = KSPLevel.objects.for_user_in_semester(self.semester.pk, self.user.pk)
+        self.assertEqual(level, 4)
+
+        self._set_user_level_to(2)
+        level = KSPLevel.objects.for_user_in_semester(self.semester.pk, self.user.pk)
+        self.assertEqual(level, 2)
+
     def _create_submits(self, submit_definitions):
         for task_number, submit_type, submit_time, points in submit_definitions:
             submit = Submit.objects.create(task=self.tasks[task_number-1], user=self.user,
@@ -174,11 +196,110 @@ class KSPRulesSubmitsAfterDeadlineTest(TestCase):
                 submit.testing_status = 'reviewed'
             submit.save()
 
-    def _get_point_cells_for_tasks(self):
+    def _assert_is_user_in_results_tables(self, in_which_tables_should_user_be):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        row = get_row_for_user(response.context['tables'], self.user, KSP_ALL)
+        for tag, should_be_in_table in zip([KSP_ALL, KSP_L1, KSP_L2, KSP_L3, KSP_L4], in_which_tables_should_user_be):
+            row = get_row_for_user(response.context['tables'], self.user, tag)
+            is_in_table = row is not None and row.active
+            if should_be_in_table:
+                self.assertTrue(is_in_table, 'User should be in results table {}'.format(tag))
+            else:
+                self.assertFalse(is_in_table, 'User should not be in results table {}'.format(tag))
+
+    def test_user_is_not_in_lower_level_results_table(self):
+        self._create_submits([
+            (1, SOURCE, self.start + timezone.timedelta(days=1), 10),
+            (2, SOURCE, self.start + timezone.timedelta(days=1), 10),
+        ])
+        self._set_user_level_to(2)
+        self._assert_is_user_in_results_tables([True, False, True, False, False])
+
+        self._create_submits([
+            (7, SOURCE, self.start + timezone.timedelta(days=1), 10),
+            (8, SOURCE, self.start + timezone.timedelta(days=1), 10),
+        ])
+        self._set_user_level_to(4)
+        self._assert_is_user_in_results_tables([True, False, False, False, True])
+
+    def test_user_is_not_in_higher_level_results_table(self):
+        self._create_submits([
+            (1, SOURCE, self.start + timezone.timedelta(days=1), 10),
+            (2, SOURCE, self.start + timezone.timedelta(days=1), 10),
+            (3, SOURCE, self.start + timezone.timedelta(days=1), 10),
+        ])
+        self._set_user_level_to(1)
+        self._assert_is_user_in_results_tables([True, True, False, False, False])
+
+        self._create_submits([(4, SOURCE, self.start + timezone.timedelta(days=1), 10)])
+        self._assert_is_user_in_results_tables([True, True, False, False, False])
+
+        self._create_submits([(5, SOURCE, self.start + timezone.timedelta(days=1), 10)])
+        self._assert_is_user_in_results_tables([True, True, True, False, False])
+
+        self._set_user_level_to(3)
+        self._assert_is_user_in_results_tables([True, False, False, True, False])
+
+    def _bulk_set_task_points(self, points):
+        # Use description points because task 2 has float points for source
+        # and we want to have integral sum of points.
+        submit_defs = [(i, DESCRIPTION, self.start + timezone.timedelta(days=1), points)
+                       for i, points in enumerate(points, start=1) if points is not None]
+        self._create_submits(submit_defs)
+
+    def _get_point_cells_for_tasks(self, results_tag=KSP_ALL):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        row = get_row_for_user(response.context['tables'], self.user, results_tag)
         return row.cells_by_key
+
+    def _assert_active_cells(self, cells, which_cells_should_be_active):
+        for i, should_be_active in enumerate(which_cells_should_be_active, start=1):
+            if should_be_active is None:
+                self.assertFalse(i in cells, 'Cell for task {} should not be present.'.format(i))
+            elif should_be_active:
+                self.assertTrue(cells[i].active, 'Cell for task {} should be active'.format(i))
+            else:
+                self.assertFalse(cells[i].active, 'Cell for task {} should not be active'.format(i))
+
+    def test_count_only_best_five_tasks_user_level_1(self):
+        self._bulk_set_task_points([17, 1, 8, 14, 3, 10, 15, 9])
+
+        cells = self._get_point_cells_for_tasks(KSP_ALL)
+        self.assertEqual(cells['sum'].points, str(17 + 15 + 14 + 10 + 9))
+        self._assert_active_cells(cells, [True, False, False, True, False, True, True, True])
+
+        cells = self._get_point_cells_for_tasks(KSP_L1)
+        self.assertEqual(cells['sum'].points, str(17 + 15 + 14 + 10 + 9))
+        self._assert_active_cells(cells, [True, False, False, True, False, True, True, True])
+
+        cells = self._get_point_cells_for_tasks(KSP_L2)
+        self.assertEqual(cells['sum'].points, str(15 + 14 + 10 + 9 + 8))
+        self._assert_active_cells(cells, [None, False, True, True, False, True, True, True])
+
+        cells = self._get_point_cells_for_tasks(KSP_L3)
+        self.assertEqual(cells['sum'].points, str(15 + 14 + 10 + 9 + 8))
+        self._assert_active_cells(cells, [None, None, True, True, False, True, True, True])
+
+        cells = self._get_point_cells_for_tasks(KSP_L4)
+        self.assertEqual(cells['sum'].points, str(15 + 14 + 10 + 9 + 3))
+        self._assert_active_cells(cells, [None, None, None, True, True, True, True, True])
+
+    def test_count_only_best_five_tasks_user_level_3(self):
+        self._set_user_level_to(3)
+        self._bulk_set_task_points([20, 18, 19, 15, 6, 3, 12, 17])
+
+        cells = self._get_point_cells_for_tasks(KSP_ALL)
+        self.assertEqual(cells['sum'].points, str(19 + 17 + 15 + 12 + 6))
+        self._assert_active_cells(cells, [False, False, True, True, True, False, True, True])
+
+        cells = self._get_point_cells_for_tasks(KSP_L3)
+        self.assertEqual(cells['sum'].points, str(19 + 17 + 15 + 12 + 6))
+        self._assert_active_cells(cells, [None, None, True, True, True, False, True, True])
+
+        cells = self._get_point_cells_for_tasks(KSP_L4)
+        self.assertEqual(cells['sum'].points, str(17 + 15 + 12 + 6 + 3))
+        self._assert_active_cells(cells, [None, None, None, True, True, True, True, True])
 
     def test_submits_in_first_phase(self):
         self._create_submits([
