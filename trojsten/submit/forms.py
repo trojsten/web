@@ -6,6 +6,11 @@ import os
 from django import forms
 from django.conf import settings
 from django.utils.html import format_html, escape
+from django.utils.translation import ugettext_lazy as _
+from unidecode import unidecode
+
+from trojsten.submit.helpers import write_chunks_to_file, get_path
+from trojsten.submit.models import Submit
 
 
 class SourceSubmitForm(forms.Form):
@@ -61,3 +66,41 @@ class TestableZipSubmitForm(forms.Form):
                 raise forms.ValidationError("Zaslaný súbor nemá koncovku .zip")
         else:
             raise forms.ValidationError("Chýba súbor")
+
+
+class SubmitAdminForm(forms.ModelForm):
+    submit_file = forms.FileField(
+        max_length=settings.UPLOADED_FILENAME_MAXLENGTH,
+        allow_empty_file=True,
+        label=_('Submit file'),
+        help_text=_('Here you can upload a file with submit description'),
+        required=False
+    )
+
+    def save(self, commit=True):
+        submit = super(SubmitAdminForm, self).save(commit)
+        file = self.cleaned_data.get('submit_file')
+        if file:
+            user = self.cleaned_data.get('user')
+            task = self.cleaned_data.get('task')
+
+            from time import time
+            submit_id = str(int(time()))
+            # Description file-name should be: surname-id-originalfilename
+            orig_filename, extension = os.path.splitext(file.name)
+            target_filename = ('%s-%s-%s' %
+                               (user.last_name, submit_id, orig_filename)
+                               )[:(255 - len(extension))] + extension
+            sfiletarget = unidecode(os.path.join(
+                get_path(task, user),
+                target_filename,
+            ))
+            write_chunks_to_file(sfiletarget, file.chunks())
+            submit.filepath = sfiletarget
+        if commit:
+            submit.save()
+        return submit
+
+    class Meta:
+        model = Submit
+        fields = '__all__'

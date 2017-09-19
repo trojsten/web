@@ -14,6 +14,7 @@ from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden)
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html
+from django.utils.translation import ugettext_lazy as _
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response as APIResponse
 from sendfile import sendfile
@@ -25,7 +26,6 @@ from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
 from trojsten.submit.helpers import (get_path, process_submit, update_submit,
                                      write_chunks_to_file)
 from trojsten.submit.templatetags.submit_parts import submitclass
-
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
@@ -341,9 +341,14 @@ def task_submit_post(request, task_id, submit_type):
                          testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
                          filepath=sfiletarget)
             sub.save()
-            messages.add_message(request, messages.SUCCESS,
-                                 'Úspešne sa ti podarilo submitnúť popis, '
-                                 'po skončení kola ti ho vedúci opravia')
+            if task.round.can_submit:
+                messages.add_message(request, messages.SUCCESS,
+                                     _('You have successfully submitted your description, '
+                                       'it will be reviewed after the round finishes.'))
+            else:
+                messages.add_message(request, messages.WARNING,
+                                     _('You have submitted your description after the deadline. '
+                                       'It is not counted in results.'))
         else:
             for field in form:
                 for error in field.errors:

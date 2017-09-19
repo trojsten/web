@@ -7,16 +7,16 @@ from django.utils.encoding import force_text
 from easy_select2 import select2_modelform
 
 from trojsten.contests.models import Round
-from trojsten.reviews.urls import submit_urls
 from trojsten.contests.models import Task
+from trojsten.reviews.urls import submit_urls
+from trojsten.submit.forms import SubmitAdminForm
 from trojsten.utils.utils import attribute_format, get_related
-
 from .models import Submit, ExternalSubmitToken
 
 
 class SubmitAdmin(admin.ModelAdmin):
     change_form_template = 'admin/submit_form.html'
-    form = select2_modelform(Submit)
+    form = select2_modelform(Submit, form_class=SubmitAdminForm)
 
     list_select_related = True
     list_display = ('get_task_name', 'get_task_number',
