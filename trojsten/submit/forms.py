@@ -9,7 +9,7 @@ from django.utils.html import format_html, escape
 from django.utils.translation import ugettext_lazy as _
 from unidecode import unidecode
 
-from trojsten.submit.helpers import write_chunks_to_file, get_path
+from trojsten.submit.helpers import write_chunks_to_file, get_path, get_description_file_path
 from trojsten.submit.models import Submit
 
 
@@ -84,17 +84,7 @@ class SubmitAdminForm(forms.ModelForm):
             user = self.cleaned_data.get('user')
             task = self.cleaned_data.get('task')
 
-            from time import time
-            submit_id = str(int(time()))
-            # Description file-name should be: surname-id-originalfilename
-            orig_filename, extension = os.path.splitext(file.name)
-            target_filename = ('%s-%s-%s' %
-                               (user.last_name, submit_id, orig_filename)
-                               )[:(255 - len(extension))] + extension
-            sfiletarget = unidecode(os.path.join(
-                get_path(task, user),
-                target_filename,
-            ))
+            sfiletarget = get_description_file_path(file, user, task)
             write_chunks_to_file(sfiletarget, file.chunks())
             submit.filepath = sfiletarget
         if commit:

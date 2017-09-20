@@ -9,10 +9,12 @@ import tempfile
 import threading
 import time
 import unittest
+from os import path
 
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
+from django.core.files import File
 from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
 from django.utils import timezone
@@ -20,10 +22,11 @@ from django.utils.translation import ugettext_lazy as _
 
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
+from trojsten.submit import constants
+from trojsten.submit.forms import SubmitAdminForm
 from trojsten.submit.helpers import (get_lang_from_filename, get_path_raw,
-                                     post_submit, write_chunks_to_file)
+                                     post_submit, write_chunks_to_file, get_description_file_path)
 from trojsten.utils.test_utils import get_noexisting_id
-
 from .models import ExternalSubmitToken, Submit
 
 
@@ -570,3 +573,69 @@ class ExternalSubmitKeyTests(TestCase):
         url = reverse('external_submit')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 405)
+
+
+@override_settings(
+    SUBMIT_PATH=tempfile.mkdtemp(dir=path.join(path.dirname(__file__), 'test_data')),
+)
+class SubmitAdminFormTests(TestCase):
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(settings.SUBMIT_PATH)
+        super(SubmitAdminFormTests, cls).tearDownClass()
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='TestUser', password='password',
+                                             first_name='Jozko', last_name='Mrkvicka',
+                                             graduation=timezone.now().year + 2)
+
+        group = Group.objects.create(name='Test Group')
+        competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        semester = Semester.objects.create(
+            number=1, name='Test semester 1', year=1, competition=competition
+        )
+
+        start = timezone.now() + timezone.timedelta(-8)
+        self.end = timezone.now() + timezone.timedelta(-4)
+        test_round = Round.objects.create(number=1, semester=semester, solutions_visible=True,
+                                          start_time=start, end_time=self.end, visible=True)
+        self.task = Task.objects.create(number=1, name='Test task 1', round=test_round)
+
+    def test_create_submit(self):
+        submit_file_path = path.join('trojsten', 'reviews', 'test_data', 'submits', 'description.txt')
+        file = open(submit_file_path, 'r')
+        file_content = file.read()
+        file.close()
+
+        submit_file = File(open(submit_file_path, 'r'), 'description.txt')
+        data = {
+            'task': self.task.pk,
+            'time': timezone.now(),
+            'user': self.user.pk,
+            'submit_type': constants.SUBMIT_TYPE_DESCRIPTION,
+            'points': 0,
+            'testing_status': constants.SUBMIT_STATUS_IN_QUEUE,
+        }
+        form = SubmitAdminForm(data, {'submit_file': submit_file})
+        print(form.errors)
+        self.assertTrue(form.is_valid())
+        submit = form.save()
+        file_path = get_description_file_path(file, self.user, self.task)
+        self.assertEqual(submit.filepath, file_path)
+        uploaded_file = open(file_path, 'r')
+        self.assertIsNotNone(uploaded_file)
+        self.assertEqual(uploaded_file.read(), file_content)
+
+    def test_edit_submit_time(self):
+        submit = Submit.objects.create(
+            task=self.task, user=self.user, submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            points=0, testing_status=constants.SUBMIT_STATUS_IN_QUEUE
+        )
+        data = SubmitAdminForm(instance=submit).initial
+        new_time = timezone.now() + timezone.timedelta(-1)
+        data['time'] = new_time
+        form = SubmitAdminForm(data)
+        self.assertTrue(form.is_valid())
+        edited_submit = form.save()
+        self.assertEqual(edited_submit.time, new_time)
