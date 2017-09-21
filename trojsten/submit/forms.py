@@ -7,9 +7,8 @@ from django import forms
 from django.conf import settings
 from django.utils.html import format_html, escape
 from django.utils.translation import ugettext_lazy as _
-from unidecode import unidecode
 
-from trojsten.submit.helpers import write_chunks_to_file, get_path, get_description_file_path
+from trojsten.submit.helpers import write_chunks_to_file, get_description_file_path
 from trojsten.submit.models import Submit
 
 
