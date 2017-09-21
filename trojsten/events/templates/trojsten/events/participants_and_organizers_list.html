@@ -18,10 +18,10 @@
     <th>Škola</th>
 </tr>
 </thead>
-{% for participant in event.participants %}
+{% for participant in participants %}
     <tr {% if user == participant.user %}class="active"{% endif %}>
         <td>{{ participant.user.get_full_name }}</td>
-        <td>{{ participant.user.school_year | school_year }}</td>
+        <td>{{ participant.year_at_event | school_year }}</td>
         <td>
         {% if participant.user.school.has_abbreviation %}
             <abbr title="{{ participant.user.school.verbose_name }}"
@@ -35,7 +35,7 @@
     </tr>
 {% endfor %}
 <tr><th colspan="3">Vedúci</th></tr>
-{% for organizer in event.organizers %}
+{% for organizer in organizers %}
     <tr {% if user == organizer.user %}class="active"{% endif %}>
         <td colspan="2">{{ organizer.user.get_full_name }}</td>
         <td>
