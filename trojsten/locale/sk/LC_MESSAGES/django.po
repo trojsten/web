@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-19 16:46+0200\n"
+"POT-Creation-Date: 2017-09-23 23:35+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -683,48 +683,48 @@ msgstr "Úspešne dokončené opravovanie tejto úlohy!"
 msgid "Table of Contents"
 msgstr ""
 
-#: submit/constants.py:10
+#: submit/constants.py:11
 msgid "reviewed"
 msgstr "opravený"
 
-#: submit/constants.py:11
+#: submit/constants.py:12
 msgid "in queue"
 msgstr "v poradí"
 
-#: submit/constants.py:12
+#: submit/constants.py:13
 msgid "finished"
 msgstr "ukončený"
 
-# Submit
-#: submit/constants.py:31 submit/tests.py:386
-msgid "Wrong answer"
-msgstr "Zlá odpoveď"
-
-#: submit/constants.py:32
-msgid "Compilation error"
-msgstr "Chyba počas kompilácie"
-
-#: submit/constants.py:33
-msgid "Time limit exceeded"
-msgstr "Prekročený časový limit"
-
-#: submit/constants.py:34
-msgid "Memory limit exceeded"
-msgstr "Prekročený pamäťový limit"
-
-#: submit/constants.py:35
+#: submit/constants.py:14 submit/constants.py:37
 msgid "OK"
 msgstr "OK"
 
+# Submit
+#: submit/constants.py:33 submit/tests.py:389
+msgid "Wrong answer"
+msgstr "Zlá odpoveď"
+
+#: submit/constants.py:34
+msgid "Compilation error"
+msgstr "Chyba počas kompilácie"
+
+#: submit/constants.py:35
+msgid "Time limit exceeded"
+msgstr "Prekročený časový limit"
+
 #: submit/constants.py:36
+msgid "Memory limit exceeded"
+msgstr "Prekročený pamäťový limit"
+
+#: submit/constants.py:38
 msgid "Runtime exception"
 msgstr "Chyba počas behu programu"
 
-#: submit/constants.py:37
+#: submit/constants.py:39
 msgid "Security exception"
 msgstr "Pokus o narušenie bezpečnosti"
 
-#: submit/constants.py:38
+#: submit/constants.py:40
 msgid "Ignored"
 msgstr ""
 
@@ -737,6 +737,10 @@ msgstr "Nahrať súbor"
 #: submit/forms.py:77
 msgid "Here you can upload a file with submit description"
 msgstr "Tu môžeš nahrať súbor s popisom riešenia"
+
+#: submit/forms.py:85
+msgid "You can attach a submit file only to descriptions."
+msgstr "Nahrať súbor môžeš len k popisom."
 
 #: submit/templates/trojsten/submit/parts/submit_list.html:30
 #: submit/templates/trojsten/submit/parts/submit_list.html:36
@@ -752,20 +756,21 @@ msgstr ""
 msgid "Detaily"
 msgstr ""
 
-#: submit/views.py:346
+#: submit/views.py:335
 msgid ""
 "You have successfully submitted your description, it will be reviewed after "
 "the round finishes."
 msgstr ""
-"Úspešne sa ti podarilo submitnúť popis, "
-"po skončení kola ti ho vedúci opravia."
+"Úspešne sa ti podarilo submitnúť popis, po skončení kola ti ho vedúci "
+"opravia."
 
-#: submit/views.py:350
+#: submit/views.py:339
 msgid ""
 "You have submitted your description after the deadline. It is not counted in "
 "results."
 msgstr ""
-"Nahral si svoj popis riešenia po termíne kola. Nebude zarátaný vo výsledkovke."
+"Nahral si svoj popis riešenia po termíne kola. Nebude zarátaný vo "
+"výsledkovke."
 
 #: templates/comments/comment.html:23
 msgid "Preview of your comment"

@@ -5,9 +5,11 @@ import os
 
 from django import forms
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.utils.html import format_html, escape
 from django.utils.translation import ugettext_lazy as _
 
+from trojsten.submit import constants
 from trojsten.submit.helpers import write_chunks_to_file, get_description_file_path
 from trojsten.submit.models import Submit
 
@@ -75,6 +77,14 @@ class SubmitAdminForm(forms.ModelForm):
         help_text=_('Here you can upload a file with submit description'),
         required=False
     )
+
+    def clean(self):
+        cleaned_data = super(SubmitAdminForm, self).clean()
+        if cleaned_data['submit_file']\
+                and cleaned_data['submit_type'] != constants.SUBMIT_TYPE_DESCRIPTION:
+            raise ValidationError(_('You can attach a submit file only to descriptions.'),
+                                  code='invalid')
+        return cleaned_data
 
     def save(self, commit=True):
         submit = super(SubmitAdminForm, self).save(commit)

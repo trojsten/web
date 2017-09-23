@@ -6,10 +6,12 @@ from django.utils.translation import ugettext_lazy as _
 SUBMIT_STATUS_REVIEWED = 'reviewed'
 SUBMIT_STATUS_IN_QUEUE = 'in queue'
 SUBMIT_STATUS_FINISHED = 'finished'
+SUBMIT_STATUS_OK = 'OK'
 SUBMIT_STATUS_CHOICES = [
     (SUBMIT_STATUS_REVIEWED, _('reviewed')),
     (SUBMIT_STATUS_IN_QUEUE, _('in queue')),
     (SUBMIT_STATUS_FINISHED, _('finished')),
+    (SUBMIT_STATUS_OK, _('OK')),  # for support of old interactive tasks
 ]
 SUBMIT_RESPONSE_ERROR = 'CERR'
 SUBMIT_RESPONSE_OK = 'OK'
