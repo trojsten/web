@@ -213,7 +213,7 @@ class KMSRulesTest(TestCase):
         for i in range(coefficient - 4):
             ckmo = Event.objects.create(
                 name='CKMO', type=type_mo, place=place,
-                start_time=self.time, end_time=self.time + timezone.timedelta(-i * 366)
+                start_time=self.time, end_time=self.time + timezone.timedelta(-(i + 1) * 366)
             )
             EventParticipant.objects.create(
                 event=ckmo, user=user, type=EventParticipant.PARTICIPANT, going=True
