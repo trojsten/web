@@ -16,6 +16,18 @@ class ParticipantsAndOrganizersListView(DetailView):
     context_object_name = 'event'
     pk_url_kwarg = 'event_id'
 
+    def get_context_data(self, **kwargs):
+        context = super(ParticipantsAndOrganizersListView, self).get_context_data(**kwargs)
+        event = context['event']
+        participants = event.participants.select_related('user__school')
+        for participant in participants:
+            participant.year_at_event = participant.user.school_year_at(event.start_time)
+        context.update({
+            'participants': participants,
+            'organizers': event.organizers.select_related('user__school'),
+        })
+        return context
+
 
 participants_organizers_list = ParticipantsAndOrganizersListView.as_view()
 
