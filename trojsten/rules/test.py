@@ -48,7 +48,7 @@ class KMSCoefficientTest(TestCase):
         self.type_mo = EventType.objects.create(name=KMS_MO_FINALS_TYPE, organizers_group=group,
                                                 is_camp=False)
 
-        competition = Competition.objects.create(name='TestCompetition', pk=4)
+        competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         self.semesters = []
         self.camps = []
@@ -160,6 +160,7 @@ class KMSRulesTest(TestCase):
     def setUp(self):
         time = datetime.datetime(2004, 4, 7, 12, 47)
         self.time = timezone.make_aware(time)
+        # pk = 2 sets rules to KMSRules
         self.competition = Competition.objects.create(name='TestCompetition', pk=7)
         self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         self.competition.save()
@@ -185,6 +186,7 @@ class KMSRulesTest(TestCase):
             self.tasks[-1].categories = cat
             self.tasks[-1].save()
 
+        self.group = Group.objects.create(name="skupina")
         self.url = reverse('view_latest_results')
 
     def _create_submits(self, user, points):
@@ -195,17 +197,17 @@ class KMSRulesTest(TestCase):
                 submit.time = self.end + timezone.timedelta(-1)
                 submit.save()
 
-    def _create_user_with_coefficient(self, coefficient):
+    def _create_user_with_coefficient(self, coefficient, username="test_user"):
         graduation_year = self.round.end_time.year + 3 + int(self.round.end_time.month > SCHOOL_YEAR_END_MONTH)
         if coefficient < 4:
             graduation_year -= coefficient - 1
         else:
             graduation_year -= 3
             type_mo = EventType.objects.create(name=KMS_MO_FINALS_TYPE, is_camp=False,
-                                               organizers_group=Group.objects.create(name="skupina"))
+                                               organizers_group=self.group)
             place = EventPlace.objects.create(name='Horna dolna')
         user = User.objects.create(
-            username="test_user", password="password", first_name="Jozko",
+            username=username, password="password", first_name="Jozko",
             last_name="Mrkvicka", graduation=graduation_year
         )
         for i in range(coefficient - 4):
@@ -217,6 +219,12 @@ class KMSRulesTest(TestCase):
                 event=ckmo, user=user, type=EventParticipant.PARTICIPANT, going=True
             )
         return user
+
+    def test_create_user_with_coefficient(self):
+        for i in range(-4, 12):
+            user = self._create_user_with_coefficient(i, 'testuser%d' % i)
+            generator = KMSResultsGenerator(KMSRules.RESULTS_TAGS[KMS_BETA])
+            self.assertEqual(generator.get_user_coefficient(user, self.round), i)
 
     def test_only_best_five(self):
         points = [9, 7, 0, 8, 4, 5, 4]
