@@ -123,7 +123,7 @@ class KSPResultsGenerator(ResultsGenerator):
         row.cells_by_key[results_constants.LEVEL_COLUMN_KEY] = ResultsCell(str(user_level))
 
     def create_results_cols(self, res_request):
-        yield ResultsCol(key=results_constants.LEVEL_COLUMN_KEY, name='L')
+        yield ResultsCol(key=results_constants.LEVEL_COLUMN_KEY, name='Level')
         for col in super(KSPResultsGenerator, self).create_results_cols(res_request):
             yield col
 
