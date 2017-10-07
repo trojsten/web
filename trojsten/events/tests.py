@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import datetime
+import pytz
 
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -188,3 +190,28 @@ class EventParticipantsTest(TestCase):
         EventParticipant.objects.create(event=self.event, user=user, going=True, type=1)
         response = self.client.get(self.part_list_url)
         self.assertContains(response, user.get_full_name())
+
+
+class ParticipantsAndOrganizersListViewTest(TestCase):
+    def test_school_year(self):
+        current_year = timezone.now().year
+        site = Site.objects.get(pk=settings.SITE_ID)
+        user = User.objects.create(
+            username='ferko', first_name='Ferko', last_name='Mrkvicka',
+            graduation=current_year - 1)
+        group = Group.objects.create(name="skupina")
+        place = EventPlace.objects.create(name="Miesto")
+        type_camp = EventType.objects.create(name="sustredenie",
+                                             organizers_group=group, is_camp=True)
+        type_camp.sites.add(site)
+        event = Event.objects.create(
+            start_time=datetime.datetime(day=12, month=3, year=current_year - 2, tzinfo=pytz.utc),
+            end_time=datetime.datetime(day=17, month=3, year=current_year - 2, tzinfo=pytz.utc),
+            place=place, type=type_camp,
+        )
+        EventParticipant.objects.create(event=event, user=user, going=True, type=0)
+
+        part_list_url = reverse('participants_list', kwargs={'event_id': event.id})
+        response = self.client.get(part_list_url)
+
+        self.assertContains(response, '<td>3</td>')
