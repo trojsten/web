@@ -3,7 +3,6 @@ python:
   - "2.7"
   - "3.5"
 env:
-  - DJANGO_VERSION='>=1.10,<1.11'
   - DJANGO_VERSION='>=1.11,<2'
 matrix:
   include:
