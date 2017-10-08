@@ -7,23 +7,6 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
-event_types = {'KSP sústredenie', 'PRASK sústredenie'}
-
-
-def update_event_attendance(apps, schema_editor):
-    EventType = apps.get_model('events', 'EventType')
-    for event_type in EventType.objects.filter(name__in=event_types):
-        for event in event_type.event_set.all():
-            for participant in event.eventparticipant_set.filter(type=1, going=True):
-                participant.going = False
-                participant.save()
-
-
-def reverse_update_event_attendance(apps, schema_editor):
-    # We won't update anything.
-    pass
-
-
 class Migration(migrations.Migration):
 
     replaces = [(b'events', '0001_initial'), (b'events', '0002_auto_20160118_1906'), (b'events', '0003_auto_20170916_1641'), (b'events', '0004_auto_20170916_2053'), (b'events', '0005_auto_20170916_2349'), (b'events', '0006_auto_20170917_1657'), (b'events', '0007_auto_20170917_2343')]
@@ -46,7 +29,6 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100, verbose_name='n\xe1zov')),
                 ('start_time', models.DateTimeField(verbose_name='\u010das za\u010diatku')),
                 ('end_time', models.DateTimeField(verbose_name='\u010das konca')),
-                ('registration_deadline', models.DateTimeField(blank=True, null=True, verbose_name='deadline pre registr\xe1ciu')),
                 ('text', models.TextField(blank=True, default='', help_text='Obsah bude prehnan\xfd <a href="http://en.wikipedia.org/wiki/Markdown">Markdownom</a>.')),
             ],
             options={
@@ -70,18 +52,15 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='Invitation',
+            name='EventParticipant',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type', models.SmallIntegerField(choices=[(0, '\xfa\u010dastn\xedk'), (1, 'n\xe1hradn\xedk'), (2, 'ved\xfaci')], default=0, verbose_name='typ pozv\xe1nky')),
-                ('going', models.NullBooleanField(verbose_name='z\xfa\u010dastn\xed sa')),
-                ('event', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='invitations', to='events.Event', verbose_name='akcia')),
+                ('type', models.SmallIntegerField(choices=[(0, '\xfa\u010dastn\xedk'), (1, 'n\xe1hradn\xedk'), (2, 'ved\xfaci')], default=0, verbose_name='typ pozvania')),
+                ('going', models.BooleanField(default=True, verbose_name='z\xfa\u010dastnil sa')),
+                ('event', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='events.Event', verbose_name='akcia')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='pou\u017e\xedvate\u013e')),
             ],
-            options={
-                'verbose_name': 'pozv\xe1nka',
-                'verbose_name_plural': 'pozv\xe1nky',
-            },
+            options={'verbose_name': '\xfa\u010dastn\xedk akcie', 'verbose_name_plural': '\xfa\u010dastn\xedci akcie'},
         ),
         migrations.CreateModel(
             name='EventPlace',
@@ -98,7 +77,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='place',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='events.Place', verbose_name='miesto'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='events.EventPlace', verbose_name='miesto'),
         ),
         migrations.AddField(
             model_name='event',
@@ -106,7 +85,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='events.EventType', verbose_name='typ akcie'),
         ),
         migrations.AlterUniqueTogether(
-            name='invitation',
+            name='eventparticipant',
             unique_together=set([('event', 'user')]),
         ),
         migrations.AddField(
@@ -114,11 +93,7 @@ class Migration(migrations.Migration):
             name='semester',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='contests.Semester', verbose_name='semester'),
         ),
-        migrations.RenameModel(
-            old_name='Invitation',
-            new_name='EventParticipant',
-        ),
-        migrations.CreateModel(
+            migrations.CreateModel(
             name='EventOrganizer',
             fields=[
             ],
@@ -128,37 +103,5 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'ved\xfaci akcie',
             },
             bases=('events.eventparticipant',),
-        ),
-        migrations.AlterField(
-            model_name='eventparticipant',
-            name='event',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='events.Event', verbose_name='akcia'),
-        ),
-        migrations.AlterField(
-            model_name='eventparticipant',
-            name='going',
-            field=models.BooleanField(default=False, verbose_name='z\xfa\u010dastnil sa'),
-        ),
-        migrations.AlterField(
-            model_name='eventparticipant',
-            name='going',
-            field=models.BooleanField(default=True, verbose_name='z\xfa\u010dastnil sa'),
-        ),
-        migrations.AlterField(
-            model_name='eventparticipant',
-            name='type',
-            field=models.SmallIntegerField(choices=[(0, '\xfa\u010dastn\xedk'), (1, 'n\xe1hradn\xedk'), (2, 'ved\xfaci')], default=0, verbose_name='typ pozvania'),
-        ),
-        migrations.AlterModelOptions(
-            name='eventparticipant',
-            options={'verbose_name': '\xfa\u010dastn\xedk akcie', 'verbose_name_plural': '\xfa\u010dastn\xedci akcie'},
-        ),
-        migrations.RemoveField(
-            model_name='event',
-            name='registration_deadline',
-        ),
-        migrations.RunPython(
-            code=update_event_attendance,
-            reverse_code=reverse_update_event_attendance,
         ),
     ]
