@@ -8,5 +8,5 @@ else
     SOURCES="requirements.in requirements2.in"
 fi
 
-pip-compile $SOURCES -o requirements.txt
-pip-compile $SOURCES requirements.devel.in -o requirements.devel.txt
+pip-compile -r $SOURCES -o requirements.txt
+pip-compile -r $SOURCES requirements.devel.in -o requirements.devel.txt
