@@ -27,9 +27,6 @@ class Migration(migrations.Migration):
             old_name='Invitation',
             new_name='EventParticipant',
         ),
-        migrations.DeleteModel(
-            name='OrganizerInvitation',
-        ),
         migrations.CreateModel(
             name='EventOrganizer',
             fields=[
