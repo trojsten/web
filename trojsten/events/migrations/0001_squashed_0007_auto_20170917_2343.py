@@ -9,7 +9,7 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [(b'events', '0001_initial'), (b'events', '0002_auto_20160118_1906'), (b'events', '0003_auto_20170916_1641'), (b'events', '0004_auto_20170916_2053'), (b'events', '0005_auto_20170916_2349'), (b'events', '0006_auto_20170917_1657'), (b'events', '0007_auto_20170917_2343')]
+    replaces = [('events', '0001_initial'), ('events', '0002_auto_20160118_1906'), ('events', '0003_auto_20170916_1641'), ('events', '0004_auto_20170916_2053'), ('events', '0005_auto_20170916_2349'), ('events', '0006_auto_20170917_1657'), ('events', '0007_auto_20170917_2343')]
 
     initial = True
 
@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100, verbose_name='n\xe1zov')),
                 ('is_camp', models.BooleanField(verbose_name='s\xfastredko')),
                 ('organizers_group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='auth.Group', verbose_name='skupina ved\xfacich')),
-                ('sites', models.ManyToManyField(blank=True, to=b'sites.Site')),
+                ('sites', models.ManyToManyField(blank=True, to='sites.Site')),
             ],
             options={
                 'verbose_name': 'typ akcie',
