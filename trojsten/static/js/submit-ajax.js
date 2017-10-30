@@ -12,7 +12,7 @@
                 } else {
                     setTimeout(function() {
                         poll_submit(id, callback);
-                    }, 1000);
+                    }, 10000);
                 }
             });
         }
