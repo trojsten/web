@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import csv
 import os
 
-from trojsten.people.management.commands.migrate_base_class import MigrateBaceCommand
+from trojsten.people.management.commands.migrate_base_class import MigrateBaseCommand
 
 
 """
@@ -25,7 +25,7 @@ where s.id = p.seria_id and rp.priklad_id = p.id and rp.riesitel_id = r.id;" \
 # TODO vvysledkovky
 
 
-class Command(MigrateBaceCommand):
+class Command(MigrateBaseCommand):
     help = 'Imports people and their related info from fks_csv.'
 
     def add_arguments(self, parser):
@@ -33,8 +33,8 @@ class Command(MigrateBaceCommand):
         parser.add_argument('csv_directory', type=str,
                             help="Directory containing all csv files.")
 
-    def handle_noargs(self, **options):
-        super(Command, self).handle_noargs(**options)
+    def handle(self, **options):
+        super(Command, self).handle(**options)
         base = options['csv_directory']
 
         addresses_file = os.path.join(base, "adresa.csv")

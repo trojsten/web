@@ -2,18 +2,18 @@ from __future__ import unicode_literals
 
 import csv
 
-from trojsten.people.management.commands.migrate_base_class import MigrateBaceCommand
+from trojsten.people.management.commands.migrate_base_class import MigrateBaseCommand
 
 
-class Command(MigrateBaceCommand):
+class Command(MigrateBaseCommand):
     help = 'Imports people and their related info from fks_csv.'
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
         parser.add_argument('file', type=str)
 
-    def handle_noargs(self, **options):
-        super(Command, self).handle_noargs(**options)
+    def handle(self, **options):
+        super(Command, self).handle(**options)
         participants_file = options['file']
 
         participants = csv.DictReader(open(participants_file))

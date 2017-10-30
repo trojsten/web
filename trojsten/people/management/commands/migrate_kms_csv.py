@@ -4,7 +4,7 @@ import csv
 from collections import defaultdict
 import os
 
-from trojsten.people.management.commands.migrate_base_class import MigrateBaceCommand
+from trojsten.people.management.commands.migrate_base_class import MigrateBaseCommand
 
 """
 Restore the mysql database dump and run (replace <passwd> and <user>)
@@ -18,7 +18,7 @@ done
 """
 
 
-class Command(MigrateBaceCommand):
+class Command(MigrateBaseCommand):
     help = 'Imports people and their related info from kms_csv.'
 
     def add_arguments(self, parser):
@@ -26,8 +26,8 @@ class Command(MigrateBaceCommand):
         parser.add_argument('csv_directory', type=str,
                             help="Directory containing all csv files.")
 
-    def handle_noargs(self, **options):
-        super(Command, self).handle_noargs(**options)
+    def handle(self, **options):
+        super(Command, self).handle(**options)
         base = options['csv_directory']
         participants_file = os.path.join(base, "riesitelia.csv")
         participants = csv.DictReader(open(participants_file))

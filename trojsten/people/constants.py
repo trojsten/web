@@ -16,3 +16,23 @@ MAILING_OPTION_OTHER = 'O'
 OTHER_SCHOOL_ID = 1
 
 DEENVELOPING_NOT_REVIEWED_SYMBOL = '*'
+
+# User properties
+# User id in the old fks database
+FKS_ID_PROPERTY_KEY = "FKS ID"
+# User id in the old kms database
+KMS_ID_PROPERTY_KEY = "KMS ID"
+# User id in the old ksp database
+KASPAR_ID_PROPERTY_KEY = "KSP ID"
+# User id in the csv file
+CSV_ID_PROPERTY_KEY = "csv ID"
+MOBIL_PROPERTY_KEY = "Mobil"
+NICKNAME_PROPERTY_KEY = "Prezyvka"
+BIRTH_NAME_PROPERTY_KEY = "Rodne Meno"
+LAST_CONTACT_PROPERTY_KEY = "Posledny kontakt"
+KMS_CAMPS_PROPERTY_KEY = "KMS sustredenia"
+KASPAR_NOTE_PROPERTY_KEY = "KSP note"
+KSP_CAMPS_PROPERTY_KEY = "KSP sustredenia"
+MEMORY_PROPERTY_KEY = "Spomienky"
+COMPANY_PROPERTY_KEY = "Posobisko"
+AFFILIATION_PROPERTY_KEY = "Pozicia"
