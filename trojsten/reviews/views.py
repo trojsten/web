@@ -267,12 +267,12 @@ def zip_upload(request, task_pk):
                         text = archive.read(form_data['filename'])
                         points_num = int(text)
                         user_data[user_pk]['points'] = points_num
-                    except:
+                    except:  # noqa: E722 @FIXME
                         pass
                 elif match.group(RE_FILENAME) == REVIEW_COMMENT_FILENAME:
                     try:
                         user_data[user_pk]['comment'] = archive.read(form_data['filename'])
-                    except:
+                    except:  # noqa: E722 @FIXME
                         pass
                 else:
                     user_data[user_pk]['filename'] = form_data['filename']
