@@ -16,7 +16,7 @@ from . import constants
 def write_chunks_to_file(filepath, chunks):
     try:
         os.makedirs(os.path.dirname(filepath))
-    except:
+    except:  # noqa: E722 @FIXME
         pass
     with open(filepath, 'wb+') as destination:
         for chunk in chunks:
@@ -165,7 +165,7 @@ def update_submit(submit):
             # bodov.
             try:
                 score = Decimal(tree.find("runLog/score").text)
-            except:
+            except:  # noqa: E722 @FIXME
                 score = 0
             points = (submit.task.source_points * score) / Decimal(100)
         submit.points = points

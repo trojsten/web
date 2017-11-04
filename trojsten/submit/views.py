@@ -38,7 +38,7 @@ def protocol_data(protocol_path, force_show_details=False):
         template_data['protocolReady'] = True  # Tested, show the protocol
         try:
             tree = ET.parse(protocol_path)  # Protocol is in XML format
-        except:
+        except:  # noqa: E722 @FIXME
             # don't throw error if protocol is corrupted. (should only happen
             # while protocol is being uploaded)
             template_data['protocolReady'] = False
@@ -259,7 +259,7 @@ def task_submit_post(request, task_id, submit_type):
 
     try:
         sfile = request.FILES['submit_file']
-    except:
+    except:  # noqa: E722 @FIXME
         # error will be reported from form validation
         pass
 
