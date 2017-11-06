@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-23 23:35+0200\n"
+"POT-Creation-Date: 2017-11-28 18:58+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -165,31 +165,35 @@ msgstr "%(count)s sekunda"
 
 #: login/views.py:29
 msgid "Logout successful"
-msgstr ""
+msgstr "Odhlásenie úspešné"
 
 #: people/admin.py:157
 msgid "Personal info"
-msgstr ""
+msgstr "Osobné údaje"
 
 #: people/admin.py:160
 msgid "Address"
-msgstr ""
+msgstr "Adresa"
 
 #: people/admin.py:161
 msgid "School"
-msgstr ""
+msgstr "Škola"
 
-#: people/admin.py:164
+#: people/admin.py:164 people/forms.py:270
+msgid "Password"
+msgstr "Heslo"
+
+#: people/admin.py:165
 msgid "Permissions"
-msgstr ""
+msgstr "Práva"
 
-#: people/admin.py:167
+#: people/admin.py:168
 msgid "Important dates"
-msgstr ""
+msgstr "Dôležité dátumy"
 
-#: people/admin.py:256
+#: people/admin.py:257
 msgid "Users merged succesfully."
-msgstr ""
+msgstr "Používatelia spojení úspešne."
 
 #: people/forms.py:30 people/forms.py:49
 msgid "Street"
@@ -254,10 +258,6 @@ msgstr ""
 "Nemôžeme ti posielať poštu na školu, pokiaľ si si žiadnu nevybral. Ak sa "
 "tvoja škola nenachádza v zozname, napíš v e-maili, že ti máme posielať poštu "
 "na školu"
-
-#: people/forms.py:270
-msgid "Password"
-msgstr "Heslo"
 
 #: people/forms.py:272
 msgid "Password confirmation"
