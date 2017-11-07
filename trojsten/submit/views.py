@@ -14,6 +14,7 @@ from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden)
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html
+from django.utils.translation import ugettext_lazy as _
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response as APIResponse
 from sendfile import sendfile
@@ -23,9 +24,8 @@ from trojsten.contests.models import Competition, Round, Task
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
                                    TestableZipSubmitForm)
 from trojsten.submit.helpers import (get_path, process_submit, update_submit,
-                                     write_chunks_to_file)
+                                     write_chunks_to_file, get_description_file_path)
 from trojsten.submit.templatetags.submit_parts import submitclass
-
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
@@ -321,18 +321,7 @@ def task_submit_post(request, task_id, submit_type):
             return HttpResponseForbidden()
         form = DescriptionSubmitForm(request.POST, request.FILES)
         if form.is_valid():
-            # Description submit id's are currently timestamps
-            from time import time
-            submit_id = str(int(time()))
-            # Description file-name should be: surname-id-originalfilename
-            orig_filename, extension = os.path.splitext(sfile.name)
-            target_filename = ('%s-%s-%s' %
-                               (request.user.last_name, submit_id, orig_filename)
-                               )[:(255 - len(extension))] + extension
-            sfiletarget = unidecode(os.path.join(
-                get_path(task, request.user),
-                target_filename,
-            ))
+            sfiletarget = get_description_file_path(sfile, request.user, task)
             write_chunks_to_file(sfiletarget, sfile.chunks())
             sub = Submit(task=task,
                          user=request.user,
@@ -341,9 +330,14 @@ def task_submit_post(request, task_id, submit_type):
                          testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
                          filepath=sfiletarget)
             sub.save()
-            messages.add_message(request, messages.SUCCESS,
-                                 'Úspešne sa ti podarilo submitnúť popis, '
-                                 'po skončení kola ti ho vedúci opravia')
+            if task.round.can_submit:
+                messages.add_message(request, messages.SUCCESS,
+                                     _('You have successfully submitted your description, '
+                                       'it will be reviewed after the round finishes.'))
+            else:
+                messages.add_message(request, messages.WARNING,
+                                     _('You have submitted your description after the deadline. '
+                                       'It is not counted in results.'))
         else:
             for field in form:
                 for error in field.errors:

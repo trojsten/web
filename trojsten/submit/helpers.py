@@ -8,6 +8,7 @@ from time import time
 
 from django.conf import settings
 from django.utils.encoding import smart_bytes
+from os import path
 from unidecode import unidecode
 
 from . import constants
@@ -65,6 +66,23 @@ def get_path(task, user):
         ),
         "%s-%d" % (task.round.semester.competition.name, user.id)
     )
+
+
+def get_description_file_path(file, user, task):
+    """Returns path for given description file.
+
+    The path is of the form: $SUBMIT_PATH/submits/KSP/task_id/user_id/surname-id-originalfilename.
+    Description submit id's are currently timestamps.
+    """
+    submit_id = str(int(time()))
+    orig_filename, extension = os.path.splitext(path.basename(file.name))
+    target_filename = ('%s-%s-%s' %
+                       (user.last_name, submit_id, orig_filename)
+                       )[:(255 - len(extension))] + extension
+    return unidecode(os.path.join(
+        get_path(task, user),
+        target_filename,
+    ))
 
 
 def post_submit(raw, data):

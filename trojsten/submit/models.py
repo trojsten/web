@@ -8,15 +8,16 @@ from decimal import Decimal
 
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.safestring import mark_safe
 from markdown import markdown
 
+from trojsten.contests.models import Task
 from trojsten.people.constants import (GRADUATION_SCHOOL_YEAR,
                                        SCHOOL_YEAR_END_MONTH)
 from trojsten.people.models import User
 from trojsten.submit import constants as submit_constants
-from trojsten.contests.models import Task
 
 
 class SubmitManager(models.Manager):
@@ -90,14 +91,15 @@ class Submit(models.Model):
     tester response and protocol ID assigned.
     """
     task = models.ForeignKey(Task, verbose_name='úloha')
-    time = models.DateTimeField(auto_now_add=True, verbose_name='čas')
+    time = models.DateTimeField(default=timezone.now, verbose_name='čas')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='odovzdávateľ')
     submit_type = models.IntegerField(verbose_name='typ submitu', choices=submit_constants.SUBMIT_TYPES)
     points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body')
 
     filepath = models.CharField(max_length=512, verbose_name='súbor', blank=True)
     testing_status = models.CharField(
-        max_length=128, verbose_name='stav testovania', blank=True)
+        max_length=128, verbose_name='stav testovania', blank=True,
+        choices=submit_constants.SUBMIT_STATUS_CHOICES)
     tester_response = models.CharField(
         max_length=10, verbose_name='odpoveď testovača', blank=True,
         help_text='Očakávané odpovede sú %s' % (
