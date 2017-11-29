@@ -153,7 +153,7 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
     )
 
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
+        (None, {'fields': ('username',)}),
         (_('Personal info'), {'fields': (
             'first_name', 'last_name', 'email', 'gender', 'birth_date'
         )}),
@@ -161,6 +161,7 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
         (_('School'), {'fields': ('school', 'graduation')}),
     )
     superuser_fieldsets = fieldsets + (
+        (_('Password'), {'fields': ('password',)}),
         (_('Permissions'), {'fields': (
             'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'
         )}),

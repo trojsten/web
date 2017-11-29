@@ -6,7 +6,7 @@ import re
 import sys
 try:
     from urllib.request import quote, unquote
-except:
+except:  # noqa: E722 @FIXME
     from urllib import quote, unquote
 import zipfile
 from functools import partial, wraps
@@ -90,7 +90,7 @@ class ReviewForm(forms.Form):
         user_id = cleaned_data['user']
         try:
             cleaned_data['user'] = User.objects.get(pk=user_id)
-        except:
+        except:  # noqa: E722 @FIXME
             raise forms.ValidationError(_('User %s does not exist') % user_id)
 
         return cleaned_data
@@ -145,7 +145,7 @@ class ZipForm(forms.Form):
         if 'initial' in kwargs and 'filename' in kwargs['initial']:
             try:
                 kwargs['initial']['filename'].encode('utf8')
-            except:
+            except:  # noqa: E722 @FIXME
                 kwargs['initial']['filename'] = quote(kwargs['initial']['filename'])
             self.filename = kwargs['initial']['filename']
             self.name = kwargs['initial']['filename']
@@ -154,9 +154,9 @@ class ZipForm(forms.Form):
             try:
                 try:
                     kwargs['initial']['comment'] = kwargs['initial']['comment'].decode('utf8')
-                except:
+                except:  # noqa: E722 @FIXME
                     kwargs['initial']['comment'] = kwargs['initial']['comment'].decode('windows-1250')
-            except:
+            except:  # noqa: E722 @FIXME
                 kwargs['initial']['comment'] = unidecode(kwargs['initial']['comment'])
 
         self.fields['points'] = forms.IntegerField(min_value=0, required=False, max_value=max_val)
@@ -170,7 +170,7 @@ class ZipForm(forms.Form):
         else:
             try:
                 cleaned_data['filename'] = unquote(cleaned_data['filename'].encode('ascii'))
-            except:
+            except:  # noqa: E722 @FIXME
                 pass
 
         if cleaned_data['user'] == 'None':

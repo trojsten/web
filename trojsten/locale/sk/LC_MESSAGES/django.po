@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-17 02:21+0200\n"
+"POT-Creation-Date: 2017-11-28 18:58+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -165,31 +165,35 @@ msgstr "%(count)s sekunda"
 
 #: login/views.py:29
 msgid "Logout successful"
-msgstr ""
+msgstr "Odhlásenie úspešné"
 
 #: people/admin.py:157
 msgid "Personal info"
-msgstr ""
+msgstr "Osobné údaje"
 
 #: people/admin.py:160
 msgid "Address"
-msgstr ""
+msgstr "Adresa"
 
 #: people/admin.py:161
 msgid "School"
-msgstr ""
+msgstr "Škola"
 
-#: people/admin.py:164
+#: people/admin.py:164 people/forms.py:270
+msgid "Password"
+msgstr "Heslo"
+
+#: people/admin.py:165
 msgid "Permissions"
-msgstr ""
+msgstr "Práva"
 
-#: people/admin.py:167
+#: people/admin.py:168
 msgid "Important dates"
-msgstr ""
+msgstr "Dôležité dátumy"
 
-#: people/admin.py:256
+#: people/admin.py:257
 msgid "Users merged succesfully."
-msgstr ""
+msgstr "Používatelia spojení úspešne."
 
 #: people/forms.py:30 people/forms.py:49
 msgid "Street"
@@ -255,10 +259,6 @@ msgstr ""
 "tvoja škola nenachádza v zozname, napíš v e-maili, že ti máme posielať poštu "
 "na školu"
 
-#: people/forms.py:270
-msgid "Password"
-msgstr "Heslo"
-
 #: people/forms.py:272
 msgid "Password confirmation"
 msgstr "Potvrdenie hesla"
@@ -307,7 +307,7 @@ msgstr "Kolo"
 msgid "Submit"
 msgstr "Odoslať"
 
-#: people/models.py:219
+#: people/models.py:220
 msgid "Value \"{}\" does not match regex \"{}\"."
 msgstr ""
 
@@ -399,7 +399,7 @@ msgid "Complete Registration"
 msgstr "Dodatočná Registrácia"
 
 #: people/templates/trojsten/people/additional_registration.html:23
-#: people/tests.py:757
+#: people/tests.py:758
 msgid "You have already filled all required properties."
 msgstr "Momentálne máš vyplnené všetky potrebné údaje."
 
@@ -530,34 +530,34 @@ msgstr ""
 "a>.\n"
 "                "
 
-#: reviews/forms.py:48
+#: reviews/forms.py:49
 #, python-format
 msgid "File must be a ZIP archive: %s"
 msgstr "Súbor musí byť ZIP archív: %s"
 
-#: reviews/forms.py:83
+#: reviews/forms.py:86
 msgid "Points are required"
 msgstr "Body sú povinné"
 
-#: reviews/forms.py:86
+#: reviews/forms.py:89
 msgid "User is required"
 msgstr "Používateľ je povinný"
 
-#: reviews/forms.py:91
+#: reviews/forms.py:94
 #, python-format
 msgid "User %s does not exist"
 msgstr "Používateľ %s neexistuje"
 
-#: reviews/forms.py:182
+#: reviews/forms.py:185
 #, python-format
 msgid "Invalid filename %s"
 msgstr "Neplatný názov súboru %s"
 
-#: reviews/forms.py:185
+#: reviews/forms.py:188
 msgid "Must have set points"
 msgstr "Musíš uviesť body"
 
-#: reviews/forms.py:203
+#: reviews/forms.py:206
 msgid "Assigned 2 or more files to the same user."
 msgstr "Rovnaký používateľ má priradené 2 alebo viac súborov."
 
@@ -679,42 +679,68 @@ msgstr "Ignorovať"
 msgid "Successfully finished reviewing this task!"
 msgstr "Úspešne dokončené opravovanie tejto úlohy!"
 
-#: settings/common.py:392
+#: settings/common.py:393
 msgid "Table of Contents"
 msgstr ""
 
-# Submit
-#: submit/constants.py:26 submit/tests.py:386
-msgid "Wrong answer"
-msgstr "Zlá odpoveď"
+#: submit/constants.py:11
+msgid "reviewed"
+msgstr "opravený"
 
-#: submit/constants.py:27
-msgid "Compilation error"
-msgstr "Chyba počas kompilácie"
+#: submit/constants.py:12
+msgid "in queue"
+msgstr "v poradí"
 
-#: submit/constants.py:28
-msgid "Time limit exceeded"
-msgstr "Prekročený časový limit"
+#: submit/constants.py:13
+msgid "finished"
+msgstr "ukončený"
 
-#: submit/constants.py:29
-msgid "Memory limit exceeded"
-msgstr "Prekročený pamäťový limit"
-
-#: submit/constants.py:30
+#: submit/constants.py:14 submit/constants.py:37
 msgid "OK"
 msgstr "OK"
 
-#: submit/constants.py:31
+# Submit
+#: submit/constants.py:33 submit/tests.py:389
+msgid "Wrong answer"
+msgstr "Zlá odpoveď"
+
+#: submit/constants.py:34
+msgid "Compilation error"
+msgstr "Chyba počas kompilácie"
+
+#: submit/constants.py:35
+msgid "Time limit exceeded"
+msgstr "Prekročený časový limit"
+
+#: submit/constants.py:36
+msgid "Memory limit exceeded"
+msgstr "Prekročený pamäťový limit"
+
+#: submit/constants.py:38
 msgid "Runtime exception"
 msgstr "Chyba počas behu programu"
 
-#: submit/constants.py:32
+#: submit/constants.py:39
 msgid "Security exception"
 msgstr "Pokus o narušenie bezpečnosti"
 
-#: submit/constants.py:33
+#: submit/constants.py:40
 msgid "Ignored"
 msgstr ""
+
+#: submit/forms.py:76
+#, fuzzy
+#| msgid "Submit"
+msgid "Submit file"
+msgstr "Nahrať súbor"
+
+#: submit/forms.py:77
+msgid "Here you can upload a file with submit description"
+msgstr "Tu môžeš nahrať súbor s popisom riešenia"
+
+#: submit/forms.py:85
+msgid "You can attach a submit file only to descriptions."
+msgstr "Nahrať súbor môžeš len k popisom."
 
 #: submit/templates/trojsten/submit/parts/submit_list.html:30
 #: submit/templates/trojsten/submit/parts/submit_list.html:36
@@ -729,6 +755,22 @@ msgstr ""
 #: submit/templates/trojsten/submit/parts/submit_list.html:92
 msgid "Detaily"
 msgstr ""
+
+#: submit/views.py:335
+msgid ""
+"You have successfully submitted your description, it will be reviewed after "
+"the round finishes."
+msgstr ""
+"Úspešne sa ti podarilo submitnúť popis, po skončení kola ti ho vedúci "
+"opravia."
+
+#: submit/views.py:339
+msgid ""
+"You have submitted your description after the deadline. It is not counted in "
+"results."
+msgstr ""
+"Nahral si svoj popis riešenia po termíne kola. Nebude zarátaný vo "
+"výsledkovke."
 
 #: templates/comments/comment.html:23
 msgid "Preview of your comment"

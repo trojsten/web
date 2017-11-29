@@ -84,7 +84,7 @@ class MenuItem(models.Model):
             resolved = False
             try:
                 resolved = resolve(url)
-            except:
+            except:  # noqa: E722 @FIXME
                 pass
 
             matches = resolved and resolved.url_name == pattern
