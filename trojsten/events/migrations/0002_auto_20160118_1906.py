@@ -66,6 +66,17 @@ class Migration(migrations.Migration):
             name='type',
             field=models.ForeignKey(verbose_name='typ akcie', to='events.EventType'),
         ),
+        migrations.CreateModel(
+            name='OrganizerInvitation',
+            fields=[
+            ],
+            options={
+                'verbose_name': 'ved\xfaci',
+                'proxy': True,
+                'verbose_name_plural': 'ved\xfaci',
+            },
+            bases=('events.invitation',),
+        ),
         migrations.AlterUniqueTogether(
             name='invitation',
             unique_together=set([('event', 'user')]),
