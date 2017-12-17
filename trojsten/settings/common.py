@@ -50,6 +50,13 @@ if 'test' in sys.argv:
     if 'kaspar' in DATABASES:
         del DATABASES['kaspar']
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'results-cache',
+    }
+}
+
 PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
     os.path.dirname(os.path.realpath(trojsten.__file__))
 )
