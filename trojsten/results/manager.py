@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.core.cache import cache
 
 from .representation import ResultsRequest
 
@@ -14,7 +15,13 @@ def get_results(tag_key, round, single_round):
     The function abstracts the different result sources (generating, frozen, cached).
     """
     # FIXME(generic_results_stage_2): frozen results
-    return _generate_results(tag_key, round, single_round)
+
+    cache_key = '{}.{}.{}'.format(tag_key, round.pk, single_round)
+    results = cache.get(cache_key)
+    if results is None:
+        results = _generate_results(tag_key, round, single_round)
+        cache.set(cache_key, results)
+    return results
 
 
 def get_results_tags_for_rounds(rounds):

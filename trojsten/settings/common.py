@@ -54,6 +54,8 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'results-cache',
+        'TIMEOUT': 60 * 5,
+        'MAX_ENTRIES': 100,
     }
 }
 
