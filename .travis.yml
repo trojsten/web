@@ -3,10 +3,7 @@ python:
   - "2.7"
   - "3.5"
 env:
-  - DJANGO_VERSION='>=1.10,<1.11'
-
-# command to install dependencies
-
+  - DJANGO_VERSION='>=1.11,<2'
 matrix:
   include:
   - python: "3.5"
@@ -14,7 +11,7 @@ matrix:
     install: pip install flake8
     script: flake8 trojsten
 
-
+# command to install dependencies
 install:
   - wget https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.4.6/elasticsearch-2.4.6.tar.gz
   - tar -xzf elasticsearch-2.4.6.tar.gz
@@ -25,6 +22,7 @@ install:
   - pip install -q coverage
   - pip install -q codeclimate-test-reporter
   - bash -c 'cd trojsten; python ../manage.py compilemessages;'
+
 # command to run tests
 script:
   - wget -q --waitretry=1 --retry-connrefused -T 10 -O - http://127.0.0.1:9200
