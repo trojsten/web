@@ -3,6 +3,13 @@ import os
 
 from trojsten.settings.common import *
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        'LOCATION': 'results-cache',
+    }
+}
+
 ALLOWED_HOSTS = []
 DEBUG = True
 SUBMIT_DEBUG = True
