@@ -3,6 +3,7 @@ from collections import namedtuple
 
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
+from django.views.decorators.cache import cache_page
 
 from trojsten.contests.models import Competition, Round
 from trojsten.utils.utils import is_true
@@ -11,6 +12,7 @@ from .constants import DEFAULT_TAG_KEY
 from .manager import TagKeyError, get_results, get_results_tags_for_rounds
 
 
+@cache_page(60 * 5)
 def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
     """Displays results for specified round_ids and category_id
     """
@@ -48,6 +50,7 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
     )
 
 
+@cache_page(60 * 5)
 def view_latest_results(request):
     """Displays results for latest rounds for each competition
     """
