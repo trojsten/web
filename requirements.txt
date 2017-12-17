@@ -78,7 +78,7 @@ pyyaml==3.12              # via tablib
 requests-oauthlib==0.8.0  # via social-auth-core
 requests==2.14.2
 six==1.11.0               # via bleach, cryptography, django-nyt, html5lib, pyopenssl, social-auth-app-django, social-auth-core, wiki
-social-auth-app-django==2.0.0  # via ksp-login
+social-auth-app-django==1.2.0
 social-auth-core==1.5.0   # via ksp-login, social-auth-app-django
 sorl-thumbnail==12.4.1    # via wiki
 tablib==0.12.1            # via django-import-export
