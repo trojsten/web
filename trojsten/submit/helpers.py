@@ -106,7 +106,7 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
         lang = get_lang_from_filename(f.name)
         if not lang:
             return False
-        language = lang
+        language = lang.strip('.')
 
     # Generate submit ID
     # Submit ID is <timestamp>-##### where ##### are 5 random digits
@@ -116,21 +116,22 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
     # Prepare submit parameters (not entirely sure about this yet).
     user_id = "%s-%d" % (contest_id, user_id)
     task_id = "%s-%d" % (contest_id, task_id)
-    original_name = unidecode(f.name)
-    correct_filename = task_id + language
     data = f.read()
 
     # Determine local directory to store RAW file into
     path = get_path_raw(contest_id, task_id, user_id)
 
-    # Prepare RAW from submit parameters
-    raw = "%s\n%s\n%s\n%s\n%s\n%s\n" % (
+    priority = 0
+
+    # Prepare RAW header from submit parameters
+    raw = "submit1.3\n%s\n%s\n%s\n%s\n%s\n%s\nmagic_footer\n" % (
         settings.TESTER_WEB_IDENTIFIER,
         submit_id,
         user_id,
-        correct_filename,
-        timestamp,
-        original_name)
+        task_id,
+        language,
+        priority,
+    )
 
     # Write RAW to local file
     write_chunks_to_file(os.path.join(path, submit_id + constants.SUBMIT_RAW_FILE_EXTENSION), [raw, data])
