@@ -9476,6 +9476,11 @@ label.required:after {
   border: 2px solid #4a6fd8;
   outline: 5px solid #ffffff;
 }
+@media only screen and (max-width: 480px) {
+  .main-content {
+    border: none;
+  }
+}
 .main-content p {
   line-height: 1.5;
 }
@@ -9530,6 +9535,11 @@ footer a:visited {
 /* Login Button */
 #login-box {
   margin-right: -30px;
+}
+@media only screen and (max-width: 480px) {
+  #login-box {
+    margin-right: initial;
+  }
 }
 #login-dropdown {
   border: 1px solid #21419b;
