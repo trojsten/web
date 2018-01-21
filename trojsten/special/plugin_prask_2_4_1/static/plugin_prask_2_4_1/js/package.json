@@ -1,0 +1,30 @@
+{
+  "name": "prask_questions",
+  "version": "1.0.0",
+  "description": "compile by: ``` babel --presets es2015,react --watch src/ --out-dir lib/ ```",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "NODE_ENV=production webpack --config webpack.config.js",
+    "dev": "webpack --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "8.4.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^15.0.1",
+    "react-dom": "^15.0.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "webpack": "^3.10.0"
+  }
+}
