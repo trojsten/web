@@ -128,6 +128,12 @@ label.required:after {
   outline: 5px solid @main-bg;
 }
 
+@media only screen and (max-width: 480px) {
+  .main-content {
+    border: none;
+  }
+}
+
 .main-content p {
   line-height: 1.5;
 }
@@ -195,6 +201,12 @@ footer a:visited {
 /* Login Button */
 #login-box {
   margin-right:-30px;
+}
+
+@media only screen and (max-width: 480px) {
+  #login-box {
+    margin-right: -5px;
+  }
 }
 
 #login-dropdown {
@@ -266,17 +278,34 @@ footer {
   position: absolute;
   bottom: 0;
   width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 84px;
   background-color: darken(@body-bg, 7%);
-}
-
-footer .container {
-  padding-top: 20px;
 }
 
 footer ul {
   margin-bottom: 6px;
+}
+
+footer .container {
+  padding-top: 20px;
+  margin-bottom: 1em;
+}
+
+footer div {
+  text-align: center;
+}
+
+#footer-logo {
+  height: 100%;
+}
+
+footer img {
+  max-height: 2em;
+}
+
+@media only screen and (max-width: 480px) {
+  footer .mobile-second-row {
+    margin-top: 1em;
+  }
 }
 
 .glyphicon-animate-rotate {

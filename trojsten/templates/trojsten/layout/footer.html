@@ -1,17 +1,63 @@
 {% load staticfiles %}
 {% block page_footer %}
-<ul class="list-inline text-muted">
-<li><a href="/kontakt/"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Kontakt</a></li>
-<li><a href="/sponzori/"><span class="glyphicon glyphicon-euro" aria-hidden="true"></span> Sponzori</a></li>
-<li><a href="{% url 'contact_form' %}"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Nahlásiť problém</a></li>
-<li class="pull-right">
-    &copy; <a id="trojsten_logo" href="http://trojsten.sk/"><img src="{% static "images/trojsten/logo_small.png" %}" alt="Trojsten"/>Trojsten</a> {% now "Y" %} (rev {{ VERSION }}) <br>    
-</li>
-</ul>
-<ul class="list-inline text-muted">
-<li><a href="http://trojsten.sk/podporte-nas/">Podporte nás</a> darovaním 2% z dane</li>
-<li class="pull-right">
-    ikonky &copy; <a href="http://glyphicons.com/">GLYPHICONS.com</a>
-</li>
-</ul>
+
+<div class="container text-muted">
+  <div class="row">
+    <div class="col-sm-2 col-xs-12" id="footer-logo">
+      <a href="http://trojsten.sk/">
+        <div>
+          <img src="{% static "images/trojsten/logo_small.png" %}" alt="Trojsten"/>
+        </div>
+        &copy; {% now "Y" %} Trojsten
+        <!-- (rev {{ VERSION }}) -->
+      </a>
+    </div>
+
+    <div class="col-sm-2 col-xs-6 footer-text">
+        <a href="http://trojsten.sk/podporte-nas/">
+          <div>
+            <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+          </div>
+          Podporte nás
+        </a>
+      </div>
+
+    <div class="col-sm-2 col-xs-6">
+      <a href="/kontakt/">
+        <div>
+          <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+        </div>
+        Kontakt
+      </a>
+    </div>
+
+    <div class="col-sm-2 col-xs-6 mobile-second-row">
+      <a href="/sponzori/">
+        <div>
+          <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
+        </div>
+        Sponzori
+      </a>
+    </div>
+
+    <div class="col-sm-2 col-xs-6 mobile-second-row">
+      <a href="{% url 'contact_form' %}">
+        <div>
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        </div>
+        Nahlásiť problém
+      </a>
+    </div>
+
+    <div class="col-sm-2 hidden-xs">
+      <a href="http://glyphicons.com/">
+        <div>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </div>
+        &copy; GLYPHICONS
+      </a>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
