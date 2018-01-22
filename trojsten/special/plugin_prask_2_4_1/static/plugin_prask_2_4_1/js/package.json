@@ -1,7 +1,7 @@
 {
   "name": "prask_questions",
   "version": "1.0.0",
-  "description": "compile by: ``` babel --presets es2015,react --watch src/ --out-dir lib/ ```",
+  "description": "Prask game, 2. year, 4. round, 1. problem",
   "main": "index.js",
   "directories": {
     "lib": "lib"
