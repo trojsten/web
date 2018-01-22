@@ -9379,7 +9379,7 @@ https://github.com/twitter/typeahead.js/issues/378
 }
 @font-face {
   font-family: 'Reckless Regular';
-  src: url('../../fonts/Reckless.otf') format('opentype');
+  src: url('../../fonts/Reckless.bare.otf') format('opentype');
 }
 html,
 body {
