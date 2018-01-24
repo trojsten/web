@@ -32,7 +32,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
     town = forms.CharField(max_length=64, label=_('Town'))
     postal_code = forms.CharField(
         max_length=16, label=_('Postal code'))
-    country = LazyTypedChoiceField(choices=countries, label=_('Country'))
+    country = LazyTypedChoiceField(choices=countries, initial='SK', label=_('Country'))
 
     MAILING_OPTION_CHOICES = [
         (constants.MAILING_OPTION_HOME, _('home')),
