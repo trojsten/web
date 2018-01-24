@@ -38,12 +38,11 @@ body {
 
 .navbar-main {
   z-index: 1050;
-
   border-bottom: 3px solid @body-bg;
   outline: 2px solid @brand-primary;
 }
 
-.navbar-main .navbar-toggle:focus{
+.navbar-main .navbar-toggle:focus {
   background-color: transparent;
 }
 
@@ -55,18 +54,15 @@ li > h1 {
   margin-top: 0;
 }
 
-h2.logo
-{
+h2.logo {
   margin-top: 0;
 }
 
-h2.logo img
-{
+h2.logo img {
   max-width:80%;
 }
 
-#trojsten_logo
-{
+#trojsten_logo {
   img {
     height: 1.5em;
     vertical-align: baseline;
@@ -194,7 +190,7 @@ footer a:visited {
   }
 }
 
-.sidebar .nav>li>a {
+.sidebar .nav > li > a {
   padding-left: 15px;
 }
 
@@ -285,32 +281,28 @@ footer {
   bottom: 0;
   width: 100%;
   background-color: darken(@body-bg, 7%);
-}
 
-footer ul {
-  margin-bottom: 6px;
-}
+  .container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 
-footer .container {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
+  ul {
+    margin-bottom: 6px;
+  }
 
-footer div {
-  text-align: center;
-}
+  div {
+    text-align: center;
+  }
 
-#footer-logo {
-  height: 100%;
-}
+  img {
+    max-height: 2em;
+  }
 
-footer img {
-  max-height: 2em;
-}
-
-@media only screen and (max-width: 480px) {
-  footer .mobile-second-row {
-    margin-top: 1em;
+  @media only screen and (max-width: 480px) {
+    .mobile-second-row {
+      margin-top: 1em;
+    }
   }
 }
 
@@ -331,11 +323,91 @@ footer img {
 
 /* Statements markdown specific
 -------------------------------------------------- */
+/* Bootstrap table styles */
+.table-bootstrap-original {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: @line-height-computed;
+  // Cells
+  > thead,
+  > tbody,
+  > tfoot {
+    > tr {
+      > th,
+      > td {
+        padding: @table-cell-padding;
+        line-height: @line-height-base;
+        vertical-align: top;
+        border-top: 1px solid @table-border-color;
+      }
+    }
+  }
+  // Bottom align for column headings
+  > thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid @table-border-color;
+  }
+  // Remove top border from thead by default
+  > caption + thead,
+  > colgroup + thead,
+  > thead:first-child {
+    > tr:first-child {
+      > th,
+      > td {
+        border-top: 0;
+      }
+    }
+  }
+  // Account for multiple tbody instances
+  > tbody + tbody {
+    border-top: 2px solid @table-border-color;
+  }
 
-.task-table th, .task-table td {
-    border: 1px solid darken(@brand-primary, 20%);
-    border-collapse: collapse;
-    padding: 2px 5px;
+  // Nesting
+  .table {
+    background-color: @body-bg;
+  }
+}
+
+.table-bordered-bootstrap-original {
+  border: 1px solid @table-border-color;
+  > thead,
+  > tbody,
+  > tfoot {
+    > tr {
+      > th,
+      > td {
+        border: 1px solid @table-border-color;
+      }
+    }
+  }
+  > thead > tr {
+    > th,
+    > td {
+      border-bottom-width: 2px;
+    }
+  }
+}
+/* End of Bootstrap table styles */
+
+.task-statement {
+  table {
+    &:extend(.table-bootstrap-original all);
+    &:extend(.table-bordered-bootstrap-original all);
+
+    /* Gray table head */
+    thead {
+      tr {a
+        th {
+          background-color: #f5f5f5;
+        }
+      }
+    }
+
+    * {
+      text-align: center;
+    }
+  }
 }
 
 .wiki-article {
