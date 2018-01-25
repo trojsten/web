@@ -1,3 +1,6 @@
+@import url(//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,latin-ext);
+@import url(//fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700,800&subset=latin,latin-ext);
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,900&subset=latin-ext');
 /*! normalize.css v3.0.1 | MIT License | git.io/normalize */
 html {
   font-family: sans-serif;
@@ -6953,12 +6956,14 @@ label {
   padding-bottom: 9px;
   margin: 40px 0 20px;
   border-bottom: 1px solid #eeeeee;
+  text-align: left;
 }
 .wiki-article h2 {
   font-size: 24.5px;
   padding-bottom: 9px;
   margin: 40px 0 20px;
   border-bottom: 1px solid #eeeeee;
+  text-align: left;
   margin-bottom: 20px;
   padding-bottom: 0px;
 }
@@ -9372,10 +9377,9 @@ https://github.com/twitter/typeahead.js/issues/378
 .twitter-typeahead {
   display: block !important;
 }
-<<<<<<< HEAD
 @font-face {
   font-family: 'Reckless Regular';
-  src: url('../../fonts/Reckless.bare.otf') format('opentype');
+  src: url('../../fonts/Reckless.otf') format('opentype');
 }
 html,
 body {
@@ -9714,6 +9718,4 @@ footer img {
     display: none;
   }
 }
-=======
->>>>>>> Add final main Bootstrap with seminar CSS
 /*# sourceMappingURL=bootstrap.css.map */

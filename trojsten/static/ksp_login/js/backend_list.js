@@ -1,8 +1,5 @@
 ksp_login.jQuery(function($)
 {
-    // Apply js-dependent CSS.
-    $('.ksp_login_provider_list').addClass('ksp_login_provider_list_js');
-
     var show_element = function(elem, callback)
     {
         $(elem).slideDown({

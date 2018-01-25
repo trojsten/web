@@ -4,58 +4,114 @@
 {% load utils %}
 {% load staticfiles %}
 
-<div class="row">
-  {% if SITE.is_login_provider %}
-  <div class="ksp_login_provider_list col-md-6">
-  <h4>Prihlásenie pomocou OpenID</h4>
-    {% for provider in login_providers %}
+{% if SITE.is_login_provider %}
+  <div class="row">
+    <div class="ksp_login_provider_list col-sm-6 col-xs-12">
+      <script>
+        /* This script hides buttons that should be visible only if JS is disabled */
+        const thisScript = document.currentScript;
+        const styleTag = document.createElement('style');
+        const css = '.form-noscript { display: none; } .login-button-js { display: initial; }';
+        styleTag.type = 'text/css';
+        styleTag.appendChild(document.createTextNode(css));
+        thisScript.parentNode.insertBefore(styleTag, thisScript.nextSibling);
+      </script>
+      <h4>Prihlásenie pomocou OpenID</h4>
+      {% for provider in login_providers %}
         <div class="form-group provider_{% if provider.required_field %}with_input{% else %}simple{% endif %}">
-        <a href="#" class="btn btn-default btn-block">
-          <img src="{% static "ksp_login/img/"|add:provider.name|add:".png" %}" title="{{ provider.name }}" alt="{{ provider.name }}" />
-          {{ provider.name | provider_name }}
-        </a>
-        <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline">
+          <a href="#" class="btn btn-default btn-block">
+            <img
+              src="{% static "ksp_login/img/"|add:provider.name|add:".png" %}"
+              title="{{ provider.name }}"
+              alt="{{ provider.name }}"
+            />
+            {{ provider.name | provider_name }}
+          </a>
+          <form
+            method="get"
+            action="{% url "social:begin" provider.name %}"
+            class="form-noscript"
+          >
             {% csrf_token %}
-            {% if provider.required_field %}
-              <input class="form-control input-sm col-md-3" type="text" name="{{ provider.required_field }}" placeholder="{{ provider.required_field_verbose }}" />
-            {% endif %}
             <input type="hidden" name="next" value="{% ksp_login_next %}" />
-            <input class="btn btn-default btn-sm" type="submit" value="{% trans "Log in" %}" />
+            {% if provider.required_field %}
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="{{ provider.required_field }}"
+                  placeholder="{{ provider.required_field_verbose }}"
+                />
+                <div class="input-group-btn">
+                  <button type="submit" class="btn btn-primary">
+                    {% trans "Log in" %}
+                  </button>
+                </div>
+              </div>
+            {% else %}
+              <button type="submit" class="btn btn-primary btn-block">
+                {% trans "Log in" %}
+              </button>
+            {% endif %}
           </form>
         </div>
-    {% endfor %}
-  </div>
-
-  <div class="col-md-6">
-  <h4>Prihlásenie pomocou hesla</h4>
-  <form action="{% url "account_login" %}" method="post">
-      <input type="hidden" name="next" value="{% ksp_login_next %}" />
-      {% csrf_token %}
-      {% for field in form %}
-      <div class="form-group">
-        <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.auto_id }}" name="{{ field.name }}" placeholder="{{ field.label }}" {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %} />
-      </div>
       {% endfor %}
-      <div class="form-group">
-          <input class="btn btn-primary btn-block" type="submit" value="{% trans "Log in" %}" />
-          <a class="btn btn-link btn-block" href="{% url "password_reset" %}">{% trans "Forgotten password" %}</a>
-      </div>
-  </form>
-  </div>
-</div>
+    </div>
 
-<div class="row">
-<div class="col-md-12">
-<hr/>
-<a class="btn btn-info btn-block"  href="{% url "account_register" %}">{% trans "Registration" %}</a>
-</div>
+    <div class="col-sm-6 col-xs-12">
+      <h4>Prihlásenie pomocou hesla</h4>
+      <form action="{% url "account_login" %}" method="post">
+        <input type="hidden" name="next" value="{% ksp_login_next %}" />
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+          <input
+            type="{{ field.field.widget.input_type }}"
+            class="form-control"
+            id="{{ field.auto_id }}"
+            name="{{ field.name }}"
+            placeholder="{{ field.label }}"
+            {% if field.field.max_length %}
+              maxlength="{{ field.field.max_length }}"
+            {% endif %}
+          />
+        </div>
+        {% endfor %}
+        <div class="form-group">
+          <button class="btn btn-primary btn-block" type="submit">
+            {% trans "Log in" %}
+          </button>
+          <a class="btn btn-link btn-block" href="{% url "password_reset" %}">
+            {% trans "Forgotten password" %}
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <hr/>
+      <a class="btn btn-info btn-block"  href="{% url "account_register" %}">
+        {% trans "Registration" %}
+      </a>
+    </div>
+  </div>
 {% else %}
-{% with login_providers.0 as provider %}
-  <form action="{% url "social:begin" provider.name %}" method="get" class="form-inline" id="auto_login_form">
-    {% csrf_token %}
-    <input type="hidden" name="next" value="{% ksp_login_next %}" />
-    <input class="btn btn-primary btn-block btn-lg" type="submit" value="{% trans "Log in with your Trojsten account" %}" />
-  </form>
-{% endwith %}
+  <div class="row">
+    {% with login_providers.0 as provider %}
+      <form
+        method="get"
+        action="{% url "social:begin" provider.name %}"
+        class="form-inline"
+        id="auto_login_form"
+      >
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% ksp_login_next %}" />
+        <button type="submit" class="btn btn-primary btn-block btn-lg">
+          {% trans "Log in with your Trojsten account" %}
+        </button>
+      </form>
+    {% endwith %}
+  </div>
 {% endif %}
-</div>
