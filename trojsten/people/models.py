@@ -7,6 +7,7 @@ import re
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
+from django_countries.fields import CountryField
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -20,8 +21,7 @@ class AbstractAddress(models.Model):
     town = models.CharField(max_length=64, db_index=True, verbose_name='mesto')
     postal_code = models.CharField(
         max_length=16, db_index=True, verbose_name='PSČ')
-    country = models.CharField(
-        max_length=32, db_index=True, verbose_name='krajina')
+    country = CountryField()
 
     class Meta:
         abstract = True

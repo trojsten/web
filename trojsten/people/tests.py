@@ -13,6 +13,7 @@ from django.http.request import HttpRequest
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django_countries.fields import Country
 
 from trojsten.contests import constants as contests_constants
 from trojsten.contests.models import Competition, Round, Semester, Task
@@ -81,7 +82,7 @@ class MergeUsersTests(TestCase):
         self.telefon = UserPropertyKey.objects.create(key_name='Telefon')
         self.op = UserPropertyKey.objects.create(key_name='OP')
         self.address = Address.objects.create(
-            street='Jablková 47', town='Dolný Kubín', postal_code='94742', country='Slovensko'
+            street='Jablková 47', town='Dolný Kubín', postal_code='94742', country=Country('SK')
         )
         rnd = Round.objects.create(
             semester=Semester.objects.create(
@@ -193,7 +194,7 @@ class UserFormTests(TestCase):
         self.request.session = {}
         address = Address.objects.create(
             street='Matematicka 47', town='Algebrovo', postal_code='420 47',
-            country='Slovensko'
+            country=Country('SK')
         )
         School.objects.create(
             verbose_name='Iná škola', pk=1
@@ -221,7 +222,7 @@ class UserFormTests(TestCase):
             'street': 'Pekná 47',
             'town': 'Bratislava',
             'postal_code': '420 47',
-            'country': 'Slovensko',
+            'country': Country('SK'),
             'birth_date': datetime.date(2016, 8, 19),
             'email': 'mail@example.com'
         }
@@ -231,7 +232,7 @@ class UserFormTests(TestCase):
             'corr_street': 'Pekna 47',
             'corr_town': 'Krasno',
             'corr_postal_code': '842 47',
-            'corr_country': 'Slovensko'
+            'corr_country': Country('SK')
         })
         self.full_name = 'Jožko Mrkvička'
 
@@ -330,7 +331,7 @@ class UserFormTests(TestCase):
         street = 'Kukucinova 47'
         town = 'Sladkovicovo'
         postal_code = '420 47'
-        country = 'Slovensko'
+        country = Country('SK')
 
         form.data['mailing_option'] = constants.MAILING_OPTION_OTHER
         form.data['corr_street'] = street
