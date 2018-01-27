@@ -27,12 +27,13 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
     single_round = is_true(request.GET.get('single_round', False))
 
     try:
-        table = get_results(tag_key, round, single_round)
+        results = get_results(tag_key, round, single_round)
     except TagKeyError:
         raise Http404('Invalid result tag: %s' % tag_key)
 
     context = {
-        'table': table,
+        'scoreboard': results,
+        'tag_name': round.semester.competition.rules.RESULTS_TAGS.get(tag_key).name,
         'show_staff': is_true(request.GET.get('show_staff', False)),
         'competition_ignored': (
             request.user.is_anonymous() or
@@ -66,12 +67,13 @@ def view_latest_results(request):
     single_round = is_true(request.GET.get('single_round', False))
 
     ResultTableObject = namedtuple(
-        'ResultTableObject', ['table', 'competition_ignored', 'user_valid']
+        'ResultTableObject', ['scoreboard', 'tag_name', 'competition_ignored', 'user_valid']
     )
 
-    tables = [
+    scoreboards = [
         ResultTableObject(
             get_results(result_tag.key, round, single_round),
+            result_tag.name,
             request.user.is_anonymous() or request.user.is_competition_ignored(
                 round.semester.competition
             ),
@@ -84,7 +86,7 @@ def view_latest_results(request):
     ]
 
     context = {
-        'tables': tables,
+        'scoreboards': scoreboards,
         'show_staff': is_true(request.GET.get('show_staff', False)),
     }
     return render(

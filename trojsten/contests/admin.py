@@ -32,7 +32,7 @@ class RoundAdmin(admin.ModelAdmin):
     list_select_related = True
     list_display = ('short_str',
                     'get_semester_number', 'get_semester_name', 'get_year', 'get_competition',
-                    'can_submit', 'start_time', 'end_time',
+                    'can_submit', 'start_time', 'end_time', 'results_final',
                     'visible', 'tasks_pdf',
                     'solutions_visible', 'solutions_pdf')
     list_filter = ('semester__competition', 'semester__year')
