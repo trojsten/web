@@ -12,12 +12,15 @@ from django.test import TestCase
 from django.utils import timezone
 
 import trojsten.submit.constants as submit_constants
-from trojsten.contests.models import Competition, Semester, Round, Task, Category
-from trojsten.events.models import EventParticipant, Event, EventType, EventPlace
+from trojsten.contests.models import (Category, Competition, Round, Semester,
+                                      Task)
+from trojsten.events.models import (Event, EventParticipant, EventPlace,
+                                    EventType)
 from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
 from trojsten.people.models import User
-from trojsten.rules.kms import KMS_ALFA, KMS_BETA, KMS_CAMP_TYPE,\
-    KMS_MO_FINALS_TYPE, COEFFICIENT_COLUMN_KEY, KMSResultsGenerator, KMSRules
+from trojsten.rules.kms import (COEFFICIENT_COLUMN_KEY, KMS_ALFA, KMS_BETA,
+                                KMS_CAMP_TYPE, KMS_MO_FINALS_TYPE,
+                                KMSResultsGenerator, KMSRules)
 from trojsten.rules.ksp import KSP_ALL, KSP_L1, KSP_L2, KSP_L3, KSP_L4
 from trojsten.rules.models import KSPLevel
 from trojsten.submit.models import Submit
@@ -26,14 +29,41 @@ SOURCE = submit_constants.SUBMIT_TYPE_SOURCE
 DESCRIPTION = submit_constants.SUBMIT_TYPE_DESCRIPTION
 
 
-def get_row_for_user(tables, user, tag_key):
-    for table_object in tables:
-        table = table_object.table
-        if table.tag.key == tag_key:
-            for row in table.rows:
-                if row.user == user:
-                    return row
+class DictObject(object):
+    def __init__(self, d):
+        """Convert a dictionary to a class
+
+        @param :d Dictionary
+        """
+        self.__dict__.update(d)
+        for k, v in d.items():
+            if isinstance(v, dict):
+                self.__dict__[k] = DictObject(v)
+            if isinstance(v, list):
+                self.__dict__[k] = [DictObject(i) for i in v if isinstance(i, dict)]
+
+
+def get_scoreboard(scoreboards, tag_key):
+    for scoreboard_object in scoreboards:
+        scoreboard = scoreboard_object.scoreboard
+        if scoreboard.tag == tag_key:
+            return scoreboard
     return None
+
+
+def get_row_for_user(scoreboard, user):
+    if scoreboard:
+        table = scoreboard.serialized_results
+        for row in table['rows']:
+            if row['user']['id'] == user.id:
+                return DictObject(row)
+    return None
+
+
+def get_col_to_index_map(scoreboard):
+    if scoreboard:
+        return {k: i for i, k in enumerate(map(lambda c: c['key'], scoreboard.serialized_results['cols']))}
+    return dict()
 
 
 class KMSCoefficientTest(TestCase):
@@ -235,14 +265,16 @@ class KMSRulesTest(TestCase):
 
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        row = get_row_for_user(response.context['tables'], user, KMS_ALFA)
-        self.assertEqual(row.cells_by_key[COEFFICIENT_COLUMN_KEY].points, '1')
-        self.assertEqual(row.cells_by_key['sum'].points, '33')
+        scoreboard = get_scoreboard(response.context['scoreboards'], KMS_ALFA)
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        row = get_row_for_user(scoreboard, user)
+        self.assertEqual(row.cell_list[col_to_index_map[COEFFICIENT_COLUMN_KEY]].points, '1')
+        self.assertEqual(row.cell_list[col_to_index_map['sum']].points, '33')
         for i in range(1, 8):
-            self.assertEqual(row.cells_by_key[i].points, str(points[i - 1]))
+            self.assertEqual(row.cell_list[col_to_index_map[i]].points, str(points[i - 1]))
             if i not in [5, 7]:
-                self.assertEqual(row.cells_by_key[i].active, active[i - 1])
-        self.assertTrue(row.cells_by_key[5].active ^ row.cells_by_key[7].active)
+                self.assertEqual(row.cell_list[col_to_index_map[i]].active, active[i - 1])
+        self.assertTrue(row.cell_list[col_to_index_map[5]].active ^ row.cell_list[col_to_index_map[7]].active)
 
     def test_tasks_coefficients_alfa(self):
         points = [1, 2, 3, 4, 5, 6, 7]
@@ -250,12 +282,14 @@ class KMSRulesTest(TestCase):
         self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        row = get_row_for_user(response.context['tables'], user, KMS_ALFA)
+        scoreboard = get_scoreboard(response.context['scoreboards'], KMS_ALFA)
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        row = get_row_for_user(scoreboard, user)
         for i in range(1, 3):
-            self.assertFalse(row.cells_by_key[i].active)
+            self.assertFalse(row.cell_list[col_to_index_map[i]].active)
         for i in range(3, 8):
-            self.assertTrue(row.cells_by_key[i].active)
-        self.assertEqual(row.cells_by_key['sum'].points, '25')
+            self.assertTrue(row.cell_list[col_to_index_map[i]].active)
+        self.assertEqual(row.cell_list[col_to_index_map['sum']].points, '25')
 
     def test_tasks_coefficients_beta(self):
         points = [-1, -1, -1, 3, 4, 5, 6, 7, 8]
@@ -263,11 +297,13 @@ class KMSRulesTest(TestCase):
         self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        row = get_row_for_user(response.context['tables'], user, KMS_BETA)
-        self.assertFalse(row.cells_by_key[4].active)
+        scoreboard = get_scoreboard(response.context['scoreboards'], KMS_BETA)
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        row = get_row_for_user(scoreboard, user)
+        self.assertFalse(row.cell_list[col_to_index_map[4]].active)
         for i in range(5, 10):
-            self.assertTrue(row.cells_by_key[i].active)
-        self.assertEqual(row.cells_by_key['sum'].points, '30')
+            self.assertTrue(row.cell_list[col_to_index_map[i]].active)
+        self.assertEqual(row.cell_list[col_to_index_map['sum']].points, '30')
 
     def test_beta_only_user(self):
         points = [-1, -1, 2, 3, 4, 5, 6, 7, 8]
@@ -275,8 +311,10 @@ class KMSRulesTest(TestCase):
         self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        row_beta = get_row_for_user(response.context['tables'], user, KMS_BETA)
-        row_alfa = get_row_for_user(response.context['tables'], user, KMS_ALFA)
+        scoreboard = get_scoreboard(response.context['scoreboards'], KMS_BETA)
+        row_beta = get_row_for_user(scoreboard, user)
+        scoreboard = get_scoreboard(response.context['scoreboards'], KMS_ALFA)
+        row_alfa = get_row_for_user(scoreboard, user)
         self.assertTrue(row_beta.active)
         self.assertFalse(row_alfa.active)
 
@@ -286,8 +324,10 @@ class KMSRulesTest(TestCase):
         self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        row_beta = get_row_for_user(response.context['tables'], user, KMS_BETA)
-        row_alfa = get_row_for_user(response.context['tables'], user, KMS_ALFA)
+        scoreboard = get_scoreboard(response.context['scoreboards'], KMS_BETA)
+        row_beta = get_row_for_user(scoreboard, user)
+        scoreboard = get_scoreboard(response.context['scoreboards'], KMS_ALFA)
+        row_alfa = get_row_for_user(scoreboard, user)
         self.assertTrue(row_alfa.active)
         self.assertFalse(row_beta.active)
 
@@ -297,10 +337,14 @@ class KMSRulesTest(TestCase):
         self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        row_beta = get_row_for_user(response.context['tables'], user, KMS_BETA)
-        row_alfa = get_row_for_user(response.context['tables'], user, KMS_ALFA)
-        self.assertEqual(row_alfa.cells_by_key['sum'].points, '25')
-        self.assertEqual(row_beta.cells_by_key['sum'].points, '39')
+        scoreboard = get_scoreboard(response.context['scoreboards'], KMS_BETA)
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        row_beta = get_row_for_user(scoreboard, user)
+        scoreboard = get_scoreboard(response.context['scoreboards'], KMS_ALFA)
+        self.assertEqual(row_beta.cell_list[col_to_index_map['sum']].points, '39')
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        row_alfa = get_row_for_user(scoreboard, user)
+        self.assertEqual(row_alfa.cell_list[col_to_index_map['sum']].points, '25')
 
 
 class KSPRulesOneUserTest(TestCase):
@@ -351,7 +395,7 @@ class KSPRulesOneUserTest(TestCase):
 
     def _create_submits(self, submit_definitions):
         for task_number, submit_type, submit_time, points in submit_definitions:
-            submit = Submit.objects.create(task=self.tasks[task_number-1], user=self.user,
+            submit = Submit.objects.create(task=self.tasks[task_number - 1], user=self.user,
                                            submit_type=submit_type, points=points)
             submit.time = submit_time
             if submit_type == DESCRIPTION:
@@ -362,7 +406,8 @@ class KSPRulesOneUserTest(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         for tag, should_be_in_table in zip([KSP_ALL, KSP_L1, KSP_L2, KSP_L3, KSP_L4], in_which_tables_should_user_be):
-            row = get_row_for_user(response.context['tables'], self.user, tag)
+            scoreboard = get_scoreboard(response.context['scoreboards'], tag)
+            row = get_row_for_user(scoreboard, self.user)
             is_in_table = row is not None and row.active
             if should_be_in_table:
                 self.assertTrue(is_in_table, 'User should be in results table {}'.format(tag))
@@ -412,8 +457,13 @@ class KSPRulesOneUserTest(TestCase):
     def _get_point_cells_for_tasks(self, results_tag=KSP_ALL):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        row = get_row_for_user(response.context['tables'], self.user, results_tag)
-        return row.cells_by_key
+        scoreboard = get_scoreboard(response.context['scoreboards'], results_tag)
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        row = get_row_for_user(scoreboard, self.user)
+        return {
+            k: row.cell_list[col_to_index_map[k]]
+            for k in map(lambda c: c['key'], scoreboard.serialized_results['cols'])
+        }
 
     def _assert_active_cells(self, cells, which_cells_should_be_active):
         for i, should_be_active in enumerate(which_cells_should_be_active, start=1):
@@ -543,7 +593,7 @@ class KSPRulesOneUserTest(TestCase):
         cells = self._get_point_cells_for_tasks()
         self.assertEqual(cells[1].points, '7.5')
         self.assertEqual(cells[2].points, '6')
-        self.assertEqual(cells[3].points, '{:.3f}'.format(4.32 + 6.57/2))
+        self.assertEqual(cells[3].points, '{:.3f}'.format(4.32 + 6.57 / 2))
 
     def test_fewer_points_in_second_phase(self):
         self._create_submits([

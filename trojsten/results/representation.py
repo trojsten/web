@@ -73,11 +73,14 @@ class ResultsRow(Serializable):
         }
 
     def _serialize_school_data(self):
-        return {
-            'id': self.school.id,
-            'name': self.school_name,
-            'verbose_name': self.school.verbose_name,
-        }
+        if self.school:
+            return {
+                'id': self.school.id,
+                'name': self.school_name,
+                'verbose_name': self.school.verbose_name,
+            }
+        else:
+            return None
 
     def encode(self):
         return {
