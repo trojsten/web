@@ -83,15 +83,15 @@ class ResultsRow(Serializable):
             return None
 
     def encode(self):
-        return {
+        row = {
             'user': self._serialize_user_data(),
             'cell_list': self.cell_list,
             'rank': self.rank,
-            'total': self.total,
-            'total_round': self.total_round,
-            'previous': self.previous,
             'active': self.active
         }
+        if self.previous:
+            row['previous'] = self.previous
+        return row
 
 
 class Results(Serializable):

@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-# import timezone
-
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
 
-from trojsten.contests.models import Competition, Round, Semester
+from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User, UserPropertyKey
+from trojsten.schools.models import School
 from trojsten.submit.models import Submit
-from trojsten.contests.models import Task
 from trojsten.utils.test_utils import get_noexisting_id
+
+from .representation import Results, ResultsCell, ResultsCol, ResultsRow
 
 
 class RecentResultsTest(TestCase):
@@ -235,3 +235,197 @@ class ResultsTest(TestCase):
         submit.save()
         response = self.client.get("%s?single_round=True" % self.url2)
         self.assertContains(response, self.user.get_full_name())
+
+
+class SerializationTest(TestCase):
+    def test_serialize_cell(self):
+        d = {
+            'points': 15,
+            'manual_points': 10,
+            'auto_points': 5,
+            'active': True
+        }
+        cell = ResultsCell(15, 10, 5, True)
+
+        self.assertDictEqual(cell.serialize(), d)
+
+    def test_serialize_col_with_task(self):
+        competition = Competition.objects.create(name='TestCompetition')
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        semester = Semester.objects.create(number=1, name='Test semester', competition=competition,
+                                           year=1)
+        rnd = Round.objects.create(number=1, semester=semester, visible=True,
+                                   solutions_visible=True, start_time=timezone.now(),
+                                   end_time=timezone.now() + timezone.timedelta(4))
+        task = Task.objects.create(number=1, name='Test task 1', round=rnd)
+        d = {
+            'name': '1',
+            'key': 'T1',
+            'task': {'id': task.id, 'name': 'Test task 1'}
+        }
+        col = ResultsCol('T1', '1', task)
+
+        self.assertDictEqual(col.serialize(), d)
+
+    def test_serialize_col_without_task(self):
+        d = {
+            'name': '1',
+            'key': 'T1',
+        }
+        col = ResultsCol('T1', '1')
+
+        self.assertDictEqual(col.serialize(), d)
+
+    def test_serialize_row_without_previous(self):
+        school = School.objects.create(abbreviation='GJH', verbose_name='Gymnazium Jura Hronca')
+        user = User.objects.create(username="TestUser", password="password",
+                                   first_name="Jozko", last_name="Mrkvicka",
+                                   graduation=timezone.now().year + 2,
+                                   school=school)
+
+        school_dict = {
+            'id': school.id,
+            'name': 'GJH',
+            'verbose_name': 'Gymnazium Jura Hronca',
+        }
+        user_dict = {
+            'id': user.id,
+            'name': 'Jozko Mrkvicka',
+            'year': 2,
+            'school': school_dict,
+        }
+        cell1 = ResultsCell(15, 10, 5, True)
+        cell2 = ResultsCell(10, 6, 4, False)
+        cell_list_raw = [cell1, cell2]
+        cell_list = [cell.serialize() for cell in cell_list_raw]
+        d = {
+            'user': user_dict,
+            'cell_list': cell_list,
+            'rank': 1,
+            'active': True,
+        }
+        row = ResultsRow(user, active=True)
+        row.cell_list = cell_list
+        row.rank = 1
+
+        self.assertDictEqual(row.serialize(), d)
+
+    def test_serialize_row_with_previous(self):
+        school = School.objects.create(abbreviation='GJH', verbose_name='Gymnazium Jura Hronca')
+        user = User.objects.create(username="TestUser", password="password",
+                                   first_name="Jozko", last_name="Mrkvicka",
+                                   graduation=timezone.now().year + 2,
+                                   school=school)
+
+        school_dict = {
+            'id': school.id,
+            'name': 'GJH',
+            'verbose_name': 'Gymnazium Jura Hronca',
+        }
+        user_dict = {
+            'id': user.id,
+            'name': 'Jozko Mrkvicka',
+            'year': 2,
+            'school': school_dict,
+        }
+        cell1 = ResultsCell(15, 10, 5, True)
+        cell2 = ResultsCell(10, 6, 4, False)
+        cell3 = ResultsCell(11, 6, 5, True)
+        cell_list_raw = [cell1, cell2]
+        cell_list = [cell.serialize() for cell in cell_list_raw]
+        prev_cell_list_raw = [cell3]
+        prev_cell_list = [cell.serialize() for cell in prev_cell_list_raw]
+        prev_d = {
+            'user': user_dict,
+            'cell_list': prev_cell_list,
+            'rank': 2,
+            'active': True,
+        }
+        d = {
+            'user': user_dict,
+            'cell_list': cell_list,
+            'rank': 1,
+            'previous': prev_d,
+            'active': True,
+        }
+        prev_row = ResultsRow(user, active=True)
+        prev_row.cell_list = prev_cell_list_raw
+        prev_row.rank = 2
+        row = ResultsRow(user, previous=prev_row, active=True)
+        row.cell_list = cell_list_raw
+        row.rank = 1
+
+        self.assertDictEqual(row.serialize(), d)
+
+    def test_serialize_results(self):
+        col_d = {
+            'name': '1',
+            'key': 'T1',
+        }
+        col = ResultsCol('T1', '1')
+
+        school = School.objects.create(abbreviation='GJH', verbose_name='Gymnazium Jura Hronca')
+        user = User.objects.create(username="TestUser", password="password",
+                                   first_name="Jozko", last_name="Mrkvicka",
+                                   graduation=timezone.now().year + 2,
+                                   school=school)
+
+        school_dict = {
+            'id': school.id,
+            'name': 'GJH',
+            'verbose_name': 'Gymnazium Jura Hronca',
+        }
+        user_dict = {
+            'id': user.id,
+            'name': 'Jozko Mrkvicka',
+            'year': 2,
+            'school': school_dict,
+        }
+        cell1 = ResultsCell(15, 10, 5, True)
+        cell2 = ResultsCell(10, 6, 4, False)
+        cell_list_raw = [cell1, cell2]
+        cell_list = [cell.serialize() for cell in cell_list_raw]
+        row1_d = {
+            'user': user_dict,
+            'cell_list': cell_list,
+            'rank': 1,
+            'active': True,
+        }
+        row1 = ResultsRow(user, active=True)
+        row1.cell_list = cell_list
+        row1.rank = 1
+
+        user = User.objects.create(username="TestUser2", password="password",
+                                   first_name="Ferko", last_name="Mrkvicka",
+                                   graduation=timezone.now().year + 3,
+                                   school=school)
+
+        user_dict = {
+            'id': user.id,
+            'name': 'Ferko Mrkvicka',
+            'year': 1,
+            'school': school_dict,
+        }
+        cell1 = ResultsCell(15, 10, 5, True)
+        cell2 = ResultsCell(10, 6, 4, False)
+        cell_list_raw = [cell1, cell2]
+        cell_list = [cell.serialize() for cell in cell_list_raw]
+        row2_d = {
+            'user': user_dict,
+            'cell_list': cell_list,
+            'rank': 2,
+            'active': True,
+        }
+        row2 = ResultsRow(user, active=True)
+        row2.cell_list = cell_list
+        row2.rank = 2
+
+        d = {
+            'cols': [col_d],
+            'rows': [row1_d, row2_d]
+        }
+        results = Results(None)
+        results.cols = [col]
+        results.rows = [row1, row2]
+
+        self.assertDictEqual(results.serialize(), d)
