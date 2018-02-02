@@ -1,12 +1,13 @@
 language: python
+cache: pip
 python:
   - "2.7"
-  - "3.5"
+  - "3.6"
 env:
   - DJANGO_VERSION='>=1.11,<2'
 matrix:
   include:
-  - python: "3.5"
+  - python: "3.6"
     env: TEST_PEP8=True
     install: pip install flake8
     script: flake8 trojsten
