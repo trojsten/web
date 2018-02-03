@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 version=`python -c "import sys; print(sys.version)" | head -n1 | cut -c1`
 if [ $version = 3 ]
