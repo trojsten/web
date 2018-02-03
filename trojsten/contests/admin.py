@@ -12,6 +12,13 @@ from trojsten.contests.forms import TaskValidationForm
 from trojsten.utils.utils import attribute_format, get_related
 
 
+def make_results_final(modeladmin, request, queryset):
+    queryset.update(results_final=True)
+
+
+make_results_final.short_description = 'Označ výsledky za finálne'
+
+
 class CompetitionAdmin(admin.ModelAdmin):
     form = select2_modelform(Competition)
     list_display = ('name', 'organizers_group', 'get_sites')
@@ -36,6 +43,7 @@ class RoundAdmin(admin.ModelAdmin):
                     'visible', 'tasks_pdf',
                     'solutions_visible', 'solutions_pdf')
     list_filter = ('semester__competition', 'semester__year')
+    actions = [make_results_final]
 
     get_semester_number = get_related(attribute_chain=('semester', 'number'),
                                       description='časť',
