@@ -290,6 +290,7 @@ class SerializationTest(TestCase):
         }
         user_dict = {
             'id': user.id,
+            'username': 'TestUser',
             'name': 'Jozko Mrkvicka',
             'year': 2,
             'school': school_dict,
@@ -324,6 +325,7 @@ class SerializationTest(TestCase):
         }
         user_dict = {
             'id': user.id,
+            'username': 'TestUser',
             'name': 'Jozko Mrkvicka',
             'year': 2,
             'school': school_dict,
@@ -377,6 +379,7 @@ class SerializationTest(TestCase):
         }
         user_dict = {
             'id': user.id,
+            'username': 'TestUser',
             'name': 'Jozko Mrkvicka',
             'year': 2,
             'school': school_dict,
@@ -402,6 +405,7 @@ class SerializationTest(TestCase):
 
         user_dict = {
             'id': user.id,
+            'username': 'TestUser2',
             'name': 'Ferko Mrkvicka',
             'year': 1,
             'school': school_dict,

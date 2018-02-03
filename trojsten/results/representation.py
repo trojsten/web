@@ -67,6 +67,7 @@ class ResultsRow(Serializable):
     def _serialize_user_data(self):
         return {
             'id': self.user.id,
+            'username': self.user.username,
             'name': self.user.get_full_name(),
             'school': self._serialize_school_data(),
             'year': self.user.school_year,
