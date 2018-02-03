@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
+from django.contrib.postgres.fields import JSONField
 
 
 @python_2_unicode_compatible
@@ -71,4 +72,29 @@ class FrozenUserResult(models.Model):
         return '%s %s' % (
             self.frozenresults,
             self.fullname,
+        )
+
+
+@python_2_unicode_compatible
+class Results(models.Model):
+    round = models.ForeignKey('contests.Round', verbose_name='kolo')
+    tag = models.CharField(max_length=50, blank=True, null=True, verbose_name='tag/kategória')
+    is_single_round = models.BooleanField(verbose_name='vynechať predošlé kolá')
+    has_previous_results = models.BooleanField(default=False, verbose_name='zahŕňa predošlé kolá')
+    time = models.DateTimeField(auto_now_add=True, verbose_name='čas')
+    serialized_results = JSONField(blank=True)
+
+    class Meta:
+        verbose_name = 'Výsledkovka'
+        verbose_name_plural = 'Výsledkovky'
+        indexes = [
+            models.Index(fields=['round', 'tag', 'is_single_round']),
+        ]
+        unique_together = ('round', 'tag', 'is_single_round')
+
+    def __str__(self):
+        return '%s(%s) [%s]' % (
+            self.round,
+            'single' if self.is_single_round else 'multi',
+            self.tag,
         )

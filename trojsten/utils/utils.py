@@ -1,8 +1,9 @@
 import json
+from datetime import time
+from decimal import Decimal
 
 from django.http import HttpResponse
 from django.utils import timezone
-from datetime import time
 
 
 def is_true(value):
@@ -85,3 +86,25 @@ def json_response(func):
             data = json.dumps(str(objects))
         return HttpResponse(data, 'application/json')
     return decorator
+
+
+class Serializable(object):
+    def serialize(self):
+        return self.serialize_recursive(self.encode())
+
+    def serialize_recursive(self, obj):
+        if isinstance(obj, Serializable):
+            return obj.serialize()
+        elif isinstance(obj, list):
+            return [self.serialize_recursive(i) for i in obj]
+        elif isinstance(obj, tuple):
+            return tuple(self.serialize_recursive(i) for i in obj)
+        elif isinstance(obj, dict):
+            return {self.serialize_recursive(k): self.serialize_recursive(v) for k, v in obj.items()}
+        elif isinstance(obj, Decimal):
+            return str(obj)
+        else:
+            return obj
+
+    def encode(self):
+        return self.__dict__

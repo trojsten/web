@@ -7,27 +7,26 @@
 {% block page_header %}
 <h1>Výsledky<small>
 {% if single_round %}
-    {{ table.round.number }}. kola{% else %}po {{ table.round.number }}. kole
+    {{ scoreboard.round.number }}. kola{% else %}po {{ scoreboard.round.number }}. kole
 {% endif %}
-{{ table.round.semester.number }}. časti {{ table.round.semester.year }}. ročníka
-{{ table.round.semester.competition }} {{ table.tag.name }}
+{{ scoreboard.round.semester.number }}. časti {{ scoreboard.round.semester.year }}. ročníka
+{{ scoreboard.round.semester.competition }} {{ tag_name }}
 </small></h1>
 {% endblock %}
 
 {% block page_content %}
-{% is_frozen table.round table.single_round as results_are_final %}
-{% if not results_are_final %}
-    {% show_progress table.round results=True %}
+{% if not scoreboard.round.frozen %}
+    {% show_progress scoreboard.round results=True %}
 {% endif %}
 {% if competition_ignored and not request.user.is_anonymous %}
     <div class="alert alert-danger">
-      Tvoje riešenia sa nerátajú do výsledkovky. Ak to chceš zmeniť, povoľ si súťaž <em>{{ table.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
+      Tvoje riešenia sa nerátajú do výsledkovky. Ak to chceš zmeniť, povoľ si súťaž <em>{{ scoreboard.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
     </div>
 {% endif %}
-{% show_results_table table=table show_staff=show_staff%}
+{% show_results_table scoreboard=scoreboard show_staff=show_staff%}
 {% include 'trojsten/results/parts/buttons.html' %}
 <h2>Vysvetlivky</h2>
 {% include 'trojsten/results/parts/legend.html' %}
 
-{% show_archive active_competition=table.round.semester.competition %}
+{% show_archive active_competition=scoreboard.round.semester.competition %}
 {% endblock %}

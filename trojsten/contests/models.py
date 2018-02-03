@@ -149,6 +149,7 @@ class Round(models.Model):
     )
     visible = models.BooleanField(verbose_name='viditeľnosť', default=False)
     solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov', default=False)
+    results_final = models.BooleanField(verbose_name='výsledky sú finálne', default=False)
 
     objects = RoundManager()
 

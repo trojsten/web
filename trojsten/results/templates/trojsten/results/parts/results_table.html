@@ -65,16 +65,16 @@
         {% endif %}
     {% endif %}
     </td>
-    <td class="result-name">{{ row.name }}</td>
-    <td class="result-year">{{ row.year | school_year }}</td>
+    <td class="result-name">{{ row.user.name }}</td>
+    <td class="result-year">{{ row.user.year | school_year }}</td>
     <td class="result-school">
-    {% if row.school %}
-        <abbr title="{{ row.school.verbose_name }}" data-toggle="tooltip"
+    {% if row.user.school %}
+        <abbr title="{{ row.user.school.verbose_name }}" data-toggle="tooltip"
               data-placement="top">
-            {{ row.school_name }}
+            {{ row.user.school.name }}
         </abbr>
     {% else %}
-        {{ row.school_name }}
+        {{ row.user.school.name }}
     {% endif %}
     </td>
     {% for cell in row.cell_list %}
