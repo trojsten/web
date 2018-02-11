@@ -8,6 +8,7 @@ from django.db.models import Q
 
 from trojsten.contests.models import Round, Competition
 from trojsten.events.models import Event, EventParticipant
+from trojsten.people.models import User
 from trojsten.results.manager import get_results
 from trojsten.rules.models import KSPLevel
 
@@ -68,6 +69,13 @@ def prepare_events(latest_event_start_date):
     return events
 
 
+def get_total_points_col_index(results_table):
+    cols = results_table.serialized_results['cols']
+    for i, col in enumerate(cols):
+        if col['key'] == 'sum':
+            return i
+
+
 def level_updates_from_semester_results(semester, level_up_score_limits_for_table_levels=None):
     """
     Returns a list of LevelUpRecords for users whose level should be updated.
@@ -82,13 +90,16 @@ def level_updates_from_semester_results(semester, level_up_score_limits_for_tabl
 
     updates = []
     for table, table_level in result_tables:
-        for row in table.rows:
-            if not row.active:
+        total_points_col_index = get_total_points_col_index(table)
+
+        for row in table.serialized_results['rows']:
+            if not row['active']:
                 continue
-            if int(row.rank) > 5 or float(row.total) < level_up_score_limits_for_table_levels[table_level]:
+            total_points = float(row['cell_list'][total_points_col_index]['points'])
+            if int(row['rank']) > 5 or total_points < level_up_score_limits_for_table_levels[table_level]:
                 break
             level_up = KSPLevel(
-                user=row.user,
+                user=User.objects.get(pk=row['user']['id']),
                 new_level=min(4, table_level + 1),
                 source_semester=semester,
                 last_semester_before_level_up=semester
@@ -121,16 +132,20 @@ def level_updates_from_camp_attendance(camp, associated_semester, last_semester_
 
     # TODO: Get frozen results table if available.
     results_table = get_results('KSP_ALL', last_round, single_round=False)
+    total_points_col_index = get_total_points_col_index(results_table)
 
     updates = []
-    for row in results_table.rows:
-        if row.user.pk not in invited_users_pks_set:
+    for row in results_table.serialized_results['rows']:
+        user_id = row['user']['id']
+        if user_id not in invited_users_pks_set:
             continue
-        if float(row.total) < level_up_score_limits_for_user_levels[user_levels[row.user.pk]]:
+
+        total_points = float(row['cell_list'][total_points_col_index]['points'])
+        if total_points < level_up_score_limits_for_user_levels[user_levels[user_id]]:
             break
         level_up = KSPLevel(
-            user=row.user,
-            new_level=min(4, user_levels[row.user.pk] + 1),
+            user=User.objects.get(pk=user_id),
+            new_level=min(4, user_levels[user_id] + 1),
             source_camp=camp,
             last_semester_before_level_up=last_semester_before_level_up
         )
