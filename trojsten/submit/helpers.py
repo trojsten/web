@@ -27,18 +27,18 @@ def write_chunks_to_file(filepath, chunks):
 def get_lang_from_filename(filename):
     ext = os.path.splitext(filename)[1].lower()
     extmapping = {
-        ".cpp": ".cc",
-        ".cc": ".cc",
-        ".pp": ".pas",
-        ".pas": ".pas",
-        ".dpr": ".pas",
-        ".c": ".c",
-        ".py": ".py",
-        ".py3": ".py",
-        ".hs": ".hs",
-        ".cs": ".cs",
-        ".java": ".java",
-        ".zip": ".zip"}
+        ".cpp": "cc",
+        ".cc": "cc",
+        ".pp": "pas",
+        ".pas": "pas",
+        ".dpr": "pas",
+        ".c": "c",
+        ".py": "py",
+        ".py3": "py",
+        ".hs": "hs",
+        ".cs": "cs",
+        ".java": "java",
+        ".zip": "zip"}
 
     if ext not in extmapping:
         return False
@@ -106,7 +106,6 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
         lang = get_lang_from_filename(f.name)
         if not lang:
             return False
-        language = lang.strip('.')
 
     # Generate submit ID
     # Submit ID is <timestamp>-##### where ##### are 5 random digits
