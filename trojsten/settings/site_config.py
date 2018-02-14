@@ -14,6 +14,7 @@ class InternalSite(BaseSite):
     has_logo = False
     is_login_provider = False
     folder = 'trojsten'
+    css_folder = 'trojsten'
     theme_color = '#5f7de4'
     autologin = True
     facebook_page = 'https://www.facebook.com/Trojsten'
@@ -27,6 +28,7 @@ class KSPSite(InternalSite):
     organizers_email = 'ksp-info@ksp.sk'
     has_logo = True
     folder = 'ksp'
+    css_folder = 'ksp'
     facebook_page = 'https://www.facebook.com/KSPsk'
     googleplus_page = 'http://www.ksp.sk'
     theme_color = '#818f3d'
@@ -38,6 +40,7 @@ class PraskSite(KSPSite):
     url = 'http://prask.ksp.sk'
     has_logo = True
     folder = 'prask'
+    css_folder = 'ksp'
     facebook_page = 'https://www.facebook.com/prask.ksp'
     googleplus_page = 'https://prask.ksp.sk'
 
@@ -49,6 +52,7 @@ class FKSSite(InternalSite):
     organizers_email = 'otazky@fks.sk'
     has_logo = True
     folder = 'fks'
+    css_folder = 'fks'
     facebook_page = 'http://fks.sk'
     googleplus_page = 'http://fks.sk'
     theme_color = '#e39f3c'
@@ -60,6 +64,7 @@ class UFOSite(FKSSite):
     url = 'http://ufo.fks.sk'
     has_logo = True
     folder = 'ufo'
+    css_folder = 'fks'
     facebook_page = 'http://ufo.fks.sk'
     googleplus_page = 'http://ufo.fks.sk'
 
@@ -71,6 +76,7 @@ class FXSite(FKSSite):
     has_logo = True
     organizers_email = 'fx@fks.sk'
     folder = 'fx'
+    css_folder = 'fks'
     facebook_page = 'http://fx.fks.sk'
     googleplus_page = 'http://fx.fks.sk'
 
@@ -81,6 +87,7 @@ class KMSSite(BaseSite):
     url = 'http://kms.sk'
     has_logo = True
     folder = 'kms'
+    css_folder = 'kms'
     facebook_page = 'https://www.facebook.com/pages/KMS/144730632208936'
     googleplus_page = 'http://kms.sk'
     theme_color = '#4a6fd8'
@@ -92,6 +99,7 @@ class TrojstenSite(BaseSite):
     short_name = 'Trojsten'
     url = 'http://trojsten.sk'
     folder = 'trojsten'
+    css_folder = 'trojsten'
     facebook_page = 'https://www.facebook.com/Trojsten'
     googleplus_page = 'http://trojsten.sk'
     theme_color = '#5f7de4'
@@ -109,6 +117,7 @@ class WikiSite(InternalSite):
     short_name = 'Wiki'
     url = 'http://wiki.trojsten.sk'
     folder = 'wiki'
+    css_folder = 'trojsten'
 
 
 class IKSSite(BaseSite):

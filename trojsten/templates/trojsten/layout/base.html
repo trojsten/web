@@ -12,7 +12,12 @@
     <link rel="icon" type="image/png" href="{% static "images/favicon-192.png" %}" sizes="192x192"/>
     {% render_block "css" %}
     {% block stylesheets %}
-      <link rel="stylesheet" href="{% static "css/"|add:SITE.folder|add:"/bootstrap.min.css" %}" type="text/css" />
+      <link rel="stylesheet" href="{% static "css/"|add:SITE.css_folder|add:"/bootstrap.min.css" %}" type="text/css" />
+      <link
+        rel="stylesheet"
+        href="{% static "css/"|add:SITE.css_folder|add:"/"|add:SITE.css_folder|add:".min.css" %}"
+        type="text/css"
+      />
       <link rel="stylesheet" href="{% static "ksp_login/css/base.css" %}" type="text/css" />
     {% endblock %}
     {% block extra_head %}{% endblock %}
