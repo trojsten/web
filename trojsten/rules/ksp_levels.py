@@ -139,7 +139,7 @@ def level_updates_from_camp_attendance(camp, associated_semester, last_semester_
     will receive a levelling boost (associated_semester_competitor_level + 1) for the next semester.
 
     Optionally define custom level-up thresholds for different user levels by setting
-    `level_up_score_thresholds`. 
+    `level_up_score_thresholds`.
     """
     if level_up_score_thresholds is None:
         level_up_score_thresholds = defaultdict(lambda: 100)
