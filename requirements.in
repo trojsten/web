@@ -15,6 +15,7 @@ django-favicon
 django-fluent-comments
 django-haystack
 django-import-export
+django-jsonfield
 django-mathfilters
 django-oauth-toolkit
 django-recaptcha2
@@ -31,11 +32,11 @@ elasticsearch
 fake-factory
 first
 ksp-login>=0.5
-social-auth-app-django<2
 psycopg2>=2.7.3.1
 pycrypto
 pymdown-extensions<3.0
 pytz
 requests<=2.15
+social-auth-app-django<2
 Unidecode
 wiki>=0.3<0.4
