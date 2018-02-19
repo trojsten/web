@@ -472,7 +472,7 @@ class SubmitHelpersTests(TestCase):
             self.assertEqual(data, b'helloworld')
 
     def test_get_lang_from_filename(self):
-        self.assertEqual(get_lang_from_filename('file.cpp'), 'cc')
+        self.assertEqual(get_lang_from_filename('file.cpp'), '.cc')
         self.assertEqual(get_lang_from_filename('file.foo'), False)
 
     def test_get_path_raw(self):
