@@ -24,7 +24,7 @@ django-sortedm2m
 django-threadedcomments
 django-tips
 django-trojsten-news
-Django<2
+Django>=1.11,<2
 djangorestframework
 ecdsa
 elasticsearch
