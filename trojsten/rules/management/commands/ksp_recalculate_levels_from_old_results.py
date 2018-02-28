@@ -13,8 +13,6 @@ from trojsten.rules.ksp_levels import prepare_events, level_updates_from_camp_at
 class Command(BaseCommand):
     help = 'Deletes KSP levels of all users and calculates new levels ' \
            'by simulating history (past camps and semesters).'
-    # TODO: Maybe add command that incrementally updates levels as a result of the most recent events or automate
-    # level updates.
 
     def handle(self, *args, **options):
         KSPLevel.objects.all().delete()
@@ -31,14 +29,16 @@ class Command(BaseCommand):
             updates = list()
             if event.semester is not None:
                 self.stdout.write(text_type(event.semester))
-                updates = level_updates_from_semester_results(
-                    event.semester, {l: (x * 3) // 4 for l, x in max_points_in_levels.items()}
-                )
+                level_up_score_thresholds = \
+                    {l: (x * 3) // 4 for l, x in max_points_in_levels.items()}
+                updates = level_updates_from_semester_results(event.semester,
+                                                              level_up_score_thresholds)
             elif event.camp is not None:
                 self.stdout.write(text_type(event.camp))
+                level_up_score_thresholds = {l: x // 2 for l, x in max_points_in_levels.items()}
                 updates = level_updates_from_camp_attendance(
                     event.camp, event.associated_semester, event.last_semester_before_level_up,
-                    {l: x // 2 for l, x in max_points_in_levels.items()}
+                    level_up_score_thresholds
                 )
             self.stdout.write('\n'.join(map(text_type, updates)))
 

@@ -3,18 +3,22 @@
 # Supports updates with finished semester or camp.
 
 from collections import namedtuple, defaultdict
+import logging
 
 from django.db.models import Q
 
 from trojsten.contests.models import Round, Competition
 from trojsten.events.models import Event, EventParticipant
+from trojsten.people.models import User
 from trojsten.results.manager import get_results
 from trojsten.rules.models import KSPLevel
 
+logger = logging.getLogger('management_commands')
 
 # Either a semester or a camp which will yield level-ups.
-ResultsAffectingEvent = namedtuple('ResultsAffectingEvent',
-                                   'start_time, semester, camp, associated_semester, last_semester_before_level_up')
+ResultsAffectingEvent = namedtuple(
+    'ResultsAffectingEvent',
+    'start_time, semester, camp, associated_semester, last_semester_before_level_up')
 
 
 def prepare_events(latest_event_start_date):
@@ -68,45 +72,77 @@ def prepare_events(latest_event_start_date):
     return events
 
 
-def level_updates_from_semester_results(semester, level_up_score_limits_for_table_levels=None):
+def get_total_score_column_index(results_table):
+    """
+    Returns an index to results_table.serialized_results['cols'] where a total sum of all points
+    is stored. Returns None if no 'sum' column is found.
+    """
+    cols = results_table.serialized_results['cols']
+    for i, col in enumerate(cols):
+        if col['key'] == 'sum':
+            return i
+
+
+def level_updates_from_semester_results(semester, level_up_score_thresholds=None):
     """
     Returns a list of LevelUpRecords for users whose level should be updated.
-    First 5 competitors from each level get a levelling boost (results_table_level + 1) for the next semester.
+    First 5 competitors from each level get a levelling boost (results_table_level + 1) for the
+    next semester.
+
+    Optionally define custom level-up thresholds for different result table levels by setting
+    `level_up_score_thresholds`.
     """
-    if level_up_score_limits_for_table_levels is None:
-        level_up_score_limits_for_table_levels = defaultdict(lambda: 150)
+    if level_up_score_thresholds is None:
+        level_up_score_thresholds = defaultdict(lambda: 150)
 
     round = Round.objects.filter(semester=semester).order_by('number').last()
     # TODO: Get frozen results table if available.
-    result_tables = [(get_results('KSP_L{}'.format(level), round, single_round=False), level) for level in range(1, 4)]
+    result_tables = [(get_results('KSP_L{}'.format(level), round, single_round=False), level)
+                     for level in range(1, 4)]
 
     updates = []
     for table, table_level in result_tables:
-        for row in table.rows:
-            if not row.active:
+        total_score_column_index = get_total_score_column_index(table)
+        if total_score_column_index is None:
+            logger.warning('Results table {} for round {} does not contain "sum" column.'.format(
+                table.tag, table.round
+            ))
+            continue
+
+        for row in table.serialized_results['rows']:
+            # Skip organizers and (hidden) participants with level higher than table level.
+            if not row['active']:
                 continue
-            if int(row.rank) > 5 or float(row.total) < level_up_score_limits_for_table_levels[table_level]:
+            total_points = float(row['cell_list'][total_score_column_index]['points'])
+            if int(row['rank']) > 5 or \
+               total_points < level_up_score_thresholds[table_level]:
                 break
-            level_up = KSPLevel(
-                user=row.user,
-                new_level=min(4, table_level + 1),
-                source_semester=semester,
-                last_semester_before_level_up=semester
-            )
-            updates.append(level_up)
+            try:
+                level_up = KSPLevel(
+                    user=User.objects.get(pk=row['user']['id']),
+                    new_level=min(4, table_level + 1),
+                    source_semester=semester,
+                    last_semester_before_level_up=semester
+                )
+                updates.append(level_up)
+            except User.DoesNotExist:
+                logger.warning('User with id {} does not exist.'.format(row['user']['id']))
 
     return updates
 
 
 def level_updates_from_camp_attendance(camp, associated_semester, last_semester_before_level_up,
-                                       level_up_score_limits_for_user_levels=None):
+                                       level_up_score_thresholds=None):
     """
     Returns a list of LevelUpRecords for users whose level should be updated.
     All participants who were invited for their success in KSP (reached at least 100 points)
     will receive a levelling boost (associated_semester_competitor_level + 1) for the next semester.
+
+    Optionally define custom level-up thresholds for different user levels by setting
+    `level_up_score_thresholds`.
     """
-    if level_up_score_limits_for_user_levels is None:
-        level_up_score_limits_for_user_levels = defaultdict(lambda: 100)
+    if level_up_score_thresholds is None:
+        level_up_score_thresholds = defaultdict(lambda: 100)
 
     invited_users_pks = EventParticipant.objects.filter(
         Q(type=EventParticipant.PARTICIPANT) | Q(type=EventParticipant.RESERVE),
@@ -115,25 +151,37 @@ def level_updates_from_camp_attendance(camp, associated_semester, last_semester_
     ).values_list('user__pk', flat=True)
     invited_users_pks_set = set(invited_users_pks)
 
-    user_levels = KSPLevel.objects.for_users_in_semester_as_dict(associated_semester.pk, invited_users_pks)
-
+    user_levels = KSPLevel.objects.for_users_in_semester_as_dict(associated_semester.pk,
+                                                                 invited_users_pks)
     last_round = Round.objects.filter(semester=associated_semester).order_by('number').last()
 
     # TODO: Get frozen results table if available.
     results_table = get_results('KSP_ALL', last_round, single_round=False)
+    total_score_column_index = get_total_score_column_index(results_table)
+    if total_score_column_index is None:
+        logger.warning('Results table {} for round {} does not contain "sum" column.'.format(
+            results_table.tag, results_table.round
+        ))
+        return list()
 
-    updates = []
-    for row in results_table.rows:
-        if row.user.pk not in invited_users_pks_set:
+    updates = list()
+    for row in results_table.serialized_results['rows']:
+        user_id = row['user']['id']
+        if user_id not in invited_users_pks_set:
             continue
-        if float(row.total) < level_up_score_limits_for_user_levels[user_levels[row.user.pk]]:
+
+        total_points = float(row['cell_list'][total_score_column_index]['points'])
+        if total_points < level_up_score_thresholds[user_levels[user_id]]:
             break
-        level_up = KSPLevel(
-            user=row.user,
-            new_level=min(4, user_levels[row.user.pk] + 1),
-            source_camp=camp,
-            last_semester_before_level_up=last_semester_before_level_up
-        )
-        updates.append(level_up)
+        try:
+            level_up = KSPLevel(
+                user=User.objects.get(pk=user_id),
+                new_level=min(4, user_levels[user_id] + 1),
+                source_camp=camp,
+                last_semester_before_level_up=last_semester_before_level_up
+            )
+            updates.append(level_up)
+        except User.DoesNotExist:
+            logger.warning('User with id {} does not exist.'.format(row['user']['id']))
 
     return updates
