@@ -83,6 +83,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        'management_commands': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
     }
 }
 
