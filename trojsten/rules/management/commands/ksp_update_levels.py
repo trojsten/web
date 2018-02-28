@@ -22,7 +22,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('camp_or_semester', type=str, choices=['camp', 'semester'])
         parser.add_argument('id', type=int, help='Semester or camp id.')
-        parser.add_argument('--dry', action='store_false', dest='dry',
+        parser.add_argument('--dry', action='store_true', dest='dry',
                             help='Only prints out the prepared level up events.')
 
     def handle(self, *args, **options):
