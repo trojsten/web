@@ -111,7 +111,7 @@ def install_requirements():
         with prefix('workon %s' % env.virtualenv_name):
             if env.build_requirements:
                 run('bash build_requirements.sh')
-            if env.requirements_file:
+            if hasattr(env, 'requirements_file') and env.requirements_file:
                 run('pip install -r {}'.format(env.requirements_file))
             else:
                 run('pip install -r requirements.txt --exists-action w')
