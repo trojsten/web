@@ -35,7 +35,8 @@ env.roledefs = {
         'shell': '/usr/local/bin/bash -l -c',
         'server_configuration': '/usr/local/www/trojstenweb/*.yaml',
         'local': False,
-        'build_requirements': True
+        'build_requirements': False,
+        'requirements_file': 'requirements3.txt'
     },
     'local': {
         'user': os.environ.get('USER'),
@@ -110,9 +111,12 @@ def install_requirements():
         with prefix('workon %s' % env.virtualenv_name):
             if env.build_requirements:
                 run('bash build_requirements.sh')
-            run('pip install -r requirements.txt --exists-action w')
-            if env.local:
-                run('pip install -r requirements.devel.txt')
+            if env.requirements_file:
+                run('pip install -r {}'.format(env.requirements_file))
+            else:
+                run('pip install -r requirements.txt --exists-action w')
+                if env.local:
+                    run('pip install -r requirements.devel.txt')
 
 
 def manage(*args):
