@@ -9466,7 +9466,7 @@ label.required:after {
   padding-left: 5%;
   padding-right: 5%;
   padding-bottom: 3em;
-  margin-bottom: 3em;
+  margin-bottom: 5px;
   -webkit-box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.5);
   box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.5);
   border: 2px solid #e39f3c;
@@ -9474,7 +9474,7 @@ label.required:after {
 }
 @media only screen and (max-width: 480px) {
   .main-content {
-    border: none;
+    border-color: white;
   }
 }
 .main-content p {
@@ -9588,7 +9588,12 @@ html {
 }
 body {
   /* Margin bottom by footer height */
-  margin-bottom: 84px;
+  margin-bottom: 6em;
+}
+@media only screen and (max-width: 480px) {
+  body {
+    padding-bottom: 6em;
+  }
 }
 footer {
   position: absolute;
@@ -9600,8 +9605,8 @@ footer ul {
   margin-bottom: 6px;
 }
 footer .container {
-  padding-top: 20px;
-  margin-bottom: 1em;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 footer div {
   text-align: center;
