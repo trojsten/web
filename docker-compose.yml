@@ -8,7 +8,6 @@ services:
       - POSTGRES_USER=trojsten
       - POSTGRES_DB=trojsten
   web:
-    build: .
     image: trojstenweb:latest
     ports:
       - "8000:8000"
@@ -22,7 +21,7 @@ services:
       - TROJSTENWEB_DATABASE_URL=db
       - TROJSTENWEB_DATABASE_USER=trojsten
       - TROJSTENWEB_DATABASE_NAME=trojsten
-    command: python manage.py runserver 0.0.0.0:8000
+    command: sh docker-dev-entrypoint.sh
   login:
     build: .
     image: trojstenweb:latest
