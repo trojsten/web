@@ -5,6 +5,7 @@
 local_settings.py
 media/*
 /static/*
+trojsten/statements/*
 version.txt
 .venv
 .coverage
