@@ -26,23 +26,31 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
     )
     single_round = is_true(request.GET.get('single_round', False))
 
-    try:
-        results = get_results(tag_key, round, single_round)
-    except TagKeyError:
-        raise Http404('Invalid result tag: %s' % tag_key)
+    ResultTableObject = namedtuple(
+        'ResultTableObject', ['scoreboard', 'tag_name', 'competition_ignored', 'user_valid']
+    )
+
+    scoreboards = [
+        ResultTableObject(
+            get_results(result_tag.key, round, single_round),
+            result_tag.name,
+            request.user.is_anonymous() or request.user.is_competition_ignored(
+                round.semester.competition
+            ),
+            request.user.is_anonymous() or request.user.is_valid_for_competition(
+                round.semester.competition
+            ),
+        )
+        for result_tags in get_results_tags_for_rounds([round])
+        for result_tag in result_tags
+    ]
 
     context = {
-        'scoreboard': results,
+        'round_score' : scoreboards[0][0],
+        'scoreboards': scoreboards,
+        'selected_tag' : tag_key,
         'tag_name': round.semester.competition.rules.RESULTS_TAGS.get(tag_key).name,
         'show_staff': is_true(request.GET.get('show_staff', False)),
-        'competition_ignored': (
-            request.user.is_anonymous() or
-            request.user.is_competition_ignored(round.semester.competition)
-        ),
-        'user_valid': (
-            request.user.is_anonymous() or
-            request.user.is_valid_for_competition(round.semester.competition)
-        ),
     }
     return render(
         request, 'trojsten/results/view_results.html', context

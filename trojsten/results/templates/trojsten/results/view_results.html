@@ -7,26 +7,53 @@
 {% block page_header %}
 <h1>Výsledky<small>
 {% if single_round %}
-    {{ scoreboard.round.number }}. kola{% else %}po {{ scoreboard.round.number }}. kole
+    {{ round_score.round.number }}. kola{% else %}po {{ round_score.round.number }}. kole
 {% endif %}
-{{ scoreboard.round.semester.number }}. časti {{ scoreboard.round.semester.year }}. ročníka
-{{ scoreboard.round.semester.competition }} {{ tag_name }}
+{{ round_score.round.semester.number }}. časti {{ round_score.round.semester.year }}. ročníka
+{{ round_score.round.semester.competition }}
 </small></h1>
 {% endblock %}
 
 {% block page_content %}
-{% if not scoreboard.round.frozen %}
-    {% show_progress scoreboard.round results=True %}
+{% if tables|length|add:-1 %}
+<ul class="nav nav-tabs" role="tablist">
+{% for scoreboard_data in scoreboards %}
+    {% with scoreboard_data.scoreboard as scoreboard %}
+        <li {% if scoreboard.tag == selected_tag %}class="active"{% endif %}>
+            <a href="#category-tab-{{ scoreboard.round.id }}-{{ scoreboard.tag }}" role="tab"
+               data-toggle="tab">
+                {{ scoreboard.round.semester.competition }} {{ scoreboard_data.tag_name }}
+            </a>
+        </li>
+    {% endwith %}
+{% endfor %}
+</ul>
 {% endif %}
-{% if competition_ignored and not request.user.is_anonymous %}
-    <div class="alert alert-danger">
-      Tvoje riešenia sa nerátajú do výsledkovky. Ak to chceš zmeniť, povoľ si súťaž <em>{{ scoreboard.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
-    </div>
-{% endif %}
-{% show_results_table scoreboard=scoreboard show_staff=show_staff%}
+<!-- Tab panes -->
+<div class="tab-content">
+{% for scoreboard_data in scoreboards %}
+    {% with scoreboard_data.scoreboard as scoreboard %}
+        <div class="tab-pane fade{% if scoreboard.tag == selected_tag %} in active{% endif %}"
+             id="category-tab-{{ scoreboard.round.id }}-{{ scoreboard.tag }}">
+            {% if not scoreboard.round.frozen %}
+                {% show_progress scoreboard.round results=True %}
+            {% endif %}
+            {% if scoreboard_data.competition_ignored and not request.user.is_anonymous %}
+                <div class="alert alert-danger">
+                  Tvoje riešenia sa nerátajú do výsledkovky. Ak to chceš zmeniť, povoľ si súťaž <em>{{ scoreboard.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
+                </div>
+            {% endif %}
+            {% show_results_table scoreboard=scoreboard show_staff=show_staff %}
+        </div>
+    {% endwith %}
+{% empty %}
+    <div class="alert alert-warning">Ešte nebeží žiadne kolo.</div>
+{% endfor %}
+</div>
+
 {% include 'trojsten/results/parts/buttons.html' %}
 <h2>Vysvetlivky</h2>
 {% include 'trojsten/results/parts/legend.html' %}
 
-{% show_archive active_competition=scoreboard.round.semester.competition %}
+{% show_archive active_competition=round_score.round.semester.competition %}
 {% endblock %}
