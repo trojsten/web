@@ -1,0 +1,24 @@
+{% extends "trojsten/layout/main.html" %}
+{% load submit_parts %}
+{% load staticfiles %}
+{% load utils %}
+{% load i18n %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/syntax_highlight.css" %}" type="text/css" />
+{% endblock %}
+
+{% block title %}{% trans 'My submitted tasks' %}{% endblock %}
+
+{% block page_content %}
+    <h1 id="article-title" class="task-name">{% trans 'My submitted tasks' %}</h1>
+    {% for semester in semesters %}
+        <h2>{{ semester }}</h2>
+        {% for round in semester.round_set.all %}
+            <h3>{{ round.number }}. kolo</h3>
+            {% show_submits_for_user_and_round round %}
+        {% endfor %}
+    {% endfor %}
+
+{% endblock %}

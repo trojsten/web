@@ -215,6 +215,37 @@ def active_rounds_submit_page(request):
     )
 
 
+@login_required
+def all_submits_page(request):
+    submits_query_set = Submit.objects.filter(
+        user=request.user
+    ).select_related(
+        'task__round', 'task__round__semester'
+    ).order_by('task', 'time').distinct('task')
+    semesters_quer_set = submits_query_set.order_by('task__round__semester').distinct('task__round__semester')\
+        .only('task__round__semester')
+    submits = {}
+    semesters = []
+    for submit in semesters_quer_set:
+        semester = submit.task.round.semester
+        semesters.append(semester)
+        submits[semester] = {}
+        for round in semester.round_set.all():
+            submits[semester][round] = []
+    for submit in submits_query_set:
+        submits[submit.task.round.semester][submit.task.round].append(submit)
+
+    return render(
+        request,
+        'trojsten/submit/all_submits_page.html',
+        {
+            'all_submits': submits,
+            'semesters': semesters,
+            'IN_QUEUE': constants.SUBMIT_STATUS_IN_QUEUE,
+        },
+    )
+
+
 def receive_protocol(request, protocol_id):
     submit = get_object_or_404(Submit, protocol_id=protocol_id)
     update_submit(submit)

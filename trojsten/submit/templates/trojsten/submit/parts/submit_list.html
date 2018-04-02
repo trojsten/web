@@ -27,14 +27,14 @@
                 <td>Neopravené</td>
                 <td>..</td>
                 <td>
-                    <a class="btn btn-primary btn-xs" href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Stiahni' %}</a>
+                    <a class="btn btn-primary btn-xs" href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Download' %}</a>
                 </td>
                 {% else %}
                 <td>Opravené</td>
                 <td>{{ submit.points }}</td>
                 <td>
-                    <a class="btn btn-primary btn-xs" href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Stiahni' %}</a>
-                    <a class="btn btn-primary btn-xs comment-button comment-hidden" href="#" data-id="{{ submit.id }}">{% trans 'Pozri komentár' %}</a>
+                    <a class="btn btn-primary btn-xs" href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Download' %}</a>
+                    <a class="btn btn-primary btn-xs comment-button comment-hidden" href="#" data-id="{{ submit.id }}">{% trans 'Show comment' %}</a>
                 </td>
                 {% endif %}
             </tr>

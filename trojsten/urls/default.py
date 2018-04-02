@@ -12,6 +12,7 @@ import trojsten.login.views
 import trojsten.people.views
 import trojsten.results.urls
 import trojsten.submit.urls
+import trojsten.submit.views
 
 from .common import urlpatterns as common_urlpatterns
 
@@ -27,6 +28,8 @@ urlpatterns = common_urlpatterns + [
     url(r'^ulohy/', include(trojsten.contests.urls)),
     url(r'^archiv/$', trojsten.contests.views.archive, {'path': '/archiv'},
         name='archive'),
+    url(r'^mojeulohy/$', trojsten.submit.views.all_submits_page,
+        name='all_submits_page'),
     url(r'^akcie/', include('trojsten.events.urls')),
     url(r'^specialne/', include('trojsten.special.urls')),
     url(r'^komentare/', include('fluent_comments.urls')),
