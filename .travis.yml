@@ -17,7 +17,6 @@ install:
   - wget https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.4.6/elasticsearch-2.4.6.tar.gz
   - tar -xzf elasticsearch-2.4.6.tar.gz
   - ./elasticsearch-2.4.6/bin/elasticsearch &
-  - if [[ $TRAVIS_PYTHON_VERSION != 2.7 ]]; then pip install --upgrade pip git+https://github.com/jazzband/pip-tools.git@master; ./build_requirements.sh; fi  # TODO: remove social-auth-core workaround when it starts working.
   - if [[ $TRAVIS_PYTHON_VERSION != 2.7 ]]; then pip install -r requirements3.txt; else pip install -r requirements.txt; fi
   - pip install -q "Django${DJANGO_VERSION}"
   - pip install -q coverage
