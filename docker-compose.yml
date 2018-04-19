@@ -27,13 +27,11 @@ services:
       - TROJSTENWEB_DATABASE_URL=db
       - TROJSTENWEB_DATABASE_USER=trojsten
       - TROJSTENWEB_DATABASE_NAME=trojsten
-      - TROJSTENWEB_LOGIN_PROVIDER_URL=http://10.47.0.4:8047
+      - TROJSTENWEB_LOGIN_PROVIDER_URL=http://10.47.0.4:8000
     command: python manage.py runserver 0.0.0.0:8000
   login:
     build: .
     image: trojstenweb:latest
-    ports:
-      - "8047:8047"
     volumes:
       - .:/web
     networks:
@@ -43,12 +41,11 @@ services:
       - db
     environment:
       - DJANGO_SETTINGS_MODULE=trojsten.settings.login_dev
-      - TROJSTENWEB_DEVELOPMENT_SITE_ID=10
       - TROJSTENWEB_DATABASE_URL=db
       - TROJSTENWEB_DATABASE_USER=trojsten
       - TROJSTENWEB_DATABASE_NAME=trojsten
       - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;10.47.0.4
-    command: python manage.py runserver 0.0.0.0:8047
+    command: python manage.py runserver 0.0.0.0:8000
 
 volumes:
   db_data:

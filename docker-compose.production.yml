@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  ksp:
+    build: .
+    image: trojstenweb:latest
+    ports:
+      - "8102:80"
+    volumes:
+      - trojstenweb_data:/usr/share/trojstenweb
+    env_file:
+      - prod.env
+    environment:
+      DJANGO_SETTINGS_MODULE: 'trojsten.settings.ksp'
+      TROJSTENWEB_ALLOWED_HOSTS: 'www.ksp.sk'
+  login:
+    image: trojstenweb:latest
+    ports:
+      - "8103:80"
+    volumes:
+      - trojstenweb_data:/usr/share/trojstenweb
+    env_file:
+      - prod.env
+    environment:
+      - DJANGO_SETTINGS_MODULE=trojsten.settings.login
+      - TROJSTENWEB_ALLOWED_HOSTS='login.trojsten.sk'
+  static:
+    build:
+      context: .
+      dockerfile: Dockerfile.static
+    image: trojstenweb-static:latest
+    depends_on:
+      - ksp
+    ports:
+      - "8101:80"
+
+volumes:
+  trojstenweb_data:
