@@ -16,7 +16,7 @@
     {% for semester in semesters %}
         <h2>{{ semester }}</h2>
         {% for round in semester.round_set.all %}
-            <h3>{{ round.number }}. kolo</h3>
+            <h3><a href="{%  url 'task_list' round.id %}">{{ round.number }}. kolo</a></h3>
             {% show_submits_for_user_and_round round %}
         {% endfor %}
     {% endfor %}

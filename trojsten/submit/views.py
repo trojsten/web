@@ -218,10 +218,10 @@ def active_rounds_submit_page(request):
 @login_required
 def all_submits_page(request):
     submits_query_set = Submit.objects.filter(
-        user=request.user
+        user=request.user, submit_type=constants.SUBMIT_TYPE_DESCRIPTION
     ).select_related(
         'task__round', 'task__round__semester'
-    ).order_by('task', 'time').distinct('task')
+    ).order_by('task', '-time').distinct('task')
     semesters_quer_set = submits_query_set.order_by('task__round__semester').distinct('task__round__semester')\
         .only('task__round__semester')
     submits = {}
