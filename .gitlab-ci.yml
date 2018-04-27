@@ -64,12 +64,14 @@ test-py2:
     script:
         - docker build . --no-cache --pull -t "${TROJSTENWEB_IMAGE_NAME}:${TROJSTENWEB_IMAGE_TAG}"
         - docker login -u gitlab-ci-token -p "${CI_BUILD_TOKEN}" "${REGISTRY_HOST}"
-        - docker push "${TROJSTEN_IMAGE_NANME}:${TROJSTEN_IMAGE_TAG}"
+        - docker push "${TROJSTENWEB_IMAGE_NAME}:${TROJSTENWEB_IMAGE_TAG}"
     variables:
         IMAGE_TAG: latest
 
 latest-image:
     <<: *tagged_image_template
+    variables:
+        IMAGE_TAG: "latest"
     only:
       - master
 
