@@ -66,19 +66,19 @@ test-py2:
         - docker login -u gitlab-ci-token -p "${CI_BUILD_TOKEN}" "${REGISTRY_HOST}"
         - docker push "${TROJSTENWEB_IMAGE_NAME}:${TROJSTENWEB_IMAGE_TAG}"
     variables:
-        IMAGE_TAG: latest
+        TROJSTENWEB_IMAGE_TAG: latest
 
 latest-image:
     <<: *tagged_image_template
     variables:
-        IMAGE_TAG: "latest"
+        TROJSTENWEB_IMAGE_TAG: "latest"
     only:
       - master
 
 tagged-image:
     <<: *tagged_image_template
     variables:
-        IMAGE_TAG: ${CI_COMMIT_REF_NAME}
+        TROJSTENWEB_IMAGE_TAG: ${CI_COMMIT_REF_NAME}
     only:
       - tags
 
