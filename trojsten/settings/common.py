@@ -16,6 +16,10 @@ def env(name, default):
     return os.environ.get(name, default)
 
 
+def bool_env(name, default):
+    return env(name, default) == 'True'
+
+
 def skip_unreadable_post(record):
     if record.exc_info:
         exc_type, exc_value = record.exc_info[:2]
@@ -65,7 +69,7 @@ PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
 
 AUTH_USER_MODEL = 'people.User'
 
-DEBUG = bool(env('TROJSTENWEB_DEBUG', 'False'))
+DEBUG = bool_env('TROJSTENWEB_DEBUG', 'False')
 
 if 'TROJSTENWEB_ADMINS' in os.environ:
     ADMINS = tuple([tuple(admin.split(':')) for admin in env('TROJSTENWEB_ADMINS', '').split(';')])
