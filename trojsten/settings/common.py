@@ -17,7 +17,8 @@ def env(name, default):
 
 
 def bool_env(name, default):
-    return env(name, default) == 'True'
+    val = str(env(name, default)).lower()
+    return val == 'true' or val == '1'
 
 
 def skip_unreadable_post(record):
