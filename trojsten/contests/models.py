@@ -219,16 +219,16 @@ class Round(models.Model):
 
     def is_visible_for_user(self, user):
         return (
-                user.is_superuser or
-                self.semester.competition.organizers_group in user.groups.all() or
-                self.visible
+            user.is_superuser or
+            self.semester.competition.organizers_group in user.groups.all() or
+            self.visible
         )
 
     def solutions_are_visible_for_user(self, user):
         return (
-                user.is_superuser or
-                self.semester.competition.organizers_group in user.groups.all() or
-                self.solutions_visible
+            user.is_superuser or
+            self.semester.competition.organizers_group in user.groups.all() or
+            self.solutions_visible
         )
 
     @property
@@ -325,9 +325,9 @@ class Task(models.Model):
         blank=True, null=True,
     )
     email_on_desc_submit = models.BooleanField(verbose_name='Zaslať notifikáciu o submite popisu opravovateľom',
-                                               default=False)
+        default=False)
     email_on_code_submit = models.BooleanField(verbose_name='Zaslať notifikáciu o submite kódu opravovateľom',
-                                               default=False)
+        default=False)
 
     objects = TaskManager()
 
@@ -396,8 +396,7 @@ class Task(models.Model):
         TaskPeople.objects.create(task=self, user=user, role=role)
 
     def get_assigned_people_for_role(self, role):
-        return [line.user for line in TaskPeople.objects
-            .filter(task=self, role=role)]
+        return [line.user for line in TaskPeople.objects.filter(task=self, role=role)]
 
 
 class TaskPeople(models.Model):
