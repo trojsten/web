@@ -324,10 +324,12 @@ class Task(models.Model):
         max_length=128, verbose_name='Odkaz na externé odovzdávanie',
         blank=True, null=True,
     )
-    email_on_desc_submit = models.BooleanField(verbose_name='Zaslať notifikáciu o submite popisu opravovateľom',
-        default=False)
-    email_on_code_submit = models.BooleanField(verbose_name='Zaslať notifikáciu o submite kódu opravovateľom',
-        default=False)
+    email_on_desc_submit = models.BooleanField(
+        verbose_name='Zaslať notifikáciu o submite popisu opravovateľom', default=False
+    )
+    email_on_code_submit = models.BooleanField(
+        verbose_name='Zaslať notifikáciu o submite kódu opravovateľom', default=False
+    )
 
     objects = TaskManager()
 
