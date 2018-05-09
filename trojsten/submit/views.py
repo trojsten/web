@@ -16,6 +16,8 @@ from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
+from django.core.mail import send_mail
+from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response as APIResponse
 from sendfile import sendfile
@@ -27,6 +29,7 @@ from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
 from trojsten.submit.helpers import (get_path, process_submit, update_submit,
                                      write_chunks_to_file, get_description_file_path)
 from trojsten.submit.templatetags.submit_parts import submitclass
+from trojsten.contests import constants as contest_consts
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
@@ -300,6 +303,21 @@ def poll_submit_info(request, submit_id):
     }), content_type='application/json; charset=utf-8')
 
 
+def send_notification_email(submit):
+    send_mail(
+        _('[Trojstenweb] User submission detected'),
+        _('{name} submitted {possessive} solution to task {task}\n\nSubmit link: {submit_link}\n\nThis is an automated '
+          'response, do not reply').format(
+            name=submit.user.get_full_name(),
+            possessive='his' if submit.user.gender == 'M' else 'her',
+            task=submit.task.__str__(),
+            submit_link='%s/admin/old_submit/submit/%s' % (settings.SITES[settings.SITE_ID].url, str(submit.id)),
+        ),
+        settings.DEFAULT_FROM_EMAIL,
+        [org.email for org in submit.task.get_assigned_people_for_role(contest_consts.TASK_ROLE_REVIEWER)]
+    )
+
+
 @login_required
 def task_submit_post(request, task_id, submit_type):
     """Spracovanie uploadnuteho submitu"""
@@ -357,6 +375,9 @@ def task_submit_post(request, task_id, submit_type):
                              testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
                              protocol_id=submit_id)
                 sub.save()
+                if task.email_on_code_submit:
+                    send_notification_email(sub)
+
                 success_message = format_html(
                     'Úspešne si submitol program, výsledok testovania nájdeš '
                     '<a href="{}">tu</a>',
@@ -392,6 +413,9 @@ def task_submit_post(request, task_id, submit_type):
                          testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
                          filepath=sfiletarget)
             sub.save()
+            if task.email_on_desc_submit:
+                send_notification_email(sub)
+
             if task.round.can_submit:
                 messages.add_message(request, messages.SUCCESS,
                                      _('You have successfully submitted your description, '
