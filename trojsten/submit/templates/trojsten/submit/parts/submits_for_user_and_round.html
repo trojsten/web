@@ -4,38 +4,72 @@
 
 <table class="table table-hover">
     <thead>
-        <tr>
+    <tr>
+        {% if submit_type == DESCRIPTION %}
             <th>Úloha</th>
             <th>Čas</th>
             <th>Stav</th>
             <th>Body</th>
             <th>Akcie</th>
-        </tr>
+        {% else %}
+            <th>Úloha</th>
+            <th>Čas</th>
+            <th>Stav</th>
+            <th>Správa z testovača</th>
+            <th>Body</th>
+            <th>Akcie</th>
+        {% endif %}
+    </tr>
     </thead>
     <tbody>
-    {% for submit in round_submits %}
-        {% if submit.testing_status == IN_QUEUE %}
-        <tr>
-        {% else %}
-        <tr class="success">
-        {% endif %}
-            <td><a href="{% url 'task_statement' submit.task.id %}" style="color:black">{{ submit.task.number }}. {{ submit.task.name }}</a></td>
-            <td>{{ submit.time }}</td>
+    {% if submit_type == DESCRIPTION %}
+        {% for submit in round_submits %}
             {% if submit.testing_status == IN_QUEUE %}
+                <tr>
+                    {% else %}
+                <tr class="success">
+            {% endif %}
+        <td><a href="{% url 'task_statement' submit.task.id %}"
+               style="color:black">{{ submit.task.number }}. {{ submit.task.name }}</a></td>
+        <td>{{ submit.time }}</td>
+        {% if submit.testing_status == IN_QUEUE %}
             <td>Neopravené</td>
             <td>..</td>
             <td>
-                <a class="btn btn-primary btn-xs" href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Download' %}</a>
+                <a class="btn btn-primary btn-xs"
+                   href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Download' %}</a>
             </td>
-            {% else %}
+        {% else %}
             <td>Opravené</td>
             <td>{{ submit.points }}</td>
             <td>
-                <a class="btn btn-primary btn-xs" href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Download' %}</a>
-                <a class="btn btn-primary btn-xs comment-button comment-hidden" href="#" data-id="{{ submit.id }}">{% trans 'Pozri komentár' %}</a>
+                <a class="btn btn-primary btn-xs"
+                   href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Download' %}</a>
+                <a class="btn btn-primary btn-xs comment-button comment-hidden" href="#"
+                   data-id="{{ submit.id }}">{% trans 'Pozri komentár' %}</a>
             </td>
-            {% endif %}
+        {% endif %}
         </tr>
-    {% endfor %}
+        {% endfor %}
+    {% else %}
+        {% for submit in round_submits %}
+            <tr class="{{ submit|submitclass }}" data-id="{{ submit.id }}">
+                <td><a href="{% url 'task_statement' submit.task.id %}"
+                       style="color:black">{{ submit.task.number }}. {{ submit.task.name }}</a></td>
+                <td>{{ submit.time }}</td>
+                {% if submit.testing_status == IN_QUEUE %}
+                    <td>Testuje sa</td>
+                    <td>Čaká sa na otestovanie</td>
+                    <td>..</td>
+                {% else %}
+                    <td>Dotestované</td>
+                    <td>{{ submit.tester_response_verbose }}</td>
+                    <td>{{ submit.points }}</td>
+                {% endif %}
+                <td><a class="btn btn-primary btn-xs"
+                       href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Detaily' %}</a></td>
+            </tr>
+        {% endfor %}
+    {% endif %}
     </tbody>
 </table>

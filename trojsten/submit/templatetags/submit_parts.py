@@ -63,10 +63,26 @@ def round_submit_form(context, round):
     return context
 
 
+@register.inclusion_tag('trojsten/submit/parts/submits_for_user_and_competition.html', takes_context=True)
+def show_submits_for_user_and_competition(context, competition):
+    template_data = {
+        'semesters': context['all_semesters'][competition][1:]
+    }
+    context.update(template_data)
+    return context
+
+@register.inclusion_tag('trojsten/submit/parts/submits_for_user_and_semester.html', takes_context=True)
+def show_submits_for_user_and_semester(context, semester):
+    template_data = {
+        'rounds': reversed(semester.round_set.all())
+    }
+    context.update(template_data)
+    return context
+
 @register.inclusion_tag('trojsten/submit/parts/submits_for_user_and_round.html', takes_context=True)
 def show_submits_for_user_and_round(context, round):
     template_data = {
-        'round_submits': context['all_submits'][round.semester][round],
+        'round_submits': context['all_submits'][round.semester.competition][round.semester][round],
     }
     context.update(template_data)
     return context

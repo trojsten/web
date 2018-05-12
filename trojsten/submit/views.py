@@ -6,6 +6,7 @@ import os
 import xml.etree.ElementTree as ET
 
 import six
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -216,34 +217,60 @@ def active_rounds_submit_page(request):
 
 
 @login_required
-def all_submits_page(request):
+def all_submits_page(request, submit_type):
     submits_query_set = Submit.objects.filter(
-        user=request.user, submit_type=constants.SUBMIT_TYPE_DESCRIPTION
+        user=request.user, submit_type=submit_type,
+        task__round__semester__competition__sites__in=[settings.SITE_ID],
     ).select_related(
-        'task__round', 'task__round__semester'
-    ).order_by('task', '-time').distinct('task')
-    semesters_quer_set = submits_query_set.order_by('task__round__semester').distinct('task__round__semester')\
-        .only('task__round__semester')
-    submits = {}
-    semesters = []
-    for submit in semesters_quer_set:
-        semester = submit.task.round.semester
-        semesters.append(semester)
-        submits[semester] = {}
-        for round in semester.round_set.all():
-            submits[semester][round] = []
+        'task__round', 'task__round__semester', 'task__round__semester__competition',
+    ).order_by(
+        'task__round__semester__competition',  '-task__round__semester__year', '-task__round__semester__number',
+        '-task__round__number', 'task__number', 'submit_type', '-time'
+    ).distinct(
+        'task__round__semester__competition',  'task__round__semester__year', 'task__round__semester__number',
+        'task__round__number', 'task__number', 'submit_type',
+    )
+    competitions = [None]
+    semesters = {}
+    all_submits = {}
     for submit in submits_query_set:
-        submits[submit.task.round.semester][submit.task.round].append(submit)
+        competition = submit.task.round.semester.competition
+        semester = submit.task.round.semester
+        if competition != competitions[-1]:
+            competitions.append(competition)
+            all_submits[competition] = {}
+            semesters[competition] = [None]
+        if semester != semesters[competition][-1]:
+            semesters[competition].append(semester)
+            all_submits[competition][semester] = {}
+            for round in semester.round_set.all():
+                all_submits[competition][semester][round] = []
+        all_submits[competition][semester][submit.task.round].append(submit)
+
+    print(submits_query_set)
 
     return render(
         request,
         'trojsten/submit/all_submits_page.html',
         {
-            'all_submits': submits,
-            'semesters': semesters,
+            'all_submits': all_submits,
+            'competitions': competitions[1:],
+            'all_semesters': semesters,
             'IN_QUEUE': constants.SUBMIT_STATUS_IN_QUEUE,
+            'submit_type': submit_type,
+            'DESCRIPTION': constants.SUBMIT_TYPE_DESCRIPTION,
         },
     )
+
+
+@login_required
+def all_submits_description_page(request):
+    return all_submits_page(request, constants.SUBMIT_TYPE_DESCRIPTION)
+
+
+@login_required
+def all_submits_source_page(request):
+    return all_submits_page(request, constants.SUBMIT_TYPE_SOURCE)
 
 
 def receive_protocol(request, protocol_id):

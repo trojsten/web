@@ -13,12 +13,23 @@
 
 {% block page_content %}
     <h1 id="article-title" class="task-name">{% trans 'My submitted tasks' %}</h1>
-    {% for semester in semesters %}
-        <h2>{{ semester }}</h2>
-        {% for round in semester.round_set.all %}
-            <h3><a href="{%  url 'task_list' round.id %}">{{ round.number }}. kolo</a></h3>
-            {% show_submits_for_user_and_round round %}
+    <div>
+    {% if competitions|length > 1 %}
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs settings-tabs" role="tablist">
+        {% for competition in competitions %}
+            <li role="presentation" {% if forloop.counter == 1 %} class="active" {% endif %}><a href="#{{ competition }}" aria-controls={{ competition }} role="tab" data-toggle="tab">{{ competition }}</a></li>
         {% endfor %}
-    {% endfor %}
-
+        </ul>
+    {% endif %}
+        <div class="tab-content">
+            {% for competition in competitions %}
+                {% if competitions|length > 1 %}
+                <div role="tabpanel" class="tab-pane fade{% if forloop.counter == 1 %} in active{% endif %}" id={{ competition }}>
+                {% endif %}
+                    {% show_submits_for_user_and_competition competition %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
