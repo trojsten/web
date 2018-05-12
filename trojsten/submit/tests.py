@@ -644,7 +644,7 @@ class SubmitAdminFormTests(TestCase):
 class AllSubmitsListTets(TestCase):
 
     def setUp(self):
-        self.url = reverse('all_submits_page')
+        self.url = reverse('all_submits_description_page')
         self.grad_year = timezone.now().year + 1
         self.non_staff_user = User.objects.create_user(username='jozko', first_name='Jozko',
                                                        last_name='Mrkvicka', password='pass',
@@ -672,7 +672,7 @@ class AllSubmitsListTets(TestCase):
 
     def test_redirect_to_login(self):
         response = self.client.get(self.url)
-        redirect_to = '%s?next=%s' % (settings.LOGIN_URL, reverse('all_submits_page'))
+        redirect_to = '%s?next=%s' % (settings.LOGIN_URL, reverse('all_submits_description_page'))
         self.assertRedirects(response, redirect_to)
 
     def test_in_queue_submit(self):
