@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-02 21:30+0200\n"
+"POT-Creation-Date: 2018-05-12 21:28+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -603,8 +603,8 @@ msgstr " (stiahne pre každého užívateľa opravené riešenie, ak je opraven�
 #: reviews/templates/admin/submit_form.html:12
 #: submit/templates/trojsten/submit/parts/submit_list.html:30
 #: submit/templates/trojsten/submit/parts/submit_list.html:36
-#: submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:28
-#: submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:34
+#: submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:40
+#: submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:47
 msgid "Download"
 msgstr "Stiahnuť"
 
@@ -761,11 +761,15 @@ msgstr "Pozri komentár"
 msgid "Detaily"
 msgstr ""
 
-#: submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:35
-msgid "Pozri komentár"
-msgstr ""
+#: submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:49
+msgid "View comment"
+msgstr "Pozri komentár"
 
-#: submit/views.py:367
+#: submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:70
+msgid "Details"
+msgstr "Detaily"
+
+#: submit/views.py:393
 msgid ""
 "You have successfully submitted your description, it will be reviewed after "
 "the round finishes."
@@ -773,7 +777,7 @@ msgstr ""
 "Úspešne sa ti podarilo submitnúť popis, po skončení kola ti ho vedúci "
 "opravia."
 
-#: submit/views.py:371
+#: submit/views.py:397
 msgid ""
 "You have submitted your description after the deadline. It is not counted in "
 "results."

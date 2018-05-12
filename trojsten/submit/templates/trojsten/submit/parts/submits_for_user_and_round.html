@@ -46,7 +46,7 @@
                 <a class="btn btn-primary btn-xs"
                    href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Download' %}</a>
                 <a class="btn btn-primary btn-xs comment-button comment-hidden" href="#"
-                   data-id="{{ submit.id }}">{% trans 'Pozri komentár' %}</a>
+                   data-id="{{ submit.id }}">{% trans 'View comment' %}</a>
             </td>
         {% endif %}
         </tr>
@@ -67,7 +67,7 @@
                     <td>{{ submit.points }}</td>
                 {% endif %}
                 <td><a class="btn btn-primary btn-xs"
-                       href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Detaily' %}</a></td>
+                       href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Details' %}</a></td>
             </tr>
         {% endfor %}
     {% endif %}
