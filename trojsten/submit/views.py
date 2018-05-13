@@ -20,6 +20,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response as APIResponse
 from sendfile import sendfile
 from unidecode import unidecode
+from wiki.decorators import get_article
 
 from trojsten.contests.models import Competition, Round, Task
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
@@ -217,7 +218,8 @@ def active_rounds_submit_page(request):
 
 
 @login_required
-def all_submits_page(request, submit_type):
+def all_submits_page(request, submit_type, article, *args, **kwargs):
+    print(kwargs)
     submits_query_set = Submit.objects.filter(
         user=request.user, submit_type=submit_type,
         task__round__semester__competition__sites__in=[settings.SITE_ID],
@@ -247,30 +249,34 @@ def all_submits_page(request, submit_type):
                 all_submits[competition][semester][round] = []
         all_submits[competition][semester][submit.task.round].append(submit)
 
-    print(submits_query_set)
+    kwargs.update({
+        'article': article,
+        'all_submits': all_submits,
+        'competitions': competitions[1:],
+        'all_semesters': semesters,
+        'IN_QUEUE': constants.SUBMIT_STATUS_IN_QUEUE,
+        'submit_type': submit_type,
+        'DESCRIPTION': constants.SUBMIT_TYPE_DESCRIPTION,
+    })
 
     return render(
         request,
         'trojsten/submit/all_submits_page.html',
-        {
-            'all_submits': all_submits,
-            'competitions': competitions[1:],
-            'all_semesters': semesters,
-            'IN_QUEUE': constants.SUBMIT_STATUS_IN_QUEUE,
-            'submit_type': submit_type,
-            'DESCRIPTION': constants.SUBMIT_TYPE_DESCRIPTION,
-        },
+        kwargs
     )
 
 
 @login_required
-def all_submits_description_page(request):
-    return all_submits_page(request, constants.SUBMIT_TYPE_DESCRIPTION)
+@get_article(can_read=True)
+def all_submits_description_page(request, article, *args, **kwargs):
+    print(kwargs)
+    return all_submits_page(request, constants.SUBMIT_TYPE_DESCRIPTION, article, *args, **kwargs)
 
 
 @login_required
-def all_submits_source_page(request):
-    return all_submits_page(request, constants.SUBMIT_TYPE_SOURCE)
+@get_article(can_read=True)
+def all_submits_source_page(request, article, *args, **kwargs):
+    return all_submits_page(request, constants.SUBMIT_TYPE_SOURCE, article, *args, **kwargs)
 
 
 def receive_protocol(request, protocol_id):

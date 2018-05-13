@@ -1,7 +1,7 @@
-{% extends "trojsten/layout/main.html" %}
-{% load submit_parts %}
+{% extends "wiki/article.html" %}
 {% load staticfiles %}
 {% load utils %}
+{% load wiki_tags submit_parts %}
 {% load i18n %}
 
 {% block stylesheets %}
@@ -11,8 +11,8 @@
 
 {% block title %}{% trans 'My submitted tasks' %}{% endblock %}
 
-{% block page_content %}
-    <h1 id="article-title" class="task-name">{% trans 'My submitted tasks' %}</h1>
+{% block wiki_contents_tab %}
+    {% wiki_render article %}
     <div>
     {% if competitions|length > 1 %}
         <!-- Nav tabs -->
@@ -25,11 +25,12 @@
         <div class="tab-content">
             {% for competition in competitions %}
                 {% if competitions|length > 1 %}
-                <div role="tabpanel" class="tab-pane fade{% if forloop.counter == 1 %} in active{% endif %}" id={{ competition }}>
+                <div class="tab-pane fade{% if forloop.counter == 1 %} in active{% endif %}" id={{ competition }}>
                 {% endif %}
                     {% show_submits_for_user_and_competition competition %}
-                </div>
+                {% if competitions|length > 1 %} </div> {% endif %}
             {% endfor %}
         </div>
     </div>
+
 {% endblock %}
