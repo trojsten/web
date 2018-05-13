@@ -19,6 +19,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from wiki.models import Article, ArticleRevision, URLPath
 
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
@@ -669,6 +670,15 @@ class AllSubmitsListTets(TestCase):
                                      end_time=self.end_time_new)
         self.task = Task.objects.create(number=1, name='Test task', round=round,
                                         has_testablezip=True)
+
+        self.site = Site.objects.get(pk=settings.SITE_ID)
+        root_article = Article.objects.create()
+        ArticleRevision.objects.create(article=root_article, title='test 1')
+        urlpath_root = URLPath.objects.create(site=self.site, article=root_article)
+        descriptions_article = Article.objects.create()
+        ArticleRevision.objects.create(article=descriptions_article, title='test 2')
+        URLPath.objects.create(site=self.site, article=descriptions_article, slug='mojeulohy',
+                               parent=urlpath_root)
 
     def test_redirect_to_login(self):
         response = self.client.get(self.url)

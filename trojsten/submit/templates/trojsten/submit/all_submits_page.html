@@ -4,11 +4,6 @@
 {% load wiki_tags submit_parts %}
 {% load i18n %}
 
-{% block stylesheets %}
-{{ block.super }}
-<link rel="stylesheet" href="{% static "css/syntax_highlight.css" %}" type="text/css" />
-{% endblock %}
-
 {% block title %}{% trans 'My submitted tasks' %}{% endblock %}
 
 {% block wiki_contents_tab %}
