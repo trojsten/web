@@ -226,10 +226,10 @@ def all_submits_page(request, submit_type, article, *args, **kwargs):
     ).select_related(
         'task__round', 'task__round__semester', 'task__round__semester__competition',
     ).order_by(
-        'task__round__semester__competition',  '-task__round__semester__year', '-task__round__semester__number',
+        'task__round__semester__competition', '-task__round__semester__year', '-task__round__semester__number',
         '-task__round__number', 'task__number', 'submit_type', '-time'
     ).distinct(
-        'task__round__semester__competition',  'task__round__semester__year', 'task__round__semester__number',
+        'task__round__semester__competition', 'task__round__semester__year', 'task__round__semester__number',
         'task__round__number', 'task__number', 'submit_type',
     )
     competitions = [None]
