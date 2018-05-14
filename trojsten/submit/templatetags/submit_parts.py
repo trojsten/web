@@ -43,14 +43,20 @@ def show_submit_list(task, user):
 
 @register.filter
 def submitclass(submit):
-    if submit.testing_status == constants.SUBMIT_STATUS_IN_QUEUE:
-        return 'info submit-untested'
-    elif submit.tester_response == constants.SUBMIT_RESPONSE_OK:
-        return 'success submit-tested'
-    elif submit.points > 0:
-        return 'warning submit-tested'
+    if submit.submit_type == constants.SUBMIT_TYPE_DESCRIPTION:
+        if submit.testing_status == constants.SUBMIT_STATUS_REVIEWED:
+            return 'success'
+        else:
+            return ''
     else:
-        return 'danger submit-tested'
+        if submit.testing_status == constants.SUBMIT_STATUS_IN_QUEUE:
+            return 'info submit-untested'
+        elif submit.tester_response == constants.SUBMIT_RESPONSE_OK:
+            return 'success submit-tested'
+        elif submit.points > 0:
+            return 'warning submit-tested'
+        else:
+            return 'danger submit-tested'
 
 
 @register.inclusion_tag('trojsten/submit/parts/round_submit_form.html', takes_context=True)

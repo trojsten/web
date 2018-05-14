@@ -1,31 +1,30 @@
-{% extends "wiki/article.html" %}
+{% extends "trojsten/layout/main.html" %}
 {% load staticfiles %}
 {% load utils %}
-{% load wiki_tags submit_parts %}
+{% load submit_parts %}
 {% load i18n %}
 
 {% block title %}{% trans 'My submitted tasks' %}{% endblock %}
 
-{% block wiki_contents_tab %}
-    {% wiki_render article %}
+{% block page_content %}
+    <h1>{% trans 'My submitted tasks' %}</h1>
     <div>
-    {% if competitions|length > 1 %}
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs settings-tabs" role="tablist">
-        {% for competition in competitions %}
-            <li role="presentation" {% if forloop.counter == 1 %} class="active" {% endif %}><a href="#{{ competition }}" aria-controls={{ competition }} role="tab" data-toggle="tab">{{ competition }}</a></li>
-        {% endfor %}
-        </ul>
-    {% endif %}
+        {% if competitions|length > 1 %}
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs settings-tabs" role="tablist">
+                {% for competition in competitions %}
+                    <li role="presentation" {% if forloop.counter == 1 %} class="active" {% endif %}><a
+                            href="#{{ competition }}" aria-controls={{ competition }} role="tab"
+                            data-toggle="tab">{{ competition }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         <div class="tab-content">
             {% for competition in competitions %}
-                {% if competitions|length > 1 %}
                 <div class="tab-pane fade{% if forloop.counter == 1 %} in active{% endif %}" id={{ competition }}>
-                {% endif %}
                     {% show_submits_for_user_and_competition competition %}
-                {% if competitions|length > 1 %} </div> {% endif %}
+                </div>
             {% endfor %}
         </div>
     </div>
-
 {% endblock %}

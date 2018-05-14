@@ -19,7 +19,6 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from wiki.models import Article, ArticleRevision, URLPath
 
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
@@ -642,7 +641,7 @@ class SubmitAdminFormTests(TestCase):
         self.assertEqual(edited_submit.time, new_time)
 
 
-class AllSubmitsListTets(TestCase):
+class AllSubmitsListTest(TestCase):
 
     def setUp(self):
         self.url = reverse('all_submits_description_page')
@@ -650,35 +649,19 @@ class AllSubmitsListTets(TestCase):
         self.non_staff_user = User.objects.create_user(username='jozko', first_name='Jozko',
                                                        last_name='Mrkvicka', password='pass',
                                                        graduation=self.grad_year)
-        self.staff_user = User.objects.create_user(username='staff', first_name='Staff',
-                                                   last_name='Staff', password='pass',
-                                                   graduation=2010)
         self.group = Group.objects.create(name='staff')
-        self.group.user_set.add(self.staff_user)
-        self.staff_user.groups.add(self.group)
         competition = Competition.objects.create(name='TestCompetition',
                                                  organizers_group=self.group)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        self.start_time_old = timezone.now() + timezone.timedelta(-10)
-        self.start_time_new = timezone.now() + timezone.timedelta(5)
-        self.end_time_old = timezone.now() + timezone.timedelta(-5)
-        self.end_time_new = timezone.now() + timezone.timedelta(10)
+        self.start_time = timezone.now() + timezone.timedelta(-10)
+        self.end_time = timezone.now() + timezone.timedelta(10)
         semester = Semester.objects.create(
             number=1, name='Test semester', competition=competition, year=1)
         round = Round.objects.create(number=1, semester=semester, visible=True,
-                                     solutions_visible=False, start_time=self.start_time_old,
-                                     end_time=self.end_time_new)
+                                     solutions_visible=False, start_time=self.start_time,
+                                     end_time=self.end_time)
         self.task = Task.objects.create(number=1, name='Test task', round=round,
                                         has_testablezip=True)
-
-        self.site = Site.objects.get(pk=settings.SITE_ID)
-        root_article = Article.objects.create()
-        ArticleRevision.objects.create(article=root_article, title='test 1')
-        urlpath_root = URLPath.objects.create(site=self.site, article=root_article)
-        descriptions_article = Article.objects.create()
-        ArticleRevision.objects.create(article=descriptions_article, title='test 2')
-        URLPath.objects.create(site=self.site, article=descriptions_article, slug='mojeulohy',
-                               parent=urlpath_root)
 
     def test_redirect_to_login(self):
         response = self.client.get(self.url)
