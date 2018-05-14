@@ -639,3 +639,71 @@ class SubmitAdminFormTests(TestCase):
         self.assertTrue(form.is_valid())
         edited_submit = form.save()
         self.assertEqual(edited_submit.time, new_time)
+
+
+class AllSubmitsListTest(TestCase):
+
+    def setUp(self):
+        self.url = reverse('all_submits_description_page')
+        self.grad_year = timezone.now().year + 1
+        self.non_staff_user = User.objects.create_user(username='jozko', first_name='Jozko',
+                                                       last_name='Mrkvicka', password='pass',
+                                                       graduation=self.grad_year)
+        self.group = Group.objects.create(name='staff')
+        competition = Competition.objects.create(name='TestCompetition',
+                                                 organizers_group=self.group)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.start_time = timezone.now() + timezone.timedelta(-10)
+        self.end_time = timezone.now() + timezone.timedelta(10)
+        semester = Semester.objects.create(
+            number=1, name='Test semester', competition=competition, year=1)
+        round = Round.objects.create(number=1, semester=semester, visible=True,
+                                     solutions_visible=False, start_time=self.start_time,
+                                     end_time=self.end_time)
+        self.task = Task.objects.create(number=1, name='Test task', round=round,
+                                        has_testablezip=True)
+
+    def test_redirect_to_login(self):
+        response = self.client.get(self.url)
+        redirect_to = '%s?next=%s' % (settings.LOGIN_URL, reverse('all_submits_description_page'))
+        self.assertRedirects(response, redirect_to)
+
+    def test_in_queue_submit(self):
+        self.client.force_login(self.non_staff_user)
+        Submit.objects.create(
+            task=self.task, user=self.non_staff_user, submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_IN_QUEUE, points=0
+        )
+        response = self.client.get(self.url)
+        self.assertContains(response, 'Test task')
+        self.assertContains(response, 'Neopravené')
+
+    def test_reviewed_submit(self):
+        self.client.force_login(self.non_staff_user)
+        Submit.objects.create(
+            task=self.task, user=self.non_staff_user, submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED, points=4
+        )
+        Submit.objects.create(
+            task=self.task, user=self.non_staff_user, submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED, points=7
+        )
+        response = self.client.get(self.url)
+        self.assertContains(response, 'Test task')
+        self.assertContains(response, 'Opravené')
+        self.assertContains(response, '7,00')
+
+    def test_reviewed_submit(self):
+        self.client.force_login(self.non_staff_user)
+        Submit.objects.create(
+            task=self.task, user=self.non_staff_user, submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_IN_QUEUE, points=0
+        )
+        Submit.objects.create(
+            task=self.task, user=self.non_staff_user, submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED, points=7
+        )
+        response = self.client.get(self.url)
+        self.assertContains(response, 'Test task')
+        self.assertContains(response, 'Opravené')
+        self.assertContains(response, '7,00')

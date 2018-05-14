@@ -1,0 +1,8 @@
+{% load utils %}
+{% load submit_parts %}
+{% load i18n %}
+
+{% for semester in semesters %}
+    <h2>{{ semester }}</h2>
+    {% show_submits_for_user_and_semester semester %}
+{% endfor %}

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-28 18:58+0100\n"
+"POT-Creation-Date: 2018-05-12 21:28+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -52,55 +52,55 @@ msgid "Category doesn't correspond with competition."
 msgstr ""
 
 # pdf file names
-#: contests/models.py:255
+#: contests/models.py:256
 msgid "year"
 msgstr "ročník"
 
-#: contests/models.py:257
+#: contests/models.py:258
 msgid "round"
 msgstr "kolo"
 
-#: contests/models.py:259
+#: contests/models.py:260
 msgid "solutions"
 msgstr "vzoráky"
 
-#: contests/models.py:259
+#: contests/models.py:260
 msgid "tasks"
 msgstr "zadania"
 
-#: contests/models.py:398
+#: contests/models.py:399
 #, fuzzy
 #| msgid "tasks"
 msgid "task"
 msgstr "úloha"
 
-#: contests/models.py:401
+#: contests/models.py:402
 msgid "organizer"
 msgstr "vedúci"
 
-#: contests/models.py:404
+#: contests/models.py:405
 msgid "reviewer"
 msgstr "opravovateľ"
 
-#: contests/models.py:405
+#: contests/models.py:406
 #, fuzzy
 #| msgid "solution-writer"
 msgid "solution writer"
 msgstr "vzorákovač"
 
-#: contests/models.py:406
+#: contests/models.py:407
 msgid "proofreader"
 msgstr "recenzovač"
 
-#: contests/models.py:409
+#: contests/models.py:410
 msgid "role"
 msgstr "funkcia"
 
-#: contests/models.py:413
+#: contests/models.py:414
 msgid "Assigned user"
 msgstr "Pridelený človek"
 
-#: contests/models.py:414
+#: contests/models.py:415
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
 
@@ -179,7 +179,7 @@ msgstr "Adresa"
 msgid "School"
 msgstr "Škola"
 
-#: people/admin.py:164 people/forms.py:270
+#: people/admin.py:164 people/forms.py:271
 msgid "Password"
 msgstr "Heslo"
 
@@ -195,15 +195,15 @@ msgstr "Dôležité dátumy"
 msgid "Users merged succesfully."
 msgstr "Používatelia spojení úspešne."
 
-#: people/forms.py:30 people/forms.py:49
+#: people/forms.py:31 people/forms.py:49
 msgid "Street"
 msgstr "Ulica"
 
-#: people/forms.py:31 people/forms.py:50
+#: people/forms.py:32 people/forms.py:50
 msgid "Town"
 msgstr "Mesto"
 
-#: people/forms.py:33 people/forms.py:52
+#: people/forms.py:34 people/forms.py:52
 msgid "Postal code"
 msgstr "PSČ"
 
@@ -231,25 +231,25 @@ msgstr "Korešpondenčná adresa"
 msgid "Choose, where you want to accept mails."
 msgstr "Vyber, kam ti máme posielať poštu."
 
-#: people/forms.py:71
+#: people/forms.py:72
 msgid "Gender"
 msgstr "Pohlavie"
 
-#: people/forms.py:87 people/forms.py:95 people/forms.py:103
-#: people/forms.py:112 people/forms.py:122 people/forms.py:132
-#: people/forms.py:142
+#: people/forms.py:88 people/forms.py:96 people/forms.py:104
+#: people/forms.py:113 people/forms.py:123 people/forms.py:133
+#: people/forms.py:143
 msgid "This field is required."
 msgstr "Toto pole je povinné."
 
-#: people/forms.py:153
+#: people/forms.py:154
 msgid "Your graduation year is too far in the past."
 msgstr "Tvoj rok maturity je príliš ďaleko v minulosti."
 
-#: people/forms.py:159
+#: people/forms.py:160
 msgid "Your graduation year is too far in the future."
 msgstr "Tvoj rok maturity je príliš ďaleko v budúcnosti."
 
-#: people/forms.py:171
+#: people/forms.py:172
 msgid ""
 "We cannot send you correspondence to school when you don't choose any "
 "school. If your school is not in the list write us in an e-mail that you "
@@ -259,15 +259,15 @@ msgstr ""
 "tvoja škola nenachádza v zozname, napíš v e-maili, že ti máme posielať poštu "
 "na školu"
 
-#: people/forms.py:272
+#: people/forms.py:273
 msgid "Password confirmation"
 msgstr "Potvrdenie hesla"
 
-#: people/forms.py:273
+#: people/forms.py:274
 msgid "Enter the same password as above, for verification."
 msgstr "Zadaj rovnaké heslo ako vyššie pre jeho overenie"
 
-#: people/forms.py:299
+#: people/forms.py:300
 msgid ""
 "We recommend choosing a strong passphrase but we don't enforce any "
 "ridiculous constraints on your passwords."
@@ -275,31 +275,31 @@ msgstr ""
 "Odporúčame ti vybrať silné heslo, ale nebudeme od teba vyžadovať žiadne "
 "smiešne požiadavky"
 
-#: people/forms.py:307
+#: people/forms.py:308
 msgid ""
 "Since you're logging in using an external provider, this field is optional; "
 "however, by supplying it, you will be able to log in using a password. "
 msgstr ""
 
-#: people/forms.py:317
+#: people/forms.py:318
 msgid "The two password fields didn't match."
 msgstr ""
 
-#: people/forms.py:456
+#: people/forms.py:457
 msgid "Points have to be non-negative and at most {}."
 msgstr "Body musia byť nezáporné a najviac {}."
 
-#: people/forms.py:461
+#: people/forms.py:462
 #, fuzzy
 #| msgid "The value has to be integer or {}."
 msgid "The value has to be number or {}."
 msgstr "Hodnota musí byť číslo alebo {}."
 
-#: people/forms.py:505
+#: people/forms.py:506
 msgid "Round"
 msgstr "Kolo"
 
-#: people/forms.py:519 people/forms.py:557
+#: people/forms.py:520 people/forms.py:558
 #: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
 #: people/templates/trojsten/people/settings.html:95
 #: templates/ksp_login/parts/multiple_forms.html:11
@@ -399,7 +399,7 @@ msgid "Complete Registration"
 msgstr "Dodatočná Registrácia"
 
 #: people/templates/trojsten/people/additional_registration.html:23
-#: people/tests.py:758
+#: people/tests.py:759
 msgid "You have already filled all required properties."
 msgstr "Momentálne máš vyplnené všetky potrebné údaje."
 
@@ -492,8 +492,9 @@ msgstr "Možete použiť ľubovoľnú z nasledujúcich služieb na prihlásenie.
 #: templates/ksp_login/parts/login_box.html:44
 #: templates/ksp_login/parts/login_box.html:61
 #: templates/ksp_login/parts/login_box.html:75
-#: templates/ksp_login/parts/login_full_contents.html:23
-#: templates/ksp_login/parts/login_full_contents.html:40
+#: templates/ksp_login/parts/login_full_contents.html:47
+#: templates/ksp_login/parts/login_full_contents.html:53
+#: templates/ksp_login/parts/login_full_contents.html:82
 msgid "Log in"
 msgstr "Prihlásiť sa"
 
@@ -600,6 +601,10 @@ msgstr " (stiahne pre každého užívateľa opravené riešenie, ak je opraven�
 
 #: reviews/templates/admin/review_form.html:57
 #: reviews/templates/admin/submit_form.html:12
+#: submit/templates/trojsten/submit/parts/submit_list.html:30
+#: submit/templates/trojsten/submit/parts/submit_list.html:36
+#: submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:40
+#: submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:47
 msgid "Download"
 msgstr "Stiahnuť"
 
@@ -679,7 +684,7 @@ msgstr "Ignorovať"
 msgid "Successfully finished reviewing this task!"
 msgstr "Úspešne dokončené opravovanie tejto úlohy!"
 
-#: settings/common.py:393
+#: settings/common.py:419
 msgid "Table of Contents"
 msgstr ""
 
@@ -742,21 +747,29 @@ msgstr "Tu môžeš nahrať súbor s popisom riešenia"
 msgid "You can attach a submit file only to descriptions."
 msgstr "Nahrať súbor môžeš len k popisom."
 
-#: submit/templates/trojsten/submit/parts/submit_list.html:30
-#: submit/templates/trojsten/submit/parts/submit_list.html:36
-msgid "Stiahni"
-msgstr ""
+#: submit/templates/trojsten/submit/all_submits_page.html:12
+#: submit/templates/trojsten/submit/all_submits_page.html:15
+msgid "My submitted tasks"
+msgstr "Moje odovzdané úlohy"
 
 #: submit/templates/trojsten/submit/parts/submit_list.html:37
-msgid "Pozri komentár"
-msgstr ""
+msgid "Show comment"
+msgstr "Pozri komentár"
 
 #: submit/templates/trojsten/submit/parts/submit_list.html:75
 #: submit/templates/trojsten/submit/parts/submit_list.html:92
 msgid "Detaily"
 msgstr ""
 
-#: submit/views.py:335
+#: submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:49
+msgid "View comment"
+msgstr "Pozri komentár"
+
+#: submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:70
+msgid "Details"
+msgstr "Detaily"
+
+#: submit/views.py:393
 msgid ""
 "You have successfully submitted your description, it will be reviewed after "
 "the round finishes."
@@ -764,7 +777,7 @@ msgstr ""
 "Úspešne sa ti podarilo submitnúť popis, po skončení kola ti ho vedúci "
 "opravia."
 
-#: submit/views.py:339
+#: submit/views.py:397
 msgid ""
 "You have submitted your description after the deadline. It is not counted in "
 "results."
@@ -836,18 +849,18 @@ msgstr ""
 msgid "More login options"
 msgstr ""
 
-#: templates/ksp_login/parts/login_full_contents.html:41
+#: templates/ksp_login/parts/login_full_contents.html:85
 msgid "Forgotten password"
 msgstr ""
 
 # Login
-#: templates/ksp_login/parts/login_full_contents.html:50
+#: templates/ksp_login/parts/login_full_contents.html:96
 #: templates/ksp_login/registration.html:5
 #: templates/ksp_login/registration.html:8
 msgid "Registration"
 msgstr "Registrácia"
 
-#: templates/ksp_login/parts/login_full_contents.html:57
+#: templates/ksp_login/parts/login_full_contents.html:112
 msgid "Log in with your Trojsten account"
 msgstr ""
 
