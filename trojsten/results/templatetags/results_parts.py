@@ -10,6 +10,7 @@ def show_results_table(context, scoreboard, show_staff=False):
 
     context.update({
         'table': scoreboard.serialized_results,
+        'has_previous_rounds': scoreboard.has_previous_results,
         'show_staff': show_staff
     })
     return context
