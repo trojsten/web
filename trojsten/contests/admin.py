@@ -2,14 +2,22 @@
 
 from __future__ import unicode_literals
 
+from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.contrib import admin
 from django.utils.encoding import force_text
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
+from django.contrib.sites.models import Site
 from easy_select2 import select2_modelform
 
 from trojsten.contests.models import Category, Competition, Round, Semester, Task, TaskPeople
+from trojsten.people.models import User
 from trojsten.reviews.urls import task_review_urls
 from trojsten.contests.forms import TaskValidationForm
 from trojsten.utils.utils import attribute_format, get_related
+
+from news.models import Entry
 
 
 def make_results_final(modeladmin, request, queryset):
@@ -76,6 +84,22 @@ class RoundAdmin(admin.ModelAdmin):
         return super(RoundAdmin, self).get_queryset(request).filter(
             semester__in=semester_lst
         )
+
+    @receiver(post_save, sender=Round)
+    def visibility_change(sender, instance, **kwargs):
+        round = instance
+        if instance.tracker.has_changed('visible') and instance.visible:
+            user = User.objects.filter(username='matus')[0]
+            site = Site.objects.get(pk=settings.SITE_ID)
+            announcement = 'Zverejnili sme [zadania {} kola.]({})\n\n'.format(
+                round.number, reverse('task_list', kwargs={'round_id': round.id}))
+            deadline = 'Termín tohto kola je {}.\n\n'.format(
+                round.end_time.strftime('%d.%m.%Y o %H:%M')) if round.end_time else ''
+            second_deadline = 'Na doprogramovanie budete mať čas do {}.\n\n'.format(
+                round.end_time.strftime('%d.%m.%Y o %H:%M')) if round.second_end_time else ''
+            news_entry = Entry.objects.create(author=user, title='%s začalo!' % round.short_str(),
+                                              text=announcement + deadline + second_deadline)
+            news_entry.sites.add(site)
 
 
 class TaskByYearSubFilter(admin.SimpleListFilter):

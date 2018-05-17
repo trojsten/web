@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 from unidecode import unidecode
+from model_utils import FieldTracker
 
 from trojsten.people.models import User, UserPropertyKey
 from trojsten.results.models import FrozenResults
@@ -152,6 +153,8 @@ class Round(models.Model):
     results_final = models.BooleanField(verbose_name='výsledky sú finálne', default=False)
 
     objects = RoundManager()
+
+    tracker = FieldTracker()
 
     @property
     def can_submit(self):

@@ -17,6 +17,7 @@ django-haystack
 django-import-export
 django-jsonfield
 django-mathfilters
+django-model-utils
 django-oauth-toolkit
 django-recaptcha2
 django-sekizai
