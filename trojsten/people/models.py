@@ -74,15 +74,6 @@ class User(AbstractUser):
                                         verbose_name='adresa korešpondencie')
     mail_to_school = models.BooleanField(default=False,
                                          verbose_name='posielať poštu do školy')
-    school = models.ForeignKey('schools.School',
-                               null=True,
-                               verbose_name='škola',
-                               help_text='Do políčka napíšte skratku, '
-                                         'časť názvu alebo adresy školy a následne '
-                                         'vyberte správnu možnosť zo zoznamu. '
-                                         'Pokiaľ vaša škola nie je '
-                                         'v&nbsp;zozname, vyberte "Iná škola" '
-                                         'a&nbsp;pošlite nám e-mail.')
     graduation = models.IntegerField(null=True,
                                      verbose_name='rok maturity',
                                      help_text='Povinné pre žiakov.')
@@ -111,11 +102,14 @@ class User(AbstractUser):
         verbose_name_plural = 'používatelia'
 
     @property
-    def school_now(self):
+    def school(self):
         return UserSchool.objects.filter(user=self).order_by('-start_time').first().school
 
     def school_at(self, date):
         return UserSchool.objects.filter(user=self, start_time__lt=date).order_by('-start_time').first().school
+
+    def add_school(self, school, date=timezone.now()):
+        UserSchool.objects.create(user=self, school=school, start_time=date)
 
     @property
     def school_year(self):
@@ -171,7 +165,7 @@ User._meta.get_field('username').blank = True
 class UserSchool(models.Model):
     user = models.ForeignKey(User, verbose_name=_('User'))
     school = models.ForeignKey(School, verbose_name=_('School'))
-    start_time = models.DateField(verbose_name=_('Start of study'))
+    start_time = models.DateField(verbose_name=_('Start of study'), default=timezone.now)
 
 
 class UserPropertyManager(models.Manager):

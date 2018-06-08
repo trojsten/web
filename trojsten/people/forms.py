@@ -14,6 +14,7 @@ from ksp_login.utils import get_partial_pipeline
 
 from trojsten.contests.models import Competition, Round, Task
 from trojsten.people.models import Address, DuplicateUser, User, UserProperty
+from trojsten.schools.models import School
 from trojsten.submit.constants import (SUBMIT_PAPER_FILEPATH,
                                        SUBMIT_STATUS_IN_QUEUE,
                                        SUBMIT_STATUS_REVIEWED,
@@ -28,6 +29,17 @@ from .helpers import get_similar_users
 # TODO: reuse code from ksp_login
 class TrojstenUserBaseForm(forms.ModelForm):
     required_css_class = 'required'
+    school = forms.ModelChoiceField(
+        label='Škola',
+        help_text='Do políčka napíšte skratku, '
+                  'časť názvu alebo adresy školy a následne '
+                  'vyberte správnu možnosť zo zoznamu. '
+                  'Pokiaľ vaša škola nie je '
+                  'v&nbsp;zozname, vyberte "Iná škola" '
+                  'a&nbsp;pošlite nám e-mail.',
+        queryset=School.objects.all(),
+        widget=forms.Select(attrs={'class': 'autocomplete'}),
+    )
     street = forms.CharField(max_length=70, label=_('Street'))
     town = forms.CharField(max_length=64, label=_('Town'))
     postal_code = forms.CharField(
@@ -57,10 +69,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email',
-                  'birth_date', 'gender', 'school', 'graduation',)
-        widgets = {
-            'school': forms.Select(attrs={'class': 'autocomplete'}),
-        }
+                  'birth_date', 'gender', 'graduation',)
 
     def __init__(self, *args, **kwargs):
         super(TrojstenUserBaseForm, self).__init__(*args, **kwargs)
@@ -72,7 +81,6 @@ class TrojstenUserBaseForm(forms.ModelForm):
             label=_('Gender'),
             choices=User.GENDER_CHOICES,
         )
-        self.fields['school'].initial = 1
 
     def get_initial_from_pipeline(self, pipeline_state):
         return None if not pipeline_state else {
@@ -186,6 +194,7 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
             kwargs['instance'] = self.user
             if self.user.home_address:
                 kwargs['initial'] = {
+                    'school': user.school,
                     'street': user.home_address.street,
                     'town': user.home_address.town,
                     'postal_code': user.home_address.postal_code,
@@ -258,6 +267,7 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
                 corr_address.save()
                 user.mailing_address = corr_address
             user.save()
+            user.add_school(self.cleaned_data.get('school'))
             if not DuplicateUser.objects.filter(user=user).exists():
                 similar_users = get_similar_users(user)
                 if len(similar_users):
@@ -277,10 +287,7 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email',
-                  'birth_date', 'gender', 'school', 'graduation',)
-        widgets = {
-            'school': forms.Select(attrs={'class': 'autocomplete'}),
-        }
+                  'birth_date', 'gender', 'graduation',)
 
     def __init__(self, *args, **kwargs):
         try:
@@ -365,6 +372,7 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
                 corr_address.save()
                 user.mailing_address = corr_address
             user.save()
+            user.add_school(self.cleaned_data.get('school'))
             similar_users = get_similar_users(user)
             if len(similar_users):
                 DuplicateUser.objects.create(user=user)

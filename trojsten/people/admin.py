@@ -25,7 +25,7 @@ from . import constants
 from .forms import MergeForm
 from .helpers import get_similar_users, merge_users
 from .models import (Address, DuplicateUser, User, UserProperty,
-                     UserPropertyKey)
+                     UserPropertyKey, UserSchool)
 
 
 class AddressAdmin(admin.ModelAdmin):
@@ -36,6 +36,13 @@ class AddressAdmin(admin.ModelAdmin):
 class UserPropertyInLine(admin.TabularInline):
     model = UserProperty
     extra = 0
+
+
+class UserSchoolInLine(admin.TabularInline):
+    model = UserSchool
+    form = select2_modelform(UserSchool)
+    ordering = ['start_time']
+    extra = 1
 
 
 class StaffFilter(admin.SimpleListFilter):
@@ -95,6 +102,11 @@ class ActiveInSemesterSubFilter(admin.SimpleListFilter):
 
 
 class UsersExport(resources.ModelResource):
+    school__verbose_name = fields.Field()
+    school__addr_name = fields.Field()
+    school__street = fields.Field()
+    school__city = fields.Field()
+    school__zip_code = fields.Field()
     street = fields.Field()
     town = fields.Field()
     postal_code = fields.Field()
@@ -109,6 +121,21 @@ class UsersExport(resources.ModelResource):
             'school__city', 'school__zip_code'
         )
         widgets = {'birth_date': {'format': '%d.%m.%Y'}}
+
+    def dehydrate_school__verbose_name(self, obj):
+        return obj.school.verbose_name if obj.school else _('Other school')
+
+    def dehydrate_school__addr_name(self, obj):
+        return obj.school.addr_name if obj.school else _('Other school')
+
+    def dehydrate_school__street(self, obj):
+        return obj.school.street if obj.school else ''
+
+    def dehydrate_school__city(self, obj):
+        return obj.school.city if obj.school else ''
+
+    def dehydrate_school__zip_code(self, obj):
+        return obj.school.zip_code if obj.school else ''
 
     def dehydrate_street(self, obj):
         address = obj.get_mailing_address()
@@ -131,7 +158,7 @@ class AdminUserAddForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'school', 'graduation']
+        fields = ['first_name', 'last_name', 'graduation']
 
 
 class UserAdmin(ExportMixin, DefaultUserAdmin):
@@ -149,7 +176,7 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
     }
 
     add_fieldsets = (
-        (None, {'fields': ('first_name', 'last_name', 'school', 'graduation')}),
+        (None, {'fields': ('first_name', 'last_name', 'graduation')}),
     )
 
     fieldsets = (
@@ -158,7 +185,7 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
             'first_name', 'last_name', 'email', 'gender', 'birth_date'
         )}),
         (_('Address'), {'fields': ('home_address', 'mail_to_school', 'mailing_address')}),
-        (_('School'), {'fields': ('school', 'graduation')}),
+        (_('School'), {'fields': ('graduation',)}),
     )
     superuser_fieldsets = fieldsets + (
         (_('Password'), {'fields': ('password',)}),
@@ -168,13 +195,13 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
 
-    inlines = (UserPropertyInLine,)
+    inlines = (UserSchoolInLine, UserPropertyInLine)
 
     resource_class = UsersExport
 
     def get_queryset(self, request):
         qs = super(UserAdmin, self).get_queryset(request)
-        return qs.select_related('school').prefetch_related(
+        return qs.prefetch_related(
             'groups', 'properties__key'
         )
 

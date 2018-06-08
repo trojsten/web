@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 from django.utils.encoding import force_text
+from django.utils.translation import ugettext_lazy as _
 from easy_select2 import select2_modelform
 from import_export import fields, resources
 from import_export.admin import ExportMixin
@@ -67,6 +68,7 @@ class EventAdmin(admin.ModelAdmin):
 
 
 class EventParticipantExport(resources.ModelResource):
+    user__school__verbose_name = fields.Field()
     type = fields.Field()
 
     street = fields.Field()
@@ -82,6 +84,9 @@ class EventParticipantExport(resources.ModelResource):
             'user__school__verbose_name', 'type', 'going'
         ]
         widgets = {'user__birth_date': {'format': '%d.%m.%Y'}}
+
+    def dehydrate_user__school__verbose_name(selfs, obj):
+        return obj.user.school.verbose_name if obj.user.school else _('Other_school')
 
     def dehydrate_type(self, obj):
         return obj.get_type_display()
