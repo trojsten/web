@@ -13,6 +13,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from unidecode import unidecode
 
+from trojsten.schools.models import School
 from . import constants
 
 
@@ -110,6 +111,13 @@ class User(AbstractUser):
         verbose_name_plural = 'používatelia'
 
     @property
+    def school_now(self):
+        return UserSchool.objects.filter(user=self).order_by('-start_time').first().school
+
+    def school_at(self, date):
+        return UserSchool.objects.filter(user=self, start_time__lt=date).order_by('-start_time').first().school
+
+    @property
     def school_year(self):
         return self.school_year_at(
             timezone.localtime(timezone.now()).date()
@@ -158,6 +166,12 @@ class User(AbstractUser):
 User._meta.get_field('first_name').blank = False
 User._meta.get_field('last_name').blank = False
 User._meta.get_field('username').blank = True
+
+
+class UserSchool(models.Model):
+    user = models.ForeignKey(User, verbose_name=_('User'))
+    school = models.ForeignKey(School, verbose_name=_('School'))
+    start_time = models.DateField(verbose_name=_('Start of study'))
 
 
 class UserPropertyManager(models.Manager):
