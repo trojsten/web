@@ -287,6 +287,10 @@ def poll_submit_info(request, submit_id):
             task__round__semester__competition__organizers_group__user__pk=request.user.pk).exists():
         # You shouldn't see other user's submits if you are not an organizer of the competition
         raise PermissionDenied()
+
+    if not submit.tested:  # try to find and parse protocol with each poll
+        update_submit(submit)
+
     return HttpResponse(json.dumps({
         'tested': submit.tested,
         'response_verbose': six.text_type(submit.tester_response_verbose),

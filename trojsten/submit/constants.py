@@ -13,6 +13,7 @@ SUBMIT_STATUS_CHOICES = [
     (SUBMIT_STATUS_FINISHED, _('finished')),
     (SUBMIT_STATUS_OK, _('OK')),  # for support of old interactive tasks
 ]
+SUBMIT_RESPONSE_PROTOCOL_CORRUPTED = 'PROTCOR'
 SUBMIT_RESPONSE_ERROR = 'CERR'
 SUBMIT_RESPONSE_OK = 'OK'
 SUBMIT_RAW_FILE_EXTENSION = '.raw'
@@ -37,7 +38,8 @@ SUBMIT_VERBOSE_RESPONSE = {
     'OK': _('OK'),
     'EXC': _('Runtime exception'),
     'SEC': _('Security exception'),
-    'IGN': _('Ignored')
+    'IGN': _('Ignored'),
+    'PROTCOR': _('Protocol corrupted'),
 }
 
 SUBMIT_PAPER_FILEPATH = '<PAPIEROVE>'
