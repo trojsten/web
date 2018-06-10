@@ -3,6 +3,7 @@ import os
 import random
 import socket
 import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import ParseError
 from decimal import Decimal
 from time import time
 
@@ -160,11 +161,10 @@ def parse_result_and_points_from_protocol(submit):
     protocol_path = submit.protocol_path
     if not os.path.exists(protocol_path):
         return None, None
-    print('AHA', protocol_path)
 
     try:
         tree = ET.parse(protocol_path)
-    except:  # noqa: E722 @FIXME
+    except ParseError:
         return constants.SUBMIT_RESPONSE_PROTOCOL_CORRUPTED, 0
 
     # Ak kompilátor vyhlási chyby, testovač ich vráti v tagu <compileLog>

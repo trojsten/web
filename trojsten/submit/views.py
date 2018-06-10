@@ -4,6 +4,7 @@
 import json
 import os
 import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import ParseError
 
 import six
 from django.conf import settings
@@ -39,9 +40,9 @@ def protocol_data(protocol_path, force_show_details=False):
         template_data['protocolReady'] = True  # Tested, show the protocol
         try:
             tree = ET.parse(protocol_path)  # Protocol is in XML format
-        except:  # noqa: E722 @FIXME
-            # don't throw error if protocol is corrupted. (should only happen
-            # while protocol is being uploaded)
+        except ParseError:
+            # Don't throw error if protocol is corrupted: either protocol is still being uploaded
+            # or the user is informed about the corrupted protocol via submit response status.
             template_data['protocolReady'] = False
             return template_data
         clog = tree.find('compileLog')
