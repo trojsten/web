@@ -39,9 +39,9 @@ def protocol_data(protocol_path, force_show_details=False):
         template_data['protocolReady'] = True  # Tested, show the protocol
         try:
             tree = ET.parse(protocol_path)  # Protocol is in XML format
-        except:  # noqa: E722 @FIXME
-            # don't throw error if protocol is corrupted. (should only happen
-            # while protocol is being uploaded)
+        except SyntaxError:
+            # Don't throw error if protocol is corrupted: either protocol is still being uploaded
+            # or the user is informed about the corrupted protocol via submit response status.
             template_data['protocolReady'] = False
             return template_data
         clog = tree.find('compileLog')
@@ -287,6 +287,10 @@ def poll_submit_info(request, submit_id):
             task__round__semester__competition__organizers_group__user__pk=request.user.pk).exists():
         # You shouldn't see other user's submits if you are not an organizer of the competition
         raise PermissionDenied()
+
+    if not submit.tested:  # try to find and parse protocol with each poll
+        update_submit(submit)
+
     return HttpResponse(json.dumps({
         'tested': submit.tested,
         'response_verbose': six.text_type(submit.tester_response_verbose),
