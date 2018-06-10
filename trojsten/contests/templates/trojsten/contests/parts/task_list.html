@@ -41,9 +41,11 @@
         {% endif %}
     </th>
     {% endif %}
-    <th width="15%">
-        Kategória
-    </th>
+    {% if categories.count > 0 %}
+        <th width="15%">
+            Kategória
+        </th>
+    {% endif %}
     <th width="15%">
         Max. body
     </th>
@@ -67,11 +69,13 @@
                 <a href="{% url 'solution_statement' task_id=task.id %}">vzorák</a>
             </td>
         {% endif %}
-        <td>
-            {% for category in task.categories.all %}
-                <span class="label label-default category-{{ category }}">{{ category }}</span>
-            {% endfor %}
-        </td>
+        {% if categories.count > 0 %}
+            <td>
+                {% for category in task.categories.all %}
+                    <span class="label label-default category-{{ category }}">{{ category }}</span>
+                {% endfor %}
+            </td>
+        {% endif %}
         <td>
             {% if task.description_points > 0 %}
                 <span class="points-item">popis:&nbsp;{{ task.description_points }}</span>
