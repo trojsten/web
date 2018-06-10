@@ -100,7 +100,7 @@ class EventParticipantExport(resources.ModelResource):
 
     def dehydrate_country(self, obj):
         address = obj.user.get_mailing_address()
-        return '' if address is None else address.country
+        return '' if address is None else str(address.country)
 
 
 class EventParticipantAdmin(ExportMixin, admin.ModelAdmin):
