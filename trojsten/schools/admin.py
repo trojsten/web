@@ -18,4 +18,5 @@ class SchoolAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ('verbose_name', 'abbreviation', 'addr_name', 'street', 'city', 'zip_code')
     resource_class = SchoolExport
 
+
 admin.site.register(School, SchoolAdmin)
