@@ -4,6 +4,7 @@ import random
 import socket
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import ParseError
+from xml.parsers.expat import ExpatError
 from decimal import Decimal
 from time import time
 
@@ -164,7 +165,7 @@ def parse_result_and_points_from_protocol(submit):
 
     try:
         tree = ET.parse(protocol_path)
-    except ParseError:
+    except (ParseError, ExpatError):
         return constants.SUBMIT_RESPONSE_PROTOCOL_CORRUPTED, 0
 
     # Ak kompilátor vyhlási chyby, testovač ich vráti v tagu <compileLog>
