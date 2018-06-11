@@ -310,7 +310,8 @@ def send_notification_email(submit):
           ' response, do not reply').format(
             name=submit.user.get_full_name(),
             task=str(submit.task),
-            submit_link=Site.objects.get_current().domain + reverse('admin:old_submit_submit_change', args=(submit.id, )),
+            submit_link=Site.objects.get_current().domain + reverse('admin:old_submit_submit_change',
+                                                                    args=(submit.id, )),
         ),
         settings.DEFAULT_FROM_EMAIL,
         [org.email for org in submit.task.get_assigned_people_for_role(contest_consts.TASK_ROLE_REVIEWER)]
