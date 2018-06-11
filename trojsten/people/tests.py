@@ -287,7 +287,7 @@ class UserFormTests(TestCase):
 
     def test_user_creation_invalid_school(self):
         data = self.form_data
-        data['school'] = 1
+        data['school'] = None
         data['mailing_option'] = constants.MAILING_OPTION_SCHOOL
         form = TrojstenUserCreationForm(data=data, request=self.request)
         self.assertFalse(form.is_valid())

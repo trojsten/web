@@ -81,7 +81,8 @@ class User(AbstractUser):
                                          'vyberte správnu možnosť zo zoznamu. '
                                          'Pokiaľ vaša škola nie je '
                                          'v&nbsp;zozname, vyberte "Iná škola" '
-                                         'a&nbsp;pošlite nám e-mail.')
+                                         'a&nbsp;pošlite nám e-mail.',
+                               default=None)
     graduation = models.IntegerField(null=True,
                                      verbose_name='rok maturity',
                                      help_text='Povinné pre žiakov.')

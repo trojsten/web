@@ -191,10 +191,13 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
     get_is_staff = attribute_format(attribute='is_staff', description='vedúci', boolean=True)
 
     def get_school(self, obj):
-        if obj.school.has_abbreviation:
-            show = obj.school.abbreviation
+        if obj.school:
+            if obj.school.has_abbreviation:
+                show = obj.school.abbreviation
+            else:
+                show = obj.school.verbose_name
         else:
-            show = obj.school.verbose_name
+            show = 'Iná škola'
         return '<span title="%s">%s</span>' % (
             escape(force_text(obj.school)), escape(force_text(show))
         )

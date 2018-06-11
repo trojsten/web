@@ -72,7 +72,8 @@ class TrojstenUserBaseForm(forms.ModelForm):
             label=_('Gender'),
             choices=User.GENDER_CHOICES,
         )
-        self.fields['school'].initial = 1
+        self.fields['school'].initial = None
+        self.fields['school'].empty_label = 'Iná škola'
 
     def get_initial_from_pipeline(self, pipeline_state):
         return None if not pipeline_state else {
@@ -166,8 +167,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
     def clean_mailing_option(self):
         school = self.cleaned_data.get('school')
         option = self.cleaned_data.get('mailing_option')
-        if option == constants.MAILING_OPTION_SCHOOL and \
-                (school is None or school.pk == constants.OTHER_SCHOOL_ID):
+        if option == constants.MAILING_OPTION_SCHOOL and school is None:
             raise forms.ValidationError(
                 _("We cannot send you correspondence to school when you don't choose any school. "
                   "If your school is not in the list "

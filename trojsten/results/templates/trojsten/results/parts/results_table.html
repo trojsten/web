@@ -74,7 +74,10 @@
             {{ row.user.school.name }}
         </abbr>
     {% else %}
-        {{ row.user.school.name }}
+        <abbr title="Iná škola" data-toggle="tooltip"
+              data-placement="top">
+            ?
+        </abbr>
     {% endif %}
     </td>
     {% for cell in row.cell_list %}
