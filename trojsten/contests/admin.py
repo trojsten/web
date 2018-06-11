@@ -32,6 +32,7 @@ class SemesterAdmin(admin.ModelAdmin):
     form = select2_modelform(Semester)
     list_display = ('short_str', 'number', 'name', 'competition', 'year')
     list_filter = ('competition', 'year')
+    ordering = ('competition', '-year', '-number')
 
 
 class RoundAdmin(admin.ModelAdmin):
@@ -67,6 +68,7 @@ class RoundAdmin(admin.ModelAdmin):
     can_submit = attribute_format(attribute='can_submit',
                                   description='prebieha',
                                   boolean=True)
+    ordering = ('semester__competition', '-semester__year', 'semester__name', '-semester__number')
 
     def get_queryset(self, request):
         user_groups = request.user.groups.all()
@@ -174,6 +176,9 @@ class TaskAdmin(admin.ModelAdmin):
     get_competition = get_related(attribute_chain=('round', 'semester', 'competition'),
                                   description='súťaž',
                                   order='round__semester__competition')
+
+    ordering = ('round__semester__competition', '-round__semester__year', '-round__semester__number',
+                '-round__number', '-number')
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         user_groups = request.user.groups.all()
