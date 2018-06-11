@@ -6,9 +6,9 @@ import os
 import xml.etree.ElementTree as ET
 
 import six
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.models import Site
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
@@ -309,8 +309,8 @@ def send_notification_email(submit):
         _('{name} submitted solution to task {task}\n\nSubmit link: {submit_link}\n\nThis is an automated'
           ' response, do not reply').format(
             name=submit.user.get_full_name(),
-            task=submit.task.__str__(),
-            submit_link='%s/admin/old_submit/submit/%s' % (settings.SITES[settings.SITE_ID].url, str(submit.id)),
+            task=str(submit.task),
+            submit_link=Site.objects.get_current().domain + reverse('admin:old_submit_submit_change', args=(submit.id, )),
         ),
         settings.DEFAULT_FROM_EMAIL,
         [org.email for org in submit.task.get_assigned_people_for_role(contest_consts.TASK_ROLE_REVIEWER)]
