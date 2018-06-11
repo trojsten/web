@@ -10,7 +10,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contests', '0010_round_results_final'),
+        ('contests', '0011_auto_20180611_1626'),
     ]
 
     operations = [

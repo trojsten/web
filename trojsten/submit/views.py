@@ -306,10 +306,9 @@ def poll_submit_info(request, submit_id):
 def send_notification_email(submit):
     send_mail(
         _('[Trojstenweb] User submission detected'),
-        _('{name} submitted {possessive} solution to task {task}\n\nSubmit link: {submit_link}\n\nThis is an automated'
+        _('{name} submitted solution to task {task}\n\nSubmit link: {submit_link}\n\nThis is an automated'
           ' response, do not reply').format(
             name=submit.user.get_full_name(),
-            possessive='his' if submit.user.gender == 'M' else 'her',
             task=submit.task.__str__(),
             submit_link='%s/admin/old_submit/submit/%s' % (settings.SITES[settings.SITE_ID].url, str(submit.id)),
         ),
