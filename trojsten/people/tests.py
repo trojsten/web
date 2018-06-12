@@ -206,9 +206,10 @@ class UserFormTests(TestCase):
         self.user = User.objects.create(
             username='janko4247', first_name='Janko', last_name='Hrasko', password='pass',
             gender='M', birth_date=datetime.date(1999, 9, 19), email='hrasko@example.com',
-            mail_to_school=True, school=self.school, graduation=2018,
+            mail_to_school=True, graduation=2018,
             home_address=address
         )
+        self.user.add_school(self.school)
         self.form_data = {
             'username': 'mrkva',
             'password1': 'heslo',
@@ -303,6 +304,8 @@ class UserFormTests(TestCase):
     def test_valid_initial_data(self):
         form = TrojstenUserChangeForm({}, user=self.user)
         form.data = form.initial
+        form.is_valid()
+        print(form.errors)
         self.assertTrue(form.is_valid())
 
     def test_valid_user_change(self):

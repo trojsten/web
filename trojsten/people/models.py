@@ -103,7 +103,8 @@ class User(AbstractUser):
 
     @property
     def school(self):
-        return UserSchool.objects.filter(user=self).order_by('-start_time').first().school
+        schools_queryset = UserSchool.objects.filter(user=self).order_by('-start_time')
+        return schools_queryset.first().school if len(schools_queryset) > 0 else None
 
     def school_at(self, date):
         return UserSchool.objects.filter(user=self, start_time__lt=date).order_by('-start_time').first().school

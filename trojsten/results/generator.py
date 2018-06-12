@@ -111,7 +111,7 @@ class ResultsGenerator(object):
         ).distinct(
             'user', 'task', 'submit_type'
         ).select_related(
-            'user', 'user__school', 'task'
+            'user', 'task'
         ).prefetch_related('user__properties', 'user__ignored_competitions')
 
     def create_row(self, res_request, user, cols):

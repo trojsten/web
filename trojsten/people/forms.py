@@ -194,7 +194,6 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
             kwargs['instance'] = self.user
             if self.user.home_address:
                 kwargs['initial'] = {
-                    'school': user.school,
                     'street': user.home_address.street,
                     'town': user.home_address.town,
                     'postal_code': user.home_address.postal_code,
@@ -209,6 +208,8 @@ class TrojstenUserChangeForm(TrojstenUserBaseForm):
                 kwargs['initial'][
                     'corr_country'] = user.mailing_address.country
                 kwargs['initial']['has_correspondence_address'] = True
+            if self.user.school:
+                kwargs['initial']['school'] = user.school.pk
 
         super(TrojstenUserChangeForm, self).__init__(*args, **kwargs)
 

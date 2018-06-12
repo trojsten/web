@@ -56,7 +56,7 @@ class SubmitManager(models.Manager):
             'user', 'task', 'submit_type', '-time', '-id',
         ).distinct(
             'user', 'task', 'submit_type'
-        ).select_related('user__school', 'task')
+        ).select_related('task')
 
     # @FIXME: This is used for rendering points for each task at task_list view.
     #  Displaying scores for tasks should be implemented in results/rules.
