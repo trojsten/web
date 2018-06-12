@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib import admin
 from django.utils.encoding import force_text
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.sites.models import Site
 from easy_select2 import select2_modelform
@@ -86,11 +86,10 @@ class RoundAdmin(admin.ModelAdmin):
         )
 
     @receiver(post_save, sender=Round)
-    def visibility_change(sender, instance, **kwargs):
+    def check_visibility_change(sender, instance, **kwargs):
         round = instance
-        if instance.tracker.has_changed('visible') and instance.visible:
-            user = User.objects.filter(username='matus')[0]
-            site = Site.objects.get(pk=settings.SITE_ID)
+        if round.previous_visible != round.visible and round.visible:
+            user = User.objects.filter(username=settings.DEFAULT_SITE_USER).get()
             announcement = 'Zverejnili sme [zadania {} kola.]({})\n\n'.format(
                 round.number, reverse('task_list', kwargs={'round_id': round.id}))
             deadline = 'Termín tohto kola je {}.\n\n'.format(
@@ -99,7 +98,7 @@ class RoundAdmin(admin.ModelAdmin):
                 round.end_time.strftime('%d.%m.%Y o %H:%M')) if round.second_end_time else ''
             news_entry = Entry.objects.create(author=user, title='%s začalo!' % round.short_str(),
                                               text=announcement + deadline + second_deadline)
-            news_entry.sites.add(site)
+            news_entry.sites.add(Site.objects.get_current())
 
 
 class TaskByYearSubFilter(admin.SimpleListFilter):

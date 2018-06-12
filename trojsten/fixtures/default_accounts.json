@@ -1,0 +1,26 @@
+[
+  {
+    "model": "people.User",
+    "fields": {
+      "username": "trojsten_bot",
+      "first_name": "Trojsten",
+      "last_name": "Bot",
+      "gender": "M",
+      "graduation": 1970,
+      "mail_to_school": false,
+      "school":1
+    }
+  },
+  {
+    "model": "people.User",
+    "fields": {
+      "username": "ksp_bot",
+      "first_name": "KSP",
+      "last_name": "Bot",
+      "gender": "M",
+      "graduation": 1947,
+      "mail_to_school": false,
+      "school":1
+    }
+  }
+]

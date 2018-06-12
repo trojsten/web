@@ -14,7 +14,6 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 from unidecode import unidecode
-from model_utils import FieldTracker
 
 from trojsten.people.models import User, UserPropertyKey
 from trojsten.results.models import FrozenResults
@@ -154,7 +153,15 @@ class Round(models.Model):
 
     objects = RoundManager()
 
-    tracker = FieldTracker()
+    previous_visible = None
+
+    def __init__(self, *args, **kwargs):
+        super(Round, self).__init__(*args, **kwargs)
+        self.previous_visible = self.visible
+
+    def save(self, *args, **kwargs):
+        super(Round, self).save(*args, **kwargs)
+        self.previous_visible = self.visible
 
     @property
     def can_submit(self):
