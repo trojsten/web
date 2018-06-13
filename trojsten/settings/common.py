@@ -218,6 +218,7 @@ INSTALLED_APPS = (
     'trojsten.utils',
     'trojsten.people',
     'trojsten.contests',
+    'trojsten.diplomas',
     'trojsten.events',
     'trojsten.submit.apps.SubmitConfig',
     'trojsten.results',
