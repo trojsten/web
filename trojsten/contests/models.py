@@ -91,7 +91,7 @@ class Competition(models.Model):
     required_user_props = models.ManyToManyField(
         UserPropertyKey, limit_choices_to={'hidden': False}, verbose_name='Povinné vlastnosti človeka', blank=True
     )
-    founded = models.IntegerField(verbose_name=_('Founded in'), blank=True, null=True)
+    founded = models.IntegerField(verbose_name=_('Year of foundation'), blank=True, null=True)
 
     @property
     def rules(self):
