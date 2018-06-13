@@ -10,6 +10,9 @@
     {{ scoreboard.round.number }}. kola{% else %}po {{ scoreboard.round.number }}. kole
 {% endif %}
 {{ scoreboard.round.semester.number }}. časti {{ scoreboard.round.semester.year }}. ročníka
+{% if competition_founded %}
+    ({{ competition_founded|add:year }}/{{ competition_founded|add:year|add:"1" }})
+{% endif %}
 {{ scoreboard.round.semester.competition }} {{ tag_name }}
 </small></h1>
 {% endblock %}

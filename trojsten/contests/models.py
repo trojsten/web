@@ -91,6 +91,7 @@ class Competition(models.Model):
     required_user_props = models.ManyToManyField(
         UserPropertyKey, limit_choices_to={'hidden': False}, verbose_name='Povinné vlastnosti človeka', blank=True
     )
+    founded = models.IntegerField(verbose_name=_('Founded in'), blank=True, null=True)
 
     @property
     def rules(self):
@@ -121,8 +122,11 @@ class Semester(models.Model):
         verbose_name_plural = 'Časti'
 
     def __str__(self):
-        return '%i. (%s) časť, %i. ročník %s'\
-            % (self.number, self.name, self.year, self.competition)
+        semester_name = '(%s) ' % self.name if len(self.name) > 0 else ''
+        school_year = '(%d/%d) ' % (self.competition.founded + self.year, self.competition.founded + self.year + 1) \
+            if self.competition.founded else ''
+        return '%i. %sčasť, %i. ročník %s%s'\
+            % (self.number, semester_name, self.year, school_year, self.competition)
 
     def short_str(self):
         return '%i. (%s) časť'\
@@ -239,11 +243,9 @@ class Round(models.Model):
         verbose_name_plural = 'Kolá'
 
     def __str__(self):
-        return '%i. kolo, %i. časť, %i. ročník %s' % (
+        return '%i. kolo, %s' % (
             self.number,
-            self.semester.number,
-            self.semester.year,
-            self.semester.competition,
+            self.semester,
         )
 
     def short_str(self):

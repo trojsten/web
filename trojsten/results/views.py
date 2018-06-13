@@ -35,6 +35,8 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
         'scoreboard': results,
         'tag_name': round.semester.competition.rules.RESULTS_TAGS.get(tag_key).name,
         'show_staff': is_true(request.GET.get('show_staff', False)),
+        'competition_founded': round.semester.competition.founded,
+        'year': round.semester.year,
         'competition_ignored': (
             request.user.is_anonymous() or
             request.user.is_competition_ignored(round.semester.competition)
