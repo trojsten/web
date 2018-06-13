@@ -13,7 +13,7 @@ from django.utils.translation import string_concat
 from ksp_login.utils import get_partial_pipeline
 
 from trojsten.contests.models import Competition, Round, Task
-from trojsten.people.models import Address, DuplicateUser, User, UserProperty
+from trojsten.people.models import Address, DuplicateUser, User, UserProperty, UserSchool
 from trojsten.schools.models import School
 from trojsten.submit.constants import (SUBMIT_PAPER_FILEPATH,
                                        SUBMIT_STATUS_IN_QUEUE,
@@ -517,6 +517,15 @@ class RoundSelectForm(forms.Form):
                 semester__competition__in=Competition.objects.current_site_only()
             ).order_by('-end_time'),
         )
+
+
+class UserSchoolFrom(forms.ModelForm):
+    class Meta:
+        model = UserSchool
+        exclude = ()
+        widgets = {
+            'school': forms.Select(attrs={'class': 'autocomplete form-control'}),
+        }
 
 
 class IgnoreCompetitionForm(forms.Form):

@@ -42,7 +42,7 @@ class UserSchoolInLine(admin.TabularInline):
     model = UserSchool
     form = select2_modelform(UserSchool)
     ordering = ['start_time']
-    extra = 1
+    extra = 0
 
 
 class StaffFilter(admin.SimpleListFilter):

@@ -110,7 +110,8 @@ class User(AbstractUser):
         return UserSchool.objects.filter(user=self, start_time__lt=date).order_by('-start_time').first().school
 
     def add_school(self, school, date=timezone.now()):
-        UserSchool.objects.create(user=self, school=school, start_time=date)
+        if school != self.school:
+            UserSchool.objects.create(user=self, school=school, start_time=date)
 
     @property
     def school_year(self):
@@ -167,6 +168,11 @@ class UserSchool(models.Model):
     user = models.ForeignKey(User, verbose_name=_('User'))
     school = models.ForeignKey(School, verbose_name=_('School'))
     start_time = models.DateField(verbose_name=_('Start of study'), default=timezone.now)
+
+    class Meta:
+        verbose_name = _('School of user')
+        verbose_name_plural = _('Schools of user')
+        ordering = ['start_time']
 
 
 class UserPropertyManager(models.Manager):
