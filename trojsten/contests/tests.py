@@ -49,7 +49,7 @@ class ArchiveTest(TestCase):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(self.site)
         semester = Semester.objects.create(
-            number=1, name='Test semester', competition=competition, year=1
+            number=1, competition=competition, year=1
         )
         Round.objects.create(number=1, semester=semester, solutions_visible=True, visible=True)
 
@@ -64,6 +64,20 @@ class ArchiveTest(TestCase):
         self.assertContains(response, "Zadania a vzoráky")
         # @ToDo: translations
         self.assertContains(response, "Výsledky")
+
+    def test_one_semester_with_name(self):
+        competition = Competition.objects.create(name='TestCompetition')
+        competition.sites.add(self.site)
+        semester = Semester.objects.create(
+            number=1, name='test semseter', competition=competition, year=1
+        )
+        Round.objects.create(number=1, semester=semester, solutions_visible=True, visible=True)
+
+        response = self.client.get(self.url)
+        # @ToDo: translations
+        self.assertContains(response, "1. (test semseter) časť")
+        # @ToDo: translations
+        self.assertNotContains(response, "1. časť")
 
     def test_two_competitions(self):
         competition1 = Competition.objects.create(name='TestCompetition 42')
@@ -80,10 +94,10 @@ class ArchiveTest(TestCase):
         self.assertContains(response, "TestCompetition 47")
 
         semester1 = Semester.objects.create(
-            number=42, name='Test semester 42', competition=competition1, year=42
+            number=42, competition=competition1, year=42
         )
         semester2 = Semester.objects.create(
-            number=47, name='Test semester 47', competition=competition2, year=47
+            number=47, competition=competition2, year=47
         )
         Round.objects.create(number=42, semester=semester1, solutions_visible=True, visible=True)
         Round.objects.create(number=47, semester=semester2, solutions_visible=True, visible=True)
@@ -129,10 +143,10 @@ class ArchiveTest(TestCase):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(self.site)
         semester1 = Semester.objects.create(
-            number=1, name='Test semester 1', competition=competition, year=1
+            number=1, competition=competition, year=1
         )
         semester2 = Semester.objects.create(
-            number=2, name='Test semester 2', competition=competition, year=1
+            number=2, competition=competition, year=1
         )
         Round.objects.create(number=1, semester=semester1, solutions_visible=True, visible=True)
 

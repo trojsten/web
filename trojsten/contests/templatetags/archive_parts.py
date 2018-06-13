@@ -12,6 +12,7 @@ def show_round_list(user, competition):
     all_rounds = get_rounds_by_year(user, competition)
     data = {
         'all_rounds': all_rounds,
+        'competition': competition,
     }
     return data
 

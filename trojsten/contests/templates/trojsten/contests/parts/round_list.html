@@ -5,6 +5,9 @@
         <tr>
           <th colspan="3" class="active">
             {{ year }}. ročník
+            {% if competition.founded %}
+                ({{ competition.founded|add:year }}/{{ competition.founded|add:year|add:"1" }})
+            {% endif %}
           </th>
         </tr>
       </thead>
@@ -20,7 +23,7 @@
               {% endif %}
             </td>
             <td>
-              {{ round.semester.number }}. časť
+              {{ round.semester.number }}.{% if round.semester.name %} ({{ round.semester.name }}){% endif %} časť
             </td>
             <td style="text-align:right;">
               <a href="{% url 'task_list' round_id=round.id %}"  class="btn btn-primary btn-sm">

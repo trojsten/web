@@ -6,10 +6,9 @@
 
 {% block page_header %}
 <h1>
-    Zadania
+    Zadania<br>
     <small>
-        {{ round.number }}. kola {{ round.semester.number }}. časti
-        {{ round.semester.year }}. ročníka {{ round.semester.competition.name }}
+        {{ round }}
         {% if not round.visible %}
             <span class="label label-danger">skryté</span>
         {% endif %}
