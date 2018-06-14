@@ -143,10 +143,10 @@
       "pk":18,
       "model":"menu.menuitem",
       "fields":{
-         "url":"/diplomy",
-         "glyphicon":"glyphicon-education",
+         "url":"@view_diplomas",
+         "glyphicon":"glyphicon-file",
          "name":"Diplomy",
-         "active_url_pattern":"^/diplomy/$"
+         "active_url_pattern":"view_diplomas"
       }
    },
    {  

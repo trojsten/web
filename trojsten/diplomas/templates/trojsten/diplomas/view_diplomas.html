@@ -1,4 +1,5 @@
 {% extends "trojsten/layout/main.html" %}
+{% load bootstrap %}
 {% load utils %}
 
 {% block title %}Diplomy{% endblock %}
@@ -8,4 +9,11 @@
 {% endblock %}
 
 {% block page_content %}
+    <form action="{% url 'view_diplomas' %}" method="post" id="form" enctype='multipart/form-data'>
+        {% csrf_token %}
+          <table border="1">
+            {{ form  | bootstrap_inline }}
+          </table>
+        <button type="submit">Generate diplomas</button>
+    </form>
 {% endblock %}

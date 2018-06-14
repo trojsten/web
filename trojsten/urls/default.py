@@ -13,6 +13,7 @@ import trojsten.people.views
 import trojsten.results.urls
 import trojsten.submit.urls
 import trojsten.submit.views
+import trojsten.diplomas.urls
 
 from .common import urlpatterns as common_urlpatterns
 
@@ -24,6 +25,7 @@ urlpatterns = common_urlpatterns + [
         name='additional_registration'),
     url(r'^odovzdavanie/', include(trojsten.submit.urls)),
     url(r'^vysledky/', include(trojsten.results.urls)),
+    url(r'^diplomy/', include(trojsten.diplomas.urls)),
     url(r'^novinky/', include(news.urls)),
     url(r'^ulohy/', include(trojsten.contests.urls)),
     url(r'^archiv/$', trojsten.contests.views.archive, {'path': '/archiv'},

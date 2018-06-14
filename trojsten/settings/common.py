@@ -531,3 +531,6 @@ if 'TROJSTENWEB_CONTACT_FORM_RECIPIENTS' in os.environ:
     CONTACT_FORM_RECIPIENTS = tuple(env('TROJSTENWEB_CONTACT_FORM_RECIPIENTS', '').split(';'))
 else:
     CONTACT_FORM_RECIPIENTS = tuple([mail_tuple[1] for mail_tuple in MANAGERS])
+
+# Diploma settings
+DIPLOMA_PARTICIPANTS_ALLOWED_EXTENSIONS = ['.csv', '.json']
