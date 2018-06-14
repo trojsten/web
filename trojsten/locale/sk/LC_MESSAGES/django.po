@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-14 21:50+0000\n"
+"POT-Creation-Date: 2018-06-14 22:03+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -72,12 +72,12 @@ msgid "tasks"
 msgstr "zadania"
 
 #: trojsten/contests/models.py:328
-msgid "Zaslať opravovateľom notifikáciu o submite popisu"
-msgstr "Send notification to reviewers about new description submit"
+msgid "Send notification to reviewers about new description submit"
+msgstr "Zaslať opravovateľom notifikáciu o submite popisu"
 
 #: trojsten/contests/models.py:331
-msgid "Zaslať opravovateľom notifikáciu o submite kódu"
-msgstr "Send notification to reviewers about new code submit"
+msgid "Send notification to reviewers about new code submit"
+msgstr "Zaslať opravovateľom notifikáciu o submite kódu"
 
 #: trojsten/contests/models.py:406
 #, fuzzy
