@@ -2,7 +2,6 @@ import subprocess
 from tempfile import TemporaryFile, NamedTemporaryFile
 import zipfile
 import os
-from . import constants
 import re
 
 
