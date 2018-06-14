@@ -325,10 +325,10 @@ class Task(models.Model):
         blank=True, null=True,
     )
     email_on_desc_submit = models.BooleanField(
-        verbose_name='Zaslať notifikáciu o submite popisu opravovateľom', default=False
+        verbose_name=_('Zaslať opravovateľom notifikáciu o submite popisu'), default=False
     )
     email_on_code_submit = models.BooleanField(
-        verbose_name='Zaslať notifikáciu o submite kódu opravovateľom', default=False
+        verbose_name=_('Zaslať opravovateľom notifikáciu o submite kódu'), default=False
     )
 
     objects = TaskManager()
