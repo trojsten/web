@@ -127,6 +127,8 @@ class User(AbstractUser):
         return {prop.key: prop.value for prop in self.properties.all()}
 
     def get_school_mailing_address(self):
+        if self.school is None:
+            return None
         address = self.school.get_mailing_address()
         address.recipient = '%s %s' % (self.first_name, self.last_name)
         return address
