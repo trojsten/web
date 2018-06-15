@@ -53,7 +53,7 @@ def view_latest_results(request):
     scoreboards = get_scoreboards_for_rounds(rounds, request)
 
     context = {
-        'selected_tag': scoreboards[0].scoreboard.tag,
+        'selected_tag': scoreboards[0].scoreboard.tag if scoreboards else None,
         'scoreboards': scoreboards,
         'show_staff': is_true(request.GET.get('show_staff', False)),
     }
