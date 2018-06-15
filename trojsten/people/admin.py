@@ -197,7 +197,7 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
             else:
                 show = obj.school.verbose_name
         else:
-            show = 'Iná škola'
+            show = _('Other school')
         return '<span title="%s">%s</span>' % (
             escape(force_text(obj.school)), escape(force_text(show))
         )

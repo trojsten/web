@@ -196,9 +196,6 @@ class UserFormTests(TestCase):
             street='Matematicka 47', town='Algebrovo', postal_code='420 47',
             country=Country('SK')
         )
-        School.objects.create(
-            verbose_name='Iná škola', pk=1
-        )
         self.school = School.objects.create(
             abbreviation='GJH', verbose_name='Gymnázium Janka Hraška', pk=2,
             street='Hronca 42', city='Bratislava', zip_code='123 45'
