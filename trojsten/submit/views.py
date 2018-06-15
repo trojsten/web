@@ -15,7 +15,7 @@ from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden)
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
@@ -303,15 +303,19 @@ def poll_submit_info(request, submit_id):
     }), content_type='application/json; charset=utf-8')
 
 
-def send_notification_email(submit):
+def send_notification_email(submit, task_id, submit_type):
     send_mail(
         _('[Trojstenweb] User submission detected'),
-        _('{name} submitted solution to task {task}\n\nSubmit link: {submit_link}\n\nThis is an automated'
-          ' response, do not reply').format(
+        (_('{name} submitted solution to task {task}\n\n') +
+         (_('Link for reviewing: {review_link}\n\n') if submit_type == constants.SUBMIT_TYPE_DESCRIPTION else '') +
+         _('Submit link: {submit_link}\n\n'
+           'This is an automated response, do not reply')).format(
             name=submit.user.get_full_name(),
             task=str(submit.task),
             submit_link=Site.objects.get_current().domain + reverse('admin:old_submit_submit_change',
-                                                                    args=(submit.id, )),
+                                                                    args=(submit.id,)),
+            review_link=Site.objects.get_current().domain + reverse('admin:review_edit',
+                                                                    args=(task_id, submit.id))
         ),
         settings.DEFAULT_FROM_EMAIL,
         [org.email for org in submit.task.get_assigned_people_for_role(contest_consts.TASK_ROLE_REVIEWER)]
@@ -376,7 +380,7 @@ def task_submit_post(request, task_id, submit_type):
                              protocol_id=submit_id)
                 sub.save()
                 if task.email_on_code_submit:
-                    send_notification_email(sub)
+                    send_notification_email(sub, task_id, submit_type)
 
                 success_message = format_html(
                     'Úspešne si submitol program, výsledok testovania nájdeš '
@@ -414,7 +418,7 @@ def task_submit_post(request, task_id, submit_type):
                          filepath=sfiletarget)
             sub.save()
             if task.email_on_desc_submit:
-                send_notification_email(sub)
+                send_notification_email(sub, task_id, submit_type)
 
             if task.round.can_submit:
                 messages.add_message(request, messages.SUCCESS,
