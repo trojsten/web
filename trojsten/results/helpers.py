@@ -11,6 +11,7 @@ from trojsten.utils.utils import is_true
 from .models import FrozenResults
 from .manager import get_results, get_results_tags_for_rounds
 
+
 class TaskPoints(object):
     def __init__(self):
         self.source_points = 0
