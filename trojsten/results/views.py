@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
-from collections import namedtuple
-
 from django.shortcuts import get_object_or_404, render
 
 from trojsten.contests.models import Competition, Round
 from trojsten.utils.utils import is_true
 
 from .constants import DEFAULT_TAG_KEY
-from .manager import get_results, get_results_tags_for_rounds
+from .helpers import get_scoreboards_for_rounds
 
 
 def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
@@ -23,33 +21,13 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
         ),
         pk=round_id,
     )
-    single_round = is_true(request.GET.get('single_round', False))
 
-    ResultTableObject = namedtuple(
-        'ResultTableObject', ['scoreboard', 'tag_name',
-                              'competition_ignored', 'user_valid']
-    )
-
-    scoreboards = [
-        ResultTableObject(
-            get_results(result_tag.key, round, single_round),
-            result_tag.name,
-            request.user.is_anonymous() or request.user.is_competition_ignored(
-                round.semester.competition
-            ),
-            request.user.is_anonymous() or request.user.is_valid_for_competition(
-                round.semester.competition
-            ),
-        )
-        for result_tags in get_results_tags_for_rounds([round])
-        for result_tag in result_tags
-    ]
+    scoreboards = get_scoreboards_for_rounds([round], request)
 
     context = {
-        'round_score': scoreboards[0][0],
+        'round': round,
         'scoreboards': scoreboards,
         'selected_tag': tag_key,
-        'tag_name': round.semester.competition.rules.RESULTS_TAGS.get(tag_key).name,
         'show_staff': is_true(request.GET.get('show_staff', False)),
     }
     return render(
@@ -72,29 +50,10 @@ def view_latest_results(request):
         )
     ]
 
-    single_round = is_true(request.GET.get('single_round', False))
-
-    ResultTableObject = namedtuple(
-        'ResultTableObject', ['scoreboard', 'tag_name',
-                              'competition_ignored', 'user_valid']
-    )
-
-    scoreboards = [
-        ResultTableObject(
-            get_results(result_tag.key, round, single_round),
-            result_tag.name,
-            request.user.is_anonymous() or request.user.is_competition_ignored(
-                round.semester.competition
-            ),
-            request.user.is_anonymous() or request.user.is_valid_for_competition(
-                round.semester.competition
-            ),
-        )
-        for round, result_tags in zip(rounds, get_results_tags_for_rounds(rounds))
-        for result_tag in result_tags
-    ]
+    scoreboards = get_scoreboards_for_rounds(rounds, request)
 
     context = {
+        'selected_tag': scoreboards[0].scoreboard.tag,
         'scoreboards': scoreboards,
         'show_staff': is_true(request.GET.get('show_staff', False)),
     }
