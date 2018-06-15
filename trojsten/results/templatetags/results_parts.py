@@ -14,7 +14,3 @@ def show_results_table(context, scoreboard, show_staff=False):
         'show_staff': show_staff
     })
     return context
-
-@register.inclusion_tag('trojsten/results/parts/results_content.html', takes_context=True)
-def show_results_content(context):
-    return context
