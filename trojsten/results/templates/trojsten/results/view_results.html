@@ -1,5 +1,5 @@
 {% extends "trojsten/layout/main.html" %}
-{% load results_parts archive_parts statements_parts %}
+{% load archive_parts %}
 {% load utils %}
 
 {% block title %}Výsledky{% endblock %}
@@ -7,26 +7,17 @@
 {% block page_header %}
 <h1>Výsledky<small>
 {% if single_round %}
-    {{ scoreboard.round.number }}. kola{% else %}po {{ scoreboard.round.number }}. kole
+    {{ round.number }}. kola{% else %}po {{ round.number }}. kole
 {% endif %}
-{{ scoreboard.round.semester.number }}. časti {{ scoreboard.round.semester.year }}. ročníka
-{{ scoreboard.round.semester.competition }} {{ tag_name }}
+{{ round.semester.number }}. časti {{ round.semester.year }}. ročníka
+{{ round.semester.competition }}
 </small></h1>
 {% endblock %}
 
 {% block page_content %}
-{% if not scoreboard.round.frozen %}
-    {% show_progress scoreboard.round results=True %}
-{% endif %}
-{% if competition_ignored and not request.user.is_anonymous %}
-    <div class="alert alert-danger">
-      Tvoje riešenia sa nerátajú do výsledkovky. Ak to chceš zmeniť, povoľ si súťaž <em>{{ scoreboard.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
-    </div>
-{% endif %}
-{% show_results_table scoreboard=scoreboard show_staff=show_staff%}
-{% include 'trojsten/results/parts/buttons.html' %}
-<h2>Vysvetlivky</h2>
-{% include 'trojsten/results/parts/legend.html' %}
 
-{% show_archive active_competition=scoreboard.round.semester.competition %}
+{% include 'trojsten/results/parts/results_content.html' %}
+
+{% show_archive active_competition=round.semester.competition %}
+
 {% endblock %}
