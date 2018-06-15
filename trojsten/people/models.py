@@ -74,6 +74,7 @@ class User(AbstractUser):
     mail_to_school = models.BooleanField(default=False,
                                          verbose_name='posielať poštu do školy')
     school = models.ForeignKey('schools.School',
+                               blank=True,
                                null=True,
                                verbose_name='škola',
                                help_text='Do políčka napíšte skratku, '
