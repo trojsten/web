@@ -77,16 +77,15 @@ class User(AbstractUser):
                                blank=True,
                                null=True,
                                verbose_name='škola',
-                               help_text='Do políčka napíšte skratku, '
-                                         'časť názvu alebo adresy školy a následne '
-                                         'vyberte správnu možnosť zo zoznamu. '
-                                         'Pokiaľ vaša škola nie je '
-                                         'v&nbsp;zozname, vyberte "Iná škola" '
-                                         'a&nbsp;pošlite nám e-mail.',
+                               help_text=_('Type an abbreviation, part of the name or '
+                                           'school address and select the correct '
+                                           'option from the list. If your school is '
+                                           'not in the list, pick "Other school" '
+                                           'and send us an e-mail'),
                                default=None)
     graduation = models.IntegerField(null=True,
                                      verbose_name='rok maturity',
-                                     help_text='Povinné pre žiakov.')
+                                     help_text=_('Required field for students.'))
     ignored_competitions = models.ManyToManyField('contests.Competition',
                                                   verbose_name='ignorované súťaže')
 

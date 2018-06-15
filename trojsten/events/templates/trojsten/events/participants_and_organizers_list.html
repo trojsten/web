@@ -33,7 +33,7 @@
                 {{ participant.user.school.verbose_name }}
             {% endif %}
         {% else %}
-            Iná škola
+            {% trans "Other school" %}
         {% endif %}
         </td>
     </tr>
@@ -53,7 +53,7 @@
                 {{ organizer.user.school.verbose_name }}
             {% endif %}
         {% else %}
-            Iná škola
+            {% trans "Other school" %}
         {% endif %}
         </td>
     </tr>

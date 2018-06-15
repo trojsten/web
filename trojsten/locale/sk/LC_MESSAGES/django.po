@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-15 11:04+0000\n"
+"POT-Creation-Date: 2018-06-15 15:09+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -166,6 +166,15 @@ msgstr "%(count)s minúta"
 msgid "%(count)d second"
 msgstr "%(count)s sekunda"
 
+#: trojsten/events/templates/trojsten/events/participants_and_organizers_list.html:36
+#: trojsten/events/templates/trojsten/events/participants_and_organizers_list.html:56
+#: trojsten/people/admin.py:200 trojsten/people/forms.py:76
+#: trojsten/results/templates/trojsten/results/parts/results_table.html:77
+#, fuzzy
+#| msgid "school"
+msgid "Other school"
+msgstr "Iná škola"
+
 #: trojsten/login/views.py:29
 msgid "Logout successful"
 msgstr "Odhlásenie úspešné"
@@ -193,12 +202,6 @@ msgstr "Práva"
 #: trojsten/people/admin.py:168
 msgid "Important dates"
 msgstr "Dôležité dátumy"
-
-#: trojsten/people/admin.py:200 trojsten/people/forms.py:76
-#, fuzzy
-#| msgid "school"
-msgid "Other school"
-msgstr "Iná škola"
 
 #: trojsten/people/admin.py:260
 msgid "Users merged succesfully."
@@ -317,7 +320,20 @@ msgstr "Kolo"
 msgid "Submit"
 msgstr "Odoslať"
 
-#: trojsten/people/models.py:221
+#: trojsten/people/models.py:80
+msgid ""
+"Type an abbreviation, part of the name or school address and select the "
+"correct option from the list. If your school is not in the list, pick "
+"\"Other school\" and send us an e-mail"
+msgstr "Do políčka napíšte skratku, časť názvu alebo adresy školy a následne "
+"vyberte správnu možnosť zo zoznamu. Pokiaľ vaša škola nie je v zozname, "
+"vyberte \"Iná škola\" a pošlite nám e-mail."
+
+#: trojsten/people/models.py:88
+msgid "Required field for students."
+msgstr "Povinné pre žiakov."
+
+#: trojsten/people/models.py:223
 msgid "Value \"{}\" does not match regex \"{}\"."
 msgstr ""
 
