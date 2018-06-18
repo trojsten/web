@@ -66,7 +66,7 @@ class RoundManager(models.Manager):
         )
 
     def latest_finished_for_competition(self, competition):
-        return self.filter(semester__competition=competition, visible=True, end_time__lt=timezone.now())\
+        return self.filter(semester__competition=competition, visible=True, end_time__lt=timezone.now()) \
             .order_by('-end_time').first()
 
 
@@ -121,12 +121,13 @@ class Semester(models.Model):
         verbose_name_plural = 'Časti'
 
     def __str__(self):
-        return '%i. (%s) časť, %i. ročník %s'\
-            % (self.number, self.name, self.year, self.competition)
+        return '%i. (%s) časť, %i. ročník %s' \
+               % (self.number, self.name, self.year, self.competition)
 
     def short_str(self):
-        return '%i. (%s) časť'\
-            % (self.number, self.name)
+        return '%i. (%s) časť' \
+               % (self.number, self.name)
+
     short_str.short_description = 'Časť'
 
 
@@ -179,7 +180,7 @@ class Round(models.Model):
         return path
 
     def get_path(self, solution=False):
-        path_type = settings.TASK_STATEMENTS_SOLUTIONS_DIR if solution\
+        path_type = settings.TASK_STATEMENTS_SOLUTIONS_DIR if solution \
             else settings.TASK_STATEMENTS_TASKS_DIR
         path = os.path.join(
             self.get_base_path(),
@@ -188,7 +189,7 @@ class Round(models.Model):
         return path
 
     def get_pdf_path(self, solution=False):
-        pdf_file = settings.TASK_STATEMENTS_SOLUTIONS_PDF if solution\
+        pdf_file = settings.TASK_STATEMENTS_SOLUTIONS_PDF if solution \
             else settings.TASK_STATEMENTS_PDF
         path = os.path.join(
             self.get_path(solution),
@@ -248,6 +249,7 @@ class Round(models.Model):
 
     def short_str(self):
         return '%i. kolo' % self.number
+
     short_str.short_description = 'kolo'
 
     def get_pdf_name(self, solution=False):
@@ -322,6 +324,12 @@ class Task(models.Model):
         max_length=128, verbose_name='Odkaz na externé odovzdávanie',
         blank=True, null=True,
     )
+    email_on_desc_submit = models.BooleanField(
+        verbose_name=_('Send notification to reviewers about new description submit'), default=False
+    )
+    email_on_code_submit = models.BooleanField(
+        verbose_name=_('Send notification to reviewers about new code submit'), default=False
+    )
 
     objects = TaskManager()
 
@@ -390,8 +398,7 @@ class Task(models.Model):
         TaskPeople.objects.create(task=self, user=user, role=role)
 
     def get_assigned_people_for_role(self, role):
-        return [line.user for line in TaskPeople.objects
-                .filter(task=self, role=role)]
+        return [line.user for line in TaskPeople.objects.filter(task=self, role=role)]
 
 
 class TaskPeople(models.Model):
