@@ -311,7 +311,7 @@ def send_notification_email(submit, task_id, submit_type):
          _('Submit link: {submit_link}\n\n'
            'This is an automated response, do not reply')).format(
             name=submit.user.get_full_name(),
-            task=str(submit.task),
+            task=submit.task,
             submit_link=Site.objects.get_current().domain + reverse('admin:old_submit_submit_change',
                                                                     args=(submit.id,)),
             review_link=Site.objects.get_current().domain + reverse('admin:review_edit',

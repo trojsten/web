@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-15 19:08+0000\n"
+"POT-Creation-Date: 2018-06-18 12:09+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -719,7 +719,7 @@ msgid "OK"
 msgstr "OK"
 
 # Submit
-#: trojsten/submit/constants.py:34 trojsten/submit/tests.py:390
+#: trojsten/submit/constants.py:34 trojsten/submit/tests.py:393
 msgid "Wrong answer"
 msgstr "Zlá odpoveď"
 
@@ -796,7 +796,9 @@ msgstr "[Trojstenweb] Nový submit uživateľa"
 msgid ""
 "{name} submitted solution to task {task}\n"
 "\n"
-msgstr "Uživateľ {name} submitol riešenie úlohy {task}\n\n"
+msgstr ""
+"Uživateľ {name} submitol riešenie úlohy {task}\n"
+"\n"
 
 #: trojsten/submit/views.py:310
 #, python-brace-format
@@ -970,6 +972,11 @@ msgstr ""
 #: trojsten/templates/wiki/article.html:40
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
+
+#, fuzzy
+#~| msgid "Test string"
+#~ msgid "Test string {}"
+#~ msgstr "Testovací string {}"
 
 #~ msgid ""
 #~ "\n"
