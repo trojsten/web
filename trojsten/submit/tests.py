@@ -793,7 +793,7 @@ class TestSubmitNotificationEmails(TestCase):
         self.desc_submit = Submit.objects.create(task=self.task, user=self.user,
                                                  submit_type=1, points=0, pk=2)
 
-    def test_create_submit(self):
+    def test_send_notification_email(self):
         send_notification_email(self.code_submit, self.task.id, 0)
         self.assertEqual(len(mail.outbox), 1)
 
