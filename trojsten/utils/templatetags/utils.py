@@ -53,16 +53,14 @@ def as_list(value):
 
 
 @register.filter
+def to_list(value):
+    return list(value)
+
+
+@register.filter
 def slice_if_needed(value, arg):
-    res = []
-    count = 0
     maximum, default = [int(i) for i in arg.split(" ")]
-    for i in value:
-        if count > maximum:
-            return res[:default]
-        res.append(i)
-        count += 1
-    return res
+    return value[:default] if len(value) >= maximum else value[:maximum]
 
 
 @register.assignment_tag(takes_context=True)
