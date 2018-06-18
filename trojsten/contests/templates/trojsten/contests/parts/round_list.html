@@ -1,3 +1,4 @@
+{% load utils %}
 {% for year, round_list in all_rounds.items %}
     <div class="table-responsive">
     <table class="table table-rounds">
@@ -26,7 +27,7 @@
               <a href="{% url 'task_list' round_id=round.id %}"  class="btn btn-primary btn-sm">
                 Zadania a vzoráky
               </a>
-              {% for tag in result_tags %}
+              {% for tag in result_tags|slice_if_needed:"2 1" %}
                 <a class="btn btn-danger btn-sm"
                    href="{% url 'view_results' round_id=round.id tag_key=tag.key %}">
                     Výsledky {{ tag.name }}
