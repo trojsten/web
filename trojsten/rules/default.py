@@ -43,7 +43,7 @@ class CompetitionRules(object):
         rounds = Round.objects.filter(
             semester__competition=competition,
             visible=True,
-            end_time__gte = timezone.now() + timezone.timedelta(days=-180)
+            end_time__gte=timezone.now() + timezone.timedelta(days=-180)
         )
         return rounds.order_by('-end_time', '-number')[:1]
 
