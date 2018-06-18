@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 SVG_TEMPLATES = [
     ('diplom-trojsten-fks.ai.svg', 'Diplom FKS'),
     ('diplom-trojsten-kms.ai.svg', 'Diplom KMS'),

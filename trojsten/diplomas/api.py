@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import subprocess
 from tempfile import TemporaryFile, NamedTemporaryFile
 import zipfile
