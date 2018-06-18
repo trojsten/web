@@ -40,7 +40,11 @@ class CompetitionRules(object):
             return None
 
     def get_actual_result_rounds(self, competition):
-        rounds = Round.objects.filter(semester__competition=competition, visible=True)
+        rounds = Round.objects.filter(
+            semester__competition=competition,
+            visible=True,
+            end_time__gte = timezone.now() + timezone.timedelta(days=-180)
+        )
         return rounds.order_by('-end_time', '-number')[:1]
 
 
