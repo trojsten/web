@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-09 17:04+0200\n"
+"POT-Creation-Date: 2018-06-18 12:09+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -55,55 +55,63 @@ msgid "Category doesn't correspond with competition."
 msgstr ""
 
 # pdf file names
-#: trojsten/contests/models.py:256
+#: trojsten/contests/models.py:258
 msgid "year"
 msgstr "ročník"
 
-#: trojsten/contests/models.py:258
+#: trojsten/contests/models.py:260
 msgid "round"
 msgstr "kolo"
 
-#: trojsten/contests/models.py:260
+#: trojsten/contests/models.py:262
 msgid "solutions"
 msgstr "vzoráky"
 
-#: trojsten/contests/models.py:260
+#: trojsten/contests/models.py:262
 msgid "tasks"
 msgstr "zadania"
 
-#: trojsten/contests/models.py:399
+#: trojsten/contests/models.py:328
+msgid "Send notification to reviewers about new description submit"
+msgstr "Zaslať opravovateľom notifikáciu o submite popisu"
+
+#: trojsten/contests/models.py:331
+msgid "Send notification to reviewers about new code submit"
+msgstr "Zaslať opravovateľom notifikáciu o submite kódu"
+
+#: trojsten/contests/models.py:406
 #, fuzzy
 #| msgid "tasks"
 msgid "task"
 msgstr "úloha"
 
-#: trojsten/contests/models.py:402
+#: trojsten/contests/models.py:409
 msgid "organizer"
 msgstr "vedúci"
 
-#: trojsten/contests/models.py:405
+#: trojsten/contests/models.py:412
 msgid "reviewer"
 msgstr "opravovateľ"
 
-#: trojsten/contests/models.py:406
+#: trojsten/contests/models.py:413
 #, fuzzy
 #| msgid "solution-writer"
 msgid "solution writer"
 msgstr "vzorákovač"
 
-#: trojsten/contests/models.py:407
+#: trojsten/contests/models.py:414
 msgid "proofreader"
 msgstr "recenzovač"
 
-#: trojsten/contests/models.py:410
+#: trojsten/contests/models.py:417
 msgid "role"
 msgstr "funkcia"
 
-#: trojsten/contests/models.py:414
+#: trojsten/contests/models.py:421
 msgid "Assigned user"
 msgstr "Pridelený človek"
 
-#: trojsten/contests/models.py:415
+#: trojsten/contests/models.py:422
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
 
@@ -138,28 +146,28 @@ msgid "View the solution."
 msgstr "Pozrieť vzorové riešenie."
 
 # Task Statements
-#: trojsten/contests/templatetags/statements_parts.py:98
+#: trojsten/contests/templatetags/statements_parts.py:99
 #, fuzzy, python-format
 #| msgid "%(count)d day"
 #| msgid_plural "%(count)s days"
 msgid "%(count)d day"
 msgstr "%(count)s deň"
 
-#: trojsten/contests/templatetags/statements_parts.py:101
+#: trojsten/contests/templatetags/statements_parts.py:102
 #, fuzzy, python-format
 #| msgid "%(count)d hour"
 #| msgid_plural "%(count)s hours"
 msgid "%(count)d hour"
 msgstr "%(count)s hodina"
 
-#: trojsten/contests/templatetags/statements_parts.py:104
+#: trojsten/contests/templatetags/statements_parts.py:105
 #, fuzzy, python-format
 #| msgid "%(count)d minute"
 #| msgid_plural "%(count)s minutes"
 msgid "%(count)d minute"
 msgstr "%(count)s minúta"
 
-#: trojsten/contests/templatetags/statements_parts.py:107
+#: trojsten/contests/templatetags/statements_parts.py:108
 #, fuzzy, python-format
 #| msgid "%(count)d second"
 #| msgid_plural "%(count)s seconds"
@@ -711,7 +719,7 @@ msgid "OK"
 msgstr "OK"
 
 # Submit
-#: trojsten/submit/constants.py:34 trojsten/submit/tests.py:389
+#: trojsten/submit/constants.py:34 trojsten/submit/tests.py:393
 msgid "Wrong answer"
 msgstr "Zlá odpoveď"
 
@@ -779,7 +787,48 @@ msgstr "Pozri komentár"
 msgid "Details"
 msgstr "Detaily"
 
-#: trojsten/submit/views.py:397
+#: trojsten/submit/views.py:308
+msgid "[Trojstenweb] User submission detected"
+msgstr "[Trojstenweb] Nový submit uživateľa"
+
+#: trojsten/submit/views.py:309
+#, python-brace-format
+msgid ""
+"{name} submitted solution to task {task}\n"
+"\n"
+msgstr ""
+"Uživateľ {name} submitol riešenie úlohy {task}\n"
+"\n"
+
+#: trojsten/submit/views.py:310
+#, python-brace-format
+msgid ""
+"Link for reviewing: {review_link}\n"
+"\n"
+msgstr ""
+"Link na opravovanie: {review_link}\n"
+"\n"
+
+#: trojsten/submit/views.py:311
+#, fuzzy, python-brace-format
+#| msgid ""
+#| "{name} submitted solution to task {task}\n"
+#| "\n"
+#| "Submit link: {submit_link}\n"
+#| "\n"
+#| "This is an automated response, do not reply"
+msgid ""
+"Submit link: {submit_link}\n"
+"\n"
+"This is an automated response, do not reply"
+msgstr ""
+"Uživateľ {name} submitol riešenie k úlohe {task}\n"
+"\n"
+"Link na submit: {submit_link}\n"
+"\n"
+"Toto je automatizovaná správa, neodpovedajte na ňu"
+
+#: trojsten/submit/views.py:425
 msgid ""
 "You have successfully submitted your description, it will be reviewed after "
 "the round finishes."
@@ -787,7 +836,7 @@ msgstr ""
 "Úspešne sa ti podarilo submitnúť popis, po skončení kola ti ho vedúci "
 "opravia."
 
-#: trojsten/submit/views.py:401
+#: trojsten/submit/views.py:429
 msgid ""
 "You have submitted your description after the deadline. It is not counted in "
 "results."
@@ -923,6 +972,11 @@ msgstr ""
 #: trojsten/templates/wiki/article.html:40
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
+
+#, fuzzy
+#~| msgid "Test string"
+#~ msgid "Test string {}"
+#~ msgstr "Testovací string {}"
 
 #~ msgid ""
 #~ "\n"
