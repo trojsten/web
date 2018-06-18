@@ -124,7 +124,7 @@ class UsersExport(resources.ModelResource):
 
     def dehydrate_country(self, obj):
         address = obj.get_mailing_address()
-        return '' if address is None else address.country
+        return '' if address is None else str(address.country)
 
 
 class AdminUserAddForm(ModelForm):

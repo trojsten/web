@@ -150,6 +150,51 @@ def process_submit(f, task, language, user):
     return process_submit_raw(f, contest_id, task.id, language, user.id)
 
 
+def parse_result_and_points_from_protocol(submit):
+    """
+    Z XML protokolu získa výsledok testovania a počet bodov,
+    ktoré sa neskôr môžu uložiť do databázy.
+
+    Ak protokol ešte neexistuje, vráti None, None.
+    """
+    protocol_path = submit.protocol_path
+    if not os.path.exists(protocol_path):
+        return None, None
+
+    try:
+        tree = ET.parse(protocol_path)
+    except SyntaxError:
+        return constants.SUBMIT_RESPONSE_PROTOCOL_CORRUPTED, 0
+
+    # Ak kompilátor vyhlási chyby, testovač ich vráti v tagu <compileLog>
+    # Ak takýto tag existuje, výsledok je chyba pri testovaní a 0 bodov.
+    clog = tree.find("compileLog")
+    if clog is not None:
+        return constants.SUBMIT_RESPONSE_ERROR, 0
+
+    # Pre každý vstup kompilátor vyprodukuje tag <test>, všetky <test>-y
+    # sú v tag-u <runLog>. Výsledok je buď OK, alebo prvý nájdený druh
+    # chyby.
+    runlog = tree.find("runLog")
+    result = constants.SUBMIT_RESPONSE_OK
+    for test in runlog:
+        if test.tag != 'test':
+            continue
+        test_result = test[2].text
+        if test_result != constants.SUBMIT_RESPONSE_OK:
+            result = test_result
+            break
+    # Na konci testovača je v tagu <score> uložené percento získaných
+    # bodov.
+    try:
+        score = Decimal(tree.find("runLog/score").text)
+    except:  # noqa: E722 @FIXME
+        score = 0
+    points = (submit.task.source_points * score) / Decimal(100)
+
+    return result, points
+
+
 def update_submit(submit):
     """Zistí, či už je dotestované, ak hej, tak updatne databázu.
 
@@ -159,36 +204,9 @@ def update_submit(submit):
 
     Tento súbor obsahuje výstup testovača (v XML) a treba ho parse-núť
     """
-    protocol_path = submit.protocol_path
-    if os.path.exists(protocol_path):
-        tree = ET.parse(protocol_path)
-        # Ak kompilátor vyhlási chyby, testovač ich vráti v tagu <compileLog>
-        # Ak takýto tag existuje, výsledok je chyba pri testovaní a 0 bodov.
-        clog = tree.find("compileLog")
-        if clog is not None:
-            result = constants.SUBMIT_RESPONSE_ERROR
-            points = 0
-        else:
-            # Pre každý vstup kompilátor vyprodukuje tag <test>, všetky <test>-y
-            # sú v tag-u <runLog>. Výsledok je buď OK, alebo prvý nájdený druh
-            # chyby.
-            runlog = tree.find("runLog")
-            result = constants.SUBMIT_RESPONSE_OK
-            for test in runlog:
-                if test.tag != 'test':
-                    continue
-                test_result = test[2].text
-                if test_result != constants.SUBMIT_RESPONSE_OK:
-                    result = test_result
-                    break
-            # Na konci testovača je v tagu <score> uložené percento získaných
-            # bodov.
-            try:
-                score = Decimal(tree.find("runLog/score").text)
-            except:  # noqa: E722 @FIXME
-                score = 0
-            points = (submit.task.source_points * score) / Decimal(100)
-        submit.points = points
+    result, points = parse_result_and_points_from_protocol(submit)
+    if result is not None:
         submit.tester_response = result
+        submit.points = points
         submit.testing_status = constants.SUBMIT_STATUS_FINISHED
         submit.save()

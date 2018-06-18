@@ -1,5 +1,5 @@
 {% extends "trojsten/layout/main.html" %}
-{% load results_parts archive_parts statements_parts %}
+{% load archive_parts %}
 {% load utils %}
 
 {% block title %}Aktuálne výsledky{% endblock %}
@@ -9,46 +9,8 @@
 {% endblock %}
 
 {% block page_content %}
-<!-- Nav tabs -->
-{% if tables|length|add:-1 %}
-<ul class="nav nav-tabs" role="tablist">
-{% for scoreboard_data in scoreboards %}
-    {% with scoreboard_data.scoreboard as scoreboard %}
-        <li {% if forloop.counter == 1 %}class="active"{% endif %}>
-            <a href="#category-tab-{{ scoreboard.round.id }}-{{ scoreboard.tag }}" role="tab"
-               data-toggle="tab">
-                {{ scoreboard.round.semester.competition }} {{ scoreboard_data.tag_name }}
-            </a>
-        </li>
-    {% endwith %}
-{% endfor %}
-</ul>
-{% endif %}
-<!-- Tab panes -->
-<div class="tab-content">
-{% for scoreboard_data in scoreboards %}
-    {% with scoreboard_data.scoreboard as scoreboard %}
-        <div class="tab-pane fade{% if forloop.counter == 1 %} in active{% endif %}"
-             id="category-tab-{{ scoreboard.round.id }}-{{ scoreboard.tag }}">
-            {% if not scoreboard.round.frozen %}
-                {% show_progress scoreboard.round results=True %}
-            {% endif %}
-            {% if scoreboard_data.competition_ignored and not request.user.is_anonymous %}
-                <div class="alert alert-danger">
-                  Tvoje riešenia sa nerátajú do výsledkovky. Ak to chceš zmeniť, povoľ si súťaž <em>{{ scoreboard.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
-                </div>
-            {% endif %}
-            {% show_results_table scoreboard=scoreboard show_staff=show_staff %}
-        </div>
-    {% endwith %}
-{% empty %}
-    <div class="alert alert-warning">Ešte nebeží žiadne kolo.</div>
-{% endfor %}
-</div>
 
-{% include 'trojsten/results/parts/buttons.html' %}
-<h2>Vysvetlivky</h2>
-{% include 'trojsten/results/parts/legend.html' %}
+{% include 'trojsten/results/parts/results_content.html' %}
 
 {% show_archive %}
 

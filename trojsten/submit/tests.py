@@ -25,7 +25,8 @@ from trojsten.people.models import User
 from trojsten.submit import constants
 from trojsten.submit.forms import SubmitAdminForm
 from trojsten.submit.helpers import (get_lang_from_filename, get_path_raw,
-                                     post_submit, write_chunks_to_file, get_description_file_path)
+                                     post_submit, write_chunks_to_file, get_description_file_path,
+                                     update_submit)
 from trojsten.utils.test_utils import get_noexisting_id
 from .models import ExternalSubmitToken, Submit
 
@@ -458,6 +459,17 @@ class SubmitHelpersTests(TestCase):
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
 
+        self.user = User.objects.create_user(username='jozko', first_name='Jozko',
+                                             last_name='Mrkvicka', password='pass',
+                                             graduation=timezone.now().year + 1)
+        competition = Competition.objects.create(name='TestCompetition')
+        semester = Semester.objects.create(
+            number=1, name='Test semester', competition=competition, year=1)
+        round = Round.objects.create(number=1, semester=semester,
+                                     start_time=timezone.now(), end_time=timezone.now())
+        self.task = Task.objects.create(number=1, name='Test task', round=round,
+                                        has_source=True, source_points=20)
+
     def tearDown(self):
         shutil.rmtree(self.temp_dir)
 
@@ -501,6 +513,34 @@ class SubmitHelpersTests(TestCase):
         post_submit(u'raw', b'data')
         server_thread.join()
         self.assertEqual(self.received, b'rawdata')
+
+    def test_update_submit_ok(self):
+        submit = Submit.objects.create(
+            task=self.task, user=self.user, submit_type=constants.SUBMIT_TYPE_SOURCE,
+            points=0, testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
+            # the extension will be automatically changed to .protokol when searching for protocol
+            filepath=path.join('trojsten', 'submit', 'test_data', 'ok_protocol.data')
+        )
+
+        update_submit(submit)
+
+        self.assertEqual(submit.testing_status, constants.SUBMIT_STATUS_FINISHED)
+        self.assertEqual(submit.tester_response, constants.SUBMIT_RESPONSE_OK)
+        self.assertEqual(submit.points, 20)
+
+    def test_update_submit_corrupted_protocol(self):
+        submit = Submit.objects.create(
+            task=self.task, user=self.user, submit_type=constants.SUBMIT_TYPE_SOURCE,
+            points=0, testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
+            # the extension will be automatically changed to .protokol when searching for protocol
+            filepath=path.join('trojsten', 'submit', 'test_data', 'corrupted_protocol.data')
+        )
+
+        update_submit(submit)
+
+        self.assertEqual(submit.testing_status, constants.SUBMIT_STATUS_FINISHED)
+        self.assertEqual(submit.tester_response, constants.SUBMIT_RESPONSE_PROTOCOL_CORRUPTED)
+        self.assertEqual(submit.points, 0)
 
 
 class ExternalSubmitKeyTests(TestCase):
@@ -639,3 +679,71 @@ class SubmitAdminFormTests(TestCase):
         self.assertTrue(form.is_valid())
         edited_submit = form.save()
         self.assertEqual(edited_submit.time, new_time)
+
+
+class AllSubmitsListTest(TestCase):
+
+    def setUp(self):
+        self.url = reverse('all_submits_description_page')
+        self.grad_year = timezone.now().year + 1
+        self.non_staff_user = User.objects.create_user(username='jozko', first_name='Jozko',
+                                                       last_name='Mrkvicka', password='pass',
+                                                       graduation=self.grad_year)
+        self.group = Group.objects.create(name='staff')
+        competition = Competition.objects.create(name='TestCompetition',
+                                                 organizers_group=self.group)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.start_time = timezone.now() + timezone.timedelta(-10)
+        self.end_time = timezone.now() + timezone.timedelta(10)
+        semester = Semester.objects.create(
+            number=1, name='Test semester', competition=competition, year=1)
+        round = Round.objects.create(number=1, semester=semester, visible=True,
+                                     solutions_visible=False, start_time=self.start_time,
+                                     end_time=self.end_time)
+        self.task = Task.objects.create(number=1, name='Test task', round=round,
+                                        has_testablezip=True)
+
+    def test_redirect_to_login(self):
+        response = self.client.get(self.url)
+        redirect_to = '%s?next=%s' % (settings.LOGIN_URL, reverse('all_submits_description_page'))
+        self.assertRedirects(response, redirect_to)
+
+    def test_in_queue_submit(self):
+        self.client.force_login(self.non_staff_user)
+        Submit.objects.create(
+            task=self.task, user=self.non_staff_user, submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_IN_QUEUE, points=0
+        )
+        response = self.client.get(self.url)
+        self.assertContains(response, 'Test task')
+        self.assertContains(response, 'Neopravené')
+
+    def test_reviewed_submit(self):
+        self.client.force_login(self.non_staff_user)
+        Submit.objects.create(
+            task=self.task, user=self.non_staff_user, submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED, points=4
+        )
+        Submit.objects.create(
+            task=self.task, user=self.non_staff_user, submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED, points=7
+        )
+        response = self.client.get(self.url)
+        self.assertContains(response, 'Test task')
+        self.assertContains(response, 'Opravené')
+        self.assertContains(response, '7,00')
+
+    def test_reviewed_submit(self):
+        self.client.force_login(self.non_staff_user)
+        Submit.objects.create(
+            task=self.task, user=self.non_staff_user, submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_IN_QUEUE, points=0
+        )
+        Submit.objects.create(
+            task=self.task, user=self.non_staff_user, submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED, points=7
+        )
+        response = self.client.get(self.url)
+        self.assertContains(response, 'Test task')
+        self.assertContains(response, 'Opravené')
+        self.assertContains(response, '7,00')

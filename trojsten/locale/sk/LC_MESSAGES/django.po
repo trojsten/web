@@ -259,6 +259,7 @@ msgid "Your graduation year is too far in the past."
 msgstr "Tvoj rok maturity je príliš ďaleko v minulosti."
 
 #: trojsten/people/forms.py:161
+
 msgid "Your graduation year is too far in the future."
 msgstr "Tvoj rok maturity je príliš ďaleko v budúcnosti."
 
@@ -425,7 +426,7 @@ msgid "Complete Registration"
 msgstr "Dodatočná Registrácia"
 
 #: trojsten/people/templates/trojsten/people/additional_registration.html:23
-#: trojsten/people/tests.py:756
+#: trojsten/people/tests.py:759
 msgid "You have already filled all required properties."
 msgstr "Momentálne máš vyplnené všetky potrebné údaje."
 
@@ -629,6 +630,10 @@ msgstr " (stiahne pre každého užívateľa opravené riešenie, ak je opraven�
 
 #: trojsten/reviews/templates/admin/review_form.html:57
 #: trojsten/reviews/templates/admin/submit_form.html:12
+#: trojsten/submit/templates/trojsten/submit/parts/submit_list.html:30
+#: trojsten/submit/templates/trojsten/submit/parts/submit_list.html:36
+#: trojsten/submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:30
+#: trojsten/submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:37
 msgid "Download"
 msgstr "Stiahnuť"
 
@@ -729,33 +734,37 @@ msgid "OK"
 msgstr "OK"
 
 # Submit
-#: trojsten/submit/constants.py:33 trojsten/submit/tests.py:389
+#: trojsten/submit/constants.py:34 trojsten/submit/tests.py:389
 msgid "Wrong answer"
 msgstr "Zlá odpoveď"
 
-#: trojsten/submit/constants.py:34
+#: trojsten/submit/constants.py:35
 msgid "Compilation error"
 msgstr "Chyba počas kompilácie"
 
-#: trojsten/submit/constants.py:35
+#: trojsten/submit/constants.py:36
 msgid "Time limit exceeded"
 msgstr "Prekročený časový limit"
 
-#: trojsten/submit/constants.py:36
+#: trojsten/submit/constants.py:37
 msgid "Memory limit exceeded"
 msgstr "Prekročený pamäťový limit"
 
-#: trojsten/submit/constants.py:38
+#: trojsten/submit/constants.py:39
 msgid "Runtime exception"
 msgstr "Chyba počas behu programu"
 
-#: trojsten/submit/constants.py:39
+#: trojsten/submit/constants.py:40
 msgid "Security exception"
 msgstr "Pokus o narušenie bezpečnosti"
 
-#: trojsten/submit/constants.py:40
+#: trojsten/submit/constants.py:41
 msgid "Ignored"
 msgstr ""
+
+#: trojsten/submit/constants.py:42
+msgid "Protocol corrupted"
+msgstr "Nečitateľný protokol"
 
 #: trojsten/submit/forms.py:76
 #, fuzzy
@@ -771,21 +780,29 @@ msgstr "Tu môžeš nahrať súbor s popisom riešenia"
 msgid "You can attach a submit file only to descriptions."
 msgstr "Nahrať súbor môžeš len k popisom."
 
-#: trojsten/submit/templates/trojsten/submit/parts/submit_list.html:30
-#: trojsten/submit/templates/trojsten/submit/parts/submit_list.html:36
-msgid "Stiahni"
-msgstr ""
+#: trojsten/submit/templates/trojsten/submit/all_submits_page.html:7
+#: trojsten/submit/templates/trojsten/submit/all_submits_page.html:10
+msgid "My submitted tasks"
+msgstr "Moje odovzdané úlohy"
 
 #: trojsten/submit/templates/trojsten/submit/parts/submit_list.html:37
-msgid "Pozri komentár"
-msgstr ""
+msgid "Show comment"
+msgstr "Pozri komentár"
 
 #: trojsten/submit/templates/trojsten/submit/parts/submit_list.html:75
 #: trojsten/submit/templates/trojsten/submit/parts/submit_list.html:92
 msgid "Detaily"
 msgstr ""
 
-#: trojsten/submit/views.py:335
+#: trojsten/submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:39
+msgid "View comment"
+msgstr "Pozri komentár"
+
+#: trojsten/submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:53
+msgid "Details"
+msgstr "Detaily"
+
+#: trojsten/submit/views.py:397
 msgid ""
 "You have successfully submitted your description, it will be reviewed after "
 "the round finishes."
@@ -793,7 +810,7 @@ msgstr ""
 "Úspešne sa ti podarilo submitnúť popis, po skončení kola ti ho vedúci "
 "opravia."
 
-#: trojsten/submit/views.py:339
+#: trojsten/submit/views.py:401
 msgid ""
 "You have submitted your description after the deadline. It is not counted in "
 "results."

@@ -6,8 +6,10 @@ from trojsten.contests.models import Round
 from trojsten.submit import constants as submit_constants
 from trojsten.submit.models import Submit
 from trojsten.contests.models import Task
+from trojsten.utils.utils import is_true
 
 from .models import FrozenResults
+from .manager import get_results, get_results_tags_for_rounds
 
 
 class TaskPoints(object):
@@ -260,3 +262,25 @@ def make_result_table(
         results_data=final_results,
         has_previous_results=has_previous_results,
     )
+
+
+def get_scoreboards_for_rounds(rounds, request):
+    single_round = is_true(request.GET.get('single_round', False))
+    ResultTableObject = namedtuple(
+        'ResultTableObject', ['scoreboard', 'tag_name',
+                              'competition_ignored', 'user_valid']
+    )
+    return [
+        ResultTableObject(
+            get_results(result_tag.key, round, single_round),
+            result_tag.name,
+            request.user.is_anonymous() or request.user.is_competition_ignored(
+                round.semester.competition
+            ),
+            request.user.is_anonymous() or request.user.is_valid_for_competition(
+                round.semester.competition
+            ),
+        )
+        for round, result_tags in zip(rounds, get_results_tags_for_rounds(rounds))
+        for result_tag in result_tags
+    ]

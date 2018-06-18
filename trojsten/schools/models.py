@@ -51,5 +51,5 @@ class School(models.Model):
             street=self.street,
             town=self.city,
             postal_code=self.zip_code,
-            country=settings.DEFAULT_COUNTRY
+            country=settings.DEFAULT_SCHOOL_COUNTRY
         )
