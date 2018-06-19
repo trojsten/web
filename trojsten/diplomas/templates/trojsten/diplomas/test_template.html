@@ -1,0 +1,26 @@
+{% extends "trojsten/layout/main.html" %}
+{% load bootstrap %}
+{% load utils %}
+{% load sekizai_tags %}
+{% load staticfiles %}
+
+{% block title %}Diplomy{% endblock %}
+
+{% block page_header %}
+<h1>Diplomy</h1>
+{% endblock %}
+
+{% block page_content %}
+    {{ hello }}
+    <form action="{% url 'view_diplomas' %}" method="post" id="form" enctype='multipart/form-data'>
+        {% csrf_token %}
+              {{ form  | bootstrap_inline }}
+        <button type="submit">Generate diplomas</button>
+    </form>
+
+{% addtoblock "js" %}
+    <script>var additional_data = "{{ hello }}";</script>
+    <script src="{% static "js/diploma_preview.js" %}"></script>
+{% endaddtoblock %}
+
+{% endblock %}

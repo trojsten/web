@@ -6,17 +6,27 @@ from django.conf import settings
 from django.utils.html import format_html, escape
 from django.utils.translation import ugettext_lazy as _
 
+from trojsten.diplomas.models import DiplomaTemplate
+
 from . import constants
 
 
 class DiplomaParametersForm(forms.Form):
-    TEMPLATE_CHOICES = constants.SVG_TEMPLATES
-    template = forms.ChoiceField(choices=TEMPLATE_CHOICES)
+
+    # def __init__(self, *args, **kwargs):
+    #     super(DiplomaParametersForm, self).__init__(*args, **kwargs)
+    #     self.fields[]
+
+    diploma_templates = DiplomaTemplate.objects.get_queryset()
+    template_choices = [(t.pk, t.name) for t in diploma_templates]
+
+    template = forms.ChoiceField(choices=template_choices)
     join_pdf = forms.BooleanField(initial=True, required=False)
     participant_file = forms.FileField(
         max_length=settings.UPLOADED_FILENAME_MAXLENGTH,
         required=False
     )
+    participant_json_data = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     def clean_participant_file(self):
         pfile = self.cleaned_data['participant_file']

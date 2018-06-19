@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+import re
+
+FIELD_SEARCH_PATTERN = re.compile(r'\{(\w+)\}')
+FIELD_REPLACE_PATTERN = '{{{}}}'
 
 SVG_TEMPLATES = [
     ('diplom-trojsten-fks.ai.svg', 'Diplom FKS'),

@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import subprocess
+from datetime import datetime
 from tempfile import TemporaryFile, NamedTemporaryFile
 import zipfile
 import os
 import re
+
+from .constants import *
 
 
 class DiplomaGenerator:
@@ -18,22 +21,22 @@ class DiplomaGenerator:
 
     def create_diplomas(self,
                         participants,
-                        template_svg_name='diplom-trojsten-ksp.ai.svg',
+                        template_svg,
                         separate=False):
-
-        template_svg = open(os.path.join(self.svg_path, template_svg_name), 'r').read()
 
         svgs = [self.svg_for_participant(template_svg, participant)
                 for participant in participants]
 
-        pdfs = self.render_pdfs(svgs, separate=separate, name_prefix=template_svg_name)
+        pdfs = self.render_pdfs(svgs,
+                                separate=separate,
+                                name_prefix=datetime.now().strftime("%Y-%m-%d-%H-%M"))
 
         return pdfs
 
     def svg_for_participant(self, template_svg, participant):
         svg = template_svg
         for attr, value in participant.items():
-            pattern = "{%s}" % attr
+            pattern = FIELD_REPLACE_PATTERN.format(attr)
             svg = re.sub(pattern, str(value), svg)
         return svg
 
