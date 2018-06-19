@@ -52,17 +52,6 @@ def as_list(value):
     return [value]
 
 
-@register.filter
-def to_list(value):
-    return list(value)
-
-
-@register.filter
-def slice_if_needed(value, arg):
-    maximum, default = [int(i) for i in arg.split(" ")]
-    return value[:default] if len(value) >= maximum else value[:maximum]
-
-
 @register.assignment_tag(takes_context=True)
 def is_organizer(context, competition):
     return (

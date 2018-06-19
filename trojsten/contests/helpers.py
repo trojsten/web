@@ -37,3 +37,7 @@ def get_points_from_submits(tasks, submits):
             submit.testing_status,
         )
     return res
+
+
+def slice_if_needed(maximum, default, l):
+    return l[:default] if len(l) >= maximum else l[:maximum]
