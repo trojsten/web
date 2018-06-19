@@ -10,7 +10,7 @@ from .constants import *
 @python_2_unicode_compatible
 class DiplomaTemplate(models.Model):
     name = models.CharField(max_length=128)
-    svg = models.CharField(max_length=5000000)
+    svg = models.TextField()
 
     class Meta:
         verbose_name = 'Šablóna diplomu'

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import json
 
 from django import forms
 from django.conf import settings
@@ -8,25 +9,25 @@ from django.utils.translation import ugettext_lazy as _
 
 from trojsten.diplomas.models import DiplomaTemplate
 
-from . import constants
-
 
 class DiplomaParametersForm(forms.Form):
 
-    # def __init__(self, *args, **kwargs):
-    #     super(DiplomaParametersForm, self).__init__(*args, **kwargs)
-    #     self.fields[]
+    def __init__(self, templates, *args, **kwargs):
+        self.diploma_templates = templates
 
-    diploma_templates = DiplomaTemplate.objects.get_queryset()
-    template_choices = [(t.pk, t.name) for t in diploma_templates]
+        super(DiplomaParametersForm, self).__init__(*args, **kwargs)
 
-    template = forms.ChoiceField(choices=template_choices)
-    join_pdf = forms.BooleanField(initial=True, required=False)
-    participant_file = forms.FileField(
-        max_length=settings.UPLOADED_FILENAME_MAXLENGTH,
-        required=False
-    )
-    participant_json_data = forms.CharField(widget=forms.HiddenInput(), required=False)
+        template_choices = [(t.pk, t.name) for t in self.diploma_templates]
+
+        self.fields['template'] = forms.ChoiceField(choices=template_choices)
+        self.fields['join_pdf'] = forms.BooleanField(initial=True, required=False)
+        self.fields['participant_file'] = forms.FileField(
+            max_length=settings.UPLOADED_FILENAME_MAXLENGTH,
+            required=False
+        )
+        self.fields['participant_json_data'] = forms.CharField(widget=forms.HiddenInput(),
+                                                               required=False,
+                                                               initial="{}")
 
     def clean_participant_file(self):
         pfile = self.cleaned_data['participant_file']
@@ -41,3 +42,10 @@ class DiplomaParametersForm(forms.Form):
                 )
             )
         return pfile
+
+    def clean_participant_json_data(self):
+        data = self.cleaned_data['participant_json_data']
+        try:
+            return json.loads(data)
+        except json.JSONDecodeError:
+            raise forms.ValidationError("Supplied data invalid")

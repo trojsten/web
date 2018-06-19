@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import zipfile
 import os
+import json
 
 from django.shortcuts import render
 from django.contrib import messages
@@ -12,14 +13,21 @@ from trojsten.diplomas.helpers import parse_participants
 from trojsten.diplomas.forms import DiplomaParametersForm
 from trojsten.diplomas.models import DiplomaTemplate
 
+from wiki.decorators import get_article
 
+
+@get_article
 @login_required
-def view_diplomas(request):
+def view_diplomas(request, article, *args, **kwargs):
+    diploma_templates = DiplomaTemplate.objects.get_queryset()
+    editable_fields = {}
+    for d in diploma_templates:
+        editable_fields[d.pk] = d.editable_fields
+
     if request.method == 'POST':
-        form = DiplomaParametersForm(request.POST, request.FILES)
+        form = DiplomaParametersForm(diploma_templates, request.POST, request.FILES)
         if form.is_valid():
-            for key, value in form.cleaned_data.items():
-                print(key)
+
             pfile = form.cleaned_data['participant_file']
             participant_data, error_msg = parse_participants(pfile)
             if not participant_data:
@@ -27,10 +35,13 @@ def view_diplomas(request):
             else:
 
                 separate = not form.cleaned_data['join_pdf']
-                template_name = form.cleaned_data['template']
+                template_pk = form.cleaned_data['template']
+                svg = diploma_templates.filter(pk=template_pk).get().svg
+                field_values = form.cleaned_data['participant_json_data']
+                print(field_values)
 
                 generator = DiplomaGenerator()
-                pdfs = generator.create_diplomas(participant_data, template_svg="", separate=separate)
+                pdfs = generator.create_diplomas(participant_data, template_svg=svg, separate=separate)
                 path = os.path.join(os.path.dirname(__file__), 'archive.zip')
                 with zipfile.ZipFile(path, 'w', zipfile.ZIP_DEFLATED) as archive:
                     for name, content in pdfs:
@@ -43,13 +54,16 @@ def view_diplomas(request):
                     messages.add_message(request, messages.ERROR,
                                          '%s: %s' % (field.label, error))
     else:
-        form = DiplomaParametersForm()
+        form = DiplomaParametersForm(diploma_templates)
 
     context = {
         'form': form,
-        'hello': 'world!'
+        'hello': 'world!',
+        'article': article,
+        'template_fields': json.dumps(editable_fields, ensure_ascii=False).encode('utf8')
     }
 
+    print(article)
     return render(
         request, 'trojsten/diplomas/test_template.html', context
     )

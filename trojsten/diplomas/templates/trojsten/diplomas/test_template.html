@@ -3,6 +3,7 @@
 {% load utils %}
 {% load sekizai_tags %}
 {% load staticfiles %}
+{% load wiki_tags %}
 
 {% block title %}Diplomy{% endblock %}
 
@@ -11,15 +12,19 @@
 {% endblock %}
 
 {% block page_content %}
-    {{ hello }}
     <form action="{% url 'view_diplomas' %}" method="post" id="form" enctype='multipart/form-data'>
         {% csrf_token %}
-              {{ form  | bootstrap_inline }}
-        <button type="submit">Generate diplomas</button>
+        <div id="editable_fields_container"></div>
+        {{ form  | bootstrap_inline }}
+        <button id='form_submit' type="submit">Generate diplomas</button>
     </form>
 
+{% block wiki_contents_tab %}
+{% wiki_render article %}
+{% endblock %}
+
 {% addtoblock "js" %}
-    <script>var additional_data = "{{ hello }}";</script>
+    <script>var template_fields = "{{ template_fields }}";</script>
     <script src="{% static "js/diploma_preview.js" %}"></script>
 {% endaddtoblock %}
 
