@@ -155,7 +155,7 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
     fieldsets = (
         (None, {'fields': ('username',)}),
         (_('Personal info'), {'fields': (
-            'first_name', 'last_name', 'email', 'gender', 'birth_date'
+            'first_name', 'last_name', 'email', 'birth_date'
         )}),
         (_('Address'), {'fields': ('home_address', 'mail_to_school', 'mailing_address')}),
         (_('School'), {'fields': ('school', 'graduation')}),
