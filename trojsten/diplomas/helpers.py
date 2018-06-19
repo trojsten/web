@@ -9,6 +9,8 @@ DECODE_ERROR_MSG = _("Unsupported file format")
 
 
 def parse_participants(pfile):
+    if pfile is None:
+        return None, _("File is empty")
     extension = os.path.splitext(pfile.name)[-1].lower()
     if extension == '.json':
         data = pfile.read()
@@ -23,7 +25,6 @@ def parse_participants(pfile):
         try:
             return [dict(row) for row in reader], ""
         except csv.Error as e:
-            print(e)
             return None, DECODE_ERROR_MSG
     else:
         return None, _("Unsupported extension")

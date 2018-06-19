@@ -12,12 +12,57 @@
 {% endblock %}
 
 {% block page_content %}
-    <form action="{% url 'view_diplomas' %}" method="post" id="form" enctype='multipart/form-data'>
-        {% csrf_token %}
-        <div id="editable_fields_container"></div>
-        {{ form  | bootstrap_inline }}
-        <button id='form_submit' type="submit">Generate diplomas</button>
-    </form>
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#single">Single diploma</a></li>
+        <li><a data-toggle="tab" href="#multiple">Multiple diploma</a></li>
+    </ul>
+
+    <div class="container">
+        <div class="tab-content">
+            <div id="single" class="tab-pane fade in active">
+                <form action="" method="post" id="dummy_form" enctype='multipart/form-data' class="form-vertical">
+                </form>
+
+                <form action="{% url 'view_diplomas' %}" method="post" id="form" enctype='multipart/form-data' class="form-inline">
+                    {% csrf_token %}
+
+                      {{ form.non_field_errors }}
+
+                      {{ form.source.errors }}
+                      {{ form.source }}
+                     <table>
+                     <tr>
+                        <th>{{ form.template.label_tag }}</th>
+                        <td>
+                          {{ form.template.errors }}
+                          {{ form.template }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>{{ form.join_pdf.label_tag }}</th>
+                        <td>
+                          {{ form.join_pdf.errors }}
+                          {{ form.join_pdf }}
+                        </td>
+                      </tr>
+
+                     </table>
+                    {{ form.single_participant_data }}
+                    <button id='form_submit' type="submit">Generate diplomas</button>
+                </form>
+            </div>
+            <div id="multiple" class="tab-pane fade">
+                <form action="{% url 'view_diplomas' %}" method="post" id="form" enctype='multipart/form-data' class="form-inline">
+                    {% csrf_token %}
+                    {{ form  | bootstrap_inline }}
+                    <button id='form_submit' type="submit">Generate diplomas</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <br><br>
 
 {% block wiki_contents_tab %}
 {% wiki_render article %}
