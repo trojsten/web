@@ -28,7 +28,6 @@ def view_diplomas(request, article, *args, **kwargs):
         if form.is_valid():
 
             participants_data = form.cleaned_data['participants_data']
-            print(participants_data)
             separate = not form.cleaned_data['join_pdf']
             template_pk = form.cleaned_data['template']
             svg = diploma_templates.filter(pk=template_pk).get().svg

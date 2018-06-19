@@ -4,7 +4,7 @@ import re
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
-from .constants import *
+from .constants import FIELD_SEARCH_PATTERN
 
 
 @python_2_unicode_compatible
@@ -19,3 +19,6 @@ class DiplomaTemplate(models.Model):
     @property
     def editable_fields(self):
         return re.findall(FIELD_SEARCH_PATTERN, self.svg)
+
+    def __str__(self):
+        return self.name

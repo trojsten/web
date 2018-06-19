@@ -7,7 +7,7 @@ import zipfile
 import os
 import re
 
-from .constants import *
+from .constants import FIELD_REPLACE_PATTERN
 
 
 class DiplomaGenerator:
@@ -75,7 +75,6 @@ class DiplomaGenerator:
         with TemporaryFile() as tmp:
             with zipfile.ZipFile(tmp, 'w', zipfile.ZIP_DEFLATED) as archive:
                 for name, content in pdfs:
-                    print(name)
                     archive.writestr(name, content)
 
             tmp.seek(0)

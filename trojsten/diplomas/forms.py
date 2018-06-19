@@ -7,7 +7,6 @@ from django.conf import settings
 from django.utils.html import format_html, escape
 from django.utils.translation import ugettext_lazy as _
 
-from trojsten.diplomas.models import DiplomaTemplate
 from .helpers import parse_participants
 
 
@@ -65,7 +64,7 @@ class DiplomaParametersForm(forms.Form):
 
         is_json_empty = True
         json_data = self.cleaned_data['single_participant_data']
-        for _, v in json_data[0].items():
+        for k, v in json_data[0].items():
             if v != "":
                 is_json_empty = False
                 break
