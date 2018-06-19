@@ -98,11 +98,11 @@ class MergeUsersTests(TestCase):
             solutions_visible=False,
         )
         self.target_user = _create_random_user(
-            first_name='Jozef', last_name='Novak', email='jozef@novak.sk', gender='M',
+            first_name='Jozef', last_name='Novak', email='jozef@novak.sk',
             graduation=2017,
         )
         self.source_user = _create_random_user(
-            first_name='Jozef', last_name='Novak', email='jozef.novak@gmail.com', gender='M',
+            first_name='Jozef', last_name='Novak', email='jozef.novak@gmail.com',
             graduation=2015, home_address=self.address,
         )
         UserProperty.objects.create(user=self.target_user, key=self.tricko, value='L')
@@ -205,7 +205,7 @@ class UserFormTests(TestCase):
         )
         self.user = User.objects.create(
             username='janko4247', first_name='Janko', last_name='Hrasko', password='pass',
-            gender='M', birth_date=datetime.date(1999, 9, 19), email='hrasko@example.com',
+            birth_date=datetime.date(1999, 9, 19), email='hrasko@example.com',
             mail_to_school=True, school=self.school, graduation=2018,
             home_address=address
         )
@@ -215,7 +215,6 @@ class UserFormTests(TestCase):
             'password2': 'heslo',
             'first_name': 'Jožko',
             'last_name': 'Mrkvička',
-            'gender': 'M',
             'mailing_option': constants.MAILING_OPTION_SCHOOL,
             'school': 2,
             'graduation': 2017,

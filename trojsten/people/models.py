@@ -53,13 +53,6 @@ class User(AbstractUser):
     Holds, provide access to or manages all informations
     related to a person.
     """
-    GENDER_CHOICES = [('M', 'Chlapec'), ('F', 'Dievča')]
-    gender = models.CharField(
-        max_length=1,
-        choices=GENDER_CHOICES,
-        default='M',
-        verbose_name='pohlavie',
-    )
     birth_date = models.DateField(
         null=True, db_index=True, verbose_name='dátum narodenia')
     home_address = models.ForeignKey(Address,
