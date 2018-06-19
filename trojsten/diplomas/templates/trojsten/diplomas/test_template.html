@@ -18,6 +18,8 @@
         <li><a data-toggle="tab" href="#multiple">Multiple diploma</a></li>
     </ul>
 
+    <br>
+
     <div class="container">
         <div class="tab-content">
             <div id="single" class="tab-pane fade in active">
@@ -33,22 +35,16 @@
                       {{ form.source }}
                      <table>
                      <tr>
-                        <th>{{ form.template.label_tag }}</th>
+                        <th style="width: 75px">{{ form.template.label_tag }}</th>
                         <td>
                           {{ form.template.errors }}
                           {{ form.template }}
                         </td>
                       </tr>
-                      <tr>
-                        <th>{{ form.join_pdf.label_tag }}</th>
-                        <td>
-                          {{ form.join_pdf.errors }}
-                          {{ form.join_pdf }}
-                        </td>
-                      </tr>
 
                      </table>
                     {{ form.single_participant_data }}
+                    <br>
                     <button id='form_submit' type="submit">Generate diplomas</button>
                 </form>
             </div>

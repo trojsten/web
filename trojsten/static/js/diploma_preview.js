@@ -21,6 +21,7 @@
                 var label = document.createElement('label');
                 label.setAttribute('for', 'id_' + field_name);
                 label.innerHTML = field_name;
+                label.setAttribute("style","width:75px");
                 var input_container = document.createElement("div");
                 input_container.className = "form-group";
                 input_container.appendChild(label);

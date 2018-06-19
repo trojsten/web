@@ -20,11 +20,11 @@ class DiplomaParametersForm(forms.Form):
         template_choices = [(t.pk, t.name) for t in self.diploma_templates]
 
         self.fields['template'] = forms.ChoiceField(choices=template_choices)
-        self.fields['join_pdf'] = forms.BooleanField(initial=True, required=False)
         self.fields['participants_data'] = forms.FileField(
             max_length=settings.UPLOADED_FILENAME_MAXLENGTH,
             required=False
         )
+        self.fields['join_pdf'] = forms.BooleanField(initial=True, required=False)
         self.fields['single_participant_data'] = forms.CharField(widget=forms.HiddenInput(),
                                                                  required=False,
                                                                  initial="[{}]")
