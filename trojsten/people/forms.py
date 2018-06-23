@@ -57,7 +57,7 @@ class TrojstenUserBaseForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email',
-                  'birth_date', 'school', 'graduation',)
+                  'birth_date', 'gender', 'school', 'graduation',)
         widgets = {
             'school': forms.Select(attrs={'class': 'autocomplete'}),
         }
@@ -67,6 +67,11 @@ class TrojstenUserBaseForm(forms.ModelForm):
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
         self.fields['email'].required = True
+        self.fields['gender'] = forms.ChoiceField(
+            widget=forms.RadioSelect,
+            label=_('Gender'),
+            choices=User.GENDER_CHOICES,
+        )
         self.fields['school'].initial = 1
 
     def get_initial_from_pipeline(self, pipeline_state):
@@ -272,7 +277,7 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email',
-                  'birth_date', 'school', 'graduation',)
+                  'birth_date', 'gender', 'school', 'graduation',)
         widgets = {
             'school': forms.Select(attrs={'class': 'autocomplete'}),
         }
@@ -413,13 +418,14 @@ class MergeForm(forms.Form):
 
         field_factory = MergeFieldFactory(user, candidate)
         user_fields = [field.name for field in User._meta.get_fields() if not field.is_relation]
+        display = set(['gender'])
         use_datetime = set(['last_login', 'date_joined', 'birth_date'])
         prop_keys = set(user.get_properties().keys()) | set(candidate.get_properties().keys())
 
         self.fields.update(OrderedDict([
             (
                 f,
-                field_factory.get_field(f, use_datetime=f in use_datetime)
+                field_factory.get_field(f, display=f in display, use_datetime=f in use_datetime)
             ) for f in user_fields
         ] + [
             (
