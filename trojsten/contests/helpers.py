@@ -4,6 +4,8 @@ from trojsten.contests.models import Round
 from trojsten.results.helpers import UserResult
 from trojsten.results.manager import get_results_tags_for_rounds
 
+from .constants import MAX_NUMBER_OF_TAGS, DEFAULT_NUMBER_OF_TAGS
+
 
 def get_rounds_by_year(user, competition):
     rounds = Round.objects.visible(
@@ -39,5 +41,5 @@ def get_points_from_submits(tasks, submits):
     return res
 
 
-def slice_if_needed(maximum, default, l):
-    return l[:default] if len(l) >= maximum else l[:maximum]
+def slice_tag_list(tag_list, maximum=MAX_NUMBER_OF_TAGS, default=DEFAULT_NUMBER_OF_TAGS):
+    return tag_list[:default] if len(tag_list) >= maximum else tag_list[:maximum]

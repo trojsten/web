@@ -1,18 +1,23 @@
+from collections import OrderedDict
 from django import template
 
 from trojsten.contests.models import Competition
 
-from ..helpers import get_rounds_by_year, slice_if_needed
+from ..helpers import get_rounds_by_year, slice_tag_list
 
 register = template.Library()
+
+
+def slice_tags(round_tag):
+    return round_tag[0], slice_tag_list(list(round_tag[1]))
 
 
 @register.inclusion_tag('trojsten/contests/parts/round_list.html')
 def show_round_list(user, competition):
     all_rounds = get_rounds_by_year(user, competition)
 
-    for i in all_rounds:
-        all_rounds[i] = [(round, slice_if_needed(2, 1, list(result_tags))) for round, result_tags in all_rounds[i]]
+    all_rounds = {key: list(map(slice_tags, v)) for key, v in all_rounds.items()}
+    all_rounds = OrderedDict(sorted(all_rounds.items(), key=lambda t: t[0], reverse=True))
 
     data = {
         'all_rounds': all_rounds,
