@@ -301,11 +301,15 @@ class UserFormTests(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {'password2': ['Heslo a jeho potvrdenie sa nezhodujú.']})
 
+    def test_valid_user_creation_school(self):
+        form = TrojstenUserCreationForm(data=self.form_data, request=self.request)
+        self.assertTrue(form.is_valid())
+        user = form.save()
+        self.assertEqual(user.school, self.school)
+
     def test_valid_initial_data(self):
         form = TrojstenUserChangeForm({}, user=self.user)
         form.data = form.initial
-        form.is_valid()
-        print(form.errors)
         self.assertTrue(form.is_valid())
 
     def test_valid_user_change(self):
@@ -327,6 +331,18 @@ class UserFormTests(TestCase):
             'corr_postal_code': ['Toto pole je povinné.'],
             'corr_country': ['Toto pole je povinné.']
         })
+
+    def test_valid_school_change(self):
+        new_school = School.objects.create(
+            abbreviation='GG', verbose_name='Gymnázium 2', pk=3,
+            street='Hronca 47', city='Bratislava', zip_code='123 45'
+        )
+        form = TrojstenUserChangeForm({}, user=self.user)
+        form.data = form.initial
+        form.data['school'] = new_school.pk
+        self.assertTrue(form.is_valid())
+        form.save()
+        self.assertEqual(self.user.school, new_school)
 
     def test_mailing_address_change(self):
         form = TrojstenUserChangeForm({}, user=self.user)

@@ -103,12 +103,14 @@ class User(AbstractUser):
 
     @property
     def school(self):
-        schools_queryset = UserSchool.objects.filter(user=self).order_by('-start_time')
+        schools_queryset = UserSchool.objects.filter(user=self).order_by('-start_time', '-id')
+        # TODO: Replace Other school with None
         return schools_queryset.first().school if schools_queryset.count() > 0 \
             else School.objects.get(pk=constants.OTHER_SCHOOL_ID)
 
     def school_at(self, date):
-        schools_queryset = UserSchool.objects.filter(user=self, start_time__lt=date).order_by('-start_time')
+        schools_queryset = UserSchool.objects.filter(user=self, start_time__lt=date).order_by('-start_time', '-id')
+        # TODO: Replace Other school with None
         return schools_queryset.first().school if schools_queryset.count() > 0 \
             else School.objects.get(pk=constants.OTHER_SCHOOL_ID)
 
