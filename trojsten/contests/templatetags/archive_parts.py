@@ -15,10 +15,7 @@ def slice_tags(round_tag):
 @register.inclusion_tag('trojsten/contests/parts/round_list.html')
 def show_round_list(user, competition):
     all_rounds = get_rounds_by_year(user, competition)
-
-    all_rounds = {key: list(map(slice_tags, v)) for key, v in all_rounds.items()}
-    all_rounds = OrderedDict(sorted(all_rounds.items(), key=lambda t: t[0], reverse=True))
-
+    all_rounds = OrderedDict((key, list(map(slice_tags, v))) for key, v in all_rounds.items())
     data = {
         'all_rounds': all_rounds,
     }
