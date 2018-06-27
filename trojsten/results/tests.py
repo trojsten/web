@@ -137,8 +137,10 @@ class RecentResultsTest(TestCase):
         Round.objects.create(number=2, semester=semester2, solutions_visible=True, visible=True, end_time=good_time)
 
         response = self.client.get(self.url)
-        self.assertContains(response, 'oldCompetition', count=3)
-        self.assertContains(response, 'newCompetition', count=4)
+
+        names = list(map(lambda x: x.scoreboard.round.semester.competition.name, response.context['scoreboards']))
+        self.assertTrue('newCompetition' in names)
+        self.assertFalse('oldCompetition' in names)
 
 
 class ResultsTest(TestCase):
