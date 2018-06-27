@@ -524,7 +524,7 @@ class UserSchoolFrom(forms.ModelForm):
         model = UserSchool
         exclude = ()
         widgets = {
-            'school': forms.Select(attrs={'class': 'autocomplete form-control'}),
+            'school': forms.Select(attrs={'class': 'input autocomplete'}),
         }
 
 

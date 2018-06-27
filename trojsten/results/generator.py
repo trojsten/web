@@ -125,6 +125,7 @@ class ResultsGenerator(object):
             year=user.school_year_at(res_request.round.end_time),
             previous=res_request.get_previous_row_for_user(user),
             active=self.is_user_active(res_request, user),
+            school=user.school_at(res_request.round.end_time),
         )
         for col in cols:
             if col.task is not None:

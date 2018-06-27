@@ -23,13 +23,13 @@
         <td>{{ participant.user.get_full_name }}</td>
         <td>{{ participant.year_at_event | school_year }}</td>
         <td>
-        {% if participant.user.school.has_abbreviation %}
-            <abbr title="{{ participant.user.school.verbose_name }}"
+        {% if participant.school_at_event.has_abbreviation %}
+            <abbr title="{{ participant.school_at_event.verbose_name }}"
                   data-toggle="tooltip" data-placement="top">
-                {{ participant.user.school.abbreviation }}
+                {{ participant.school_at_event.abbreviation }}
             </abbr>
         {% else %}
-            {{ participant.user.school.verbose_name }}
+            {{ participant.school_at_event.verbose_name }}
         {% endif %}
         </td>
     </tr>
@@ -39,13 +39,13 @@
     <tr {% if user == organizer.user %}class="active"{% endif %}>
         <td colspan="2">{{ organizer.user.get_full_name }}</td>
         <td>
-        {% if organizer.user.school.has_abbreviation %}
-            <abbr title="{{ organizer.user.school.verbose_name }}"
+        {% if organizer.school_at_event.has_abbreviation %}
+            <abbr title="{{ organizer.school_at_event.verbose_name }}"
                   data-toggle="tooltip" data-placement="top">
-                {{ organizer.user.school.abbreviation }}
+                {{ organizer.school_at_event.abbreviation }}
             </abbr>
         {% else %}
-            {{ organizer.user.school.verbose_name }}
+            {{ organizer.school_at_event.verbose_name }}
         {% endif %}
         </td>
     </tr>
