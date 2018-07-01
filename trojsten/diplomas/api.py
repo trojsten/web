@@ -42,12 +42,6 @@ class DiplomaGenerator:
 
     def render_pdfs(self, svgs, separate=False, pdf_name='diploma_joined.pdf', name_prefix=""):
 
-        def make_into_file(content):
-            tmp = NamedTemporaryFile(mode='w')
-            tmp.write(content)
-            tmp.seek(0)
-            return tmp
-
         if not isinstance(svgs, list):
             svgs = [svgs]
 
@@ -80,3 +74,17 @@ class DiplomaGenerator:
             tmp.seek(0)
             content = tmp.read()
         return content
+
+
+def make_into_file(content):
+    tmp = NamedTemporaryFile(mode='w')
+    tmp.write(content)
+    tmp.seek(0)
+    return tmp
+
+
+def render_png(svg):
+    f = make_into_file(svg)
+    png = subprocess.check_output(['rsvg-convert', '-f', 'png', f.name])
+    f.close()
+    return png

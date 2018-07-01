@@ -1,0 +1,91 @@
+{% extends "trojsten/layout/main.html" %}
+{% load bootstrap %}
+{% load i18n %}
+{% load utils %}
+{% load sekizai_tags %}
+{% load staticfiles %}
+{% load wiki_tags %}
+
+{% block title %}Diplomy{% endblock %}
+
+{% block page_header %}
+<h1>Diplomy</h1>
+{% endblock %}
+
+{% block page_content %}
+
+
+    <form action="{% url 'view_diplomas' %}" method="post" id="form" enctype='multipart/form-data' class="form-inline">
+        {% csrf_token %}
+            {{ form.media }}
+
+        <div class="row">
+            <div class="col-md-6">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#single">{% trans "Single diploma"%}</a></li>
+                    <li><a data-toggle="tab" href="#multiple">{% trans "Multiple diplomas" %}</a></li>
+                </ul>
+
+                <div class="form-group" style="margin-top: 5px">
+                    <label style="width: 100px">{%trans "Template" %}</label>{{ form.template }}
+                </div>
+
+                <div class="tab-content">
+                    <div id="single" class="tab-pane fade active in" >
+                        <h3>Editable fields</h3>
+                        <div id="dummy_form">
+
+                        </div>
+                        {{ form.single_participant_data }}
+                    </div>
+
+                    <div id="multiple" class="tab-pane fade">
+                        <h3>Input data</h3>
+                        <div class="form-group" style="display: inline-block">
+                            <label>Upload a file</label>{{ form.participants_data }}
+                        </div>
+
+
+                        <div class="form-group">
+                            <label>{{ form.join_pdf.label }}</label>
+                            {{ form.join_pdf }}
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+                {{ form.non_field_errors }}
+                {{ form.source.errors }}
+                {{ form.source }}
+
+            </div>
+
+            <div class="col-md-6">
+               <div class="thumbnail" style="width: 100%">
+                    <a id='preview_link' href="">
+                        <img id='preview_image' src="">
+                    </a>
+                </div>
+            </div>
+
+            <div style="text-align: center">
+                <button id='form_submit' type="submit">{% trans "Generate diplomas" %}</button>
+            </div>
+        </div>
+    {{ form.participants_data_input }}
+    </form>
+
+    <br><br>
+
+{% block wiki_contents_tab %}
+{% wiki_render article %}
+{% endblock %}
+
+{% addtoblock "js" %}
+    <script>var template_fields = "{{ template_fields }}";</script>
+    <script src="{% static "js/diploma_preview.js" %}"></script>
+{% endaddtoblock %}
+
+{% endblock %}

@@ -534,3 +534,10 @@ else:
 
 # Diploma settings
 DIPLOMA_PARTICIPANTS_ALLOWED_EXTENSIONS = ['.csv', '.json']
+
+EDITOR_CONFIG = {
+    'mode': 'python',
+    'lineWrapping': True,
+    'lineNumbers': True,
+    'tabSize': 4
+}

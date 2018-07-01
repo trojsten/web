@@ -2,6 +2,25 @@
 {
     $(function()
     {
+        $(document).ready(function(){
+            var editor = document.getElementById("id_participants_data_input")
+
+            $("#id_participants_data").on({
+                change: function () {
+                    var f = document.getElementById("id_participants_data").files[0];
+
+                    var fileReader = new FileReader();
+                    fileReader.onload = function(fileLoadedEvent){
+                        var textFromFileLoaded = fileLoadedEvent.target.result;
+                        editor.setValue(textFromFileLoaded);
+                    };
+                    fileReader.readAsText(f, "UTF-8");
+                }
+            });
+
+            refresh_form()
+        });
+
         let fields = JSON.parse(template_fields.replace(/&quot;/g,'"'));
 
         function refresh_form() {
@@ -21,13 +40,18 @@
                 var label = document.createElement('label');
                 label.setAttribute('for', 'id_' + field_name);
                 label.innerHTML = field_name;
-                label.setAttribute("style","width:75px");
+                label.setAttribute("style","width:100px");
                 var input_container = document.createElement("div");
                 input_container.className = "form-group";
                 input_container.appendChild(label);
                 input_container.appendChild(input);
+                input_container.setAttribute('style', 'margin-top:5px');
                 document.getElementById("dummy_form").appendChild(input_container);
-            })
+            });
+
+            document.getElementById("preview_link").setAttribute('href', "./" + document.getElementById("id_template").value);
+            document.getElementById("preview_image").src = "./" + document.getElementById("id_template").value;
+            document.getElementById("preview_image").setAttribute('alt', "./" + document.getElementById("id_template").value)
         }
 
         function serialize_data(){
@@ -37,10 +61,6 @@
             });
             return JSON.stringify([d]);
         }
-
-        $(document).ready(function(){
-            refresh_form()
-        });
 
         $("#form").on({
             submit: function(){
@@ -54,6 +74,8 @@
                 serialize_data();
             }
         });
+
+
 
     });
 })(jQuery);

@@ -6,22 +6,37 @@ import json
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseNotFound
+from django.views.decorators.cache import cache_page
 from sendfile import sendfile
 
-from trojsten.diplomas.api import DiplomaGenerator
+from trojsten.diplomas.api import DiplomaGenerator, render_png
 from trojsten.diplomas.forms import DiplomaParametersForm
 from trojsten.diplomas.models import DiplomaTemplate
 
 from wiki.decorators import get_article
 
 
+@cache_page(60*15)
+@login_required
+def diploma_preview(request, diploma_id):
+    diploma = DiplomaTemplate.objects.filter(pk=diploma_id).get()
+    if diploma:
+        png = render_png(diploma.svg)
+        return HttpResponse(png, content_type="image/png")
+    else:
+        return HttpResponseNotFound()
+
+
 @get_article
 @login_required
 def view_diplomas(request, article, *args, **kwargs):
-    diploma_templates = DiplomaTemplate.objects.get_queryset()
+    diploma_templates = DiplomaTemplate.objects.get_queryset().order_by('name')
     editable_fields = {}
+    svgs = {}
     for d in diploma_templates:
         editable_fields[d.pk] = d.editable_fields
+        svgs[d.pk] = d.svg
 
     if request.method == 'POST':
         form = DiplomaParametersForm(diploma_templates, request.POST, request.FILES)
@@ -55,5 +70,5 @@ def view_diplomas(request, article, *args, **kwargs):
     }
 
     return render(
-        request, 'trojsten/diplomas/test_template.html', context
+        request, 'trojsten/diplomas/test_template_v2.html', context
     )

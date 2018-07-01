@@ -8,6 +8,7 @@ from django.utils.html import format_html, escape
 from django.utils.translation import ugettext_lazy as _
 
 from .helpers import parse_participants
+from .widgets import Editor
 
 
 class DiplomaParametersForm(forms.Form):
@@ -24,10 +25,13 @@ class DiplomaParametersForm(forms.Form):
             max_length=settings.UPLOADED_FILENAME_MAXLENGTH,
             required=False
         )
-        self.fields['join_pdf'] = forms.BooleanField(initial=True, required=False)
+        self.fields['join_pdf'] = forms.BooleanField(initial=True, required=False, label=_('Join into one pdf'))
         self.fields['single_participant_data'] = forms.CharField(widget=forms.HiddenInput(),
                                                                  required=False,
                                                                  initial="[{}]")
+        self.fields['participants_data_input'] = forms.CharField(widget=Editor(mode={'name': 'javascript', 'json': True},
+                                                                               theme='darcula'),
+                                                                 required=False)
 
     def clean_participants_data(self):
         pfile = self.cleaned_data['participants_data']
