@@ -292,7 +292,7 @@ class SerializationTest(TestCase):
             'id': user.id,
             'username': 'TestUser',
             'name': 'Jozko Mrkvicka',
-            'year': 2,
+            'year': user.school_year,
             'school': school_dict,
         }
         cell1 = ResultsCell(15, 10, 5, True)
@@ -327,7 +327,7 @@ class SerializationTest(TestCase):
             'id': user.id,
             'username': 'TestUser',
             'name': 'Jozko Mrkvicka',
-            'year': 2,
+            'year': user.school_year,
             'school': school_dict,
         }
         cell1 = ResultsCell(15, 10, 5, True)
@@ -381,7 +381,7 @@ class SerializationTest(TestCase):
             'id': user.id,
             'username': 'TestUser',
             'name': 'Jozko Mrkvicka',
-            'year': 2,
+            'year': user.school_year,
             'school': school_dict,
         }
         cell1 = ResultsCell(15, 10, 5, True)
@@ -407,7 +407,7 @@ class SerializationTest(TestCase):
             'id': user.id,
             'username': 'TestUser2',
             'name': 'Ferko Mrkvicka',
-            'year': 1,
+            'year': user.school_year,
             'school': school_dict,
         }
         cell1 = ResultsCell(15, 10, 5, True)
@@ -431,5 +431,4 @@ class SerializationTest(TestCase):
         results = Results(None)
         results.cols = [col]
         results.rows = [row1, row2]
-
         self.assertDictEqual(results.serialize(), d)
