@@ -30,7 +30,8 @@ class DiplomaParametersForm(forms.Form):
                                                                  required=False,
                                                                  initial="[{}]")
         self.fields['participants_data_input'] = forms.CharField(widget=Editor(mode={'name': 'javascript', 'json': True},
-                                                                               theme='darcula'),
+                                                                               theme='darcula',
+                                                                               autofocus=True),
                                                                  required=False)
 
     def clean_participants_data(self):

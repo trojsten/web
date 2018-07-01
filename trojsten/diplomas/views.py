@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import zipfile
-import os
 import json
+from tempfile import TemporaryFile
 
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.cache import cache_page
-from sendfile import sendfile
+from django.utils import timezone
 
 from trojsten.diplomas.api import DiplomaGenerator, render_png
 from trojsten.diplomas.forms import DiplomaParametersForm
@@ -49,11 +49,26 @@ def view_diplomas(request, article, *args, **kwargs):
 
             generator = DiplomaGenerator()
             pdfs = generator.create_diplomas(participants_data, template_svg=svg, separate=separate)
-            path = os.path.join(os.path.dirname(__file__), 'archive.zip')
-            with zipfile.ZipFile(path, 'w', zipfile.ZIP_DEFLATED) as archive:
+
+            archive_file = TemporaryFile(mode='w+b')
+            with zipfile.ZipFile(archive_file, 'w', zipfile.ZIP_DEFLATED) as archive:
                 for name, content in pdfs:
                     archive.writestr(name, content)
-            return sendfile(request, path, attachment=True)
+            archive_file.seek(0)
+
+            filename = timezone.now().strftime("diplom_{}_%Y_%m_%d_%H:%M:%S.zip".format(request.user.last_name))
+
+            response = HttpResponse()
+            response['Content-type'] = 'application/zip'
+            response['Content-Description'] = 'File Transfer'
+            response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+            response['Content-Transfer-Encoding'] = 'binary'
+
+            response.write(archive_file.read())
+
+            archive_file.close()
+
+            return response
 
         else:
             for field in form:

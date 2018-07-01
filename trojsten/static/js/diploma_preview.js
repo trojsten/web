@@ -3,7 +3,6 @@
     $(function()
     {
         $(document).ready(function(){
-            var editor = document.getElementById("id_participants_data_input")
 
             $("#id_participants_data").on({
                 change: function () {
@@ -12,13 +11,13 @@
                     var fileReader = new FileReader();
                     fileReader.onload = function(fileLoadedEvent){
                         var textFromFileLoaded = fileLoadedEvent.target.result;
-                        editor.setValue(textFromFileLoaded);
+                        window.editor.setValue(textFromFileLoaded);
                     };
                     fileReader.readAsText(f, "UTF-8");
                 }
             });
 
-            refresh_form()
+            refresh_form();
         });
 
         let fields = JSON.parse(template_fields.replace(/&quot;/g,'"'));
@@ -74,8 +73,6 @@
                 serialize_data();
             }
         });
-
-
 
     });
 })(jQuery);

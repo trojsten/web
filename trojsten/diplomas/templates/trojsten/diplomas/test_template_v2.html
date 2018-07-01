@@ -15,43 +15,45 @@
 {% block page_content %}
 
 
-    <form action="{% url 'view_diplomas' %}" method="post" id="form" enctype='multipart/form-data' class="form-inline">
+    <form action="{% url 'view_diplomas' %}" method="post" id="form" enctype='multipart/form-data' class="form-vertical">
         {% csrf_token %}
-            {{ form.media }}
+        {{ form.media }}
 
         <div class="row">
             <div class="col-md-6">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#single">{% trans "Single diploma"%}</a></li>
-                    <li><a data-toggle="tab" href="#multiple">{% trans "Multiple diplomas" %}</a></li>
+                    <li class="active"><a data-toggle="tab" href="#multiple">{% trans "Multiple diplomas" %}</a></li>
+                    <li><a data-toggle="tab" href="#single">{% trans "Single diploma"%}</a></li>
                 </ul>
 
                 <div class="form-group" style="margin-top: 5px">
-                    <label style="width: 100px">{%trans "Template" %}</label>{{ form.template }}
+                    <label style="width: 100px">{{ form.template.label_tag }}</label>{{ form.template }}
                 </div>
 
                 <div class="tab-content">
-                    <div id="single" class="tab-pane fade active in" >
+                    <div id="single" class="tab-pane fade" >
                         <h3>Editable fields</h3>
                         <div id="dummy_form">
-
                         </div>
+
                         {{ form.single_participant_data }}
                     </div>
 
-                    <div id="multiple" class="tab-pane fade">
-                        <h3>Input data</h3>
-                        <div class="form-group" style="display: inline-block">
-                            <label>Upload a file</label>{{ form.participants_data }}
+                    <div id="multiple" class="tab-pane fade active in">
+                        <h4>Upload a file </h4>
+                        <div class="form-group">
+                            {{ form.participants_data }}
                         </div>
 
+                        <h4>Or enter data manually: </h4>
+                        <div class="form-group">
+                            {{ form.participants_data_input }}
+                        </div>
 
                         <div class="form-group">
-                            <label>{{ form.join_pdf.label }}</label>
+                            <label>{{ form.join_pdf.label_tag }}</label>
                             {{ form.join_pdf }}
                         </div>
-
-
 
                     </div>
                 </div>
@@ -62,19 +64,20 @@
 
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6" style="text-align: center">
                <div class="thumbnail" style="width: 100%">
                     <a id='preview_link' href="">
                         <img id='preview_image' src="">
                     </a>
                 </div>
+                <h4>Template preview</h4>
             </div>
 
-            <div style="text-align: center">
-                <button id='form_submit' type="submit">{% trans "Generate diplomas" %}</button>
-            </div>
+
         </div>
-    {{ form.participants_data_input }}
+        <div style="text-align: center">
+            <button class="btn btn-primary btn-block" id='form_submit' type="submit">{% trans "Generate" %}</button>
+        </div>
     </form>
 
     <br><br>
