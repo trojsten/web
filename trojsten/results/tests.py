@@ -280,8 +280,8 @@ class SerializationTest(TestCase):
         school = School.objects.create(abbreviation='GJH', verbose_name='Gymnazium Jura Hronca')
         user = User.objects.create(username="TestUser", password="password",
                                    first_name="Jozko", last_name="Mrkvicka",
-                                   graduation=timezone.now().year + 2,
-                                   school=school)
+                                   graduation=timezone.now().year + 2)
+        user.add_school(school)
 
         school_dict = {
             'id': school.id,
@@ -315,8 +315,8 @@ class SerializationTest(TestCase):
         school = School.objects.create(abbreviation='GJH', verbose_name='Gymnazium Jura Hronca')
         user = User.objects.create(username="TestUser", password="password",
                                    first_name="Jozko", last_name="Mrkvicka",
-                                   graduation=timezone.now().year + 2,
-                                   school=school)
+                                   graduation=timezone.now().year + 2)
+        user.add_school(school)
 
         school_dict = {
             'id': school.id,
@@ -369,8 +369,8 @@ class SerializationTest(TestCase):
         school = School.objects.create(abbreviation='GJH', verbose_name='Gymnazium Jura Hronca')
         user = User.objects.create(username="TestUser", password="password",
                                    first_name="Jozko", last_name="Mrkvicka",
-                                   graduation=timezone.now().year + 2,
-                                   school=school)
+                                   graduation=timezone.now().year + 2)
+        user.add_school(school)
 
         school_dict = {
             'id': school.id,
@@ -400,8 +400,8 @@ class SerializationTest(TestCase):
 
         user = User.objects.create(username="TestUser2", password="password",
                                    first_name="Ferko", last_name="Mrkvicka",
-                                   graduation=timezone.now().year + 3,
-                                   school=school)
+                                   graduation=timezone.now().year + 3)
+        user.add_school(school)
 
         user_dict = {
             'id': user.id,

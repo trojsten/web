@@ -44,7 +44,7 @@ class KSPResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                 'user', 'task', '-time', '-id',
             ).distinct(
                 'user', 'task',
-            ).select_related('user', 'user__school', 'task', 'task__round')
+            ).select_related('user', 'task', 'task__round')
         return chain(submits, penalized_submits)
 
     def source_submit_points(self, previous_points, submit):

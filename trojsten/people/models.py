@@ -13,6 +13,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from unidecode import unidecode
 
+from trojsten.schools.models import School
 from . import constants
 
 
@@ -73,15 +74,6 @@ class User(AbstractUser):
                                         verbose_name='adresa korešpondencie')
     mail_to_school = models.BooleanField(default=False,
                                          verbose_name='posielať poštu do školy')
-    school = models.ForeignKey('schools.School',
-                               null=True,
-                               verbose_name='škola',
-                               help_text='Do políčka napíšte skratku, '
-                                         'časť názvu alebo adresy školy a následne '
-                                         'vyberte správnu možnosť zo zoznamu. '
-                                         'Pokiaľ vaša škola nie je '
-                                         'v&nbsp;zozname, vyberte "Iná škola" '
-                                         'a&nbsp;pošlite nám e-mail.')
     graduation = models.IntegerField(null=True,
                                      verbose_name='rok maturity',
                                      help_text='Povinné pre žiakov.')
@@ -108,6 +100,20 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'používateľ'
         verbose_name_plural = 'používatelia'
+
+    @property
+    def school(self):
+        return self.school_at(timezone.now())
+
+    def school_at(self, date):
+        schools_queryset = UserSchool.objects.filter(user=self, start_time__lte=date).order_by('-start_time', '-id')
+        # TODO: Replace Other school with None
+        return schools_queryset.first().school if schools_queryset.count() > 0 \
+            else School.objects.filter(pk=constants.OTHER_SCHOOL_ID).first()
+
+    def add_school(self, school, date=timezone.now()):
+        if school != self.school:
+            UserSchool.objects.create(user=self, school=school, start_time=date)
 
     @property
     def school_year(self):
@@ -158,6 +164,17 @@ class User(AbstractUser):
 User._meta.get_field('first_name').blank = False
 User._meta.get_field('last_name').blank = False
 User._meta.get_field('username').blank = True
+
+
+class UserSchool(models.Model):
+    user = models.ForeignKey(User, verbose_name=_('User'))
+    school = models.ForeignKey(School, verbose_name=_('School'))
+    start_time = models.DateField(verbose_name=_('Start of study'), default=timezone.now)
+
+    class Meta:
+        verbose_name = _('School of user')
+        verbose_name_plural = _('Schools of user')
+        ordering = ['start_time']
 
 
 class UserPropertyManager(models.Manager):

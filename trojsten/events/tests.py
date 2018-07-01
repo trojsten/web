@@ -11,7 +11,8 @@ from django.test import TestCase
 from django.utils import timezone
 from wiki.models import Article, ArticleRevision, URLPath
 
-from trojsten.people.models import User
+from trojsten.people.models import User, UserSchool
+from trojsten.schools.models import School
 from trojsten.utils.test_utils import get_noexisting_id
 
 from .models import Event, EventParticipant, EventPlace, EventType
@@ -193,25 +194,63 @@ class EventParticipantsTest(TestCase):
 
 
 class ParticipantsAndOrganizersListViewTest(TestCase):
-    def test_school_year(self):
+    def setUp(self):
         current_year = timezone.now().year
         site = Site.objects.get(pk=settings.SITE_ID)
-        user = User.objects.create(
+        self.user = User.objects.create(
             username='ferko', first_name='Ferko', last_name='Mrkvicka',
             graduation=current_year - 1)
+
         group = Group.objects.create(name="skupina")
-        place = EventPlace.objects.create(name="Miesto")
-        type_camp = EventType.objects.create(name="sustredenie",
-                                             organizers_group=group, is_camp=True)
-        type_camp.sites.add(site)
-        event = Event.objects.create(
+        self.place = EventPlace.objects.create(name="Miesto")
+        self.type_camp = EventType.objects.create(name="sustredenie",
+                                                  organizers_group=group, is_camp=True)
+        self.type_camp.sites.add(site)
+        self.event = Event.objects.create(
             start_time=datetime.datetime(day=12, month=3, year=current_year - 2, tzinfo=pytz.utc),
             end_time=datetime.datetime(day=17, month=3, year=current_year - 2, tzinfo=pytz.utc),
-            place=place, type=type_camp,
+            place=self.place, type=self.type_camp,
         )
-        EventParticipant.objects.create(event=event, user=user, going=True, type=0)
+        EventParticipant.objects.create(event=self.event, user=self.user, going=True, type=0)
 
-        part_list_url = reverse('participants_list', kwargs={'event_id': event.id})
-        response = self.client.get(part_list_url)
+        self.old_school = School.objects.create(
+            abbreviation='GYMN1', verbose_name='Gymnázium Janka Hraška',
+            street='Hronca 42', city='Bratislava', zip_code='123 45'
+        )
+        self.current_school = School.objects.create(
+            abbreviation='GYMN2', verbose_name='Gymnázium Janka Hraška',
+            street='Hronca 42', city='Bratislava', zip_code='123 45'
+        )
+        UserSchool.objects.create(
+            user=self.user, school=self.old_school, start_time=self.event.start_time + timezone.timedelta(-10)
+        )
+        UserSchool.objects.create(
+            user=self.user, school=self.current_school, start_time=self.event.end_time + timezone.timedelta(10)
+        )
+
+        self.part_list_url = reverse('participants_list', kwargs={'event_id': self.event.id})
+
+    def test_school_year(self):
+        response = self.client.get(self.part_list_url)
 
         self.assertContains(response, '<td>3</td>')
+
+    def test_old_school_at_event_time(self):
+        response = self.client.get(self.part_list_url)
+
+        self.assertContains(response, self.old_school.abbreviation)
+        self.assertNotContains(response, self.current_school.abbreviation)
+
+    def test_current_school_at_event_time(self):
+        event = Event.objects.create(
+            start_time=self.event.end_time + timezone.timedelta(20),
+            end_time=self.event.end_time + timezone.timedelta(30),
+            place=self.place, type=self.type_camp,
+        )
+        EventParticipant.objects.create(event=event, user=self.user, going=True, type=0)
+
+        url = reverse('participants_list', kwargs={'event_id': event.id})
+        response = self.client.get(url)
+
+        self.assertContains(response, self.current_school.abbreviation)
+        self.assertNotContains(response, self.old_school.abbreviation)

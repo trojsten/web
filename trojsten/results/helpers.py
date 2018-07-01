@@ -187,7 +187,6 @@ def get_frozen_results(round, category=None, single_round=False):
         'task_points__task',
     ).select_related(
         'original_user',
-        'school',
     ).order_by('rank')
 
     results = defaultdict(FrozenUserResult)

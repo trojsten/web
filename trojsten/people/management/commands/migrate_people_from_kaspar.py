@@ -113,7 +113,6 @@ class Command(NoArgsCommand):
             # The username needs to be unique, thus the ID.
             'username': '%s%s%d' % (first_name, last_name, man_id),
             'is_active': False,
-            'school': self.school_id_map[school_id]
         }
 
         if grad_year:
@@ -140,6 +139,7 @@ class Command(NoArgsCommand):
             self.stdout.write("Creating user %s %s" % (first_name, last_name))
 
         new_user = User.objects.create(**new_user_args)
+        new_user.add_school(self.school_id_map[school_id])
         self.man_id_map[man_id] = new_user
 
         new_user.properties.create(key=self.kaspar_id_key, value=man_id)

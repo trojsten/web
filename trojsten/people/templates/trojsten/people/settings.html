@@ -19,6 +19,7 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs settings-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">{%  trans "Profile" %}</a></li>
+        <li role="presentation"><a href="#schools" aria-controls="schools" role="tab" data-toggle="tab">{%  trans "School History" %}</a></li>
         <li role="presentation"><a href="#props" aria-controls="properties" role="tab" data-toggle="tab">{% trans "Properties" %}</a></li>
         <li role="presentation"><a href="#contests" aria-controls="contests" role="tab" data-toggle="tab">{% trans "Contests" %}</a></li>
         {% if SITE.is_login_provider %}
@@ -33,11 +34,84 @@
             {% include "ksp_login/parts/multiple_forms.html" %}
         </div>
 
+        <div role="tabpanel" class="tab-pane fade" id="schools">
+            {% blocktrans %}
+                <p>Here you can see and edit informations, which schoos you have visited during attending our seminars
+                    along dates, since when the information is valid. According to these informations,
+                    your school is showed in results and camp paticipants list.</p>
+
+                <p>If your school is missing in the list, write us an email and we add it to the list.</p>
+            {% endblocktrans %}
+            <form method="post" action="" class="form-horizontal">
+                {% csrf_token %}
+                {{ school_history_form_set.management_form }}
+                <div id='schools_items_container'>
+                  {% for form in school_history_form_set %}
+                    <div class="form-group{% if form.errors %} has-error{% endif %}">
+                    {% for field in form %}
+                        {% if field.name == "school" %}
+                            {% if field.value %}
+                                <label class="col-md-7 control-label">{{ field.field.choices|choice_text:field.value }}</label>
+                                <input type="hidden" name="{{ field.html_name }}" value="{{ field.value }}"/>
+                            {% else %}
+                                {{ field | bootstrap_inline}}
+                            {% endif %}
+                        {% elif field.name == "start_time" %}
+                            <span class="col-md-2">
+                                {{ field | bootstrap_inline}}
+                            </span>
+                        {% elif field.is_hidden %}
+                            {{ field }}
+                        {% else %}
+                            <span class="col-md-2">
+                                {{ field | bootstrap_inline}}
+                            </span>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                    {% endfor %}
+                    </div>
+                  {% endfor %}
+                </div>
+                <script type="text/html" id="schools-item-template">
+                    <div id="schools-item-__prefix__" class="form-group">
+                    {% for field in school_history_form_set.empty_form %}
+                        {{ field.errors }}
+                        {% if field.name == "school" %}
+                        <span class="col-md-7">
+                            {{ field | bootstrap_inline}}
+                        </span>
+
+                        {% elif field.name == "start_time" %}
+                            <span class="col-md-2">
+                                {{ field | bootstrap_inline}}
+                            </span>
+                        {% elif field.is_hidden %}
+                            {{ field }}
+                        {% else %}
+                            <span class="col-md-2">
+                                {{ field | bootstrap_inline}}
+                            </span>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                </script>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-7">
+                        <input class="btn btn-primary" type="submit" name="school_history_submit" value="{% trans "Submit" %}" />
+                        <a href="#" id="add-schools-item-button" class="btn btn-info add-item" onClick="addItem(event, 'schools')">{% trans "Add school" %}</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <div role="tabpanel" class="tab-pane fade" id="props">
             <form method="post" action="" class="form-horizontal">
                 {% csrf_token %}
                 {{ user_props_form_set.management_form }}
-                <div id='items_container'>
+                <div id='props_items_container'>
                   {% for form in user_props_form_set %}
                     <div class="form-group{% if form.errors %} has-error{% endif %}">
                     {% for field in form %}
@@ -66,8 +140,8 @@
                     </div>
                   {% endfor %}
                 </div>
-                <script type="text/html" id="item-template">
-                    <div id="item-__prefix__" class="form-group">
+                <script type="text/html" id="props-item-template">
+                    <div id="props-item-__prefix__" class="form-group">
                     {% for field in user_props_form_set.empty_form %}
                         {{ field.errors }}
                         {% if field.name == "key" %}
@@ -93,7 +167,7 @@
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-7">
                         <input class="btn btn-primary" type="submit" name="user_props_submit" value="{% trans "Submit" %}" />
-                        <a href="#" id="add-item-button" class="btn btn-info add-item" onClick="addItem(event)">{% trans "Add property" %}</a>
+                        <a href="#" id="add-item-button" class="btn btn-info add-item" onClick="addItem(event, 'props')">{% trans "Add property" %}</a>
                     </div>
                 </div>
             </form>
@@ -163,21 +237,21 @@
     <script src="{% static "js/moment.min.js" %}"></script>
     <script src="{% static "js/bootstrap-datetimepicker.js" %}"></script>
     <script>
-      function addItem(ev) {
+      function addItem(ev, prefix) {
         ev.preventDefault();
-        var count = $('div#items_container').children().length;
+        var count = $('div#' + prefix + '_items_container').children().length;
         var ids = new Set($('[name^="properties"][name$="key"]').map(function() {
             return $(this).attr("value");}).toArray());
-        var tmplMarkup = $('#item-template').html();
+        var tmplMarkup = $('#' + prefix + '-item-template').html();
         var compiledTmpl = $(tmplMarkup.replace(/__prefix__/g, count));
         $('[name^="properties"][name$="key"]', compiledTmpl).children().each(function() {
             if (ids.has($(this).attr("value"))) {
                 $(this).remove();
             }
         });
-        $('div#items_container').append(compiledTmpl);
+        $('div#' + prefix + '_items_container').append(compiledTmpl);
         // update form count
-        $('#id_properties-TOTAL_FORMS').attr('value', count+1);
+        $('#id_' + prefix + '-TOTAL_FORMS').attr('value', count+1);
       }
       </script>
 {% endaddtoblock %}

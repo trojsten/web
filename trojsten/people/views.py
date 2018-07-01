@@ -6,14 +6,14 @@ from ksp_login.forms import UserProfileForm, get_profile_forms
 from social_django.models import UserSocialAuth
 
 from trojsten.contests.models import Competition, Round
-from trojsten.people.models import User
+from trojsten.people.models import User, UserSchool
 from trojsten.submit.constants import (SUBMIT_STATUS_REVIEWED,
                                        SUBMIT_TYPE_DESCRIPTION)
 from trojsten.submit.models import Submit
 
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .forms import (AdditionalRegistrationForm, IgnoreCompetitionForm,
-                    RoundSelectForm, SubmittedTasksForm)
+                    RoundSelectForm, SubmittedTasksForm, UserSchoolFrom)
 from .helpers import get_required_properties
 from .models import UserProperty
 
@@ -51,16 +51,28 @@ def settings(request, settings_form=UserProfileForm):
     """
 
     UserPropsFormSet = _get_user_props_formset(request.user.is_staff)
+    SchoolHistoryFormSet = forms.inlineformset_factory(
+        User, UserSchool,
+        form=UserSchoolFrom,
+        fields=('school', 'start_time'),
+        extra=0,
+    )
 
     form_classes = [settings_form] + get_profile_forms()
 
     _forms = None
+    school_history_form_set = None
     user_props_form_set = None
     competition_select_form = None
 
     if request.method == "POST":
-        if request.POST.get('user_props_submit', None):
-            user_props_form_set = UserPropsFormSet(request.POST, instance=request.user)
+        if request.POST.get('school_history_submit', None):
+            school_history_form_set = SchoolHistoryFormSet(request.POST, instance=request.user, prefix='schools')
+            if school_history_form_set.is_valid():
+                school_history_form_set.save()
+                return redirect(reverse('account_settings') + '#schools')
+        elif request.POST.get('user_props_submit', None):
+            user_props_form_set = UserPropsFormSet(request.POST, instance=request.user, prefix='props')
             if user_props_form_set.is_valid():
                 user_props_form_set.save()
                 return redirect(reverse('account_settings') + '#props')
@@ -79,9 +91,11 @@ def settings(request, settings_form=UserProfileForm):
 
     if not _forms:
         _forms = [form(user=request.user) for form in form_classes]
+    if not school_history_form_set:
+        school_history_form_set = SchoolHistoryFormSet(instance=request.user, prefix='schools')
     if not user_props_form_set:
         user_props_form_set = UserPropsFormSet(
-            instance=request.user, queryset=UserProperty.objects.visible(request.user)
+            instance=request.user, queryset=UserProperty.objects.visible(request.user), prefix='props'
         )
     if not competition_select_form:
         competition_select_form = IgnoreCompetitionForm(user=request.user)
@@ -89,6 +103,7 @@ def settings(request, settings_form=UserProfileForm):
     return render(request, 'trojsten/people/settings.html', {
         'account_associations': UserSocialAuth.get_social_auth_for_user(request.user),
         'forms': _forms,
+        'school_history_form_set': school_history_form_set,
         'user_props_form_set': user_props_form_set,
         'competition_select_form': competition_select_form,
     })
