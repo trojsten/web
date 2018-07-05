@@ -3,8 +3,6 @@ from time import time
 
 import os
 import random
-import xml.etree.ElementTree as ET
-from decimal import Decimal
 from django.conf import settings
 from django.utils.encoding import smart_bytes
 from os import path
@@ -112,38 +110,8 @@ def parse_result_and_points_from_protocol(submit):
     if not os.path.exists(protocol_path):
         return None, None
 
-    try:
-        tree = ET.parse(protocol_path)
-    except SyntaxError:
-        return constants.SUBMIT_RESPONSE_PROTOCOL_CORRUPTED, 0
-
-    # Ak kompilátor vyhlási chyby, testovač ich vráti v tagu <compileLog>
-    # Ak takýto tag existuje, výsledok je chyba pri testovaní a 0 bodov.
-    clog = tree.find("compileLog")
-    if clog is not None:
-        return constants.SUBMIT_RESPONSE_ERROR, 0
-
-    # Pre každý vstup kompilátor vyprodukuje tag <test>, všetky <test>-y
-    # sú v tag-u <runLog>. Výsledok je buď OK, alebo prvý nájdený druh
-    # chyby.
-    runlog = tree.find("runLog")
-    result = constants.SUBMIT_RESPONSE_OK
-    for test in runlog:
-        if test.tag != 'test':
-            continue
-        test_result = test[2].text
-        if test_result != constants.SUBMIT_RESPONSE_OK:
-            result = test_result
-            break
-    # Na konci testovača je v tagu <score> uložené percento získaných
-    # bodov.
-    try:
-        score = Decimal(tree.find("runLog/score").text)
-    except:  # noqa: E722 @FIXME
-        score = 0
-    points = (submit.task.source_points * score) / Decimal(100)
-
-    return result, points
+    with open(protocol_path) as protocol:
+        return judge_client.parse_protocol(protocol, max_point=submit.task.source_points)
 
 
 def update_submit(submit):

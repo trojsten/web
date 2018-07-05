@@ -1,9 +1,10 @@
+# coding=utf-8
 import socket
+from decimal import Decimal
 from django.utils.encoding import smart_bytes
+from xlrd.xlsx import ET
 
-
-class JudgeConnectionError(IOError):
-    pass
+from trojsten.submit import constants
 
 
 class JudgeClient(object):
@@ -33,6 +34,44 @@ class JudgeClient(object):
 
         header = self._create_header(submit_id, user_id, task_id, language)
         self._send_data_to_server(header, submission_content)
+
+    @staticmethod
+    def parse_protocol(protocol_content, max_points):
+        """Parses protocol returned by judge system.
+
+        If protocol contains <compileLog> it means there was a testing error.
+        If any of <test> tag in <runLog> contains non OK result, the overall result is the first non OK result.
+        The points are computed from percentage of maximum points stored in <score> tag.
+
+        :param protocol_content: content of the protocol.
+        :param max_points: maximum possible points for the task.
+        :return: testing_result, number_of_points
+        """
+        try:
+            tree = ET.parse(protocol_content)
+        except SyntaxError:
+            raise ProtocolCorruptedError('Error while parsing protocol.\n%s' % protocol_content)
+
+        compile_log = tree.find("compileLog")
+        if compile_log is not None:
+            return constants.SUBMIT_RESPONSE_ERROR, 0  # Returns zero points if there was error.
+
+        run_log = tree.find("runLog")
+        result = constants.SUBMIT_RESPONSE_OK
+        for test in run_log:
+            if test.tag != 'test':
+                continue
+            test_result = test[2].text
+            if test_result != constants.SUBMIT_RESPONSE_OK:
+                result = test_result
+                break
+        try:
+            score = Decimal(tree.find("runLog/score").text)
+        except (ValueError, TypeError):
+            raise ProtocolFormatError("Invalid score.\n%s" % protocol_content)
+        points = (max_points * score) / Decimal(100)
+
+        return result, points
 
     def _create_header(self, submit_id, user_id, task_id, language):
         """Creates a raw header from submit parameters"""
@@ -66,3 +105,19 @@ class DebugJudgeClient(JudgeClient):
         print('Submit RAW:')
         print(header)
         print(submission_file_content)
+
+
+class JudgeConnectionError(IOError):
+    pass
+
+
+class ProtocolError(ValueError):
+    pass
+
+
+class ProtocolCorruptedError(ProtocolError):
+    pass
+
+
+class ProtocolFormatError(ProtocolError):
+    pass
