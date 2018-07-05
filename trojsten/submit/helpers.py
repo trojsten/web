@@ -2,6 +2,7 @@
 from time import time
 
 import os
+import random
 import xml.etree.ElementTree as ET
 from decimal import Decimal
 from django.conf import settings
@@ -45,27 +46,15 @@ def get_lang_from_filename(filename):
     return extmapping[ext]
 
 
-def get_path_raw(contest_id, task_id, user_id):
-    """Vypočíta cestu, kam uložiť súbory submitu bez dotknutia databázy.
-
-    Cesta má tvar: $SUBMIT_PATH/submits/KSP/task_id/user_id
-    """
-
-    return os.path.join(settings.SUBMIT_PATH, 'submits',
-                        str(user_id), str(task_id))
-
-
 def get_path(task, user):
-    """Vypočíta cestu, kam uložiť súbory submitu.
+    """Returns path of the submission directory.
 
-    Cesta má tvar: $SUBMIT_PATH/submits/KSP/task_id/user_id
+    Path is in form of: $SUBMIT_PATH/submits/user-id/task_id/
     """
-    return get_path_raw(
-        task.round.semester.competition.name, "%s-%d" % (
-            task.round.semester.competition.name, task.id
-        ),
-        "%s-%d" % (task.round.semester.competition.name, user.id)
-    )
+    return os.path.join(settings.SUBMIT_PATH,
+                        'submits',
+                        "%s-%d" % (task.round.semester.competition.name, user.id),
+                        "%s-%d" % (task.round.semester.competition.name, task.id))
 
 
 def get_description_file_path(file, user, task):
@@ -85,8 +74,14 @@ def get_description_file_path(file, user, task):
     ))
 
 
+def _generate_submit_id():
+    """Generates a submit id in form of <timestamp>-##### where ##### are 5 random digits."""
+    timestamp = int(time())
+    return '%d-%05d' % (timestamp, random.randint(0, 99999))
+
+
 def process_submit(f, task, language, user):
-    """Načíta všetko potrebné z databázy a spracuje submit"""
+    """Calls judge_client.submit() with correct parameters."""
     contest_id = task.round.semester.competition.name
 
     # Determine language from filename if language not entered
@@ -100,15 +95,9 @@ def process_submit(f, task, language, user):
     user_id = "%s-%d" % (contest_id, user.id)
     task_id = "%s-%d" % (contest_id, task.id)
 
-    submit_id = judge_client.submit(user_id, task_id, data, language)
+    submit_id = _generate_submit_id()
+    judge_client.submit(submit_id, user_id, task_id, data, language)
 
-    # Determine local directory to store RAW file into
-    submission_directory = get_path_raw(contest_id, task_id, user_id)
-
-    # Write RAW to local file
-    write_chunks_to_file(os.path.join(submission_directory, submit_id + constants.SUBMIT_RAW_FILE_EXTENSION), [raw, data])
-
-    # Return submit ID
     return submit_id
 
 

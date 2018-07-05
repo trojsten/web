@@ -22,9 +22,9 @@ from trojsten.contests.models import Competition, Round, Semester, Task, TaskPeo
 from trojsten.people.models import User
 from trojsten.submit import constants
 from trojsten.submit.forms import SubmitAdminForm
-from trojsten.submit.helpers import (get_lang_from_filename, get_path_raw,
+from trojsten.submit.helpers import (get_lang_from_filename,
                                      write_chunks_to_file, get_description_file_path,
-                                     update_submit)
+                                     update_submit, get_path)
 from trojsten.submit.views import send_notification_email
 from trojsten.utils.test_utils import get_noexisting_id
 from .models import ExternalSubmitToken, Submit
@@ -486,9 +486,12 @@ class SubmitHelpersTests(TestCase):
         self.assertEqual(get_lang_from_filename('file.cpp'), '.cc')
         self.assertEqual(get_lang_from_filename('file.foo'), False)
 
-    def test_get_path_raw(self):
-        self.assertEqual(get_path_raw('contest', 'task', 'user'),
-                         os.path.join(settings.SUBMIT_PATH, 'submits', 'user', 'task'))
+    def test_get_path(self):
+        contest = self.task.round.semester.competition.name
+        tester_user_id = '%s-%s' % (contest, self.user.id)
+        tester_task_id = '%s-%s' % (contest, self.task.id)
+        self.assertEqual(get_path(self.task, self.user),
+                         os.path.join(settings.SUBMIT_PATH, 'submits', tester_user_id, tester_task_id))
 
     def test_update_submit_ok(self):
         submit = Submit.objects.create(
