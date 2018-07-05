@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # Common settings for trojsten.
-import json
-import os
 import sys
 
+import json
+import os
 from django.contrib.messages import constants as messages
 from django.http import UnreadablePostError
 from django.utils.translation import ugettext_lazy as _
 
 import trojsten.special.installed_apps
+from trojsten.submit import judge_client
 from . import site_config
 
 
@@ -506,6 +507,8 @@ PROTOCOL_FILE_EXTENSION = env('TROJSTENWEB_PROTOCOL_FILE_EXTENSION', '.protokol'
 TESTER_URL = env('TROJSTENWEB_TESTER_URL', 'experiment')
 TESTER_PORT = int(env('TROJSTENWEB_TESTER_PORT', '12347'))
 TESTER_WEB_IDENTIFIER = env('TROJSTENWEB_TESTER_WEB_IDENTIFIER', 'KSP')
+JUDGE_CLIENT = judge_client.JudgeClient(TESTER_WEB_IDENTIFIER, TESTER_URL, TESTER_PORT)
+
 
 # Rules settings
 COMPETITION_RULES = {

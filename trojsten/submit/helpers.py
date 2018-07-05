@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
-import os
-import random
-import socket
-import xml.etree.ElementTree as ET
-from decimal import Decimal
 from time import time
 
+import os
+import xml.etree.ElementTree as ET
+from decimal import Decimal
 from django.conf import settings
 from django.utils.encoding import smart_bytes
 from os import path
 from unidecode import unidecode
 
 from . import constants
+
+judge_client = settings.JUDGE_CLIENT
 
 
 def write_chunks_to_file(filepath, chunks):
@@ -85,22 +85,10 @@ def get_description_file_path(file, user, task):
     ))
 
 
-def post_submit(raw, data):
-    """Pošle RAW na otestovanie"""
-    if settings.SUBMIT_DEBUG:
-        print("Submit RAW: ")
-        print(raw)
-        print(data)
-    else:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((settings.TESTER_URL, settings.TESTER_PORT))
-        sock.sendall(smart_bytes(raw))
-        sock.sendall(smart_bytes(data))
-        sock.close()
+def process_submit(f, task, language, user):
+    """Načíta všetko potrebné z databázy a spracuje submit"""
+    contest_id = task.round.semester.competition.name
 
-
-def process_submit_raw(f, contest_id, task_id, language, user_id):
-    """Spracuje submit bez dotknutia databázy"""
     # Determine language from filename if language not entered
     if language == '.':
         language = get_lang_from_filename(f.name)
@@ -108,46 +96,20 @@ def process_submit_raw(f, contest_id, task_id, language, user_id):
             return False
 
     language = language.strip('.')
+    data = smart_bytes(f.read())
+    user_id = "%s-%d" % (contest_id, user.id)
+    task_id = "%s-%d" % (contest_id, task.id)
 
-    # Generate submit ID
-    # Submit ID is <timestamp>-##### where ##### are 5 random digits
-    timestamp = int(time())
-    submit_id = "%d-%05d" % (timestamp, random.randint(0, 99999))
-
-    # Prepare submit parameters (not entirely sure about this yet).
-    user_id = "%s-%d" % (contest_id, user_id)
-    task_id = "%s-%d" % (contest_id, task_id)
-    data = f.read()
+    submit_id = judge_client.submit(user_id, task_id, data, language)
 
     # Determine local directory to store RAW file into
-    path = get_path_raw(contest_id, task_id, user_id)
-
-    priority = 0
-
-    # Prepare RAW header from submit parameters
-    raw = "submit1.3\n%s\n%s\n%s\n%s\n%s\n%s\nmagic_footer\n" % (
-        settings.TESTER_WEB_IDENTIFIER,
-        submit_id,
-        user_id,
-        task_id,
-        language,
-        priority,
-    )
+    submission_directory = get_path_raw(contest_id, task_id, user_id)
 
     # Write RAW to local file
-    write_chunks_to_file(os.path.join(path, submit_id + constants.SUBMIT_RAW_FILE_EXTENSION), [raw, data])
-
-    # Send RAW for testing (uncomment when deploying)
-    post_submit(raw, data)
+    write_chunks_to_file(os.path.join(submission_directory, submit_id + constants.SUBMIT_RAW_FILE_EXTENSION), [raw, data])
 
     # Return submit ID
     return submit_id
-
-
-def process_submit(f, task, language, user):
-    """Načíta všetko potrebné z databázy a spracuje submit"""
-    contest_id = task.round.semester.competition.name
-    return process_submit_raw(f, contest_id, task.id, language, user.id)
 
 
 def parse_result_and_points_from_protocol(submit):
