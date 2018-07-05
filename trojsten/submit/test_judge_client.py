@@ -44,4 +44,3 @@ class SubmitHelpersTests(TestCase):
         self.assertEqual(request_parts[7], b'magic_footer')
         # Submission
         self.assertEqual(request_parts[8], b'test_submission')
-
