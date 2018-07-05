@@ -13,35 +13,16 @@ from . import constants
 judge_client = settings.JUDGE_CLIENT
 
 
-def write_chunks_to_file(filepath, chunks):
-    try:
-        os.makedirs(os.path.dirname(filepath))
-    except:  # noqa: E722 @FIXME
-        pass
-    with open(filepath, 'wb+') as destination:
+def write_chunks_to_file(target_path, chunks):
+    os.makedirs(os.path.dirname(target_path))
+    with open(target_path, 'wb+') as destination:
         for chunk in chunks:
             destination.write(smart_bytes(chunk))
 
 
 def get_lang_from_filename(filename):
     ext = os.path.splitext(filename)[1].lower()
-    extmapping = {
-        ".cpp": ".cc",
-        ".cc": ".cc",
-        ".pp": ".pas",
-        ".pas": ".pas",
-        ".dpr": ".pas",
-        ".c": ".c",
-        ".py": ".py",
-        ".py3": ".py",
-        ".hs": ".hs",
-        ".cs": ".cs",
-        ".java": ".java",
-        ".zip": ".zip"}
-
-    if ext not in extmapping:
-        return False
-    return extmapping[ext]
+    return constants.EXT_MAPPING.get(ext, None)
 
 
 def get_path(task, user):
@@ -88,24 +69,26 @@ def process_submit(f, task, language, user):
         if not language:
             return False
 
+    # TODO: Strip '.' before
     language = language.strip('.')
-    data = smart_bytes(f.read())
-    user_id = "%s-%d" % (contest_id, user.id)
-    task_id = "%s-%d" % (contest_id, task.id)
 
     submit_id = _generate_submit_id()
+    user_id = "%s-%d" % (contest_id, user.id)
+    task_id = "%s-%d" % (contest_id, task.id)
+    data = smart_bytes(f.read())
+
     judge_client.submit(submit_id, user_id, task_id, data, language)
 
     return submit_id
 
 
 def parse_result_and_points_from_protocol(submit):
-    """
-    Z XML protokolu získa výsledok testovania a počet bodov,
-    ktoré sa neskôr môžu uložiť do databázy.
+    """Parses result and points from XML protocol.
 
-    Ak protokol ešte neexistuje, vráti None, None.
+    :param submit: submit model instance.
+    :return: subimt_result, points or None, None if protocol does not exist.
     """
+
     protocol_path = submit.protocol_path
     if not os.path.exists(protocol_path):
         return None, None
@@ -115,14 +98,14 @@ def parse_result_and_points_from_protocol(submit):
 
 
 def update_submit(submit):
-    """Zistí, či už je dotestované, ak hej, tak updatne databázu.
+    """Updates submit in DB if testing has completed.
 
-    Ak je dotestované, tak do zložky so submitmi testovač nahral súbor
-    s rovnakým názvom ako má submit len s príponou .protokol
-    (nastaviteľné v settings/common.py)
+    Check if protocol is available and if it is, updates the submit.
 
-    Tento súbor obsahuje výstup testovača (v XML) a treba ho parse-núť
+    :param submit: subimit model instance.
+    :return: None
     """
+
     result, points = parse_result_and_points_from_protocol(submit)
     if result is not None:
         submit.tester_response = result
