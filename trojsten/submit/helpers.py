@@ -76,7 +76,7 @@ def process_submit(f, task, language, user):
     submit_id = _generate_submit_id()
     user_id = "%s-%d" % (contest_id, user.id)
     task_id = "%s-%d" % (contest_id, task.id)
-    data = smart_bytes(f.read())
+    data = f.read()
 
     judge_client.submit(submit_id, user_id, task_id, data, language)
 

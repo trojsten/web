@@ -80,22 +80,22 @@ class JudgeClient(object):
 
     def _create_header(self, submit_id, user_id, task_id, language):
         """Creates a raw header from submit parameters"""
-        return smart_bytes('submit1.3\n%s\n%s\n%s\n%s\n%s\n%s\nmagic_footer\n' % (
+        return 'submit1.3\n%s\n%s\n%s\n%s\n%s\n%s\nmagic_footer\n' % (
             self.tester_id,
             submit_id,
             user_id,
             task_id,
             language,
             0,  # priority
-        ))
+        )
 
     def _send_data_to_server(self, header, submission_file_content):
         """Sends submission to the judge system."""
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             sock.connect((self.tester_url, self.tester_port))
-            sock.sendall(header)
-            sock.sendall(submission_file_content)
+            sock.sendall(smart_bytes(header))
+            sock.sendall(smart_bytes(submission_file_content))
         except JudgeConnectionError:
             raise JudgeConnectionError(
                 'Failed to connect to judge system (%s:%s)' % (self.tester_url, self.tester_port))

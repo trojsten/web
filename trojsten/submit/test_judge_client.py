@@ -32,7 +32,7 @@ class SubmitHelpersTests(TestCase):
         self.judge_client.submit('test_id', 'test_user', 'test_task', 'test_submission', 'py')
         server_thread.join()
 
-        request_parts = self.received.split('\n')
+        request_parts = self.received.split(b'\n')
         # Header
         self.assertEqual(request_parts[0], b'submit1.3')
         self.assertEqual(request_parts[1], b'TEST')
