@@ -2,9 +2,11 @@
 import socket
 from decimal import Decimal
 from django.utils.encoding import smart_bytes
-from xlrd.xlsx import ET
+from xml.etree import ElementTree
 
 from trojsten.submit import constants
+
+_MAX_PROTOCOL_ERROR_SIZE = 2000
 
 
 class JudgeClient(object):
@@ -48,9 +50,11 @@ class JudgeClient(object):
         :return: testing_result, number_of_points
         """
         try:
-            tree = ET.parse(protocol_content)
+            tree = ElementTree.parse(protocol_content)
         except SyntaxError:
-            raise ProtocolCorruptedError('Error while parsing protocol.\n%s' % protocol_content)
+            protocol_content.seek(0)
+            raise ProtocolCorruptedError(
+                'Error while parsing protocol.\n%s' % protocol_content.read(_MAX_PROTOCOL_ERROR_SIZE))
 
         compile_log = tree.find("compileLog")
         if compile_log is not None:
@@ -68,7 +72,8 @@ class JudgeClient(object):
         try:
             score = Decimal(tree.find("runLog/score").text)
         except (ValueError, TypeError):
-            raise ProtocolFormatError("Invalid score.\n%s" % protocol_content)
+            protocol_content.seek(0)
+            raise ProtocolFormatError("Invalid score.\n%s" % protocol_content.read(_MAX_PROTOCOL_ERROR_SIZE))
         points = (max_points * score) / Decimal(100)
 
         return result, points
@@ -92,7 +97,8 @@ class JudgeClient(object):
             sock.sendall(header)
             sock.sendall(submission_file_content)
         except JudgeConnectionError:
-            raise JudgeConnectionError('Failed to connect to judge system (%s:%s)' % (self.tester_url, self.tester_port))
+            raise JudgeConnectionError(
+                'Failed to connect to judge system (%s:%s)' % (self.tester_url, self.tester_port))
         finally:
             sock.close()
 

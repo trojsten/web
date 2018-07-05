@@ -8,6 +8,7 @@ from django.utils.encoding import smart_bytes
 from os import path
 from unidecode import unidecode
 
+from trojsten.submit.judge_client import ProtocolCorruptedError
 from . import constants
 
 judge_client = settings.JUDGE_CLIENT
@@ -20,7 +21,7 @@ def write_chunks_to_file(target_path, chunks):
             destination.write(smart_bytes(chunk))
 
 
-def get_lang_from_filename(filename):
+def _get_lang_from_filename(filename):
     ext = os.path.splitext(filename)[1].lower()
     return constants.EXT_MAPPING.get(ext, None)
 
@@ -65,7 +66,7 @@ def process_submit(f, task, language, user):
 
     # Determine language from filename if language not entered
     if language == '.':
-        language = get_lang_from_filename(f.name)
+        language = _get_lang_from_filename(f.name)
         if not language:
             return False
 
@@ -94,7 +95,10 @@ def parse_result_and_points_from_protocol(submit):
         return None, None
 
     with open(protocol_path) as protocol:
-        return judge_client.parse_protocol(protocol, max_point=submit.task.source_points)
+        try:
+            return judge_client.parse_protocol(protocol, max_points=submit.task.source_points)
+        except ProtocolCorruptedError:
+            return constants.SUBMIT_RESPONSE_PROTOCOL_CORRUPTED, 0
 
 
 def update_submit(submit):

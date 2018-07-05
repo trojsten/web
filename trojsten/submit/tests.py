@@ -22,7 +22,7 @@ from trojsten.contests.models import Competition, Round, Semester, Task, TaskPeo
 from trojsten.people.models import User
 from trojsten.submit import constants
 from trojsten.submit.forms import SubmitAdminForm
-from trojsten.submit.helpers import (get_lang_from_filename,
+from trojsten.submit.helpers import (_get_lang_from_filename,
                                      write_chunks_to_file, get_description_file_path,
                                      update_submit, get_path)
 from trojsten.submit.views import send_notification_email
@@ -483,8 +483,8 @@ class SubmitHelpersTests(TestCase):
             self.assertEqual(data, b'helloworld')
 
     def test_get_lang_from_filename(self):
-        self.assertEqual(get_lang_from_filename('file.cpp'), '.cc')
-        self.assertEqual(get_lang_from_filename('file.foo'), False)
+        self.assertEqual(_get_lang_from_filename('file.cpp'), '.cc')
+        self.assertEqual(_get_lang_from_filename('file.foo'), None)
 
     def test_get_path(self):
         contest = self.task.round.semester.competition.name
