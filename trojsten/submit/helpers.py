@@ -96,8 +96,9 @@ def parse_result_and_points_from_protocol(submit):
 
     with open(protocol_path) as protocol:
         try:
-            return judge_client.parse_protocol(protocol, max_points=submit.task.source_points)
-        except ProtocolCorruptedError:
+            # TODO: limit protocol size so we don't go OOM in case of malicious protocol.
+            return judge_client.parse_protocol(protocol.read(), max_points=submit.task.source_points)
+        except ProtocolCorruptedError as e:
             return constants.SUBMIT_RESPONSE_PROTOCOL_CORRUPTED, 0
 
 

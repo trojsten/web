@@ -6,8 +6,6 @@ from xml.etree import ElementTree
 
 from trojsten.submit import constants
 
-_MAX_PROTOCOL_ERROR_SIZE = 2000
-
 
 class JudgeClient(object):
 
@@ -50,11 +48,10 @@ class JudgeClient(object):
         :return: testing_result, number_of_points
         """
         try:
-            tree = ElementTree.parse(protocol_content)
+            tree = ElementTree.fromstring(protocol_content)
         except SyntaxError:
-            protocol_content.seek(0)
             raise ProtocolCorruptedError(
-                'Error while parsing protocol.\n%s' % protocol_content.read(_MAX_PROTOCOL_ERROR_SIZE))
+                'Error while parsing protocol.', protocol_content)
 
         compile_log = tree.find("compileLog")
         if compile_log is not None:
@@ -72,8 +69,7 @@ class JudgeClient(object):
         try:
             score = Decimal(tree.find("runLog/score").text)
         except (ValueError, TypeError):
-            protocol_content.seek(0)
-            raise ProtocolFormatError("Invalid score.\n%s" % protocol_content.read(_MAX_PROTOCOL_ERROR_SIZE))
+            raise ProtocolFormatError("Invalid score.", protocol_content)
         points = (max_points * score) / Decimal(100)
 
         return result, points
@@ -114,11 +110,20 @@ class DebugJudgeClient(JudgeClient):
 
 
 class JudgeConnectionError(IOError):
-    pass
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return '%s: %s' % (self.__class__.__name__, repr(self.message))
 
 
 class ProtocolError(ValueError):
-    pass
+    def __init__(self, message, protocol):
+        self.message = message
+        self.protocol = protocol
+
+    def __str__(self):
+        return '%s: %s\n%s\n' % (self.__class__.__name__, repr(self.message), self.protocol)
 
 
 class ProtocolCorruptedError(ProtocolError):
