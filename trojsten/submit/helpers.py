@@ -93,31 +93,10 @@ def parse_result_and_points_from_protocol(submit):
     :param submit: submit model instance.
     :return: subimt_result, points or None, None if protocol does not exist.
     """
-
-    protocol_path = submit.protocol_path
-    if not os.path.exists(protocol_path):
+    if submit.protocol is None:
         return None, None
-
-    with open(protocol_path) as protocol:
-        try:
-            # TODO: limit protocol size so we don't go OOM in case of malicious protocol.
-            return judge_client.parse_protocol(protocol.read(), max_points=submit.task.source_points)
-        except ProtocolCorruptedError as e:
-            return constants.SUBMIT_RESPONSE_PROTOCOL_CORRUPTED, 0
-
-
-def update_submit(submit):
-    """Updates submit in DB if testing has completed.
-
-    Check if protocol is available and if it is, updates the submit.
-
-    :param submit: subimit model instance.
-    :return: None
-    """
-
-    result, points = parse_result_and_points_from_protocol(submit)
-    if result is not None:
-        submit.tester_response = result
-        submit.points = points
-        submit.testing_status = constants.SUBMIT_STATUS_FINISHED
-        submit.save()
+    try:
+        # TODO: limit protocol size so we don't go OOM in case of malicious protocol.
+        return judge_client.parse_protocol(submit.protocol, max_points=submit.task.source_points)
+    except ProtocolCorruptedError:
+        return constants.SUBMIT_RESPONSE_PROTOCOL_CORRUPTED, 0

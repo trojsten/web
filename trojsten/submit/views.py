@@ -2,38 +2,42 @@
 # Create your views here.
 
 import json
+import logging
 import os
-import xml.etree.ElementTree as ET
-
 import six
+import xml.etree.ElementTree as ET
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
 from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden)
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
-from django.core.mail import send_mail
-from django.conf import settings
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response as APIResponse
 from sendfile import sendfile
 from unidecode import unidecode
 
+from trojsten.contests import constants as contest_consts
 from trojsten.contests.models import Competition, Round, Task
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
                                    TestableZipSubmitForm)
-from trojsten.submit.helpers import (get_path, process_submit, update_submit,
-                                     write_chunks_to_file, get_description_file_path)
+from trojsten.submit.helpers import (get_path, process_submit,
+                                     write_chunks_to_file, get_description_file_path,
+                                     parse_result_and_points_from_protocol)
 from trojsten.submit.templatetags.submit_parts import submitclass
-from trojsten.contests import constants as contest_consts
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
 from .serializers import ExternalSubmitSerializer
+
+logger = logging.getLogger(__name__)
 
 
 def protocol_data(protocol_path, force_show_details=False):
@@ -276,10 +280,29 @@ def all_submits_source_page(request):
     return all_submits_page(request, constants.SUBMIT_TYPE_SOURCE)
 
 
-def receive_protocol(request, protocol_id):
-    submit = get_object_or_404(Submit, protocol_id=protocol_id)
-    update_submit(submit)
-    return HttpResponse('')
+@api_view(['POST'])
+@authentication_classes((SessionAuthentication, TokenAuthentication))
+def upload_protocol(request):
+    if not request.user.has_perm('old_submit.change_submit'):
+        raise PermissionDenied()
+    protocol_id = request.POST.get('submit_id')
+    protocol_content = request.POST.get('protocol')
+    if not protocol_id or not protocol_content:
+        logger.warning('Missing submit_id or protocol.\n%s' % request.POST)
+        return HttpResponse()
+    try:
+        submit = Submit.objects.get(protocol_id=protocol_id)
+    except Submit.DoesNotExist:
+        logger.warning('Invalid protocol id: %s' % protocol_id)
+        return HttpResponse()
+    submit.protocol = protocol_content
+    result, points = parse_result_and_points_from_protocol(submit)
+    if result is not None:
+        submit.tester_response = result
+        submit.points = points
+        submit.testing_status = constants.SUBMIT_STATUS_FINISHED
+    submit.save()
+    return HttpResponse()
 
 
 #  @login_required
@@ -290,9 +313,6 @@ def poll_submit_info(request, submit_id):
             task__round__semester__competition__organizers_group__user__pk=request.user.pk).exists():
         # You shouldn't see other user's submits if you are not an organizer of the competition
         raise PermissionDenied()
-
-    if not submit.tested:  # try to find and parse protocol with each poll
-        update_submit(submit)
 
     return HttpResponse(json.dumps({
         'tested': submit.tested,
@@ -463,5 +483,4 @@ def external_submit(request):
         testing_status=constants.SUBMIT_RESPONSE_OK,
     )
     submit.save()
-
     return APIResponse()
