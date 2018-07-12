@@ -1,78 +1,85 @@
 (function($)
 {
-    $(function()
-    {
-        $(document).ready(function(){
 
-            $("#id_participants_data").on({
-                change: function () {
-                    var f = document.getElementById("id_participants_data").files[0];
+    let fields = JSON.parse(template_fields.replace(/&quot;/g,'"'));
 
-                    var fileReader = new FileReader();
-                    fileReader.onload = function(fileLoadedEvent){
-                        var textFromFileLoaded = fileLoadedEvent.target.result;
-                        window.editor.setValue(textFromFileLoaded);
-                    };
-                    fileReader.readAsText(f, "UTF-8");
-                }
-            });
+    let memory_dict = {};
 
-            refresh_form();
+    function refresh_form() {
+        var current_template = document.getElementById("id_template").value;
+        var current_fields = fields[current_template];
+
+
+        $('div', $('#dummy_form')).each(function () {
+            memory_dict[this.children[1].name] = this.children[1].value;
         });
 
-        let fields = JSON.parse(template_fields.replace(/&quot;/g,'"'));
+        var container = document.getElementById("dummy_form");
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
 
-        function refresh_form() {
-            var current_fields = fields[document.getElementById("id_template").value];
+        $.each(current_fields, function (index, field_name) {
 
-            var container = document.getElementById("dummy_form");
-            while (container.firstChild) {
-                container.removeChild(container.firstChild);
+            var input = document.createElement("input");
+            input.setAttribute("type", "text");
+            input.setAttribute('id', 'id_' + field_name);
+            input.setAttribute("name", field_name);
+            var value = field_name in memory_dict ? memory_dict[field_name] : "";
+            input.setAttribute("value", value);
+
+            var label = document.createElement('label');
+            label.setAttribute('for', 'id_' + field_name);
+            label.innerHTML = field_name;
+            label.setAttribute("style","width:100px");
+
+            var input_container = document.createElement("div");
+            input_container.className = "form-group";
+            input_container.appendChild(label);
+            input_container.appendChild(input);
+            input_container.setAttribute('style', 'margin-top:5px');
+
+            document.getElementById("dummy_form").appendChild(input_container);
+        });
+
+        $.get("./" + current_template + '/sources/', function( data ) {
+          $( "#sources_container" ).html( data );
+        });
+
+        document.getElementById("preview_image").src = "./" + current_template + '/preview/';
+        document.getElementById("preview_image").setAttribute('alt', "./" + current_template + '/preview/')
+    }
+
+    function serialize_single_form(){
+        let d = {};
+        document.getElementById("dummy_form").childNodes.forEach(function(item){
+            d[item.childNodes[1].name] = item.childNodes[1].value;
+        });
+        return JSON.stringify([d]);
+    }
+
+    window.set_editor_content = function(content){
+        window.editor.setValue(content);
+    };
+
+    $(document).ready(function(){
+
+        $("#form_submit_single").on({
+            click: function () {
+                document.getElementById("id_participants_data").value = serialize_single_form()
             }
-
-            $.each(current_fields, function (index, field_name) {
-                var input = document.createElement("input");
-                input.setAttribute("type", "text");
-                input.setAttribute('id', 'id_' + field_name);
-                input.setAttribute("name", field_name);
-                input.setAttribute("value", "");
-                var label = document.createElement('label');
-                label.setAttribute('for', 'id_' + field_name);
-                label.innerHTML = field_name;
-                label.setAttribute("style","width:100px");
-                var input_container = document.createElement("div");
-                input_container.className = "form-group";
-                input_container.appendChild(label);
-                input_container.appendChild(input);
-                input_container.setAttribute('style', 'margin-top:5px');
-                document.getElementById("dummy_form").appendChild(input_container);
-            });
-
-            document.getElementById("preview_link").setAttribute('href', "./" + document.getElementById("id_template").value);
-            document.getElementById("preview_image").src = "./" + document.getElementById("id_template").value;
-            document.getElementById("preview_image").setAttribute('alt', "./" + document.getElementById("id_template").value)
-        }
-
-        function serialize_data(){
-            let d = {};
-            document.getElementById("dummy_form").childNodes.forEach(function(item){
-                d[item.childNodes[1].name] = item.childNodes[1].value;
-            });
-            return JSON.stringify([d]);
-        }
-
-        $("#form").on({
-            submit: function(){
-                document.getElementById("id_single_participant_data").value = serialize_data();
+        });
+        $("#form_submit_multiple").on({
+            click: function () {
+                document.getElementById("id_participants_data").value = window.editor.getValue();
             }
         });
 
         $("#id_template").on({
             change: function () {
                 refresh_form();
-                serialize_data();
             }
         });
-
+        refresh_form();
     });
 })(jQuery);

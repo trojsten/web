@@ -4,7 +4,10 @@ import subprocess
 from datetime import datetime
 from tempfile import TemporaryFile, NamedTemporaryFile
 import zipfile
+import csv
+import json
 import os
+import io
 import re
 
 from .constants import FIELD_REPLACE_PATTERN
@@ -88,3 +91,25 @@ def render_png(svg):
     png = subprocess.check_output(['rsvg-convert', '-f', 'png', f.name])
     f.close()
     return png
+
+
+def parse_participants(pfile):
+    if pfile is None:
+        return None, "File is empty"
+    extension = os.path.splitext(pfile.name)[-1].lower()
+    if extension == '.json':
+        data = pfile.read()
+        try:
+            return json.loads(data), ""
+        except json.JSONDecodeError:
+            return None, "Unsupported file format"
+
+    elif extension == '.csv':
+        f = io.StringIO(pfile.read().decode())
+        reader = csv.DictReader(f, dialect='excel-tab')
+        try:
+            return [dict(row) for row in reader], ""
+        except csv.Error:
+            return None, "Unsupported file format"
+    else:
+        return None, "Unsupported extension"

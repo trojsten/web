@@ -6,21 +6,43 @@ from tempfile import TemporaryFile
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 
 from trojsten.diplomas.api import DiplomaGenerator, render_png
 from trojsten.diplomas.forms import DiplomaParametersForm
-from trojsten.diplomas.models import DiplomaTemplate
+from trojsten.diplomas.models import DiplomaTemplate, DiplomaDataSource
 
 from wiki.decorators import get_article
+from .sources import get_class
 
 
-@cache_page(60*15)
+@csrf_exempt
+def source_request(request, source_class):
+    user_data = get_class(source_class).handle_request(request)
+    return JsonResponse(user_data, safe=False)
+
+
+@login_required
+def diploma_sources(request, diploma_id):
+    diploma = DiplomaTemplate.objects.get(pk=diploma_id)
+    file_upload_source = DiplomaDataSource.objects.get(value='FileUpload')
+    sources = []
+    for source in [file_upload_source] + [x for x in diploma.sources.all()]:
+        src = source.source_class
+        sources.append({'html': src.render(),
+                        'name': source.name,
+                        'url': source.value
+                        })
+    return render(request, 'trojsten/diplomas/sources.html', {'sources': sources})
+
+
+#@cache_page(60*15)
 @login_required
 def diploma_preview(request, diploma_id):
-    diploma = DiplomaTemplate.objects.filter(pk=diploma_id).get()
+    diploma = DiplomaTemplate.objects.get(pk=diploma_id)
     if diploma:
         png = render_png(diploma.svg)
         return HttpResponse(png, content_type="image/png")
@@ -35,7 +57,7 @@ def view_diplomas(request, article, *args, **kwargs):
     editable_fields = {}
     svgs = {}
     for d in diploma_templates:
-        editable_fields[d.pk] = d.editable_fields
+        editable_fields[d.pk] = sorted(d.editable_fields)
         svgs[d.pk] = d.svg
 
     if request.method == 'POST':

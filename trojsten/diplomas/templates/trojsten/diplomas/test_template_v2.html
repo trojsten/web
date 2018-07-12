@@ -19,66 +19,85 @@
         {% csrf_token %}
         {{ form.media }}
 
-        <div class="row">
-            <div class="col-md-6">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#multiple">{% trans "Multiple diplomas" %}</a></li>
-                    <li><a data-toggle="tab" href="#single">{% trans "Single diploma"%}</a></li>
-                </ul>
+        {{ form.participants_data }}
 
-                <div class="form-group" style="margin-top: 5px">
-                    <label style="width: 100px">{{ form.template.label_tag }}</label>{{ form.template }}
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#multiple"><h4>{% trans "Multiple diplomas" %}</h4></a></li>
+            <li><a data-toggle="tab" href="#single"><h4>{% trans "Single diploma"%}</h4></a></li>
+        </ul>
+
+        <hr style="margin-bottom: 10px; margin-top: 10px">
+
+        <div class="form-group" style="margin-right: 10px; display: inline">
+            <label style="width: 100px">{{ form.template.label_tag }}</label>{{ form.template }}
+        </div>
+
+        <button style="display: inline" type="button" class="d-inline-block btn btn-info" data-toggle="modal" data-target="#myModal">Preview</button>
+
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
+                <div class="modal-body">
+                    <img id='preview_image' src="" class="img-responsive">
+                </div>
+            </div>
+          </div>
+        </div>
 
-                <div class="tab-content">
-                    <div id="single" class="tab-pane fade" >
-                        <h3>Editable fields</h3>
-                        <div id="dummy_form">
+        <hr style="margin-bottom: 10px; margin-top: 10px">
+
+        <div class="tab-content">
+
+            <div id="single" class="tab-pane fade" >
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div id="dummy_form"></div>
                         </div>
-
-                        {{ form.single_participant_data }}
-                    </div>
-
-                    <div id="multiple" class="tab-pane fade active in">
-                        <h4>Upload a file </h4>
-                        <div class="form-group">
-                            {{ form.participants_data }}
+                        <div class="col-md-4">
+                            <div style="text-align: center">
+                                <button class="btn btn-primary btn-lg" id='form_submit_single' type="submit">{% trans "Generate" %}</button>
+                            </div>
                         </div>
-
-                        <h4>Or enter data manually: </h4>
-                        <div class="form-group">
-                            {{ form.participants_data_input }}
-                        </div>
-
-                        <div class="form-group">
-                            <label>{{ form.join_pdf.label_tag }}</label>
-                            {{ form.join_pdf }}
-                        </div>
-
                     </div>
                 </div>
-
-                {{ form.non_field_errors }}
-                {{ form.source.errors }}
-                {{ form.source }}
-
             </div>
 
-            <div class="col-md-6" style="text-align: center">
-               <div class="thumbnail" style="width: 100%">
-                    <a id='preview_link' href="">
-                        <img id='preview_image' src="">
-                    </a>
+            <div id="multiple" class="tab-pane fade active in">
+
+                {{ form.editor }}
+
+                <div class="container-fluid" style="text-align: center">
+                    <h3 style="margin-bottom: 15px; margin-top: 15px">Source options</h3>
+                    <hr style="margin-bottom: 10px; margin-top: 10px">
+                    <div class="row" style="display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex;">
+                        <div class="col-md-10">
+                            <div id="sources_container" style="height: 100%;"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>{{ form.join_pdf.label_tag }}</label>
+                                {{ form.join_pdf }}
+                            </div>
+                           <div style="text-align: center">
+                                <button class="btn btn-primary btn-default" id='form_submit_multiple' type="submit">{% trans "Generate" %}</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <h4>Template preview</h4>
+
             </div>
-
-
         </div>
-        <div style="text-align: center">
-            <button class="btn btn-primary btn-block" id='form_submit' type="submit">{% trans "Generate" %}</button>
-        </div>
+
+        {{ form.non_field_errors }}
+        {{ form.source.errors }}
+        {{ form.source }}
     </form>
+
+    <hr style="margin-bottom: 10px; margin-top: 10px">
 
     <br><br>
 

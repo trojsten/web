@@ -537,7 +537,7 @@ DIPLOMA_PARTICIPANTS_ALLOWED_EXTENSIONS = ['.csv', '.json']
 
 EDITOR_CONFIG = {
     'mode': 'python',
-    'lineWrapping': True,
+    'lineWrapping': False,
     'lineNumbers': True,
     'tabSize': 4
 }
