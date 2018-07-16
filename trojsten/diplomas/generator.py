@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 import subprocess
 from datetime import datetime
-from tempfile import TemporaryFile, NamedTemporaryFile
-import zipfile
-import csv
-import json
+from tempfile import NamedTemporaryFile
 import os
-import io
 import re
 
 from .constants import FIELD_REPLACE_PATTERN
@@ -17,10 +14,6 @@ class DiplomaGenerator:
 
     def __init__(self, static_path=None):
         self.svg_path = static_path or os.path.join(os.path.dirname(__file__), 'static/diplomas/')
-
-    def create_sample(self):
-        participants = [{'name': 'Ferko Mrkvička', 'round': '2. Letná časť', 'year': 2018, 'rank': 47}]
-        return self.create_diplomas(participants, separate=True)[0]
 
     def create_diplomas(self,
                         participants,
@@ -45,6 +38,12 @@ class DiplomaGenerator:
 
     def render_pdfs(self, svgs, separate=False, pdf_name='diploma_joined.pdf', name_prefix=""):
 
+        def make_into_file(content):
+            tmp = NamedTemporaryFile(mode='w')
+            tmp.write(content)
+            tmp.seek(0)
+            return tmp
+
         if not isinstance(svgs, list):
             svgs = [svgs]
 
@@ -65,51 +64,11 @@ class DiplomaGenerator:
 
         return pdfs
 
-    def create_archive_file(self, pdfs):
-        if not isinstance(pdfs, list):
-            pdfs = [pdfs]
-
-        with TemporaryFile() as tmp:
-            with zipfile.ZipFile(tmp, 'w', zipfile.ZIP_DEFLATED) as archive:
-                for name, content in pdfs:
-                    archive.writestr(name, content)
-
-            tmp.seek(0)
-            content = tmp.read()
-        return content
-
-
-def make_into_file(content):
-    tmp = NamedTemporaryFile(mode='w')
-    tmp.write(content)
-    tmp.seek(0)
-    return tmp
-
-
-def render_png(svg):
-    f = make_into_file(svg)
-    png = subprocess.check_output(['rsvg-convert', '-f', 'png', f.name])
-    f.close()
-    return png
-
-
-def parse_participants(pfile):
-    if pfile is None:
-        return None, "File is empty"
-    extension = os.path.splitext(pfile.name)[-1].lower()
-    if extension == '.json':
-        data = pfile.read()
-        try:
-            return json.loads(data), ""
-        except json.JSONDecodeError:
-            return None, "Unsupported file format"
-
-    elif extension == '.csv':
-        f = io.StringIO(pfile.read().decode())
-        reader = csv.DictReader(f, dialect='excel-tab')
-        try:
-            return [dict(row) for row in reader], ""
-        except csv.Error:
-            return None, "Unsupported file format"
-    else:
-        return None, "Unsupported extension"
+    @staticmethod
+    def render_png(svg):
+        f = NamedTemporaryFile(mode='w')
+        f.write(svg)
+        f.seek(0)
+        png = subprocess.check_output(['rsvg-convert', '-f', 'png', f.name])
+        f.close()
+        return png

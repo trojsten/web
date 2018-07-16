@@ -1,58 +1,73 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import zipfile
 import json
 from tempfile import TemporaryFile
+from functools import wraps
 
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
-from django.views.decorators.cache import cache_page
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 
-from trojsten.diplomas.api import DiplomaGenerator, render_png
+from trojsten.diplomas.generator import DiplomaGenerator
 from trojsten.diplomas.forms import DiplomaParametersForm
-from trojsten.diplomas.models import DiplomaTemplate, DiplomaDataSource
+from trojsten.diplomas.models import DiplomaTemplate
 
 from wiki.decorators import get_article
-from .sources import get_class
+from .sources import SOURCE_CLASSES
 
 
+def staff_only(f):
+    @wraps(f)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_staff:
+            return HttpResponseForbidden("You are not authorized to access this section")
+        return f(request, *args, **kwargs)
+    return wrapper
+
+
+@staff_only
 @csrf_exempt
 def source_request(request, source_class):
-    user_data = get_class(source_class).handle_request(request)
+    source_instance = SOURCE_CLASSES[source_class]()
+    user_data = source_instance.handle_request(request)
     return JsonResponse(user_data, safe=False)
 
 
+@staff_only
 @login_required
 def diploma_sources(request, diploma_id):
     diploma = DiplomaTemplate.objects.get(pk=diploma_id)
-    file_upload_source = DiplomaDataSource.objects.get(value='FileUpload')
     sources = []
-    for source in [file_upload_source] + [x for x in diploma.sources.all()]:
-        src = source.source_class
+    for source in diploma.sources.all():
+        src = source.source_class()
         sources.append({'html': src.render(),
-                        'name': source.name,
-                        'url': source.value
+                        'name': src.name,
+                        'verbose_name': source.name
                         })
     return render(request, 'trojsten/diplomas/sources.html', {'sources': sources})
 
 
-#@cache_page(60*15)
+@staff_only
 @login_required
 def diploma_preview(request, diploma_id):
     diploma = DiplomaTemplate.objects.get(pk=diploma_id)
     if diploma:
-        png = render_png(diploma.svg)
+        png = DiplomaGenerator.render_png(diploma.svg)
         return HttpResponse(png, content_type="image/png")
     else:
         return HttpResponseNotFound()
 
 
+@staff_only
 @get_article
 @login_required
 def view_diplomas(request, article, *args, **kwargs):
+
     diploma_templates = DiplomaTemplate.objects.get_queryset().order_by('name')
     editable_fields = {}
     svgs = {}
@@ -65,6 +80,7 @@ def view_diplomas(request, article, *args, **kwargs):
         if form.is_valid():
 
             participants_data = form.cleaned_data['participants_data']
+            print(form.cleaned_data['editor'])
             separate = not form.cleaned_data['join_pdf']
             template_pk = form.cleaned_data['template']
             svg = diploma_templates.filter(pk=template_pk).get().svg
@@ -107,5 +123,5 @@ def view_diplomas(request, article, *args, **kwargs):
     }
 
     return render(
-        request, 'trojsten/diplomas/test_template_v2.html', context
+        request, 'trojsten/diplomas/view_diplomas.html', context
     )

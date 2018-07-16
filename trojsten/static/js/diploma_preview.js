@@ -9,9 +9,8 @@
         var current_template = document.getElementById("id_template").value;
         var current_fields = fields[current_template];
 
-
-        $('div', $('#dummy_form')).each(function () {
-            memory_dict[this.children[1].name] = this.children[1].value;
+        $('#dummy_form').find('input').each(function(i, component) {
+            memory_dict[component.name] = component.value;
         });
 
         var container = document.getElementById("dummy_form");
@@ -21,25 +20,29 @@
 
         $.each(current_fields, function (index, field_name) {
 
+            var label = document.createElement('label');
+            label.setAttribute('for', 'id_' + field_name);
+            label.innerHTML = field_name;
+            label.setAttribute('class', 'control-label col-sm-3 col-lg-3');
+
             var input = document.createElement("input");
             input.setAttribute("type", "text");
             input.setAttribute('id', 'id_' + field_name);
             input.setAttribute("name", field_name);
             var value = field_name in memory_dict ? memory_dict[field_name] : "";
             input.setAttribute("value", value);
-
-            var label = document.createElement('label');
-            label.setAttribute('for', 'id_' + field_name);
-            label.innerHTML = field_name;
-            label.setAttribute("style","width:100px");
+            input.className = "form-control";
 
             var input_container = document.createElement("div");
-            input_container.className = "form-group";
-            input_container.appendChild(label);
+            input_container.setAttribute('class', 'col-sm-9 col-lg-9');
             input_container.appendChild(input);
-            input_container.setAttribute('style', 'margin-top:5px');
 
-            document.getElementById("dummy_form").appendChild(input_container);
+            var container = document.createElement("div");
+            container.className = "form-group";
+            container.appendChild(label);
+            container.appendChild(input_container);
+
+            document.getElementById("dummy_form").appendChild(container);
         });
 
         $.get("./" + current_template + '/sources/', function( data ) {

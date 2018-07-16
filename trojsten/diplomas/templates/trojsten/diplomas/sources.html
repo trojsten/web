@@ -2,24 +2,38 @@
 {% load i18n %}
 {% load utils %}
 
-<div class="col-md-4" style="border-right: 1px solid #eee; height: 100%">
-    <ul class="nav nav-pills nav-stacked">
-        {% for source in sources %}
-            <li {% if forloop.counter == 1 %} class="active"{% endif %}>
-                <a href="#{{ source.url }}"  data-toggle="pill" >
-                    {{ source.name }}
-                </a>
-            </li>
-    {% endfor %}
-    </ul>
-</div>
 
-<div class="col-md-8" style="border-right: 1px solid #eee; height: 100%">
-    <div class="tab-content">
-        {% for source in sources %}
-            <div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="{{ source.url }}"  style="margin:0px; padding: 0px">
-                {{ source.html }}
-            </div>
-        {% endfor %}
+{% if sources %}
+    <div class="row">
+        <h4 style="margin-bottom: 15px; margin-top: 10px">External input options</h4>
+        <hr>
     </div>
-</div>
+
+    <div class="row"  style="
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;">
+       <div class="col-md-4" style="border-right: 1px solid #eee;">
+            <ul class="nav nav-pills nav-stacked">
+                {% for source in sources %}
+                    <li {% if forloop.counter == 1 %} class="active"{% endif %}>
+                        <a href="#{{ source.name }}"  data-toggle="pill" >
+                            {{ source.verbose_name }}
+                        </a>
+                    </li>
+            {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-md-8">
+            <div class="tab-content">
+                {% for source in sources %}
+                    <div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="{{ source.name }}"  style="margin:0px; padding: 0px">
+                        {{ source.html }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}

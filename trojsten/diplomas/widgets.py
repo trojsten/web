@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django import forms
 import json
 from django.conf import settings
@@ -9,7 +11,7 @@ script_url = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.39.0'
 class Editor(forms.Textarea):
 
     def __init__(self, **kwargs):
-        self.config = dict(default_config)
+        self.config = default_config
         self.config.update(kwargs)
         super(Editor, self).__init__()
 

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import io
 import csv
 import json
@@ -34,16 +36,21 @@ class DiplomaParametersForm(forms.Form):
     def clean_participants_data(self):
         data = self.cleaned_data['participants_data']
 
+        result = None
+
         try:
-            return json.loads(data)
+            result = json.loads(data)
         except json.JSONDecodeError:
             pass
 
         try:
             f = io.StringIO(data)
             reader = csv.DictReader(f, dialect='excel-tab')
-            return [dict(row) for row in reader]
+            result = [dict(row) for row in reader]
         except csv.Error:
             pass
 
-        raise forms.ValidationError("Failed to parse the supplied file")
+        if not result:
+            raise forms.ValidationError("Failed to parse the input data")
+
+        return result

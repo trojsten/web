@@ -1,21 +1,30 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 import re
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
 from .constants import FIELD_SEARCH_PATTERN
-from .sources import get_class
+from .sources import SOURCE_CLASSES, SOURCE_CHOICES
+
+
+class DiplomaDataSourceManager(models.Manager):
+    def default(self):
+        return self.get_queryset().filter(is_default=True) or []
 
 
 @python_2_unicode_compatible
 class DiplomaDataSource(models.Model):
-    name = models.CharField(max_length=128)
-    value = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, verbose_name='Source name')
+    class_name = models.CharField(max_length=128, choices=SOURCE_CHOICES, verbose_name='Implemented source class')
+    is_default = models.BooleanField(default=False, verbose_name="Add to predefined sources")
+
+    objects = DiplomaDataSourceManager()
 
     @property
     def source_class(self):
-        return get_class(self.value)
+        return SOURCE_CLASSES[self.class_name]
 
     def __str__(self):
         return self.name
