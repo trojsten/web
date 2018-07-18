@@ -4,9 +4,9 @@
 
 <div style="text-align: right">
     <div class="form-group">
-        <label style="width: 100px; margin-right: 10px">{{ category.label }}</label>
+        <label style="width: 100px; margin-right: 10px">{% trans "Categories" %}</label>
         <select id="naboj_category" style="width: 150px">
-        {% for category in category.categories %}
+        {% for category in categories %}
             <option value="{{ category.value }}">{{ category.name }}</option>
         {% endfor %}
         </select>

@@ -55,8 +55,8 @@
 
     function serialize_single_form(){
         let d = {};
-        document.getElementById("dummy_form").childNodes.forEach(function(item){
-            d[item.childNodes[1].name] = item.childNodes[1].value;
+        $("#dummy_form").find('input').each(function (i) {
+           d[$(this).attr('name')] = $(this).val()
         });
         return JSON.stringify([d]);
     }

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-18 12:09+0000\n"
+"POT-Creation-Date: 2018-07-18 09:20+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -10,7 +10,7 @@ msgid "Subject"
 msgstr "Predmet"
 
 #: trojsten/contact_form/forms.py:22 trojsten/contact_form/tests.py:63
-#: trojsten/contact_form/tests.py:72
+#: trojsten/contact_form/tests.py:72 trojsten/diplomas/models.py:45
 msgid "Name"
 msgstr "Meno"
 
@@ -173,6 +173,112 @@ msgstr "%(count)s minúta"
 #| msgid_plural "%(count)s seconds"
 msgid "%(count)d second"
 msgstr "%(count)s sekunda"
+
+#: trojsten/diplomas/admin.py:41
+msgid "authorized groups"
+msgstr "autorizované skupiny"
+
+#: trojsten/diplomas/admin.py:45
+msgid "sources"
+msgstr "zdroje"
+
+#: trojsten/diplomas/forms.py:21
+msgid "Template"
+msgstr "Šablóna"
+
+#: trojsten/diplomas/forms.py:32
+msgid "Join into one PDF"
+msgstr "Spojiť do jedného PDF"
+
+#: trojsten/diplomas/forms.py:54
+msgid "Failed to parse the input data"
+msgstr "Chyba pri spracovaní dát"
+
+#: trojsten/diplomas/models.py:25
+msgid "Source name"
+msgstr "Názov zdroja"
+
+#: trojsten/diplomas/models.py:26
+msgid "Source class"
+msgstr "Trieda zdroja"
+
+#: trojsten/diplomas/models.py:27
+msgid "Add to default sources"
+msgstr "Pridať do základných zdrojov"
+
+#: trojsten/diplomas/models.py:39
+msgid "Data source for diplomas"
+msgstr "Zdroj dát pre diplomy"
+
+#: trojsten/diplomas/models.py:40
+msgid "Data sources for diplomas"
+msgstr "Zdroje dát pre diplomy"
+
+#: trojsten/diplomas/models.py:48
+msgid "Sources"
+msgstr "Zdroje"
+
+#: trojsten/diplomas/models.py:52
+msgid "Authorized groups"
+msgstr "Autorizované skupiny"
+
+#: trojsten/diplomas/models.py:55
+msgid "The groups that are authorized to use this template."
+msgstr "Skupiny s povolením používať túto šablónu"
+
+#: trojsten/diplomas/models.py:60
+msgid "Diploma template"
+msgstr "Šablóna diplomu"
+
+#: trojsten/diplomas/models.py:61
+msgid "Diploma templates"
+msgstr "Šablóny diplomov"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/parts/fileupload.html:6
+msgid "Choose a file"
+msgstr "Nahrať súbor"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/parts/naboj_math.html:7
+msgid "Categories"
+msgstr "Kategórie"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/parts/naboj_math.html:15
+msgid "Limit to first"
+msgstr "Iba prvých"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/parts/naboj_math.html:18
+msgid "Load"
+msgstr "Načítať"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/sources.html:8
+msgid "External input options"
+msgstr "Výber externého zdroja"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:9
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:12
+msgid "Diplomas"
+msgstr "Diplomy"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:25
+msgid "Multiple diplomas"
+msgstr "Viacero diplomov"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:26
+msgid "Single diploma"
+msgstr "Jeden diplom"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:34
+msgid "Preview"
+msgstr "Náhľad"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:64
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:93
+msgid "Generate"
+msgstr "Generovať"
+
+#: trojsten/diplomas/views.py:104
+msgid "Trying to access non-existent or restricted template"
+msgstr "Neexistujúca alebo zakázaná šablóna"
 
 #: trojsten/login/views.py:29
 msgid "Logout successful"
@@ -698,7 +804,7 @@ msgstr "Ignorovať"
 msgid "Successfully finished reviewing this task!"
 msgstr "Úspešne dokončené opravovanie tejto úlohy!"
 
-#: trojsten/settings/common.py:424
+#: trojsten/settings/common.py:425
 msgid "Table of Contents"
 msgstr ""
 

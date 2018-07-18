@@ -2,18 +2,15 @@
 from __future__ import unicode_literals
 
 import subprocess
-from datetime import datetime
 from tempfile import NamedTemporaryFile
-import os
 import re
+
+from django.utils import timezone
 
 from .constants import FIELD_REPLACE_PATTERN
 
 
 class DiplomaGenerator:
-
-    def __init__(self, static_path=None):
-        self.svg_path = static_path or os.path.join(os.path.dirname(__file__), 'static/diplomas/')
 
     def create_diplomas(self,
                         participants,
@@ -25,7 +22,7 @@ class DiplomaGenerator:
 
         pdfs = self.render_pdfs(svgs,
                                 separate=separate,
-                                name_prefix=datetime.now().strftime("%Y-%m-%d-%H-%M"))
+                                name_prefix=timezone.localtime().strftime("%Y-%m-%d-%H-%M"))
 
         return pdfs
 

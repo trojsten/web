@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-#from __future__ import unicode_literals
 
-from bs4 import BeautifulSoup
-from urllib.request import urlopen
-from django.template import loader
-from django.utils import timezone
 import re
 import json
 from abc import abstractmethod
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+
+from django.template import loader
+from django.utils import timezone
 
 
 class AbstractSource(object):
@@ -116,8 +116,7 @@ class NabojMath(Naboj):
 
     def render(self, **kwargs):
         context = {
-            'category': {'categories': [{'name': 'Juniori', 'value': 'jun'}, {'name': 'Seniori', 'value': 'sen'}],
-                         'label': 'Kategórie'},
+            'categories': [{'name': 'Juniori', 'value': 'jun'}, {'name': 'Seniori', 'value': 'sen'}],
             'name': self.name
         }
         context.update(kwargs)
