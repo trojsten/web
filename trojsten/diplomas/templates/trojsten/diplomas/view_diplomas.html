@@ -54,46 +54,48 @@
         <div class="tab-content">
 
             <div id="single" class="tab-pane fade" >
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-7">
-                            <div id="dummy_form"></div>
-                        </div>
-                        <div class="col-md-5">
-                            <div style="text-align: center">
-                                <button class="btn btn-primary btn-lg" id='form_submit_single' type="submit">{% trans "Generate" %}</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="container-fluid" style="text-align: center">
+                    <div class="row" id="dummy_form"></div>
+                    <button class="btn btn-lg btn-success" id='form_submit_single' type="submit">{% trans "Generate" %}</button>
                 </div>
             </div>
 
             <div id="multiple" class="tab-pane fade active in">
 
+                <div class="row">
+                      <div class="form-group" style="margin-left: 0">
+                        <label >{% trans "Replaceable fields:" %}</label>
+                        <label id="fields_list"></label>
+                    </div>
+                </div>
+
+
                 {{ form.editor }}
 
                 <div class="container-fluid" style="text-align: center">
-                    <hr style="margin-bottom: 10px; margin-top: 10px">
-                    <div class="row"  style="
-                        display: -webkit-box;
-                        display: -webkit-flex;
-                        display: -ms-flexbox;
-                        display: flex;">
 
-                        <div class="col-md-10">
-                            <div class="container-fluid" id="sources_container"></div>
+
+                    <div class="row">
+                        <div id="sources_container" class="container-fluid"></div>
+                    </div>
+
+                    <div class="row">
+                        <hr>
+                        <h4 style="margin-bottom: 20px;">{% trans "Output options" %}</h4>
+                    </div>
+
+                    <div class="row" style="text-align: center;">
+                        <div class="form-group col-sm-6 col-lg-6">
+                            <!-- TODO: option of copying a download link-->
                         </div>
 
-                        <div class="col-md-2" style="border-left: 1px solid #eee">
-                            <div class="form-group">
-                                <label>{{ form.join_pdf.label_tag }}</label>
+                        <div class="form-group col-sm-5 col-lg-5">
+                            <label class="control-label">{{ form.join_pdf.label_tag }}</label>
                                 {{ form.join_pdf }}
-                            </div>
-                           <div style="text-align: center">
-                                <button class="btn btn-primary btn-default" id='form_submit_multiple' type="submit">{% trans "Generate" %}</button>
-                            </div>
                         </div>
-
+                       <div class=" col-sm-1 col-lg-1">
+                            <button class="btn btn-lg btn-success" id='form_submit_multiple' type="submit">{% trans "Generate" %}</button>
+                        </div>
                     </div>
                 </div>
 
@@ -105,13 +107,8 @@
         {{ form.source }}
     </form>
 
-    <hr style="margin-bottom: 10px; margin-top: 10px">
 
-    <br><br>
-
-{% block wiki_contents_tab %}
-{% wiki_render article %}
-{% endblock %}
+<div id="tutorial_container"></div>
 
 {% addtoblock "js" %}
     <script>var template_fields = "{{ template_fields }}";</script>

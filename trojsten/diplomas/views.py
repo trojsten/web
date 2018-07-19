@@ -3,12 +3,13 @@ from __future__ import unicode_literals
 
 import zipfile
 import json
+from functools import wraps
 from tempfile import TemporaryFile
 
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
@@ -21,6 +22,30 @@ from wiki.decorators import get_article
 from .sources import SOURCE_CLASSES
 
 
+def access_filter(f):
+    @wraps(f)
+    def wrapper(request, diploma_id, *args, **kwargs):
+        template = DiplomaTemplate.objects.filter(pk=diploma_id)
+        if not template:
+            return HttpResponseNotFound(_('Template does not exist'))
+
+        if request.user.is_superuser:
+            return f(request, diploma_id, *args, **kwargs)
+
+        user_groups = request.user.groups.all()
+        intersect = template.filter(authorized_groups__in=user_groups).distinct()
+        if not intersect:
+            return HttpResponseForbidden(_("You do not have access to this template"))
+
+        return f(request, diploma_id, *args, **kwargs)
+    return wrapper
+
+
+@get_article
+@login_required
+def view_tutorial(request, article, *args, **kwargs):
+    return render(request, 'trojsten/diplomas/parts/tutorial.html', {"article": article})
+
 @csrf_exempt
 @login_required
 def source_request(request, source_class):
@@ -29,6 +54,7 @@ def source_request(request, source_class):
     return JsonResponse(user_data, safe=False)
 
 
+@access_filter
 @login_required
 def diploma_sources(request, diploma_id):
     diploma = DiplomaTemplate.objects.get(pk=diploma_id)
@@ -39,29 +65,28 @@ def diploma_sources(request, diploma_id):
                         'name': src.name,
                         'verbose_name': source.name
                         })
-    return render(request, 'trojsten/diplomas/sources.html', {'sources': sources})
+    return render(request, 'trojsten/diplomas/parts/sources.html', {'sources': sources})
 
 
+@access_filter
 @login_required
 def diploma_preview(request, diploma_id):
     diploma = DiplomaTemplate.objects.get(pk=diploma_id)
     if diploma:
         png = DiplomaGenerator.render_png(diploma.svg)
         return HttpResponse(png, content_type="image/png")
-    else:
-        return HttpResponseNotFound()
+    return HttpResponseNotFound()
 
 
-@get_article
 @login_required
-def view_diplomas(request, article, *args, **kwargs):
+def view_diplomas(request):
 
     user_groups = request.user.groups.all()
 
-    diploma_templates = DiplomaTemplate.objects.filter(authorized_groups__in=user_groups).order_by('name').distinct()
+    diploma_templates = DiplomaTemplate.objects.get_queryset().order_by('name')
 
-    if request.user.is_superuser:
-        diploma_templates = DiplomaTemplate.objects.get_queryset()
+    if not request.user.is_superuser:
+        diploma_templates = diploma_templates.filter(authorized_groups__in=user_groups).distinct()
 
     if request.method == 'POST':
         form = DiplomaParametersForm(diploma_templates, request.POST, request.FILES)
@@ -69,7 +94,7 @@ def view_diplomas(request, article, *args, **kwargs):
 
             template_pk = form.cleaned_data['template']
             participants_data = form.cleaned_data['participants_data']
-            separate = not form.cleaned_data['join_pdf']
+            join = form.cleaned_data['join_pdf']
 
             template = diploma_templates.filter(pk=template_pk).get()
 
@@ -77,7 +102,7 @@ def view_diplomas(request, article, *args, **kwargs):
                 svg = template.svg
 
                 generator = DiplomaGenerator()
-                pdfs = generator.create_diplomas(participants_data, template_svg=svg, separate=separate)
+                pdfs = generator.create_diplomas(participants_data, template_svg=svg, join=join)
 
                 archive_file = TemporaryFile(mode='w+b')
                 with zipfile.ZipFile(archive_file, 'w', zipfile.ZIP_DEFLATED) as archive:
@@ -99,9 +124,6 @@ def view_diplomas(request, article, *args, **kwargs):
                 archive_file.close()
 
                 return response
-            else:
-                messages.add_message(request, messages.ERROR,
-                                     _("Trying to access non-existent or restricted template"))
         else:
             for field in form:
                 for error in field.errors:
@@ -116,7 +138,6 @@ def view_diplomas(request, article, *args, **kwargs):
 
     context = {
         'form': form,
-        'article': article,
         'template_fields': json.dumps(editable_fields, ensure_ascii=False).encode('utf8')
     }
 

@@ -9,6 +9,10 @@ script_url = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.39.0'
 
 
 class Editor(forms.Textarea):
+    """
+    A widget designed to replace a standard TextArea element with a JS component provided
+    by CodeMirror. Highly customizable, see https://codemirror.net/ for reference.
+    """
 
     def __init__(self, **kwargs):
         self.config = default_config

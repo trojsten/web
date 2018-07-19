@@ -11,17 +11,27 @@ from .constants import FIELD_REPLACE_PATTERN
 
 
 class DiplomaGenerator:
+    """
+    Provides necessary methods for handling SVG files and templating them into diplomas
+    """
 
     def create_diplomas(self,
                         participants,
                         template_svg,
-                        separate=False):
+                        join=False):
+        """
+
+        :param participants: A list of dict objects, where keys are fields to replace and values are values
+        :param template_svg: string content of SVG file
+        :param separate: boolean whether resulting PDFs are to be joined together or not
+        :return: PDF(s) containing generated diplomas
+        """
 
         svgs = [self.svg_for_participant(template_svg, participant)
                 for participant in participants]
 
         pdfs = self.render_pdfs(svgs,
-                                separate=separate,
+                                join=join,
                                 name_prefix=timezone.localtime().strftime("%Y-%m-%d-%H-%M"))
 
         return pdfs
@@ -33,7 +43,7 @@ class DiplomaGenerator:
             svg = re.sub(pattern, str(value), svg)
         return svg
 
-    def render_pdfs(self, svgs, separate=False, pdf_name='diploma_joined.pdf', name_prefix=""):
+    def render_pdfs(self, svgs, join=False, name_prefix=""):
 
         def make_into_file(content):
             tmp = NamedTemporaryFile(mode='w')
@@ -48,13 +58,14 @@ class DiplomaGenerator:
 
         command = ['rsvg-convert', '-f', 'pdf']
 
-        if separate:
-            pdfs = [('%s_%d.pdf' % (name_prefix, num), subprocess.check_output(command, stdin=f))
-                    for num, f in enumerate(svg_files)]
-        else:
+        if join:
             args = command + [f.name for f in svg_files]
             pdf = subprocess.check_output(args)
-            pdfs = [(pdf_name, pdf)]
+            pdfs = [('diplomas_joined.pdf', pdf)]
+
+        else:
+            pdfs = [('%s_%d.pdf' % (name_prefix, num), subprocess.check_output(command, stdin=f))
+                    for num, f in enumerate(svg_files)]
 
         for f in svg_files:
             f.close()

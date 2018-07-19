@@ -1,0 +1,68 @@
+{% load bootstrap %}
+{% load utils %}
+{% load i18n %}
+
+<div>
+    <div class="col-sm-9 col-lg-9">
+        <div class="form-group">
+            <label class="control-label col-sm-4 col-lg-4">{% trans "Categories" %}</label>
+            <div class="col-sm-8 col-lg-8">
+                <select id="naboj_category" class="form-control">
+                {% for category in categories %}
+                    <option value="{{ category.value }}">{{ category.name }}</option>
+                {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-4 col-lg-4">{% trans "Limit to first"%}</label>
+            <div class="col-sm-8 col-lg-8">
+                <input class="form-control" type="number" id="naboj_limit">
+            </div>
+        </div>
+
+        <div class="form-group" data-toggle="tooltip" data-placement="top"
+                title="{% trans 'Scrape data directly from URL (last resort in case Naboj site changes structure)'%}">
+            <label class="control-label col-sm-4 col-lg-4">{% trans "Results URL"%}</label>
+            <div class="col-sm-8 col-lg-8">
+                <input class="form-control" type="url" id="naboj_url" placeholder="{% trans 'This field is not required' %}">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-sm-3 col-lg-3">
+        <button class="btn btn-default" type="button" onclick="$(this).submit_request('{{ name }}')">{% trans "Load"%}</button>
+    </div>
+</div>
+
+
+
+<script>
+    (function ($) {
+
+        function serialize_parameters() {
+            let j = {
+                'limit': document.getElementById('naboj_limit').value,
+                'category': document.getElementById('naboj_category').value,
+                'url': document.getElementById('naboj_url').value
+            };
+            return JSON.stringify(j);
+        }
+
+        $.fn.submit_request = function(class_name){
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", './sources/' + class_name +'/', true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var json = JSON.parse(xhr.responseText);
+                    set_editor_content(JSON.stringify(json, undefined, 4));
+                }
+            };
+            let data = serialize_parameters();
+            xhr.send(data);
+        }
+    })(jQuery);
+</script>

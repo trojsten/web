@@ -17,10 +17,22 @@ class AbstractSource(object):
         pass
 
     def handle_request(self, request, **kwargs):
+        """
+        Rendered component on the page is capable of making a request to the backend
+        (for cases when obtaining participant data is computationally expensive or they
+        are queried from the server). This method provides such interface.
+        :param request:
+        :param kwargs:
+        :return:
+        """
         return []
 
     @abstractmethod
     def render(self, **kwargs):
+        """
+        :param kwargs:
+        :return: Rendered HTML that will be displayed as a component on page
+        """
         return ""
 
 
@@ -28,11 +40,14 @@ class FileUpload(AbstractSource):
     name = 'file_upload'
 
     def render(self, **kwargs):
-        template = loader.get_template('trojsten/diplomas/parts/fileupload.html')
+        template = loader.get_template('trojsten/diplomas/sources/fileupload.html')
         return template.render()
 
 
 class Naboj(AbstractSource):
+    """
+    Base class for Naboj result webpage scraper.
+    """
 
     name = 'naboj'
 
@@ -47,8 +62,12 @@ class Naboj(AbstractSource):
         return pattern.format(args=url_args)
 
     @staticmethod
-    def get_latest_year(homepage):
-        soup = BeautifulSoup(urlopen(homepage).read().decode("utf-8"), 'html.parser')
+    def get_latest_year(homepage_url):
+        """
+        :param homepage_url: Url to Naboj index page
+        :return: current year of the event if found, otherwise current year in local timezone
+        """
+        soup = BeautifulSoup(urlopen(homepage_url).read().decode("utf-8"), 'html.parser')
         menu_bar = soup.find('div', id='menucont')
         if not menu_bar:
             return timezone.localdate().year
@@ -60,7 +79,19 @@ class Naboj(AbstractSource):
 
     @staticmethod
     def scrape_results(url, limit=None):
+        """
+
+        :param url: link to result page
+        :param limit: maximum number of scraped positions
+        :return: JSON-serializable object containing scraped result data
+        """
         soup = BeautifulSoup(urlopen(url).read().decode("utf-8"), 'html.parser')
+
+        results_header = soup.find('div', class_='main_content').find('h3').text.split(',')
+        results_header = [x.strip() for x in results_header]
+        competition, category, location = results_header[0], results_header[1], results_header[2]
+        year = competition.split()[-1]
+
         table = soup.find('table', class_='pretty_table')
         if not table:
             return []
@@ -87,6 +118,10 @@ class Naboj(AbstractSource):
 
                     participants[i] = m.group(1)
                 row_result['participants'] = ", ".join(participants)
+
+            row_result['year'] = year
+            row_result['category'] = category
+            row_result['location'] = location
             results.append(row_result)
 
         return results
@@ -96,7 +131,8 @@ class Naboj(AbstractSource):
         kwargs.update(json.loads(request_body))
         limit = kwargs.pop('limit', None)
         limit = None if limit == '' else int(limit)
-        url = self.compose_url(**kwargs)
+        url = kwargs.pop('url', '')
+        url = url if url != '' else self.compose_url(**kwargs)
         return self.scrape_results(url, limit)
 
 
@@ -120,7 +156,7 @@ class NabojMath(Naboj):
             'name': self.name
         }
         context.update(kwargs)
-        template = loader.get_template('trojsten/diplomas/parts/naboj_math.html')
+        template = loader.get_template('trojsten/diplomas/sources/naboj_math.html')
         return template.render(context=context)
 
 

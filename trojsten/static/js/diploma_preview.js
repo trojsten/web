@@ -13,6 +13,8 @@
             memory_dict[component.name] = component.value;
         });
 
+        $("#fields_list").html(current_fields.join(', '));
+
         var container = document.getElementById("dummy_form");
         while (container.firstChild) {
             container.removeChild(container.firstChild);
@@ -23,7 +25,7 @@
             var label = document.createElement('label');
             label.setAttribute('for', 'id_' + field_name);
             label.innerHTML = field_name;
-            label.setAttribute('class', 'control-label col-sm-3 col-lg-3');
+            label.setAttribute('class', 'control-label col-sm-4 col-lg-4');
 
             var input = document.createElement("input");
             input.setAttribute("type", "text");
@@ -34,7 +36,7 @@
             input.className = "form-control";
 
             var input_container = document.createElement("div");
-            input_container.setAttribute('class', 'col-sm-9 col-lg-9');
+            input_container.setAttribute('class', 'col-sm-4 col-lg-4');
             input_container.appendChild(input);
 
             var container = document.createElement("div");
@@ -46,7 +48,7 @@
         });
 
         $.get("./" + current_template + '/sources/', function( data ) {
-          $( "#sources_container" ).html( data );
+            $( "#sources_container" ).html( data );
         });
 
         document.getElementById("preview_image").src = "./" + current_template + '/preview/';
@@ -83,6 +85,11 @@
                 refresh_form();
             }
         });
+
+        $.get("./tutorial/", function( data ) {
+            $( "#tutorial_container" ).html( data );
+        });
+
         refresh_form();
     });
 })(jQuery);
