@@ -10,7 +10,6 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse, HttpResponseForbidden
-from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
@@ -47,7 +46,6 @@ def view_tutorial(request, article, *args, **kwargs):
     return render(request, 'trojsten/diplomas/parts/tutorial.html', {"article": article})
 
 
-@csrf_exempt
 @login_required
 def source_request(request, source_class):
     source_instance = SOURCE_CLASSES[source_class]()
