@@ -8,6 +8,7 @@ amqp==1.4.9               # via kombu
 anyjson==0.3.3            # via kombu
 billiard==3.3.0.23        # via celery
 bleach==1.5.0             # via wiki
+bs4==0.0.1
 celery==3.1.26.post2
 certifi==2015.04.28
 czech-sort==0.4

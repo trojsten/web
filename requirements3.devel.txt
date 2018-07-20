@@ -10,6 +10,7 @@ asn1crypto==0.24.0        # via cryptography
 bcrypt==3.1.4             # via paramiko
 billiard==3.3.0.23        # via celery
 bleach==1.5.0             # via wiki
+bs4==0.0.1
 bumpversion==0.5.3
 celery==3.1.26.post2
 certifi==2015.04.28
