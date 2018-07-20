@@ -46,6 +46,7 @@ def access_filter(f):
 def view_tutorial(request, article, *args, **kwargs):
     return render(request, 'trojsten/diplomas/parts/tutorial.html', {"article": article})
 
+
 @csrf_exempt
 @login_required
 def source_request(request, source_class):

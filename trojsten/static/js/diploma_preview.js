@@ -87,7 +87,14 @@
         });
 
         $.get("./tutorial/", function( data ) {
-            $( "#tutorial_container" ).html( data );
+            var el = document.createElement( 'html' );
+            el.innerHTML = data;
+            var content = el.getElementsByClassName('main-content')[0];
+            if (content !== undefined){
+                content.className = '';
+                $("#tutorial_container" ).html(content)
+            }
+            else $("#tutorial_container" ).html( data );
         });
 
         refresh_form();

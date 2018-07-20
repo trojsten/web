@@ -4,7 +4,11 @@ import re
 import json
 from abc import abstractmethod
 from bs4 import BeautifulSoup
-from urllib.request import urlopen
+
+try:
+    from urllib2 import urlopen
+except ImportError:
+    from urllib.request import urlopen
 
 from django.template import loader
 from django.utils import timezone
