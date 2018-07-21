@@ -37,14 +37,14 @@ class DiplomaParametersForm(forms.Form):
 
         try:
             result = parse_json(data)
-        except:
+        except Exception:
             result = None
         if result:
             return result
 
         try:
             result = parse_csv(data)
-        except:
+        except Exception:
             result = None
         if result:
             return result
