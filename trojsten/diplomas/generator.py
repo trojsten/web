@@ -39,15 +39,21 @@ class DiplomaGenerator:
     def svg_for_participant(self, template_svg, participant):
         svg = template_svg
         for attr, value in participant.items():
+            try:
+                if not isinstance(value, unicode):
+                    value = str(value)
+            except NameError:
+                if not isinstance(value, str):
+                    value = str(value)
             pattern = FIELD_REPLACE_PATTERN.format(attr)
-            svg = re.sub(pattern, str(value), svg)
+            svg = re.sub(pattern, value, svg)
         return svg
 
     def render_pdfs(self, svgs, join=False, name_prefix=""):
 
         def make_into_file(content):
-            tmp = NamedTemporaryFile(mode='w')
-            tmp.write(content)
+            tmp = NamedTemporaryFile(mode='wb')
+            tmp.write(content.encode('utf-8'))
             tmp.seek(0)
             return tmp
 
@@ -74,8 +80,8 @@ class DiplomaGenerator:
 
     @staticmethod
     def render_png(svg):
-        f = NamedTemporaryFile(mode='w')
-        f.write(svg)
+        f = NamedTemporaryFile(mode='wb')
+        f.write(svg.encode('utf-8'))
         f.seek(0)
         png = subprocess.check_output(['rsvg-convert', '-f', 'png', f.name])
         f.close()

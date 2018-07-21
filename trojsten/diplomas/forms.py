@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
-import io
-import csv
-import json
 import re
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
+from trojsten.diplomas.helpers import parse_json, parse_csv
 from .widgets import Editor
 
 
@@ -23,7 +22,7 @@ class DiplomaParametersForm(forms.Form):
                           autofocus=True),
             required=False,
             disabled=True,
-            initial=kwargs.get('data', {}).get('participants_data', ''))
+            initial=kwargs.get(str('data'), {}).get('participants_data', ''))
 
         self.fields['participants_data'] = forms.CharField(widget=forms.HiddenInput(),
                                                            required=False,
@@ -36,25 +35,17 @@ class DiplomaParametersForm(forms.Form):
         data = self.cleaned_data['participants_data']
         data = re.sub(r'[\t]+', '\t', data)
 
-        result = None
         try:
-            result = json.loads(data)
-        except json.JSONDecodeError:
-            pass
+            result = parse_json(data)
+        except:
+            result = None
         if result:
             return result
 
         try:
-            f = io.StringIO(data)
-            reader = csv.DictReader(f, dialect='excel-tab', strict=True)
-            result = [dict(row) for row in reader]
-            for row in result:
-                for k in row.keys():
-                    if not k.isalnum():      # Otherwise the reader would parse just about anything...
-                        result = None
-                        raise csv.Error
-        except csv.Error:
-            pass
+            result = parse_csv(data)
+        except:
+            result = None
         if result:
             return result
 
