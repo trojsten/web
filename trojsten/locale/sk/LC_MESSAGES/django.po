@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-18 09:20+0000\n"
+"POT-Creation-Date: 2018-07-21 18:27+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -182,15 +182,19 @@ msgstr "autorizované skupiny"
 msgid "sources"
 msgstr "zdroje"
 
-#: trojsten/diplomas/forms.py:21
+#: trojsten/diplomas/forms.py:19
 msgid "Template"
 msgstr "Šablóna"
 
-#: trojsten/diplomas/forms.py:32
+#: trojsten/diplomas/forms.py:31
+msgid "Participants data"
+msgstr "Dáta účastníkov"
+
+#: trojsten/diplomas/forms.py:33
 msgid "Join into one PDF"
 msgstr "Spojiť do jedného PDF"
 
-#: trojsten/diplomas/forms.py:54
+#: trojsten/diplomas/forms.py:61
 msgid "Failed to parse the input data"
 msgstr "Chyba pri spracovaní dát"
 
@@ -234,25 +238,40 @@ msgstr "Šablóna diplomu"
 msgid "Diploma templates"
 msgstr "Šablóny diplomov"
 
-#: trojsten/diplomas/templates/trojsten/diplomas/parts/fileupload.html:6
+#: trojsten/diplomas/templates/trojsten/diplomas/parts/sources.html:9
+msgid "External input options"
+msgstr "Výber externého zdroja"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/fileupload.html:6
 msgid "Choose a file"
 msgstr "Nahrať súbor"
 
-#: trojsten/diplomas/templates/trojsten/diplomas/parts/naboj_math.html:7
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj_math.html:8
 msgid "Categories"
 msgstr "Kategórie"
 
-#: trojsten/diplomas/templates/trojsten/diplomas/parts/naboj_math.html:15
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj_math.html:19
 msgid "Limit to first"
 msgstr "Iba prvých"
 
-#: trojsten/diplomas/templates/trojsten/diplomas/parts/naboj_math.html:18
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj_math.html:26
+msgid ""
+"Scrape data directly from URL (last resort in case Naboj site changes "
+"structure)"
+msgstr ""
+"Stiahni dáta priamo z URL (poistka pre prípad zmien Náboj stránky)"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj_math.html:27
+msgid "Results URL"
+msgstr "URL výsledkov"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj_math.html:29
+msgid "This field is not required"
+msgstr "Toto pole nie je povinné."
+
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj_math.html:36
 msgid "Load"
 msgstr "Načítať"
-
-#: trojsten/diplomas/templates/trojsten/diplomas/sources.html:8
-msgid "External input options"
-msgstr "Výber externého zdroja"
 
 #: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:9
 #: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:12
@@ -271,14 +290,26 @@ msgstr "Jeden diplom"
 msgid "Preview"
 msgstr "Náhľad"
 
-#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:64
-#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:93
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:59
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:97
 msgid "Generate"
 msgstr "Generovať"
 
-#: trojsten/diplomas/views.py:104
-msgid "Trying to access non-existent or restricted template"
-msgstr "Neexistujúca alebo zakázaná šablóna"
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:67
+msgid "Replaceable fields:"
+msgstr "Nahraditeľné polia:"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:84
+msgid "Output options"
+msgstr "Možnosti výstupu"
+
+#: trojsten/diplomas/views.py:29
+msgid "Template does not exist"
+msgstr "Šablóna neexistuje"
+
+#: trojsten/diplomas/views.py:37
+msgid "You do not have access to this template"
+msgstr "K tejto šablóne nemáte prístup"
 
 #: trojsten/login/views.py:29
 msgid "Logout successful"
@@ -1078,6 +1109,9 @@ msgstr ""
 #: trojsten/templates/wiki/article.html:40
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
+
+#~ msgid "Trying to access non-existent or restricted template"
+#~ msgstr "Neexistujúca alebo zakázaná šablóna"
 
 #, fuzzy
 #~| msgid "Test string"

@@ -87,8 +87,11 @@ def view_diplomas(request):
     if not request.user.is_superuser:
         diploma_templates = diploma_templates.filter(authorized_groups__in=user_groups).distinct()
 
+    if not diploma_templates.exists():
+        return HttpResponseForbidden()
+
     if request.method == 'POST':
-        form = DiplomaParametersForm(diploma_templates, request.POST, request.FILES)
+        form = DiplomaParametersForm(diploma_templates, data=request.POST, files=request.FILES)
         if form.is_valid():
 
             template_pk = form.cleaned_data['template']
@@ -112,8 +115,7 @@ def view_diplomas(request):
                 filename = timezone.localtime().strftime(
                     "diplom_{}_%Y_%m_%d_%H:%M:%S.zip".format(request.user.last_name))
 
-                response = HttpResponse()
-                response['Content-type'] = 'application/zip'
+                response = HttpResponse(content_type='application/zip')
                 response['Content-Description'] = 'File Transfer'
                 response['Content-Disposition'] = 'attachment; filename="%s"' % filename
                 response['Content-Transfer-Encoding'] = 'binary'

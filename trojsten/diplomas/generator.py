@@ -23,7 +23,7 @@ class DiplomaGenerator:
 
         :param participants: A list of dict objects, where keys are fields to replace and values are values
         :param template_svg: string content of SVG file
-        :param separate: boolean whether resulting PDFs are to be joined together or not
+        :param join: boolean whether resulting PDFs are to be joined together or not
         :return: PDF(s) containing generated diplomas
         """
 
