@@ -24,7 +24,7 @@ class DiplomaDataSourceManager(models.Manager):
 class DiplomaDataSource(models.Model):
     name = models.CharField(max_length=128, verbose_name=_('Source name'))
     class_name = models.CharField(max_length=128, choices=SOURCE_CHOICES, verbose_name=_('Source class'))
-    is_default = models.BooleanField(default=False, verbose_name=_("Add to default sources"))
+    is_default = models.BooleanField(default=False, verbose_name=_('Add to default sources'))
 
     objects = DiplomaDataSourceManager()
 

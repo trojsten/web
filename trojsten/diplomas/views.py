@@ -34,7 +34,7 @@ def access_filter(f):
         user_groups = request.user.groups.all()
         intersect = template.filter(authorized_groups__in=user_groups).distinct()
         if not intersect:
-            return HttpResponseForbidden(_("You do not have access to this template"))
+            return HttpResponseForbidden(_('You do not have access to this template'))
 
         return f(request, diploma_id, *args, **kwargs)
     return wrapper
@@ -43,7 +43,7 @@ def access_filter(f):
 @get_article
 @login_required
 def view_tutorial(request, article, *args, **kwargs):
-    return render(request, 'trojsten/diplomas/parts/tutorial.html', {"article": article})
+    return render(request, 'trojsten/diplomas/parts/tutorial.html', {'article': article})
 
 
 @login_required
@@ -73,7 +73,7 @@ def diploma_preview(request, diploma_id):
     diploma = DiplomaTemplate.objects.get(pk=diploma_id)
     if diploma:
         png = DiplomaGenerator.render_png(diploma.svg)
-        return HttpResponse(png, content_type="image/png")
+        return HttpResponse(png, content_type='image/png')
     return HttpResponseNotFound()
 
 
@@ -113,11 +113,11 @@ def view_diplomas(request):
                 archive_file.seek(0)
 
                 filename = timezone.localtime().strftime(
-                    "diplom_{}_%Y_%m_%d_%H:%M:%S.zip".format(request.user.last_name))
+                    'diplom_{}_%Y_%m_%d_%H:%M:%S.zip'.format(request.user.last_name))
 
                 response = HttpResponse(content_type='application/zip')
                 response['Content-Description'] = 'File Transfer'
-                response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+                response['Content-Disposition'] = 'attachment; filename=\'%s\'' % filename
                 response['Content-Transfer-Encoding'] = 'binary'
 
                 response.write(archive_file.read())

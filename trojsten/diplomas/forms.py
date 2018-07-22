@@ -26,7 +26,7 @@ class DiplomaParametersForm(forms.Form):
 
         self.fields['participants_data'] = forms.CharField(widget=forms.HiddenInput(),
                                                            required=False,
-                                                           initial="",
+                                                           initial='',
                                                            label=_('Participants data'))
 
         self.fields['join_pdf'] = forms.BooleanField(initial=True, required=False, label=_('Join into one PDF'))
@@ -49,4 +49,4 @@ class DiplomaParametersForm(forms.Form):
         if result:
             return result
 
-        raise forms.ValidationError(_("Failed to parse the input data"))
+        raise forms.ValidationError(_('Failed to parse the input data'))

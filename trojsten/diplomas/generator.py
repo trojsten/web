@@ -7,7 +7,7 @@ import re
 
 from django.utils import timezone
 
-from .constants import FIELD_REPLACE_PATTERN
+from .constants import FIELD_REPLACE_PATTERN, DIPLOMA_DEFAULT_NAME
 
 
 class DiplomaGenerator:
@@ -20,6 +20,7 @@ class DiplomaGenerator:
                         template_svg,
                         join=False):
         """
+        Given a list of participants and a template SVG creates a PDF diploma for every participant from the template
 
         :param participants: A list of dict objects, where keys are fields to replace and values are values
         :param template_svg: string content of SVG file
@@ -32,7 +33,7 @@ class DiplomaGenerator:
 
         pdfs = self.render_pdfs(svgs,
                                 join=join,
-                                name_prefix=timezone.localtime().strftime("%Y-%m-%d-%H-%M"))
+                                name_prefix=timezone.localtime().strftime('%Y-%m-%d-%H-%M'))
 
         return pdfs
 
@@ -45,44 +46,45 @@ class DiplomaGenerator:
             except NameError:
                 if not isinstance(value, str):
                     value = str(value)
-            pattern = FIELD_REPLACE_PATTERN.format(attr)
+            pattern = FIELD_REPLACE_PATTERN.format(field_name=attr)
             svg = re.sub(pattern, value, svg)
         return svg
 
-    def render_pdfs(self, svgs, join=False, name_prefix=""):
+    @staticmethod
+    def make_into_file(content):
+        tmp = NamedTemporaryFile(mode='wb')
+        tmp.write(content.encode('utf-8'))
+        tmp.seek(0)
+        return tmp
 
-        def make_into_file(content):
-            tmp = NamedTemporaryFile(mode='wb')
-            tmp.write(content.encode('utf-8'))
-            tmp.seek(0)
-            return tmp
+    def render_pdfs(self, svgs, join=False, name_prefix=''):
 
         if not isinstance(svgs, list):
             svgs = [svgs]
 
-        svg_files = [make_into_file(svg) for svg in svgs]
+        svg_files = [self.make_into_file(svg) for svg in svgs]
 
         command = ['rsvg-convert', '-f', 'pdf']
+        try:
+            if join:
+                args = command + [f.name for f in svg_files]
+                pdf = subprocess.check_output(args)
+                pdfs = [(DIPLOMA_DEFAULT_NAME, pdf)]
 
-        if join:
-            args = command + [f.name for f in svg_files]
-            pdf = subprocess.check_output(args)
-            pdfs = [('diplomas_joined.pdf', pdf)]
-
-        else:
-            pdfs = [('%s_%d.pdf' % (name_prefix, num), subprocess.check_output(command, stdin=f))
-                    for num, f in enumerate(svg_files)]
-
-        for f in svg_files:
-            f.close()
+            else:
+                pdfs = [('%s_%d.pdf' % (name_prefix, num), subprocess.check_output(command, stdin=f))
+                        for num, f in enumerate(svg_files)]
+        finally:
+            for f in svg_files:
+                f.close()
 
         return pdfs
 
     @staticmethod
     def render_png(svg):
-        f = NamedTemporaryFile(mode='wb')
-        f.write(svg.encode('utf-8'))
-        f.seek(0)
-        png = subprocess.check_output(['rsvg-convert', '-f', 'png', f.name])
-        f.close()
+        f = DiplomaGenerator.make_into_file(svg)
+        try:
+            png = subprocess.check_output(['rsvg-convert', '-f', 'png', f.name])
+        finally:
+            f.close()
         return png

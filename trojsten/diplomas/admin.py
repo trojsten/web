@@ -37,7 +37,7 @@ class DiplomaTemplateAdmin(admin.ModelAdmin):
         ).distinct()
 
     def get_groups(self, obj):
-        return ', '.join(sorted(force_text(x) for x in obj.authorized_groups.all()))
+        return ', '.join(sorted(force_text(group) for group in obj.authorized_groups.all()))
     get_groups.short_description = _('authorized groups')
 
     def get_sources(self, obj):

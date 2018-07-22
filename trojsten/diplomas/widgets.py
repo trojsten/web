@@ -42,5 +42,5 @@ class Editor(forms.Textarea):
 
     def render(self, name, value, attrs=None, **kwargs):
         field = super(Editor, self).render(name, value, attrs)
-        return "%s<script>var editor = CodeMirror.fromTextArea(document.getElementById('%s'), %s);</script>" % \
+        return '%s<script>var editor = CodeMirror.fromTextArea(document.getElementById(\'%s\'), %s);</script>' % \
                (field, attrs['id'], json.dumps(self.config))

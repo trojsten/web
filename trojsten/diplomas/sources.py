@@ -25,6 +25,7 @@ class AbstractSource(object):
         Rendered component on the page is capable of making a request to the backend
         (for cases when obtaining participant data is computationally expensive or they
         are queried from the server). This method provides such interface.
+
         :param request:
         :param kwargs:
         :return:
@@ -34,10 +35,12 @@ class AbstractSource(object):
     @abstractmethod
     def render(self, **kwargs):
         """
+        Method outputs HTML representation of the source plugin
+
         :param kwargs:
         :return: Rendered HTML that will be displayed as a component on page
         """
-        return ""
+        return ''
 
 
 class FileUpload(AbstractSource):
@@ -60,18 +63,20 @@ class Naboj(AbstractSource):
         url_args = []
         for k, v in kwargs.items():
             if v is not None:
-                url_args.append("{}={}".format(k, v))
-        url_args = "&".join(url_args)
+                url_args.append('{}={}'.format(k, v))
+        url_args = '&'.join(url_args)
 
         return pattern.format(args=url_args)
 
     @staticmethod
     def get_latest_year(homepage_url):
         """
+        Obtains the current year of the Naboj competition
+
         :param homepage_url: Url to Naboj index page
         :return: current year of the event if found, otherwise current year in local timezone
         """
-        soup = BeautifulSoup(urlopen(homepage_url).read().decode("utf-8"), 'html.parser')
+        soup = BeautifulSoup(urlopen(homepage_url).read().decode('utf-8'), 'html.parser')
         menu_bar = soup.find('div', id='menucont')
         if not menu_bar:
             return timezone.localdate().year
@@ -84,12 +89,13 @@ class Naboj(AbstractSource):
     @staticmethod
     def scrape_results(url, limit=None):
         """
+        Scrapes the results of Naboj competition from the given URL.
 
         :param url: link to result page
         :param limit: maximum number of scraped positions
         :return: JSON-serializable object containing scraped result data
         """
-        soup = BeautifulSoup(urlopen(url).read().decode("utf-8"), 'html.parser')
+        soup = BeautifulSoup(urlopen(url).read().decode('utf-8'), 'html.parser')
 
         results_header = soup.find('div', class_='main_content').find('h3').text.split(',')
         results_header = [x.strip() for x in results_header]
@@ -121,7 +127,7 @@ class Naboj(AbstractSource):
                         break
 
                     participants[i] = m.group(1)
-                row_result['participants'] = ", ".join(participants)
+                row_result['participants'] = ', '.join(participants)
 
             row_result['year'] = year
             row_result['category'] = category
@@ -148,7 +154,7 @@ class NabojMath(Naboj):
 
     def handle_request(self, request, **kwargs):
         kwargs.update({
-            'pattern': "{homepage}/archive/results.php?".format(homepage=self.HOMEPAGE_URL) + '{args}',
+            'pattern': '{homepage}/archive/results.php?'.format(homepage=self.HOMEPAGE_URL) + '{args}',
             'year': self.get_latest_year(self.HOMEPAGE_URL),
             'country_code': 'sk'
         })
@@ -172,7 +178,7 @@ class NabojPhysics(NabojMath):
 
     def handle_request(self, request, **kwargs):
         kwargs.update({
-            'pattern': "{homepage}/archive/results.php?".format(homepage=self.HOMEPAGE_URL) + '{args}',
+            'pattern': '{homepage}/archive/results.php?'.format(homepage=self.HOMEPAGE_URL) + '{args}',
             'year': self.get_latest_year(self.HOMEPAGE_URL),
             'country_code': 'sk'
         })
