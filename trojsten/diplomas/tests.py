@@ -6,13 +6,17 @@ from trojsten.diplomas.models import DiplomaTemplate
 from trojsten.people.models import User
 
 from django.contrib.auth.models import Group
-from django.test import TransactionTestCase
-from django.utils.translation import ugettext_lazy as _
+from django.test import TransactionTestCase, override_settings
 
 try:
     from urllib import urlencode
 except ImportError:
     from urllib.parse import urlencode
+
+english = override_settings(
+    LANGUAGE_CODE='en-US',
+    LANGUAGES=(('en', 'English'),),
+)
 
 
 class CreateDiplomaTestCase(TransactionTestCase):
@@ -36,6 +40,7 @@ class CreateDiplomaTestCase(TransactionTestCase):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/zip')
 
+    @english
     def test_malformed_input(self):
         self.client.force_login(self.user_super)
 
@@ -45,7 +50,7 @@ class CreateDiplomaTestCase(TransactionTestCase):
                              content_type='application/x-www-form-urlencoded')
         messages = list(r.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), _('Participants data: Failed to parse the input data'))
+        self.assertEqual(str(messages[0]), 'Participants data: Failed to parse the input data')
 
     def test_standard_user_permissions(self):
         self.template.authorized_groups.add(self.test_group)
