@@ -39,7 +39,7 @@ class CreateDiplomaTestCase(TransactionTestCase):
     def test_malformed_input(self):
         self.client.force_login(self.user_super)
 
-        malformed = urlencode({'template': 1, 'participants_data': '[{\'name\': \'val]', 'join_pdf': 'on'})
+        malformed = urlencode({'template': 1, 'participants_data': '[{"name": "val]', 'join_pdf': 'on'})
         r = self.client.post(self.url,
                              data=malformed,
                              content_type='application/x-www-form-urlencoded')

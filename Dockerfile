@@ -1,4 +1,4 @@
-FROM python:2.7-alpine3.7
+FROM python:3.6-alpine3.7
 
 ENV PYTHONUNBUFFERED=0
 
@@ -7,10 +7,10 @@ RUN apk add --no-cache --virtual build-deps gcc g++ make libffi-dev musl-dev pos
 COPY ./fonts/* /usr/share/fonts/
 RUN fc-cache -f -v
 
-COPY ./requirements.devel.txt /web/requirements.devel.txt
+COPY ./requirements3.devel.txt /web/requirements3.devel.txt
 WORKDIR /web
 
-RUN pip install --no-cache-dir -r requirements.devel.txt
+RUN pip install --no-cache-dir -r requirements3.devel.txt
 
 COPY . /web
 

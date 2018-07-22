@@ -35,7 +35,7 @@ class AbstractSource(object):
     @abstractmethod
     def render(self, **kwargs):
         """
-        Method outputs HTML representation of the source plugin
+        Method outputs HTML representation of the source plugin.
 
         :param kwargs:
         :return: Rendered HTML that will be displayed as a component on page
@@ -71,7 +71,7 @@ class Naboj(AbstractSource):
     @staticmethod
     def get_latest_year(homepage_url):
         """
-        Obtains the current year of the Naboj competition
+        Obtains the current year of the Naboj competition.
 
         :param homepage_url: Url to Naboj index page
         :return: current year of the event if found, otherwise current year in local timezone
@@ -188,14 +188,10 @@ class NabojPhysics(NabojMath):
         return super(NabojPhysics, self).render(name=self.name)
 
 
-SOURCE_CHOICES = [
-    (FileUpload.name, FileUpload.name),
-    (NabojPhysics.name, NabojPhysics.name),
-    (NabojMath.name, NabojMath.name)
-]
-
 SOURCE_CLASSES = {
     FileUpload.name: FileUpload,
     NabojPhysics.name: NabojPhysics,
     NabojMath.name: NabojMath
 }
+
+SOURCE_CHOICES = tuple((name, name) for name in SOURCE_CLASSES)

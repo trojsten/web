@@ -12,7 +12,7 @@ from .constants import FIELD_REPLACE_PATTERN, DIPLOMA_DEFAULT_NAME
 
 class DiplomaGenerator:
     """
-    Provides necessary methods for handling SVG files and templating them into diplomas
+    Provides necessary methods for handling SVG files and templating them into diplomas.
     """
 
     def create_diplomas(self,
@@ -20,7 +20,7 @@ class DiplomaGenerator:
                         template_svg,
                         join=False):
         """
-        Given a list of participants and a template SVG creates a PDF diploma for every participant from the template
+        Given a list of participants and a template SVG creates a PDF diploma for every participant from the template.
 
         :param participants: A list of dict objects, where keys are fields to replace and values are values
         :param template_svg: string content of SVG file

@@ -117,7 +117,7 @@ def view_diplomas(request):
 
                 response = HttpResponse(content_type='application/zip')
                 response['Content-Description'] = 'File Transfer'
-                response['Content-Disposition'] = 'attachment; filename=\'%s\'' % filename
+                response['Content-Disposition'] = 'attachment; filename="%s"' % filename
                 response['Content-Transfer-Encoding'] = 'binary'
 
                 response.write(archive_file.read())
