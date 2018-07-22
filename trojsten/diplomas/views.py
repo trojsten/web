@@ -1,23 +1,23 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import zipfile
-import json
 from functools import wraps
+import json
 from tempfile import TemporaryFile
+import zipfile
 
-from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse, HttpResponseForbidden
+from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
-from trojsten.diplomas.generator import DiplomaGenerator
-from trojsten.diplomas.forms import DiplomaParametersForm
-from trojsten.diplomas.models import DiplomaTemplate
-
 from wiki.decorators import get_article
+
+from .forms import DiplomaParametersForm
+from .generator import DiplomaGenerator
+from .models import DiplomaTemplate
 from .sources import SOURCE_CLASSES
 
 

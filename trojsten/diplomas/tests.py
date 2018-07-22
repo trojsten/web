@@ -1,12 +1,11 @@
-from django.conf import settings
-from django.contrib.sites.models import Site
-from django.urls import reverse
-
 from trojsten.diplomas.models import DiplomaTemplate
 from trojsten.people.models import User
 
+from django.conf import settings
 from django.contrib.auth.models import Group
-from django.test import TransactionTestCase, override_settings
+from django.contrib.sites.models import Site
+from django.test import override_settings, TestCase
+from django.urls import reverse
 
 try:
     from urllib import urlencode
@@ -19,7 +18,7 @@ english = override_settings(
 )
 
 
-class CreateDiplomaTestCase(TransactionTestCase):
+class CreateDiplomaTestCase(TestCase):
     fixtures = ['diploma_templates.json']
 
     def setUp(self):

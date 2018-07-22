@@ -1,7 +1,8 @@
 from __future__ import unicode_literals
 
-from django import forms
 import json
+
+from django import forms
 from django.conf import settings
 
 default_config = getattr(settings, 'EDITOR_CONFIG', {})

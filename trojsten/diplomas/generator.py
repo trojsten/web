@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import re
 import subprocess
 from tempfile import NamedTemporaryFile
-import re
 
 from django.utils import timezone
 

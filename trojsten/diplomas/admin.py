@@ -7,8 +7,8 @@ from django.utils.encoding import force_text
 
 from easy_select2.widgets import Select2Multiple
 
-from .widgets import Editor
 from .models import DiplomaTemplate, DiplomaDataSource
+from .widgets import Editor
 
 
 class DiplomaTemplateAdminForm(forms.ModelForm):

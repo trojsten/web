@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 
-import re
-import json
 from abc import abstractmethod
 from bs4 import BeautifulSoup
+import json
+import re
 
 try:
     from urllib2 import urlopen
+    from urllib import urlencode
 except ImportError:
     from urllib.request import urlopen
+    from urllib.parse import urlencode
+
 
 from django.template import loader
 from django.utils import timezone
@@ -58,15 +61,9 @@ class Naboj(AbstractSource):
 
     name = 'naboj'
 
-    @staticmethod
-    def compose_url(pattern, *args, **kwargs):
-        url_args = []
-        for k, v in kwargs.items():
-            if v is not None:
-                url_args.append('{}={}'.format(k, v))
-        url_args = '&'.join(url_args)
+    TEMPLATE = 'naboj'
 
-        return pattern.format(args=url_args)
+    HOMEPAGE_URL = 'https://abstract.naboj.org'
 
     @staticmethod
     def get_latest_year(homepage_url):
@@ -137,13 +134,31 @@ class Naboj(AbstractSource):
         return results
 
     def handle_request(self, request, **kwargs):
+        params = {
+            'year': self.get_latest_year(self.HOMEPAGE_URL),
+            'country_code': 'sk'
+        }
         request_body = request.body.decode('utf8')
-        kwargs.update(json.loads(request_body))
-        limit = kwargs.pop('limit', None)
+        params.update(json.loads(request_body))
+        params.update(kwargs)
+
+        limit = params.pop('limit', None)
         limit = None if limit == '' else int(limit)
-        url = kwargs.pop('url', '')
-        url = url if url != '' else self.compose_url(**kwargs)
+
+        url = params.pop('url', '')
+        url = url if url != '' else '{homepage}/archive/results.php?{args_param}'.format(homepage=self.HOMEPAGE_URL,
+                                                                                         args_param=urlencode(params))
+
         return self.scrape_results(url, limit)
+
+    def render(self, **kwargs):
+        context = kwargs.pop('context', {})
+        context.update({
+            'categories': [{'name': 'Juniori', 'value': 'jun'}, {'name': 'Seniori', 'value': 'sen'}],
+            'name': self.name
+        })
+        template = loader.get_template('trojsten/diplomas/sources/%s.html' % self.TEMPLATE)
+        return template.render(context=context)
 
 
 class NabojMath(Naboj):
@@ -152,40 +167,12 @@ class NabojMath(Naboj):
 
     HOMEPAGE_URL = 'https://math.naboj.org'
 
-    def handle_request(self, request, **kwargs):
-        kwargs.update({
-            'pattern': '{homepage}/archive/results.php?'.format(homepage=self.HOMEPAGE_URL) + '{args}',
-            'year': self.get_latest_year(self.HOMEPAGE_URL),
-            'country_code': 'sk'
-        })
-        return super(NabojMath, self).handle_request(request, **kwargs)
 
-    def render(self, **kwargs):
-        context = {
-            'categories': [{'name': 'Juniori', 'value': 'jun'}, {'name': 'Seniori', 'value': 'sen'}],
-            'name': self.name
-        }
-        context.update(kwargs)
-        template = loader.get_template('trojsten/diplomas/sources/naboj_math.html')
-        return template.render(context=context)
-
-
-class NabojPhysics(NabojMath):
+class NabojPhysics(Naboj):
 
     name = 'naboj_physics'
 
     HOMEPAGE_URL = 'https://physics.naboj.org'
-
-    def handle_request(self, request, **kwargs):
-        kwargs.update({
-            'pattern': '{homepage}/archive/results.php?'.format(homepage=self.HOMEPAGE_URL) + '{args}',
-            'year': self.get_latest_year(self.HOMEPAGE_URL),
-            'country_code': 'sk'
-        })
-        return super(NabojPhysics, self).handle_request(request, **kwargs)
-
-    def render(self, **kwargs):
-        return super(NabojPhysics, self).render(name=self.name)
 
 
 SOURCE_CLASSES = {

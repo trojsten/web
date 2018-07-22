@@ -6,7 +6,7 @@ import re
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from trojsten.diplomas.helpers import parse_json, parse_csv
+from .helpers import parse_json, parse_csv
 from .widgets import Editor
 
 

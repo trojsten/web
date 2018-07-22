@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-21 18:27+0000\n"
+"POT-Creation-Date: 2018-07-22 21:39+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -182,19 +182,19 @@ msgstr "autorizované skupiny"
 msgid "sources"
 msgstr "zdroje"
 
-#: trojsten/diplomas/forms.py:19
+#: trojsten/diplomas/forms.py:18
 msgid "Template"
 msgstr "Šablóna"
 
-#: trojsten/diplomas/forms.py:31
+#: trojsten/diplomas/forms.py:30
 msgid "Participants data"
 msgstr "Dáta účastníkov"
 
-#: trojsten/diplomas/forms.py:33
+#: trojsten/diplomas/forms.py:32
 msgid "Join into one PDF"
 msgstr "Spojiť do jedného PDF"
 
-#: trojsten/diplomas/forms.py:61
+#: trojsten/diplomas/forms.py:52
 msgid "Failed to parse the input data"
 msgstr "Chyba pri spracovaní dát"
 
@@ -246,30 +246,29 @@ msgstr "Výber externého zdroja"
 msgid "Choose a file"
 msgstr "Nahrať súbor"
 
-#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj_math.html:8
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj.html:8
 msgid "Categories"
 msgstr "Kategórie"
 
-#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj_math.html:19
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj.html:19
 msgid "Limit to first"
 msgstr "Iba prvých"
 
-#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj_math.html:26
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj.html:26
 msgid ""
 "Scrape data directly from URL (last resort in case Naboj site changes "
 "structure)"
-msgstr ""
-"Stiahni dáta priamo z URL (poistka pre prípad zmien Náboj stránky)"
+msgstr "Stiahni dáta priamo z URL (poistka pre prípad zmien Náboj stránky)"
 
-#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj_math.html:27
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj.html:27
 msgid "Results URL"
 msgstr "URL výsledkov"
 
-#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj_math.html:29
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj.html:29
 msgid "This field is not required"
 msgstr "Toto pole nie je povinné."
 
-#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj_math.html:36
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj.html:36
 msgid "Load"
 msgstr "Načítať"
 
