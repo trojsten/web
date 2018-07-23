@@ -6,6 +6,7 @@ django-bulk-update
 django-classy-tags
 django-contact-form
 django-contrib-comments
+django-cookie-law
 django-cors-headers
 django-countries
 django-crispy-forms

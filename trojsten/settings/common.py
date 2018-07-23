@@ -269,6 +269,8 @@ INSTALLED_APPS = (
     'crispy_forms',
     'django_comments',
     'threadedcomments',
+
+    'cookielaw',
 )
 
 INSTALLED_APPS += trojsten.special.installed_apps.INSTALLED_APPS

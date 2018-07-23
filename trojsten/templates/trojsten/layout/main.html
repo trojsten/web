@@ -1,5 +1,6 @@
 {% extends "trojsten/layout/base.html" %}
 {% load utils navigation_tags %}
+{% load cookielaw_tags %}
 
 {% block page_layout %}
 <header>{% include "trojsten/layout/header.html" %}</header>
@@ -36,4 +37,7 @@
     {% include "trojsten/layout/footer.html" %}
 </footer>
 
+<div style="position: fixed; bottom: 0; width: 100%;">
+    {% cookielaw_banner %}
+</div>
 {% endblock %}
