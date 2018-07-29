@@ -1,0 +1,12 @@
+[
+  {
+    "fields": {
+      "name": "Sample template",
+      "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n   xmlns:cc=\"http://creativecommons.org/ns#\"\n   xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n   xmlns:svg=\"http://www.w3.org/2000/svg\"\n   xmlns=\"http://www.w3.org/2000/svg\"\n   id=\"svg8\"\n   version=\"1.1\"\n   viewBox=\"0 0 210 297\"\n   height=\"297mm\"\n   width=\"210mm\">\n  <defs\n     id=\"defs2\" />\n  <metadata\n     id=\"metadata5\">\n    <rdf:RDF>\n      <cc:Work\n         rdf:about=\"\">\n        <dc:format>image/svg+xml</dc:format>\n        <dc:type\n           rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" />\n        <dc:title></dc:title>\n      </cc:Work>\n    </rdf:RDF>\n  </metadata>\n  <g\n     id=\"layer1\" />\n</svg>\n",
+      "authorized_groups": [],
+      "sources": []
+    },
+    "model": "diplomas.DiplomaTemplate",
+    "pk": 1
+  }
+]

@@ -1,0 +1,39 @@
+{% load bootstrap %}
+{% load i18n %}
+{% load utils %}
+
+
+{% if sources %}
+    <div class="row">
+        <hr>
+        <h4 style="margin-bottom: 20px; ">{% trans "External input options" %}</h4>
+    </div>
+
+    <div class="row"  style="
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;">
+       <div class="col-md-3" style="border-right: 1px solid #eee;">
+            <ul class="nav nav-pills nav-stacked">
+                {% for source in sources %}
+                    <li {% if forloop.counter == 1 %} class="active"{% endif %}>
+                        <a href="#{{ source.name }}"  data-toggle="pill" >
+                            {{ source.verbose_name }}
+                        </a>
+                    </li>
+            {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-md-9">
+            <div class="tab-content">
+                {% for source in sources %}
+                    <div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="{{ source.name }}">
+                        {{ source.html }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}

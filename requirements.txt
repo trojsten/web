@@ -6,13 +6,13 @@
 #
 amqp==1.4.9               # via kombu
 anyjson==0.3.3            # via kombu
-asn1crypto==0.24.0        # via cryptography
+beautifulsoup4==4.6.0     # via bs4
 billiard==3.3.0.23        # via celery
 bleach==1.5.0             # via wiki
+bs4==0.0.1
+backports.csv==1.0.6
 celery==3.1.26.post2
 certifi==2015.04.28
-cffi==1.11.5              # via cryptography
-cryptography==2.2.2       # via pyopenssl
 czech-sort==0.4
 diff-match-patch==20121119  # via django-import-export
 django-autoslug==1.9.3    # via django-trojsten-news
@@ -48,14 +48,11 @@ django==1.11.12
 djangorestframework==3.8.2
 ecdsa==0.13
 elasticsearch==6.2.0
-enum34==1.1.6             # via cryptography
 et-xmlfile==1.0.1         # via openpyxl
 fake-factory==9999.9.9
 first==2.0.1
 html5lib==0.9999999       # via bleach
-idna==2.6                 # via cryptography
 importlib==1.0.4
-ipaddress==1.0.22         # via cryptography
 jdcal==1.4                # via openpyxl
 kombu==3.0.37             # via celery
 ksp-login==0.5.0
@@ -67,7 +64,6 @@ openpyxl==2.5.3           # via tablib
 pillow==5.1.0             # via wiki
 psycopg2==2.7.4
 pyasn1==0.4.2             # via ndg-httpsclient
-pycparser==2.18           # via cffi
 pycrypto==2.6.1
 pyjwt==1.6.1              # via social-auth-core
 pymdown-extensions==2.0
@@ -78,7 +74,7 @@ pytz==2018.4
 pyyaml==3.12              # via tablib
 requests-oauthlib==0.8.0  # via social-auth-core
 requests==2.14.2
-six==1.11.0               # via bleach, cryptography, django-nyt, html5lib, pyopenssl, social-auth-app-django, social-auth-core, wiki
+six==1.11.0               # via bleach, django-nyt, html5lib, social-auth-app-django, social-auth-core, wiki
 social-auth-app-django==1.2.0
 social-auth-core==1.7.0   # via ksp-login, social-auth-app-django
 sorl-thumbnail==12.4.1    # via wiki
