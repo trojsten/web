@@ -97,6 +97,7 @@ def parse_result_and_points_from_protocol(submit):
         return None, None
     try:
         # TODO: limit protocol size so we don't go OOM in case of malicious protocol.
-        return judge_client.parse_protocol(submit.protocol, max_points=submit.task.source_points)
+        protocol = judge_client.parse_protocol(submit.protocol, max_points=submit.task.source_points)
+        return protocol.result, protocol.points
     except ProtocolCorruptedError:
         return constants.SUBMIT_RESPONSE_PROTOCOL_CORRUPTED, 0

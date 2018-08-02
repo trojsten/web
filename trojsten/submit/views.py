@@ -4,8 +4,9 @@
 import json
 import logging
 import os
-import six
 import xml.etree.ElementTree as ET
+
+import six
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -18,8 +19,10 @@ from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
-from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.authentication import (SessionAuthentication,
+                                           TokenAuthentication)
+from rest_framework.decorators import (api_view, authentication_classes,
+                                       permission_classes)
 from rest_framework.response import Response as APIResponse
 from sendfile import sendfile
 from unidecode import unidecode
@@ -28,60 +31,46 @@ from trojsten.contests import constants as contest_consts
 from trojsten.contests.models import Competition, Round, Task
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
                                    TestableZipSubmitForm)
-from trojsten.submit.helpers import (get_path, process_submit,
-                                     write_chunks_to_file, get_description_file_path,
-                                     parse_result_and_points_from_protocol)
+from trojsten.submit.helpers import (get_description_file_path, get_path,
+                                     parse_result_and_points_from_protocol,
+                                     process_submit, write_chunks_to_file)
 from trojsten.submit.templatetags.submit_parts import submitclass
+
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
 from .serializers import ExternalSubmitSerializer
 
 logger = logging.getLogger(__name__)
+judge_client = settings.JUDGE_CLIENT
 
 
-def protocol_data(protocol_path, force_show_details=False):
-    template_data = {}
-    if os.path.exists(protocol_path):
+def protocol_data(submit, force_show_details=False):
+    if not submit.protocol:  # Not tested yet!
+        return {'protocolReady': False}
+    try:
+        protocol = judge_client.parse_protocol(submit.protocol, submit.task.source_points)
+        template_data = {}
         template_data['protocolReady'] = True  # Tested, show the protocol
-        try:
-            tree = ET.parse(protocol_path)  # Protocol is in XML format
-        except SyntaxError:
-            # Don't throw error if protocol is corrupted: either protocol is still being uploaded
-            # or the user is informed about the corrupted protocol via submit response status.
-            template_data['protocolReady'] = False
-            return template_data
-        clog = tree.find('compileLog')
-        # Show compilation log if present
-        template_data['compileLogPresent'] = clog is not None
-        if clog is None:
-            clog = ''
-        else:
-            clog = clog.text
-        template_data['compileLog'] = clog
-        tests = []
-        runlog = tree.find('runLog')
-        if runlog is not None:
-            for runtest in runlog:
-                # Test log format in protocol is:
-                # name, resultCode, resultMsg, time, details
-                if runtest.tag != 'test':
-                    continue
-                test = {}
-                test['name'] = runtest[0].text
-                test['result'] = runtest[2].text
-                test['time'] = runtest[3].text
-                details = runtest[4].text if len(runtest) > 4 else None
-                test['details'] = details
-                test['showDetails'] = details is not None and (
-                    'sample' in test['name'] or force_show_details
-                )
-                tests.append(test)
+        template_data['compileLogPresent'] = protocol.compile_log is not None
+        template_data['compileLog'] = protocol.compile_log
+        tests = protocol.tests
+
+        for runtest in tests:
+            test = {
+                'name': runtest.name,
+                'result': runtest.result,
+                'time': runtest.time,
+                'details': runtest.details,
+                'showDetails': runtest.details is not None and (
+                    'sample' in test['name'] or force_show_details),
+            }
+            tests.append(test)
         template_data['tests'] = tests
         template_data['have_tests'] = len(tests) > 0
-    else:
-        template_data['protocolReady'] = False  # Not tested yet!
-    return template_data
+        return template_data
+    except ProtocolError:
+        return {'protocolReady': False}
 
 
 @login_required
@@ -112,10 +101,10 @@ def view_protocol(request, submit_id):
         submit.submit_type == constants.SUBMIT_TYPE_SOURCE or
         submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
     ):
-        protocol_path = submit.protocol_path
-        is_organizer = request.user.is_in_group(submit.task.round.semester.competition.organizers_group)
+        is_organizer = request.user.is_in_group(
+            submit.task.round.semester.competition.organizers_group)
         template_data = protocol_data(
-            protocol_path, submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP or is_organizer
+            submit, submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP or is_organizer
         )
         template_data['submit'] = submit
         template_data['submit_verbose_response'] = constants.SUBMIT_VERBOSE_RESPONSE
@@ -146,10 +135,11 @@ def view_submit(request, submit_id):
             'source': True,
             'submit_verbose_response': constants.SUBMIT_VERBOSE_RESPONSE
         }
-        protocol_path = submit.protocol_path
-        is_organizer = request.user.is_in_group(submit.task.round.semester.competition.organizers_group)
+        is_organizer = request.user.is_in_group(
+            submit.task.round.semester.competition.organizers_group)
         template_data.update(
-            protocol_data(protocol_path, submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP or is_organizer)
+            protocol_data(submit, submit.submit_type ==
+                          constants.SUBMIT_TYPE_TESTABLE_ZIP or is_organizer)
         )
         if os.path.exists(submit.filepath):
             # Source code available, display it!
@@ -338,7 +328,8 @@ def send_notification_email(submit, task_id, submit_type):
                                                                     args=(task_id, submit.id))
         ),
         settings.DEFAULT_FROM_EMAIL,
-        [org.email for org in submit.task.get_assigned_people_for_role(contest_consts.TASK_ROLE_REVIEWER)]
+        [org.email for org in submit.task.get_assigned_people_for_role(
+            contest_consts.TASK_ROLE_REVIEWER)]
     )
 
 
