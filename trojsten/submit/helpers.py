@@ -15,7 +15,11 @@ judge_client = settings.JUDGE_CLIENT
 
 
 def write_chunks_to_file(target_path, chunks):
-    os.makedirs(os.path.dirname(target_path))
+    try:
+        os.makedirs(os.path.dirname(target_path))
+    except OSError:
+        # Directory exists.
+        pass
     with open(target_path, 'wb+') as destination:
         for chunk in chunks:
             destination.write(smart_bytes(chunk))

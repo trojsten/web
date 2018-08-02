@@ -21,7 +21,7 @@ class JudgeClient(object):
         self.tester_url = tester_url
         self.tester_port = tester_port
 
-    def submit(self, submit_id, user_id, task_id, submission_content, language):
+    def submit(self, submit_id, user_id, task_id, submission_content, language, priority=0):
         """Submits a file to the judge system.
 
         :param submit_id: unique id of the submit.
@@ -32,7 +32,7 @@ class JudgeClient(object):
         :returns: submit_id
         """
 
-        header = self._create_header(submit_id, user_id, task_id, language)
+        header = self._create_header(submit_id, user_id, task_id, language, priority)
         self._send_data_to_server(header, submission_content)
 
     @staticmethod
@@ -74,7 +74,7 @@ class JudgeClient(object):
 
         return result, points
 
-    def _create_header(self, submit_id, user_id, task_id, language):
+    def _create_header(self, submit_id, user_id, task_id, language, priority):
         """Creates a raw header from submit parameters"""
         return 'submit1.3\n%s\n%s\n%s\n%s\n%s\n%s\nmagic_footer\n' % (
             self.tester_id,
@@ -82,7 +82,7 @@ class JudgeClient(object):
             user_id,
             task_id,
             language,
-            0,  # priority
+            priority,
         )
 
     def _send_data_to_server(self, header, submission_file_content):
