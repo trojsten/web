@@ -4,8 +4,6 @@
 import json
 import logging
 import os
-import xml.etree.ElementTree as ET
-
 import six
 from django.conf import settings
 from django.contrib import messages
@@ -34,8 +32,8 @@ from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
 from trojsten.submit.helpers import (get_description_file_path, get_path,
                                      parse_result_and_points_from_protocol,
                                      process_submit, write_chunks_to_file)
+from trojsten.submit.judge_client import ProtocolError
 from trojsten.submit.templatetags.submit_parts import submitclass
-
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
@@ -50,10 +48,11 @@ def protocol_data(submit, force_show_details=False):
         return {'protocolReady': False}
     try:
         protocol = judge_client.parse_protocol(submit.protocol, submit.task.source_points)
-        template_data = {}
-        template_data['protocolReady'] = True  # Tested, show the protocol
-        template_data['compileLogPresent'] = protocol.compile_log is not None
-        template_data['compileLog'] = protocol.compile_log
+        template_data = {
+            'protocolReady': True,
+            'compileLogPresent': protocol.compile_log is not None,
+            'compileLog': protocol.compile_log,
+        }
         tests = protocol.tests
 
         for runtest in tests:
@@ -62,8 +61,7 @@ def protocol_data(submit, force_show_details=False):
                 'result': runtest.result,
                 'time': runtest.time,
                 'details': runtest.details,
-                'showDetails': runtest.details is not None and (
-                    'sample' in test['name'] or force_show_details),
+                'showDetails': runtest.details is not None and ('sample' in runtest['name'] or force_show_details),
             }
             tests.append(test)
         template_data['tests'] = tests
@@ -98,8 +96,8 @@ def view_protocol(request, submit_id):
 
     # For source submits, display testing results, source code and submit list.
     if (
-        submit.submit_type == constants.SUBMIT_TYPE_SOURCE or
-        submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+            submit.submit_type == constants.SUBMIT_TYPE_SOURCE or
+            submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
     ):
         is_organizer = request.user.is_in_group(
             submit.task.round.semester.competition.organizers_group)
@@ -127,8 +125,8 @@ def view_submit(request, submit_id):
 
     # For source submits, display testing results, source code and submit list.
     if (
-        submit.submit_type == constants.SUBMIT_TYPE_SOURCE or
-        submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+            submit.submit_type == constants.SUBMIT_TYPE_SOURCE or
+            submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
     ):
         template_data = {
             'submit': submit,
@@ -360,8 +358,8 @@ def task_submit_post(request, task_id, submit_type):
 
     # File will be sent to tester
     if (
-        submit_type == constants.SUBMIT_TYPE_SOURCE or
-        submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+            submit_type == constants.SUBMIT_TYPE_SOURCE or
+            submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
     ):
         if submit_type == constants.SUBMIT_TYPE_SOURCE:
             form = SourceSubmitForm(request.POST, request.FILES)

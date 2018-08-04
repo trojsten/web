@@ -1,8 +1,8 @@
+from time import time
+
 import os.path
 import zipfile
 from collections import OrderedDict
-from time import time
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -58,7 +58,7 @@ def review_task(request, task_pk):
                     return redirect('admin:review_submit_zip', task.pk)
         if 'points_submit' in request.POST:
             form_set = PointsFormSet(request.POST, form_kwargs={
-                                     'max_points': task.description_points})
+                'max_points': task.description_points})
             if form_set.is_valid():
                 form_set.save(task)
                 messages.add_message(
@@ -184,7 +184,7 @@ def download_all_submits(request, task_pk, download_reviews=False):
     with zipfile.ZipFile(path, 'w') as zipper:
         for i, user in enumerate(submits):
             if 'description' in user:
-                submit = user['review'] if download_reviews and 'review' in user\
+                submit = user['review'] if download_reviews and 'review' in user \
                     else user['description']
                 description_submit_id = submit.pk
                 if not os.path.isfile(submit.filepath):
