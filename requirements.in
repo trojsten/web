@@ -12,7 +12,7 @@ django-cors-headers
 django-countries
 django-crispy-forms
 django-dotenv
-django-easy-select2
+django-easy-select2<=1.3.4
 django-favicon
 django-fluent-comments
 django-haystack
