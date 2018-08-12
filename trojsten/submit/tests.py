@@ -4,13 +4,8 @@ from __future__ import unicode_literals
 import json
 import os
 import shutil
-import socket
 import tempfile
-import threading
-import time
 import unittest
-from os import path
-
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
@@ -20,15 +15,16 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from os import path
 
-from trojsten.contests.models import Competition, Round, Semester, Task, TaskPeople
 from trojsten.contests.constants import TASK_ROLE_REVIEWER
+from trojsten.contests.models import Competition, Round, Semester, Task, TaskPeople
 from trojsten.people.models import User
 from trojsten.submit import constants
 from trojsten.submit.forms import SubmitAdminForm
-from trojsten.submit.helpers import (get_lang_from_filename, get_path_raw,
-                                     post_submit, write_chunks_to_file, get_description_file_path,
-                                     update_submit)
+from trojsten.submit.helpers import (_get_lang_from_filename,
+                                     write_chunks_to_file, get_description_file_path,
+                                     update_submit, get_path)
 from trojsten.submit.views import send_notification_email
 from trojsten.utils.test_utils import get_noexisting_id
 from .models import ExternalSubmitToken, Submit
@@ -487,35 +483,15 @@ class SubmitHelpersTests(TestCase):
             self.assertEqual(data, b'helloworld')
 
     def test_get_lang_from_filename(self):
-        self.assertEqual(get_lang_from_filename('file.cpp'), '.cc')
-        self.assertEqual(get_lang_from_filename('file.foo'), False)
+        self.assertEqual(_get_lang_from_filename('file.cpp'), '.cc')
+        self.assertEqual(_get_lang_from_filename('file.foo'), None)
 
-    def test_get_path_raw(self):
-        self.assertEqual(get_path_raw('contest', 'task', 'user'),
-                         os.path.join(settings.SUBMIT_PATH, 'submits', 'user', 'task'))
-
-    @override_settings(
-        TESTER_URL='127.0.0.1',
-        TESTER_PORT=7777,
-        SUBMIT_DEBUG=False,
-    )
-    def test_post_submit(self):
-        def run_fake_server(test):
-            server_sock = socket.socket()
-            server_sock.bind((settings.TESTER_URL, settings.TESTER_PORT))
-            server_sock.listen(0)
-            conn, addr = server_sock.accept()
-            raw = conn.recv(2048)
-            data = conn.recv(2048)
-            server_sock.close()
-            test.received = raw + data
-
-        server_thread = threading.Thread(target=run_fake_server, args=(self,))
-        server_thread.start()
-        time.sleep(50.0 / 1000.0)  # 50ms should be enough for the server to bind
-        post_submit(u'raw', b'data')
-        server_thread.join()
-        self.assertEqual(self.received, b'rawdata')
+    def test_get_path(self):
+        contest = self.task.round.semester.competition.name
+        tester_user_id = '%s-%s' % (contest, self.user.id)
+        tester_task_id = '%s-%s' % (contest, self.task.id)
+        self.assertEqual(get_path(self.task, self.user),
+                         os.path.join(settings.SUBMIT_PATH, 'submits', tester_user_id, tester_task_id))
 
     def test_update_submit_ok(self):
         submit = Submit.objects.create(

@@ -43,3 +43,18 @@ SUBMIT_VERBOSE_RESPONSE = {
 }
 
 SUBMIT_PAPER_FILEPATH = '<PAPIEROVE>'
+
+EXT_MAPPING = {
+    ".cpp": ".cc",
+    ".cc": ".cc",
+    ".pp": ".pas",
+    ".pas": ".pas",
+    ".dpr": ".pas",
+    ".c": ".c",
+    ".py": ".py",
+    ".py3": ".py",
+    ".hs": ".hs",
+    ".cs": ".cs",
+    ".java": ".java",
+    ".zip": ".zip",
+}

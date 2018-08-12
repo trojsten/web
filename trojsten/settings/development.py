@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+
 import os
 
 from trojsten.settings.common import *
@@ -104,3 +105,5 @@ SOCIAL_AUTH_TROJSTEN_SECRET = env(
 )
 
 ELASTICSEARCH_TESTS = bool(int(env('TROJSTENWEB_ELASTICSEARCH_TESTS', False)))
+JUDGE_CLIENT = judge_client.DebugJudgeClient()
+
