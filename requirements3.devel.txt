@@ -7,9 +7,12 @@
 amqp==1.4.9               # via kombu
 anyjson==0.3.3            # via kombu
 asn1crypto==0.24.0        # via cryptography
+backports.csv==1.0.6
 bcrypt==3.1.4             # via paramiko
+beautifulsoup4==4.6.1     # via bs4
 billiard==3.3.0.23        # via celery
 bleach==1.5.0             # via wiki
+bs4==0.0.1
 bumpversion==0.5.3
 celery==3.1.26.post2
 certifi==2015.04.28
@@ -31,7 +34,7 @@ django-countries==5.3
 django-crispy-forms==1.7.2
 django-debug-toolbar==1.9.1
 django-dotenv==1.4.2
-django-easy-select2==1.4.0
+django-easy-select2==1.3.4
 django-favicon==0.1.3
 django-fluent-comments==2.0
 django-haystack==2.8.1

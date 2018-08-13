@@ -1,0 +1,28 @@
+{% load bootstrap %}
+{% load utils %}
+{% load i18n %}
+
+<div class="form-group">
+    <label style="width: 100px">{% trans "Choose a file" %}</label>
+    <input style="display: inline" type="file" name="fileupload_input" id="id_fileupload_input">
+</div>
+<div class="form-group">
+
+</div>
+
+<script>
+    (function ($) {
+
+        $("#id_fileupload_input").on({
+            change: function () {
+                var f = document.getElementById("id_fileupload_input").files[0];
+                var fileReader = new FileReader();
+                fileReader.onload = function(fileLoadedEvent){
+                    var textFromFileLoaded = fileLoadedEvent.target.result;
+                    set_editor_content(textFromFileLoaded);
+                };
+                fileReader.readAsText(f, "UTF-8");
+            }
+        });
+    })(jQuery);
+</script>
