@@ -2,82 +2,73 @@
 # Create your views here.
 
 import json
+import logging
 import os
-import xml.etree.ElementTree as ET
-
 import six
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
 from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden)
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
-from django.core.mail import send_mail
-from django.conf import settings
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.authentication import (SessionAuthentication,
+                                           TokenAuthentication)
+from rest_framework.decorators import (api_view, authentication_classes,
+                                       permission_classes)
 from rest_framework.response import Response as APIResponse
 from sendfile import sendfile
 from unidecode import unidecode
 
+from trojsten.contests import constants as contest_consts
 from trojsten.contests.models import Competition, Round, Task
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
                                    TestableZipSubmitForm)
-from trojsten.submit.helpers import (get_path, process_submit, update_submit,
-                                     write_chunks_to_file, get_description_file_path)
+from trojsten.submit.helpers import (get_description_file_path, get_path,
+                                     parse_result_and_points_from_protocol,
+                                     process_submit, write_chunks_to_file)
+from trojsten.submit.judge_client import ProtocolError
 from trojsten.submit.templatetags.submit_parts import submitclass
-from trojsten.contests import constants as contest_consts
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
 from .serializers import ExternalSubmitSerializer
 
+logger = logging.getLogger(__name__)
+judge_client = settings.JUDGE_CLIENT
 
-def protocol_data(protocol_path, force_show_details=False):
-    template_data = {}
-    if os.path.exists(protocol_path):
-        template_data['protocolReady'] = True  # Tested, show the protocol
-        try:
-            tree = ET.parse(protocol_path)  # Protocol is in XML format
-        except SyntaxError:
-            # Don't throw error if protocol is corrupted: either protocol is still being uploaded
-            # or the user is informed about the corrupted protocol via submit response status.
-            template_data['protocolReady'] = False
-            return template_data
-        clog = tree.find('compileLog')
-        # Show compilation log if present
-        template_data['compileLogPresent'] = clog is not None
-        if clog is None:
-            clog = ''
-        else:
-            clog = clog.text
-        template_data['compileLog'] = clog
-        tests = []
-        runlog = tree.find('runLog')
-        if runlog is not None:
-            for runtest in runlog:
-                # Test log format in protocol is:
-                # name, resultCode, resultMsg, time, details
-                if runtest.tag != 'test':
-                    continue
-                test = {}
-                test['name'] = runtest[0].text
-                test['result'] = runtest[2].text
-                test['time'] = runtest[3].text
-                details = runtest[4].text if len(runtest) > 4 else None
-                test['details'] = details
-                test['showDetails'] = details is not None and (
-                    'sample' in test['name'] or force_show_details
-                )
-                tests.append(test)
+
+def protocol_data(submit, force_show_details=False):
+    if not submit.protocol:  # Not tested yet!
+        return {'protocolReady': False}
+    try:
+        protocol = judge_client.parse_protocol(submit.protocol, submit.task.source_points)
+        template_data = {
+            'protocolReady': True,
+            'compileLogPresent': protocol.compile_log is not None,
+            'compileLog': protocol.compile_log,
+        }
+        tests = protocol.tests
+
+        for runtest in tests:
+            test = {
+                'name': runtest.name,
+                'result': runtest.result,
+                'time': runtest.time,
+                'details': runtest.details,
+                'showDetails': runtest.details is not None and ('sample' in runtest['name'] or force_show_details),
+            }
+            tests.append(test)
         template_data['tests'] = tests
         template_data['have_tests'] = len(tests) > 0
-    else:
-        template_data['protocolReady'] = False  # Not tested yet!
-    return template_data
+        return template_data
+    except ProtocolError:
+        return {'protocolReady': False}
 
 
 @login_required
@@ -105,13 +96,13 @@ def view_protocol(request, submit_id):
 
     # For source submits, display testing results, source code and submit list.
     if (
-        submit.submit_type == constants.SUBMIT_TYPE_SOURCE or
-        submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+            submit.submit_type == constants.SUBMIT_TYPE_SOURCE or
+            submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
     ):
-        protocol_path = submit.protocol_path
-        is_organizer = request.user.is_in_group(submit.task.round.semester.competition.organizers_group)
+        is_organizer = request.user.is_in_group(
+            submit.task.round.semester.competition.organizers_group)
         template_data = protocol_data(
-            protocol_path, submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP or is_organizer
+            submit, submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP or is_organizer
         )
         template_data['submit'] = submit
         template_data['submit_verbose_response'] = constants.SUBMIT_VERBOSE_RESPONSE
@@ -134,18 +125,19 @@ def view_submit(request, submit_id):
 
     # For source submits, display testing results, source code and submit list.
     if (
-        submit.submit_type == constants.SUBMIT_TYPE_SOURCE or
-        submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+            submit.submit_type == constants.SUBMIT_TYPE_SOURCE or
+            submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
     ):
         template_data = {
             'submit': submit,
             'source': True,
             'submit_verbose_response': constants.SUBMIT_VERBOSE_RESPONSE
         }
-        protocol_path = submit.protocol_path
-        is_organizer = request.user.is_in_group(submit.task.round.semester.competition.organizers_group)
+        is_organizer = request.user.is_in_group(
+            submit.task.round.semester.competition.organizers_group)
         template_data.update(
-            protocol_data(protocol_path, submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP or is_organizer)
+            protocol_data(submit, submit.submit_type ==
+                          constants.SUBMIT_TYPE_TESTABLE_ZIP or is_organizer)
         )
         if os.path.exists(submit.filepath):
             # Source code available, display it!
@@ -276,10 +268,29 @@ def all_submits_source_page(request):
     return all_submits_page(request, constants.SUBMIT_TYPE_SOURCE)
 
 
-def receive_protocol(request, protocol_id):
-    submit = get_object_or_404(Submit, protocol_id=protocol_id)
-    update_submit(submit)
-    return HttpResponse('')
+@api_view(['POST'])
+@authentication_classes((SessionAuthentication, TokenAuthentication))
+def upload_protocol(request):
+    if not request.user.has_perm('old_submit.change_submit'):
+        raise PermissionDenied()
+    protocol_id = request.POST.get('submit_id')
+    protocol_content = request.POST.get('protocol')
+    if not protocol_id or not protocol_content:
+        logger.warning('Missing submit_id or protocol.\n%s' % request.POST)
+        return HttpResponse()
+    try:
+        submit = Submit.objects.get(protocol_id=protocol_id)
+    except Submit.DoesNotExist:
+        logger.warning('Invalid protocol id: %s' % protocol_id)
+        return HttpResponse()
+    submit.protocol = protocol_content
+    result, points = parse_result_and_points_from_protocol(submit)
+    if result is not None:
+        submit.tester_response = result
+        submit.points = points
+        submit.testing_status = constants.SUBMIT_STATUS_FINISHED
+    submit.save()
+    return HttpResponse()
 
 
 #  @login_required
@@ -290,9 +301,6 @@ def poll_submit_info(request, submit_id):
             task__round__semester__competition__organizers_group__user__pk=request.user.pk).exists():
         # You shouldn't see other user's submits if you are not an organizer of the competition
         raise PermissionDenied()
-
-    if not submit.tested:  # try to find and parse protocol with each poll
-        update_submit(submit)
 
     return HttpResponse(json.dumps({
         'tested': submit.tested,
@@ -318,7 +326,8 @@ def send_notification_email(submit, task_id, submit_type):
                                                                     args=(task_id, submit.id))
         ),
         settings.DEFAULT_FROM_EMAIL,
-        [org.email for org in submit.task.get_assigned_people_for_role(contest_consts.TASK_ROLE_REVIEWER)]
+        [org.email for org in submit.task.get_assigned_people_for_role(
+            contest_consts.TASK_ROLE_REVIEWER)]
     )
 
 
@@ -349,8 +358,8 @@ def task_submit_post(request, task_id, submit_type):
 
     # File will be sent to tester
     if (
-        submit_type == constants.SUBMIT_TYPE_SOURCE or
-        submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+            submit_type == constants.SUBMIT_TYPE_SOURCE or
+            submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
     ):
         if submit_type == constants.SUBMIT_TYPE_SOURCE:
             form = SourceSubmitForm(request.POST, request.FILES)
@@ -463,5 +472,4 @@ def external_submit(request):
         testing_status=constants.SUBMIT_RESPONSE_OK,
     )
     submit.save()
-
     return APIResponse()

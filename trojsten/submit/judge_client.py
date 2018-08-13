@@ -1,10 +1,15 @@
 # coding=utf-8
 import socket
+from collections import namedtuple
 from decimal import Decimal
-from django.utils.encoding import smart_bytes
 from xml.etree import ElementTree
 
+from django.utils.encoding import smart_bytes
+
 from trojsten.submit import constants
+
+Protocol = namedtuple('Protocol', ['result', 'points', 'compile_log', 'tests'])
+ProtocolTest = namedtuple('ProtocolTest', ['name', 'result', 'time', 'details'])
 
 
 class JudgeClient(object):
@@ -55,14 +60,24 @@ class JudgeClient(object):
 
         compile_log = tree.find("compileLog")
         if compile_log is not None:
-            return constants.SUBMIT_RESPONSE_ERROR, 0  # Returns zero points if there was error.
+            return Protocol(
+                points=0,  # Returns zero points if there was error.
+                result=constants.SUBMIT_RESPONSE_ERROR,
+                compile_log=compile_log.text,
+                tests=tuple())
 
-        run_log = tree.find("runLog")
         result = constants.SUBMIT_RESPONSE_OK
+        tests = []
+        run_log = tree.find("runLog")
         for test in run_log:
             if test.tag != 'test':
                 continue
             test_result = test[2].text
+            details = test[4].text if len(test) > 4 else None
+            tests.append(ProtocolTest(name=test[0].text,
+                                      result=test_result,
+                                      time=test[3].text,
+                                      details=details))
             if test_result != constants.SUBMIT_RESPONSE_OK:
                 result = test_result
                 break
@@ -71,8 +86,7 @@ class JudgeClient(object):
         except (ValueError, TypeError):
             raise ProtocolFormatError("Invalid score.", protocol_content)
         points = (max_points * score) / Decimal(100)
-
-        return result, points
+        return Protocol(result=result, points=points, compile_log=None, tests=tests)
 
     def _create_header(self, submit_id, user_id, task_id, language, priority):
         """Creates a raw header from submit parameters"""

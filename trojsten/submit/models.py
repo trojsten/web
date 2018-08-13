@@ -3,9 +3,9 @@
 from __future__ import unicode_literals
 
 import binascii
+
 import os
 from decimal import Decimal
-
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -107,9 +107,10 @@ class Submit(models.Model):
         )
     )
     protocol_id = models.CharField(
-        max_length=128, verbose_name='číslo protokolu', blank=True)
+        db_index=True, max_length=128, verbose_name='číslo protokolu', blank=True)
 
     reviewer_comment = models.TextField(verbose_name='komentár od opravovateľa', blank=True)
+    protocol = models.TextField(verbose_name='protokol', blank=True, null=True)
 
     objects = SubmitManager()
 
@@ -124,10 +125,6 @@ class Submit(models.Model):
             submit_constants.SUBMIT_TYPES[self.submit_type][1],
             str(self.time),
         )
-
-    @property
-    def protocol_path(self):
-        return self.filepath.rsplit('.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
 
     @property
     def filename(self):
