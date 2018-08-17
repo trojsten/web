@@ -249,6 +249,7 @@ INSTALLED_APPS = (
     'oauth2_provider',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
     'snowpenguin.django.recaptcha2',
 
     # django-wiki and its dependencies
