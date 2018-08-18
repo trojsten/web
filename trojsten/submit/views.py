@@ -4,7 +4,9 @@
 import json
 import logging
 import os
+
 import six
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -23,8 +25,6 @@ from rest_framework.decorators import (api_view, authentication_classes,
                                        permission_classes)
 from rest_framework.response import Response as APIResponse
 from sendfile import sendfile
-from unidecode import unidecode
-
 from trojsten.contests import constants as contest_consts
 from trojsten.contests.models import Competition, Round, Task
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
@@ -34,6 +34,8 @@ from trojsten.submit.helpers import (get_description_file_path, get_path,
                                      process_submit, write_chunks_to_file)
 from trojsten.submit.judge_client import ProtocolError
 from trojsten.submit.templatetags.submit_parts import submitclass
+from unidecode import unidecode
+
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
@@ -53,17 +55,16 @@ def protocol_data(submit, force_show_details=False):
             'compileLogPresent': protocol.compile_log is not None,
             'compileLog': protocol.compile_log,
         }
-        tests = protocol.tests
-
-        for runtest in tests:
-            test = {
+        tests = [
+            {
                 'name': runtest.name,
                 'result': runtest.result,
                 'time': runtest.time,
                 'details': runtest.details,
                 'showDetails': runtest.details is not None and ('sample' in runtest['name'] or force_show_details),
             }
-            tests.append(test)
+            for runtest in protocol.tests
+        ]
         template_data['tests'] = tests
         template_data['have_tests'] = len(tests) > 0
         return template_data

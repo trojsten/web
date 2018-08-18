@@ -6,6 +6,8 @@ import os
 import shutil
 import tempfile
 import unittest
+from os import path
+
 from django.conf import settings
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
@@ -16,18 +18,18 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from os import path
-
 from trojsten.contests.constants import TASK_ROLE_REVIEWER
-from trojsten.contests.models import Competition, Round, Semester, Task, TaskPeople
+from trojsten.contests.models import (Competition, Round, Semester, Task,
+                                      TaskPeople)
 from trojsten.people.models import User
 from trojsten.submit import constants
 from trojsten.submit.forms import SubmitAdminForm
 from trojsten.submit.helpers import (_get_lang_from_filename,
-                                     write_chunks_to_file, get_description_file_path,
-                                     get_path)
+                                     get_description_file_path, get_path,
+                                     write_chunks_to_file)
 from trojsten.submit.views import send_notification_email
 from trojsten.utils.test_utils import get_noexisting_id
+
 from .models import ExternalSubmitToken, Submit
 
 
@@ -464,7 +466,8 @@ class SubmitHelpersTests(TestCase):
                                              graduation=timezone.now().year + 1)
         self.tester_user = User.objects.create(username='testovac')
         submit_ct = ContentType.objects.get(app_label='old_submit', model='submit')
-        change_submit_perm = Permission.objects.get(content_type=submit_ct, codename='change_submit')
+        change_submit_perm = Permission.objects.get(
+            content_type=submit_ct, codename='change_submit')
         self.tester_user.user_permissions.add(change_submit_perm)
         self.tester_user.save()
 
@@ -647,7 +650,8 @@ class SubmitAdminFormTests(TestCase):
         self.task = Task.objects.create(number=1, name='Test task 1', round=test_round, )
 
     def test_create_submit(self):
-        submit_file_path = path.join('trojsten', 'reviews', 'test_data', 'submits', 'description.txt')
+        submit_file_path = path.join('trojsten', 'reviews', 'test_data',
+                                     'submits', 'description.txt')
         file = open(submit_file_path, 'r')
         file_content = file.read()
         file.close()
@@ -817,3 +821,43 @@ class TestSubmitNotificationEmails(TestCase):
         self.assertIn('example.com/admin/old_submit/submit/2/change/', email.body)
         self.assertIn('example.com/admin/contests/task/1/review/edit/2/', email.body)
         self.assertEqual(email.from_email, 'no-reply@trojsten.sk')
+
+
+class SubmitDetailTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='TestUser', password='password',
+                                             first_name='Jozko', last_name='Mrkvicka',
+                                             graduation=timezone.now().year + 2)
+        self.client.force_login(self.user)
+        group = Group.objects.create(name='Test Group')
+        competition = Competition.objects.create(name='TestCompetition', organizers_group=group)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        semester = Semester.objects.create(
+            number=1, name='Test semester 1', year=1, competition=competition
+        )
+
+        start = timezone.now() + timezone.timedelta(-8)
+        self.end = timezone.now() + timezone.timedelta(-4)
+        test_round = Round.objects.create(number=1, semester=semester, solutions_visible=True,
+                                          start_time=start, end_time=self.end, visible=True)
+        self.task = Task.objects.create(number=1, name='Test task 1', round=test_round, pk=1)
+
+    def test_submit_details(self):
+        protocol = '''<protokol><runLog>
+        <test><name>0.sample.a.in</name><resultCode>1</resultCode><resultMsg>OK</resultMsg><time>28</time></test>
+        <test><name>0.sample.b.in</name><resultCode>1</resultCode><resultMsg>OK</resultMsg><time>28</time></test>
+        <score>100</score><details>
+        Score: 100
+        </details><finalResult>1</finalResult><finalMessage>OK (OK: 100 %)</finalMessage></runLog></protokol>
+        '''
+        submit = Submit.objects.create(
+            task=self.task, user=self.user, submit_type=constants.SUBMIT_TYPE_SOURCE,
+            points=20, testing_status=constants.SUBMIT_STATUS_FINISHED, tester_response='OK',
+            protocol_id='test_id_47', protocol=protocol)
+        submit = Submit.objects.get(pk=submit.pk)
+
+        url = reverse('view_submit', kwargs={'submit_id': submit.pk})
+        response = self.client.get(url)
+
+        self.assertContains(response, '0.sample.a.in')
+        self.assertContains(response, 'OK')
