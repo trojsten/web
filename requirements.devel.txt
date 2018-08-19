@@ -7,11 +7,11 @@
 amqp==1.4.9               # via kombu
 anyjson==0.3.3            # via kombu
 asn1crypto==0.24.0        # via cryptography
+backports.csv==1.0.6
 bcrypt==3.1.4             # via paramiko
 beautifulsoup4==4.6.0     # via bs4
 billiard==3.3.0.23        # via celery
 bleach==1.5.0             # via wiki
-backports.csv==1.0.6
 bs4==0.0.1
 bumpversion==0.5.3
 celery==3.1.26.post2
@@ -19,7 +19,7 @@ certifi==2015.04.28
 cffi==1.11.5              # via bcrypt, cryptography, pynacl
 click==6.7                # via pip-tools
 coverage==4.5.1
-cryptography==2.2.2       # via paramiko
+cryptography==2.2.2       # via paramiko, pyopenssl
 czech-sort==0.4
 diff-match-patch==20121119  # via django-import-export
 django-autoslug==1.9.3    # via django-trojsten-news
@@ -96,6 +96,7 @@ social-auth-core==1.7.0   # via ksp-login, social-auth-app-django
 sorl-thumbnail==12.4.1    # via wiki
 sqlparse==0.2.4
 tablib==0.12.1            # via django-import-export
+trojsten-judge-client==1.0.0
 unicodecsv==0.14.1        # via tablib
 unidecode==1.0.22
 urllib3==1.22             # via elasticsearch

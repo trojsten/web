@@ -6,7 +6,6 @@ import logging
 import os
 
 import six
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -19,12 +18,16 @@ from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
+from judge_client import constants as judge_constants
+from judge_client.client import ProtocolError
 from rest_framework.authentication import (SessionAuthentication,
                                            TokenAuthentication)
 from rest_framework.decorators import (api_view, authentication_classes,
                                        permission_classes)
 from rest_framework.response import Response as APIResponse
 from sendfile import sendfile
+from unidecode import unidecode
+
 from trojsten.contests import constants as contest_consts
 from trojsten.contests.models import Competition, Round, Task
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
@@ -32,9 +35,7 @@ from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
 from trojsten.submit.helpers import (get_description_file_path, get_path,
                                      parse_result_and_points_from_protocol,
                                      process_submit, write_chunks_to_file)
-from trojsten.submit.judge_client import ProtocolError
 from trojsten.submit.templatetags.submit_parts import submitclass
-from unidecode import unidecode
 
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
@@ -470,7 +471,7 @@ def external_submit(request):
         user=validated['user'],
         points=validated['points'],
         submit_type=constants.SUBMIT_TYPE_EXTERNAL,
-        testing_status=constants.SUBMIT_RESPONSE_OK,
+        testing_status=judge_constants.SUBMIT_RESPONSE_OK,
     )
     submit.save()
     return APIResponse()
