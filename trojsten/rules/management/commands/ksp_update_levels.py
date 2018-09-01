@@ -51,10 +51,12 @@ class Command(BaseCommand):
             new_rules_start = timezone.datetime(year=2017, month=9, day=1,
                                                 tzinfo=timezone.get_default_timezone())
             associated_semester_from_old_rules = rounds_with_semesters[1].end_time < new_rules_start
-            max_points_in_levels = \
-                {1: 120, 2: 140, 3: 160, 4: 180} if associated_semester_from_old_rules else None
-            level_up_score_thresholds = {l: x // 2 for l, x in max_points_in_levels.items()}
-
+            if associated_semester_from_old_rules:
+                max_points_in_levels = \
+                    {1: 120, 2: 140, 3: 160, 4: 180}
+                level_up_score_thresholds = {l: x // 2 for l, x in max_points_in_levels.items()}
+            else:
+                level_up_score_thresholds = None
             updates = level_updates_from_camp_attendance(
                 camp, associated_semester, last_semester_before_level_up, level_up_score_thresholds)
 
