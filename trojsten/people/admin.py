@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 from django.conf.urls import url
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
+from django.core.exceptions import PermissionDenied
 from django.db import models
 from django.forms import ModelForm
 from django.shortcuts import get_object_or_404, redirect, render
@@ -159,9 +160,9 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
         )}),
         (_('Address'), {'fields': ('home_address', 'mail_to_school', 'mailing_address')}),
         (_('School'), {'fields': ('school', 'graduation')}),
+        (_('Password'), {'fields': ('password',)}),
     )
     superuser_fieldsets = fieldsets + (
-        (_('Password'), {'fields': ('password',)}),
         (_('Permissions'), {'fields': (
             'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'
         )}),
@@ -210,6 +211,11 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
 
     def get_urls(self):
         return submitted_tasks_urls + super(UserAdmin, self).get_urls()
+
+    def user_change_password(self, request, id, form_url=''):
+        if not request.user.is_superuser:
+            raise PermissionDenied
+        return super(UserAdmin, self).user_change_password(request, id, form_url)
 
 
 class DuplicateUserAdmin(admin.ModelAdmin):
