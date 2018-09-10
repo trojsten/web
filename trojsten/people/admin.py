@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 from django.conf.urls import url
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
+from django.core.exceptions import PermissionDenied
 from django.db import models
 from django.forms import ModelForm
 from django.shortcuts import get_object_or_404, redirect, render
@@ -159,9 +160,9 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
         )}),
         (_('Address'), {'fields': ('home_address', 'mail_to_school', 'mailing_address')}),
         (_('School'), {'fields': ('school', 'graduation')}),
+        (_('Password'), {'fields': ('password',)}),
     )
     superuser_fieldsets = fieldsets + (
-        (_('Password'), {'fields': ('password',)}),
         (_('Permissions'), {'fields': (
             'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'
         )}),
@@ -191,13 +192,14 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
     get_is_staff = attribute_format(attribute='is_staff', description='vedúci', boolean=True)
 
     def get_school(self, obj):
-        if obj.school.has_abbreviation:
-            show = obj.school.abbreviation
-        else:
-            show = obj.school.verbose_name
-        return '<span title="%s">%s</span>' % (
-            escape(force_text(obj.school)), escape(force_text(show))
-        )
+        if obj.school:
+            if obj.school.has_abbreviation:
+                show = obj.school.abbreviation
+            else:
+                show = obj.school.verbose_name
+            return '<span title="%s">%s</span>' % (
+                escape(force_text(obj.school)), escape(force_text(show))
+            )
     get_school.short_description = 'škola'
     get_school.admin_order_field = 'school'
     get_school.allow_tags = True
@@ -209,6 +211,11 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
 
     def get_urls(self):
         return submitted_tasks_urls + super(UserAdmin, self).get_urls()
+
+    def user_change_password(self, request, id, form_url=''):
+        if not request.user.is_superuser:
+            raise PermissionDenied
+        return super(UserAdmin, self).user_change_password(request, id, form_url)
 
 
 class DuplicateUserAdmin(admin.ModelAdmin):
