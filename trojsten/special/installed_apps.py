@@ -10,4 +10,5 @@ INSTALLED_APPS = (
     "trojsten.special.plugin_prask_2_4_1",
     "trojsten.special.plugin_prask_2_4_3",
     "trojsten.special.plugin_prask_3_3_3",
+    "trojsten.special.plugin_prask_5_1_1",
 )
