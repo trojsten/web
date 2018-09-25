@@ -10,9 +10,13 @@ from .models import UserLevel
 from .update_points import update_points
 
 
+MAX_LEVELS = 10
+
 @login_required()
 def main(request, level=1):
-    level = max(min(int(level), 10), 1)
+    DEFAULT_MAXIMUM = 9999999999
+
+    level = max(min(int(level), MAX_LEVELS), 1)
     user = request.user
     userlevel, _ = UserLevel.objects.get_or_create(level_id=level, user=user)
 
@@ -22,7 +26,7 @@ def main(request, level=1):
     for x in userlevel.try_set.order_by('id'):
         try_set.append((x.input, x.output, x.output == target))
 
-    levels = [[i, False] for i in range(1, 11)]
+    levels = [[i + 1, False] for i in range(MAX_LEVELS)]
     for x in UserLevel.objects.filter(user=user):
         levels[x.level_id - 1][1] = x.solved
 
@@ -35,13 +39,13 @@ def main(request, level=1):
         "try_count": userlevel.try_count,
         "try_count_ending":
         {1: '', 2: 'y', 3: 'y', 4: 'y'}.get(userlevel.try_count, 'ov'),
-        "maximum": LEVELS[level].MAXIMUM if hasattr(LEVELS[level], 'MAXIMUM') else 9999999999,
+        "maximum": LEVELS[level].MAXIMUM if hasattr(LEVELS[level], 'MAXIMUM') else DEFAULT_MAXIMUM,
     })
 
 
 @login_required()
 def run(request, level=1):
-    level = max(min(int(level), 10), 1)
+    level = max(min(int(level), MAX_LEVELS), 1)
     user = request.user
     userlevel, _ = UserLevel.objects.get_or_create(level_id=level, user=user)
 

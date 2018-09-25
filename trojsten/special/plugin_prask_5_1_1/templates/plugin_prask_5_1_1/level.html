@@ -21,16 +21,12 @@
 
 </head>
 <body>
-
   <div class="site-wrapper">
-
     <div class="site-wrapper-inner">
-
       <div class="cover-container">
-
         <div class="masthead clearfix">
           <div class="inner">
-            <h3 class="masthead-brand">Zwarte Doos 2</h3>
+            <h3 class="masthead-brand">Zwarte Doos</h3>
             <ul class="nav masthead-nav">
               {% for lvl, solved in levels %}
                 <li class='{% if lvl == level %}active{% endif %}'>
@@ -116,7 +112,6 @@
   <script src='{% static "js/bootstrap.min.js" %}'></script>
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src='{% static "plugin_ksp_32_1_1/ie10-viewport-bug-workaround.js" %}'></script>
-
 
 </body>
 </html>
