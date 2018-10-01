@@ -12,6 +12,7 @@ from .update_points import update_points
 
 MAX_LEVELS = 10
 
+
 @login_required()
 def main(request, level=1):
     DEFAULT_MAXIMUM = 9999999999
@@ -45,6 +46,8 @@ def main(request, level=1):
 
 @login_required()
 def run(request, level=1):
+    MAX_INPUT = 10 ** 10 - 1
+
     level = max(min(int(level), MAX_LEVELS), 1)
     user = request.user
     userlevel, _ = UserLevel.objects.get_or_create(level_id=level, user=user)
@@ -55,7 +58,7 @@ def run(request, level=1):
     except (KeyError, ValueError):
         return HttpResponseBadRequest()
 
-    if _input < 0 or _input >= 10**10:
+    if _input < 0 or _input > MAX_INPUT:
         return HttpResponseBadRequest()
 
     _output = LEVELS[level].run(_input, userlevel.try_count)

@@ -22,9 +22,6 @@ def update_points(user):
         user=user,
         points=points,
         submit_type=SUBMIT_TYPE_EXTERNAL,
-        filepath="",
         testing_status="OK",
-        tester_response="",
-        protocol_id="",
     )
     submit.save()
