@@ -18,6 +18,8 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from judge_client import constants as judge_constants
+
 from trojsten.contests.constants import TASK_ROLE_REVIEWER
 from trojsten.contests.models import (Competition, Round, Semester, Task,
                                       TaskPeople)
@@ -523,7 +525,7 @@ class SubmitHelpersTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(submit.testing_status, constants.SUBMIT_STATUS_FINISHED)
-        self.assertEqual(submit.tester_response, constants.SUBMIT_RESPONSE_OK)
+        self.assertEqual(submit.tester_response, judge_constants.SUBMIT_RESPONSE_OK)
         self.assertEqual(submit.points, 20)
         self.assertEqual(submit.protocol, protocol)
 
@@ -546,7 +548,7 @@ class SubmitHelpersTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(submit.testing_status, constants.SUBMIT_STATUS_FINISHED)
-        self.assertEqual(submit.tester_response, constants.SUBMIT_RESPONSE_PROTOCOL_CORRUPTED)
+        self.assertEqual(submit.tester_response, judge_constants.SUBMIT_RESPONSE_PROTOCOL_CORRUPTED)
         self.assertEqual(submit.points, 0)
 
 

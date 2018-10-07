@@ -105,5 +105,4 @@ SOCIAL_AUTH_TROJSTEN_SECRET = env(
 )
 
 ELASTICSEARCH_TESTS = bool(int(env('TROJSTENWEB_ELASTICSEARCH_TESTS', False)))
-JUDGE_CLIENT = judge_client.DebugJudgeClient()
-
+JUDGE_CLIENT = client.DebugJudgeClient()

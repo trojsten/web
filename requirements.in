@@ -1,5 +1,5 @@
-bs4
 backports.csv
+bs4
 celery<4.0.0
 certifi==2015.04.28
 czech_sort
@@ -40,5 +40,6 @@ pymdown-extensions<3.0
 pytz
 requests<=2.15
 social-auth-app-django<2
+trojsten-judge-client==1.0.0
 Unidecode
 wiki>=0.3,<0.4

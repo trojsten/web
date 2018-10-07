@@ -76,6 +76,7 @@ social-auth-app-django==1.2.0
 social-auth-core==1.7.0   # via ksp-login, social-auth-app-django
 sorl-thumbnail==12.4.1    # via wiki
 tablib==0.12.1            # via django-import-export
+trojsten-judge-client==1.0.0
 unicodecsv==0.14.1        # via tablib
 unidecode==1.0.22
 urllib3==1.22             # via elasticsearch
