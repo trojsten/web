@@ -4,7 +4,6 @@
 import json
 import logging
 import os
-
 import six
 from django.conf import settings
 from django.contrib import messages
@@ -36,7 +35,6 @@ from trojsten.submit.helpers import (get_description_file_path, get_path,
                                      parse_result_and_points_from_protocol,
                                      process_submit, write_chunks_to_file)
 from trojsten.submit.templatetags.submit_parts import submitclass
-
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit
@@ -62,7 +60,7 @@ def protocol_data(submit, force_show_details=False):
                 'result': runtest.result,
                 'time': runtest.time,
                 'details': runtest.details,
-                'showDetails': runtest.details is not None and ('sample' in runtest['name'] or force_show_details),
+                'showDetails': runtest.details is not None and ('sample' in runtest.name or force_show_details),
             }
             for runtest in protocol.tests
         ]
