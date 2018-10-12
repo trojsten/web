@@ -87,13 +87,13 @@ pytz==2018.5
 pyyaml==3.13              # via tablib
 requests-oauthlib==1.0.0  # via social-auth-core
 requests==2.14.2
-six==1.11.0               # via bcrypt, bleach, cryptography, django-nyt, html5lib, pip-tools, pynacl, social-auth-app-django, social-auth-core, wiki
+six==1.11.0               # via bcrypt, bleach, cryptography, django-nyt, html5lib, pip-tools, pynacl, social-auth-app-django, social-auth-core, trojsten-judge-client, wiki
 social-auth-app-django==1.2.0
 social-auth-core==1.7.0   # via ksp-login, social-auth-app-django
 sorl-thumbnail==12.5.0    # via wiki
 sqlparse==0.2.4
 tablib==0.12.1            # via django-import-export
-trojsten-judge-client==1.0.0
+trojsten-judge-client==1.0.1
 unicodecsv==0.14.1        # via tablib
 unidecode==1.0.22
 urllib3==1.23             # via elasticsearch
