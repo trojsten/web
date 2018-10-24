@@ -317,9 +317,9 @@ def send_notification_email(submit, task_id, submit_type):
     send_mail(
         _('[Trojstenweb] User submission detected'),
         (_('{name} submitted solution to task {task}\n\n')
-        + (_('Link for reviewing: {review_link}\n\n') if submit_type == constants.SUBMIT_TYPE_DESCRIPTION else '')
-        + _('Submit link: {submit_link}\n\n'
-           'This is an automated response, do not reply')).format(
+         + (_('Link for reviewing: {review_link}\n\n') if submit_type == constants.SUBMIT_TYPE_DESCRIPTION else '')
+         + _('Submit link: {submit_link}\n\n'
+         + 'This is an automated response, do not reply')).format(
             name=submit.user.get_full_name(),
             task=submit.task,
             submit_link=Site.objects.get_current().domain + reverse('admin:old_submit_submit_change',

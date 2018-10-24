@@ -34,8 +34,9 @@ def review_task(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     PointsFormSet = formset_factory(BasePointForm, formset=BasePointFormSet, extra=0)
 
-    if (not request.user.is_superuser
-        and task.round.semester.competition.organizers_group not inrequest.user.groups.all()
+    if (
+        not request.user.is_superuser
+        and task.round.semester.competition.organizers_group not in request.user.groups.all()
     ):
         raise PermissionDenied
 
@@ -102,7 +103,8 @@ def edit_review(request, task_pk, submit_pk):
     task = get_object_or_404(Task, pk=task_pk)
     submit = get_object_or_404(Submit, pk=submit_pk)
 
-    if (not request.user.is_superuser
+    if (
+        not request.user.is_superuser
         and task.round.semester.competition.organizers_group not in request.user.groups.all()
     ):
         raise PermissionDenied
@@ -151,7 +153,8 @@ def submit_download(request, submit_pk):
     submit = get_object_or_404(Submit, pk=submit_pk)
     name = submit_download_filename(submit)
 
-    if (not request.user.is_superuser
+    if (
+        not request.user.is_superuser
         and submit.task.round.semester.competition.organizers_group not in request.user.groups.all()
     ):
         raise PermissionDenied
@@ -166,7 +169,8 @@ def download_all_submits(request, task_pk, download_reviews=False):
     task = get_object_or_404(Task, pk=task_pk)
     submits = get_latest_submits_for_task(task).values()
 
-    if (not request.user.is_superuser
+    if (
+        not request.user.is_superuser
         and task.round.semester.competition.organizers_group not in request.user.groups.all()
     ):
         raise PermissionDenied
@@ -235,7 +239,8 @@ def zip_upload(request, task_pk):
     if name is None:
         raise Http404
 
-    if (not request.user.is_superuser
+    if (
+        not request.user.is_superuser
         and task.round.semester.competition.organizers_group not in request.user.groups.all()
     ):
         raise PermissionDenied
