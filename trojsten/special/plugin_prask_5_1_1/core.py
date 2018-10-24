@@ -145,13 +145,13 @@ class Level3(object):
 
     @classmethod
     def generate_primes(cls):
-        limit = 10**6
-        erat = [True] * limit
-        for i in range(2, limit):
+        LIMIT = 10**6
+        erat = [True] * LIMIT
+        for i in range(2, LIMIT):
             if not erat[i]:
                 continue
             cls.PRIMES.append(i)
-            for j in range(i, limit, i):
+            for j in range(i, LIMIT, i):
                 erat[j] = False
 
     @classmethod
