@@ -21,149 +21,54 @@ class Level1(object):
 
 class Level2(object):
 
-    TABLE = [
-        '-',
-        'H',
-        'He',
-        'Li',
-        'Be',
-        'B',
-        'C',
-        'N',
-        'O',
-        'F',
-        'Ne',
-        'Na',
-        'Mg',
-        'Al',
-        'Si',
-        'P',
-        'S',
-        'Cl',
-        'Ar',
-        'K',
-        'Ca',
-        'Sc',
-        'Ti',
-        'V',
-        'Cr',
-        'Mn',
-        'Fe',
-        'Co',
-        'Ni',
-        'Cu',
-        'Zn',
-        'Ga',
-        'Ge',
-        'As',
-        'Se',
-        'Br',
-        'Kr',
-        'Rb',
-        'Sr',
-        'Y',
-        'Zr',
-        'Nb',
-        'Mo',
-        'Tc',
-        'Ru',
-        'Rh',
-        'Pd',
-        'Ag',
-        'Cd',
-        'In',
-        'Sn',
-        'Sb',
-        'Te',
-        'I',
-        'Xe',
-        'Cs',
-        'Ba',
-        'La',
-        'Ce',
-        'Pr',
-        'Nd',
-        'Pm',
-        'Sm',
-        'Eu',
-        'Gd',
-        'Tb',
-        'Dy',
-        'Ho',
-        'Er',
-        'Tm',
-        'Yb',
-        'Lu',
-        'Hf',
-        'Ta',
-        'W',
-        'Re',
-        'Os',
-        'Ir',
-        'Pt',
-        'Au',
-        'Hg',
-        'Tl',
-        'Pb',
-        'Bi',
-        'Po',
-        'At',
-        'Rn',
-        'Fr',
-        'Ra',
-        'Ac',
-        'Th',
-        'Pa',
-        'U',
-        'Np',
-        'Pu',
-        'Am',
-        'Cm',
-        'Bk',
-        'Cf',
-        'Es',
-    ]
-    TARGET = "Al,I,Ca"
+    TARGET = "196418"
 
     @classmethod
     def run(cls, x, try_count):
-        str_x = str(x)
-        elements = []
-        start = 0
-        if len(str_x) % 2 == 1:
-            elements.append(cls.TABLE[int(str_x[0])])
-            start = 1
-        for i in range(start, len(str_x), 2):
-            elements.append(cls.TABLE[int(str_x[i:i + 2])])
-        return ','.join(elements)
+        a, b = 0, 1
+        for i in range(x):
+            a, b = b, a + b
+            if len(str(a)) > 30:
+                return 'PRILIS VELKE'
+        return str(a)
 
 
 class Level3(object):
 
-    TARGET = "7907"
-    PRIMES = []
-
-    @classmethod
-    def generate_primes(cls):
-        limit = 10**6
-        erat = [True] * limit
-        for i in range(2, limit):
-            if not erat[i]:
-                continue
-            cls.PRIMES.append(i)
-            for j in range(i, limit, i):
-                erat[j] = False
+    TARGET = "3528"
 
     @classmethod
     def run(cls, x, try_count):
-        if not cls.PRIMES:
-            cls.generate_primes()
-        if x >= len(cls.PRIMES):
-            return 'PRILIS VELKE'
-        return str(cls.PRIMES[x])
+        new_x = x
+        if x % 2 == 0:
+            new_x *= 3
+        if x % 3 == 0:
+            new_x *= 2
+        return str(new_x)
 
 
 class Level4(object):
+
+    TARGET = "3684591"
+
+    @classmethod
+    def run(cls, x, try_count):
+        ans = ''
+        for (i, c) in enumerate(str(x)):
+            ans += str((((int(c) - i) % 10) + 10) % 10)
+        return ans
+
+
+class Level5(object):
+
+    TARGET = '5268'
+
+    @classmethod
+    def run(cls, x, try_count):
+        return str(abs(x - try_count))
+
+
+class Level6(object):
 
     TARGET = "Oto"
     DATA = []
@@ -179,27 +84,6 @@ class Level4(object):
     def run(cls, x, try_count):
         cls.init_data()
         return cls.DATA[x % 365]
-
-
-class Level5(object):
-
-    TARGET = '5268'
-
-    @classmethod
-    def run(cls, x, try_count):
-        return str(abs(x - try_count))
-
-
-class Level6(object):
-
-    TARGET = "3684591"
-
-    @classmethod
-    def run(cls, x, try_count):
-        ans = ''
-        for (i, c) in enumerate(str(x)):
-            ans += str((((int(c) - i) % 10) + 10) % 10)
-        return ans
 
 
 class Level7(object):
@@ -227,22 +111,11 @@ class Level7(object):
 
 class Level8(object):
 
-    TARGET = "214365"
+    TARGET = "8"
 
     @classmethod
     def run(cls, x, try_count):
-        digits = list(map(int, str(x)))
-        last = digits[0]
-        num = 1
-        res = ""
-        for i in (digits[1:] + [None]):
-            if last == i:
-                num += 1
-            else:
-                res += "%d%d" % (last, num)
-                last = i
-                num = 1
-        return res
+        return str(bin(x).count('1'))
 
 
 class Level9(object):
@@ -274,8 +147,20 @@ class Level10(object):
     TARGET = "8"
 
     @classmethod
+    def roman_size(cls, num):
+        res = 0
+        size = [9, 5, 4, 1]
+        count = [2, 1, 2, 1]
+        for i in range(100, -1, -1):
+            for j in range(0, 4):
+                while num - 10 ** i * size[j] >= 0:
+                    num -= 10 ** i * size[j]
+                    res += count[j]
+        return res
+
+    @classmethod
     def run(cls, x, try_count):
-        return str(bin(x).count('1'))
+        return str(cls.roman_size(x))
 
 
 LEVELS = {
