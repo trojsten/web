@@ -36,8 +36,8 @@ def validate_url(value):
         return
 
     raise ValidationError(
-        'Hodnota by mala byť externá URL, absolútna cesta' +
-        ' alebo urlname začínajúce znakom "@"!'
+        'Hodnota by mala byť externá URL, absolútna cesta'
+        + ' alebo urlname začínajúce znakom "@"!'
     )
 
 
@@ -49,8 +49,8 @@ class MenuItem(models.Model):
         verbose_name='adresa',
         validators=[validate_url],
         help_text=(
-            'Povolené tvary sú "http(s)://domain.com/path", ' +
-            '"/absolute/path" a "@urlname".'
+            'Povolené tvary sú "http(s)://domain.com/path", '
+            + '"/absolute/path" a "@urlname".'
         ),
     )
     glyphicon = models.CharField(
@@ -59,8 +59,8 @@ class MenuItem(models.Model):
         max_length=196, blank=True,
         verbose_name='regulárne výrazy pre zvýraznenie',
         help_text=(
-            'Medzerou oddelené urlnames a regulárne výrazy,' +
-            'ktoré pri zhode s cestou zvýraznia aktuálnu položku.'
+            'Medzerou oddelené urlnames a regulárne výrazy,'
+            + 'ktoré pri zhode s cestou zvýraznia aktuálnu položku.'
         ),
     )
 

@@ -36,8 +36,8 @@ class RoundManager(models.Manager):
         res = self.filter(semester__competition__in=competitions)
         if not user.is_superuser:
             res = res.filter(
-                Q(semester__competition__organizers_group__in=user.groups.all()) |
-                Q(visible=True)
+                Q(semester__competition__organizers_group__in=user.groups.all())
+                | Q(visible=True)
             )
         return res
 
@@ -57,8 +57,8 @@ class RoundManager(models.Manager):
         """Returns all visible running rounds for each competition
         """
         return self.visible(user, all_sites).filter(
-            (Q(second_end_time__isnull=False) & Q(second_end_time__gte=timezone.now())) |
-            (Q(second_end_time__isnull=True) & Q(end_time__gte=timezone.now()))
+            (Q(second_end_time__isnull=False) & Q(second_end_time__gte=timezone.now()))
+            | (Q(second_end_time__isnull=True) & Q(end_time__gte=timezone.now()))
         ).order_by(
             '-end_time', '-number',
         ).select_related(
@@ -219,16 +219,16 @@ class Round(models.Model):
 
     def is_visible_for_user(self, user):
         return (
-            user.is_superuser or
-            self.semester.competition.organizers_group in user.groups.all() or
-            self.visible
+            user.is_superuser
+            or self.semester.competition.organizers_group in user.groups.all()
+            or self.visible
         )
 
     def solutions_are_visible_for_user(self, user):
         return (
-            user.is_superuser or
-            self.semester.competition.organizers_group in user.groups.all() or
-            self.solutions_visible
+            user.is_superuser
+            or self.semester.competition.organizers_group in user.groups.all()
+            or self.solutions_visible
         )
 
     @property

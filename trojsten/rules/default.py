@@ -20,8 +20,8 @@ class CompetitionRules(object):
 
     def get_Q_for_graded_submits(self):
         return (
-            models.Q(time__lte=models.F('task__round__end_time')) |
-            models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
+            models.Q(time__lte=models.F('task__round__end_time'))
+            | models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
         )
 
     def get_results_tags(self):

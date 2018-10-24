@@ -96,8 +96,8 @@ def view_protocol(request, submit_id):
 
     # For source submits, display testing results, source code and submit list.
     if (
-            submit.submit_type == constants.SUBMIT_TYPE_SOURCE or
-            submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+            submit.submit_type == constants.SUBMIT_TYPE_SOURCE
+            or submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
     ):
         is_organizer = request.user.is_in_group(
             submit.task.round.semester.competition.organizers_group)
@@ -125,8 +125,8 @@ def view_submit(request, submit_id):
 
     # For source submits, display testing results, source code and submit list.
     if (
-            submit.submit_type == constants.SUBMIT_TYPE_SOURCE or
-            submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+            submit.submit_type == constants.SUBMIT_TYPE_SOURCE
+            or submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
     ):
         template_data = {
             'submit': submit,
@@ -136,8 +136,10 @@ def view_submit(request, submit_id):
         is_organizer = request.user.is_in_group(
             submit.task.round.semester.competition.organizers_group)
         template_data.update(
-            protocol_data(submit, submit.submit_type ==
-                          constants.SUBMIT_TYPE_TESTABLE_ZIP or is_organizer)
+            protocol_data(
+                submit,
+                submit.submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP or is_organizer
+            )
         )
         if os.path.exists(submit.filepath):
             # Source code available, display it!
@@ -314,9 +316,9 @@ def poll_submit_info(request, submit_id):
 def send_notification_email(submit, task_id, submit_type):
     send_mail(
         _('[Trojstenweb] User submission detected'),
-        (_('{name} submitted solution to task {task}\n\n') +
-         (_('Link for reviewing: {review_link}\n\n') if submit_type == constants.SUBMIT_TYPE_DESCRIPTION else '') +
-         _('Submit link: {submit_link}\n\n'
+        (_('{name} submitted solution to task {task}\n\n')
+        + (_('Link for reviewing: {review_link}\n\n') if submit_type == constants.SUBMIT_TYPE_DESCRIPTION else '')
+        + _('Submit link: {submit_link}\n\n'
            'This is an automated response, do not reply')).format(
             name=submit.user.get_full_name(),
             task=submit.task,
@@ -358,8 +360,8 @@ def task_submit_post(request, task_id, submit_type):
 
     # File will be sent to tester
     if (
-            submit_type == constants.SUBMIT_TYPE_SOURCE or
-            submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
+            submit_type == constants.SUBMIT_TYPE_SOURCE
+            or submit_type == constants.SUBMIT_TYPE_TESTABLE_ZIP
     ):
         if submit_type == constants.SUBMIT_TYPE_SOURCE:
             form = SourceSubmitForm(request.POST, request.FILES)

@@ -55,8 +55,8 @@ def as_list(value):
 @register.assignment_tag(takes_context=True)
 def is_organizer(context, competition):
     return (
-        context['user'].is_superuser or
-        competition.organizers_group in context['user'].groups.all()
+        context['user'].is_superuser
+        or competition.organizers_group in context['user'].groups.all()
     )
 
 
