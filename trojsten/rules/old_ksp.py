@@ -38,8 +38,8 @@ class KSPResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             ).filter(
                 submit_type=submit_constants.SUBMIT_TYPE_SOURCE
             ).filter(
-                models.Q(time__gte=models.F('task__round__end_time')) &
-                models.Q(time__lte=models.F('task__round__second_end_time'))
+                models.Q(time__gte=models.F('task__round__end_time'))
+                & models.Q(time__lte=models.F('task__round__second_end_time'))
             ).order_by(
                 'user', 'task', '-time', '-id',
             ).distinct(

@@ -321,8 +321,11 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
         return password2
 
     def clean_password2(self):
-        if (self.password_required or self.cleaned_data.get('password1') or
-                self.cleaned_data.get('password2')):
+        if (
+            self.password_required
+            or self.cleaned_data.get('password1')
+            or self.cleaned_data.get('password2')
+        ):
             return self.clean_password2_default()
         return None
 
