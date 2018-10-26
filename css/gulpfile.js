@@ -22,4 +22,4 @@ gulp.task('watch', function(){
   gulp.watch('src/*.less', ['less']);
 });
 
-gulp.task('default', ['watch']);
+gulp.task('default', gulp.series('watch'));
