@@ -4,14 +4,14 @@ from __future__ import unicode_literals
 
 import logging
 from django.conf import settings
-from django.db import migrations
+from django.core.management.base import BaseCommand
 
 from trojsten.submit import constants
 from trojsten.submit.models import Submit
 
 
-def migrate_protocols(*args, **kwargs):
-    submits = Submit.objects.filter(protocol__isnull=True, submit_type=constants.SUBMIT_TYPE_SOURCE)
+def migrate_protocols(submit_type, *args, **kwargs):
+    submits = Submit.objects.filter(protocol__isnull=True, submit_type=submit_type)
     logging.info('Unprocessed submit object count: {}'.format(submits.count()))
 
     for submit in submits:
@@ -24,11 +24,9 @@ def migrate_protocols(*args, **kwargs):
             logging.warning(e)
 
 
-class Migration(migrations.Migration):
-    dependencies = [
-        ('old_submit', '0005_auto_20180915_2002'),
-    ]
+class Command(BaseCommand):
+    help = 'Migrates protocols from filesystem to DB.'
 
-    operations = [
-        migrations.RunPython(migrate_protocols)
-    ]
+    def handle(self, *args, **kwargs):
+        migrate_protocols(constants.SUBMIT_TYPE_SOURCE)
+        migrate_protocols(constants.SUBMIT_TYPE_TESTABLE_ZIP)
