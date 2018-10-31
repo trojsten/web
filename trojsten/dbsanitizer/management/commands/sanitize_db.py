@@ -1,10 +1,10 @@
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 
 from ...model_sanitizers import ModelSanitizerManager
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     help = 'Sanitize datatabase, so any sensitive data is removed or anonymized.'
 
-    def handle_noargs(self, **options):
+    def handle(self, **options):
         ModelSanitizerManager.run()

@@ -50,7 +50,7 @@ djangorestframework==3.8.2
 ecdsa==0.13
 elasticsearch==6.3.1
 et-xmlfile==1.0.1         # via openpyxl
-fake-factory==9999.9.9
+faker==0.9.2
 first==2.0.1
 html5lib==0.9999999       # via bleach
 jdcal==1.4                # via openpyxl
@@ -65,16 +65,18 @@ psycopg2==2.7.5
 pyjwt==1.6.4              # via social-auth-core
 pymdown-extensions==2.0
 python-akismet==0.4.1     # via django-fluent-comments
+python-dateutil==2.7.5    # via faker
 python3-openid==3.1.0     # via social-auth-core
 pytz==2018.5
 pyyaml==3.13              # via tablib
 requests-oauthlib==1.0.0  # via social-auth-core
 requests==2.14.2
-six==1.11.0               # via bleach, django-nyt, html5lib, social-auth-app-django, social-auth-core, trojsten-judge-client, wiki
+six==1.11.0               # via bleach, django-nyt, faker, html5lib, python-dateutil, social-auth-app-django, social-auth-core, trojsten-judge-client, wiki
 social-auth-app-django==1.2.0
 social-auth-core==1.7.0   # via ksp-login, social-auth-app-django
 sorl-thumbnail==12.5.0    # via wiki
 tablib==0.12.1            # via django-import-export
+text-unidecode==1.2       # via faker
 trojsten-judge-client==1.0.1
 unicodecsv==0.14.1        # via tablib
 unidecode==1.0.22
