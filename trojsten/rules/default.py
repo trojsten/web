@@ -4,7 +4,7 @@ from django.db import models
 from django.utils import timezone
 
 from trojsten.contests.models import Round
-from trojsten.results.constants import DEFAULT_TAG_KEY
+from trojsten.results.constants import DEFAULT_TAG_KEY, MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS
 from trojsten.results.generator import ResultsGenerator
 from trojsten.results.representation import ResultsTag
 from trojsten.submit import constants as submit_constants
@@ -43,7 +43,8 @@ class CompetitionRules(object):
         rounds = Round.objects.filter(
             semester__competition=competition,
             visible=True,
-            end_time__gte=timezone.now() + timezone.timedelta(days=-180)
+            end_time__gte=timezone.now() - timezone.timedelta(
+                days=MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS)
         )
         return rounds.order_by('-end_time', '-number')[:1]
 

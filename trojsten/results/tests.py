@@ -126,21 +126,24 @@ class RecentResultsTest(TestCase):
         semester1 = Semester.objects.create(
             number=1, name='Test semester', competition=competition1, year=1
         )
-        Round.objects.create(number=1, semester=semester1, solutions_visible=True, visible=True, end_time=bad_time)
+        Round.objects.create(number=1, semester=semester1, solutions_visible=True, visible=True,
+                             end_time=bad_time)
 
-        good_time = timezone.now() + timezone.timedelta(days=-47)
+        good_time = timezone.now() + timezone.timedelta(days=-147)
         competition2 = Competition.objects.create(name='newCompetition')
         competition2.sites.add(Site.objects.get(pk=settings.SITE_ID))
         semester2 = Semester.objects.create(
             number=1, name='Test semester', competition=competition2, year=1
         )
-        Round.objects.create(number=2, semester=semester2, solutions_visible=True, visible=True, end_time=good_time)
+        Round.objects.create(number=2, semester=semester2, solutions_visible=True, visible=True,
+                             end_time=good_time)
 
         response = self.client.get(self.url)
 
-        names = list(map(lambda x: x.scoreboard.round.semester.competition.name, response.context['scoreboards']))
-        self.assertTrue('newCompetition' in names)
-        self.assertFalse('oldCompetition' in names)
+        competition_names = list(map(lambda x: x.scoreboard.round.semester.competition.name,
+                                     response.context['scoreboards']))
+        self.assertIn('newCompetition', competition_names)
+        self.assertNotIn('oldCompetition', competition_names)
 
 
 class ResultsTest(TestCase):
