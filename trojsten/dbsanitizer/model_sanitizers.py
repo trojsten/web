@@ -7,8 +7,8 @@ import string
 from bulk_update.helper import bulk_update
 from faker import Factory
 
-from trojsten.regal.people.models import User, UserProperty
-from trojsten.regal.contests.models import Task
+from trojsten.people.models import User, UserProperty
+from trojsten.contests.models import Task
 
 accent_chars_lowercase = 'äřéŕťýúíóôášďěüöůĺľžčň'
 accent_chars_uppercase = accent_chars_lowercase.upper()

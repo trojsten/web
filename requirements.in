@@ -31,7 +31,7 @@ Django>=1.11,<2
 djangorestframework
 ecdsa
 elasticsearch
-fake-factory
+faker
 first
 ksp-login>=0.5
 psycopg2>=2.7.3.1
