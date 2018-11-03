@@ -18,12 +18,13 @@ env.roledefs = {
     'prod': {
         'hosts': ['trojstenweb@archiv.ksp.sk'],
         'project_path': '/home/trojstenweb/web',
-        'virtualenv_name': 'trojstenweb',
+        'virtualenv_name': 'trojstenweb-3',
         'db_name': 'trojstenweb',
         'use_sudo': False,
-        'server_configuration': 'trojsten/*.wsgi',
+        'server_configuration': '/home/trojstenweb/uwsgi/*.yaml',
         'local': False,
-        'build_requirements': False
+        'build_requirements': False,
+        'requirements_file': 'requirements3.txt'
     },
     'beta': {
         'hosts': ['inteligent.trojsten.sk:22100'],
