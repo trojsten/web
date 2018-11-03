@@ -4,7 +4,7 @@ from trojsten.contests.models import Task
 
 from .models import UserLevel
 
-ZWARTE_DOOS_TASK_ID = 984
+ZWARTE_DOOS_TASK_ID = 1628
 
 
 def get_task():
@@ -16,7 +16,7 @@ def get_task():
 
 
 def update_points(user):
-    points = UserLevel.objects.filter(user=user.id, solved=True).count()
+    points = UserLevel.objects.filter(user=user.id, solved=True).count() * 1.5
     submit = Submit(
         task=get_task(),
         user=user,
