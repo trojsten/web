@@ -31,7 +31,7 @@ def main(request, level=1):
     for x in UserLevel.objects.filter(user=user):
         levels[x.level_id - 1][1] = x.solved
 
-    return render(request, 'plugin_prask_5_2_1/level.html', {
+    return render(request, 'plugin_prask_5_1_2/level.html', {
         "level": level,
         "levels": levels,
         "solved": userlevel.solved,

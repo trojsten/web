@@ -4,8 +4,7 @@ from trojsten.contests.models import Task
 
 from .models import UserLevel
 
-# TODO set correct id
-ZWARTE_DOOS_TASK_ID = 1628
+ZWARTE_DOOS_TASK_ID = 1653
 
 
 def get_task():

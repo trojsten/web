@@ -8,7 +8,7 @@ from string import ascii_uppercase
 from math import sqrt
 from datetime import datetime
 
-"""Prask zwarte doos forked from ./plugin_prask_5_2_1"""
+"""Prask zwarte doos forked from ./plugin_prask_5_1_1"""
 
 __author__ = "Siegrift"
 
@@ -44,7 +44,7 @@ class Level3(object):
 
 class Level4(object):
 
-    TARGET = "320"
+    TARGET = "20"
 
     @classmethod
     def run(cls, x, try_count):
@@ -113,7 +113,7 @@ class Level7(object):
 
 class Level8(object):
 
-    TARGET = "Lothar Collatz 47"
+    TARGET = "Lothar Collatz 111"
 
     @classmethod
     def run(cls, x, try_count):
@@ -133,16 +133,18 @@ class Level8(object):
 class Level9(object):
 
     TARGET = "432"
-    MAXIMUM = 10 ** 7
+    MAX = 10 ** 10
     PRIMES = []
 
     @classmethod
     def init_primes(cls):
-        sieve = [True] * cls.MAXIMUM
-        for i in range(3, int(cls.MAXIMUM**0.5)+1, 2):
-            if sieve[i]:
-                sieve[i*i::2*i] = [False]*((cls.MAXIMUM-i*i-1)//(2*i)+1)
-        cls.PRIMES = [2] + [i for i in range(3, cls.MAXIMUM, 2) if sieve[i]]
+        mx = int(sqrt(cls.MAX) + 1)
+        sieve = [True] * mx
+        for p in range(2, mx):
+            if sieve[p]:
+                cls.PRIMES.append(p)
+                for x in range(p, mx, p):
+                    sieve[x] = False
 
     @classmethod
     def run(cls, x, try_count):
@@ -162,7 +164,8 @@ class Level9(object):
                     c += 1
                     x //= p
                 phi *= (p ** (c-1)) * (p - 1)
-            return phi
+
+            return str(phi if x == 1 else phi * (x - 1))
 
 
 class Level10(object):

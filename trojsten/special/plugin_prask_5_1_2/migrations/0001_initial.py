@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='try',
             name='userlevel',
-            field=models.ForeignKey(to='plugin_prask_5_2_1.UserLevel'),
+            field=models.ForeignKey(to='plugin_prask_5_1_2.UserLevel'),
         ),
         migrations.AlterUniqueTogether(
             name='userlevel',

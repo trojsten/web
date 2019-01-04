@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from trojsten.special.plugin_prask_5_2_1 import views
+from trojsten.special.plugin_prask_5_1_2 import views
 
 urlpatterns = [
     url(r'^$', views.main),
