@@ -116,8 +116,6 @@ def install_requirements():
                 run('pip install -r {}'.format(env.requirements_file))
             else:
                 run('pip install -r requirements.txt --exists-action w')
-                if env.local:
-                    run('pip install -r requirements.devel.txt')
 
 
 def manage(*args):
