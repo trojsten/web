@@ -42,3 +42,10 @@ social-auth-app-django<2
 trojsten-judge-client>=1.0.1
 Unidecode
 wiki>=0.3,<0.4
+# dev
+bumpversion
+coverage
+sqlparse
+django-debug-toolbar
+Fabric
+pip-tools

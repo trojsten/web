@@ -1,9 +1,9 @@
-import os
 import time
 
+import os
 from fabric.api import env
-from fabric.operations import local as fabric_local, get, run as fabric_run, sudo
 from fabric.context_managers import cd, prefix, quiet
+from fabric.operations import get, local as fabric_local, run as fabric_run, sudo
 
 """
 Fabric deployment scripts for github.com:trojsten/web
@@ -24,7 +24,7 @@ env.roledefs = {
         'server_configuration': '/home/trojstenweb/uwsgi/*.yaml',
         'local': False,
         'build_requirements': False,
-        'requirements_file': 'requirements3.txt'
+        'requirements_file': 'requirements.txt'
     },
     'beta': {
         'hosts': ['inteligent.trojsten.sk:22100'],
@@ -37,7 +37,7 @@ env.roledefs = {
         'server_configuration': '/usr/local/www/trojstenweb/*.yaml',
         'local': False,
         'build_requirements': False,
-        'requirements_file': 'requirements3.txt'
+        'requirements_file': 'requirements.txt'
     },
     'local': {
         'user': os.environ.get('USER'),
@@ -60,7 +60,7 @@ def run(*args, **kwargs):
 
 
 def load_role(role_name):
-    for k, v in env.roledefs[role_name].iteritems():
+    for k, v in env.roledefs[role_name].items():
         env[k] = v
 
 
@@ -116,8 +116,6 @@ def install_requirements():
                 run('pip install -r {}'.format(env.requirements_file))
             else:
                 run('pip install -r requirements.txt --exists-action w')
-                if env.local:
-                    run('pip install -r requirements.devel.txt')
 
 
 def manage(*args):

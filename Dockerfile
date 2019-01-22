@@ -7,10 +7,10 @@ RUN apk add --no-cache --virtual build-deps gcc g++ make libffi-dev musl-dev pos
 COPY ./fonts/* /usr/share/fonts/
 RUN fc-cache -f -v
 
-COPY ./requirements3.devel.txt /web/requirements3.devel.txt
+COPY ./requirements.txt /web/requirements.txt
 WORKDIR /web
 
-RUN pip install --no-cache-dir -r requirements3.devel.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /web
 
