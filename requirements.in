@@ -37,7 +37,8 @@ ksp-login>=0.5
 psycopg2>=2.7.3.1
 pymdown-extensions<3.0
 pytz
-requests<=2.15
+pyyaml>=4.2b1 # security fix, remove when newer release is available.
+requests<=2.15 # to maintain compatibility with old openssl on prod.
 social-auth-app-django<2
 trojsten-judge-client>=1.0.1
 Unidecode
