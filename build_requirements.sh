@@ -7,5 +7,6 @@ then
     pip-compile -r $SOURCES -o requirements.txt
 else
     echo "Python 2 is no longer supported."
+    exit 1
 fi
 

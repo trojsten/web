@@ -33,15 +33,7 @@ lint:
         DJANGO_SETTINGS_MODULE: trojsten.settings.test
     before_script:
         - apt-get update -qy && apt-get install -y gettext librsvg2-bin
-        - |
-          case "${PYTHON_VERSION}" in
-            3*)
-                pip install -r requirements3.txt
-                ;;
-            *)
-                pip install -r requirements.txt
-                ;;
-          esac
+        - pip install -r requirements.txt
         - pip install -q coverage
         - bash -c 'cd trojsten; python ../manage.py compilemessages;'
     script:
@@ -51,10 +43,9 @@ test-py3:
     <<: *test_template
     image: python:3.6
 
-test-py2:
+test-py35:
     <<: *test_template
-    image: python:2.7
-
+    image: python:3.5
 
 .tagged_image: &tagged_image_template
     image: docker:stable
