@@ -19,7 +19,7 @@ certifi==2015.04.28
 cffi==1.11.5              # via bcrypt, cryptography, pynacl
 click==7.0                # via pip-tools
 coverage==4.5.2
-cryptography==2.4.2       # via fabric, paramiko
+cryptography==2.4.2       # via paramiko
 czech-sort==0.4
 defusedxml==0.5.0         # via odfpy, python3-openid, social-auth-core
 diff-match-patch==20181111  # via django-import-export
@@ -58,12 +58,11 @@ djangorestframework==3.9.1
 ecdsa==0.13
 elasticsearch==6.3.1
 et-xmlfile==1.0.1         # via openpyxl
-fabric==1.14.0            # TODO: fix fabfile and upgrade to 2.4.0
+fabric==1.14.0
 faker==1.0.1
 first==2.0.1
 html5lib==0.9999999       # via bleach
 idna==2.8                 # via cryptography
-invoke==1.2.0             # via fabric
 jdcal==1.4                # via openpyxl
 kombu==3.0.37             # via celery
 ksp-login==0.5.0
@@ -84,7 +83,7 @@ python-akismet==0.4.1     # via django-fluent-comments
 python-dateutil==2.7.5    # via faker
 python3-openid==3.1.0     # via social-auth-core
 pytz==2018.9
-pyyaml==3.13              # via tablib
+pyyaml==4.2b4
 requests-oauthlib==1.2.0  # via social-auth-core
 requests==2.14.2
 six==1.12.0               # via bcrypt, bleach, cryptography, django-nyt, faker, html5lib, pip-tools, pynacl, python-dateutil, social-auth-app-django, social-auth-core, trojsten-judge-client, wiki
