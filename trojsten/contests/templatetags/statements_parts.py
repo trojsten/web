@@ -8,7 +8,6 @@ from django.utils.translation import ungettext as _
 from trojsten.contests.models import Category, Task
 from trojsten.results.manager import get_results_tags_for_rounds
 from trojsten.submit.models import Submit
-
 from ..helpers import get_points_from_submits, get_rounds_by_year
 
 register = template.Library()
@@ -32,7 +31,7 @@ def show_task_list(context, round):
         'categories': categories,
         'solutions_visible': round.solutions_are_visible_for_user(context['user']),
     }
-    if context['user'].is_authenticated():
+    if context['user'].is_authenticated:
         submits = Submit.objects.latest_for_user(tasks, context['user'])
         results = get_points_from_submits(tasks, submits)
         data['points'] = results

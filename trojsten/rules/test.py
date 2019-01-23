@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 import datetime
-
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
@@ -18,9 +17,8 @@ from trojsten.events.models import (Event, EventParticipant, EventPlace,
                                     EventType)
 from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
 from trojsten.people.models import User
-from trojsten.rules.kms import (COEFFICIENT_COLUMN_KEY, KMS_ALFA, KMS_BETA,
-                                KMS_CAMP_TYPE, KMS_MO_FINALS_TYPE,
-                                KMSResultsGenerator, KMSRules)
+from trojsten.rules.kms import (COEFFICIENT_COLUMN_KEY, KMSResultsGenerator, KMSRules, KMS_ALFA, KMS_BETA,
+                                KMS_CAMP_TYPE, KMS_MO_FINALS_TYPE)
 from trojsten.rules.ksp import KSP_ALL, KSP_L1, KSP_L2, KSP_L3, KSP_L4
 from trojsten.rules.models import KSPLevel
 from trojsten.submit.models import Submit
@@ -213,7 +211,7 @@ class KMSRulesTest(TestCase):
                 cat += [category_alfa]
             if i >= 4:
                 cat += [category_beta]
-            self.tasks[-1].categories = cat
+            self.tasks[-1].categories.set(cat)
             self.tasks[-1].save()
 
         self.group = Group.objects.create(name="skupina")
