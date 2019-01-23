@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+import django
 from django.conf import settings
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -24,22 +25,26 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='place',
             name='address',
-            field=models.ForeignKey(blank=True, to='people.Address', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, blank=True, to='people.Address',
+                                    null=True),
         ),
         migrations.AddField(
             model_name='invitation',
             name='event',
-            field=models.ForeignKey(related_name='invitations', verbose_name='akcia', to='events.Event'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='invitations',
+                                    verbose_name='akcia', to='events.Event'),
         ),
         migrations.AddField(
             model_name='invitation',
             name='user',
-            field=models.ForeignKey(verbose_name='pou\u017e\xedvate\u013e', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, verbose_name='pou\u017e\xedvate\u013e',
+                                    to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='eventtype',
             name='organizers_group',
-            field=models.ForeignKey(verbose_name='skupina ved\xfacich', to='auth.Group'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, verbose_name='skupina ved\xfacich',
+                                    to='auth.Group'),
         ),
         migrations.AddField(
             model_name='eventtype',
@@ -54,17 +59,20 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='place',
-            field=models.ForeignKey(verbose_name='miesto', to='events.Place'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, verbose_name='miesto',
+                                    to='events.Place'),
         ),
         migrations.AddField(
             model_name='event',
             name='registration',
-            field=models.ForeignKey(verbose_name='prihl\xe1\u0161ka', blank=True, to='events.Registration', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, verbose_name='prihl\xe1\u0161ka',
+                                    blank=True, to='events.Registration', null=True),
         ),
         migrations.AddField(
             model_name='event',
             name='type',
-            field=models.ForeignKey(verbose_name='typ akcie', to='events.EventType'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, verbose_name='typ akcie',
+                                    to='events.EventType'),
         ),
         migrations.CreateModel(
             name='OrganizerInvitation',
