@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 import re
-
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import resolve, reverse
@@ -110,7 +109,8 @@ class MenuGroup(models.Model):
         Site,
         related_name='menu_groups',
         db_index=True,
-        verbose_name='stránka')
+        verbose_name='stránka',
+        on_delete=models.CASCADE)
     items = SortedManyToManyField(
         MenuItem,
         related_name='groups',

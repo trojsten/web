@@ -90,9 +90,9 @@ class Submit(models.Model):
     Description submit has points and filename, Source submit has also
     tester response and protocol ID assigned.
     """
-    task = models.ForeignKey(Task, verbose_name='úloha')
+    task = models.ForeignKey(Task, verbose_name='úloha', on_delete=models.CASCADE)
     time = models.DateTimeField(default=timezone.now, verbose_name='čas')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='odovzdávateľ')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='odovzdávateľ', on_delete=models.CASCADE)
     submit_type = models.IntegerField(verbose_name='typ submitu', choices=submit_constants.SUBMIT_TYPES)
     points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body')
 

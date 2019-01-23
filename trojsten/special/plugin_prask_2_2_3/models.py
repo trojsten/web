@@ -8,5 +8,6 @@ class UserLink(models.Model):
         related_name='+',
         null=True,
         blank=True,
+        on_delete=models.CASCADE,
     )
     link = models.URLField(max_length=255, unique=True)

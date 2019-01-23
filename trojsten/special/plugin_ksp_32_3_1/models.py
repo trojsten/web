@@ -5,7 +5,7 @@ from django.db import models
 
 
 class LevelSolved(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+', on_delete=models.CASCADE)
     series = models.IntegerField()
     level = models.IntegerField()
 
