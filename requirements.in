@@ -42,7 +42,7 @@ requests<=2.15 # to maintain compatibility with old openssl on prod.
 social-auth-app-django<2
 trojsten-judge-client>=1.0.1
 Unidecode
-wiki>=0.3,<0.4
+wiki>=0.3
 # dev
 bumpversion
 coverage
