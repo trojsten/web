@@ -119,6 +119,32 @@ class RecentResultsTest(TestCase):
         response = self.client.get("%s?show_staff=True" % self.url)
         self.assertContains(response, self.user.get_full_name())
 
+    def test_dont_show_old_result(self):
+        bad_time = timezone.now() + timezone.timedelta(days=-200)
+        competition1 = Competition.objects.create(name='oldCompetition')
+        competition1.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        semester1 = Semester.objects.create(
+            number=1, name='Test semester', competition=competition1, year=1
+        )
+        Round.objects.create(number=1, semester=semester1, solutions_visible=True, visible=True,
+                             end_time=bad_time)
+
+        good_time = timezone.now() + timezone.timedelta(days=-147)
+        competition2 = Competition.objects.create(name='newCompetition')
+        competition2.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        semester2 = Semester.objects.create(
+            number=1, name='Test semester', competition=competition2, year=1
+        )
+        Round.objects.create(number=2, semester=semester2, solutions_visible=True, visible=True,
+                             end_time=good_time)
+
+        response = self.client.get(self.url)
+
+        competition_names = list(map(lambda x: x.scoreboard.round.semester.competition.name,
+                                     response.context['scoreboards']))
+        self.assertIn('newCompetition', competition_names)
+        self.assertNotIn('oldCompetition', competition_names)
+
 
 class ResultsTest(TestCase):
     def setUp(self):
