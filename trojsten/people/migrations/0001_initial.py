@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
-from django.conf import settings
-import django.utils.timezone
-import trojsten.people.models
 import django.core.validators
+import django.utils.timezone
+from django.conf import settings
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -95,27 +94,35 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userproperty',
             name='key',
-            field=models.ForeignKey(related_name='properties', verbose_name='n\xe1zov vlastnosti', to='people.UserPropertyKey'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='properties',
+                                    verbose_name='n\xe1zov vlastnosti', to='people.UserPropertyKey'),
         ),
         migrations.AddField(
             model_name='userproperty',
             name='user',
-            field=models.ForeignKey(related_name='properties', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='properties',
+                                    to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='user',
             name='home_address',
-            field=models.ForeignKey(related_name='lives_here', verbose_name='dom\xe1ca adresa', to='people.Address', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='lives_here',
+                                    verbose_name='dom\xe1ca adresa', to='people.Address', null=True),
         ),
         migrations.AddField(
             model_name='user',
             name='mailing_address',
-            field=models.ForeignKey(related_name='accepting_mails_here', verbose_name='adresa kore\u0161pondencie', blank=True, to='people.Address', null=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='accepting_mails_here',
+                                    verbose_name='adresa kore\u0161pondencie', blank=True, to='people.Address',
+                                    null=True),
         ),
         migrations.AddField(
             model_name='user',
             name='school',
-            field=models.ForeignKey(default=1, to='people.School', help_text='Do pol\xed\u010dka nap\xed\u0161te skratku, \u010das\u0165 n\xe1zvu alebo adresy \u0161koly a n\xe1sledne vyberte spr\xe1vnu mo\u017enos\u0165 zo zoznamu. Pokia\u013e va\u0161a \u0161kola nie je v&nbsp;zozname, vyberte "Gymn\xe1zium in\xe9" a&nbsp;po\u0161lite n\xe1m e-mail.', null=True, verbose_name='\u0161kola'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, default=1, to='people.School',
+                                    help_text='Do pol\xed\u010dka nap\xed\u0161te skratku, \u010das\u0165 n\xe1zvu '
+                                              'alebo adresy \u0161koly a n\xe1sledne vyberte spr\xe1vnu mo\u017enos\u0165 zo zoznamu. Pokia\u013e va\u0161a \u0161kola nie je v&nbsp;zozname, vyberte "Gymn\xe1zium in\xe9" a&nbsp;po\u0161lite n\xe1m e-mail.',
+                                    null=True, verbose_name='\u0161kola'),
         ),
         migrations.AddField(
             model_name='user',

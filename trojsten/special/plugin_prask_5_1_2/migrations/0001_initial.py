@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+import django
 from django.conf import settings
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -27,13 +28,14 @@ class Migration(migrations.Migration):
                 ('level_id', models.IntegerField()),
                 ('try_count', models.IntegerField(default=0)),
                 ('solved', models.BooleanField(default=False)),
-                ('user', models.ForeignKey(related_name='+', to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+',
+                                           to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.AddField(
             model_name='try',
             name='userlevel',
-            field=models.ForeignKey(to='plugin_prask_5_1_2.UserLevel'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='plugin_prask_5_1_2.UserLevel'),
         ),
         migrations.AlterUniqueTogether(
             name='userlevel',

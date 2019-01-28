@@ -14,7 +14,7 @@ def contact_form_sent_redirect(request):
 
 
 def home_redirect(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         if 'home' not in request.GET:
             return redirect(reverse('news_list', kwargs={'page': 1}))
     return article.ArticleView.as_view()(request, path='')

@@ -2,14 +2,12 @@
 
 from collections import defaultdict, namedtuple
 
-from trojsten.contests.models import Round
+from trojsten.contests.models import Round, Task
 from trojsten.submit import constants as submit_constants
 from trojsten.submit.models import Submit
-from trojsten.contests.models import Task
 from trojsten.utils.utils import is_true
-
-from .models import FrozenResults
 from .manager import get_results, get_results_tags_for_rounds
+from .models import FrozenResults
 
 
 class TaskPoints(object):
@@ -274,10 +272,10 @@ def get_scoreboards_for_rounds(rounds, request):
         ResultTableObject(
             get_results(result_tag.key, round, single_round),
             result_tag.name,
-            request.user.is_anonymous() or request.user.is_competition_ignored(
+            request.user.is_anonymous or request.user.is_competition_ignored(
                 round.semester.competition
             ),
-            request.user.is_anonymous() or request.user.is_valid_for_competition(
+            request.user.is_anonymous or request.user.is_valid_for_competition(
                 round.semester.competition
             ),
         )

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib.sites.models import Site
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils.encoding import python_2_unicode_compatible
 
 

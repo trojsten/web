@@ -27,9 +27,7 @@ class EventType(models.Model):
     """
     name = models.CharField(max_length=100, verbose_name='názov')
     sites = models.ManyToManyField(Site, blank=True)
-    organizers_group = models.ForeignKey(
-        Group, verbose_name='skupina vedúcich'
-    )
+    organizers_group = models.ForeignKey(Group, verbose_name='skupina vedúcich', on_delete=models.CASCADE)
     is_camp = models.BooleanField(verbose_name='sústredko')
 
     objects = EventTypeManager()
@@ -45,7 +43,7 @@ class EventType(models.Model):
 @python_2_unicode_compatible
 class EventPlace(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
-    address = models.ForeignKey('people.Address', null=True, blank=True)
+    address = models.ForeignKey('people.Address', null=True, blank=True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'miesto akcie'
@@ -58,14 +56,14 @@ class EventPlace(models.Model):
 @python_2_unicode_compatible
 class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name='názov')
-    type = models.ForeignKey(EventType, verbose_name='typ akcie')
-    place = models.ForeignKey(EventPlace, verbose_name='miesto')
+    type = models.ForeignKey(EventType, verbose_name='typ akcie', on_delete=models.CASCADE)
+    place = models.ForeignKey(EventPlace, verbose_name='miesto', on_delete=models.CASCADE)
     start_time = models.DateTimeField(verbose_name='čas začiatku')
     end_time = models.DateTimeField(verbose_name='čas konca')
     text = models.TextField(help_text='Obsah bude prehnaný <a '
                                       'href="http://en.wikipedia.org/wiki/Markdown">'
                                       'Markdownom</a>.', default='', blank=True)
-    semester = models.ForeignKey(Semester, blank=True, null=True, verbose_name='semester')
+    semester = models.ForeignKey(Semester, blank=True, null=True, verbose_name='semester', on_delete=models.CASCADE)
 
     @property
     def participants(self):
@@ -102,8 +100,8 @@ class EventParticipant(models.Model):
         (RESERVE, 'náhradník'),
         (ORGANIZER, 'vedúci'),
     )
-    event = models.ForeignKey(Event, verbose_name='akcia')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='používateľ')
+    event = models.ForeignKey(Event, verbose_name='akcia', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='používateľ', on_delete=models.CASCADE)
     type = models.SmallIntegerField(
         choices=TYPE_CHOICES, default=PARTICIPANT, verbose_name='typ pozvania'
     )

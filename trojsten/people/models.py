@@ -3,14 +3,13 @@
 from __future__ import unicode_literals
 
 import re
-
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
-from django_countries.fields import CountryField
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django_countries.fields import CountryField
 from unidecode import unidecode
 
 from . import constants
@@ -65,12 +64,14 @@ class User(AbstractUser):
     home_address = models.ForeignKey(Address,
                                      related_name='lives_here',
                                      null=True,
-                                     verbose_name='domáca adresa')
+                                     verbose_name='domáca adresa',
+                                     on_delete=models.CASCADE)
     mailing_address = models.ForeignKey(Address,
                                         related_name='accepting_mails_here',
                                         blank=True,
                                         null=True,
-                                        verbose_name='adresa korešpondencie')
+                                        verbose_name='adresa korešpondencie',
+                                        on_delete=models.CASCADE)
     mail_to_school = models.BooleanField(default=False,
                                          verbose_name='posielať poštu do školy')
     school = models.ForeignKey('schools.School',
@@ -81,7 +82,8 @@ class User(AbstractUser):
                                          'vyberte správnu možnosť zo zoznamu. '
                                          'Pokiaľ vaša škola nie je '
                                          'v&nbsp;zozname, vyberte "Iná škola" '
-                                         'a&nbsp;pošlite nám e-mail.')
+                                         'a&nbsp;pošlite nám e-mail.',
+                               on_delete=models.CASCADE)
     graduation = models.IntegerField(null=True,
                                      verbose_name='rok maturity',
                                      help_text='Povinné pre žiakov.')
@@ -196,11 +198,11 @@ class UserProperty(models.Model):
     """
     Additional user properties, can be called as related_name in QuerySet of User.
     """
-    user = models.ForeignKey(User,
-                             related_name='properties')
+    user = models.ForeignKey(User, related_name='properties', on_delete=models.CASCADE)
     key = models.ForeignKey(UserPropertyKey,
                             verbose_name='názov vlastnosti',
-                            related_name='properties')
+                            related_name='properties',
+                            on_delete=models.CASCADE)
     value = models.TextField(verbose_name='hodnota vlastnosti')
 
     objects = UserPropertyManager()
@@ -229,14 +231,14 @@ class DuplicateUser(models.Model):
     Merge candidate users - users with duplicit name or other properties.
     """
     MERGE_STATUS_UNRESOLVED = 0
-    MERGE_STATUS_NOT_DUPOLICATE = 1
+    MERGE_STATUS_NOT_DUPLICATE = 1
     MERGE_STATUS_RESOLVED = 2
     MERGE_STATUS_CHOICES = [
         (MERGE_STATUS_UNRESOLVED, 'Nevyriešené'),
-        (MERGE_STATUS_NOT_DUPOLICATE, 'Nie je duplikát'),
+        (MERGE_STATUS_NOT_DUPLICATE, 'Nie je duplikát'),
         (MERGE_STATUS_RESOLVED, 'Vyriešený duplikát'),
     ]
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     status = models.IntegerField(
         choices=MERGE_STATUS_CHOICES,
         default=0,
