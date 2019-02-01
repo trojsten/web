@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User, UserPropertyKey
+from trojsten.rules.test import get_row_for_user
 from trojsten.schools.models import School
 from trojsten.submit.models import Submit
 from trojsten.utils.test_utils import get_noexisting_id
@@ -124,23 +125,30 @@ class ResultsTest(TestCase):
     def setUp(self):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.semester0 = Semester.objects.create(number=1, name='Test semester 2', year=0,
+                                                 competition=competition)
         self.semester1 = Semester.objects.create(number=1, name='Test semester 1', year=1,
                                                  competition=competition)
         self.semester2 = Semester.objects.create(number=2, name='Test semester 2', year=1,
                                                  competition=competition)
 
+        start0 = timezone.now() + timezone.timedelta(days=-47 - 366)
+        end0 = timezone.now() + timezone.timedelta(days=-366)
         start1 = timezone.now() + timezone.timedelta(-12)
         end1 = timezone.now() + timezone.timedelta(-8)
         start2 = timezone.now() + timezone.timedelta(-8)
         end2 = timezone.now() + timezone.timedelta(-4)
         start3 = timezone.now() + timezone.timedelta(-4)
         end3 = timezone.now() + timezone.timedelta(4)
+        self.round0 = Round.objects.create(number=2, semester=self.semester0, solutions_visible=True,
+                                           start_time=start0, end_time=end0, visible=True)
         self.round1 = Round.objects.create(number=1, semester=self.semester1, solutions_visible=True,
                                            start_time=start1, end_time=end1, visible=True)
         self.round2 = Round.objects.create(number=2, semester=self.semester1, solutions_visible=True,
                                            start_time=start2, end_time=end2, visible=True)
         self.round3 = Round.objects.create(number=2, semester=self.semester2, solutions_visible=True,
                                            start_time=start3, end_time=end3, visible=True)
+        self.task0 = Task.objects.create(number=1, name='Test task 0', round=self.round0)
         self.task1 = Task.objects.create(number=1, name='Test task 1', round=self.round1)
         self.task2 = Task.objects.create(number=1, name='Test task 2', round=self.round2)
         self.task3 = Task.objects.create(number=1, name='Test task 3', round=self.round3)
@@ -148,6 +156,7 @@ class ResultsTest(TestCase):
         year = timezone.now().year + 2
         self.user = User.objects.create(username="TestUser", password="password",
                                         first_name="Jozko", last_name="Mrkvicka", graduation=year)
+        self.url0 = reverse('view_results', kwargs={'round_id': self.round0.id})
         self.url1 = reverse('view_results', kwargs={'round_id': self.round1.id})
         self.url2 = reverse('view_results', kwargs={'round_id': self.round2.id})
         self.url3 = reverse('view_results', kwargs={'round_id': self.round3.id})
@@ -235,6 +244,29 @@ class ResultsTest(TestCase):
         submit.save()
         response = self.client.get("%s?single_round=True" % self.url2)
         self.assertContains(response, self.user.get_full_name())
+
+    def test_two_years(self):
+        submit_time = self.round0.start_time + timezone.timedelta(0, 5)
+        submit = Submit.objects.create(task=self.task0, user=self.user, submit_type=0, points=9)
+        submit.time = submit_time
+        submit.save()
+
+        submit_time = self.round1.start_time + timezone.timedelta(0, 5)
+        submit = Submit.objects.create(task=self.task1, user=self.user, submit_type=0, points=9)
+        submit.time = submit_time
+        submit.save()
+
+        response = self.client.get(self.url0)
+        for scoreboard_object in response.context['scoreboards']:
+            scoreboard = scoreboard_object.scoreboard
+            row = get_row_for_user(scoreboard, self.user)
+            self.assertEqual(row.user.year, self.user.school_year_at(self.round0.end_time))
+
+        response = self.client.get(self.url1)
+        for scoreboard_object in response.context['scoreboards']:
+            scoreboard = scoreboard_object.scoreboard
+            row = get_row_for_user(scoreboard, self.user)
+            self.assertEqual(row.user.year, self.user.school_year_at(self.round1.end_time))
 
 
 class SerializationTest(TestCase):
