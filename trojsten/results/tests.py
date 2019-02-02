@@ -245,7 +245,7 @@ class ResultsTest(TestCase):
         response = self.client.get("%s?single_round=True" % self.url2)
         self.assertContains(response, self.user.get_full_name())
 
-    def test_two_years(self):
+    def test_use_correct_year_in_old_results(self):
         submit_time = self.round0.start_time + timezone.timedelta(0, 5)
         submit = Submit.objects.create(task=self.task0, user=self.user, submit_type=0, points=9)
         submit.time = submit_time
