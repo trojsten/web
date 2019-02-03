@@ -48,5 +48,5 @@ bumpversion
 coverage
 sqlparse
 django-debug-toolbar
-Fabric
+Fabric<2
 pip-tools
