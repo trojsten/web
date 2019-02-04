@@ -50,3 +50,4 @@ sqlparse
 django-debug-toolbar
 Fabric<2 # We need to migrate the fabfile first.
 pip-tools
+flake8
