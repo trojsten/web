@@ -26,19 +26,19 @@ django-sortedm2m
 django-threadedcomments
 django-tips
 django-trojsten-news
-Django>=1.11,<2
+Django>=2,<2.1
 djangorestframework
 ecdsa
 elasticsearch
 faker
 first
-ksp-login>=0.5
+ksp-login>=0.6
 psycopg2>=2.7.3.1
 pymdown-extensions<3.0
 pytz
 pyyaml>=4.2b1 # security fix, remove when newer release is available.
 requests<=2.15 # to maintain compatibility with old openssl on prod.
-social-auth-app-django<2
+social-auth-app-django
 trojsten-judge-client>=1.0.1
 Unidecode
 wiki>=0.3
