@@ -4,11 +4,10 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 import trojsten.login.views
-
 from .common import urlpatterns as common_urlpatterns
 
 urlpatterns = common_urlpatterns + [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^ucet/logout', trojsten.login.views.logout),
     url(r'^ucet/', include('ksp_login.urls')),
