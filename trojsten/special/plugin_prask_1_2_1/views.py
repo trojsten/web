@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import json
-
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import HttpResponseNotFound
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
 from .algorithms import ALL
 from .getcat import getcat

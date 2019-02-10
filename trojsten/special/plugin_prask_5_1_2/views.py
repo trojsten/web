@@ -1,14 +1,12 @@
 import json
-
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
+from django.urls import reverse
 
 from .core import LEVELS
 from .models import UserLevel
 from .update_points import update_points
-
 
 MAX_LEVELS = 10
 

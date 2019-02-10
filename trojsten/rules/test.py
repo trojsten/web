@@ -6,8 +6,8 @@ import datetime
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 from django.utils import timezone
 
 import trojsten.submit.constants as submit_constants
