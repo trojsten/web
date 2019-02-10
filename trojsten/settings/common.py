@@ -7,9 +7,9 @@ import os
 from django.contrib.messages import constants as messages
 from django.http import UnreadablePostError
 from django.utils.translation import ugettext_lazy as _
+from judge_client import client
 
 import trojsten.special.installed_apps
-from judge_client import client
 from . import site_config
 
 
@@ -264,7 +264,6 @@ INSTALLED_APPS = (
     'wiki.plugins.images',
     'wiki.plugins.macros',
     'taggit',
-    'kombu.transport.django',
     'haystack',
 
     # django-fluent-comments and its dependencies
@@ -453,14 +452,6 @@ ELASTICSEARCH_ANALYZER = {
         "filter": ["standard", "asciifolding", "lowercase"]
     },
 }
-
-# Celery settings
-#: Only add pickle to this list if your broker is secured
-#: from unwanted access (see userguide/security.html)
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-BROKER_URL = env('TROJSTENWEB_CELERY_BROKER_URL', 'django://')
 
 # Comments settings
 COMMENTS_APP = 'fluent_comments'

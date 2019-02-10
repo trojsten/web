@@ -1,6 +1,5 @@
 backports.csv
 bs4
-celery<4.0.0
 certifi==2015.04.28
 czech_sort
 django-bootstrap-form

@@ -4,17 +4,13 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-amqp==1.4.9               # via kombu
-anyjson==0.3.3            # via kombu
 asn1crypto==0.24.0        # via cryptography
 backports.csv==1.0.6
 bcrypt==3.1.6             # via paramiko
 beautifulsoup4==4.7.1     # via bs4
-billiard==3.3.0.23        # via celery
 bleach==2.1.4             # via wiki
 bs4==0.0.1
 bumpversion==0.5.3
-celery==3.1.26.post2
 certifi==2015.04.28
 cffi==1.11.5              # via bcrypt, cryptography, pynacl
 click==7.0                # via pip-tools
@@ -66,7 +62,6 @@ first==2.0.1
 flake8==3.7.5
 html5lib==1.0.1           # via bleach
 jdcal==1.4                # via openpyxl
-kombu==3.0.37             # via celery
 ksp-login==0.5.0
 markdown==2.6.11          # via django-tips, django-trojsten-news, pymdown-extensions, wiki
 mccabe==0.6.1             # via flake8
