@@ -9,7 +9,7 @@ ROOT_URLCONF = 'trojsten.urls.login'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-MIDDLEWARE_CLASSES += (
+MIDDLEWARE += (
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
 )
 

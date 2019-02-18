@@ -10,7 +10,8 @@ RUN fc-cache -f -v
 COPY ./requirements.txt /web/requirements.txt
 WORKDIR /web
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 COPY . /web
 

@@ -11,7 +11,7 @@ lint:
     stage: test
     image: python:3.6
     before_script:
-        - pip install flake8
+        - pip install -r requirements.txt
     script:
         - flake8 trojsten
 
@@ -20,7 +20,7 @@ lint:
     stage: test
     image: python:3.6
     services:
-        - postgres:9.2
+        - postgres:9.5
         - elasticsearch:2.4.6  # Deprecated image kôli starej verzii. Keď sa
                                # upgradne, použiť podľa návodu:
                                # https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html

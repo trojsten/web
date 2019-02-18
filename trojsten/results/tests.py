@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.contrib.sites.models import Site
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 from django.utils import timezone
 
 from trojsten.contests.models import Competition, Round, Semester, Task
@@ -13,7 +13,6 @@ from trojsten.rules.test import get_row_for_user
 from trojsten.schools.models import School
 from trojsten.submit.models import Submit
 from trojsten.utils.test_utils import get_noexisting_id
-
 from .representation import Results, ResultsCell, ResultsCol, ResultsRow
 
 

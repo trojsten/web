@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import sys
+
 import os
 import re
-import sys
+
 try:
     from urllib.request import quote, unquote
 except:  # noqa: E722 @FIXME
@@ -198,10 +200,10 @@ class BaseZipSet(BaseFormSet):
 
         users = set()
         for form in self.forms:
-            if 'user' is None:
+            user = form.cleaned_data['user']
+            if user is None:
                 continue
 
-            user = form.cleaned_data['user']
             if user and user in users:
                 raise forms.ValidationError(_('Assigned 2 or more files to the same user.'))
 

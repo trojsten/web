@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from os import path
-
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
-from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import activate
+from os import path
 from wiki.models import Article, ArticleRevision, URLPath
 
 from trojsten.contests import constants

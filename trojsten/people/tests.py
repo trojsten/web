@@ -4,13 +4,12 @@ from __future__ import unicode_literals
 import datetime
 import random
 from decimal import Decimal
-
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
-from django.core.urlresolvers import reverse
 from django.http.request import HttpRequest
 from django.test import TestCase
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django_countries.fields import Country
@@ -25,7 +24,6 @@ from trojsten.submit.constants import (SUBMIT_PAPER_FILEPATH,
                                        SUBMIT_TYPE_DESCRIPTION)
 from trojsten.submit.models import Submit
 from trojsten.utils.test_utils import get_noexisting_id
-
 from . import constants
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .forms import (AdditionalRegistrationForm, SubmittedTasksForm,

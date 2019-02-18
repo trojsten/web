@@ -104,7 +104,7 @@ class SearchTests(TestCase):
             title='Nové novinky', content='Toto je novy clanok.', article=new_article))
         URLPath.objects.create(site=self.site, article=new_article,
                                slug='new', parent=self.root_path)
-        call_command('update_index', interactive=False)
+        call_command('update_index')
         response = self.client.get('/search/', {'q': 'novy clanok'})
         self.assertSetEqual(set(['Nové novinky']),
                             set([res.title for res in response.context['page'].object_list]))

@@ -8,17 +8,15 @@ from wiki.urls import get_pattern as get_wiki_pattern
 
 import trojsten.contests.urls
 import trojsten.contests.views
-import trojsten.login.views
+import trojsten.diplomas.urls
 import trojsten.people.views
 import trojsten.results.urls
 import trojsten.submit.urls
 import trojsten.submit.views
-import trojsten.diplomas.urls
-
 from .common import urlpatterns as common_urlpatterns
 
 urlpatterns = common_urlpatterns + [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^ucet/', include('ksp_login.urls')),
     url(r'^ucet/additional_registration/?$',
         trojsten.people.views.additional_registration,

@@ -3,15 +3,14 @@ from __future__ import unicode_literals
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.db.models import Max
 from django.http.response import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
+from trojsten.contests.models import Task
 from trojsten.submit.constants import SUBMIT_TYPE_EXTERNAL
 from trojsten.submit.models import Submit
-from trojsten.contests.models import Task
-
 from .forms import SubmitForm
 from .tester import POCET_PRVKOV, process_answer, process_question
 

@@ -11,10 +11,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
 from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden)
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
 from judge_client import constants as judge_constants
