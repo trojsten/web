@@ -275,7 +275,7 @@ class KMSRulesTest(TestCase):
         self.assertTrue(row.cell_list[col_to_index_map[5]].active ^ row.cell_list[col_to_index_map[7]].active)
 
     def test_only_best_five_halved_points(self):
-        points = [-1, -1, -1, 9, 6, 4, 9, 9, 2, 10]
+        points = [-1, -1, -1, 9, 6, 8, 9, 9, 2, 10]
         active = [True] * 11
         active[5] = False
         active[9] = False
@@ -291,7 +291,7 @@ class KMSRulesTest(TestCase):
         self.assertEqual(row.cell_list[col_to_index_map['sum']].points, '41')
         for i in range(4, 11):
             self.assertEqual(row.cell_list[col_to_index_map[i]].points, str(points[i - 1]))
-            self.assertEqual(row.cell_list[col_to_index_map[i]].active, active[i - 1])
+            self.assertEqual(row.cell_list[col_to_index_map[i]].active, active[i])
         self.assertTrue(row.cell_list[col_to_index_map[5]].active ^ row.cell_list[col_to_index_map[7]].active)
 
     def test_alfa_coeff_2(self):
