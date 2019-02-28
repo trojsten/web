@@ -154,7 +154,7 @@ class KMSCoefficientTest(TestCase):
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 2)
 
     def test_ignore_mo_in_same_semester(self):
-        # year = 1, successful semesters = 0, mo = 2, coefficient = 3
+        # Coefficient = 3: year = 1, successful semesters = 0, mo = 2
         for mo_finals in self.mo_finals:
             EventParticipant.objects.create(event=mo_finals, user=self.test_user,
                                             type=EventParticipant.PARTICIPANT, going=True)
@@ -176,12 +176,12 @@ class KMSCoefficientTest(TestCase):
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 2)
 
     def test_many_camps(self):
-        # Coefficient = 5: year = 1, successful semesters = 5, mo = 0
+        # Coefficient = 6: year = 1, successful semesters = 5, mo = 0
         for i in range(5):
             EventParticipant.objects.create(event=self.camps[i], user=self.test_user,
                                             type=EventParticipant.PARTICIPANT, going=True)
         generator = KMSResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 5)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 6)
 
 
 class KMSRulesTest(TestCase):
@@ -209,7 +209,7 @@ class KMSRulesTest(TestCase):
             cat = []
             if i <= 7:
                 cat += [category_alfa]
-            if i >= 4:
+            if i >= 3:
                 cat += [category_beta]
             self.tasks[-1].categories.set(cat)
             self.tasks[-1].save()
@@ -274,8 +274,41 @@ class KMSRulesTest(TestCase):
                 self.assertEqual(row.cell_list[col_to_index_map[i]].active, active[i - 1])
         self.assertTrue(row.cell_list[col_to_index_map[5]].active ^ row.cell_list[col_to_index_map[7]].active)
 
-    def test_tasks_coefficients_alfa(self):
-        points = [1, 2, 3, 4, 5, 6, 7]
+    def test_only_best_five_halved_points(self):
+        points = [-1, -1, -1, 9, 6, 4, 9, 9, 2, 10]
+        active = [True] * 11
+        active[5] = False
+        active[9] = False
+        user = self._create_user_with_coefficient(9)
+        self._create_submits(user, points)
+
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+        scoreboard = get_scoreboard(response.context['scoreboards'], KMS_BETA)
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        row = get_row_for_user(scoreboard, user)
+        self.assertEqual(row.cell_list[col_to_index_map[COEFFICIENT_COLUMN_KEY]].points, '9')
+        self.assertEqual(row.cell_list[col_to_index_map['sum']].points, '41')
+        for i in range(4, 11):
+            self.assertEqual(row.cell_list[col_to_index_map[i]].points, str(points[i - 1]))
+            self.assertEqual(row.cell_list[col_to_index_map[i]].active, active[i - 1])
+        self.assertTrue(row.cell_list[col_to_index_map[5]].active ^ row.cell_list[col_to_index_map[7]].active)
+
+    def test_alfa_coeff_2(self):
+        points = [9, 2, 3, 4, 5]
+        user = self._create_user_with_coefficient(2)
+        self._create_submits(user, points)
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+        scoreboard = get_scoreboard(response.context['scoreboards'], KMS_ALFA)
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        row = get_row_for_user(scoreboard, user)
+        for i in range(1, 6):
+            self.assertTrue(row.cell_list[col_to_index_map[i]].active)
+        self.assertEqual(row.cell_list[col_to_index_map['sum']].points, '19')
+
+    def test_alfa_coeff_3(self):
+        points = [1, 2, 3, 4, 5, 6]
         user = self._create_user_with_coefficient(3)
         self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
@@ -283,25 +316,52 @@ class KMSRulesTest(TestCase):
         scoreboard = get_scoreboard(response.context['scoreboards'], KMS_ALFA)
         col_to_index_map = get_col_to_index_map(scoreboard)
         row = get_row_for_user(scoreboard, user)
-        for i in range(1, 3):
+        for i in range(1, 2):
             self.assertFalse(row.cell_list[col_to_index_map[i]].active)
-        for i in range(3, 8):
+        for i in range(2, 7):
             self.assertTrue(row.cell_list[col_to_index_map[i]].active)
-        self.assertEqual(row.cell_list[col_to_index_map['sum']].points, '25')
+        self.assertEqual(row.cell_list[col_to_index_map['sum']].points, '19')
 
-    def test_tasks_coefficients_beta(self):
-        points = [-1, -1, -1, 3, 4, 5, 6, 7, 8]
-        user = self._create_user_with_coefficient(7)
+    def test_beta_coeff_4(self):
+        points = [-1, -1, 8, 4, 5, 6, 7]
+        user = self._create_user_with_coefficient(4)
         self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
         scoreboard = get_scoreboard(response.context['scoreboards'], KMS_BETA)
         col_to_index_map = get_col_to_index_map(scoreboard)
         row = get_row_for_user(scoreboard, user)
-        self.assertFalse(row.cell_list[col_to_index_map[4]].active)
-        for i in range(5, 10):
+        for i in range(3, 8):
             self.assertTrue(row.cell_list[col_to_index_map[i]].active)
-        self.assertEqual(row.cell_list[col_to_index_map['sum']].points, '30')
+        self.assertEqual(row.cell_list[col_to_index_map['sum']].points, '26')
+
+    def test_beta_coeff_8(self):
+        points = [-1, -1, 3, 4, 5, 6, 7, 8]
+        user = self._create_user_with_coefficient(8)
+        self._create_submits(user, points)
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+        scoreboard = get_scoreboard(response.context['scoreboards'], KMS_BETA)
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        row = get_row_for_user(scoreboard, user)
+        self.assertFalse(row.cell_list[col_to_index_map[3]].active)
+        for i in range(4, 8):
+            self.assertTrue(row.cell_list[col_to_index_map[i]].active)
+        self.assertEqual(row.cell_list[col_to_index_map['sum']].points, '28')
+
+    def test_beta_coeff_9(self):
+        points = [-1, -1, 3, 4, 6, 6, 7, 8]
+        user = self._create_user_with_coefficient(9)
+        self._create_submits(user, points)
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+        scoreboard = get_scoreboard(response.context['scoreboards'], KMS_BETA)
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        row = get_row_for_user(scoreboard, user)
+        self.assertFalse(row.cell_list[col_to_index_map[3]].active)
+        for i in range(4, 8):
+            self.assertTrue(row.cell_list[col_to_index_map[i]].active)
+        self.assertEqual(row.cell_list[col_to_index_map['sum']].points, '26')
 
     def test_beta_only_user(self):
         points = [-1, -1, 2, 3, 4, 5, 6, 7, 8]
@@ -330,7 +390,7 @@ class KMSRulesTest(TestCase):
         self.assertFalse(row_beta.active)
 
     def test_alfa_beta_user(self):
-        points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 9]
+        points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         user = self._create_user_with_coefficient(1)
         self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
@@ -339,7 +399,7 @@ class KMSRulesTest(TestCase):
         col_to_index_map = get_col_to_index_map(scoreboard)
         row_beta = get_row_for_user(scoreboard, user)
         scoreboard = get_scoreboard(response.context['scoreboards'], KMS_ALFA)
-        self.assertEqual(row_beta.cell_list[col_to_index_map['sum']].points, '39')
+        self.assertEqual(row_beta.cell_list[col_to_index_map['sum']].points, '40')
         col_to_index_map = get_col_to_index_map(scoreboard)
         row_alfa = get_row_for_user(scoreboard, user)
         self.assertEqual(row_alfa.cell_list[col_to_index_map['sum']].points, '25')

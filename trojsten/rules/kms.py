@@ -22,7 +22,8 @@ KMS_BETA = 'beta'
 
 
 KMS_ALFA_MAX_COEFFICIENT = 3
-KMS_MAX_COEFFICIENTS = [0, 1, 2, 3, 4, 7, 100, 100, 100, 100, 100]
+KMS_ELIGIBLE_FOR_TASK_BOUND = [0, 2, 3, 5, 100, 100, 100, 100, 100, 100, 100]
+KMS_FULL_POINTS_BOUND = [0, 1, 2, 3, 5, 8, 100, 100, 100, 100, 100]
 
 KMS_CAMP_TYPE = 'KMS sústredenie'
 KMS_MO_FINALS_TYPE = 'CKMO'
@@ -36,16 +37,19 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin,
         super(KMSResultsGenerator, self).__init__(tag)
         self.camps = None
         self.mo_finals = None
+        self.coefficients = {}
 
     def get_user_coefficient(self, user, round):
-        if not self.camps or not self.mo_finals:
-            self.prepare_coefficients(round)
+        if user not in self.coefficients:
+            if not self.camps or not self.mo_finals:
+                self.prepare_coefficients(round)
 
-        year = user.school_year_at(round.end_time)
-        successful_semesters = self.camps.get(user.pk, 0)
-        mo_finals = self.mo_finals.get(user.pk, 0)
+            year = user.school_year_at(round.end_time)
+            successful_semesters = self.camps.get(user.pk, 0)
+            mo_finals = self.mo_finals.get(user.pk, 0)
+            self.coefficients[user] = year + successful_semesters + mo_finals
 
-        return year + (2 * successful_semesters - 1) // 3 + mo_finals + 1
+        return self.coefficients[user]
 
     def prepare_coefficients(self, round):
         """
@@ -100,13 +104,28 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin,
 
         # Count only tasks your coefficient is eligible for
         for key in row.cells_by_key:
-            if KMS_MAX_COEFFICIENTS[key] < coefficient:
+            if KMS_ELIGIBLE_FOR_TASK_BOUND[key] < coefficient:
                 row.cells_by_key[key].active = False
 
+        # Prepare list of piars consisting of cell and its points.
+        tasks = [
+            (cell, self.get_cell_total(request, cell) if KMS_FULL_POINTS_BOUND[key] >= coefficient
+                else (1 + self.get_cell_total(request, cell)) // 2)
+            for key, cell in row.cells_by_key.items() if row.cells_by_key[key].active
+        ]
+
         # Count only the best 5 tasks
-        for excess in sorted((row.cells_by_key[key] for key in row.cells_by_key if row.cells_by_key[key].active),
-                             key=lambda cell: -self.get_cell_total(request, cell))[5:]:
-            excess.active = False
+        for cell, _ in sorted(tasks, key=lambda x: x[1])[:-5]:
+            cell.active = False
+
+    def calculate_row_round_total(self, res_request, row, cols):
+        coefficient = self.get_user_coefficient(row.user, res_request.round)
+
+        row.round_total = sum(
+            self.get_cell_total(res_request, cell) if KMS_FULL_POINTS_BOUND[key] >= coefficient
+            else (1 + self.get_cell_total(res_request, cell)) // 2
+            for key, cell in row.cells_by_key.items() if cell.active
+        )
 
     def add_special_row_cells(self, res_request, row, cols):
         super(KMSResultsGenerator, self).add_special_row_cells(res_request, row, cols)
