@@ -390,7 +390,7 @@ class KMSRulesTest(TestCase):
         self.assertFalse(row_beta.active)
 
     def test_alfa_beta_user(self):
-        points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        points = [1, 2, 9, 4, 5, 6, 7, 8, 9, 10]
         user = self._create_user_with_coefficient(1)
         self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
@@ -402,7 +402,7 @@ class KMSRulesTest(TestCase):
         self.assertEqual(row_beta.cell_list[col_to_index_map['sum']].points, '40')
         col_to_index_map = get_col_to_index_map(scoreboard)
         row_alfa = get_row_for_user(scoreboard, user)
-        self.assertEqual(row_alfa.cell_list[col_to_index_map['sum']].points, '25')
+        self.assertEqual(row_alfa.cell_list[col_to_index_map['sum']].points, '31')
 
 
 class KSPRulesOneUserTest(TestCase):

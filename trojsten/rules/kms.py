@@ -78,6 +78,11 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin,
         ).values('user').annotate(camps=Count('event__semester', distinct=True))
                         .values_list('user', 'camps'))
 
+    def get_cell_points_for_row_total(self, res_request, cell, key, coefficient):
+        return (1 + self.get_cell_total(res_request, cell)) // 2 \
+            if KMS_FULL_POINTS_BOUND[key] < coefficient or (self.tag.key == KMS_BETA and key == 3) \
+            else self.get_cell_total(res_request, cell)
+
     def run(self, res_request):
         self.prepare_coefficients(res_request.round)
         res_request.has_submit_in_beta = set()
@@ -109,8 +114,7 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin,
 
         # Prepare list of piars consisting of cell and its points.
         tasks = [
-            (cell, self.get_cell_total(request, cell) if KMS_FULL_POINTS_BOUND[key] >= coefficient
-                else (1 + self.get_cell_total(request, cell)) // 2)
+            (cell, self.get_cell_points_for_row_total(request, cell, key, coefficient))
             for key, cell in row.cells_by_key.items() if row.cells_by_key[key].active
         ]
 
@@ -122,8 +126,7 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin,
         coefficient = self.get_user_coefficient(row.user, res_request.round)
 
         row.round_total = sum(
-            self.get_cell_total(res_request, cell) if KMS_FULL_POINTS_BOUND[key] >= coefficient
-            else (1 + self.get_cell_total(res_request, cell)) // 2
+            self.get_cell_points_for_row_total(res_request, cell, key, coefficient)
             for key, cell in row.cells_by_key.items() if cell.active
         )
 
