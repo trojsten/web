@@ -5,11 +5,10 @@ from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ungettext as _
 
-from trojsten.contests.helpers import get_points_from_submits, slice_tag_list
 from trojsten.contests.models import Category, Task
 from trojsten.results.manager import get_results_tags_for_rounds
 from trojsten.submit.models import Submit
-
+from ..helpers import get_points_from_submits, slice_tag_list
 
 register = template.Library()
 

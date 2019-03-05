@@ -52,7 +52,7 @@ def as_list(value):
     return [value]
 
 
-@register.assignment_tag(takes_context=True)
+@register.simple_tag(takes_context=True)
 def is_organizer(context, competition):
     return (
         context['user'].is_superuser
