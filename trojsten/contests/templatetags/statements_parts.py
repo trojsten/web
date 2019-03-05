@@ -8,7 +8,7 @@ from django.utils.translation import ungettext as _
 from trojsten.contests.models import Category, Task
 from trojsten.results.manager import get_results_tags_for_rounds
 from trojsten.submit.models import Submit
-from ..helpers import get_points_from_submits, get_rounds_by_year
+from ..helpers import get_points_from_submits, slice_tag_list
 
 register = template.Library()
 
@@ -41,22 +41,14 @@ def show_task_list(context, round):
 
 @register.inclusion_tag('trojsten/contests/parts/buttons.html', takes_context=True)
 def show_buttons(context, round):
-    (results_tags,) = get_results_tags_for_rounds((round,))
+    (results_tags_generator, ) = get_results_tags_for_rounds((round,))
+    sliced_results_tags = slice_tag_list(list(results_tags_generator))
 
     context.update({
         'round': round,
-        'results_tags': results_tags
+        'results_tags': sliced_results_tags
     })
     return context
-
-
-@register.inclusion_tag('trojsten/contests/parts/round_list.html')
-def show_round_list(user, competition):
-    all_rounds = get_rounds_by_year(user, competition)
-    data = {
-        'all_rounds': all_rounds,
-    }
-    return data
 
 
 @register.inclusion_tag('trojsten/contests/parts/progress.html', takes_context=True)
