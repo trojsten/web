@@ -52,11 +52,11 @@ class KSPResultsGenerator(ResultsGenerator):
             penalized_submits = Submit.objects.filter(
                 task__in=self.get_task_queryset(res_request),
             ).filter(
-                models.Q(submit_type=submit_constants.SUBMIT_TYPE_SOURCE) |
-                models.Q(submit_type=submit_constants.SUBMIT_TYPE_TESTABLE_ZIP)
+                models.Q(submit_type=submit_constants.SUBMIT_TYPE_SOURCE)
+                | models.Q(submit_type=submit_constants.SUBMIT_TYPE_TESTABLE_ZIP)
             ).filter(
-                models.Q(time__gte=models.F('task__round__end_time')) &
-                models.Q(time__lte=models.F('task__round__second_end_time'))
+                models.Q(time__gte=models.F('task__round__end_time'))
+                & models.Q(time__lte=models.F('task__round__second_end_time'))
             ).order_by(
                 'user', 'task', '-time', '-id',
             ).distinct(
