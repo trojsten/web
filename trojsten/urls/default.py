@@ -3,8 +3,6 @@ from __future__ import absolute_import
 import news.urls
 from django.conf.urls import include, url
 from django.contrib import admin
-from django_nyt.urls import get_pattern as get_notify_pattern
-from wiki.urls import get_pattern as get_wiki_pattern
 
 import trojsten.contests.urls
 import trojsten.contests.views
@@ -37,7 +35,7 @@ urlpatterns = common_urlpatterns + [
     url(r'^komentare/', include('fluent_comments.urls')),
     url(r'^diskusie/', include('trojsten.threads.urls')),
     url(r'^$', trojsten.views.home_redirect),
-    url(r'^wiki/notify/', get_notify_pattern()),
+    url(r'^wiki/notify/', include('django_nyt.urls')),
     url(r'^', include('favicon.urls')),
-    url(r'^', get_wiki_pattern()),
+    url(r'^', include('wiki.urls')),
 ]

@@ -1,7 +1,5 @@
 from __future__ import absolute_import
 
-import django_nyt
-import wiki
 from django.conf.urls import include, url
 from django.contrib import admin
 
@@ -12,8 +10,8 @@ urlpatterns = common_urlpatterns + [
     url(r'^admin/', admin.site.urls),
     url(r'^ucet/', include('ksp_login.urls')),
     url(r'^nahlasit-problem/', include('contact_form.urls')),
-    url(r'^wiki/notify/', include(django_nyt.urls)),
+    url(r'^wiki/notify/', include('django_nyt.urls')),
     url(r'^search/', CustomSearchView(), name='haystack_search'),
     url(r'^', include('favicon.urls')),
-    url(r'^', include(wiki.urls)),
+    url(r'^', include('wiki.urls')),
 ]
