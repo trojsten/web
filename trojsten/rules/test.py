@@ -25,6 +25,7 @@ from trojsten.submit.models import Submit
 
 SOURCE = submit_constants.SUBMIT_TYPE_SOURCE
 DESCRIPTION = submit_constants.SUBMIT_TYPE_DESCRIPTION
+ZIP = submit_constants.SUBMIT_TYPE_TESTABLE_ZIP
 
 
 class DictObject(object):
@@ -583,6 +584,15 @@ class KSPRulesOneUserTest(TestCase):
         self.assertEqual(cells[3].points, '')
         self.assertEqual(cells['sum'].points, '18')
 
+    def test_zip_submit_in_first_phase(self):
+        self._create_submits([
+            (1, ZIP, self.start + timezone.timedelta(days=1), 10),
+        ])
+
+        cells = self._get_point_cells_for_tasks()
+        self.assertEqual(cells[1].points, '10')
+        self.assertEqual(cells['sum'].points, '10')
+
     def test_last_submit_in_first_phase(self):
         self._create_submits([
             (1, SOURCE, self.start + timezone.timedelta(days=1), 7),
@@ -608,6 +618,15 @@ class KSPRulesOneUserTest(TestCase):
         self.assertEqual(cells[2].points, '2')
         self.assertEqual(cells[3].points, '')
         self.assertEqual(cells['sum'].points, '5.5')
+
+    def test_zip_submit_in_second_phase(self):
+        self._create_submits([
+            (1, ZIP, self.end + timezone.timedelta(days=1), 7),
+        ])
+
+        cells = self._get_point_cells_for_tasks()
+        self.assertEqual(cells[1].points, '3.5')
+        self.assertEqual(cells['sum'].points, '3.5')
 
     def test_last_submit_in_second_phase(self):
         self._create_submits([
@@ -652,6 +671,17 @@ class KSPRulesOneUserTest(TestCase):
         self.assertEqual(cells[1].points, '7.5')
         self.assertEqual(cells[2].points, '6')
         self.assertEqual(cells[3].points, '{:.3f}'.format(4.32 + 6.57 / 2))
+
+    def test_zip_submits_in_all_phases(self):
+        self._create_submits([
+            (2, ZIP, self.start + timezone.timedelta(days=1), 5),
+            (2, ZIP, self.end + timezone.timedelta(days=1), 8),
+            (2, ZIP, self.second_end + timezone.timedelta(days=1), 10),
+        ])
+
+        cells = self._get_point_cells_for_tasks()
+        self.assertEqual(cells[2].points, '6.5')
+        self.assertEqual(cells['sum'].points, '6.5')
 
     def test_fewer_points_in_second_phase(self):
         self._create_submits([
