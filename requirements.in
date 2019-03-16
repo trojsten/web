@@ -16,7 +16,6 @@ django-favicon
 django-fluent-comments
 django-haystack
 django-import-export
-django-jsonfield
 django-mathfilters
 django-oauth-toolkit<1.2.0
 django-recaptcha2
