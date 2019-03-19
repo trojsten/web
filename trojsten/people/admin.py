@@ -10,7 +10,8 @@ from django.db import models
 from django.forms import ModelForm
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.encoding import force_text
-from django.utils.html import escape
+from django.utils.html import escape, format_html
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from easy_select2 import select2_modelform
 from easy_select2.widgets import Select2
@@ -21,7 +22,6 @@ from trojsten.contests.models import Competition, Semester
 from trojsten.people.admin_urls import submitted_tasks_urls
 from trojsten.submit.models import Submit
 from trojsten.utils.utils import attribute_format
-
 from . import constants
 from .forms import MergeForm
 from .helpers import get_similar_users, merge_users
@@ -197,15 +197,13 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
                 show = obj.school.abbreviation
             else:
                 show = obj.school.verbose_name
-            return '<span title="%s">%s</span>' % (
-                escape(force_text(obj.school)), escape(force_text(show))
-            )
+            return format_html('<span title="{}">{}</span>', escape(force_text(obj.school)), escape(force_text(show)))
     get_school.short_description = 'škola'
     get_school.admin_order_field = 'school'
     get_school.allow_tags = True
 
     def get_properties(self, obj):
-        return '<br />'.join(escape(force_text(x)) for x in obj.properties.all())
+        return mark_safe('<br />'.join(escape(force_text(x)) for x in obj.properties.all()))
     get_properties.short_description = 'dodatočné vlastnosti'
     get_properties.allow_tags = True
 
