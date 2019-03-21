@@ -139,7 +139,7 @@ def view_diplomas(request):
 
     context = {
         'form': form,
-        'template_fields': json.dumps(editable_fields, ensure_ascii=False).encode('utf8')
+        'template_fields': json.dumps(editable_fields, ensure_ascii=False)
     }
 
     return render(
