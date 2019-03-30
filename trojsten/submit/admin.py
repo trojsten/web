@@ -6,12 +6,11 @@ from django.contrib import admin
 from django.utils.encoding import force_text
 from easy_select2 import select2_modelform
 
-from trojsten.contests.models import Round
-from trojsten.contests.models import Task
+from trojsten.contests.models import Round, Task
 from trojsten.reviews.urls import submit_urls
 from trojsten.submit.forms import SubmitAdminForm
 from trojsten.utils.utils import attribute_format, get_related
-from .models import Submit, ExternalSubmitToken
+from .models import ExternalSubmitToken, Submit
 
 
 class SubmitAdmin(admin.ModelAdmin):
@@ -23,7 +22,7 @@ class SubmitAdmin(admin.ModelAdmin):
                     'get_round', 'get_semester', 'get_year', 'get_competition', 'get_categories',
                     'user', 'time', 'get_points', 'submit_type', 'testing_status', 'filepath',)
     list_filter = ('task__round__semester__competition', 'testing_status', 'submit_type')
-    search_fields = ('user__username', 'task__name',)
+    search_fields = ('user__username', 'user__first_name', 'user__last_name', 'task__name', 'protocol_id', )
 
     get_points = attribute_format(
         attribute='user_points',
