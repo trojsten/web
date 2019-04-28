@@ -37,7 +37,7 @@
 {% spaceless %}
 {% if row.active or show_staff %}
 <tr
-    {% if user == row.user %}class="active"{% endif %}
+    {% if user.id == row.user.id %}class="active"{% endif %}
     {# @FIXME(css): Hack until css`s are rewritten #}
     {% if not row.active %}style="opacity: 0.5"{% endif %}
 >
