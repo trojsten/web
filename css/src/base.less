@@ -38,8 +38,17 @@ body {
 
 .navbar-main {
   z-index: 1050;
-  border-bottom: 3px solid @body-bg;
-  outline: 2px solid @brand-primary;
+  border-bottom: none;
+}
+
+.navbar-outline {
+  position: fixed;
+  top: 58px;
+  left: 0;
+  z-index: 990; // dropdown ma z-index 1000
+  width: 100%;
+  height: 2px;
+  background: @brand-primary;
 }
 
 .navbar-main .navbar-toggle:focus {
