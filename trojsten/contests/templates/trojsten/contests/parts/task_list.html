@@ -1,7 +1,7 @@
 {% load utils %}
 <!-- Nav tabs -->
 
-{% if categories|length > 1 %}
+{% if categories.count > 1 %}
 <ul class="nav nav-tabs" role="tablist">
     <li class="active">
         <a href="#category-tab-all" role="tab" data-toggle="tab"
@@ -41,7 +41,7 @@
         {% endif %}
     </th>
     {% endif %}
-    {% if categories|length > 0 %}
+    {% if categories.count > 0 %}
         <th width="15%">
             Kategória
         </th>
@@ -69,7 +69,7 @@
                 <a href="{% url 'solution_statement' task_id=task.id %}">vzorák</a>
             </td>
         {% endif %}
-        {% if categories|length > 0 %}
+        {% if categories.count > 0 %}
             <td>
                 {% for category in task.categories.all %}
                     <span class="label label-default category-{{ category }}">{{ category }}</span>

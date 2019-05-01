@@ -12,7 +12,6 @@ from ..helpers import get_points_from_submits, slice_tag_list
 
 register = template.Library()
 
-# View generuje 6 queryn?
 @register.inclusion_tag('trojsten/contests/parts/task_list.html', takes_context=True)
 def show_task_list(context, round):
     tasks = Task.objects.filter(
