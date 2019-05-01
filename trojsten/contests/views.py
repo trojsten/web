@@ -10,6 +10,7 @@ from wiki.decorators import get_article
 
 from trojsten.contests.models import Competition, Round, Task
 from trojsten.utils.utils import is_true
+from news.models import Entry as NewsEntry
 
 
 @get_article(can_read=True)
@@ -117,4 +118,19 @@ def ajax_progressbar(request, round_id):
         request,
         'trojsten/contests/ajax/progress.html',
         template_data,
+    )
+
+def dashboard(request):
+    rounds = Round.objects.active_visible(request.user).order_by('end_time')
+    competitions = Competition.objects.current_site_only()
+    news = NewsEntry.objects.filter(sites__id=settings.SITE_ID).select_related('author').prefetch_related('tags').all()[:3]
+
+    return render(
+        request,
+        'trojsten/contests/dashboard.html',
+        {
+            'competitions': competitions,
+            'rounds': rounds,
+            'news_entries': news
+        }
     )
