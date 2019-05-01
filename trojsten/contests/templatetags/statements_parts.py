@@ -12,7 +12,7 @@ from ..helpers import get_points_from_submits, slice_tag_list
 
 register = template.Library()
 
-
+# View generuje 6 queryn?
 @register.inclusion_tag('trojsten/contests/parts/task_list.html', takes_context=True)
 def show_task_list(context, round):
     tasks = Task.objects.filter(
@@ -21,9 +21,11 @@ def show_task_list(context, round):
         'number'
     ).select_related(
         'round', 'round__semester', 'round__semester__competition'
+    ).prefetch_related(
+        'categories', 'categories__competition'
     )
     # Select all categories which are represented by at least one task in displayed round.
-    categories = Category.objects.filter(task__in=tasks.values_list('pk', flat=True)).distinct()
+    categories = Category.objects.filter(task__in=tasks.values_list('pk', flat=True)).distinct().select_related('competition')
 
     data = {
         'round': round,
