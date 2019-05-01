@@ -1,0 +1,25 @@
+{% load i18n sekizai_tags staticfiles %}
+{% addtoblock "js" %}
+    <script type="text/javascript" src="{% static 'js/notifications.js' %}"></script>
+{% endaddtoblock %}
+
+{% if user.is_authenticated %}
+<ul class="nav navbar-nav navbar-right" style="margin-right:16px;">
+<li class="dropdown">
+    <p class="dropdown-toggle btn btn-primary navbar-btn" id="notification-dropdown" data-toggle="dropdown">
+      <i class="glyphicon glyphicon-bell"></i>
+      <span class="badge" id="notification-box-number"></span>
+    </p>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="notification-dropdown" id="notification-box-content">
+      {% comment %} <li role="presentation" class="divider"></li> {% endcomment %}
+      {% comment %} <li role="presentation">
+
+        <a role="menuitem" tabindex="-1" href="{% if SITE.is_login_provider %}{% url "account_logout" %}
+        {% else %}{% url "remote_account_logout" %}{%  endif %}?next={% ksp_login_next %}">
+          <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+          {% trans "Log out" %}</a>
+      </li> {% endcomment %}
+    </ul>
+</li>
+</ul>
+{% endif %}
