@@ -11,6 +11,7 @@ from wiki.decorators import get_article
 from trojsten.contests.models import Competition, Round, Task
 from trojsten.utils.utils import is_true
 from news.models import Entry as NewsEntry
+from . import constants
 
 
 @get_article(can_read=True)
@@ -123,7 +124,7 @@ def ajax_progressbar(request, round_id):
 def dashboard(request):
     rounds = Round.objects.active_visible(request.user).order_by('end_time')
     competitions = Competition.objects.current_site_only()
-    news = NewsEntry.objects.filter(sites__id=settings.SITE_ID).select_related('author').prefetch_related('tags').all()[:3]
+    news = NewsEntry.objects.filter(sites__id=settings.SITE_ID).select_related('author').prefetch_related('tags').all()[:constants.NEWS_ENTRIES_ON_DASHBOARD]
 
     return render(
         request,
