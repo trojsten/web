@@ -1,15 +1,16 @@
 {% extends "trojsten/layout/main.html" %}
 {% load statements_parts %}
 {% load archive_parts %}
+{% load i18n %}
 
-{% block title %}Nástenka{% endblock %}
+{% block title %}{% trans "Dashboard" %}{% endblock %}
 
 {% block page_header %}
-<h1>Nástenka</h1>
+<h1>{% trans "Dashboard" %}</h1>
 {% endblock %}
 
 {% block page_content %}
-    <h2>Aktuálne kolá</h2>
+    <h2>{% trans "Active rounds" %}</h2>
     {% for round in rounds %}
     <p class="lead" style="margin-bottom: 0;">
         <a href="{% url 'task_list' round_id=round.id %}">{{ round }}</a>
@@ -20,12 +21,12 @@
     {% endfor %}
 
     {% if rounds|length == 0 %}
-    <div class="alert alert-info">Aktuálne neprebieha žiadne kolo.</div>
+    <div class="alert alert-info">{% trans "There is no active round currently." %}</div>
     {% endif %}
 
     <hr>
-    <h2>Novinky</h2>
+    <h2>{% trans "News" %}</h2>
     {% include 'news/parts/news_list.html' %}
 
-    <a class="btn btn-primary" href="{% url 'news_list' page=1 %}">Viac noviniek &raquo;</a>
+    <a class="btn btn-primary" href="{% url 'news_list' page=1 %}">{% trans "More news &raquo;" %}</a>
 {% endblock %}
