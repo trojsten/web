@@ -7,6 +7,7 @@ from django.contrib.sites.models import Site
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import activate
 from os import path
 from wiki.models import Article, ArticleRevision, URLPath
@@ -14,6 +15,7 @@ from wiki.models import Article, ArticleRevision, URLPath
 from trojsten.contests import constants
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
+from news.models import Entry as NewsEntry
 from trojsten.utils.test_utils import get_noexisting_id
 
 
@@ -524,3 +526,93 @@ class RoundManagerTests(TestCase):
 
     def test_latest_finished_for_competition(self):
         self.assertEqual(Round.objects.latest_finished_for_competition(self.competition).number, 2)
+
+class DashboardTest(TestCase):
+    def setUp(self):
+        self.site = Site.objects.get(pk=settings.SITE_ID)
+        self.url = reverse('dashboard')
+
+    def test_dashboard_no_round(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, _("There is no active round currently."))
+
+    def test_active_round(self):
+        competition = Competition.objects.create(name='TestCompetition')
+        competition.sites.add(self.site)
+        semester = Semester.objects.create(
+            number=1, name='Test semester 1', competition=competition, year=1
+        )
+        round_ = Round.objects.create(number=1, semester=semester, solutions_visible=True, visible=True)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, _("There is no active round currently."))
+        self.assertContains(response, round_)
+
+    def test_two_rounds(self):
+        competition = Competition.objects.create(name='TestCompetition')
+        competition.sites.add(self.site)
+        semester = Semester.objects.create(
+            number=1, name='Test semester 1', competition=competition, year=1
+        )
+        round1 = Round.objects.create(number=1, semester=semester, solutions_visible=True, visible=True)
+        round2 = Round.objects.create(number=2, semester=semester, solutions_visible=True, visible=True)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, _("There is no active round currently."))
+        self.assertContains(response, round1)
+        self.assertContains(response, round2)
+
+    def test_invisible_round(self):
+        competition = Competition.objects.create(name='TestCompetition')
+        competition.sites.add(self.site)
+        semester = Semester.objects.create(
+            number=1, name='Test semester 1', competition=competition, year=1
+        )
+        round_ = Round.objects.create(number=1, semester=semester, visible=False)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, _("There is no active round currently."))
+    
+    def test_inactive_round(self):
+        competition = Competition.objects.create(name='TestCompetition')
+        competition.sites.add(self.site)
+        semester = Semester.objects.create(
+            number=1, name='Test semester 1', competition=competition, year=1
+        )
+        start = timezone.now() + timezone.timedelta(-8)
+        end = timezone.now() + timezone.timedelta(-5)
+
+        round_ = Round.objects.create(number=1, semester=semester, visible=True, start_time=start, end_time=end)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, _("There is no active round currently."))
+    
+    def test_dashboard_redirect(self):
+        user = User.objects.create_user('TestUser', 'test@localhost', 'password')
+        self.client.force_login(user)
+        response = self.client.get('')
+        self.assertRedirects(response, self.url)
+
+    def test_news_count(self):
+        user = User.objects.create_user('TestUser', 'test@localhost', 'password')
+
+        for i in range(constants.NEWS_ENTRIES_ON_DASHBOARD + 1):
+            entry = NewsEntry.objects.create(
+                author=user,
+                title='Test news entry %d' % i,
+                text='Test text'
+            )
+            entry.sites.add(self.site)
+
+        response = self.client.get(self.url)
+
+        for i in range(constants.NEWS_ENTRIES_ON_DASHBOARD + 1):
+            if i == 0:
+                self.assertNotContains(response, 'Test news entry %d' % i)
+            else:
+                self.assertContains(response, 'Test news entry %d' % i)
