@@ -21,9 +21,11 @@ def show_task_list(context, round):
         'number'
     ).select_related(
         'round', 'round__semester', 'round__semester__competition'
+    ).prefetch_related(
+        'categories', 'categories__competition'
     )
     # Select all categories which are represented by at least one task in displayed round.
-    categories = Category.objects.filter(task__in=tasks.values_list('pk', flat=True)).distinct()
+    categories = Category.objects.filter(task__in=tasks.values_list('pk', flat=True)).distinct().select_related('competition')
 
     data = {
         'round': round,
