@@ -543,7 +543,7 @@ class DashboardTest(TestCase):
         semester = Semester.objects.create(
             number=1, name='Test semester 1', competition=competition, year=1
         )
-        round_ = Round.objects.create(number=1, semester=semester, solutions_visible=True, visible=True)
+        round = Round.objects.create(number=1, semester=semester, solutions_visible=True, visible=True)
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
@@ -571,12 +571,12 @@ class DashboardTest(TestCase):
         semester = Semester.objects.create(
             number=1, name='Test semester 1', competition=competition, year=1
         )
-        round_ = Round.objects.create(number=1, semester=semester, visible=False)
+        round = Round.objects.create(number=1, semester=semester, visible=False)
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("There is no active round currently."))
-    
+
     def test_inactive_round(self):
         competition = Competition.objects.create(name='TestCompetition')
         competition.sites.add(self.site)
@@ -586,12 +586,12 @@ class DashboardTest(TestCase):
         start = timezone.now() + timezone.timedelta(-8)
         end = timezone.now() + timezone.timedelta(-5)
 
-        round_ = Round.objects.create(number=1, semester=semester, visible=True, start_time=start, end_time=end)
+        round = Round.objects.create(number=1, semester=semester, visible=True, start_time=start, end_time=end)
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("There is no active round currently."))
-    
+
     def test_dashboard_redirect(self):
         user = User.objects.create_user('TestUser', 'test@localhost', 'password')
         self.client.force_login(user)
