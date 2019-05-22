@@ -789,3 +789,20 @@ class UserPropsFormSetTests(TestCase):
             'properties-0-user': self.user.id
         })
         self.assertFalse(f.is_valid())
+
+    def test_invalid_form_message(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(reverse('trojsten_account_settings'), {
+            'user_props_submit': 'Odoslať',
+            'properties-TOTAL_FORMS': 1,
+            'properties-INITIAL_FORMS': 0,
+            'properties-MIN_NUM_FORMS': 0,
+            'properties-MAX_NUM_FORMS': 1000,
+            'properties-0-key': '',
+            'properties-0-value': 'abc',
+            'properties-0-id': '',
+            'properties-0-user': self.user.id
+        })
+
+        self.assertContains(response, _('This field is required.'))
