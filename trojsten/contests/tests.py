@@ -527,6 +527,7 @@ class RoundManagerTests(TestCase):
     def test_latest_finished_for_competition(self):
         self.assertEqual(Round.objects.latest_finished_for_competition(self.competition).number, 2)
 
+
 class DashboardTest(TestCase):
     def setUp(self):
         self.site = Site.objects.get(pk=settings.SITE_ID)
@@ -548,7 +549,7 @@ class DashboardTest(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, _("There is no active round currently."))
-        self.assertContains(response, round_)
+        self.assertContains(response, round)
 
     def test_two_rounds(self):
         competition = Competition.objects.create(name='TestCompetition')
@@ -571,7 +572,7 @@ class DashboardTest(TestCase):
         semester = Semester.objects.create(
             number=1, name='Test semester 1', competition=competition, year=1
         )
-        round = Round.objects.create(number=1, semester=semester, visible=False)
+        Round.objects.create(number=1, semester=semester, visible=False)
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
@@ -586,7 +587,7 @@ class DashboardTest(TestCase):
         start = timezone.now() + timezone.timedelta(-8)
         end = timezone.now() + timezone.timedelta(-5)
 
-        round = Round.objects.create(number=1, semester=semester, visible=True, start_time=start, end_time=end)
+        Round.objects.create(number=1, semester=semester, visible=True, start_time=start, end_time=end)
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)

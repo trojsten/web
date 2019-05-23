@@ -121,10 +121,12 @@ def ajax_progressbar(request, round_id):
         template_data,
     )
 
+
 def dashboard(request):
     rounds = Round.objects.active_visible(request.user).order_by('end_time')
     competitions = Competition.objects.current_site_only()
-    news = NewsEntry.objects.filter(sites__id=settings.SITE_ID).select_related('author').prefetch_related('tags').all()[:constants.NEWS_ENTRIES_ON_DASHBOARD]
+    news = NewsEntry.objects.filter(sites__id=settings.SITE_ID)\
+        .select_related('author').prefetch_related('tags').all()[:constants.NEWS_ENTRIES_ON_DASHBOARD]
 
     return render(
         request,
