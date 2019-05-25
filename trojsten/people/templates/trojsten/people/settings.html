@@ -46,9 +46,7 @@
                                 <label class="col-md-3 control-label">{{ field.field.choices|choice_text:field.value }}</label>
                                 <input type="hidden" name="{{ field.html_name }}" value="{{ field.value }}"/>
                             {% else %}
-                                <div class="col-md-3">
-                                    {{ field | bootstrap_inline}}
-                                </div>
+                                {{ field | bootstrap_inline}}
                             {% endif %}
                         {% elif field.name == "value" %}
                             <span class="col-md-7">
@@ -61,6 +59,9 @@
                                 {{ field | bootstrap_inline}}
                             </span>
                         {% endif %}
+                        {% for error in field.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
                     {% endfor %}
                     </div>
                   {% endfor %}
