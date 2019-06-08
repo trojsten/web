@@ -26,6 +26,8 @@ urlpatterns = common_urlpatterns + [
     url(r'^ulohy/', include(trojsten.contests.urls)),
     url(r'^archiv/$', trojsten.contests.views.archive, {'path': '/archiv'},
         name='archive'),
+    url(r'^nastenka/$', trojsten.contests.views.dashboard,
+        name='dashboard'),
     url(r'^mojeulohy/$', trojsten.submit.views.all_submits_description_page,
         name='all_submits_description_page'),
     url(r'^mojesubmity/$', trojsten.submit.views.all_submits_source_page,
