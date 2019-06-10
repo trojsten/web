@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  checkout_code:
     docker:
       - image: trojsten/web-base:latest
       - image: postgres:9.5
@@ -19,7 +19,23 @@ jobs:
         # TROJSTENWEB_HAYSTACK_CONNECTIONS_URL: http://elasticsearch:9200
     steps:
       - checkout
-      # Download and cache dependencies
+      - save_cache:
+        key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+        paths:
+          - ~/web
+
+  build_dependencies:
+    docker:
+      - image: python:3.6
+      - image: postgres:9.5
+        environment:
+          POSTGRES_USER: trojsten
+          POSTGRES_DB: trojsten
+      # - image: elasticsearch:2.4.6
+    working_directory: ~/web
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "requirements.txt" }}
@@ -43,6 +59,7 @@ jobs:
             . venv/bin/activate
             sh -c 'cd trojsten; python ../manage.py compilemessages;'
             coverage run --source='./trojsten' --omit 'trojsten/settings/*,trojsten/special/*' manage.py test
+
       - store_artifacts:
           path: test-reports
           destination: test-reports
