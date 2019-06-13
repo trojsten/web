@@ -1,5 +1,4 @@
-from trojsten.results.generator import (PrimarySchoolGeneratorMixin,
-                                        ResultsGenerator)
+from trojsten.results.generator import PrimarySchoolGeneratorMixin, ResultsGenerator
 
 from .default import CompetitionRules
 

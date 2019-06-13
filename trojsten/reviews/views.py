@@ -14,18 +14,29 @@ from django.utils.translation import ugettext_lazy as _
 from sendfile import sendfile
 
 from trojsten.contests.models import Task
-from trojsten.reviews.constants import (RE_FILENAME, RE_SUBMIT_PK,
-                                        REVIEW_COMMENT_FILENAME,
-                                        REVIEW_ERRORS_FILENAME,
-                                        REVIEW_POINTS_FILENAME)
-from trojsten.reviews.forms import (BasePointForm, BasePointFormSet,
-                                    ReviewForm, UploadZipForm,
-                                    get_zip_form_set, reviews_upload_pattern)
-from trojsten.reviews.helpers import (get_latest_submits_for_task,
-                                      get_user_as_choices, submit_directory,
-                                      submit_download_filename,
-                                      submit_protocol_download_filename,
-                                      submit_source_download_filename)
+from trojsten.reviews.constants import (
+    RE_FILENAME,
+    RE_SUBMIT_PK,
+    REVIEW_COMMENT_FILENAME,
+    REVIEW_ERRORS_FILENAME,
+    REVIEW_POINTS_FILENAME,
+)
+from trojsten.reviews.forms import (
+    BasePointForm,
+    BasePointFormSet,
+    ReviewForm,
+    UploadZipForm,
+    get_zip_form_set,
+    reviews_upload_pattern,
+)
+from trojsten.reviews.helpers import (
+    get_latest_submits_for_task,
+    get_user_as_choices,
+    submit_directory,
+    submit_download_filename,
+    submit_protocol_download_filename,
+    submit_source_download_filename,
+)
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED
 from trojsten.submit.models import Submit
 
@@ -43,31 +54,28 @@ def review_task(request, task_pk):
     form = None
     form_set = None
 
-    if request.method == 'POST':
-        if request.POST.get('Upload', None):
+    if request.method == "POST":
+        if request.POST.get("Upload", None):
             form = UploadZipForm(request.POST, request.FILES)
             if form.is_valid():
                 path_to_zip = form.save(request.user, task)
 
                 if path_to_zip:
-                    request.session['review_archive'] = path_to_zip
+                    request.session["review_archive"] = path_to_zip
                     messages.add_message(
-                        request,
-                        messages.SUCCESS,
-                        _('Successfully uploaded a zip file.')
+                        request, messages.SUCCESS, _("Successfully uploaded a zip file.")
                     )
-                    return redirect('admin:review_submit_zip', task.pk)
-        if 'points_submit' in request.POST:
-            form_set = PointsFormSet(request.POST, form_kwargs={
-                'max_points': task.description_points})
+                    return redirect("admin:review_submit_zip", task.pk)
+        if "points_submit" in request.POST:
+            form_set = PointsFormSet(
+                request.POST, form_kwargs={"max_points": task.description_points}
+            )
             if form_set.is_valid():
                 form_set.save(task)
                 messages.add_message(
-                    request,
-                    messages.SUCCESS,
-                    _('Points and comments were successfully updated.')
+                    request, messages.SUCCESS, _("Points and comments were successfully updated.")
                 )
-                return redirect('admin:review_task', task.pk)
+                return redirect("admin:review_task", task.pk)
 
     users = get_latest_submits_for_task(task)
     users_list = list(users.keys())
@@ -78,25 +86,18 @@ def review_task(request, task_pk):
         data = []
         for user in users_list:
             value = users[user]
-            form_data = {'user': user}
-            if 'review' in value:
-                form_data['points'] = value['review'].points
-                form_data['reviewer_comment'] = value['review'].reviewer_comment
+            form_data = {"user": user}
+            if "review" in value:
+                form_data["points"] = value["review"].points
+                form_data["reviewer_comment"] = value["review"].reviewer_comment
             data.append(form_data)
-        form_set = PointsFormSet(initial=data, form_kwargs={'max_points': task.description_points})
+        form_set = PointsFormSet(initial=data, form_kwargs={"max_points": task.description_points})
     for i in range(0, len(users_list)):
-        users[users_list[i]]['form'] = form_set.forms[i]
+        users[users_list[i]]["form"] = form_set.forms[i]
 
-    context = {
-        'task': task,
-        'users': users,
-        'form': form,
-        'form_set': form_set,
-    }
+    context = {"task": task, "users": users, "form": form, "form_set": form_set}
 
-    return render(
-        request, 'admin/review_form.html', context
-    )
+    return render(request, "admin/review_form.html", context)
 
 
 def edit_review(request, task_pk, submit_pk):
@@ -116,37 +117,27 @@ def edit_review(request, task_pk, submit_pk):
     if submit.task != task:
         raise Http404
 
-    if request.method == 'POST':
-        form = ReviewForm(request.POST,
-                          request.FILES,
-                          choices=choices,
-                          max_value=max_points)
+    if request.method == "POST":
+        form = ReviewForm(request.POST, request.FILES, choices=choices, max_value=max_points)
 
         if form.is_valid():
             form.save(submit, create)
-            messages.add_message(
-                request,
-                messages.SUCCESS,
-                _('Successfully saved the review'),
-            )
-            return redirect('admin:review_task', task.pk)
+            messages.add_message(request, messages.SUCCESS, _("Successfully saved the review"))
+            return redirect("admin:review_task", task.pk)
     else:
-        form = ReviewForm(choices=choices, max_value=max_points, initial={
-            'points': int(submit.points),
-            'comment': submit.reviewer_comment,
-            'user': submit.user_id
-        })
+        form = ReviewForm(
+            choices=choices,
+            max_value=max_points,
+            initial={
+                "points": int(submit.points),
+                "comment": submit.reviewer_comment,
+                "user": submit.user_id,
+            },
+        )
 
-    context = {
-        'task': task,
-        'submit': submit,
-        'form': form,
-        'create': create,
-    }
+    context = {"task": task, "submit": submit, "form": form, "create": create}
 
-    return render(
-        request, 'admin/review_edit.html', context
-    )
+    return render(request, "admin/review_edit.html", context)
 
 
 def submit_download(request, submit_pk):
@@ -175,51 +166,60 @@ def download_all_submits(request, task_pk, download_reviews=False):
     ):
         raise PermissionDenied
 
-    path = os.path.join(settings.SUBMIT_PATH, 'reviews')
+    path = os.path.join(settings.SUBMIT_PATH, "reviews")
     if not os.path.isdir(path):
         os.makedirs(path)
         os.chmod(path, 0o777)
 
-    path = os.path.join(path, 'Uloha-%s-%s-%s.zip' %
-                        (slugify(task.name), int(time()), slugify(request.user.username)))
+    path = os.path.join(
+        path,
+        "Uloha-%s-%s-%s.zip" % (slugify(task.name), int(time()), slugify(request.user.username)),
+    )
 
     errors = []
 
-    with zipfile.ZipFile(path, 'w') as zipper:
+    with zipfile.ZipFile(path, "w") as zipper:
         for i, user in enumerate(submits):
-            if 'description' in user:
-                submit = user['review'] if download_reviews and 'review' in user \
-                    else user['description']
+            if "description" in user:
+                submit = (
+                    user["review"] if download_reviews and "review" in user else user["description"]
+                )
                 description_submit_id = submit.pk
                 if not os.path.isfile(submit.filepath):
-                    errors += [_('Missing file of user %s') % submit.user.get_full_name()]
+                    errors += [_("Missing file of user %s") % submit.user.get_full_name()]
                 else:
                     zipper.write(submit.filepath, submit_download_filename(submit, i))
-                last_review_points = str(int(user['review'].points)) if 'review' in user else ''
-                last_review_comment = user['review'].reviewer_comment if 'review' in user else ''
-                zipper.writestr(submit_directory(submit, i) + REVIEW_POINTS_FILENAME,
-                                last_review_points)
-                zipper.writestr(submit_directory(submit, i) + REVIEW_COMMENT_FILENAME,
-                                last_review_comment.encode('utf-8'))
+                last_review_points = str(int(user["review"].points)) if "review" in user else ""
+                last_review_comment = user["review"].reviewer_comment if "review" in user else ""
+                zipper.writestr(
+                    submit_directory(submit, i) + REVIEW_POINTS_FILENAME, last_review_points
+                )
+                zipper.writestr(
+                    submit_directory(submit, i) + REVIEW_COMMENT_FILENAME,
+                    last_review_comment.encode("utf-8"),
+                )
 
-            if 'sources' in user:
-                for submit in user['sources']:
+            if "sources" in user:
+                for submit in user["sources"]:
                     if os.path.isfile(submit.filepath):
-                        zipper.write(submit.filepath,
-                                     submit_source_download_filename(submit, description_submit_id, i))
+                        zipper.write(
+                            submit.filepath,
+                            submit_source_download_filename(submit, description_submit_id, i),
+                        )
                     else:
-                        errors += [_('Missing source file of user %s') %
-                                   submit.user.get_full_name()]
+                        errors += [
+                            _("Missing source file of user %s") % submit.user.get_full_name()
+                        ]
                     if submit.protocol:
                         zipper.writestr(
                             submit.protocol,
-                            submit_protocol_download_filename(submit, description_submit_id, i)
+                            submit_protocol_download_filename(submit, description_submit_id, i),
                         )
                     else:
-                        errors += [_('Missing protocol of user %s') % submit.user.get_full_name()]
+                        errors += [_("Missing protocol of user %s") % submit.user.get_full_name()]
 
         if errors:
-            zipper.writestr(REVIEW_ERRORS_FILENAME, u'\n'.join(errors).encode('utf8'))
+            zipper.writestr(REVIEW_ERRORS_FILENAME, "\n".join(errors).encode("utf8"))
 
     return sendfile(request, path, attachment=True)
 
@@ -234,7 +234,7 @@ def download_latest_reviewed_submits(request, task_pk):
 
 def zip_upload(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
-    name = request.session.get('review_archive', None)
+    name = request.session.get("review_archive", None)
 
     if name is None:
         raise Http404
@@ -248,18 +248,18 @@ def zip_upload(request, task_pk):
     try:
         archive = zipfile.ZipFile(name)
     except (zipfile.BadZipfile, IOError):
-        messages.add_message(request, messages.ERROR, _('Problems with uploaded zip'))
-        return redirect('admin:review_task', task.pk)
+        messages.add_message(request, messages.ERROR, _("Problems with uploaded zip"))
+        return redirect("admin:review_task", task.pk)
 
     with archive:
         filelist = archive.namelist()
 
-        users = [('None', _('Ignore'))] + get_user_as_choices(task)
-        initial = [{'filename': file} for file in filelist]
+        users = [("None", _("Ignore"))] + get_user_as_choices(task)
+        initial = [{"filename": file} for file in filelist]
         user_data = OrderedDict()
 
         for form_data in initial:
-            match = reviews_upload_pattern.match(form_data['filename'])
+            match = reviews_upload_pattern.match(form_data["filename"])
             if not match:
                 continue
 
@@ -268,49 +268,43 @@ def zip_upload(request, task_pk):
                 user_pk = Submit.objects.get(pk=pk).user.pk
                 if user_pk not in user_data:
                     user_data[user_pk] = {}
-                user_data[user_pk]['user'] = user_pk
+                user_data[user_pk]["user"] = user_pk
                 if match.group(RE_FILENAME) == REVIEW_POINTS_FILENAME:
                     try:
-                        text = archive.read(form_data['filename'])
+                        text = archive.read(form_data["filename"])
                         points_num = int(text)
-                        user_data[user_pk]['points'] = points_num
+                        user_data[user_pk]["points"] = points_num
                     except:  # noqa: E722 @FIXME
                         pass
                 elif match.group(RE_FILENAME) == REVIEW_COMMENT_FILENAME:
                     try:
-                        user_data[user_pk]['comment'] = archive.read(form_data['filename'])
+                        user_data[user_pk]["comment"] = archive.read(form_data["filename"])
                     except:  # noqa: E722 @FIXME
                         pass
                 else:
-                    user_data[user_pk]['filename'] = form_data['filename']
+                    user_data[user_pk]["filename"] = form_data["filename"]
 
-    initial = [user_data[user] for user in user_data if 'filename' in user_data[user]]
-    files = set([f['filename'] for f in initial])
+    initial = [user_data[user] for user in user_data if "filename" in user_data[user]]
+    files = set([f["filename"] for f in initial])
     ZipFormSet = get_zip_form_set(
-        choices=users, max_value=task.description_points, files=files, extra=0)
+        choices=users, max_value=task.description_points, files=files, extra=0
+    )
 
-    if request.method == 'POST':
+    if request.method == "POST":
         formset = ZipFormSet(request.POST)
 
         if formset.is_valid():
             formset.save(name, task)
 
-            request.session.pop('review_archive')
+            request.session.pop("review_archive")
             messages.add_message(
-                request,
-                messages.SUCCESS,
-                _('Successfully finished reviewing this task!')
+                request, messages.SUCCESS, _("Successfully finished reviewing this task!")
             )
-            return redirect('admin:review_task', task.pk)
+            return redirect("admin:review_task", task.pk)
     else:
         formset = ZipFormSet(initial=initial)
 
     archive.close()
 
-    context = {
-        'formset': formset,
-        'task': task
-    }
-    return render(
-        request, 'admin/zip_upload.html', context
-    )
+    context = {"formset": formset, "task": task}
+    return render(request, "admin/zip_upload.html", context)

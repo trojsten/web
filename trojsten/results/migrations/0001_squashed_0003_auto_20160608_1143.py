@@ -12,60 +12,140 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('people', '0001_initial'),
+        ("people", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('contests', '0003_category_task'),
-        ('schools', '0001_initial'),
+        ("contests", "0003_category_task"),
+        ("schools", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='FrozenPoints',
+            name="FrozenPoints",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description_points', models.CharField(max_length=10, verbose_name='body za popis')),
-                ('source_points', models.CharField(max_length=10, verbose_name='body za program')),
-                ('sum', models.CharField(max_length=10, verbose_name='body')),
-                ('task', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contests.Task', verbose_name='\xfaloha')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "description_points",
+                    models.CharField(max_length=10, verbose_name="body za popis"),
+                ),
+                ("source_points", models.CharField(max_length=10, verbose_name="body za program")),
+                ("sum", models.CharField(max_length=10, verbose_name="body")),
+                (
+                    "task",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="contests.Task",
+                        verbose_name="\xfaloha",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Zmrazen\xe9 body za \xfalohu',
-                'verbose_name_plural': 'Zmrazen\xe9 body za \xfalohy',
+                "verbose_name": "Zmrazen\xe9 body za \xfalohu",
+                "verbose_name_plural": "Zmrazen\xe9 body za \xfalohy",
             },
         ),
         migrations.CreateModel(
-            name='FrozenResults',
+            name="FrozenResults",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_single_round', models.BooleanField(verbose_name='vynecha\u0165 predo\u0161l\xe9 kol\xe1')),
-                ('has_previous_results', models.BooleanField(default=False, verbose_name='zah\u0155\u0148a predo\u0161l\xe9 kol\xe1')),
-                ('time', models.DateTimeField(auto_now_add=True, verbose_name='\u010das')),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='contests.Category', verbose_name='kateg\xf3ria')),
-                ('round', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contests.Round', verbose_name='kolo')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "is_single_round",
+                    models.BooleanField(verbose_name="vynecha\u0165 predo\u0161l\xe9 kol\xe1"),
+                ),
+                (
+                    "has_previous_results",
+                    models.BooleanField(
+                        default=False, verbose_name="zah\u0155\u0148a predo\u0161l\xe9 kol\xe1"
+                    ),
+                ),
+                ("time", models.DateTimeField(auto_now_add=True, verbose_name="\u010das")),
+                (
+                    "category",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="contests.Category",
+                        verbose_name="kateg\xf3ria",
+                    ),
+                ),
+                (
+                    "round",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="contests.Round",
+                        verbose_name="kolo",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Zmrazen\xe1 v\xfdsledkovka',
-                'verbose_name_plural': 'Zmrazen\xe9 v\xfdsledkovky',
+                "verbose_name": "Zmrazen\xe1 v\xfdsledkovka",
+                "verbose_name_plural": "Zmrazen\xe9 v\xfdsledkovky",
             },
         ),
         migrations.CreateModel(
-            name='FrozenUserResult',
+            name="FrozenUserResult",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('rank', models.IntegerField(verbose_name='poradie')),
-                ('prev_rank', models.IntegerField(blank=True, null=True, verbose_name='poradie')),
-                ('fullname', models.CharField(max_length=500, verbose_name='pln\xe9 meno')),
-                ('school_year', models.IntegerField(verbose_name='ro\u010dn\xedk')),
-                ('previous_points', models.CharField(max_length=10, verbose_name='body z predo\u0161l\xfdch k\xf4l')),
-                ('sum', models.CharField(max_length=10, verbose_name='suma')),
-                ('frozenresults', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='results.FrozenResults', verbose_name='v\xfdsledkovka')),
-                ('original_user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='p\xf4vodn\xfd pou\u017e\xedvate\u013e')),
-                ('school', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schools.School', verbose_name='\u0161kola')),
-                ('task_points', models.ManyToManyField(to='results.FrozenPoints', verbose_name='body za \xfalohy')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("rank", models.IntegerField(verbose_name="poradie")),
+                ("prev_rank", models.IntegerField(blank=True, null=True, verbose_name="poradie")),
+                ("fullname", models.CharField(max_length=500, verbose_name="pln\xe9 meno")),
+                ("school_year", models.IntegerField(verbose_name="ro\u010dn\xedk")),
+                (
+                    "previous_points",
+                    models.CharField(
+                        max_length=10, verbose_name="body z predo\u0161l\xfdch k\xf4l"
+                    ),
+                ),
+                ("sum", models.CharField(max_length=10, verbose_name="suma")),
+                (
+                    "frozenresults",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="results.FrozenResults",
+                        verbose_name="v\xfdsledkovka",
+                    ),
+                ),
+                (
+                    "original_user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="p\xf4vodn\xfd pou\u017e\xedvate\u013e",
+                    ),
+                ),
+                (
+                    "school",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schools.School",
+                        verbose_name="\u0161kola",
+                    ),
+                ),
+                (
+                    "task_points",
+                    models.ManyToManyField(
+                        to="results.FrozenPoints", verbose_name="body za \xfalohy"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Zmrazen\xfd v\xfdsledok',
-                'verbose_name_plural': 'Zmrazen\xe9 v\xfdsledky',
+                "verbose_name": "Zmrazen\xfd v\xfdsledok",
+                "verbose_name_plural": "Zmrazen\xe9 v\xfdsledky",
             },
         ),
     ]

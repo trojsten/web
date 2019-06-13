@@ -69,8 +69,9 @@ def verify(reach, x, numqueries):
     if len(semiroots) > 1:
         otherroot = first(semiroots, key=lambda k: k != x)
     if otherroot is not None:
-        return 0, "Len tipuješ! Podľa tvojich otázok by druhá najľahšia mohla byť aj %d." % (
-            otherroot,
+        return (
+            0,
+            "Len tipuješ! Podľa tvojich otázok by druhá najľahšia mohla byť aj %d." % (otherroot,),
         )
     # OK, nasli ho
     max_points = False
@@ -84,7 +85,9 @@ def verify(reach, x, numqueries):
     else:
         points = 4
     message = "Správne! Máš to za %d otázok, takže dostávaš %d %s." % (
-        numqueries, points, "body" if points == 4 else "bodov"
+        numqueries,
+        points,
+        "body" if points == 4 else "bodov",
     )
     if not max_points:
         message = message + " Podarí sa ti vymyslieť lepšie riešenie?"

@@ -9,33 +9,43 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('contests', '0013_auto_20180701_2348'),
-    ]
+    dependencies = [("contests", "0013_auto_20180701_2348")]
 
     operations = [
         migrations.AlterModelOptions(
-            name='taskpeople',
-            options={'verbose_name': 'Assigned user', 'verbose_name_plural': 'Assigned people'},
+            name="taskpeople",
+            options={"verbose_name": "Assigned user", "verbose_name_plural": "Assigned people"},
         ),
         migrations.AlterField(
-            model_name='task',
-            name='email_on_code_submit',
-            field=models.BooleanField(default=False, verbose_name='Send notification to reviewers about new code submit'),
+            model_name="task",
+            name="email_on_code_submit",
+            field=models.BooleanField(
+                default=False, verbose_name="Send notification to reviewers about new code submit"
+            ),
         ),
         migrations.AlterField(
-            model_name='task',
-            name='email_on_desc_submit',
-            field=models.BooleanField(default=False, verbose_name='Send notification to reviewers about new description submit'),
+            model_name="task",
+            name="email_on_desc_submit",
+            field=models.BooleanField(
+                default=False,
+                verbose_name="Send notification to reviewers about new description submit",
+            ),
         ),
         migrations.AlterField(
-            model_name='taskpeople',
-            name='role',
-            field=models.IntegerField(choices=[(0, 'reviewer'), (1, 'solution writer'), (2, 'proofreader')], verbose_name='role'),
+            model_name="taskpeople",
+            name="role",
+            field=models.IntegerField(
+                choices=[(0, "reviewer"), (1, "solution writer"), (2, "proofreader")],
+                verbose_name="role",
+            ),
         ),
         migrations.AlterField(
-            model_name='taskpeople',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='organizer'),
+            model_name="taskpeople",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="organizer",
+            ),
         ),
     ]

@@ -7,19 +7,23 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('contests', '0012_auto_20180615_1643'),
-    ]
+    dependencies = [("contests", "0012_auto_20180615_1643")]
 
     operations = [
         migrations.AlterField(
-            model_name='task',
-            name='email_on_code_submit',
-            field=models.BooleanField(default=False, verbose_name='Zasla\u0165 opravovate\u013eom notifik\xe1ciu o submite k\xf3du'),
+            model_name="task",
+            name="email_on_code_submit",
+            field=models.BooleanField(
+                default=False,
+                verbose_name="Zasla\u0165 opravovate\u013eom notifik\xe1ciu o submite k\xf3du",
+            ),
         ),
         migrations.AlterField(
-            model_name='task',
-            name='email_on_desc_submit',
-            field=models.BooleanField(default=False, verbose_name='Zasla\u0165 opravovate\u013eom notifik\xe1ciu o submite popisu'),
+            model_name="task",
+            name="email_on_desc_submit",
+            field=models.BooleanField(
+                default=False,
+                verbose_name="Zasla\u0165 opravovate\u013eom notifik\xe1ciu o submite popisu",
+            ),
         ),
     ]

@@ -7,14 +7,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('plugin_prask_1_2_1', '0001_initial'),
-    ]
+    dependencies = [("plugin_prask_1_2_1", "0001_initial")]
 
     operations = [
         migrations.AlterField(
-            model_name='usercategory',
-            name='state',
-            field=models.CharField(default='', max_length=256),
-        ),
+            model_name="usercategory",
+            name="state",
+            field=models.CharField(default="", max_length=256),
+        )
     ]

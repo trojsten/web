@@ -12,27 +12,21 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
     """Displays results for specified round_ids and category_id
     """
     round = get_object_or_404(
-        Round.objects.visible(
-            request.user
-        ).select_related(
-            'semester__competition'
-        ).prefetch_related(
-            'semester__competition__required_user_props'
-        ),
+        Round.objects.visible(request.user)
+        .select_related("semester__competition")
+        .prefetch_related("semester__competition__required_user_props"),
         pk=round_id,
     )
 
     scoreboards = get_scoreboards_for_rounds([round], request)
 
     context = {
-        'round': round,
-        'scoreboards': scoreboards,
-        'selected_tag': tag_key,
-        'show_staff': is_true(request.GET.get('show_staff', False)),
+        "round": round,
+        "scoreboards": scoreboards,
+        "selected_tag": tag_key,
+        "show_staff": is_true(request.GET.get("show_staff", False)),
     }
-    return render(
-        request, 'trojsten/results/view_results.html', context
-    )
+    return render(request, "trojsten/results/view_results.html", context)
 
 
 def view_latest_results(request):
@@ -41,22 +35,16 @@ def view_latest_results(request):
     rounds = [
         round
         for competition in Competition.objects.current_site_only()
-        for round in competition.rules.get_actual_result_rounds(
-            competition
-        ).select_related(
-            'semester__competition'
-        ).prefetch_related(
-            'semester__competition__required_user_props'
-        )
+        for round in competition.rules.get_actual_result_rounds(competition)
+        .select_related("semester__competition")
+        .prefetch_related("semester__competition__required_user_props")
     ]
 
     scoreboards = get_scoreboards_for_rounds(rounds, request)
 
     context = {
-        'selected_tag': scoreboards[0].scoreboard.tag if scoreboards else None,
-        'scoreboards': scoreboards,
-        'show_staff': is_true(request.GET.get('show_staff', False)),
+        "selected_tag": scoreboards[0].scoreboard.tag if scoreboards else None,
+        "scoreboards": scoreboards,
+        "show_staff": is_true(request.GET.get("show_staff", False)),
     }
-    return render(
-        request, 'trojsten/results/view_latest_results.html', context
-    )
+    return render(request, "trojsten/results/view_latest_results.html", context)
