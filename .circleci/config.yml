@@ -1,26 +1,14 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
 version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: python:3.6
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
+      - image: trojsten/web-base:latest
       - image: postgres:9.5
         environment:
           POSTGRES_USER: trojsten
           POSTGRES_DB: trojsten
       # - image: elasticsearch:2.4.6
-
     working_directory: ~/web
-
     environment:
         POSTGRES_DB: trojsten
         POSTGRES_USER: trojsten
@@ -29,40 +17,32 @@ jobs:
         DJANGO_SETTINGS_MODULE: trojsten.settings.test
         TROJSTENWEB_ELASTICSEARCH_TESTS: 0
         # TROJSTENWEB_HAYSTACK_CONNECTIONS_URL: http://elasticsearch:9200
-
-
     steps:
       - checkout
-
       # Download and cache dependencies
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "requirements.txt" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-
       - run:
           name: install dependencies
           command: |
-            apt-get update -qy && apt-get install -y gettext librsvg2-bin
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
             pip install -q coverage
-
       - save_cache:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
-
       # run tests!
       - run:
           name: run tests
           command: |          
             . venv/bin/activate
-            bash -c 'cd trojsten; python ../manage.py compilemessages;'
+            sh -c 'cd trojsten; python ../manage.py compilemessages;'
             coverage run --source='./trojsten' --omit 'trojsten/settings/*,trojsten/special/*' manage.py test
-
       - store_artifacts:
           path: test-reports
           destination: test-reports
