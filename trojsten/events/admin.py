@@ -22,16 +22,16 @@ class EventTypeAdmin(admin.ModelAdmin):
 
 
 class EventParticipantInline(admin.TabularInline):
-    form = select2_modelform(EventParticipant)
     model = EventParticipant
     extra = 1
     fields = ('user', 'type', 'going'),
     verbose_name = 'účastník'
     verbose_name_plural = 'účastníci'
+    autocomplete_fields = ('user', )
 
     def get_queryset(self, request):
         qs = super(EventParticipantInline, self).get_queryset(request)
-        return qs.exclude(type=EventParticipant.ORGANIZER)
+        return qs.exclude(type=EventParticipant.ORGANIZER).select_related('user', 'event')
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
         if db_field.name == 'type':
@@ -45,10 +45,14 @@ class EventParticipantInline(admin.TabularInline):
 
 
 class EventOrganizerInline(admin.TabularInline):
-    form = select2_modelform(EventParticipant)
     model = EventOrganizer
     fields = ('user', )
     extra = 1
+    autocomplete_fields = ('user', )
+
+    def get_queryset(self, request):
+        qs = super(EventOrganizerInline, self).get_queryset(request)
+        return qs.select_related('user', 'event')
 
 
 class EventAdmin(admin.ModelAdmin):
