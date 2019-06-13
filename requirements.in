@@ -42,10 +42,12 @@ trojsten-judge-client>=1.0.1
 Unidecode
 wiki>=0.3
 # dev
+black
 bumpversion
 coverage
 sqlparse
 django-debug-toolbar
 Fabric<2 # We need to migrate the fabfile first.
 pip-tools
+pre-commit
 flake8
