@@ -1,46 +1,35 @@
 version: 2
-jobs:
-  checkout_code:
-    docker:
+
+.base: &base
+  docker:
       - image: trojsten/web-base:latest
       - image: postgres:9.5
         environment:
           POSTGRES_USER: trojsten
           POSTGRES_DB: trojsten
       # - image: elasticsearch:2.4.6
-    working_directory: ~/web
-    environment:
-        POSTGRES_DB: trojsten
-        POSTGRES_USER: trojsten
-        POSTGRES_PASSWORD: ""
-        TROJSTENWEB_DATABASE_URL: 127.0.0.1
-        DJANGO_SETTINGS_MODULE: trojsten.settings.test
-        TROJSTENWEB_ELASTICSEARCH_TESTS: 0
-        # TROJSTENWEB_HAYSTACK_CONNECTIONS_URL: http://elasticsearch:9200
+  working_directory: ~/web
+
+  
+jobs:
+  checkout_code:
+    <<: *base
     steps:
       - checkout
       - save_cache:
-        key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-        paths:
-          - ~/web
-
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/web
   build_dependencies:
-    docker:
-      - image: python:3.6
-      - image: postgres:9.5
-        environment:
-          POSTGRES_USER: trojsten
-          POSTGRES_DB: trojsten
-      # - image: elasticsearch:2.4.6
-    working_directory: ~/web
+    <<: *base
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "requirements.txt" }}
+            - v2-dependencies-{{ checksum "requirements.txt" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - v2-dependencies-
       - run:
           name: install dependencies
           command: |
@@ -51,15 +40,44 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-      # run tests!
+          key: v2-dependencies-{{ checksum "requirements.txt" }}
+  test:
+    <<: *base
+    environment:
+        POSTGRES_DB: trojsten
+        POSTGRES_USER: trojsten
+        POSTGRES_PASSWORD: ""
+        TROJSTENWEB_DATABASE_URL: 127.0.0.1
+        DJANGO_SETTINGS_MODULE: trojsten.settings.test
+        TROJSTENWEB_ELASTICSEARCH_TESTS: 0
+        # TROJSTENWEB_HAYSTACK_CONNECTIONS_URL: http://elasticsearch:9200
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - v2-dependencies-{{ checksum "requirements.txt" }}
+            # fallback to using the latest cache if no exact match is found
+            - v2-dependencies-
       - run:
           name: run tests
           command: |          
             . venv/bin/activate
             sh -c 'cd trojsten; python ../manage.py compilemessages;'
             coverage run --source='./trojsten' --omit 'trojsten/settings/*,trojsten/special/*' manage.py test
-
       - store_artifacts:
           path: test-reports
           destination: test-reports
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - checkout_code
+      - build_dependencies:
+          requires:
+            - checkout_code        
+      - test:
+          requires:
+            - build_dependencies
+   
