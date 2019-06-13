@@ -49,7 +49,7 @@ django-taggit==1.0.0      # via django-trojsten-news
 django-threadedcomments==1.2
 django-tips==0.7.0
 django-trojsten-news==0.2.1
-django==2.1.7
+django==2.1.9
 djangorestframework==3.9.2
 ecdsa==0.13
 elasticsearch==6.3.1
