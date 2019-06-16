@@ -700,7 +700,8 @@ class SubmitHelpersTests(TestCase):
         <test><name>0.sample.b.in</name><resultCode>1</resultCode><resultMsg>OK</resultMsg><time>28</time></test>
         <score>100</score><details>
         Score: 100
-        </details><finalResult>1</finalResult><finalMessage>OK (OK: 100 %)</finalMessage></runLog></protokol>
+        </details><finalResult>1</finalResult><finalMessage>OK (OK: 100 %)</finalMessage>
+        </runLog></protokol>
         """
         self.client.force_login(self.tester_user)
 
@@ -729,7 +730,8 @@ class SubmitHelpersTests(TestCase):
         <test><name>0.sample.b.in</name><resultCode>1</resultCode><resultMsg>OK</resultMsg><time>28</time></test>
         <score>100</score><details>
         Score: 100
-        </details><finalResult>1</finalResult><finalMessage>OK (OK: 100 %)</finalMessage></runLog></protokol>"""
+        </details><finalResult>1</finalResult><finalMessage>OK (OK: 100 %)</finalMessage>
+        </runLog></protokol>"""
         self.client.force_login(self.tester_user)
 
         response = self.client.post(
@@ -1104,7 +1106,8 @@ class SubmitDetailTests(TestCase):
         <test><name>0.sample.b.in</name><resultCode>1</resultCode><resultMsg>OK</resultMsg><time>28</time></test>
         <score>100</score><details>
         Score: 100
-        </details><finalResult>1</finalResult><finalMessage>OK (OK: 100 %)</finalMessage></runLog></protokol>
+        </details><finalResult>1</finalResult><finalMessage>OK (OK: 100 %)</finalMessage>
+        </runLog></protokol>
         """
         submit = Submit.objects.create(
             task=self.task,

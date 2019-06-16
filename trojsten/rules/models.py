@@ -53,8 +53,11 @@ class KSPLevelManager(models.Manager):
 @python_2_unicode_compatible
 class KSPLevel(models.Model):
     """
-    Camp attendance or good results in KSP semester can increase user's level as implemented in 'ksp_levels.py'.
-    One model instance keeps data about one level-up event for one user, storing new level explicitly.
+    Camp attendance or good results in KSP semester can increase user's level as implemented in
+    'ksp_levels.py'.
+
+    One model instance keeps data about one level-up event for one user, storing new level
+    explicitly.
 
     Since we might want to compute the new user level before the existence of the new semester model
     (e.g. if we want to display user's level for the next semester), we store the reference to the

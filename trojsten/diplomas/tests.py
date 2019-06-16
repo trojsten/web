@@ -57,7 +57,8 @@ class CreateDiplomaTestCase(TestCase):
 
         self.client.force_login(self.user_standard)
 
-        # Test that user who isnt superuser cant access template with group permissions if he's not in one
+        # Test that user who isnt superuser cant access template with group permissions
+        # if he's not in one.
         r = self.client.post(
             self.url, data=self.form_data, content_type="application/x-www-form-urlencoded"
         )

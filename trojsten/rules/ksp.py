@@ -104,10 +104,10 @@ class KSPResultsGenerator(ResultsGenerator):
     def deactivate_row_cells(self, res_request, row, cols):
         user_level = res_request.user_levels[row.user.pk]
 
-        # Deactivate users who are in the results table of a higher level (L) but don't have any submits
-        # for tasks L+3 and L+4. This makes level result tables cleaner but it doesn't exclude any winners
-        # (because to win you have to have at least 150 points from 200 possible and for that you have to have
-        # submits for these tasks).
+        # Deactivate users who are in the results table of a higher level (L) but don't have any
+        # submits for tasks L+3 and L+4. This makes level result tables cleaner but it doesn't
+        # exclude any winners (because to win you have to have at least 150 points from 200
+        # possible and for that you have to have submits for these tasks).
         if self.tag.key != KSP_ALL and user_level < self.get_results_level():
             active_in_previous_round = False
             if not res_request.single_round:

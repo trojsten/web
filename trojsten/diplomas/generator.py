@@ -17,12 +17,14 @@ class DiplomaGenerator:
 
     def create_diplomas(self, participants, template_svg, join=False):
         """
-        Given a list of participants and a template SVG creates a PDF diploma for every participant from the template.
+        Given a list of participants and a template SVG creates a PDF diploma for every participant
+        from the template.
 
-        :param participants: A list of dict objects, where keys are fields to replace and values are values
-        :param template_svg: string content of SVG file
-        :param join: boolean whether resulting PDFs are to be joined together or not
-        :return: PDF(s) containing generated diplomas
+        :param participants: A list of dict objects, where keys are fields to replace and values
+                             are the values.
+        :param template_svg: string content of SVG file.
+        :param join: boolean whether resulting PDFs are to be joined together or not.
+        :return: PDF(s) containing generated diplomas.
         """
 
         svgs = [self.svg_for_participant(template_svg, participant) for participant in participants]
