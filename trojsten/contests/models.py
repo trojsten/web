@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import os
+
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
@@ -19,6 +20,7 @@ from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
 from trojsten.submit import constants as submit_constants
 from trojsten.utils import utils
+
 from . import constants
 
 

@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
-from trojsten.menu.models import MenuItem, MenuGroup
+from trojsten.menu.models import MenuGroup, MenuItem
 
 
 class MenuItemAdmin(admin.ModelAdmin):

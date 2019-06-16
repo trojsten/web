@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import datetime
 import random
 from decimal import Decimal
+
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
@@ -26,6 +27,7 @@ from trojsten.submit.constants import (
 )
 from trojsten.submit.models import Submit
 from trojsten.utils.test_utils import get_noexisting_id
+
 from . import constants
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .forms import (

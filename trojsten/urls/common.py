@@ -8,8 +8,8 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from ksp_login import views as login_views
 
-import trojsten.people.api_urls as people_api
 import trojsten.login.views
+import trojsten.people.api_urls as people_api
 import trojsten.views
 from trojsten.contact_form.views import ContactFormView
 from trojsten.people.forms import TrojstenUserChangeForm, TrojstenUserCreationForm

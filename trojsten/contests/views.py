@@ -5,12 +5,13 @@ import os
 from django.conf import settings
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
+from news.models import Entry as NewsEntry
 from sendfile import sendfile
 from wiki.decorators import get_article
 
 from trojsten.contests.models import Competition, Round, Task
 from trojsten.utils.utils import is_true
-from news.models import Entry as NewsEntry
+
 from . import constants
 
 

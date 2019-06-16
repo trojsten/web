@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from collections import namedtuple
+
 from trojsten.utils.utils import Serializable
 
 ResultsTag = namedtuple("ResultsTag", ["key", "name"])

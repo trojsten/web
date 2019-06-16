@@ -1,15 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import sys
-
 import os
 import re
-
-try:
-    from urllib.request import quote, unquote
-except:  # noqa: E722 @FIXME
-    from urllib import quote, unquote
+import sys
 import zipfile
 from functools import partial, wraps
 from time import time
@@ -24,9 +18,15 @@ from unidecode import unidecode
 
 from trojsten.people.models import User
 from trojsten.reviews.constants import RE_FILENAME, RE_LAST_NAME, RE_SUBMIT_PK
-from trojsten.reviews.helpers import edit_review, submit_review, get_latest_submits_for_task
+from trojsten.reviews.helpers import edit_review, get_latest_submits_for_task, submit_review
 from trojsten.submit.constants import SUBMIT_STATUS_IN_QUEUE
 from trojsten.submit.helpers import write_chunks_to_file
+
+try:
+    from urllib.request import quote, unquote
+except:  # noqa: E722 @FIXME
+    from urllib import quote, unquote
+
 
 reviews_upload_pattern = re.compile(
     r"(?P<%s>.*)_(?P<%s>[0-9]+)/(?!source/)(?P<%s>.+\.[^.]+)"

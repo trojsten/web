@@ -1,8 +1,8 @@
-from time import time
-
 import os.path
 import zipfile
 from collections import OrderedDict
+from time import time
+
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied

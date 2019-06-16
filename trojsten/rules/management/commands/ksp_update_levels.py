@@ -7,12 +7,12 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 from django.utils.six import text_type
 
+from trojsten.contests.models import Round, Semester
+from trojsten.events.models import Event
 from trojsten.rules.ksp_levels import (
     level_updates_from_camp_attendance,
     level_updates_from_semester_results,
 )
-from trojsten.contests.models import Semester, Round
-from trojsten.events.models import Event
 
 logger = logging.getLogger("management_commands")
 

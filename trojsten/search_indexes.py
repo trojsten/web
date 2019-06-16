@@ -1,6 +1,5 @@
 # Indexes for haystack elasticsearch
 from django.conf import settings
-
 from haystack import indexes
 from wiki.models import Article
 

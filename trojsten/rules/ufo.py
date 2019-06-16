@@ -8,8 +8,8 @@ from trojsten.results.generator import (
     ResultsGenerator,
 )
 
-from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 from .default import CompetitionRules
+from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 
 
 class UFOResultsGenerator(PrimarySchoolGeneratorMixin, BonusColumnGeneratorMixin, ResultsGenerator):

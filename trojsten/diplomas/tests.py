@@ -1,11 +1,11 @@
-from trojsten.diplomas.models import DiplomaTemplate
-from trojsten.people.models import User
-
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
-from django.test import override_settings, TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
+
+from trojsten.diplomas.models import DiplomaTemplate
+from trojsten.people.models import User
 
 try:
     from urllib import urlencode

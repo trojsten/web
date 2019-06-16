@@ -7,7 +7,7 @@ from tempfile import NamedTemporaryFile
 
 from django.utils import timezone
 
-from .constants import FIELD_REPLACE_PATTERN, DIPLOMA_DEFAULT_NAME
+from .constants import DIPLOMA_DEFAULT_NAME, FIELD_REPLACE_PATTERN
 
 
 class DiplomaGenerator:

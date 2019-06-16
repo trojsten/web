@@ -13,6 +13,7 @@ from trojsten.rules.test import get_row_for_user
 from trojsten.schools.models import School
 from trojsten.submit.models import Submit
 from trojsten.utils.test_utils import get_noexisting_id
+
 from .representation import Results, ResultsCell, ResultsCol, ResultsRow
 
 

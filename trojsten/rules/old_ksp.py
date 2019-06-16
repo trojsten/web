@@ -8,7 +8,6 @@ from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGene
 from trojsten.results.representation import ResultsTag
 from trojsten.submit.models import Submit
 
-
 from .default import CompetitionRules
 
 KSP_Z = "Z"

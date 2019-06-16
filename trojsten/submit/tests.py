@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import unittest
-
 import json
 import os
 import shutil
 import tempfile
+import unittest
+from os import path
+
 from django.conf import settings
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
@@ -18,7 +19,6 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from judge_client import constants as judge_constants
-from os import path
 
 from trojsten.contests.constants import TASK_ROLE_REVIEWER
 from trojsten.contests.models import Competition, Round, Semester, Task, TaskPeople
@@ -33,6 +33,7 @@ from trojsten.submit.helpers import (
 )
 from trojsten.submit.views import send_notification_email
 from trojsten.utils.test_utils import get_noexisting_id
+
 from .models import ExternalSubmitToken, Submit
 
 

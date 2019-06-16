@@ -3,8 +3,8 @@ from __future__ import absolute_import
 from django.conf.urls import include, url
 from django.contrib import admin
 
-
 from trojsten.views import CustomSearchView
+
 from .common import urlpatterns as common_urlpatterns
 
 urlpatterns = common_urlpatterns + [

@@ -6,9 +6,9 @@ from django.contrib import admin
 from django.utils.encoding import force_text
 from easy_select2 import select2_modelform
 
+from trojsten.contests.forms import TaskValidationForm
 from trojsten.contests.models import Category, Competition, Round, Semester, Task, TaskPeople
 from trojsten.reviews.urls import task_review_urls
-from trojsten.contests.forms import TaskValidationForm
 from trojsten.utils.utils import attribute_format, get_related
 
 

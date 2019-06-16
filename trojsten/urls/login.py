@@ -4,6 +4,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 import trojsten.login.views
+
 from .common import urlpatterns as common_urlpatterns
 
 urlpatterns = common_urlpatterns + [

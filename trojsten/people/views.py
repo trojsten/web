@@ -9,6 +9,7 @@ from trojsten.contests.models import Competition, Round
 from trojsten.people.models import User
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED, SUBMIT_TYPE_DESCRIPTION
 from trojsten.submit.models import Submit
+
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .forms import (
     AdditionalRegistrationForm,

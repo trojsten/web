@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from itertools import chain
 from collections import OrderedDict
+from itertools import chain
 
 from django.db import models
 
-from trojsten.contests.models import Task
 import trojsten.results.constants as results_constants
 import trojsten.submit.constants as submit_constants
+from trojsten.contests.models import Task
 from trojsten.results.generator import ResultsGenerator
-from trojsten.results.representation import ResultsTag, ResultsCell, ResultsCol
+from trojsten.results.representation import ResultsCell, ResultsCol, ResultsTag
 from trojsten.rules.default import CompetitionRules
 from trojsten.rules.models import KSPLevel
 from trojsten.submit.models import Submit
-
 
 KSP_ALL = "KSP_ALL"
 KSP_L1, KSP_L2, KSP_L3, KSP_L4 = "KSP_L1", "KSP_L2", "KSP_L3", "KSP_L4"

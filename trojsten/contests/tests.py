@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from os import path
+
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import activate
-from os import path
+from django.utils.translation import ugettext_lazy as _
+from news.models import Entry as NewsEntry
 from wiki.models import Article, ArticleRevision, URLPath
 
 from trojsten.contests import constants
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
-from news.models import Entry as NewsEntry
 from trojsten.utils.test_utils import get_noexisting_id
 
 

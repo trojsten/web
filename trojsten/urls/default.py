@@ -11,6 +11,7 @@ import trojsten.people.views
 import trojsten.results.urls
 import trojsten.submit.urls
 import trojsten.submit.views
+
 from .common import urlpatterns as common_urlpatterns
 
 urlpatterns = common_urlpatterns + [

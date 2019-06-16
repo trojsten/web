@@ -3,13 +3,13 @@ from __future__ import unicode_literals
 
 import re
 
-from django.db import models
 from django.contrib.auth.models import Group
+from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from .constants import FIELD_SEARCH_PATTERN
-from .sources import SOURCE_CLASSES, SOURCE_CHOICES
+from .sources import SOURCE_CHOICES, SOURCE_CLASSES
 
 
 class DiplomaDataSourceManager(models.Manager):

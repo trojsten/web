@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import datetime
+
 import pytz
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -13,6 +14,7 @@ from wiki.models import Article, ArticleRevision, URLPath
 
 from trojsten.people.models import User
 from trojsten.utils.test_utils import get_noexisting_id
+
 from .models import Event, EventParticipant, EventPlace, EventType
 
 

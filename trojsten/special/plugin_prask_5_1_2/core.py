@@ -4,9 +4,9 @@ from __future__ import unicode_literals
 
 import codecs
 import os
-from string import ascii_uppercase
-from math import sqrt
 from datetime import datetime
+from math import sqrt
+from string import ascii_uppercase
 
 """Prask zwarte doos forked from ./plugin_prask_5_1_1"""
 
