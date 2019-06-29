@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import os
+
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
@@ -19,6 +20,7 @@ from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
 from trojsten.submit import constants as submit_constants
 from trojsten.utils import utils
+
 from . import constants
 
 
@@ -169,7 +171,6 @@ class Round(models.Model):
         year_dir = str(self.semester.year)
         competition_name = self.semester.competition.name
         path = os.path.join(
-            settings.TASK_STATEMENTS_PATH,
             competition_name,
             year_dir,
             semester_dir,
@@ -205,12 +206,12 @@ class Round(models.Model):
     @property
     def tasks_pdf_exists(self):
         path = self.get_pdf_path(solution=False)
-        return os.path.exists(path)
+        return settings.TASK_STATEMENTS_STORAGE.exists(path)
 
     @property
     def solutions_pdf_exists(self):
         path = self.get_pdf_path(solution=True)
-        return os.path.exists(path)
+        return settings.TASK_STATEMENTS_STORAGE.exists(path)
 
     def frozen_results_exists(self, single_round=False):
         return FrozenResults.objects.filter(round=self, is_single_round=single_round).exists()
@@ -379,12 +380,12 @@ class Task(models.Model):
     @property
     def task_file_exists(self):
         path = self.get_path(solution=False)
-        return os.path.exists(path)
+        return settings.TASK_STATEMENTS_STORAGE.exists(path)
 
     @property
     def solution_file_exists(self):
         path = self.get_path(solution=True)
-        return os.path.exists(path)
+        return settings.TASK_STATEMENTS_STORAGE.exists(path)
 
     def visible(self, user):
         return self.round.is_visible_for_user(user)
