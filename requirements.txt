@@ -61,7 +61,7 @@ first==2.0.2
 flake8==3.7.7
 html5lib==1.0.1           # via bleach
 jdcal==1.4                # via openpyxl
-ksp-login==0.6.0
+ksp-login==0.6.1
 markdown==2.6.11          # via django-tips, django-trojsten-news, pymdown-extensions, wiki
 mccabe==0.6.1             # via flake8
 oauthlib==3.0.1           # via django-oauth-toolkit, requests-oauthlib, social-auth-core
