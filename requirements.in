@@ -42,7 +42,6 @@ trojsten-judge-client>=1.0.1
 Unidecode
 wiki>=0.3
 # dev
-black
 bumpversion
 coverage
 django-debug-toolbar
