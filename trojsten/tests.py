@@ -63,3 +63,19 @@ class SmokeTest(TestCase):
     def _assert_homepage_loads(self):
         response = self.client.get('/', follow=True)
         self.assertEquals(response.status_code, 200)
+
+
+class LoginLinksTest(TestCase):
+    fixtures = ['sites']
+
+    @override_settings(SITE_ID=10, ROOT_URL_CONFIG='trojsten.urls.login')
+    def test_links_login(self):
+        response = self.client.get('/', follow=True)
+        self.assertNotContains(response, 'Kontakt')
+        self.assertNotContains(response, 'Sponzori')
+
+    @override_settings(SITE_ID=1, ROOT_URL_CONFIG='trojsten.urls.default')
+    def test_links_login(self):
+        response = self.client.get('/', follow=True)
+        self.assertContains(response, 'Kontakt')
+        self.assertContains(response, 'Sponzori')
