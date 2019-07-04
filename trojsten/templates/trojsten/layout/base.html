@@ -52,7 +52,7 @@
           tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
           TeX: {extensions: ["AMSmath.js","AMSsymbols.js", "[Contrib]/siunitx/siunitx.js"]}
         });
-        MathJax.Ajax.config.path["Contrib"] = "http://localhost:8000{% static "js" %}";
+        MathJax.Ajax.config.path["Contrib"] = "{% static "js" %}";
       </script>
       <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
       <script src="{% static "js/"|add:SITE.folder|add:"/analytics.js" %}" type="text/javascript"></script>
