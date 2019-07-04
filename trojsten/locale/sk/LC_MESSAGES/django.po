@@ -338,8 +338,6 @@ msgstr "K tejto šablóne nemáte prístup"
 #: trojsten/events/templates/trojsten/events/participants_and_organizers_list.html:56
 #: trojsten/people/forms.py:75
 #: trojsten/results/templates/trojsten/results/parts/results_table.html:77
-#, fuzzy
-#| msgid "school"
 msgid "Other school"
 msgstr "Iná škola"
 
