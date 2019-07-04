@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-04 16:28+0200\n"
+"POT-Creation-Date: 2019-07-04 17:53+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -80,8 +80,6 @@ msgid "Send notification to reviewers about new code submit"
 msgstr "Zaslať opravovateľom notifikáciu o submite kódu"
 
 #: trojsten/contests/models.py:403
-#, fuzzy
-#| msgid "tasks"
 msgid "task"
 msgstr "úloha"
 
@@ -94,8 +92,6 @@ msgid "reviewer"
 msgstr "opravovateľ"
 
 #: trojsten/contests/models.py:407
-#, fuzzy
-#| msgid "solution-writer"
 msgid "solution writer"
 msgstr "vzorákovač"
 
@@ -171,32 +167,24 @@ msgstr "Pozrieť vzorové riešenie."
 
 # Task Statements
 #: trojsten/contests/templatetags/statements_parts.py:93
-#, fuzzy, python-format
-#| msgid "%(count)d day"
-#| msgid_plural "%(count)s days"
+#, python-format
 msgid "%(count)d day"
-msgstr "%(count)s deň"
+msgstr "%(count)d deň"
 
 #: trojsten/contests/templatetags/statements_parts.py:96
-#, fuzzy, python-format
-#| msgid "%(count)d hour"
-#| msgid_plural "%(count)s hours"
+#, python-format
 msgid "%(count)d hour"
-msgstr "%(count)s hodina"
+msgstr "%(count)d hodina"
 
 #: trojsten/contests/templatetags/statements_parts.py:99
-#, fuzzy, python-format
-#| msgid "%(count)d minute"
-#| msgid_plural "%(count)s minutes"
+#, python-format
 msgid "%(count)d minute"
-msgstr "%(count)s minúta"
+msgstr "%(count)d minúta"
 
 #: trojsten/contests/templatetags/statements_parts.py:102
-#, fuzzy, python-format
-#| msgid "%(count)d second"
-#| msgid_plural "%(count)s seconds"
+#, python-format
 msgid "%(count)d second"
-msgstr "%(count)s sekunda"
+msgstr "%(count)d sekunda"
 
 #: trojsten/diplomas/admin.py:41
 msgid "authorized groups"
@@ -469,8 +457,6 @@ msgid "Points have to be non-negative and at most {}."
 msgstr "Body musia byť nezáporné a najviac {}."
 
 #: trojsten/people/forms.py:464
-#, fuzzy
-#| msgid "The value has to be integer or {}."
 msgid "The value has to be number or {}."
 msgstr "Hodnota musí byť číslo alebo {}."
 
@@ -576,8 +562,6 @@ msgstr ""
 # Login
 #: trojsten/people/templates/trojsten/people/additional_registration.html:11
 #: trojsten/people/templates/trojsten/people/additional_registration.html:14
-#, fuzzy
-#| msgid "Registration"
 msgid "Complete Registration"
 msgstr "Dodatočná Registrácia"
 
@@ -633,8 +617,6 @@ msgstr "Vyplniť údaje"
 
 #: trojsten/people/templates/trojsten/people/settings.html:11
 #: trojsten/people/templates/trojsten/people/settings.html:14
-#, fuzzy
-#| msgid "Account information"
 msgid "Account settings"
 msgstr "Nastavenia účtu"
 
@@ -853,8 +835,7 @@ msgid "Missing source file of user %s"
 msgstr "Chýba zdrojový súbor používateľa %s"
 
 #: trojsten/reviews/views.py:219
-#, fuzzy, python-format
-#| msgid "Missing protocol file of user %s"
+#, python-format
 msgid "Missing protocol of user %s"
 msgstr "Chýba protokol používateľa %s"
 
@@ -924,8 +905,6 @@ msgid "Protocol corrupted"
 msgstr "Nečitateľný protokol"
 
 #: trojsten/submit/forms.py:76
-#, fuzzy
-#| msgid "Submit"
 msgid "Submit file"
 msgstr "Nahrať súbor"
 
@@ -982,20 +961,12 @@ msgstr ""
 "\n"
 
 #: trojsten/submit/views.py:321
-#, fuzzy, python-brace-format
-#| msgid ""
-#| "{name} submitted solution to task {task}\n"
-#| "\n"
-#| "Submit link: {submit_link}\n"
-#| "\n"
-#| "This is an automated response, do not reply"
+#, python-brace-format
 msgid ""
 "Submit link: {submit_link}\n"
 "\n"
 "This is an automated response, do not reply"
 msgstr ""
-"Uživateľ {name} submitol riešenie k úlohe {task}\n"
-"\n"
 "Link na submit: {submit_link}\n"
 "\n"
 "Toto je automatizovaná správa, neodpovedajte na ňu"
@@ -1063,8 +1034,6 @@ msgstr ""
 
 # Login
 #: trojsten/templates/ksp_login/parts/login_box.html:22
-#, fuzzy
-#| msgid "Registration"
 msgid "Site administration"
 msgstr "Registrácia"
 
