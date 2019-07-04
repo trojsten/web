@@ -3,7 +3,7 @@ from django.db import models
 
 
 class UserLevel(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+', on_delete=models.CASCADE)
     level_id = models.IntegerField()
     try_count = models.IntegerField(default=0)
     solved = models.BooleanField(default=False)
@@ -23,6 +23,6 @@ class UserLevel(models.Model):
 
 
 class Try(models.Model):
-    userlevel = models.ForeignKey('UserLevel')
+    userlevel = models.ForeignKey('UserLevel', on_delete=models.CASCADE)
     input = models.CharField(max_length=15)
     output = models.CharField(max_length=40)

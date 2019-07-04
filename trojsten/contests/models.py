@@ -3,13 +3,12 @@
 from __future__ import unicode_literals
 
 import os
-
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
@@ -20,7 +19,6 @@ from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
 from trojsten.submit import constants as submit_constants
 from trojsten.utils import utils
-
 from . import constants
 
 
@@ -36,8 +34,8 @@ class RoundManager(models.Manager):
         res = self.filter(semester__competition__in=competitions)
         if not user.is_superuser:
             res = res.filter(
-                Q(semester__competition__organizers_group__in=user.groups.all()) |
-                Q(visible=True)
+                Q(semester__competition__organizers_group__in=user.groups.all())
+                | Q(visible=True)
             )
         return res
 
@@ -57,8 +55,8 @@ class RoundManager(models.Manager):
         """Returns all visible running rounds for each competition
         """
         return self.visible(user, all_sites).filter(
-            (Q(second_end_time__isnull=False) & Q(second_end_time__gte=timezone.now())) |
-            (Q(second_end_time__isnull=True) & Q(end_time__gte=timezone.now()))
+            (Q(second_end_time__isnull=False) & Q(second_end_time__gte=timezone.now()))
+            | (Q(second_end_time__isnull=True) & Q(end_time__gte=timezone.now()))
         ).order_by(
             '-end_time', '-number',
         ).select_related(
@@ -74,7 +72,7 @@ class CompetitionManager(models.Manager):
     def current_site_only(self):
         """Returns only competitions belonging to current site
         """
-        return Site.objects.get(pk=settings.SITE_ID).competition_set.order_by('pk').all()
+        return Competition.objects.filter(sites__id=settings.SITE_ID).order_by('pk').all()
 
 
 @python_2_unicode_compatible
@@ -84,7 +82,7 @@ class Competition(models.Model):
     """
     name = models.CharField(max_length=128, verbose_name='názov')
     sites = models.ManyToManyField(Site)
-    organizers_group = models.ForeignKey(Group, null=True, verbose_name='skupina vedúcich')
+    organizers_group = models.ForeignKey(Group, null=True, verbose_name='skupina vedúcich', on_delete=models.CASCADE)
     primary_school_only = models.BooleanField(
         default=False, verbose_name='súťaž je iba pre základoškolákov'
     )
@@ -111,7 +109,7 @@ class Semester(models.Model):
     """
     Semester consists of several rounds.
     """
-    competition = models.ForeignKey(Competition, verbose_name='súťaž')
+    competition = models.ForeignKey(Competition, verbose_name='súťaž', on_delete=models.CASCADE)
     name = models.CharField(max_length=32, verbose_name='názov', blank=True)
     number = models.IntegerField(verbose_name='číslo části')
     year = models.IntegerField(verbose_name='ročník')
@@ -137,7 +135,7 @@ class Round(models.Model):
     Round has tasks.
     Holds information about deadline and such things
     """
-    semester = models.ForeignKey(Semester, verbose_name='časť')
+    semester = models.ForeignKey(Semester, verbose_name='časť', on_delete=models.CASCADE)
     number = models.IntegerField(verbose_name='číslo')
     start_time = models.DateTimeField(
         verbose_name='začiatok', default=utils.default_start_time
@@ -219,16 +217,16 @@ class Round(models.Model):
 
     def is_visible_for_user(self, user):
         return (
-            user.is_superuser or
-            self.semester.competition.organizers_group in user.groups.all() or
-            self.visible
+            user.is_superuser
+            or self.semester.competition.organizers_group in user.groups.all()
+            or self.visible
         )
 
     def solutions_are_visible_for_user(self, user):
         return (
-            user.is_superuser or
-            self.semester.competition.organizers_group in user.groups.all() or
-            self.solutions_visible
+            user.is_superuser
+            or self.semester.competition.organizers_group in user.groups.all()
+            or self.solutions_visible
         )
 
     @property
@@ -286,7 +284,7 @@ class Category(models.Model):
     categories.
     """
     name = models.CharField(max_length=16, verbose_name='názov')
-    competition = models.ForeignKey(Competition, verbose_name='súťaž')
+    competition = models.ForeignKey(Competition, verbose_name='súťaž', on_delete=models.CASCADE)
 
     @property
     def full_name(self):
@@ -307,7 +305,7 @@ class Task(models.Model):
     Task has submits.
     """
     name = models.CharField(max_length=128, verbose_name='názov')
-    round = models.ForeignKey(Round, verbose_name='kolo')
+    round = models.ForeignKey(Round, verbose_name='kolo', on_delete=models.CASCADE)
     categories = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
     number = models.IntegerField(verbose_name='číslo')
     description_points = models.IntegerField(verbose_name='body za popis', default=0)
@@ -402,12 +400,8 @@ class Task(models.Model):
 
 
 class TaskPeople(models.Model):
-    task = models.ForeignKey(
-        Task, verbose_name=_('task'), related_name='task_people'
-    )
-    user = models.ForeignKey(
-        User, verbose_name=_('organizer'),
-    )
+    task = models.ForeignKey(Task, verbose_name=_('task'), related_name='task_people', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name=_('organizer'), on_delete=models.CASCADE)
     TASK_ROLE_CHOICES = [
         (constants.TASK_ROLE_REVIEWER, _('reviewer')),
         (constants.TASK_ROLE_SOLUTION_WRITER, _('solution writer')),

@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+
 import os
 
 from trojsten.settings.common import *
@@ -27,9 +28,9 @@ ADMINS = MANAGERS = (('Admin', 'admin@localhost'),)
 INSTALLED_APPS += (
     'debug_toolbar',
 )
-MIDDLEWARE_CLASSES = (
-    ('debug_toolbar.middleware.DebugToolbarMiddleware',) +
-    MIDDLEWARE_CLASSES
+MIDDLEWARE = (
+        ('debug_toolbar.middleware.DebugToolbarMiddleware',) +
+        MIDDLEWARE
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -104,3 +105,4 @@ SOCIAL_AUTH_TROJSTEN_SECRET = env(
 )
 
 ELASTICSEARCH_TESTS = bool(int(env('TROJSTENWEB_ELASTICSEARCH_TESTS', False)))
+JUDGE_CLIENT = client.DebugJudgeClient()

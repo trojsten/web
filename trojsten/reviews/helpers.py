@@ -1,8 +1,9 @@
-import os
-from collections import OrderedDict
 from time import time
 
 import czech_sort
+import os
+from collections import OrderedDict
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from unidecode import unidecode
@@ -137,9 +138,12 @@ def submit_source_download_filename(submit, description_submit_id, order=0):
 
 
 def submit_protocol_download_filename(submit, description_submit_id, order=0):
+    name, _ = os.path.splitext(os.path.basename(submit.filepath))
+    protocol_path = '%s.%s' % (name, settings.PROTOCOL_FILE_EXTENSION)
+
     return '%03d_%s_%s/source/%s' % (
         order,
         unidecode(submit.user.get_full_name().lower().replace(' ', '_')),
         description_submit_id,
-        os.path.basename(submit.protocol_path)
+        protocol_path,
     )

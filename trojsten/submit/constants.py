@@ -13,9 +13,6 @@ SUBMIT_STATUS_CHOICES = [
     (SUBMIT_STATUS_FINISHED, _('finished')),
     (SUBMIT_STATUS_OK, _('OK')),  # for support of old interactive tasks
 ]
-SUBMIT_RESPONSE_PROTOCOL_CORRUPTED = 'PROTCOR'
-SUBMIT_RESPONSE_ERROR = 'CERR'
-SUBMIT_RESPONSE_OK = 'OK'
 SUBMIT_RAW_FILE_EXTENSION = '.raw'
 SUBMIT_SOURCE_FILE_EXTENSION = '.data'
 SUBMIT_TYPE_SOURCE = 0
@@ -43,3 +40,18 @@ SUBMIT_VERBOSE_RESPONSE = {
 }
 
 SUBMIT_PAPER_FILEPATH = '<PAPIEROVE>'
+
+EXT_MAPPING = {
+    ".cpp": ".cc",
+    ".cc": ".cc",
+    ".pp": ".pas",
+    ".pas": ".pas",
+    ".dpr": ".pas",
+    ".c": ".c",
+    ".py": ".py",
+    ".py3": ".py",
+    ".hs": ".hs",
+    ".cs": ".cs",
+    ".java": ".java",
+    ".zip": ".zip",
+}

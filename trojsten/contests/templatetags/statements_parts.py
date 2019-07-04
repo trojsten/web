@@ -8,8 +8,7 @@ from django.utils.translation import ungettext as _
 from trojsten.contests.models import Category, Task
 from trojsten.results.manager import get_results_tags_for_rounds
 from trojsten.submit.models import Submit
-
-from ..helpers import get_points_from_submits, get_rounds_by_year
+from ..helpers import get_points_from_submits, slice_tag_list
 
 register = template.Library()
 
@@ -22,9 +21,12 @@ def show_task_list(context, round):
         'number'
     ).select_related(
         'round', 'round__semester', 'round__semester__competition'
+    ).prefetch_related(
+        'categories', 'categories__competition'
     )
     # Select all categories which are represented by at least one task in displayed round.
-    categories = Category.objects.filter(task__in=tasks.values_list('pk', flat=True)).distinct()
+    categories = Category.objects.filter(task__in=tasks.values_list(
+        'pk', flat=True)).distinct().select_related('competition')
 
     data = {
         'round': round,
@@ -32,7 +34,7 @@ def show_task_list(context, round):
         'categories': categories,
         'solutions_visible': round.solutions_are_visible_for_user(context['user']),
     }
-    if context['user'].is_authenticated():
+    if context['user'].is_authenticated:
         submits = Submit.objects.latest_for_user(tasks, context['user'])
         results = get_points_from_submits(tasks, submits)
         data['points'] = results
@@ -42,22 +44,14 @@ def show_task_list(context, round):
 
 @register.inclusion_tag('trojsten/contests/parts/buttons.html', takes_context=True)
 def show_buttons(context, round):
-    (results_tags,) = get_results_tags_for_rounds((round,))
+    (results_tags_generator, ) = get_results_tags_for_rounds((round,))
+    sliced_results_tags = slice_tag_list(list(results_tags_generator))
 
     context.update({
         'round': round,
-        'results_tags': results_tags
+        'results_tags': sliced_results_tags
     })
     return context
-
-
-@register.inclusion_tag('trojsten/contests/parts/round_list.html')
-def show_round_list(user, competition):
-    all_rounds = get_rounds_by_year(user, competition)
-    data = {
-        'all_rounds': all_rounds,
-    }
-    return data
 
 
 @register.inclusion_tag('trojsten/contests/parts/progress.html', takes_context=True)

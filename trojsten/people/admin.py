@@ -5,11 +5,13 @@ from __future__ import unicode_literals
 from django.conf.urls import url
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
+from django.core.exceptions import PermissionDenied
 from django.db import models
 from django.forms import ModelForm
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.encoding import force_text
-from django.utils.html import escape
+from django.utils.html import escape, format_html
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from easy_select2 import select2_modelform
 from easy_select2.widgets import Select2
@@ -191,13 +193,10 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
     get_is_staff = attribute_format(attribute='is_staff', description='vedúci', boolean=True)
 
     def get_school(self, obj):
-        if obj.school:
-            if obj.school.has_abbreviation:
-                show = obj.school.abbreviation
-            else:
-                show = obj.school.verbose_name
+        if obj.school.has_abbreviation:
+            show = obj.school.abbreviation
         else:
-            show = _('Other school')
+            show = obj.school.verbose_name
         return '<span title="%s">%s</span>' % (
             escape(force_text(obj.school)), escape(force_text(show))
         )

@@ -1,9 +1,10 @@
 from django.db.models import Sum
+from judge_client.constants import SUBMIT_RESPONSE_OK
 
-from trojsten.submit.constants import (SUBMIT_TYPE_EXTERNAL, SUBMIT_RESPONSE_OK,
-                                       SUBMIT_STATUS_FINISHED)
-from trojsten.submit.models import Submit
 from trojsten.contests.models import Task
+from trojsten.submit.constants import (SUBMIT_STATUS_FINISHED,
+                                       SUBMIT_TYPE_EXTERNAL)
+from trojsten.submit.models import Submit
 
 from .models import UserCategory
 

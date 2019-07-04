@@ -3,13 +3,13 @@ from collections import OrderedDict
 
 from crispy_forms import layout
 from crispy_forms.helper import FormHelper
-from django_countries.fields import LazyTypedChoiceField, countries
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.utils import timezone
+from django.utils.text import format_lazy
 from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import string_concat
+from django_countries.fields import LazyTypedChoiceField, countries
 from ksp_login.utils import get_partial_pipeline
 
 from trojsten.contests.models import Competition, Round, Task
@@ -19,7 +19,6 @@ from trojsten.submit.constants import (SUBMIT_PAPER_FILEPATH,
                                        SUBMIT_STATUS_REVIEWED,
                                        SUBMIT_TYPE_DESCRIPTION)
 from trojsten.submit.models import Submit
-
 from . import constants
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .helpers import get_similar_users
@@ -304,7 +303,7 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
         if not self.password_required:
             self.fields['password1'].required = False
             self.fields['password2'].required = False
-            self.fields['password1'].help_text = string_concat(_(
+            self.fields['password1'].help_text = format_lazy('{}{}', _(
                 "Since you're logging in using an external provider, "
                 "this field is optional; however, by supplying it, you "
                 "will be able to log in using a password. "
@@ -321,8 +320,11 @@ class TrojstenUserCreationForm(TrojstenUserBaseForm):
         return password2
 
     def clean_password2(self):
-        if (self.password_required or self.cleaned_data.get('password1') or
-                self.cleaned_data.get('password2')):
+        if (
+            self.password_required
+            or self.cleaned_data.get('password1')
+            or self.cleaned_data.get('password2')
+        ):
             return self.clean_password2_default()
         return None
 

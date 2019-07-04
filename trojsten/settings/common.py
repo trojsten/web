@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Common settings for trojsten.
-import json
-import os
 import sys
 
+import json
+import os
 from django.contrib.messages import constants as messages
 from django.http import UnreadablePostError
 from django.utils.translation import ugettext_lazy as _
+from judge_client import client
 
 import trojsten.special.installed_apps
 from . import site_config
@@ -190,7 +191,7 @@ CORS_ORIGIN_REGEX_WHITELIST = (
     '^(https?://)?(\w+\.)*trojsten\.sk$',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -218,6 +219,7 @@ INSTALLED_APPS = (
     'trojsten.utils',
     'trojsten.people',
     'trojsten.contests',
+    'trojsten.diplomas',
     'trojsten.events',
     'trojsten.submit.apps.SubmitConfig',
     'trojsten.results',
@@ -247,6 +249,7 @@ INSTALLED_APPS = (
     'oauth2_provider',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
     'snowpenguin.django.recaptcha2',
 
     # django-wiki and its dependencies
@@ -261,7 +264,6 @@ INSTALLED_APPS = (
     'wiki.plugins.images',
     'wiki.plugins.macros',
     'taggit',
-    'kombu.transport.django',
     'haystack',
 
     # django-fluent-comments and its dependencies
@@ -451,14 +453,6 @@ ELASTICSEARCH_ANALYZER = {
     },
 }
 
-# Celery settings
-#: Only add pickle to this list if your broker is secured
-#: from unwanted access (see userguide/security.html)
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-BROKER_URL = env('TROJSTENWEB_CELERY_BROKER_URL', 'django://')
-
 # Comments settings
 COMMENTS_APP = 'fluent_comments'
 FLUENT_COMMENTS_EXCLUDE_FIELDS = ('url', 'title', 'email')
@@ -505,7 +499,8 @@ UPLOADED_FILENAME_MAXLENGTH = int(env('TROJSTENWEB_UPLOADED_FILENAME_MAXLENGTH',
 PROTOCOL_FILE_EXTENSION = env('TROJSTENWEB_PROTOCOL_FILE_EXTENSION', '.protokol')
 TESTER_URL = env('TROJSTENWEB_TESTER_URL', 'experiment')
 TESTER_PORT = int(env('TROJSTENWEB_TESTER_PORT', '12347'))
-TESTER_WEB_IDENTIFIER = env('TROJSTENWEB_TESTER_WEB_IDENTIFIER', 'KSP')
+TESTER_WEB_IDENTIFIER = env('TROJSTENWEB_TESTER_WEB_IDENTIFIER', 'TROJSTENWEBv2')
+JUDGE_CLIENT = client.JudgeClient(TESTER_WEB_IDENTIFIER, TESTER_URL, TESTER_PORT)
 
 # Rules settings
 COMPETITION_RULES = {
@@ -530,3 +525,13 @@ if 'TROJSTENWEB_CONTACT_FORM_RECIPIENTS' in os.environ:
     CONTACT_FORM_RECIPIENTS = tuple(env('TROJSTENWEB_CONTACT_FORM_RECIPIENTS', '').split(';'))
 else:
     CONTACT_FORM_RECIPIENTS = tuple([mail_tuple[1] for mail_tuple in MANAGERS])
+
+# Diploma settings
+DIPLOMA_PARTICIPANTS_ALLOWED_EXTENSIONS = ['.csv', '.json']
+
+EDITOR_CONFIG = {
+    'mode': 'python',
+    'lineWrapping': False,
+    'lineNumbers': True,
+    'tabSize': 4
+}

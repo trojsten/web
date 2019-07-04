@@ -3,9 +3,9 @@
 from __future__ import unicode_literals
 
 import binascii
+
 import os
 from decimal import Decimal
-
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -50,8 +50,8 @@ class SubmitManager(models.Manager):
         return submits.filter(
             task__in=tasks,
         ).filter(
-            models.Q(time__lte=models.F('task__round__end_time')) |
-            models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
+            models.Q(time__lte=models.F('task__round__end_time'))
+            | models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
         ).order_by(
             'user', 'task', 'submit_type', '-time', '-id',
         ).distinct(
@@ -69,12 +69,12 @@ class SubmitManager(models.Manager):
             task__in=tasks,
         ).filter(
             (
-                models.Q(task__round__second_end_time__isnull=False) &
-                models.Q(submit_type=submit_constants.SUBMIT_TYPE_SOURCE) &
-                models.Q(time__lte=models.F('task__round__second_end_time'))
-            ) |
-            models.Q(time__lte=models.F('task__round__end_time')) |
-            models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
+                models.Q(task__round__second_end_time__isnull=False)
+                & models.Q(submit_type=submit_constants.SUBMIT_TYPE_SOURCE)
+                & models.Q(time__lte=models.F('task__round__second_end_time'))
+            )
+            | models.Q(time__lte=models.F('task__round__end_time'))
+            | models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
         ).order_by(
             'task', 'submit_type', '-time', '-id',
         ).distinct(
@@ -90,9 +90,9 @@ class Submit(models.Model):
     Description submit has points and filename, Source submit has also
     tester response and protocol ID assigned.
     """
-    task = models.ForeignKey(Task, verbose_name='úloha')
+    task = models.ForeignKey(Task, verbose_name='úloha', on_delete=models.CASCADE)
     time = models.DateTimeField(default=timezone.now, verbose_name='čas')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='odovzdávateľ')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='odovzdávateľ', on_delete=models.CASCADE)
     submit_type = models.IntegerField(verbose_name='typ submitu', choices=submit_constants.SUBMIT_TYPES)
     points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body')
 
@@ -107,9 +107,10 @@ class Submit(models.Model):
         )
     )
     protocol_id = models.CharField(
-        max_length=128, verbose_name='číslo protokolu', blank=True)
+        db_index=True, max_length=128, verbose_name='číslo protokolu', blank=True)
 
     reviewer_comment = models.TextField(verbose_name='komentár od opravovateľa', blank=True)
+    protocol = models.TextField(verbose_name='protokol', blank=True, null=True)
 
     objects = SubmitManager()
 
@@ -124,10 +125,6 @@ class Submit(models.Model):
             submit_constants.SUBMIT_TYPES[self.submit_type][1],
             str(self.time),
         )
-
-    @property
-    def protocol_path(self):
-        return self.filepath.rsplit('.', 1)[0] + settings.PROTOCOL_FILE_EXTENSION
 
     @property
     def filename(self):

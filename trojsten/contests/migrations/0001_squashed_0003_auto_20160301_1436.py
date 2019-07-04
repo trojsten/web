@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
 import datetime
+import django
+from django.db import migrations, models
+
 import trojsten.utils.utils
 
 
@@ -21,7 +23,9 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=128, verbose_name='n\xe1zov')),
                 ('primary_school_only', models.BooleanField(default=False, verbose_name='s\xfa\u0165a\u017e je iba pre z\xe1klado\u0161kol\xe1kov')),
-                ('organizers_group', models.ForeignKey(verbose_name='skupina ved\xfacich', to='auth.Group', null=True)),
+                ('organizers_group',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, verbose_name='skupina ved\xfacich',
+                                   to='auth.Group', null=True)),
             ],
             options={
                 'verbose_name': 'S\xfa\u0165a\u017e',
@@ -50,7 +54,9 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=32, verbose_name='n\xe1zov', blank=True)),
                 ('number', models.IntegerField(verbose_name='\u010d\xedslo s\xe9rie')),
                 ('year', models.IntegerField(verbose_name='ro\u010dn\xedk')),
-                ('competition', models.ForeignKey(verbose_name='s\xfa\u0165a\u017e', to='contests.Competition')),
+                ('competition',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, verbose_name='s\xfa\u0165a\u017e',
+                                   to='contests.Competition')),
             ],
             options={
                 'verbose_name': 'S\xe9ria',
@@ -60,7 +66,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='round',
             name='series',
-            field=models.ForeignKey(verbose_name='s\xe9ria', to='contests.Series'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, verbose_name='s\xe9ria',
+                                    to='contests.Series'),
         ),
         migrations.AddField(
             model_name='competition',

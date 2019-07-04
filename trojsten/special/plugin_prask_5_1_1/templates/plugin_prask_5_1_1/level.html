@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<!--suppress XmlDuplicatedId -->
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Podivný zošit</title>
+
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{% static "plugin_ksp_32_1_1/cover.css" %}" rel="stylesheet">
+  <link href='{% static "plugin_ksp_32_1_1/zwarte.css" %}' rel="stylesheet">
+  <link href="{% static "plugin_prask_5_1_1/custom.css" %}" rel="stylesheet">
+
+  <style id="holderjs-style" type="text/css"></style>
+
+</head>
+<body>
+  <div class="site-wrapper">
+    <div class="site-wrapper-inner">
+      <div class="cover-container">
+        <div class="masthead clearfix">
+          <div class="inner">
+            <h3 class="masthead-brand">Podivný zošit</h3>
+            <ul class="nav masthead-nav">
+              {% for lvl, solved in levels %}
+                <li class='{% if lvl == level %}active{% endif %}'>
+                  <a href='{% url "plugin_zwarte:main" lvl %}'>
+                    {% if solved %}
+                      {{ lvl }}&#10003;
+                    {% else %}
+                      &nbsp;{{ lvl }}&nbsp;
+                    {% endif %}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+        <div class="inner cover">
+          <h1 class="cover-heading">Level {{ level }}</h1>
+          {% if solved %}
+              <p class="lead">
+                  Gratulujeme!<br/>
+                  Dosiahol si <code class="solved">{{ target }}</code>
+                  na <span id="try-count">{{ try_count }}</span>
+                  pokus{{ try_count_ending }}.
+              </p>
+          {% else %}
+              <p class="lead">
+                  Dosiahni <code class="solved">{{ target }}</code><br/>
+                  Zatiaľ si mal(a) <span id="try-count">{{ try_count }}</span>
+                  pokusov.
+              </p>
+          {% endif %}
+          
+          <form class="form-inline" role="form" id="valueForm">
+            {% csrf_token %}
+            <div class="form-group">
+              <label class="sr-only" for="value">Zadaj číslo</label>
+              <input
+                      type="number"
+                      min="0"
+                      max={{maximum}}
+                      class="form-control fixed-width"
+                      id="value"
+                      placeholder="Zadaj číslo"
+              >
+            </div>
+            <button type="submit" class="btn btn-default">Pošli</button>
+          </form>
+          
+          
+          <div class="results">
+            <table id='resultsTable'>
+            </table>
+          </div>
+          
+        </div>
+
+        <div class="mastfoot">
+          <div class="inner">
+            <p>&copy; PRASK 2018</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+<!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src='{% static "js/jquery-1.11.1.min.js" %}'></script>
+  <script src='{% static "plugin_ksp_32_1_1/send.js" %}'></script>
+  <script type="text/javascript">
+    window.submit_url="{% url "plugin_zwarte:run" level %}";
+  </script>
+  <script type="text/javascript">
+    {% for input, output, solved in try_set %}
+        window.add_row("{{ input }}","{{ output }}",{{ solved|yesno:"true,false" }});
+    {% endfor %}
+  </script>
+  <script src='{% static "js/bootstrap.min.js" %}'></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src='{% static "plugin_ksp_32_1_1/ie10-viewport-bug-workaround.js" %}'></script>
+
+</body>
+</html>

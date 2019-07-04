@@ -3,12 +3,11 @@
 from __future__ import unicode_literals
 
 import re
-
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import resolve, reverse
 from django.core.validators import URLValidator
 from django.db import models
+from django.urls import resolve, reverse
 from django.utils.encoding import python_2_unicode_compatible
 from sortedm2m.fields import SortedManyToManyField
 
@@ -36,8 +35,8 @@ def validate_url(value):
         return
 
     raise ValidationError(
-        'Hodnota by mala byť externá URL, absolútna cesta' +
-        ' alebo urlname začínajúce znakom "@"!'
+        'Hodnota by mala byť externá URL, absolútna cesta'
+        + ' alebo urlname začínajúce znakom "@"!'
     )
 
 
@@ -49,8 +48,8 @@ class MenuItem(models.Model):
         verbose_name='adresa',
         validators=[validate_url],
         help_text=(
-            'Povolené tvary sú "http(s)://domain.com/path", ' +
-            '"/absolute/path" a "@urlname".'
+            'Povolené tvary sú "http(s)://domain.com/path", '
+            + '"/absolute/path" a "@urlname".'
         ),
     )
     glyphicon = models.CharField(
@@ -59,8 +58,8 @@ class MenuItem(models.Model):
         max_length=196, blank=True,
         verbose_name='regulárne výrazy pre zvýraznenie',
         help_text=(
-            'Medzerou oddelené urlnames a regulárne výrazy,' +
-            'ktoré pri zhode s cestou zvýraznia aktuálnu položku.'
+            'Medzerou oddelené urlnames a regulárne výrazy,'
+            + 'ktoré pri zhode s cestou zvýraznia aktuálnu položku.'
         ),
     )
 
@@ -110,7 +109,8 @@ class MenuGroup(models.Model):
         Site,
         related_name='menu_groups',
         db_index=True,
-        verbose_name='stránka')
+        verbose_name='stránka',
+        on_delete=models.CASCADE)
     items = SortedManyToManyField(
         MenuItem,
         related_name='groups',

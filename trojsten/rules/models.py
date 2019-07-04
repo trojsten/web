@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from collections import defaultdict
 
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -58,11 +58,13 @@ class KSPLevel(models.Model):
     (e.g. if we want to display user's level for the next semester), we store the reference to the
     'last_semester_before_level_up' instead of the first semester in which user has this new level.
     """
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     new_level = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
-    source_semester = models.ForeignKey(Semester, blank=True, null=True, related_name='caused_level_ups')
-    source_camp = models.ForeignKey(Event, blank=True, null=True)
-    last_semester_before_level_up = models.ForeignKey(Semester, related_name='next_semester_level_ups')
+    source_semester = models.ForeignKey(Semester, blank=True, null=True, related_name='caused_level_ups',
+                                        on_delete=models.CASCADE)
+    source_camp = models.ForeignKey(Event, blank=True, null=True, on_delete=models.CASCADE)
+    last_semester_before_level_up = models.ForeignKey(Semester, related_name='next_semester_level_ups',
+                                                      on_delete=models.CASCADE)
 
     objects = KSPLevelManager()
 

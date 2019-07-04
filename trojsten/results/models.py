@@ -9,15 +9,16 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
-from jsonfield import JSONField
+from django.contrib.postgres.fields import JSONField
 
 
 @python_2_unicode_compatible
 class FrozenResults(models.Model):
-    round = models.ForeignKey('contests.Round', verbose_name='kolo')
+    round = models.ForeignKey('contests.Round', verbose_name='kolo', on_delete=models.CASCADE)
     is_single_round = models.BooleanField(verbose_name='vynechať predošlé kolá')
     has_previous_results = models.BooleanField(default=False, verbose_name='zahŕňa predošlé kolá')
-    category = models.ForeignKey('contests.Category', blank=True, null=True, verbose_name='kategória')
+    category = models.ForeignKey('contests.Category', blank=True, null=True, verbose_name='kategória',
+                                 on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True, verbose_name='čas')
 
     class Meta:
@@ -34,7 +35,7 @@ class FrozenResults(models.Model):
 
 @python_2_unicode_compatible
 class FrozenPoints(models.Model):
-    task = models.ForeignKey('contests.Task', verbose_name='úloha')
+    task = models.ForeignKey('contests.Task', verbose_name='úloha', on_delete=models.CASCADE)
     description_points = models.CharField(max_length=10, verbose_name='body za popis')
     source_points = models.CharField(max_length=10, verbose_name='body za program')
     sum = models.CharField(max_length=10, verbose_name='body')
@@ -53,13 +54,14 @@ class FrozenPoints(models.Model):
 
 @python_2_unicode_compatible
 class FrozenUserResult(models.Model):
-    frozenresults = models.ForeignKey('FrozenResults', verbose_name='výsledkovka')
-    original_user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='pôvodný používateľ')
+    frozenresults = models.ForeignKey('FrozenResults', verbose_name='výsledkovka', on_delete=models.CASCADE)
+    original_user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='pôvodný používateľ',
+                                      on_delete=models.CASCADE)
     rank = models.IntegerField(verbose_name='poradie')
     prev_rank = models.IntegerField(verbose_name='poradie', blank=True, null=True)
     fullname = models.CharField(max_length=500, verbose_name='plné meno')
     school_year = models.IntegerField(verbose_name='ročník')
-    school = models.ForeignKey('schools.School', verbose_name='škola', null=True)
+    school = models.ForeignKey('schools.School', verbose_name='škola', null=True, on_delete=models.CASCADE)
     previous_points = models.CharField(max_length=10, verbose_name='body z predošlých kôl')
     sum = models.CharField(max_length=10, verbose_name='suma')
     task_points = models.ManyToManyField(FrozenPoints, verbose_name='body za úlohy')
@@ -77,7 +79,7 @@ class FrozenUserResult(models.Model):
 
 @python_2_unicode_compatible
 class Results(models.Model):
-    round = models.ForeignKey('contests.Round', verbose_name='kolo')
+    round = models.ForeignKey('contests.Round', verbose_name='kolo', on_delete=models.CASCADE)
     tag = models.CharField(max_length=50, blank=True, null=True, verbose_name='tag/kategória')
     is_single_round = models.BooleanField(verbose_name='vynechať predošlé kolá')
     has_previous_results = models.BooleanField(default=False, verbose_name='zahŕňa predošlé kolá')

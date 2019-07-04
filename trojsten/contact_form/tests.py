@@ -1,11 +1,10 @@
 from django.conf import settings
 from django.core import mail
-from django.core.urlresolvers import reverse
 from django.test import RequestFactory, TestCase, override_settings
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from trojsten.people.models import User
-
 from .forms import ContactForm
 
 

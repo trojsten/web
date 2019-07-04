@@ -7,7 +7,7 @@ NAVBAR_SITES = []
 
 ROOT_URLCONF = 'trojsten.urls.login'
 
-MIDDLEWARE_CLASSES += (
+MIDDLEWARE += (
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
 )
 

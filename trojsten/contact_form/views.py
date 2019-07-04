@@ -11,7 +11,7 @@ class ContactFormView(contact_form.views.ContactFormView):
         Returns the initial data to use for forms on this view.
         """
         initial = super(ContactFormView, self).get_initial()
-        if self.request.user.is_anonymous():
+        if self.request.user.is_anonymous:
             return initial
 
         initial['name'] = self.request.user.get_full_name()
@@ -20,5 +20,5 @@ class ContactFormView(contact_form.views.ContactFormView):
 
     def get_form_kwargs(self):
         kwargs = super(ContactFormView, self).get_form_kwargs()
-        kwargs['captcha'] = self.request.user.is_anonymous()
+        kwargs['captcha'] = self.request.user.is_anonymous
         return kwargs

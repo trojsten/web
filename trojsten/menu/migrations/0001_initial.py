@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+import django
 import sortedm2m.fields
+from django.db import migrations, models
+
 import trojsten.menu.models
 
 
@@ -48,7 +50,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='menugroup',
             name='site',
-            field=models.ForeignKey(related_name='menu_groups', verbose_name='str\xe1nka', to='sites.Site'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='menu_groups',
+                                    verbose_name='str\xe1nka', to='sites.Site'),
         ),
         migrations.AlterUniqueTogether(
             name='menugroup',

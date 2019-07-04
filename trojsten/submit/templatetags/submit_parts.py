@@ -1,8 +1,9 @@
 from django import template
+from judge_client import constants as judge_constants
 
+from trojsten.contests.models import Task
 from trojsten.submit.forms import (DescriptionSubmitForm, SourceSubmitForm,
                                    TestableZipSubmitForm)
-from trojsten.contests.models import Task
 
 from .. import constants
 from ..models import Submit
@@ -51,7 +52,7 @@ def submitclass(submit):
     else:
         if submit.testing_status == constants.SUBMIT_STATUS_IN_QUEUE:
             return 'info submit-untested'
-        elif submit.tester_response == constants.SUBMIT_RESPONSE_OK:
+        elif submit.tester_response == judge_constants.SUBMIT_RESPONSE_OK:
             return 'success submit-tested'
         elif submit.points > 0:
             return 'warning submit-tested'

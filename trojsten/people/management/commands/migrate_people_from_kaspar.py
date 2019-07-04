@@ -61,8 +61,8 @@ class Command(NoArgsCommand):
     def process_school(self, kaspar_id, abbr, name, addr_name, street,
                        city, zip_code):
         candidates = School.objects.filter(
-            Q(abbreviation__iexact=abbr) |
-            Q(abbreviation__iexact=abbr + '?')
+            Q(abbreviation__iexact=abbr)
+            | Q(abbreviation__iexact=abbr + '?')
         )
         row = (kaspar_id, abbr, name, addr_name, street, city, zip_code)
         if len(candidates) == 1:

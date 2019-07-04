@@ -52,10 +52,11 @@ class KSPResultsGenerator(ResultsGenerator):
             penalized_submits = Submit.objects.filter(
                 task__in=self.get_task_queryset(res_request),
             ).filter(
-                submit_type=submit_constants.SUBMIT_TYPE_SOURCE
+                models.Q(submit_type=submit_constants.SUBMIT_TYPE_SOURCE)
+                | models.Q(submit_type=submit_constants.SUBMIT_TYPE_TESTABLE_ZIP)
             ).filter(
-                models.Q(time__gte=models.F('task__round__end_time')) &
-                models.Q(time__lte=models.F('task__round__second_end_time'))
+                models.Q(time__gte=models.F('task__round__end_time'))
+                & models.Q(time__lte=models.F('task__round__second_end_time'))
             ).order_by(
                 'user', 'task', '-time', '-id',
             ).distinct(
@@ -63,10 +64,10 @@ class KSPResultsGenerator(ResultsGenerator):
             ).select_related('user', 'user__school', 'task', 'task__round')
         return chain(submits, penalized_submits)
 
-    def source_submit_points(self, previous_points, submit):
+    def source_or_zip_submit_points(self, previous_points, submit):
         """
         For all submits in submit queryset, the function `add_submit_to_row` is called.
-        Source points in KSP are computed from two submits, which demands this processing:
+        Source and ZIP points in KSP are computed from two submits, which demands this processing:
         - user receives all points for the last submit before `round.end_time`
         - for the last submit in the second phase of the round user can additionally receive
           max(0, (points in second phase - previous points) / 2) points
@@ -81,9 +82,10 @@ class KSPResultsGenerator(ResultsGenerator):
             return previous_points + (submit.user_points - previous_points) / 2
 
     def add_submit_to_row(self, res_request, submit, row):
-        if submit.submit_type == submit_constants.SUBMIT_TYPE_SOURCE:
+        if submit.submit_type == submit_constants.SUBMIT_TYPE_SOURCE or \
+           submit.submit_type == submit_constants.SUBMIT_TYPE_TESTABLE_ZIP:
             cell = row.cells_by_key[submit.task.number]
-            cell.auto_points = self.source_submit_points(cell.auto_points, submit)
+            cell.auto_points = self.source_or_zip_submit_points(cell.auto_points, submit)
         else:
             super(KSPResultsGenerator, self).add_submit_to_row(res_request, submit, row)
 

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from ksp_login.forms import UserProfileForm, get_profile_forms
 from social_django.models import UserSocialAuth
 
@@ -10,7 +10,6 @@ from trojsten.people.models import User
 from trojsten.submit.constants import (SUBMIT_STATUS_REVIEWED,
                                        SUBMIT_TYPE_DESCRIPTION)
 from trojsten.submit.models import Submit
-
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .forms import (AdditionalRegistrationForm, IgnoreCompetitionForm,
                     RoundSelectForm, SubmittedTasksForm)

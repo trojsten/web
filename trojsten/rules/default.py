@@ -4,7 +4,7 @@ from django.db import models
 from django.utils import timezone
 
 from trojsten.contests.models import Round
-from trojsten.results.constants import DEFAULT_TAG_KEY
+from trojsten.results.constants import DEFAULT_TAG_KEY, MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS
 from trojsten.results.generator import ResultsGenerator
 from trojsten.results.representation import ResultsTag
 from trojsten.submit import constants as submit_constants
@@ -20,8 +20,8 @@ class CompetitionRules(object):
 
     def get_Q_for_graded_submits(self):
         return (
-            models.Q(time__lte=models.F('task__round__end_time')) |
-            models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
+            models.Q(time__lte=models.F('task__round__end_time'))
+            | models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
         )
 
     def get_results_tags(self):
@@ -40,7 +40,12 @@ class CompetitionRules(object):
             return None
 
     def get_actual_result_rounds(self, competition):
-        rounds = Round.objects.filter(semester__competition=competition, visible=True)
+        rounds = Round.objects.filter(
+            semester__competition=competition,
+            visible=True,
+            end_time__gte=timezone.now() - timezone.timedelta(
+                days=MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS)
+        )
         return rounds.order_by('-end_time', '-number')[:1]
 
 

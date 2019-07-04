@@ -3,7 +3,7 @@
 
 <div class="container text-muted">
   <div class="row">
-    <div class="col-sm-2 col-xs-12" id="footer-logo">
+    <div class="col-sm-2 col-xs-12 {% if SITE.is_login_provider %}col-sm-offset-2{% endif %}" id="footer-logo">
       <a href="http://trojsten.sk/">
         <div>
           <img src="{% static "images/trojsten/logo_small.png" %}" alt="Trojsten"/>
@@ -14,14 +14,15 @@
     </div>
 
     <div class="col-sm-2 col-xs-6 footer-text">
-        <a href="http://trojsten.sk/podporte-nas/">
-          <div>
-            <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
-          </div>
-          Podporte nás
-        </a>
-      </div>
+      <a href="http://trojsten.sk/podporte-nas/">
+        <div>
+          <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+        </div>
+        Podporte nás
+      </a>
+    </div>
 
+    {% if not SITE.is_login_provider %}
     <div class="col-sm-2 col-xs-6">
       <a href="/kontakt/">
         <div>
@@ -39,6 +40,7 @@
         Sponzori
       </a>
     </div>
+    {% endif %}
 
     <div class="col-sm-2 col-xs-6 mobile-second-row">
       <a href="{% url 'contact_form' %}">

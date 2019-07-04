@@ -70,7 +70,7 @@ class ResultsRow(Serializable):
             'username': self.user.username,
             'name': self.user.get_full_name(),
             'school': self._serialize_school_data(),
-            'year': self.user.school_year,
+            'year': self.year,
         }
 
     def _serialize_school_data(self):

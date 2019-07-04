@@ -1,8 +1,8 @@
+from time import time
+
 import os.path
 import zipfile
 from collections import OrderedDict
-from time import time
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -16,11 +16,11 @@ from sendfile import sendfile
 from trojsten.contests.models import Task
 from trojsten.reviews.constants import (RE_FILENAME, RE_SUBMIT_PK,
                                         REVIEW_COMMENT_FILENAME,
-                                        REVIEW_POINTS_FILENAME,
-                                        REVIEW_ERRORS_FILENAME)
-from trojsten.reviews.forms import (ReviewForm, UploadZipForm,
-                                    get_zip_form_set, reviews_upload_pattern,
-                                    BasePointForm, BasePointFormSet)
+                                        REVIEW_ERRORS_FILENAME,
+                                        REVIEW_POINTS_FILENAME)
+from trojsten.reviews.forms import (BasePointForm, BasePointFormSet,
+                                    ReviewForm, UploadZipForm,
+                                    get_zip_form_set, reviews_upload_pattern)
 from trojsten.reviews.helpers import (get_latest_submits_for_task,
                                       get_user_as_choices, submit_directory,
                                       submit_download_filename,
@@ -34,9 +34,10 @@ def review_task(request, task_pk):
     task = get_object_or_404(Task, pk=task_pk)
     PointsFormSet = formset_factory(BasePointForm, formset=BasePointFormSet, extra=0)
 
-    if (not request.user.is_superuser and
-            task.round.semester.competition.organizers_group not in
-            request.user.groups.all()):
+    if (
+        not request.user.is_superuser
+        and task.round.semester.competition.organizers_group not in request.user.groups.all()
+    ):
         raise PermissionDenied
 
     form = None
@@ -57,7 +58,8 @@ def review_task(request, task_pk):
                     )
                     return redirect('admin:review_submit_zip', task.pk)
         if 'points_submit' in request.POST:
-            form_set = PointsFormSet(request.POST, form_kwargs={'max_points': task.description_points})
+            form_set = PointsFormSet(request.POST, form_kwargs={
+                'max_points': task.description_points})
             if form_set.is_valid():
                 form_set.save(task)
                 messages.add_message(
@@ -101,9 +103,10 @@ def edit_review(request, task_pk, submit_pk):
     task = get_object_or_404(Task, pk=task_pk)
     submit = get_object_or_404(Submit, pk=submit_pk)
 
-    if (not request.user.is_superuser and
-            task.round.semester.competition.organizers_group not in
-            request.user.groups.all()):
+    if (
+        not request.user.is_superuser
+        and task.round.semester.competition.organizers_group not in request.user.groups.all()
+    ):
         raise PermissionDenied
 
     choices = get_user_as_choices(task)
@@ -150,9 +153,10 @@ def submit_download(request, submit_pk):
     submit = get_object_or_404(Submit, pk=submit_pk)
     name = submit_download_filename(submit)
 
-    if (not request.user.is_superuser and
-            submit.task.round.semester.competition.organizers_group
-            not in request.user.groups.all()):
+    if (
+        not request.user.is_superuser
+        and submit.task.round.semester.competition.organizers_group not in request.user.groups.all()
+    ):
         raise PermissionDenied
 
     if not os.path.isfile(submit.filepath):
@@ -165,9 +169,10 @@ def download_all_submits(request, task_pk, download_reviews=False):
     task = get_object_or_404(Task, pk=task_pk)
     submits = get_latest_submits_for_task(task).values()
 
-    if (not request.user.is_superuser and
-            task.round.semester.competition.organizers_group
-            not in request.user.groups.all()):
+    if (
+        not request.user.is_superuser
+        and task.round.semester.competition.organizers_group not in request.user.groups.all()
+    ):
         raise PermissionDenied
 
     path = os.path.join(settings.SUBMIT_PATH, 'reviews')
@@ -183,7 +188,7 @@ def download_all_submits(request, task_pk, download_reviews=False):
     with zipfile.ZipFile(path, 'w') as zipper:
         for i, user in enumerate(submits):
             if 'description' in user:
-                submit = user['review'] if download_reviews and 'review' in user\
+                submit = user['review'] if download_reviews and 'review' in user \
                     else user['description']
                 description_submit_id = submit.pk
                 if not os.path.isfile(submit.filepath):
@@ -199,18 +204,19 @@ def download_all_submits(request, task_pk, download_reviews=False):
 
             if 'sources' in user:
                 for submit in user['sources']:
-                    if not os.path.isfile(submit.filepath):
-                        errors += [_('Missing source file of user %s') % submit.user.get_full_name()]
-                    else:
+                    if os.path.isfile(submit.filepath):
                         zipper.write(submit.filepath,
                                      submit_source_download_filename(submit, description_submit_id, i))
-                    if not os.path.isfile(submit.protocol_path):
-                        errors += [_('Missing protocol file of user %s') % submit.user.get_full_name()]
                     else:
-                        zipper.write(
-                            submit.protocol_path,
+                        errors += [_('Missing source file of user %s') %
+                                   submit.user.get_full_name()]
+                    if submit.protocol:
+                        zipper.writestr(
+                            submit.protocol,
                             submit_protocol_download_filename(submit, description_submit_id, i)
                         )
+                    else:
+                        errors += [_('Missing protocol of user %s') % submit.user.get_full_name()]
 
         if errors:
             zipper.writestr(REVIEW_ERRORS_FILENAME, u'\n'.join(errors).encode('utf8'))
@@ -233,9 +239,10 @@ def zip_upload(request, task_pk):
     if name is None:
         raise Http404
 
-    if (not request.user.is_superuser and
-            task.round.semester.competition.organizers_group
-            not in request.user.groups.all()):
+    if (
+        not request.user.is_superuser
+        and task.round.semester.competition.organizers_group not in request.user.groups.all()
+    ):
         raise PermissionDenied
 
     try:
