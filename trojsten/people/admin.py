@@ -22,7 +22,6 @@ from trojsten.contests.models import Competition, Semester
 from trojsten.people.admin_urls import submitted_tasks_urls
 from trojsten.submit.models import Submit
 from trojsten.utils.utils import attribute_format
-
 from . import constants
 from .forms import MergeForm
 from .helpers import get_similar_users, merge_users
@@ -161,9 +160,9 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
         )}),
         (_('Address'), {'fields': ('home_address', 'mail_to_school', 'mailing_address')}),
         (_('School'), {'fields': ('school', 'graduation')}),
+        (_('Password'), {'fields': ('password',)}),
     )
     superuser_fieldsets = fieldsets + (
-        (_('Password'), {'fields': ('password',)}),
         (_('Permissions'), {'fields': (
             'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'
         )}),
@@ -193,24 +192,28 @@ class UserAdmin(ExportMixin, DefaultUserAdmin):
     get_is_staff = attribute_format(attribute='is_staff', description='vedúci', boolean=True)
 
     def get_school(self, obj):
-        if obj.school.has_abbreviation:
-            show = obj.school.abbreviation
-        else:
-            show = obj.school.verbose_name
-        return '<span title="%s">%s</span>' % (
-            escape(force_text(obj.school)), escape(force_text(show))
-        )
+        if obj.school:
+            if obj.school.has_abbreviation:
+                show = obj.school.abbreviation
+            else:
+                show = obj.school.verbose_name
+            return format_html('<span title="{}">{}</span>', escape(force_text(obj.school)), escape(force_text(show)))
     get_school.short_description = 'škola'
     get_school.admin_order_field = 'school'
     get_school.allow_tags = True
 
     def get_properties(self, obj):
-        return '<br />'.join(escape(force_text(x)) for x in obj.properties.all())
+        return mark_safe('<br />'.join(escape(force_text(x)) for x in obj.properties.all()))
     get_properties.short_description = 'dodatočné vlastnosti'
     get_properties.allow_tags = True
 
     def get_urls(self):
         return submitted_tasks_urls + super(UserAdmin, self).get_urls()
+
+    def user_change_password(self, request, id, form_url=''):
+        if not request.user.is_superuser:
+            raise PermissionDenied
+        return super(UserAdmin, self).user_change_password(request, id, form_url)
 
 
 class DuplicateUserAdmin(admin.ModelAdmin):

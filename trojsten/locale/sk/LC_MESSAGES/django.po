@@ -368,7 +368,7 @@ msgstr "Práva"
 msgid "Important dates"
 msgstr "Dôležité dátumy"
 
-#: trojsten/people/admin.py:262
+#: trojsten/people/admin.py:257
 msgid "Users merged succesfully."
 msgstr "Používatelia spojení úspešne."
 
@@ -412,22 +412,22 @@ msgstr "Vyber, kam ti máme posielať poštu."
 msgid "Gender"
 msgstr "Pohlavie"
 
-#: trojsten/people/forms.py:87 trojsten/people/forms.py:95
-#: trojsten/people/forms.py:103 trojsten/people/forms.py:112
-#: trojsten/people/forms.py:122 trojsten/people/forms.py:132
-#: trojsten/people/forms.py:142
+#: trojsten/people/forms.py:88 trojsten/people/forms.py:96
+#: trojsten/people/forms.py:104 trojsten/people/forms.py:113
+#: trojsten/people/forms.py:123 trojsten/people/forms.py:133
+#: trojsten/people/forms.py:143
 msgid "This field is required."
 msgstr "Toto pole je povinné."
 
-#: trojsten/people/forms.py:153
+#: trojsten/people/forms.py:154
 msgid "Your graduation year is too far in the past."
 msgstr "Tvoj rok maturity je príliš ďaleko v minulosti."
 
-#: trojsten/people/forms.py:159
+#: trojsten/people/forms.py:160
 msgid "Your graduation year is too far in the future."
 msgstr "Tvoj rok maturity je príliš ďaleko v budúcnosti."
 
-#: trojsten/people/forms.py:171
+#: trojsten/people/forms.py:172
 msgid ""
 "We cannot send you correspondence to school when you don't choose any "
 "school. If your school is not in the list write us in an e-mail that you "
@@ -437,11 +437,11 @@ msgstr ""
 "tvoja škola nenachádza v zozname, napíš v e-maili, že ti máme posielať poštu "
 "na školu"
 
-#: trojsten/people/forms.py:272
+#: trojsten/people/forms.py:273
 msgid "Password confirmation"
 msgstr "Potvrdenie hesla"
 
-#: trojsten/people/forms.py:273
+#: trojsten/people/forms.py:274
 msgid "Enter the same password as above, for verification."
 msgstr "Zadaj rovnaké heslo ako vyššie pre jeho overenie"
 
@@ -893,7 +893,7 @@ msgstr "v poradí"
 msgid "finished"
 msgstr "ukončený"
 
-#: trojsten/submit/constants.py:14 trojsten/submit/constants.py:35
+#: trojsten/submit/constants.py:14 trojsten/submit/constants.py:38
 msgid "OK"
 msgstr "OK"
 
