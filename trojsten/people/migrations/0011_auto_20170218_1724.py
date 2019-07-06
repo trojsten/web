@@ -5,29 +5,29 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 countries = {
-    u'Ma\u010farsko': "HU",
-    u'Czech Republic': "CZ",
-    u'\u010cesk\xe1 republika': "CZ",
-    u'United Kingdom': "GB",
-    u'Austria': "AT",
-    u'Madarsko': "HU",
-    u'Australia': "AU",
-    u'Srbsko': "RS",
-    u'Kraj Vyso\u010dina, \u010cesk\xe1 republika': "CZ",
-    u'\u010desk\xe1 republika': "CZ",
-    u'\u010cR': "CZ",
-    u'Plze\u0148sk\xfd kraj, \u010cesk\xe1 republika': "CZ",
-    u'Sverige': "SE",
-    u'serbia': "RS",
-    u'\xd6sterreich': "AT",
-    u'Switzerland': "CH",
-    u'ma\u010farsk\xe1 \u013eudovo demokratick\xe1 ': "HU",
-    u'Kosovo': "RS",
-    u'India': "IN",
-    u'Uzbekistan': "UZ",
-    u'Uganda': "UG",
-    u'litva': "LT",
-    u'Velka Britania': "GB",
+    "Ma\u010farsko": "HU",
+    "Czech Republic": "CZ",
+    "\u010cesk\xe1 republika": "CZ",
+    "United Kingdom": "GB",
+    "Austria": "AT",
+    "Madarsko": "HU",
+    "Australia": "AU",
+    "Srbsko": "RS",
+    "Kraj Vyso\u010dina, \u010cesk\xe1 republika": "CZ",
+    "\u010desk\xe1 republika": "CZ",
+    "\u010cR": "CZ",
+    "Plze\u0148sk\xfd kraj, \u010cesk\xe1 republika": "CZ",
+    "Sverige": "SE",
+    "serbia": "RS",
+    "\xd6sterreich": "AT",
+    "Switzerland": "CH",
+    "ma\u010farsk\xe1 \u013eudovo demokratick\xe1 ": "HU",
+    "Kosovo": "RS",
+    "India": "IN",
+    "Uzbekistan": "UZ",
+    "Uganda": "UG",
+    "litva": "LT",
+    "Velka Britania": "GB",
 }
 
 
@@ -36,15 +36,11 @@ def fix_country_names(apps, schema_editor):
     # version than this migration expects. We use the historical version.
     Address = apps.get_model("people", "Address")
     for address in Address.objects.all():
-        address.country = countries.get(address.country, 'SK')
+        address.country = countries.get(address.country, "SK")
         address.save()
 
 
 class Migration(migrations.Migration):
-    dependencies = [
-        ('people', '0010_merge'),
-    ]
+    dependencies = [("people", "0010_merge")]
 
-    operations = [
-        migrations.RunPython(fix_country_names)
-    ]
+    operations = [migrations.RunPython(fix_country_names)]

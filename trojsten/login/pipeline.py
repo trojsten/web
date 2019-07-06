@@ -10,9 +10,9 @@ def associate_by_uid(backend, details, user=None, *args, **kwargs):
     if user:
         return None
     try:
-        uid = details.get('id')
+        uid = details.get("id")
         user = backend.strategy.storage.user.get_user(uid)
         if user:
-            return {'user': user}
+            return {"user": user}
     except User.DoesNotExist:
         return None

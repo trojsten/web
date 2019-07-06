@@ -3,18 +3,18 @@ from __future__ import unicode_literals
 
 import re
 
-from django.db import models
 from django.contrib.auth.models import Group
+from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from .constants import FIELD_SEARCH_PATTERN
-from .sources import SOURCE_CLASSES, SOURCE_CHOICES
+from .sources import SOURCE_CHOICES, SOURCE_CLASSES
 
 
 class DiplomaDataSourceManager(models.Manager):
     def get_queryset(self):
-        return super(DiplomaDataSourceManager, self).get_queryset().order_by('-is_default')
+        return super(DiplomaDataSourceManager, self).get_queryset().order_by("-is_default")
 
     def default(self):
         return self.get_queryset().filter(is_default=True) or []
@@ -22,9 +22,11 @@ class DiplomaDataSourceManager(models.Manager):
 
 @python_2_unicode_compatible
 class DiplomaDataSource(models.Model):
-    name = models.CharField(max_length=128, verbose_name=_('Source name'))
-    class_name = models.CharField(max_length=128, choices=SOURCE_CHOICES, verbose_name=_('Source class'))
-    is_default = models.BooleanField(default=False, verbose_name=_('Add to default sources'))
+    name = models.CharField(max_length=128, verbose_name=_("Source name"))
+    class_name = models.CharField(
+        max_length=128, choices=SOURCE_CHOICES, verbose_name=_("Source class")
+    )
+    is_default = models.BooleanField(default=False, verbose_name=_("Add to default sources"))
 
     objects = DiplomaDataSourceManager()
 
@@ -36,29 +38,27 @@ class DiplomaDataSource(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = _('Data source for diplomas')
-        verbose_name_plural = _('Data sources for diplomas')
+        verbose_name = _("Data source for diplomas")
+        verbose_name_plural = _("Data sources for diplomas")
 
 
 @python_2_unicode_compatible
 class DiplomaTemplate(models.Model):
-    name = models.CharField(max_length=128, verbose_name=_('Name'))
+    name = models.CharField(max_length=128, verbose_name=_("Name"))
     svg = models.TextField()
 
-    sources = models.ManyToManyField(DiplomaDataSource, blank=True, verbose_name=_('Sources'))
+    sources = models.ManyToManyField(DiplomaDataSource, blank=True, verbose_name=_("Sources"))
 
     authorized_groups = models.ManyToManyField(
         Group,
-        verbose_name=_('Authorized groups'),
+        verbose_name=_("Authorized groups"),
         blank=True,
-        help_text=_(
-            'The groups that are authorized to use this template.'
-        ),
+        help_text=_("The groups that are authorized to use this template."),
     )
 
     class Meta:
-        verbose_name = _('Diploma template')
-        verbose_name_plural = _('Diploma templates')
+        verbose_name = _("Diploma template")
+        verbose_name_plural = _("Diploma templates")
 
     @property
     def editable_fields(self):

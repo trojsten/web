@@ -1,6 +1,6 @@
+from trojsten.contests.models import Task
 from trojsten.submit.constants import SUBMIT_TYPE_EXTERNAL
 from trojsten.submit.models import Submit
-from trojsten.contests.models import Task
 
 from .models import UserLevel
 
@@ -16,8 +16,8 @@ def get_task():
 
 
 def update_points(user):
-    points = 2*UserLevel.objects.filter(user=user.id, level__lte=3).count()
-    points += 3*UserLevel.objects.filter(user=user.id, level__gte=4).count()
+    points = 2 * UserLevel.objects.filter(user=user.id, level__lte=3).count()
+    points += 3 * UserLevel.objects.filter(user=user.id, level__gte=4).count()
     submit = Submit(
         task=get_task(),
         user=user,

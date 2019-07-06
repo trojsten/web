@@ -7,11 +7,9 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('contests', '0004_auto_20160910_1302'),
-    ]
+    dependencies = [("contests", "0004_auto_20160910_1302")]
 
     operations = [
-        migrations.RenameModel('Series', 'Semester'),
-        migrations.RenameField('Round', 'series', 'semester'),
+        migrations.RenameModel("Series", "Semester"),
+        migrations.RenameField("Round", "series", "semester"),
     ]

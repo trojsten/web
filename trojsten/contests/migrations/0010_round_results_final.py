@@ -7,14 +7,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('contests', '0009_merge_20180121_1616'),
-    ]
+    dependencies = [("contests", "0009_merge_20180121_1616")]
 
     operations = [
         migrations.AddField(
-            model_name='round',
-            name='results_final',
-            field=models.BooleanField(default=False, verbose_name='v\xfdsledky s\xfa fin\xe1lne'),
-        ),
+            model_name="round",
+            name="results_final",
+            field=models.BooleanField(default=False, verbose_name="v\xfdsledky s\xfa fin\xe1lne"),
+        )
     ]

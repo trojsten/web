@@ -8,19 +8,26 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('people', '0008_userpropertykey_regex'),
-    ]
+    dependencies = [("people", "0008_userpropertykey_regex")]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='mail_to_school',
-            field=models.BooleanField(default=False, verbose_name='posiela\u0165 po\u0161tu do \u0161koly'),
+            model_name="user",
+            name="mail_to_school",
+            field=models.BooleanField(
+                default=False, verbose_name="posiela\u0165 po\u0161tu do \u0161koly"
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='school',
-            field=models.ForeignKey(default=1, help_text='Do pol\xed\u010dka nap\xed\u0161te skratku, \u010das\u0165 n\xe1zvu alebo adresy \u0161koly a n\xe1sledne vyberte spr\xe1vnu mo\u017enos\u0165 zo zoznamu. Pokia\u013e va\u0161a \u0161kola nie je v&nbsp;zozname, vyberte "In\xe1 \u0161kola" a&nbsp;po\u0161lite n\xe1m e-mail.', null=True, on_delete=django.db.models.deletion.CASCADE, to='schools.School', verbose_name='\u0161kola'),
+            model_name="user",
+            name="school",
+            field=models.ForeignKey(
+                default=1,
+                help_text='Do pol\xed\u010dka nap\xed\u0161te skratku, \u010das\u0165 n\xe1zvu alebo adresy \u0161koly a n\xe1sledne vyberte spr\xe1vnu mo\u017enos\u0165 zo zoznamu. Pokia\u013e va\u0161a \u0161kola nie je v&nbsp;zozname, vyberte "In\xe1 \u0161kola" a&nbsp;po\u0161lite n\xe1m e-mail.',
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="schools.School",
+                verbose_name="\u0161kola",
+            ),
         ),
     ]
