@@ -8,14 +8,12 @@ import django_countries.fields
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('people', '0011_auto_20170218_1724'),
-    ]
+    dependencies = [("people", "0011_auto_20170218_1724")]
 
     operations = [
         migrations.AlterField(
-            model_name='address',
-            name='country',
+            model_name="address",
+            name="country",
             field=django_countries.fields.CountryField(max_length=2),
-        ),
+        )
     ]

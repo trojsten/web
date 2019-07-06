@@ -10,28 +10,26 @@ from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 
 
 class ContactForm(contact_forms.ContactForm):
-    subject = forms.CharField(max_length=160,
-                              required=True,
-                              label=_('Subject'))
+    subject = forms.CharField(max_length=160, required=True, label=_("Subject"))
 
-    field_order = ['name', 'email', 'subject', 'body']
+    field_order = ["name", "email", "subject", "body"]
 
     def __init__(self, captcha, *args, **kwargs):
         super(ContactForm, self).__init__(*args, **kwargs)
         self.to = settings.CONTACT_FORM_RECIPIENTS
-        self.fields['name'].label = _('Name')
-        self.fields['email'].label = _('Email')
-        self.fields['body'].label = _('Message')
+        self.fields["name"].label = _("Name")
+        self.fields["email"].label = _("Email")
+        self.fields["body"].label = _("Message")
         if captcha:
-            self.fields['captcha'] = ReCaptchaField(widget=ReCaptchaWidget())
+            self.fields["captcha"] = ReCaptchaField(widget=ReCaptchaWidget())
 
     def body(self):
         return self.message()
 
     def reply_to(self):
         return [
-            '{name}<{email}>'.format(
-                name=self.cleaned_data['name'], email=self.cleaned_data['email']
+            "{name}<{email}>".format(
+                name=self.cleaned_data["name"], email=self.cleaned_data["email"]
             )
         ]
 
@@ -53,12 +51,9 @@ class ContactForm(contact_forms.ContactForm):
 
         """
         if not self.is_valid():
-            raise ValueError(
-                "Message cannot be sent from invalid contact form"
-            )
+            raise ValueError("Message cannot be sent from invalid contact form")
         message_dict = {}
-        for message_part in ('from_email', 'body',
-                             'to', 'subject', 'reply_to'):
+        for message_part in ("from_email", "body", "to", "subject", "reply_to"):
             attr = getattr(self, message_part)
             message_dict[message_part] = attr() if callable(attr) else attr
         return message_dict

@@ -12,7 +12,7 @@ from trojsten.results.models import FrozenResults, FrozenUserResult
 
 
 class Command(BaseCommand):
-    args = '<round_id round_id ...>'
+    args = "<round_id round_id ...>"
 
     def freeze_result(self, frozen_results, tasks, result):
         frozen_result = FrozenUserResult.objects.create(
@@ -49,10 +49,7 @@ class Command(BaseCommand):
         )
 
         for result in results_table.results_data:
-            tasks = filter(
-                lambda task: result.data.tasks[task.id].submitted,
-                results_table.tasks,
-            )
+            tasks = filter(lambda task: result.data.tasks[task.id].submitted, results_table.tasks)
 
             self.freeze_result(frozen_results, tasks, result)
 

@@ -32,16 +32,16 @@ class A(object):
             return 1, state, True
 
         if number - mini + random.randint(0, 1) > maxi - number:
-            return A.LESS, (mini, number-1), False
+            return A.LESS, (mini, number - 1), False
         else:
-            return A.MORE, (number+1, maxi), False
+            return A.MORE, (number + 1, maxi), False
 
     @staticmethod
     def format(response):
         if response == A.MORE:
-            return 'Prefíkaný kocúr býva v dome s vyšším číslom.'
+            return "Prefíkaný kocúr býva v dome s vyšším číslom."
         else:
-            return 'Prefíkaný kocúr býva v dome s nižším číslom.'
+            return "Prefíkaný kocúr býva v dome s nižším číslom."
 
 
 class B(object):
@@ -84,7 +84,7 @@ class B(object):
             return 1, state, True
 
         if midi == 0:
-            base += max((number-mini), (maxi-number))
+            base += max((number - mini), (maxi - number))
             return B._check(base, mini, number, maxi, base)
 
         if number == midi:
@@ -92,17 +92,17 @@ class B(object):
         elif number < midi:
             if (midi - mini) > (maxi - midi):
                 result = base + (midi - number)
-                return B._check(result, mini, number, midi-1, result)
+                return B._check(result, mini, number, midi - 1, result)
             else:
                 result = base - (midi - number)
-                return B._check(result, number+1, midi, maxi, base)
+                return B._check(result, number + 1, midi, maxi, base)
         else:
             if (maxi - midi) > (midi - mini):
                 result = base + (number - midi)
-                return B._check(result, midi+1, number, maxi, result)
+                return B._check(result, midi + 1, number, maxi, result)
             else:
                 result = base - (number - midi)
-                return B._check(result, mini, midi, number-1, base)
+                return B._check(result, mini, midi, number - 1, base)
 
     @staticmethod
     def format(response):
@@ -110,14 +110,14 @@ class B(object):
             scaled = (response * 180) + 5000
         else:
             scaled = response + 900000
-        return 'Prefíkanosť nášho kocúra je %.4f %%' % (scaled / 10000.0)
+        return "Prefíkanosť nášho kocúra je %.4f %%" % (scaled / 10000.0)
 
     @staticmethod
     def _check(result, mini, midi, maxi, base):
         if mini == midi:
-            return result, (mini+1, 0, maxi, base+1), False
+            return result, (mini + 1, 0, maxi, base + 1), False
         if maxi == midi:
-            return result, (mini, 0, maxi-1, base+1), False
+            return result, (mini, 0, maxi - 1, base + 1), False
         return result, (mini, midi, maxi, base), False
 
 
@@ -128,7 +128,7 @@ class C(object):
     @staticmethod
     def get_initial_state():
         reverse = bool(random.randint(0, 1))
-        border = (random.randint(21, 79))*100
+        border = (random.randint(21, 79)) * 100
         return [2, 999, 0, border, reverse]
 
     @staticmethod
@@ -151,13 +151,13 @@ class C(object):
         if number - mini + random.randint(0, 1) > maxi - number:
             if split == 0 and random.randint(0, 9) == 0:
                 split = number
-            return C._answer(number, (mini, number-1, split, border, reverse))
+            return C._answer(number, (mini, number - 1, split, border, reverse))
         else:
-            return C._answer(number, (number+1, maxi, split, border, reverse))
+            return C._answer(number, (number + 1, maxi, split, border, reverse))
 
     @staticmethod
     def format(response):
-        return 'Prefíkanosť nášho kocúra je %.2f %%' % (response / 100.0)
+        return "Prefíkanosť nášho kocúra je %.2f %%" % (response / 100.0)
 
     @staticmethod
     def _answer(number, state):
@@ -167,14 +167,14 @@ class C(object):
             result = border + number
         if number > maxi:
             if number <= split:
-                result = (2000 - (split-number)) * 10
+                result = (2000 - (split - number)) * 10
             else:
-                result = border - (1001-number)
+                result = border - (1001 - number)
 
         if reverse:
-            result = 20000-result
+            result = 20000 - result
 
         return result, state, False
 
 
-ALL = {'A': A, 'B': B, 'C': C}
+ALL = {"A": A, "B": B, "C": C}

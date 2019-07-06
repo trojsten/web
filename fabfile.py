@@ -12,43 +12,43 @@ Notes:
  - Use $HOME/.ssh/config file to configure username for connecting to inteligent.trojsten.sk
 """
 
-env.project_name = 'trojstenweb'
+env.project_name = "trojstenweb"
 env.use_ssh_config = True
 env.roledefs = {
-    'prod': {
-        'hosts': ['trojstenweb@archiv.ksp.sk'],
-        'project_path': '/home/trojstenweb/web',
-        'virtualenv_name': 'trojstenweb-3',
-        'db_name': 'trojstenweb',
-        'use_sudo': False,
-        'server_configuration': '/home/trojstenweb/uwsgi/*.yaml',
-        'local': False,
-        'build_requirements': False,
-        'requirements_file': 'requirements.txt'
+    "prod": {
+        "hosts": ["trojstenweb@archiv.ksp.sk"],
+        "project_path": "/home/trojstenweb/web",
+        "virtualenv_name": "trojstenweb-3",
+        "db_name": "trojstenweb",
+        "use_sudo": False,
+        "server_configuration": "/home/trojstenweb/uwsgi/*.yaml",
+        "local": False,
+        "build_requirements": False,
+        "requirements_file": "requirements.txt",
     },
-    'beta': {
-        'hosts': ['inteligent.trojsten.sk:22100'],
-        'project_path': '/usr/local/www/trojstenweb/web',
-        'virtualenv_name': 'trojstenweb',
-        'db_name': 'trojstenweb',
-        'use_sudo': True,
-        'sudo_user': 'trojstenweb',
-        'shell': '/usr/local/bin/bash -l -c',
-        'server_configuration': '/usr/local/www/trojstenweb/*.yaml',
-        'local': False,
-        'build_requirements': False,
-        'requirements_file': 'requirements.txt'
+    "beta": {
+        "hosts": ["inteligent.trojsten.sk:22100"],
+        "project_path": "/usr/local/www/trojstenweb/web",
+        "virtualenv_name": "trojstenweb",
+        "db_name": "trojstenweb",
+        "use_sudo": True,
+        "sudo_user": "trojstenweb",
+        "shell": "/usr/local/bin/bash -l -c",
+        "server_configuration": "/usr/local/www/trojstenweb/*.yaml",
+        "local": False,
+        "build_requirements": False,
+        "requirements_file": "requirements.txt",
     },
-    'local': {
-        'user': os.environ.get('USER'),
-        'hosts': ['localhost'],
-        'project_path': os.path.dirname(os.path.realpath(__file__)),
-        'virtualenv_name': 'trojstenweb',
-        'db_name': 'trojsten',
-        'use_sudo': False,
-        'local': True,
-        'build_requirements': False
-    }
+    "local": {
+        "user": os.environ.get("USER"),
+        "hosts": ["localhost"],
+        "project_path": os.path.dirname(os.path.realpath(__file__)),
+        "virtualenv_name": "trojstenweb",
+        "db_name": "trojsten",
+        "use_sudo": False,
+        "local": True,
+        "build_requirements": False,
+    },
 }
 
 
@@ -65,15 +65,15 @@ def load_role(role_name):
 
 
 def local():
-    load_role('local')
+    load_role("local")
 
 
 def beta():
-    load_role('beta')
+    load_role("beta")
 
 
 def prod():
-    load_role('prod')
+    load_role("prod")
 
 
 def checkout(target):
@@ -85,96 +85,96 @@ def checkout(target):
 def pull():
     with cd(env.project_path):
         if env.build_requirements:
-            run('git reset HEAD requirements*')
-            run('git checkout -- requirements*')
-        run('git pull')
+            run("git reset HEAD requirements*")
+            run("git checkout -- requirements*")
+        run("git pull")
 
 
 def fetch():
     with cd(env.project_path):
-        run('git fetch')
+        run("git fetch")
 
 
 def collectstatic():
-    manage('collectstatic', '--noinput')
+    manage("collectstatic", "--noinput")
 
 
 def migrate():
-    manage('migrate', '--noinput')
+    manage("migrate", "--noinput")
 
 
 def load_fixtures():
-    manage('loaddata', 'fixtures/*')
+    manage("loaddata", "fixtures/*")
 
 
 def install_requirements():
     with cd(env.project_path):
-        with prefix('workon %s' % env.virtualenv_name):
+        with prefix("workon %s" % env.virtualenv_name):
             if env.build_requirements:
-                run('bash build_requirements.sh')
-            if hasattr(env, 'requirements_file') and env.requirements_file:
-                run('pip install -r {}'.format(env.requirements_file))
+                run("bash build_requirements.sh")
+            if hasattr(env, "requirements_file") and env.requirements_file:
+                run("pip install -r {}".format(env.requirements_file))
             else:
-                run('pip install -r requirements.txt --exists-action w')
+                run("pip install -r requirements.txt --exists-action w")
 
 
 def manage(*args):
     with cd(env.project_path):
-        with prefix('workon %s' % env.virtualenv_name):
-            run('python manage.py ' + ' '.join(args))
+        with prefix("workon %s" % env.virtualenv_name):
+            run("python manage.py " + " ".join(args))
 
 
 def restart_wsgi():
     with cd(env.project_path):
-        run('touch {}'.format(env.server_configuration))
+        run("touch {}".format(env.server_configuration))
 
 
 def compile_translations():
-    with prefix('workon %s' % env.virtualenv_name):
+    with prefix("workon %s" % env.virtualenv_name):
         with cd(env.project_path):
-            run('cd trojsten && python ../manage.py compilemessages')
+            run("cd trojsten && python ../manage.py compilemessages")
 
 
 def write_version_txt():
     with cd(env.project_path):
         run('echo -n `git describe --tag --always`" " > version.txt')
         run('git show --pretty=format:"%cd" --date=short --quiet >> version.txt')
-        run('echo >> version.txt')
+        run("echo >> version.txt")
 
 
 def enable_maintenance_mode():
-    run('touch ~/maintenance')
+    run("touch ~/maintenance")
 
 
 def disable_maintenance_mode():
-    run('rm -f ~/maintenance')
+    run("rm -f ~/maintenance")
 
 
 def dump_sql():
-    run('mkdir -p db-dumps')
+    run("mkdir -p db-dumps")
     filename = str(int(time.time()))
-    with cd('db-dumps'):
-        run('pg_dump -Fc -O -c %s > %s.sql' % (env.db_name, filename))
-        run('rm -f latest.sql')
-        run('ln -s %s.sql latest.sql' % filename)
+    with cd("db-dumps"):
+        run("pg_dump -Fc -O -c %s > %s.sql" % (env.db_name, filename))
+        run("rm -f latest.sql")
+        run("ln -s %s.sql latest.sql" % filename)
 
 
 def get_latest_dump():
-    run('mkdir -p db-dumps')
-    with cd('db-dumps'):
-        get('latest.sql')
+    run("mkdir -p db-dumps")
+    with cd("db-dumps"):
+        get("latest.sql")
 
 
 def freeze_results(*args):
     with cd(env.project_path):
-        with prefix('workon %s' % env.virtualenv_name):
-            run('python manage.py freeze_results ' + ' '.join(args))
+        with prefix("workon %s" % env.virtualenv_name):
+            run("python manage.py freeze_results " + " ".join(args))
 
 
 def branch(name):
     with cd(env.project_path):
-        run('git fetch')
-        run('git checkout %s' % name)
+        run("git fetch")
+        run("git checkout %s" % name)
 
 
 def after_pull():
@@ -201,7 +201,7 @@ def update(target=None):
 
 def update_if_necessary():
     with quiet():
-        latest_version = fabric_local("git tag --sort=v:refname -l \"v*\" | tail -n -1", capture=True)
+        latest_version = fabric_local('git tag --sort=v:refname -l "v*" | tail -n -1', capture=True)
         with cd(env.project_path):
             current_version = run("git describe --tags --always")
     if latest_version and current_version != latest_version:
@@ -210,4 +210,4 @@ def update_if_necessary():
 
 def version():
     with cd(env.project_path):
-        run('cat version.txt')
+        run("cat version.txt")

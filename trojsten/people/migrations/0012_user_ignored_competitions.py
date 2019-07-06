@@ -8,14 +8,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contests', '0002_auto_20170302_2034'),
-        ('people', '0011_userpropertykey_hidden'),
+        ("contests", "0002_auto_20170302_2034"),
+        ("people", "0011_userpropertykey_hidden"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='ignored_competitions',
-            field=models.ManyToManyField(to='contests.Competition', verbose_name='ignorovan\xe9 s\xfa\u0165a\u017ee'),
-        ),
+            model_name="user",
+            name="ignored_competitions",
+            field=models.ManyToManyField(
+                to="contests.Competition", verbose_name="ignorovan\xe9 s\xfa\u0165a\u017ee"
+            ),
+        )
     ]

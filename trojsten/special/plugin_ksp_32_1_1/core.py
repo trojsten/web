@@ -72,8 +72,8 @@ class Level6:
     def run(x):
         x = int(x)
         length = 0
-        while Level6.SIZE**length <= x:
-            x -= Level6.SIZE**length
+        while Level6.SIZE ** length <= x:
+            x -= Level6.SIZE ** length
             length += 1
         result = ""
         while length:
@@ -88,9 +88,29 @@ class Level7:
     TARGET = "POKLAD"
 
     WAY = [
-        101010, 1149586, 625298, 887442, 756370, 821906, 789138, 805522,
-        797330, 801426, 799378, 800402, 799890, 800146, 800018, 800082, 800050,
-        800066, 800058, 800062, 800060, 800061, "POKLAD"
+        101010,
+        1149586,
+        625298,
+        887442,
+        756370,
+        821906,
+        789138,
+        805522,
+        797330,
+        801426,
+        799378,
+        800402,
+        799890,
+        800146,
+        800018,
+        800082,
+        800050,
+        800066,
+        800058,
+        800062,
+        800060,
+        800061,
+        "POKLAD",
     ]
 
     @staticmethod
@@ -113,7 +133,7 @@ class Level8:
         last = digits[0]
         num = 1
         res = ""
-        for i in (digits[1:] + [None]):
+        for i in digits[1:] + [None]:
             if last == i:
                 num += 1
             else:
@@ -129,10 +149,8 @@ class Level9:
 
     @staticmethod
     def run(x):
-        x = int(x) % (24*60)
-        d = datetime.datetime.fromtimestamp(
-            time.time() + x*47*60
-        )
+        x = int(x) % (24 * 60)
+        d = datetime.datetime.fromtimestamp(time.time() + x * 47 * 60)
         return "%02d:%02d" % (d.hour, d.minute)
 
 
@@ -140,26 +158,16 @@ class Level10:
 
     TARGET = "Boris a Hanka z Ganoviec"
 
-    BOYS = (
-        "Adam Boris Cyril Dusan Emil Fero Gustav "
-        "Hugo Ivan Jozo Kubo Laco Miso").split(" ")
+    BOYS = ("Adam Boris Cyril Dusan Emil Fero Gustav " "Hugo Ivan Jozo Kubo Laco Miso").split(" ")
 
-    GIRLS = (
-        "Anicka Betka Cecilia Danka Eva Filomena Gabika "
-        "Hanka Iveta Janka Katka").split(" ")
+    GIRLS = ("Anicka Betka Cecilia Danka Eva Filomena Gabika " "Hanka Iveta Janka Katka").split(" ")
 
-    TOWNS = (
-        "Aleksiniec Bernolakova Cerovej Danisoviec "
-        "Egresa Filakova Ganoviec").split(" ")
+    TOWNS = ("Aleksiniec Bernolakova Cerovej Danisoviec " "Egresa Filakova Ganoviec").split(" ")
 
     @staticmethod
     def run(x):
         x = int(x)
-        return "%s a %s z %s" % (
-            Level10.BOYS[x % 13],
-            Level10.GIRLS[x % 11],
-            Level10.TOWNS[x % 7]
-        )
+        return "%s a %s z %s" % (Level10.BOYS[x % 13], Level10.GIRLS[x % 11], Level10.TOWNS[x % 7])
 
 
 LEVELS = {

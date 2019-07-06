@@ -5,14 +5,17 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('contests', '0015_auto_20190123_2205'),
-    ]
+    dependencies = [("contests", "0015_auto_20190123_2205")]
 
     operations = [
         migrations.AlterField(
-            model_name='competition',
-            name='required_user_props',
-            field=models.ManyToManyField(blank=True, limit_choices_to={'hidden': False}, to='people.UserPropertyKey', verbose_name='Povinné vlastnosti človeka'),
-        ),
+            model_name="competition",
+            name="required_user_props",
+            field=models.ManyToManyField(
+                blank=True,
+                limit_choices_to={"hidden": False},
+                to="people.UserPropertyKey",
+                verbose_name="Povinné vlastnosti človeka",
+            ),
+        )
     ]

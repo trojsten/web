@@ -9,26 +9,24 @@ from django.utils import timezone
 def is_true(value):
     """Converts GET parameter value to bool
     """
-    return bool(value) and value.lower() not in ('false', '0')
+    return bool(value) and value.lower() not in ("false", "0")
 
 
 def default_start_time():
     today = timezone.now().date()
     return timezone.make_aware(
-        timezone.datetime.combine(today, time.min),
-        timezone.get_current_timezone()
+        timezone.datetime.combine(today, time.min), timezone.get_current_timezone()
     )
 
 
 def default_end_time():
     today = timezone.now().date()
     return timezone.make_aware(
-        timezone.datetime.combine(today, time.max),
-        timezone.get_current_timezone()
+        timezone.datetime.combine(today, time.max), timezone.get_current_timezone()
     )
 
 
-def get_related(attribute_chain, description='', order=None, boolean=False):
+def get_related(attribute_chain, description="", order=None, boolean=False):
     """
     Creates a member function for ModelAdmin.
     This function creates a column of table in admin list view
@@ -42,18 +40,20 @@ def get_related(attribute_chain, description='', order=None, boolean=False):
                                 order='task__name')
     list_display = (get_task_name, )
     """
+
     def get_attribute_of_related_model(self, obj):
         result = obj
         for attr in attribute_chain:
             result = getattr(result, attr)
         return result() if callable(result) else result
+
     get_attribute_of_related_model.short_description = description
     get_attribute_of_related_model.admin_order_field = order
     get_attribute_of_related_model.boolean = boolean
     return get_attribute_of_related_model
 
 
-def attribute_format(attribute, description='', order=None, boolean=False):
+def attribute_format(attribute, description="", order=None, boolean=False):
     """
     Creates a function for ModelAdmin
     to change format of column in admin list view.
@@ -68,23 +68,25 @@ def json_response(func):
     into json. If a callback is added through GET or POST
     the response is JSONP.
     """
+
     def decorator(request, *args, **kwargs):
         objects = func(request, *args, **kwargs)
         if isinstance(objects, HttpResponse):
             return objects
         try:
             data = json.dumps(objects)
-            if 'callback' in request.GET:
+            if "callback" in request.GET:
                 # a jsonp response!
-                data = '%s(%s);' % (request.GET['callback'], data)
-                return HttpResponse(data, 'text/javascript')
-            if 'callback' in request.POST:
+                data = "%s(%s);" % (request.GET["callback"], data)
+                return HttpResponse(data, "text/javascript")
+            if "callback" in request.POST:
                 # a jsonp response!
-                data = '%s(%s);' % (request.POST['callback'], data)
-                return HttpResponse(data, 'text/javascript')
+                data = "%s(%s);" % (request.POST["callback"], data)
+                return HttpResponse(data, "text/javascript")
         except:  # noqa: E722 @FIXME
             data = json.dumps(str(objects))
-        return HttpResponse(data, 'application/json')
+        return HttpResponse(data, "application/json")
+
     return decorator
 
 
@@ -100,7 +102,9 @@ class Serializable(object):
         elif isinstance(obj, tuple):
             return tuple(self.serialize_recursive(i) for i in obj)
         elif isinstance(obj, dict):
-            return {self.serialize_recursive(k): self.serialize_recursive(v) for k, v in obj.items()}
+            return {
+                self.serialize_recursive(k): self.serialize_recursive(v) for k, v in obj.items()
+            }
         elif isinstance(obj, Decimal):
             return str(obj)
         else:
