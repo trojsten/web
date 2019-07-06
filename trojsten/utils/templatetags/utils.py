@@ -55,17 +55,18 @@ def as_list(value):
 @register.simple_tag(takes_context=True)
 def is_organizer(context, competition):
     return (
-        context['user'].is_superuser
-        or competition.organizers_group in context['user'].groups.all()
+        context["user"].is_superuser or competition.organizers_group in context["user"].groups.all()
     )
 
 
 @register.simple_tag(takes_context=True)
 def is_site_organizer(context):
-    return any(map(
-        lambda competition: is_organizer(context, competition),
-        Competition.objects.current_site_only()
-    ))
+    return any(
+        map(
+            lambda competition: is_organizer(context, competition),
+            Competition.objects.current_site_only(),
+        )
+    )
 
 
 @register.filter
@@ -101,4 +102,4 @@ def school_year(school_year):
     if school_year < 1:
         school_year += 9
         is_elementary = True
-    return '{}{}'.format(school_year, 'zš' if is_elementary else '')
+    return "{}{}".format(school_year, "zš" if is_elementary else "")

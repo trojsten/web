@@ -19,7 +19,7 @@ def get_results(tag_key, round, single_round):
     # FIXME(generic_results_stage_2): frozen results
 
     # TODO generate results async and use DB as cache
-    cache_key = '{}.{}.{}'.format(tag_key, round.pk, single_round)
+    cache_key = "{}.{}.{}".format(tag_key, round.pk, single_round)
     results = cache.get(cache_key)
     if results is None:
         try:
@@ -48,9 +48,7 @@ def get_results_tags_for_rounds(rounds):
     """
     # FIXME(generic_results_stage_2): frozen results
     # @FUTURE firstly try to get tags from frozen results and then calculate the rest
-    return (
-        r.semester.competition.rules.get_results_tags() for r in rounds
-    )
+    return (r.semester.competition.rules.get_results_tags() for r in rounds)
 
 
 def _generate_raw_results(tag_key, round, single_round):
@@ -64,9 +62,7 @@ def _generate_raw_results(tag_key, round, single_round):
         previous_round = rules.get_previous_round(round)
         if previous_round is not None:
             previous_rows = _generate_raw_results(tag_key, previous_round, single_round).iterrows()
-    request = ResultsRequest(
-        round=round, single_round=single_round, previous_rows=previous_rows,
-    )
+    request = ResultsRequest(round=round, single_round=single_round, previous_rows=previous_rows)
     raw_results = generator.run(request)
     raw_results.calculate_cell_lists()
 

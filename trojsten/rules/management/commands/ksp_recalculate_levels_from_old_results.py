@@ -6,13 +6,18 @@ from django.utils.six import text_type
 from django.utils import timezone
 
 from trojsten.rules.models import KSPLevel
-from trojsten.rules.ksp_levels import prepare_events, level_updates_from_camp_attendance, \
-    level_updates_from_semester_results
+from trojsten.rules.ksp_levels import (
+    prepare_events,
+    level_updates_from_camp_attendance,
+    level_updates_from_semester_results,
+)
 
 
 class Command(BaseCommand):
-    help = 'Deletes KSP levels of all users and calculates new levels ' \
-           'by simulating history (past camps and semesters).'
+    help = (
+        "Deletes KSP levels of all users and calculates new levels "
+        "by simulating history (past camps and semesters)."
+    )
 
     def handle(self, *args, **options):
         KSPLevel.objects.all().delete()
@@ -22,25 +27,30 @@ class Command(BaseCommand):
         max_points_in_levels = {1: 120, 2: 140, 3: 160, 4: 180}
 
         # Events before the end of the school year 2016/2017
-        for event in prepare_events(timezone.datetime(year=2017, month=6, day=30,
-                                                      tzinfo=timezone.get_default_timezone())):
+        for event in prepare_events(
+            timezone.datetime(year=2017, month=6, day=30, tzinfo=timezone.get_default_timezone())
+        ):
             if event.associated_semester is None:
                 continue
             updates = list()
             if event.semester is not None:
                 self.stdout.write(text_type(event.semester))
-                level_up_score_thresholds = \
-                    {l: (x * 3) // 4 for l, x in max_points_in_levels.items()}
-                updates = level_updates_from_semester_results(event.semester,
-                                                              level_up_score_thresholds)
+                level_up_score_thresholds = {
+                    l: (x * 3) // 4 for l, x in max_points_in_levels.items()
+                }
+                updates = level_updates_from_semester_results(
+                    event.semester, level_up_score_thresholds
+                )
             elif event.camp is not None:
                 self.stdout.write(text_type(event.camp))
                 level_up_score_thresholds = {l: x // 2 for l, x in max_points_in_levels.items()}
                 updates = level_updates_from_camp_attendance(
-                    event.camp, event.associated_semester, event.last_semester_before_level_up,
-                    level_up_score_thresholds
+                    event.camp,
+                    event.associated_semester,
+                    event.last_semester_before_level_up,
+                    level_up_score_thresholds,
                 )
-            self.stdout.write('\n'.join(map(text_type, updates)))
+            self.stdout.write("\n".join(map(text_type, updates)))
 
             for update in updates:
                 update.save()

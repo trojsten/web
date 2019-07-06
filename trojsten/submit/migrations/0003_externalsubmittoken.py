@@ -9,17 +9,29 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contests', '0006_auto_20160925_1324'),
-        ('old_submit', '0002_auto_20160608_1143'),
+        ("contests", "0006_auto_20160925_1324"),
+        ("old_submit", "0002_auto_20160608_1143"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ExternalSubmitToken',
+            name="ExternalSubmitToken",
             fields=[
-                ('token', models.CharField(max_length=40, primary_key=True, serialize=False, verbose_name='token')),
-                ('name', models.CharField(max_length=64, verbose_name='n\xe1zov')),
-                ('task', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contests.Task', verbose_name='\xfaloha')),
+                (
+                    "token",
+                    models.CharField(
+                        max_length=40, primary_key=True, serialize=False, verbose_name="token"
+                    ),
+                ),
+                ("name", models.CharField(max_length=64, verbose_name="n\xe1zov")),
+                (
+                    "task",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="contests.Task",
+                        verbose_name="\xfaloha",
+                    ),
+                ),
             ],
-        ),
+        )
     ]

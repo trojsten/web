@@ -29,17 +29,17 @@ class Level2(object):
 
     @classmethod
     def run(cls, x, try_count):
-        return '%.2f Geparda' % (x / cls.GEPARD_MOVEMENT_SPEED)
+        return "%.2f Geparda" % (x / cls.GEPARD_MOVEMENT_SPEED)
 
 
 class Level3(object):
 
-    DIGITS_FIRST_LETTERS = 'NJDTŠPŠSOD'
+    DIGITS_FIRST_LETTERS = "NJDTŠPŠSOD"
     TARGET = "JNJNDŠ"
 
     @classmethod
     def run(cls, x, try_count):
-        return ''.join([cls.DIGITS_FIRST_LETTERS[ord(d) - ord('0')] for d in str(x)])
+        return "".join([cls.DIGITS_FIRST_LETTERS[ord(d) - ord("0")] for d in str(x)])
 
 
 class Level4(object):
@@ -57,7 +57,7 @@ class Level4(object):
 
 class Level5(object):
 
-    TARGET = 'Rozpaprčená'
+    TARGET = "Rozpaprčená"
     DATA = []
     FILE = os.path.join(os.path.dirname(__file__), "tapakovci.txt")
 
@@ -80,26 +80,29 @@ class Level6(object):
 
     TARGET = "Merkúr 8913.28"
     PLANETS = [
-        ('Merkúr', 0.38),
-        ('Venuša', 0.9),
-        ('Zem', 1),
-        ('Mars', 0.38),
-        ('Jupiter', 2.36),
-        ('Saturn', 0.92),
-        ('Urán', 0.89),
-        ('Neptún', 1.13),
-        ('Pluto', 0.07)]
+        ("Merkúr", 0.38),
+        ("Venuša", 0.9),
+        ("Zem", 1),
+        ("Mars", 0.38),
+        ("Jupiter", 2.36),
+        ("Saturn", 0.92),
+        ("Urán", 0.89),
+        ("Neptún", 1.13),
+        ("Pluto", 0.07),
+    ]
 
     @classmethod
     def run(cls, x, try_count):
         if x == 0:
-            return 'NIČ'
+            return "NIČ"
         if x < 10:
-            return cls.PLANETS[x-1][0]
+            return cls.PLANETS[x - 1][0]
 
         x = str(x)
         first_digit, weight = int(x[0]), int(x[1:])
-        return '{} {:.2f}'.format(cls.PLANETS[first_digit-1][0], cls.PLANETS[first_digit-1][1] * weight)
+        return "{} {:.2f}".format(
+            cls.PLANETS[first_digit - 1][0], cls.PLANETS[first_digit - 1][1] * weight
+        )
 
 
 class Level7(object):
@@ -127,7 +130,7 @@ class Level8(object):
                 x //= 2
             else:
                 x = x * 3 + 1
-        return 'Lothar Collatz %d' % ans
+        return "Lothar Collatz %d" % ans
 
 
 class Level9(object):
@@ -163,7 +166,7 @@ class Level9(object):
                 while x % p == 0:
                     c += 1
                     x //= p
-                phi *= (p ** (c-1)) * (p - 1)
+                phi *= (p ** (c - 1)) * (p - 1)
 
             return str(phi if x == 1 else phi * (x - 1))
 
@@ -175,11 +178,11 @@ class Level10(object):
     @classmethod
     def run(cls, x, try_count):
         if x == 0:
-            return 'A'
+            return "A"
 
-        ans = ''
+        ans = ""
         while x != 0:
-            ans += chr((x % len(ascii_uppercase)) + ord('A'))
+            ans += chr((x % len(ascii_uppercase)) + ord("A"))
             x //= len(ascii_uppercase)
         return ans[::-1]
 

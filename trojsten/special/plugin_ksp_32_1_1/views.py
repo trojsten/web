@@ -1,4 +1,3 @@
-
 import json
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseBadRequest
@@ -19,23 +18,26 @@ def main(request, level=1):
     target = str(LEVELS[level].TARGET)
 
     try_set = []
-    for x in userlevel.try_set.order_by('id'):
+    for x in userlevel.try_set.order_by("id"):
         try_set.append((x.input, x.output, x.output == target))
 
     levels = [[i, False] for i in range(1, 11)]
     for x in UserLevel.objects.filter(user=user):
         levels[x.level_id - 1][1] = x.solved
 
-    return render(request, 'plugin_ksp_32_1_1/level.html', {
-        "level": level,
-        "levels": levels,
-        "solved": userlevel.solved,
-        "target": target,
-        "try_set": try_set,
-        "try_count": userlevel.try_count,
-        "try_count_ending":
-        {1: '', 2: 'y', 3: 'y', 4: 'y'}.get(userlevel.try_count, 'ov'),
-    })
+    return render(
+        request,
+        "plugin_ksp_32_1_1/level.html",
+        {
+            "level": level,
+            "levels": levels,
+            "solved": userlevel.solved,
+            "target": target,
+            "try_set": try_set,
+            "try_count": userlevel.try_count,
+            "try_count_ending": {1: "", 2: "y", 3: "y", 4: "y"}.get(userlevel.try_count, "ov"),
+        },
+    )
 
 
 @login_required()
@@ -64,15 +66,18 @@ def run(request, level=1):
         update_points(user)
 
     return HttpResponse(
-        json.dumps({
-            "level": level,
-            "input": str(_input),
-            "output": _output,
-            "solved": solved,
-            "refresh": solved_right_now,
-            "try_count": userlevel.try_count,
-            "next_url": reverse('plugin_zwarte:run', args=(level,),
-                                current_app=request.resolver_match.namespace)
-        }),
+        json.dumps(
+            {
+                "level": level,
+                "input": str(_input),
+                "output": _output,
+                "solved": solved,
+                "refresh": solved_right_now,
+                "try_count": userlevel.try_count,
+                "next_url": reverse(
+                    "plugin_zwarte:run", args=(level,), current_app=request.resolver_match.namespace
+                ),
+            }
+        ),
         content_type="application/json",
     )

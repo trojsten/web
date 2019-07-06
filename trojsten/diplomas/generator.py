@@ -15,10 +15,7 @@ class DiplomaGenerator:
     Provides necessary methods for handling SVG files and templating them into diplomas.
     """
 
-    def create_diplomas(self,
-                        participants,
-                        template_svg,
-                        join=False):
+    def create_diplomas(self, participants, template_svg, join=False):
         """
         Given a list of participants and a template SVG creates a PDF diploma for every participant from the template.
 
@@ -28,12 +25,11 @@ class DiplomaGenerator:
         :return: PDF(s) containing generated diplomas
         """
 
-        svgs = [self.svg_for_participant(template_svg, participant)
-                for participant in participants]
+        svgs = [self.svg_for_participant(template_svg, participant) for participant in participants]
 
-        pdfs = self.render_pdfs(svgs,
-                                join=join,
-                                name_prefix=timezone.localtime().strftime('%Y-%m-%d-%H-%M'))
+        pdfs = self.render_pdfs(
+            svgs, join=join, name_prefix=timezone.localtime().strftime("%Y-%m-%d-%H-%M")
+        )
 
         return pdfs
 
@@ -52,19 +48,19 @@ class DiplomaGenerator:
 
     @staticmethod
     def make_into_file(content):
-        tmp = NamedTemporaryFile(mode='wb')
-        tmp.write(content.encode('utf-8'))
+        tmp = NamedTemporaryFile(mode="wb")
+        tmp.write(content.encode("utf-8"))
         tmp.seek(0)
         return tmp
 
-    def render_pdfs(self, svgs, join=False, name_prefix=''):
+    def render_pdfs(self, svgs, join=False, name_prefix=""):
 
         if not isinstance(svgs, list):
             svgs = [svgs]
 
         svg_files = [self.make_into_file(svg) for svg in svgs]
 
-        command = ['rsvg-convert', '-f', 'pdf']
+        command = ["rsvg-convert", "-f", "pdf"]
         try:
             if join:
                 args = command + [f.name for f in svg_files]
@@ -72,8 +68,10 @@ class DiplomaGenerator:
                 pdfs = [(DIPLOMA_DEFAULT_NAME, pdf)]
 
             else:
-                pdfs = [('%s_%d.pdf' % (name_prefix, num), subprocess.check_output(command, stdin=f))
-                        for num, f in enumerate(svg_files)]
+                pdfs = [
+                    ("%s_%d.pdf" % (name_prefix, num), subprocess.check_output(command, stdin=f))
+                    for num, f in enumerate(svg_files)
+                ]
         finally:
             for f in svg_files:
                 f.close()
@@ -84,7 +82,7 @@ class DiplomaGenerator:
     def render_png(svg):
         f = DiplomaGenerator.make_into_file(svg)
         try:
-            png = subprocess.check_output(['rsvg-convert', '-f', 'png', f.name])
+            png = subprocess.check_output(["rsvg-convert", "-f", "png", f.name])
         finally:
             f.close()
         return png

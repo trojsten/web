@@ -7,15 +7,17 @@ from django.db import migrations
 
 def replace_default_school_with_null(apps, schema_editor):
     try:
-        default_school = apps.get_model('schools', 'School').objects.filter(verbose_name='Iná škola').get()
-    except apps.get_model('schools', 'School').DoesNotExist:
+        default_school = (
+            apps.get_model("schools", "School").objects.filter(verbose_name="Iná škola").get()
+        )
+    except apps.get_model("schools", "School").DoesNotExist:
         return
 
-    users = apps.get_model('people', 'User')
+    users = apps.get_model("people", "User")
     for user in users.objects.filter(school=default_school):
         user.school = None
         user.save()
-    results = apps.get_model('results', 'FrozenUserResult')
+    results = apps.get_model("results", "FrozenUserResult")
     for result in results.objects.filter(school=default_school):
         result.school = None
         result.save()
@@ -23,7 +25,7 @@ def replace_default_school_with_null(apps, schema_editor):
 
 
 def revert_replace_default_school_with_null(apps, schema_editor):
-    School = apps.get_model('schools', 'School')
+    School = apps.get_model("schools", "School")
     default_school = School(
         pk=1,
         abbreviation="",
@@ -34,11 +36,11 @@ def revert_replace_default_school_with_null(apps, schema_editor):
         zip_code="",
     )
     default_school.save()
-    User = apps.get_model('people', 'User')
+    User = apps.get_model("people", "User")
     for user in User.objects.filter(school=None):
         user.school = default_school
         user.save()
-    FrozenUserResult = apps.get_model('results', 'FrozenUserResult')
+    FrozenUserResult = apps.get_model("results", "FrozenUserResult")
     for result in FrozenUserResult.objects.filter(school=None):
         result.school = default_school
         result.save()
@@ -46,10 +48,10 @@ def revert_replace_default_school_with_null(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('schools', '0001_initial'),
-    ]
+    dependencies = [("schools", "0001_initial")]
 
     operations = [
-        migrations.RunPython(replace_default_school_with_null, revert_replace_default_school_with_null),
+        migrations.RunPython(
+            replace_default_school_with_null, revert_replace_default_school_with_null
+        )
     ]

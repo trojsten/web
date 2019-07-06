@@ -7,14 +7,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('old_submit', '0003_auto_20180701_2348'),
-    ]
+    dependencies = [("old_submit", "0003_auto_20180701_2348")]
 
     operations = [
         migrations.AddField(
-            model_name='submit',
-            name='protocol',
-            field=models.TextField(blank=True, null=True, verbose_name='protokol'),
-        ),
+            model_name="submit",
+            name="protocol",
+            field=models.TextField(blank=True, null=True, verbose_name="protokol"),
+        )
     ]

@@ -9,7 +9,7 @@ except ImportError:
 
 def parse_csv(data):
     f = io.StringIO(data)
-    reader = csv.DictReader(f, dialect='excel-tab', strict=True)
+    reader = csv.DictReader(f, dialect="excel-tab", strict=True)
     result = [dict(row) for row in reader]
     for row in result:
         for k in row.keys():

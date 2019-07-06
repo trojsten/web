@@ -10,48 +10,73 @@ from trojsten.contests import constants
 
 
 def fill_task_people(apps, schema_editor):
-    Task = apps.get_model('contests', 'Task')
-    TaskPeople = apps.get_model('contests', 'TaskPeople')
+    Task = apps.get_model("contests", "Task")
+    TaskPeople = apps.get_model("contests", "TaskPeople")
     for task in Task.objects.all():
         if task.reviewer:
             TaskPeople.objects.create(
-                task=task,
-                user=task.reviewer,
-                role=constants.TASK_ROLE_REVIEWER
+                task=task, user=task.reviewer, role=constants.TASK_ROLE_REVIEWER
             )
 
 
 def reverse_fill_task_people(apps, schema_editor):
-    TaskPeople = apps.get_model('contests', 'TaskPeople')
+    TaskPeople = apps.get_model("contests", "TaskPeople")
     for line in TaskPeople.objects.all():
         if line.role == constants.TASK_ROLE_REVIEWER and not line.task.reviewer:
             line.task.reviewer = line.user
             line.task.save()
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contests', '0006_auto_20160925_1324'),
+        ("contests", "0006_auto_20160925_1324"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='TaskPeople',
+            name="TaskPeople",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('role', models.IntegerField(choices=[(0, 'opravovate\u013e'), (1, 'vzor\xe1kova\u010d'), (2, 'recenzova\u010d')], verbose_name='role')),
-                ('task', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contests.Task', verbose_name='task')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='ved\xfaci')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "role",
+                    models.IntegerField(
+                        choices=[
+                            (0, "opravovate\u013e"),
+                            (1, "vzor\xe1kova\u010d"),
+                            (2, "recenzova\u010d"),
+                        ],
+                        verbose_name="role",
+                    ),
+                ),
+                (
+                    "task",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="contests.Task",
+                        verbose_name="task",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="ved\xfaci",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Assigned user',
-                'verbose_name_plural': 'Pridelen\xed \u013eudia',
+                "verbose_name": "Assigned user",
+                "verbose_name_plural": "Pridelen\xed \u013eudia",
             },
         ),
         migrations.RunPython(fill_task_people, reverse_fill_task_people),
-        migrations.RemoveField(
-            model_name='task',
-            name='reviewer',
-        ),
+        migrations.RemoveField(model_name="task", name="reviewer"),
     ]

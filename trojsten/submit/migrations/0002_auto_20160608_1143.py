@@ -8,15 +8,16 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('old_submit', '0001_initial'),
-        ('contests', '0003_category_task'),
-    ]
+    dependencies = [("old_submit", "0001_initial"), ("contests", "0003_category_task")]
 
     operations = [
         migrations.AlterField(
-            model_name='submit',
-            name='task',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contests.Task', verbose_name='\xfaloha'),
-        ),
+            model_name="submit",
+            name="task",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="contests.Task",
+                verbose_name="\xfaloha",
+            ),
+        )
     ]
