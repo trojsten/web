@@ -1,51 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf8">
-<meta http-equiv="refresh" content="30;url=/">
-<title>Korešpondenčný seminár z programovania</title>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="10;url=/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" href="css/ksp/bootstrap.min.css" type="text/css" />
-<style type="text/css">
-body {
-    color:#ccc;
-    padding:0;
-}
+    <title>Trojsten</title>
 
-h1 {
-    color: WhiteSmoke;
-}
+    <link rel="stylesheet" href="css/trojsten/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/trojsten/trojsten.min.css" type="text/css" />
+    <style>
+        .jumbotron {
+            background-color: transparent;
+        }
 
-.top {
-    background-color: #111;
-    padding-top:5em;
-    padding-bottom:.1em;
-}
-
-.bottom {
-    padding-top:1em;
-}
-</style>
+        .jumbotron h1 {
+            font-weight: normal;
+        }
+    </style>
 </head>
+
 <body>
-<div class="top">
-<div class="container">
-<h1><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> Na stránke sa pracuje</h1>
-</div>
-</div>
-<div class="container bottom">
-<p class="lead">Ospravedlňujeme sa, stránka je dočasne nedostupná z dôvodu plánovaných opráv.
-Stránka by mala nabehnúť v priebehu pár minút.</p>
-<p><a href="/">&laquo; späť na stránku</a></p>
-</div>
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h3 class="text-center"><img id="trojsten_logo" src="images/trojsten/logo.png" height="60rem"
+                        alt="Trojsten" /></h3>
+            </div>
 
-<footer>
-<div class="container">
-<ul class="list-inline text-muted">
-<li>&copy; <a href="http://trojsten.sk/"><img id="trojsten_logo" src="images/trojsten/logo_small.png" alt="Trojsten"/>Trojsten</a></li>
-</ul>
-
-</div>
-</footer>
+            <div class="jumbotron">
+                <h1 class="fancy"><span class="text-primary"><span class="glyphicon glyphicon-warning-sign"
+                            aria-hidden="true"></span> Na stránke sa pracuje</span></h1>
+                <p class="lead">Ospravedlňujeme sa, stránka je dočasne nedostupná z dôvodu plánovaných opráv.
+                    Stránka by mala nabehnúť v priebehu pár minút.</p>
+                <p><a class="btn btn-lg btn-primary" href="/" role="button">&laquo; späť na stránku</a></p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
