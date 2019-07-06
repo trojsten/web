@@ -32,7 +32,6 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
-            pip install -q coverage
       - save_cache:
           paths:
             - ./venv
@@ -56,8 +55,13 @@ jobs:
           name: run tests
           command: |          
             . venv/bin/activate
-            sh -c 'cd trojsten; python ../manage.py compilemessages;'
-            coverage run --source='./trojsten' --omit 'trojsten/settings/*,trojsten/special/*' manage.py test      
+            bash -c 'cd trojsten; python ../manage.py compilemessages;'
+            coverage run manage.py test
+      - run:
+          name: upload coverage
+          command: | 
+            . venv/bin/activate
+            curl -s https://codecov.io/bash | bash
   lint:
     <<: *base
     steps:
