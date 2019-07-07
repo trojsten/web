@@ -207,7 +207,6 @@ class UserFormTests(TestCase):
         address = Address.objects.create(
             street="Matematicka 47", town="Algebrovo", postal_code="420 47", country=Country("SK")
         )
-        School.objects.create(verbose_name="Iná škola", pk=1)
         self.school = School.objects.create(
             abbreviation="GJH",
             verbose_name="Gymnázium Janka Hraška",
@@ -322,7 +321,7 @@ class UserFormTests(TestCase):
 
     def test_user_creation_invalid_school(self):
         data = self.form_data
-        data["school"] = 1
+        data["school"] = None
         data["mailing_option"] = constants.MAILING_OPTION_SCHOOL
         form = TrojstenUserCreationForm(data=data, request=self.request)
         self.assertFalse(form.is_valid())

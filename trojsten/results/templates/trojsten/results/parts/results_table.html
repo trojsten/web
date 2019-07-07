@@ -1,4 +1,4 @@
-{% load utils additional_registration %}
+{% load utils additional_registration i18n %}
 {% load mathfilters %}
 
 {# FIXME(generic_results_stage_2): Unify HTML style #}
@@ -74,7 +74,7 @@
             {{ row.user.school.name }}
         </abbr>
     {% else %}
-        {{ row.user.school.name }}
+        {% trans 'Other school' %}
     {% endif %}
     </td>
     {% for cell in row.cell_list %}

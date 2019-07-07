@@ -76,6 +76,7 @@ class User(AbstractUser):
     mail_to_school = models.BooleanField(default=False, verbose_name="posielať poštu do školy")
     school = models.ForeignKey(
         "schools.School",
+        blank=True,
         null=True,
         verbose_name="škola",
         help_text="Do políčka napíšte skratku, "
@@ -84,10 +85,11 @@ class User(AbstractUser):
         "Pokiaľ vaša škola nie je "
         'v&nbsp;zozname, vyberte "Iná škola" '
         "a&nbsp;pošlite nám e-mail.",
+        default=None,
         on_delete=models.CASCADE,
     )
     graduation = models.IntegerField(
-        null=True, verbose_name="rok maturity", help_text="Povinné pre žiakov."
+        null=True, verbose_name="rok maturity", help_text=_("Required field for students.")
     )
     ignored_competitions = models.ManyToManyField(
         "contests.Competition", verbose_name="ignorované súťaže"
@@ -126,6 +128,8 @@ class User(AbstractUser):
         return {prop.key: prop.value for prop in self.properties.all()}
 
     def get_school_mailing_address(self):
+        if self.school is None:
+            return None
         address = self.school.get_mailing_address()
         address.recipient = "%s %s" % (self.first_name, self.last_name)
         return address

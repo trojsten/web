@@ -95,7 +95,7 @@ class Naboj(AbstractSource):
 
         results_header = soup.find("div", class_="main_content").find("h3").text.split(",")
         results_header = [x.strip() for x in results_header]
-        competition, category, location = results_header[0], results_header[1], results_header[2]
+        competition, category, location = (results_header[0], results_header[1], results_header[2])
         year = competition.split()[-1]
 
         table = soup.find("table", class_="pretty_table")
