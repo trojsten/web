@@ -4,7 +4,7 @@ import os
 
 from django.conf import settings
 from django.http import Http404
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from news.models import Entry as NewsEntry
 from sendfile import sendfile
 from wiki.decorators import get_article
@@ -68,9 +68,12 @@ def view_pdf(request, round_id, solution=False):
         raise Http404
     path = round.get_pdf_path(solution)
     if settings.TASK_STATEMENTS_STORAGE.exists(path):
-        response = sendfile(request, settings.TASK_STATEMENTS_STORAGE.path(path))
-        response["Content-Disposition"] = 'inline; filename="%s"' % round.get_pdf_name(solution)
-        return response
+        try:
+            response = sendfile(request, settings.TASK_STATEMENTS_STORAGE.path(path))
+            response["Content-Disposition"] = 'inline; filename="%s"' % round.get_pdf_name(solution)
+            return response
+        except NotImplementedError:
+            return redirect(settings.TASK_STATEMENTS_STORAGE.url(path))
     else:
         raise Http404
 
@@ -84,7 +87,10 @@ def show_picture(request, type, task_id, picture):
         raise Http404
     path = os.path.join(task.round.get_pictures_path(), picture)
     if settings.TASK_STATEMENTS_STORAGE.exists(path):
-        return sendfile(request, path)
+        try:
+            return sendfile(request, settings.TASK_STATEMENTS_STORAGE.path(path))
+        except NotImplementedError:
+            return redirect(settings.TASK_STATEMENTS_STORAGE.url(path))
     else:
         raise Http404
 
