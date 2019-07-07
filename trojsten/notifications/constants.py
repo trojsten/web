@@ -1,1 +1,2 @@
-NOTIFICATION_SUBMIT_REVIEWED='submit_reviewed'
+NOTIFICATION_SUBMIT_REVIEWED = 'submit_reviewed'
+NOTIFICATION_CONTEST_UPDATED = 'contest_updated'

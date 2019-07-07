@@ -5,4 +5,4 @@ class NotificationsConfig(AppConfig):
     name = 'trojsten.notifications'
 
     def ready(self):
-        import trojsten.notifications.signals
+        import trojsten.notifications.signals.submit
