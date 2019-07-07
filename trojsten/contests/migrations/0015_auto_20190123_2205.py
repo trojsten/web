@@ -9,33 +9,42 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('contests', '0014_auto_20180915_2002'),
-    ]
+    dependencies = [("contests", "0014_auto_20180915_2002")]
 
     operations = [
         migrations.AlterModelOptions(
-            name='taskpeople',
-            options={'verbose_name': 'Pridelený človek', 'verbose_name_plural': 'Pridelení ľudia'},
+            name="taskpeople",
+            options={"verbose_name": "Pridelený človek", "verbose_name_plural": "Pridelení ľudia"},
         ),
         migrations.AlterField(
-            model_name='task',
-            name='email_on_code_submit',
-            field=models.BooleanField(default=False, verbose_name='Zaslať opravovateľom notifikáciu o submite kódu'),
+            model_name="task",
+            name="email_on_code_submit",
+            field=models.BooleanField(
+                default=False, verbose_name="Zaslať opravovateľom notifikáciu o submite kódu"
+            ),
         ),
         migrations.AlterField(
-            model_name='task',
-            name='email_on_desc_submit',
-            field=models.BooleanField(default=False, verbose_name='Zaslať opravovateľom notifikáciu o submite popisu'),
+            model_name="task",
+            name="email_on_desc_submit",
+            field=models.BooleanField(
+                default=False, verbose_name="Zaslať opravovateľom notifikáciu o submite popisu"
+            ),
         ),
         migrations.AlterField(
-            model_name='taskpeople',
-            name='role',
-            field=models.IntegerField(choices=[(0, 'opravovateľ'), (1, 'solution writer'), (2, 'recenzovač')], verbose_name='funkcia'),
+            model_name="taskpeople",
+            name="role",
+            field=models.IntegerField(
+                choices=[(0, "opravovateľ"), (1, "solution writer"), (2, "recenzovač")],
+                verbose_name="funkcia",
+            ),
         ),
         migrations.AlterField(
-            model_name='taskpeople',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='vedúci'),
+            model_name="taskpeople",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="vedúci",
+            ),
         ),
     ]

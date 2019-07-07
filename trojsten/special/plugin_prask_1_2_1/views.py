@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponseNotFound
@@ -12,7 +13,7 @@ from .getcat import getcat
 from .models import UserCategory, Visit
 from .submit import update_points
 
-GRATULATION = 'Gratulujeme! Prefíkaný kocúr je tvoj. Stačilo ti %d návštev.'
+GRATULATION = "Gratulujeme! Prefíkaný kocúr je tvoj. Stačilo ti %d návštev."
 
 urlky = []
 
@@ -20,9 +21,7 @@ urlky = []
 @login_required
 def root(request):
 
-    return render(request, 'plugin_prask_1_2_1/root.html', {
-        "streets": _streets(),
-    })
+    return render(request, "plugin_prask_1_2_1/root.html", {"streets": _streets()})
 
 
 @login_required()
@@ -37,21 +36,17 @@ def main(request, category, number=0):
     should_update = False
 
     with transaction.atomic():
-        inst, created = UserCategory.objects.get_or_create(
-            category=category,
-            user=request.user
-        )
+        inst, created = UserCategory.objects.get_or_create(category=category, user=request.user)
 
         if created:
             state = algorithm.get_initial_state()
         else:
             state = json.loads(inst.state)
 
-        previous = list(inst.visits.order_by('pk'))
+        previous = list(inst.visits.order_by("pk"))
 
         if number > 0 and len(previous) < 100:
-            response, state, solved = algorithm.response(
-                number, state, previous)
+            response, state, solved = algorithm.response(number, state, previous)
 
             if solved:
                 if inst.points < response:
@@ -59,10 +54,7 @@ def main(request, category, number=0):
                     should_update = True
                 response = GRATULATION % (len(previous) + 1)
             else:
-                visit = Visit(
-                    user_category=inst,
-                    number=number,
-                    response=response)
+                visit = Visit(user_category=inst, number=number, response=response)
                 response = algorithm.format(response)
                 previous.append(visit)
                 visit.save()
@@ -76,22 +68,26 @@ def main(request, category, number=0):
         update_points(request.user)
 
     if len(previous) >= 100:
-        return render(request, 'plugin_prask_1_2_1/out.html', {
-            "street": algorithm.NAME,
-            "streets": _streets(),
-            "category": category,
-        })
+        return render(
+            request,
+            "plugin_prask_1_2_1/out.html",
+            {"street": algorithm.NAME, "streets": _streets(), "category": category},
+        )
     else:
-        return render(request, 'plugin_prask_1_2_1/main.html', {
-            "street": algorithm.NAME,
-            "streets": _streets(),
-            "category": category,
-            "number": number,
-            "response": response,
-            "previous": reversed(previous),
-            "points": inst.points,
-            "cat_url": getcat(),
-        })
+        return render(
+            request,
+            "plugin_prask_1_2_1/main.html",
+            {
+                "street": algorithm.NAME,
+                "streets": _streets(),
+                "category": category,
+                "number": number,
+                "response": response,
+                "previous": reversed(previous),
+                "points": inst.points,
+                "cat_url": getcat(),
+            },
+        )
 
 
 @login_required()
@@ -100,23 +96,18 @@ def reset(request, category):
     algorithm = ALL[category]
 
     with transaction.atomic():
-        inst, created = UserCategory.objects.get_or_create(
-            category=category,
-            user=request.user
-        )
+        inst, created = UserCategory.objects.get_or_create(category=category, user=request.user)
 
         inst.state = json.dumps(algorithm.get_initial_state())
         inst.save()
 
         inst.visits.all().delete()
 
-    return redirect(reverse(
-        'plugin_prask_1_2_1_main',
-        kwargs={'category': category}))
+    return redirect(reverse("plugin_prask_1_2_1_main", kwargs={"category": category}))
 
 
 def post(request, category):
-    number = request.POST.get('number', 0)
+    number = request.POST.get("number", 0)
 
     try:
         number = int(number)
@@ -127,12 +118,10 @@ def post(request, category):
     except ValueError:
         number = 0
 
-    return redirect(reverse(
-        'plugin_prask_1_2_1_visit',
-        kwargs={
-            'category': category,
-            'number': number}))
+    return redirect(
+        reverse("plugin_prask_1_2_1_visit", kwargs={"category": category, "number": number})
+    )
 
 
 def _streets():
-    return [(key, ALL[key].NAME) for key in ['A', 'B', 'C']]
+    return [(key, ALL[key].NAME) for key in ["A", "B", "C"]]

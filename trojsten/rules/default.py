@@ -12,16 +12,13 @@ from trojsten.submit import constants as submit_constants
 
 class CompetitionRules(object):
 
-    RESULTS_TAGS = {
-        DEFAULT_TAG_KEY: ResultsTag(key=DEFAULT_TAG_KEY, name='')
-    }
+    RESULTS_TAGS = {DEFAULT_TAG_KEY: ResultsTag(key=DEFAULT_TAG_KEY, name="")}
 
     RESULTS_GENERATOR_CLASS = ResultsGenerator
 
     def get_Q_for_graded_submits(self):
-        return (
-            models.Q(time__lte=models.F('task__round__end_time'))
-            | models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
+        return models.Q(time__lte=models.F("task__round__end_time")) | models.Q(
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED
         )
 
     def get_results_tags(self):
@@ -43,14 +40,15 @@ class CompetitionRules(object):
         rounds = Round.objects.filter(
             semester__competition=competition,
             visible=True,
-            end_time__gte=timezone.now() - timezone.timedelta(
-                days=MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS)
+            end_time__gte=timezone.now()
+            - timezone.timedelta(days=MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS),
         )
-        return rounds.order_by('-end_time', '-number')[:1]
+        return rounds.order_by("-end_time", "-number")[:1]
 
 
-class FinishedRoundsResultsRulesMixin():
-
+class FinishedRoundsResultsRulesMixin:
     def get_actual_result_rounds(self, competition):
-        rounds = Round.objects.filter(semester__competition=competition, visible=True, end_time__lte=timezone.now())
-        return rounds.order_by('-end_time', '-number')[:1]
+        rounds = Round.objects.filter(
+            semester__competition=competition, visible=True, end_time__lte=timezone.now()
+        )
+        return rounds.order_by("-end_time", "-number")[:1]

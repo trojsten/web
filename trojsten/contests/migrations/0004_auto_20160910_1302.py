@@ -7,14 +7,8 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('contests', '0003_category_task'),
-    ]
+    dependencies = [("contests", "0003_category_task")]
 
     operations = [
-        migrations.RenameField(
-            model_name='task',
-            old_name='category',
-            new_name='categories',
-        ),
+        migrations.RenameField(model_name="task", old_name="category", new_name="categories")
     ]

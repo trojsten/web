@@ -44,8 +44,10 @@ wiki>=0.3
 # dev
 bumpversion
 coverage
-sqlparse
 django-debug-toolbar
 Fabric<2 # We need to migrate the fabfile first.
-pip-tools
 flake8
+isort
+pip-tools
+pre-commit
+sqlparse

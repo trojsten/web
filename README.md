@@ -3,10 +3,9 @@ Trojsten web
 
 Trojstenovy web
 
-![build status](https://travis-ci.com/trojsten/web.svg?token=m1N2H3nQQB598u53AfM8&branch=master)
+[![CircleCI](https://circleci.com/gh/trojsten/web.svg?style=svg)](https://circleci.com/gh/trojsten/web)
 [![codecov](https://codecov.io/gh/trojsten/web/branch/master/graph/badge.svg?token=t4kSkwFccG)](https://codecov.io/gh/trojsten/web)
-
-<!--[![Code Climate](https://codeclimate.com/repos/570a6919821be5775d000748/badges/4b006d69d4246dcf517f/gpa.svg)](https://codeclimate.com/repos/570a6919821be5775d000748/feed)-->
+![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)
 
 ## Sites running on this:
 - https://ksp.sk

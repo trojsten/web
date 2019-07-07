@@ -14,7 +14,7 @@ except ImportError:
     from urllib import parse as urlparse
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_current_user_info(request):
     user = request.user
     serializer = UserSerializer(user)
@@ -23,7 +23,7 @@ def get_current_user_info(request):
 
 @json_response
 def is_authenticated(request):
-    return {'authenticated': request.user.is_authenticated()}
+    return {"authenticated": request.user.is_authenticated()}
 
 
 def _autologin_urls():
@@ -31,14 +31,14 @@ def _autologin_urls():
 
 
 def autologin_urls(request):
-    url_suffix = reverse('social:begin', args=[TrojstenOAuth2.name])
-    return JsonResponse({
-        'urls': list(urlparse.urljoin(url, url_suffix) for url in _autologin_urls())
-    })
+    url_suffix = reverse("social:begin", args=[TrojstenOAuth2.name])
+    return JsonResponse(
+        {"urls": list(urlparse.urljoin(url, url_suffix) for url in _autologin_urls())}
+    )
 
 
 def autologout_urls(request):
-    url_suffix = reverse('account_logout')
-    return JsonResponse({
-        'urls': list(urlparse.urljoin(url, url_suffix) for url in _autologin_urls())
-    })
+    url_suffix = reverse("account_logout")
+    return JsonResponse(
+        {"urls": list(urlparse.urljoin(url, url_suffix) for url in _autologin_urls())}
+    )
