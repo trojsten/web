@@ -11,6 +11,7 @@ from django.urls import reverse
 from trojsten.contests.models import Task
 from trojsten.submit.constants import SUBMIT_TYPE_EXTERNAL
 from trojsten.submit.models import Submit
+
 from .forms import SubmitForm
 from .tester import POCET_PRVKOV, process_answer, process_question
 

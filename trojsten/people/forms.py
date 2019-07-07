@@ -21,6 +21,7 @@ from trojsten.submit.constants import (
     SUBMIT_TYPE_DESCRIPTION,
 )
 from trojsten.submit.models import Submit
+
 from . import constants
 from .constants import DEENVELOPING_NOT_REVIEWED_SYMBOL
 from .helpers import get_similar_users

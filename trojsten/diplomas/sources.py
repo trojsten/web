@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from abc import abstractmethod
-from bs4 import BeautifulSoup
 import json
 import re
+from abc import abstractmethod
+
+from bs4 import BeautifulSoup
+from django.template import loader
+from django.utils import timezone
 
 try:
     from urllib2 import urlopen
@@ -11,10 +14,6 @@ try:
 except ImportError:
     from urllib.request import urlopen
     from urllib.parse import urlencode
-
-
-from django.template import loader
-from django.utils import timezone
 
 
 class AbstractSource(object):

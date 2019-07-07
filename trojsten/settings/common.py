@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 # Common settings for trojsten.
-import sys
-
 import json
 import os
+import sys
+
 from django.contrib.messages import constants as messages
 from django.http import UnreadablePostError
 from django.utils.translation import ugettext_lazy as _
 from judge_client import client
 
 import trojsten.special.installed_apps
+
 from . import site_config
 
 

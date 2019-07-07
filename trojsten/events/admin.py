@@ -22,6 +22,7 @@ class EventTypeAdmin(admin.ModelAdmin):
 
 
 class EventParticipantInline(admin.TabularInline):
+    form = select2_modelform(EventParticipant)
     model = EventParticipant
     extra = 1
     fields = (("user", "type", "going"),)
@@ -46,6 +47,7 @@ class EventParticipantInline(admin.TabularInline):
 
 
 class EventOrganizerInline(admin.TabularInline):
+    form = select2_modelform(EventParticipant)
     model = EventOrganizer
     fields = ("user",)
     extra = 1

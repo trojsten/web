@@ -4,15 +4,16 @@ from __future__ import unicode_literals
 
 import datetime
 
-from django.db.models import Q, Count
+from django.db.models import Count, Q
 from django.utils import timezone
 
 from trojsten.events.models import EventParticipant
 from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
 from trojsten.results.constants import COEFFICIENT_COLUMN_KEY
 from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
-from trojsten.results.representation import ResultsTag, ResultsCell, ResultsCol
+from trojsten.results.representation import ResultsCell, ResultsCol, ResultsTag
 from trojsten.submit.models import Submit
+
 from .default import CompetitionRules
 from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 

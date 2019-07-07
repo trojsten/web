@@ -6,6 +6,7 @@ from trojsten.contests.models import Round, Task
 from trojsten.submit import constants as submit_constants
 from trojsten.submit.models import Submit
 from trojsten.utils.utils import is_true
+
 from .manager import get_results, get_results_tags_for_rounds
 from .models import FrozenResults
 

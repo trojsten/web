@@ -1,8 +1,8 @@
-from time import time
-
 import os.path
 import zipfile
 from collections import OrderedDict
+from time import time
+
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -219,7 +219,7 @@ def download_all_submits(request, task_pk, download_reviews=False):
                         errors += [_("Missing protocol of user %s") % submit.user.get_full_name()]
 
         if errors:
-            zipper.writestr(REVIEW_ERRORS_FILENAME, u"\n".join(errors).encode("utf8"))
+            zipper.writestr(REVIEW_ERRORS_FILENAME, "\n".join(errors).encode("utf8"))
 
     return sendfile(request, path, attachment=True)
 

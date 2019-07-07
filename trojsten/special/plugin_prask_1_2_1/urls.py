@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from .views import root, main, post, reset
+from .views import main, post, reset, root
 
 urlpatterns = [
     url(r"^$", root, name="plugin_prask_1_2_1_root"),

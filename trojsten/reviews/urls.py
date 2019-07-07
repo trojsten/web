@@ -2,12 +2,12 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from trojsten.reviews.views import (
+    download_latest_reviewed_submits,
     download_latest_submits,
     edit_review,
     review_task,
     submit_download,
     zip_upload,
-    download_latest_reviewed_submits,
 )
 
 task_review_urls = [

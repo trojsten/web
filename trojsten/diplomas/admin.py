@@ -2,12 +2,11 @@
 
 from django import forms
 from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_text
-
+from django.utils.translation import ugettext_lazy as _
 from easy_select2.widgets import Select2Multiple
 
-from .models import DiplomaTemplate, DiplomaDataSource
+from .models import DiplomaDataSource, DiplomaTemplate
 from .widgets import Editor
 
 

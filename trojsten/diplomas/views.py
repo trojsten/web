@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from functools import wraps
 import json
-from tempfile import TemporaryFile
 import zipfile
+from functools import wraps
+from tempfile import TemporaryFile
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render
-from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-
+from django.utils.translation import ugettext_lazy as _
 from wiki.decorators import get_article
 
 from .forms import DiplomaParametersForm

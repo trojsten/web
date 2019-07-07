@@ -4,7 +4,7 @@ from trojsten.contests.models import Round
 from trojsten.results.helpers import UserResult
 from trojsten.results.manager import get_results_tags_for_rounds
 
-from .constants import MAX_NUMBER_OF_TAGS, DEFAULT_NUMBER_OF_TAGS
+from .constants import DEFAULT_NUMBER_OF_TAGS, MAX_NUMBER_OF_TAGS
 
 
 def slice_tag_list(tag_list, maximum=MAX_NUMBER_OF_TAGS, default=DEFAULT_NUMBER_OF_TAGS):

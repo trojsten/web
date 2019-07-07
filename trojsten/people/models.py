@@ -7,10 +7,10 @@ import re
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
-from django_countries.fields import CountryField
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django_countries.fields import CountryField
 from unidecode import unidecode
 
 from . import constants

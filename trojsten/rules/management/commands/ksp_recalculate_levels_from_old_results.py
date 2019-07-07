@@ -2,15 +2,15 @@
 from __future__ import unicode_literals
 
 from django.core.management.base import BaseCommand
-from django.utils.six import text_type
 from django.utils import timezone
+from django.utils.six import text_type
 
-from trojsten.rules.models import KSPLevel
 from trojsten.rules.ksp_levels import (
-    prepare_events,
     level_updates_from_camp_attendance,
     level_updates_from_semester_results,
+    prepare_events,
 )
+from trojsten.rules.models import KSPLevel
 
 
 class Command(BaseCommand):

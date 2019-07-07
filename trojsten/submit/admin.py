@@ -10,6 +10,7 @@ from trojsten.contests.models import Round, Task
 from trojsten.reviews.urls import submit_urls
 from trojsten.submit.forms import SubmitAdminForm
 from trojsten.utils.utils import attribute_format, get_related
+
 from .models import ExternalSubmitToken, Submit
 
 

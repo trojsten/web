@@ -4,6 +4,7 @@
 import json
 import logging
 import os
+
 import six
 from django.conf import settings
 from django.contrib import messages
@@ -35,6 +36,7 @@ from trojsten.submit.helpers import (
     write_chunks_to_file,
 )
 from trojsten.submit.templatetags.submit_parts import submitclass
+
 from . import constants
 from .constants import VIEWABLE_EXTENSIONS
 from .models import Submit

@@ -6,7 +6,7 @@ import re
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from .helpers import parse_json, parse_csv
+from .helpers import parse_csv, parse_json
 from .widgets import Editor
 
 

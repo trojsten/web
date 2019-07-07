@@ -1,8 +1,8 @@
+import os
+from collections import OrderedDict
 from time import time
 
 import czech_sort
-import os
-from collections import OrderedDict
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _

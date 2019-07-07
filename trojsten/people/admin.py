@@ -22,6 +22,7 @@ from trojsten.contests.models import Competition, Semester
 from trojsten.people.admin_urls import submitted_tasks_urls
 from trojsten.submit.models import Submit
 from trojsten.utils.utils import attribute_format
+
 from . import constants
 from .forms import MergeForm
 from .helpers import get_similar_users, merge_users

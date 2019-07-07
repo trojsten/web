@@ -6,11 +6,11 @@ import os
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.utils.html import format_html, escape
+from django.utils.html import escape, format_html
 from django.utils.translation import ugettext_lazy as _
 
 from trojsten.submit import constants
-from trojsten.submit.helpers import write_chunks_to_file, get_description_file_path
+from trojsten.submit.helpers import get_description_file_path, write_chunks_to_file
 from trojsten.submit.models import Submit
 
 

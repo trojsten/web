@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import sys
-
 import io
 import shutil
+import sys
 import tempfile
 import zipfile
+from os import path
+
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
@@ -17,11 +18,11 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
-from os import path
 
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
-from trojsten.reviews import constants as review_constants, helpers
+from trojsten.reviews import constants as review_constants
+from trojsten.reviews import helpers
 from trojsten.reviews.forms import BasePointForm, BasePointFormSet, UploadZipForm, ZipForm
 from trojsten.submit import constants as submit_constants
 from trojsten.submit.models import Submit

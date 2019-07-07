@@ -2,12 +2,12 @@
 # Calculates history of KSP levels.
 # Supports updates with finished semester or camp.
 
-from collections import namedtuple, defaultdict
 import logging
+from collections import defaultdict, namedtuple
 
 from django.db.models import Q
 
-from trojsten.contests.models import Round, Competition
+from trojsten.contests.models import Competition, Round
 from trojsten.events.models import Event, EventParticipant
 from trojsten.people.models import User
 from trojsten.results.manager import get_results

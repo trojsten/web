@@ -1,11 +1,11 @@
-from trojsten.diplomas.models import DiplomaTemplate
-from trojsten.people.models import User
-
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
-from django.test import override_settings, TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
+
+from trojsten.diplomas.models import DiplomaTemplate
+from trojsten.people.models import User
 
 try:
     from urllib import urlencode
@@ -57,7 +57,8 @@ class CreateDiplomaTestCase(TestCase):
 
         self.client.force_login(self.user_standard)
 
-        # Test that user who isnt superuser cant access template with group permissions if he's not in one
+        # Test that user who isnt superuser cant access template with group permissions
+        # if he's not in one.
         r = self.client.post(
             self.url, data=self.form_data, content_type="application/x-www-form-urlencoded"
         )
