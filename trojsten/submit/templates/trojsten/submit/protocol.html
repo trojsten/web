@@ -34,7 +34,9 @@
                     {% if test.showDetails %}
                 <tr>
                 <td colspan="3"  style="padding:0">
-                        <div  class="collapse" id="collapse{{ forloop.counter0 }}"> {{ test.details|linebreaksbr }}</div>
+                    <div class="collapse" id="collapse{{ forloop.counter0 }}">
+                        <pre><samp>{{ test.details }}</samp></pre>
+                    </div>
                 </td>
                 </tr>
                    {% endif %}

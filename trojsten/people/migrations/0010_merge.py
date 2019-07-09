@@ -7,10 +7,6 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('people', '0009_user_mail_to_school'),
-        ('people', '0009_auto_20160920_0926'),
-    ]
+    dependencies = [("people", "0009_user_mail_to_school"), ("people", "0009_auto_20160920_0926")]
 
-    operations = [
-    ]
+    operations = []

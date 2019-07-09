@@ -139,6 +139,16 @@
          "active_url_pattern":""
       }
    },
+   {
+      "pk":18,
+      "model":"menu.menuitem",
+      "fields":{
+         "url":"@view_diplomas",
+         "glyphicon":"glyphicon-file",
+         "name":"Diplomy",
+         "active_url_pattern":"view_diplomas"
+      }
+   },
    {  
       "pk":1,
       "model":"menu.menugroup",
@@ -161,7 +171,8 @@
          "site":1,
          "position":1,
          "items":[  
-            10
+            10,
+            18
          ],
          "name":"Ved\u00faci",
          "staff_only":true
@@ -235,7 +246,8 @@
          "site":2,
          "position":1,
          "items":[  
-            10
+            10,
+            18
          ],
          "name":"Ved\u00faci",
          "staff_only":true

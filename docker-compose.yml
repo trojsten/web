@@ -1,0 +1,60 @@
+version: '3'
+services:
+  db:
+    image: postgres:10.1-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      trojsten:
+        ipv4_address: 10.47.0.2
+    environment:
+      - POSTGRES_USER=trojsten
+      - POSTGRES_DB=trojsten
+  web:
+    image: trojstenweb:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/web
+    networks:
+      trojsten:
+        ipv4_address: 10.47.0.3
+    depends_on:
+      - db
+      - login
+    environment:
+      - DJANGO_SETTINGS_MODULE=trojsten.settings.development
+      - TROJSTENWEB_DATABASE_URL=db
+      - TROJSTENWEB_DATABASE_USER=trojsten
+      - TROJSTENWEB_DATABASE_NAME=trojsten
+      - TROJSTENWEB_LOGIN_PROVIDER_URL=http://10.47.0.4:8047
+    command: python manage.py runserver 0.0.0.0:8000
+  login:
+    build: .
+    image: trojstenweb:latest
+    ports:
+      - "8047:8047"
+    volumes:
+      - .:/web
+    networks:
+      trojsten:
+        ipv4_address: 10.47.0.4
+    depends_on:
+      - db
+    environment:
+      - DJANGO_SETTINGS_MODULE=trojsten.settings.login_dev
+      - TROJSTENWEB_DEVELOPMENT_SITE_ID=10
+      - TROJSTENWEB_DATABASE_URL=db
+      - TROJSTENWEB_DATABASE_USER=trojsten
+      - TROJSTENWEB_DATABASE_NAME=trojsten
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;10.47.0.4
+    command: python manage.py runserver 0.0.0.0:8047
+
+volumes:
+  db_data:
+
+networks:
+  trojsten:
+    ipam:
+      config:
+        - subnet: 10.47.0.0/16

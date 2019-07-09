@@ -7,14 +7,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('people', '0010_merge'),
-    ]
+    dependencies = [("people", "0010_merge")]
 
     operations = [
         migrations.AddField(
-            model_name='userpropertykey',
-            name='hidden',
-            field=models.BooleanField(default=False, verbose_name='skryt\xe9'),
-        ),
+            model_name="userpropertykey",
+            name="hidden",
+            field=models.BooleanField(default=False, verbose_name="skryt\xe9"),
+        )
     ]

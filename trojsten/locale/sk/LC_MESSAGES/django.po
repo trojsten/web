@@ -1,27 +1,30 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-17 02:21+0200\n"
+"POT-Creation-Date: 2019-07-04 17:53+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#: contact_form/forms.py:15
+#: trojsten/contact_form/forms.py:15
 msgid "Subject"
 msgstr "Predmet"
 
-#: contact_form/forms.py:22 contact_form/tests.py:63 contact_form/tests.py:72
+#: trojsten/contact_form/forms.py:22 trojsten/contact_form/tests.py:62
+#: trojsten/contact_form/tests.py:71 trojsten/diplomas/models.py:45
 msgid "Name"
 msgstr "Meno"
 
-#: contact_form/forms.py:23 contact_form/tests.py:64 contact_form/tests.py:73
+#: trojsten/contact_form/forms.py:23 trojsten/contact_form/tests.py:63
+#: trojsten/contact_form/tests.py:72
 msgid "Email"
 msgstr "E-mail"
 
-#: contact_form/forms.py:24 contact_form/tests.py:65 contact_form/tests.py:74
+#: trojsten/contact_form/forms.py:24 trojsten/contact_form/tests.py:64
+#: trojsten/contact_form/tests.py:73
 msgid "Message"
 msgstr "Správa"
 
-#: contact_form/templates/contact_form/contact_form.html:19
+#: trojsten/contact_form/templates/contact_form/contact_form.html:19
 #, python-format
 msgid ""
 "\n"
@@ -39,7 +42,7 @@ msgstr ""
 "alebo priamo vedúcemu uvedenému pri úlohe.\n"
 "    "
 
-#: contact_form/templates/contact_form/contact_form.html:29
+#: trojsten/contact_form/templates/contact_form/contact_form.html:29
 msgid ""
 "If you have found any problem with our web site, please let us know using "
 "the following form."
@@ -47,72 +50,100 @@ msgstr ""
 "Ak ste objavili chybu na našej stránke, prosím, dajte nám vedieť použitím "
 "nasledujúceho formulára."
 
-#: contests/forms.py:11
+#: trojsten/contests/forms.py:11
 msgid "Category doesn't correspond with competition."
 msgstr ""
 
 # pdf file names
-#: contests/models.py:255
+#: trojsten/contests/models.py:256
 msgid "year"
 msgstr "ročník"
 
-#: contests/models.py:257
+#: trojsten/contests/models.py:258
 msgid "round"
 msgstr "kolo"
 
-#: contests/models.py:259
+#: trojsten/contests/models.py:260
 msgid "solutions"
 msgstr "vzoráky"
 
-#: contests/models.py:259
+#: trojsten/contests/models.py:260
 msgid "tasks"
 msgstr "zadania"
 
-#: contests/models.py:398
-#, fuzzy
-#| msgid "tasks"
+#: trojsten/contests/models.py:326
+msgid "Send notification to reviewers about new description submit"
+msgstr "Zaslať opravovateľom notifikáciu o submite popisu"
+
+#: trojsten/contests/models.py:329
+msgid "Send notification to reviewers about new code submit"
+msgstr "Zaslať opravovateľom notifikáciu o submite kódu"
+
+#: trojsten/contests/models.py:403
 msgid "task"
 msgstr "úloha"
 
-#: contests/models.py:401
+#: trojsten/contests/models.py:404
 msgid "organizer"
 msgstr "vedúci"
 
-#: contests/models.py:404
+#: trojsten/contests/models.py:406
 msgid "reviewer"
 msgstr "opravovateľ"
 
-#: contests/models.py:405
-#, fuzzy
-#| msgid "solution-writer"
+#: trojsten/contests/models.py:407
 msgid "solution writer"
 msgstr "vzorákovač"
 
-#: contests/models.py:406
+#: trojsten/contests/models.py:408
 msgid "proofreader"
 msgstr "recenzovač"
 
-#: contests/models.py:409
+#: trojsten/contests/models.py:411
 msgid "role"
 msgstr "funkcia"
 
-#: contests/models.py:413
+#: trojsten/contests/models.py:415
 msgid "Assigned user"
 msgstr "Pridelený človek"
 
-#: contests/models.py:414
+#: trojsten/contests/models.py:416
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
 
-#: contests/templates/trojsten/contests/parts/progress.html:10
+#: trojsten/contests/templates/trojsten/contests/dashboard.html:6
+#: trojsten/contests/templates/trojsten/contests/dashboard.html:9
+msgid "Dashboard"
+msgstr "Nástenka"
+
+#: trojsten/contests/templates/trojsten/contests/dashboard.html:13
+msgid "Active rounds"
+msgstr "Aktuálne kolá"
+
+#: trojsten/contests/templates/trojsten/contests/dashboard.html:24
+#: trojsten/contests/tests.py:539 trojsten/contests/tests.py:551
+#: trojsten/contests/tests.py:565 trojsten/contests/tests.py:579
+#: trojsten/contests/tests.py:594
+msgid "There is no active round currently."
+msgstr "Aktuálne neprebieha žiadne kolo."
+
+#: trojsten/contests/templates/trojsten/contests/dashboard.html:28
+msgid "News"
+msgstr "Novinky"
+
+#: trojsten/contests/templates/trojsten/contests/dashboard.html:31
+msgid "More news &raquo;"
+msgstr "Viac noviniek &raquo;"
+
+#: trojsten/contests/templates/trojsten/contests/parts/progress.html:10
 msgid "Submit programs until"
 msgstr "Doprogramovanie do"
 
-#: contests/templates/trojsten/contests/parts/progress.html:12
+#: trojsten/contests/templates/trojsten/contests/parts/progress.html:12
 msgid "End of the round"
 msgstr "Koniec kola"
 
-#: contests/templates/trojsten/contests/parts/progress.html:26
+#: trojsten/contests/templates/trojsten/contests/parts/progress.html:26
 msgid ""
 "\n"
 "      Don't submit descriptions.\n"
@@ -126,126 +157,266 @@ msgstr ""
 "ktoré dostanete časť bodov.\n"
 "      "
 
-#: contests/templates/trojsten/contests/parts/progress.html:36
+#: trojsten/contests/templates/trojsten/contests/parts/progress.html:36
 msgid "The round has finished."
 msgstr "Kolo už skončilo."
 
-#: contests/templates/trojsten/contests/parts/progress.html:39
+#: trojsten/contests/templates/trojsten/contests/parts/progress.html:39
 msgid "View the solution."
 msgstr "Pozrieť vzorové riešenie."
 
 # Task Statements
-#: contests/templatetags/statements_parts.py:98
-#, fuzzy, python-format
-#| msgid "%(count)d day"
-#| msgid_plural "%(count)s days"
+#: trojsten/contests/templatetags/statements_parts.py:93
+#, python-format
 msgid "%(count)d day"
-msgstr "%(count)s deň"
+msgstr "%(count)d deň"
 
-#: contests/templatetags/statements_parts.py:101
-#, fuzzy, python-format
-#| msgid "%(count)d hour"
-#| msgid_plural "%(count)s hours"
+#: trojsten/contests/templatetags/statements_parts.py:96
+#, python-format
 msgid "%(count)d hour"
-msgstr "%(count)s hodina"
+msgstr "%(count)d hodina"
 
-#: contests/templatetags/statements_parts.py:104
-#, fuzzy, python-format
-#| msgid "%(count)d minute"
-#| msgid_plural "%(count)s minutes"
+#: trojsten/contests/templatetags/statements_parts.py:99
+#, python-format
 msgid "%(count)d minute"
-msgstr "%(count)s minúta"
+msgstr "%(count)d minúta"
 
-#: contests/templatetags/statements_parts.py:107
-#, fuzzy, python-format
-#| msgid "%(count)d second"
-#| msgid_plural "%(count)s seconds"
+#: trojsten/contests/templatetags/statements_parts.py:102
+#, python-format
 msgid "%(count)d second"
-msgstr "%(count)s sekunda"
+msgstr "%(count)d sekunda"
 
-#: login/views.py:29
+#: trojsten/diplomas/admin.py:41
+msgid "authorized groups"
+msgstr "autorizované skupiny"
+
+#: trojsten/diplomas/admin.py:45
+msgid "sources"
+msgstr "zdroje"
+
+#: trojsten/diplomas/forms.py:18
+msgid "Template"
+msgstr "Šablóna"
+
+#: trojsten/diplomas/forms.py:30
+msgid "Participants data"
+msgstr "Dáta účastníkov"
+
+#: trojsten/diplomas/forms.py:32
+msgid "Join into one PDF"
+msgstr "Spojiť do jedného PDF"
+
+#: trojsten/diplomas/forms.py:52
+msgid "Failed to parse the input data"
+msgstr "Chyba pri spracovaní dát"
+
+#: trojsten/diplomas/models.py:25
+msgid "Source name"
+msgstr "Názov zdroja"
+
+#: trojsten/diplomas/models.py:26
+msgid "Source class"
+msgstr "Trieda zdroja"
+
+#: trojsten/diplomas/models.py:27
+msgid "Add to default sources"
+msgstr "Pridať do základných zdrojov"
+
+#: trojsten/diplomas/models.py:39
+msgid "Data source for diplomas"
+msgstr "Zdroj dát pre diplomy"
+
+#: trojsten/diplomas/models.py:40
+msgid "Data sources for diplomas"
+msgstr "Zdroje dát pre diplomy"
+
+#: trojsten/diplomas/models.py:48
+msgid "Sources"
+msgstr "Zdroje"
+
+#: trojsten/diplomas/models.py:52
+msgid "Authorized groups"
+msgstr "Autorizované skupiny"
+
+#: trojsten/diplomas/models.py:55
+msgid "The groups that are authorized to use this template."
+msgstr "Skupiny s povolením používať túto šablónu"
+
+#: trojsten/diplomas/models.py:60
+msgid "Diploma template"
+msgstr "Šablóna diplomu"
+
+#: trojsten/diplomas/models.py:61
+msgid "Diploma templates"
+msgstr "Šablóny diplomov"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/parts/sources.html:9
+msgid "External input options"
+msgstr "Výber externého zdroja"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/fileupload.html:6
+msgid "Choose a file"
+msgstr "Nahrať súbor"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj.html:8
+msgid "Categories"
+msgstr "Kategórie"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj.html:19
+msgid "Limit to first"
+msgstr "Iba prvých"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj.html:26
+msgid ""
+"Scrape data directly from URL (last resort in case Naboj site changes "
+"structure)"
+msgstr "Stiahni dáta priamo z URL (poistka pre prípad zmien Náboj stránky)"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj.html:27
+msgid "Results URL"
+msgstr "URL výsledkov"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj.html:29
+msgid "This field is not required"
+msgstr "Toto pole nie je povinné."
+
+#: trojsten/diplomas/templates/trojsten/diplomas/sources/naboj.html:36
+msgid "Load"
+msgstr "Načítať"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:9
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:12
+msgid "Diplomas"
+msgstr "Diplomy"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:25
+msgid "Multiple diplomas"
+msgstr "Viacero diplomov"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:26
+msgid "Single diploma"
+msgstr "Jeden diplom"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:34
+msgid "Preview"
+msgstr "Náhľad"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:59
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:97
+msgid "Generate"
+msgstr "Generovať"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:67
+msgid "Replaceable fields:"
+msgstr "Nahraditeľné polia:"
+
+#: trojsten/diplomas/templates/trojsten/diplomas/view_diplomas.html:84
+msgid "Output options"
+msgstr "Možnosti výstupu"
+
+#: trojsten/diplomas/views.py:29
+msgid "Template does not exist"
+msgstr "Šablóna neexistuje"
+
+#: trojsten/diplomas/views.py:37
+msgid "You do not have access to this template"
+msgstr "K tejto šablóne nemáte prístup"
+
+#: trojsten/events/templates/trojsten/events/participants_and_organizers_list.html:36
+#: trojsten/events/templates/trojsten/events/participants_and_organizers_list.html:56
+#: trojsten/people/forms.py:75
+#: trojsten/results/templates/trojsten/results/parts/results_table.html:77
+msgid "Other school"
+msgstr "Iná škola"
+
+#: trojsten/login/views.py:29
 msgid "Logout successful"
-msgstr ""
+msgstr "Odhlásenie úspešné"
 
-#: people/admin.py:157
+#: trojsten/people/admin.py:158
 msgid "Personal info"
-msgstr ""
+msgstr "Osobné údaje"
 
-#: people/admin.py:160
+#: trojsten/people/admin.py:161
 msgid "Address"
-msgstr ""
+msgstr "Adresa"
 
-#: people/admin.py:161
+#: trojsten/people/admin.py:162
 msgid "School"
-msgstr ""
+msgstr "Škola"
 
-#: people/admin.py:164
+#: trojsten/people/admin.py:163 trojsten/people/forms.py:270
+msgid "Password"
+msgstr "Heslo"
+
+#: trojsten/people/admin.py:166
 msgid "Permissions"
-msgstr ""
+msgstr "Práva"
 
-#: people/admin.py:167
+#: trojsten/people/admin.py:169
 msgid "Important dates"
-msgstr ""
+msgstr "Dôležité dátumy"
 
-#: people/admin.py:256
+#: trojsten/people/admin.py:262
 msgid "Users merged succesfully."
-msgstr ""
+msgstr "Používatelia spojení úspešne."
 
-#: people/forms.py:30 people/forms.py:49
+#: trojsten/people/forms.py:30 trojsten/people/forms.py:48
 msgid "Street"
 msgstr "Ulica"
 
-#: people/forms.py:31 people/forms.py:50
+#: trojsten/people/forms.py:31 trojsten/people/forms.py:49
 msgid "Town"
 msgstr "Mesto"
 
-#: people/forms.py:33 people/forms.py:52
+#: trojsten/people/forms.py:33 trojsten/people/forms.py:51
 msgid "Postal code"
 msgstr "PSČ"
 
-#: people/forms.py:35 people/forms.py:54
+#: trojsten/people/forms.py:34 trojsten/people/forms.py:53
 msgid "Country"
 msgstr "Krajina"
 
-#: people/forms.py:38
+#: trojsten/people/forms.py:37
 msgid "home"
 msgstr "domov"
 
-#: people/forms.py:39
+#: trojsten/people/forms.py:38
 msgid "school"
 msgstr "do školy"
 
-#: people/forms.py:40
+#: trojsten/people/forms.py:39
 msgid "other address (e. g. to a dormitory)"
 msgstr "na inú adresu (napr. na internát)"
 
-#: people/forms.py:44
+#: trojsten/people/forms.py:43
 msgid "Correspondence address"
 msgstr "Korešpondenčná adresa"
 
-#: people/forms.py:45
+#: trojsten/people/forms.py:44
 msgid "Choose, where you want to accept mails."
 msgstr "Vyber, kam ti máme posielať poštu."
 
-#: people/forms.py:71
+#: trojsten/people/forms.py:71
 msgid "Gender"
 msgstr "Pohlavie"
 
-#: people/forms.py:87 people/forms.py:95 people/forms.py:103
-#: people/forms.py:112 people/forms.py:122 people/forms.py:132
-#: people/forms.py:142
+#: trojsten/people/forms.py:88 trojsten/people/forms.py:96
+#: trojsten/people/forms.py:104 trojsten/people/forms.py:113
+#: trojsten/people/forms.py:123 trojsten/people/forms.py:133
+#: trojsten/people/forms.py:143
 msgid "This field is required."
 msgstr "Toto pole je povinné."
 
-#: people/forms.py:153
+#: trojsten/people/forms.py:154
 msgid "Your graduation year is too far in the past."
 msgstr "Tvoj rok maturity je príliš ďaleko v minulosti."
 
-#: people/forms.py:159
+#: trojsten/people/forms.py:160
 msgid "Your graduation year is too far in the future."
 msgstr "Tvoj rok maturity je príliš ďaleko v budúcnosti."
 
-#: people/forms.py:171
+#: trojsten/people/forms.py:171
 msgid ""
 "We cannot send you correspondence to school when you don't choose any "
 "school. If your school is not in the list write us in an e-mail that you "
@@ -255,19 +426,15 @@ msgstr ""
 "tvoja škola nenachádza v zozname, napíš v e-maili, že ti máme posielať poštu "
 "na školu"
 
-#: people/forms.py:270
-msgid "Password"
-msgstr "Heslo"
-
-#: people/forms.py:272
+#: trojsten/people/forms.py:272
 msgid "Password confirmation"
 msgstr "Potvrdenie hesla"
 
-#: people/forms.py:273
+#: trojsten/people/forms.py:273
 msgid "Enter the same password as above, for verification."
 msgstr "Zadaj rovnaké heslo ako vyššie pre jeho overenie"
 
-#: people/forms.py:299
+#: trojsten/people/forms.py:299
 msgid ""
 "We recommend choosing a strong passphrase but we don't enforce any "
 "ridiculous constraints on your passwords."
@@ -275,90 +442,92 @@ msgstr ""
 "Odporúčame ti vybrať silné heslo, ale nebudeme od teba vyžadovať žiadne "
 "smiešne požiadavky"
 
-#: people/forms.py:307
+#: trojsten/people/forms.py:307
 msgid ""
 "Since you're logging in using an external provider, this field is optional; "
 "however, by supplying it, you will be able to log in using a password. "
 msgstr ""
 
-#: people/forms.py:317
+#: trojsten/people/forms.py:317
 msgid "The two password fields didn't match."
 msgstr ""
 
-#: people/forms.py:456
+#: trojsten/people/forms.py:459
 msgid "Points have to be non-negative and at most {}."
 msgstr "Body musia byť nezáporné a najviac {}."
 
-#: people/forms.py:461
-#, fuzzy
-#| msgid "The value has to be integer or {}."
+#: trojsten/people/forms.py:464
 msgid "The value has to be number or {}."
 msgstr "Hodnota musí byť číslo alebo {}."
 
-#: people/forms.py:505
+#: trojsten/people/forms.py:508
 msgid "Round"
 msgstr "Kolo"
 
-#: people/forms.py:519 people/forms.py:557
-#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
-#: people/templates/trojsten/people/settings.html:95
-#: templates/ksp_login/parts/multiple_forms.html:11
-#: templates/ksp_login/parts/single_form.html:10
+#: trojsten/people/forms.py:522 trojsten/people/forms.py:560
+#: trojsten/people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
+#: trojsten/people/templates/trojsten/people/settings.html:95
+#: trojsten/templates/ksp_login/parts/multiple_forms.html:11
+#: trojsten/templates/ksp_login/parts/single_form.html:10
 msgid "Submit"
 msgstr "Odoslať"
 
-#: people/models.py:219
+#: trojsten/people/models.py:92
+msgid "Required field for students."
+msgstr "Povinné pre žiakov."
+
+#: trojsten/people/models.py:227
 msgid "Value \"{}\" does not match regex \"{}\"."
 msgstr ""
 
-#: people/templates/admin/people/duplicateuser/change_form.html:5
+#: trojsten/people/templates/admin/people/duplicateuser/change_form.html:5
 msgid "Merge candidates"
 msgstr ""
 
-#: people/templates/admin/people/duplicateuser/change_form.html:11
-#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:10
+#: trojsten/people/templates/admin/people/duplicateuser/change_form.html:11
+#: trojsten/people/templates/admin/people/duplicateuser/merge_duplicate_users.html:10
 msgid "Merge"
 msgstr ""
 
-#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:6
-#: people/templates/admin/people/submitted_tasks.html:6
-#: reviews/templates/admin/review_edit.html:6
-#: reviews/templates/admin/review_form.html:6
-#: reviews/templates/admin/zip_upload.html:6
+#: trojsten/people/templates/admin/people/duplicateuser/merge_duplicate_users.html:6
+#: trojsten/people/templates/admin/people/submitted_tasks.html:6
+#: trojsten/reviews/templates/admin/review_edit.html:6
+#: trojsten/reviews/templates/admin/review_form.html:6
+#: trojsten/reviews/templates/admin/zip_upload.html:6
 msgid "Home"
 msgstr ""
 
-#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:16
+#: trojsten/people/templates/admin/people/duplicateuser/merge_duplicate_users.html:16
 #, python-format
 msgid "Merge users %(user)s and %(candidate)s"
 msgstr ""
 
-#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:32
+#: trojsten/people/templates/admin/people/duplicateuser/merge_duplicate_users.html:32
 msgid "Reset"
 msgstr "Obnoviť"
 
-#: people/templates/admin/people/duplicateuser/merge_duplicate_users.html:33
+#: trojsten/people/templates/admin/people/duplicateuser/merge_duplicate_users.html:33
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: people/templates/admin/people/submitted_tasks.html:7
+#: trojsten/people/templates/admin/people/submitted_tasks.html:7
 msgid "People"
 msgstr "Ľudia"
 
-#: people/templates/admin/people/submitted_tasks.html:8
+#: trojsten/people/templates/admin/people/submitted_tasks.html:8
 msgid "Users"
 msgstr "Používatelia"
 
-#: people/templates/admin/people/submitted_tasks.html:10
-#: people/templates/admin/people/submitted_tasks_button.html:6
+#: trojsten/people/templates/admin/people/submitted_tasks.html:10
+#: trojsten/people/templates/admin/people/submitted_tasks_button.html:6
 msgid "Submitted tasks"
 msgstr "Odovzdané úlohy"
 
-#: people/templates/admin/people/submitted_tasks.html:15
+#: trojsten/people/templates/admin/people/submitted_tasks.html:15
 msgid "Tasks submitted by competitor"
 msgstr "Úlohy odovzdané riešiteľom"
 
-#: people/templates/admin/people/submitted_tasks.html:16
+#: trojsten/people/templates/admin/people/submitted_tasks.html:16
 msgid ""
 "\n"
 "You are viewing submits for round:\n"
@@ -366,11 +535,11 @@ msgstr ""
 "\n"
 "Prezeráš si odovzdané úlohy pre kolo:\n"
 
-#: people/templates/admin/people/submitted_tasks.html:23
+#: trojsten/people/templates/admin/people/submitted_tasks.html:23
 msgid "Change round"
 msgstr "Zmeň kolo"
 
-#: people/templates/admin/people/submitted_tasks.html:27
+#: trojsten/people/templates/admin/people/submitted_tasks.html:27
 #, python-format
 msgid ""
 "\n"
@@ -391,23 +560,21 @@ msgstr ""
 "Políčkami môžeš prechádzať pomocou tabulátora.\n"
 
 # Login
-#: people/templates/trojsten/people/additional_registration.html:11
-#: people/templates/trojsten/people/additional_registration.html:14
-#, fuzzy
-#| msgid "Registration"
+#: trojsten/people/templates/trojsten/people/additional_registration.html:11
+#: trojsten/people/templates/trojsten/people/additional_registration.html:14
 msgid "Complete Registration"
 msgstr "Dodatočná Registrácia"
 
-#: people/templates/trojsten/people/additional_registration.html:23
-#: people/tests.py:757
+#: trojsten/people/templates/trojsten/people/additional_registration.html:23
+#: trojsten/people/tests.py:754
 msgid "You have already filled all required properties."
 msgstr "Momentálne máš vyplnené všetky potrebné údaje."
 
-#: people/templates/trojsten/people/parts/additional_registration.html:9
+#: trojsten/people/templates/trojsten/people/parts/additional_registration.html:9
 msgid "We need a little more information"
 msgstr "Potrebujeme ešte zopár údajov"
 
-#: people/templates/trojsten/people/parts/additional_registration.html:13
+#: trojsten/people/templates/trojsten/people/parts/additional_registration.html:13
 msgid ""
 "To participate in some competitions, we need you to fill some more data in "
 "addition to those you have filled during registration.\n"
@@ -417,7 +584,7 @@ msgstr ""
 "údaje navyše okrem tých, ktoré si zadal pri registrácii. Pokiaľ ich "
 "nevyplníš, nebudeme ťa zobrazovať vo výsledkovej listine."
 
-#: people/templates/trojsten/people/parts/additional_registration.html:17
+#: trojsten/people/templates/trojsten/people/parts/additional_registration.html:17
 msgid ""
 "If you want to prevent this message from showing, you may check \"I do not "
 "want to participate in competition\".\n"
@@ -427,7 +594,7 @@ msgstr ""
 "\"Nechcem sa zapojiť do súťaže\". Toto rozhodnutie môžeš neskôr zmeniť v "
 "nastaveniach v sekcii \"Súťaže\"."
 
-#: people/templates/trojsten/people/parts/additional_registration.html:22
+#: trojsten/people/templates/trojsten/people/parts/additional_registration.html:22
 #, python-format
 msgid ""
 "To participate in competition <em>%(competition)s</em> you need to fill:"
@@ -435,69 +602,69 @@ msgstr ""
 "V súťaži <em>%(competition)s</em> potrebujeme ešte aby si vyplnil tieto "
 "údaje:"
 
-#: people/templates/trojsten/people/parts/additional_registration.html:33
+#: trojsten/people/templates/trojsten/people/parts/additional_registration.html:33
 #, python-format
 msgid "I do not want to participate in competition %(competition)s."
 msgstr "Nechcem sa zapojiť do súťaže %(competition)s."
 
-#: people/templates/trojsten/people/parts/additional_registration.html:37
+#: trojsten/people/templates/trojsten/people/parts/additional_registration.html:37
 msgid "Close"
 msgstr "Zavrieť"
 
-#: people/templates/trojsten/people/parts/additional_registration.html:38
+#: trojsten/people/templates/trojsten/people/parts/additional_registration.html:38
 msgid "Fill data"
 msgstr "Vyplniť údaje"
 
-#: people/templates/trojsten/people/settings.html:11
-#: people/templates/trojsten/people/settings.html:14
-#, fuzzy
-#| msgid "Account information"
+#: trojsten/people/templates/trojsten/people/settings.html:11
+#: trojsten/people/templates/trojsten/people/settings.html:14
 msgid "Account settings"
 msgstr "Nastavenia účtu"
 
-#: people/templates/trojsten/people/settings.html:21
+#: trojsten/people/templates/trojsten/people/settings.html:21
 msgid "Profile"
 msgstr "Profil"
 
-#: people/templates/trojsten/people/settings.html:22
+#: trojsten/people/templates/trojsten/people/settings.html:22
 msgid "Properties"
 msgstr "Vlastnosti"
 
-#: people/templates/trojsten/people/settings.html:23
-#: reviews/templates/admin/review_form.html:7
-#: reviews/templates/admin/zip_upload.html:7
+#: trojsten/people/templates/trojsten/people/settings.html:23
+#: trojsten/reviews/templates/admin/review_form.html:7
+#: trojsten/reviews/templates/admin/zip_upload.html:7
 msgid "Contests"
 msgstr "Súťaže"
 
-#: people/templates/trojsten/people/settings.html:25
-#: people/templates/trojsten/people/settings.html:27
+#: trojsten/people/templates/trojsten/people/settings.html:25
+#: trojsten/people/templates/trojsten/people/settings.html:27
 msgid "Login settings"
 msgstr "Nastavenia prihlasovania"
 
-#: people/templates/trojsten/people/settings.html:96
+#: trojsten/people/templates/trojsten/people/settings.html:96
 msgid "Add property"
 msgstr "Pridať vlastnosť"
 
-#: people/templates/trojsten/people/settings.html:104
+#: trojsten/people/templates/trojsten/people/settings.html:104
 msgid "Choose which competitions would you like to participate in:"
 msgstr "Vyber si súťaže, ktoré chceš riešiť:"
 
-#: people/templates/trojsten/people/settings.html:112
+#: trojsten/people/templates/trojsten/people/settings.html:112
 msgid "You can use any of the following services to log in to your account."
 msgstr "Možete použiť ľubovoľnú z nasledujúcich služieb na prihlásenie."
 
-#: people/templates/trojsten/people/settings.html:133
-#: templates/ksp_login/login.html:4 templates/ksp_login/login.html:7
-#: templates/ksp_login/parts/include_javascript.html:15
-#: templates/ksp_login/parts/login_box.html:44
-#: templates/ksp_login/parts/login_box.html:61
-#: templates/ksp_login/parts/login_box.html:75
-#: templates/ksp_login/parts/login_full_contents.html:23
-#: templates/ksp_login/parts/login_full_contents.html:40
+#: trojsten/people/templates/trojsten/people/settings.html:133
+#: trojsten/templates/ksp_login/login.html:4
+#: trojsten/templates/ksp_login/login.html:7
+#: trojsten/templates/ksp_login/parts/include_javascript.html:15
+#: trojsten/templates/ksp_login/parts/login_box.html:44
+#: trojsten/templates/ksp_login/parts/login_box.html:61
+#: trojsten/templates/ksp_login/parts/login_box.html:75
+#: trojsten/templates/ksp_login/parts/login_full_contents.html:47
+#: trojsten/templates/ksp_login/parts/login_full_contents.html:53
+#: trojsten/templates/ksp_login/parts/login_full_contents.html:82
 msgid "Log in"
 msgstr "Prihlásiť sa"
 
-#: people/templates/trojsten/people/settings.html:141
+#: trojsten/people/templates/trojsten/people/settings.html:141
 #, python-format
 msgid ""
 "\n"
@@ -512,12 +679,13 @@ msgstr ""
 "stránke</a>.\n"
 "                "
 
-#: people/templates/trojsten/people/settings.html:146
-#: templates/ksp_login/password.html:5 templates/ksp_login/password.html:8
+#: trojsten/people/templates/trojsten/people/settings.html:146
+#: trojsten/templates/ksp_login/password.html:5
+#: trojsten/templates/ksp_login/password.html:8
 msgid "Password change"
 msgstr "Zmena hesla"
 
-#: people/templates/trojsten/people/settings.html:149
+#: trojsten/people/templates/trojsten/people/settings.html:149
 #, python-format
 msgid ""
 "\n"
@@ -530,296 +698,384 @@ msgstr ""
 "a>.\n"
 "                "
 
-#: reviews/forms.py:48
+#: trojsten/reviews/forms.py:51
 #, python-format
 msgid "File must be a ZIP archive: %s"
 msgstr "Súbor musí byť ZIP archív: %s"
 
-#: reviews/forms.py:83
+#: trojsten/reviews/forms.py:88
 msgid "Points are required"
 msgstr "Body sú povinné"
 
-#: reviews/forms.py:86
+#: trojsten/reviews/forms.py:91
 msgid "User is required"
 msgstr "Používateľ je povinný"
 
-#: reviews/forms.py:91
+#: trojsten/reviews/forms.py:96
 #, python-format
 msgid "User %s does not exist"
 msgstr "Používateľ %s neexistuje"
 
-#: reviews/forms.py:182
+#: trojsten/reviews/forms.py:187
 #, python-format
 msgid "Invalid filename %s"
 msgstr "Neplatný názov súboru %s"
 
-#: reviews/forms.py:185
+#: trojsten/reviews/forms.py:190
 msgid "Must have set points"
 msgstr "Musíš uviesť body"
 
-#: reviews/forms.py:203
+#: trojsten/reviews/forms.py:208
 msgid "Assigned 2 or more files to the same user."
 msgstr "Rovnaký používateľ má priradené 2 alebo viac súborov."
 
-#: reviews/helpers.py:17
+#: trojsten/reviews/helpers.py:18
 msgid "You should upload a file or specify parent submit."
 msgstr "Mal by si nahrať súbor alebo špecifikovať predchádzajúci submit."
 
-#: reviews/templates/admin/review_edit.html:10
-#: reviews/templates/admin/review_form.html:10
-#: reviews/templates/admin/task_review.html:6
-#: reviews/templates/admin/zip_upload.html:10
+#: trojsten/reviews/templates/admin/review_edit.html:10
+#: trojsten/reviews/templates/admin/review_form.html:10
+#: trojsten/reviews/templates/admin/task_review.html:6
+#: trojsten/reviews/templates/admin/zip_upload.html:10
 msgid "Review"
 msgstr "Opravovanie"
 
-#: reviews/templates/admin/review_edit.html:11
-#: reviews/templates/admin/review_form.html:64
+#: trojsten/reviews/templates/admin/review_edit.html:11
+#: trojsten/reviews/templates/admin/review_form.html:64
 msgid "Edit"
 msgstr "Upraviť"
 
-#: reviews/templates/admin/review_form.html:8
-#: reviews/templates/admin/zip_upload.html:8
+#: trojsten/reviews/templates/admin/review_form.html:8
+#: trojsten/reviews/templates/admin/zip_upload.html:8
 msgid "Task"
 msgstr "Úloha"
 
-#: reviews/templates/admin/review_form.html:18
+#: trojsten/reviews/templates/admin/review_form.html:18
 msgid "Download all original solutions"
 msgstr "Stiahnuť všetky pôvodné riešenia"
 
-#: reviews/templates/admin/review_form.html:19
+#: trojsten/reviews/templates/admin/review_form.html:19
 msgid " (it downloads last submitted solution for each competitor)"
 msgstr " (stiahne pre každého užívateľa posledné odovzdané riešenie)"
 
-#: reviews/templates/admin/review_form.html:21
+#: trojsten/reviews/templates/admin/review_form.html:21
 msgid "Download all reviewed solutions"
 msgstr "Stiahnuť všetky opravené riešenia"
 
-#: reviews/templates/admin/review_form.html:22
+#: trojsten/reviews/templates/admin/review_form.html:22
 msgid " (it downloads reviewed solutions for each competitor if there is any)"
 msgstr " (stiahne pre každého užívateľa opravené riešenie, ak je opravené)"
 
-#: reviews/templates/admin/review_form.html:57
-#: reviews/templates/admin/submit_form.html:12
+#: trojsten/reviews/templates/admin/review_form.html:57
+#: trojsten/reviews/templates/admin/submit_form.html:12
+#: trojsten/submit/templates/trojsten/submit/parts/submit_list.html:30
+#: trojsten/submit/templates/trojsten/submit/parts/submit_list.html:36
+#: trojsten/submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:30
+#: trojsten/submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:37
 msgid "Download"
 msgstr "Stiahnuť"
 
-#: reviews/templates/admin/review_form.html:63
-#: reviews/templates/admin/submit_form.html:9
+#: trojsten/reviews/templates/admin/review_form.html:63
+#: trojsten/reviews/templates/admin/submit_form.html:9
 msgid "View"
 msgstr "Pozrieť"
 
-#: reviews/templates/admin/review_form.html:67
+#: trojsten/reviews/templates/admin/review_form.html:67
 msgid "Add new review"
 msgstr "Pridaj opravenie"
 
-#: reviews/templates/admin/review_form.html:82
+#: trojsten/reviews/templates/admin/review_form.html:82
 msgid "Update points and comments"
 msgstr "Aktualizuj body a komentáre"
 
-#: reviews/templates/admin/submit_form.html:6
+#: trojsten/reviews/templates/admin/submit_form.html:6
 msgid "View task"
 msgstr "Pozrieť úlohu"
 
-#: reviews/templates/admin/zip_upload.html:11
+#: trojsten/reviews/templates/admin/zip_upload.html:11
 msgid "Upload Zip"
 msgstr "Nahraj Zip"
 
-#: reviews/templates/admin/zip_upload.html:31
+#: trojsten/reviews/templates/admin/zip_upload.html:31
 msgid "Filename"
 msgstr "Názov súboru"
 
-#: reviews/templates/admin/zip_upload.html:32
+#: trojsten/reviews/templates/admin/zip_upload.html:32
 msgid "User"
 msgstr "Používateľ"
 
-#: reviews/templates/admin/zip_upload.html:33
+#: trojsten/reviews/templates/admin/zip_upload.html:33
 msgid "Points"
 msgstr "Body"
 
-#: reviews/templates/admin/zip_upload.html:34
+#: trojsten/reviews/templates/admin/zip_upload.html:34
 msgid "Comment"
 msgstr "Komentár"
 
-#: reviews/views.py:56
+#: trojsten/reviews/views.py:57
 msgid "Successfully uploaded a zip file."
 msgstr "Zip súbor bol úspešne nahraný"
 
-#: reviews/views.py:66
+#: trojsten/reviews/views.py:68
 msgid "Points and comments were successfully updated."
 msgstr "Body a komentáre boli úspešne aktualizované"
 
-#: reviews/views.py:127
+#: trojsten/reviews/views.py:130
 msgid "Successfully saved the review"
 msgstr "Opravenie bolo úspešne uložené"
 
-#: reviews/views.py:190
+#: trojsten/reviews/views.py:195
 #, python-format
 msgid "Missing file of user %s"
 msgstr "Chýba súbor používateľa %s"
 
-#: reviews/views.py:203
+#: trojsten/reviews/views.py:211
 #, python-format
 msgid "Missing source file of user %s"
 msgstr "Chýba zdrojový súbor používateľa %s"
 
-#: reviews/views.py:208
+#: trojsten/reviews/views.py:219
 #, python-format
-msgid "Missing protocol file of user %s"
+msgid "Missing protocol of user %s"
 msgstr "Chýba protokol používateľa %s"
 
-#: reviews/views.py:244
+#: trojsten/reviews/views.py:251
 msgid "Problems with uploaded zip"
 msgstr "Problémy s nahratým zip-om"
 
-#: reviews/views.py:250
+#: trojsten/reviews/views.py:257
 msgid "Ignore"
 msgstr "Ignorovať"
 
-#: reviews/views.py:295
+#: trojsten/reviews/views.py:302
 msgid "Successfully finished reviewing this task!"
 msgstr "Úspešne dokončené opravovanie tejto úlohy!"
 
-#: settings/common.py:392
+#: trojsten/settings/common.py:426
 msgid "Table of Contents"
 msgstr ""
 
-# Submit
-#: submit/constants.py:26 submit/tests.py:386
-msgid "Wrong answer"
-msgstr "Zlá odpoveď"
+#: trojsten/submit/constants.py:11
+msgid "reviewed"
+msgstr "opravený"
 
-#: submit/constants.py:27
-msgid "Compilation error"
-msgstr "Chyba počas kompilácie"
+#: trojsten/submit/constants.py:12
+msgid "in queue"
+msgstr "v poradí"
 
-#: submit/constants.py:28
-msgid "Time limit exceeded"
-msgstr "Prekročený časový limit"
+#: trojsten/submit/constants.py:13
+msgid "finished"
+msgstr "ukončený"
 
-#: submit/constants.py:29
-msgid "Memory limit exceeded"
-msgstr "Prekročený pamäťový limit"
-
-#: submit/constants.py:30
+#: trojsten/submit/constants.py:14 trojsten/submit/constants.py:35
 msgid "OK"
 msgstr "OK"
 
-#: submit/constants.py:31
+# Submit
+#: trojsten/submit/constants.py:31 trojsten/submit/tests.py:393
+msgid "Wrong answer"
+msgstr "Zlá odpoveď"
+
+#: trojsten/submit/constants.py:32
+msgid "Compilation error"
+msgstr "Chyba počas kompilácie"
+
+#: trojsten/submit/constants.py:33
+msgid "Time limit exceeded"
+msgstr "Prekročený časový limit"
+
+#: trojsten/submit/constants.py:34
+msgid "Memory limit exceeded"
+msgstr "Prekročený pamäťový limit"
+
+#: trojsten/submit/constants.py:36
 msgid "Runtime exception"
 msgstr "Chyba počas behu programu"
 
-#: submit/constants.py:32
+#: trojsten/submit/constants.py:37
 msgid "Security exception"
 msgstr "Pokus o narušenie bezpečnosti"
 
-#: submit/constants.py:33
+#: trojsten/submit/constants.py:38
 msgid "Ignored"
 msgstr ""
 
-#: submit/templates/trojsten/submit/parts/submit_list.html:30
-#: submit/templates/trojsten/submit/parts/submit_list.html:36
-msgid "Stiahni"
-msgstr ""
+#: trojsten/submit/constants.py:39
+msgid "Protocol corrupted"
+msgstr "Nečitateľný protokol"
 
-#: submit/templates/trojsten/submit/parts/submit_list.html:37
-msgid "Pozri komentár"
-msgstr ""
+#: trojsten/submit/forms.py:76
+msgid "Submit file"
+msgstr "Nahrať súbor"
 
-#: submit/templates/trojsten/submit/parts/submit_list.html:75
-#: submit/templates/trojsten/submit/parts/submit_list.html:92
+#: trojsten/submit/forms.py:77
+msgid "Here you can upload a file with submit description"
+msgstr "Tu môžeš nahrať súbor s popisom riešenia"
+
+#: trojsten/submit/forms.py:85
+msgid "You can attach a submit file only to descriptions."
+msgstr "Nahrať súbor môžeš len k popisom."
+
+#: trojsten/submit/templates/trojsten/submit/all_submits_page.html:7
+#: trojsten/submit/templates/trojsten/submit/all_submits_page.html:10
+msgid "My submitted tasks"
+msgstr "Moje odovzdané úlohy"
+
+#: trojsten/submit/templates/trojsten/submit/parts/submit_list.html:37
+msgid "Show comment"
+msgstr "Pozri komentár"
+
+#: trojsten/submit/templates/trojsten/submit/parts/submit_list.html:75
+#: trojsten/submit/templates/trojsten/submit/parts/submit_list.html:92
 msgid "Detaily"
 msgstr ""
 
-#: templates/comments/comment.html:23
+#: trojsten/submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:39
+msgid "View comment"
+msgstr "Pozri komentár"
+
+#: trojsten/submit/templates/trojsten/submit/parts/submits_for_user_and_round.html:53
+msgid "Details"
+msgstr "Detaily"
+
+#: trojsten/submit/views.py:318
+msgid "[Trojstenweb] User submission detected"
+msgstr "[Trojstenweb] Nový submit uživateľa"
+
+#: trojsten/submit/views.py:319
+#, python-brace-format
+msgid ""
+"{name} submitted solution to task {task}\n"
+"\n"
+msgstr ""
+"Uživateľ {name} submitol riešenie úlohy {task}\n"
+"\n"
+
+#: trojsten/submit/views.py:320
+#, python-brace-format
+msgid ""
+"Link for reviewing: {review_link}\n"
+"\n"
+msgstr ""
+"Link na opravovanie: {review_link}\n"
+"\n"
+
+#: trojsten/submit/views.py:321
+#, python-brace-format
+msgid ""
+"Submit link: {submit_link}\n"
+"\n"
+"This is an automated response, do not reply"
+msgstr ""
+"Link na submit: {submit_link}\n"
+"\n"
+"Toto je automatizovaná správa, neodpovedajte na ňu"
+
+#: trojsten/submit/views.py:436
+msgid ""
+"You have successfully submitted your description, it will be reviewed after "
+"the round finishes."
+msgstr ""
+"Úspešne sa ti podarilo submitnúť popis, po skončení kola ti ho vedúci "
+"opravia."
+
+#: trojsten/submit/views.py:440
+msgid ""
+"You have submitted your description after the deadline. It is not counted in "
+"results."
+msgstr ""
+"Nahral si svoj popis riešenia po termíne kola. Nebude zarátaný vo "
+"výsledkovke."
+
+#: trojsten/templates/comments/comment.html:23
 msgid "Preview of your comment"
 msgstr "Náhľad komentára"
 
-#: templates/comments/comment.html:32
+#: trojsten/templates/comments/comment.html:32
 msgid "Anonymous"
 msgstr "Anonym"
 
-#: templates/comments/comment.html:39
+#: trojsten/templates/comments/comment.html:39
 #, python-format
 msgid "on %(submit_date)s"
 msgstr "%(submit_date)s"
 
-#: templates/comments/comment.html:46
+#: trojsten/templates/comments/comment.html:46
 msgid "reply"
 msgstr "reagovať"
 
-#: templates/comments/form.html:4
+#: trojsten/templates/comments/form.html:4
 msgid "Comments are closed."
 msgstr "Diskusia je uzavretá."
 
-#: templates/comments/form.html:24
+#: trojsten/templates/comments/form.html:24
 msgid "Post"
 msgstr "Odoslať"
 
-#: templates/ksp_login/parts/associated_accounts_list.html:9
+#: trojsten/templates/ksp_login/parts/associated_accounts_list.html:9
 msgid "Provider"
 msgstr ""
 
-#: templates/ksp_login/parts/associated_accounts_list.html:10
+#: trojsten/templates/ksp_login/parts/associated_accounts_list.html:10
 msgid "Account"
 msgstr ""
 
-#: templates/ksp_login/parts/associated_accounts_list.html:32
+#: trojsten/templates/ksp_login/parts/associated_accounts_list.html:32
 msgid "Disconnect"
 msgstr ""
 
-#: templates/ksp_login/parts/associated_accounts_list.html:42
+#: trojsten/templates/ksp_login/parts/associated_accounts_list.html:42
 msgid "You don't have any services associated with your account."
 msgstr ""
 
-#: templates/ksp_login/parts/login_box.html:11
+#: trojsten/templates/ksp_login/parts/login_box.html:11
 msgid "Logged in as"
 msgstr ""
 
 # Login
-#: templates/ksp_login/parts/login_box.html:22
-#, fuzzy
-#| msgid "Registration"
+#: trojsten/templates/ksp_login/parts/login_box.html:22
 msgid "Site administration"
 msgstr "Registrácia"
 
-#: templates/ksp_login/parts/login_box.html:29
+#: trojsten/templates/ksp_login/parts/login_box.html:29
 msgid "Settings"
 msgstr ""
 
-#: templates/ksp_login/parts/login_box.html:38
+#: trojsten/templates/ksp_login/parts/login_box.html:38
 msgid "Log out"
 msgstr ""
 
-#: templates/ksp_login/parts/login_box.html:67
+#: trojsten/templates/ksp_login/parts/login_box.html:67
 msgid "More login options"
 msgstr ""
 
-#: templates/ksp_login/parts/login_full_contents.html:41
+#: trojsten/templates/ksp_login/parts/login_full_contents.html:85
 msgid "Forgotten password"
 msgstr ""
 
 # Login
-#: templates/ksp_login/parts/login_full_contents.html:50
-#: templates/ksp_login/registration.html:5
-#: templates/ksp_login/registration.html:8
+#: trojsten/templates/ksp_login/parts/login_full_contents.html:96
+#: trojsten/templates/ksp_login/registration.html:5
+#: trojsten/templates/ksp_login/registration.html:8
 msgid "Registration"
 msgstr "Registrácia"
 
-#: templates/ksp_login/parts/login_full_contents.html:57
+#: trojsten/templates/ksp_login/parts/login_full_contents.html:112
 msgid "Log in with your Trojsten account"
 msgstr ""
 
-#: templates/ksp_login/registration.html:14
+#: trojsten/templates/ksp_login/registration.html:14
 msgid ""
 "Welcome, new user. You only need to give us a few details in order to finish "
 "the registration process."
 msgstr ""
 
-#: templates/search/search.html:5 templates/search/search.html:9
+#: trojsten/templates/search/search.html:5
+#: trojsten/templates/search/search.html:9
 msgid "Search results for:"
 msgstr "Výsledky hľadania pre"
 
-#: templates/search/search.html:23
+#: trojsten/templates/search/search.html:23
 #, python-format
 msgid ""
 "\n"
@@ -828,51 +1084,32 @@ msgstr ""
 "\n"
 "          Nájdených <strong>%(cnt)s</strong> výskytov."
 
-#: templates/search/search.html:32
+#: trojsten/templates/search/search.html:32
 msgid "Title"
 msgstr "Názov"
 
-#: templates/search/search.html:33
+#: trojsten/templates/search/search.html:33
 msgid "Last modified"
 msgstr "Naposledy upravené"
 
-#: templates/search/search.html:58
+#: trojsten/templates/search/search.html:58
 msgid "There are no articles in this level"
 msgstr "Na tejto úrovni nie sú žiadne články."
 
-#: templates/search/search.html:68 templates/search/search.html:70
+#: trojsten/templates/search/search.html:68
+#: trojsten/templates/search/search.html:70
 msgid "Previous"
 msgstr "Predchádzajúca"
 
-#: templates/search/search.html:79 templates/search/search.html:81
+#: trojsten/templates/search/search.html:79
+#: trojsten/templates/search/search.html:81
 msgid "Next"
 msgstr "Nasledujúca"
 
-#: templates/wiki/article.html:19
+#: trojsten/templates/wiki/article.html:19
 msgid "locked"
 msgstr ""
 
-#: templates/wiki/article.html:40
+#: trojsten/templates/wiki/article.html:40
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
-
-#~ msgid ""
-#~ "\n"
-#~ "            You can change the login settings <a href="
-#~ "\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">on separate page</"
-#~ "a>.\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "            Nastavenia prihlásenia si môžeš zmeniť <a href="
-#~ "\"%(TROJSTEN_LOGIN_PROVIDER_URL)s%(settings_url)s\">na samostatnej "
-#~ "stránke</a>.\n"
-#~ "        "
-
-#~ msgid "Postal Code"
-#~ msgstr "PSČ"
-
-#, fuzzy
-#~| msgid "tasks"
-#~ msgid "Tasks"
-#~ msgstr "zadania"

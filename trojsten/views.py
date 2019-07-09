@@ -2,22 +2,23 @@
 from __future__ import unicode_literals
 
 from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
+from django.urls import reverse
 from haystack.views import SearchView
 from wiki.views import article
 
 
 def contact_form_sent_redirect(request):
-    messages.success(request, 'Vaša správa bola odoslaná. Ďakujeme za spätnú väzbu.')
-    return redirect('contact_form')
+    messages.success(request, "Vaša správa bola odoslaná. Ďakujeme za spätnú väzbu.")
+    return redirect("contact_form")
 
 
 def home_redirect(request):
-    if request.user.is_authenticated():
-        if 'home' not in request.GET:
-            return redirect(reverse('news_list', kwargs={'page': 1}))
-    return article.ArticleView.as_view()(request, path='')
+    if request.user.is_authenticated:
+        if "home" not in request.GET:
+            return redirect(reverse("dashboard"))
+
+    return article.ArticleView.as_view()(request, path="")
 
 
 # Custom view for haystack SearchView

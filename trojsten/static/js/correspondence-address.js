@@ -6,7 +6,7 @@
             "input#id_corr_street",
             "input#id_corr_town",
             "input#id_corr_postal_code",
-            "input#id_corr_country"
+            "select#id_corr_country"
         ];
 
         var show_address = function() {

@@ -1,12 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 version=`python -c "import sys; print(sys.version)" | head -n1 | cut -c1`
 if [ $version = 3 ]
 then
     SOURCES="requirements.in"
+    pip-compile -r $SOURCES -o requirements.txt
 else
-    SOURCES="requirements.in requirements2.in"
+    echo "Python 2 is no longer supported."
+    exit 1
 fi
 
-pip-compile -r $SOURCES -o requirements.txt
-pip-compile -r $SOURCES requirements.devel.in -o requirements.devel.txt

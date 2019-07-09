@@ -7,16 +7,8 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('people', '0004_auto_20160502_1646'),
-    ]
+    dependencies = [("people", "0004_auto_20160502_1646")]
 
-    database_operations = [
-        migrations.AlterModelTable('School', 'schools_school')
-    ]
+    database_operations = [migrations.AlterModelTable("School", "schools_school")]
 
-    operations = [
-        migrations.SeparateDatabaseAndState(
-            database_operations=database_operations,
-        )
-    ]
+    operations = [migrations.SeparateDatabaseAndState(database_operations=database_operations)]

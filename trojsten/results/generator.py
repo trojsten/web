@@ -2,11 +2,10 @@
 
 from django.contrib.auth import get_user_model
 
-from trojsten.people.constants import (GRADUATION_SCHOOL_YEAR,
-                                       SCHOOL_YEAR_END_MONTH)
+from trojsten.contests.models import Task
+from trojsten.people.constants import GRADUATION_SCHOOL_YEAR, SCHOOL_YEAR_END_MONTH
 from trojsten.submit import constants as submit_constants
 from trojsten.submit.models import Submit
-from trojsten.contests.models import Task
 
 from . import constants as c
 from .representation import Results, ResultsCell, ResultsCol, ResultsRow
@@ -45,7 +44,7 @@ class ResultsGenerator(object):
             round=res_request.round,
             tag=self.tag,
             single_round=res_request.single_round,
-            has_previous=bool(not res_request.single_round and res_request.previous_rows_dict)
+            has_previous=bool(not res_request.single_round and res_request.previous_rows_dict),
         )
         results.cols = list(self.create_results_cols(res_request))
         return results
@@ -59,9 +58,7 @@ class ResultsGenerator(object):
             yield ResultsCol(key=c.PREVIOUS_POINTS_COLUMN_KEY, name=c.PREVIOUS_POINTS_COLUMN_NAME)
 
         for task in self.get_task_queryset(res_request):
-            yield ResultsCol(
-                key=task.number, name=str(task.number), task=task
-            )
+            yield ResultsCol(key=task.number, name=str(task.number), task=task)
 
         yield ResultsCol(key=c.TOTAL_POINTS_COLUMN_KEY, name=c.TOTAL_POINTS_COLUMN_NAME)
 
@@ -69,7 +66,7 @@ class ResultsGenerator(object):
         """
         Returns queryset of Tasks that should be included in the table.
         """
-        return Task.objects.filter(round=res_request.round).order_by('number')
+        return Task.objects.filter(round=res_request.round).order_by("number")
 
     def add_rows_to_results(self, res_request, results):
         """
@@ -99,20 +96,18 @@ class ResultsGenerator(object):
         """
         rules = res_request.round.semester.competition.rules
 
-        return Submit.objects.filter(
-            task__in=self.get_task_queryset(res_request),
-        ).filter(
-            # TODO: filter users here?
-            user__in=get_user_model().objects.all()
-        ).filter(
-            rules.get_Q_for_graded_submits()
-        ).order_by(
-            'user', 'task', 'submit_type', '-time', '-id',
-        ).distinct(
-            'user', 'task', 'submit_type'
-        ).select_related(
-            'user', 'user__school', 'task'
-        ).prefetch_related('user__properties', 'user__ignored_competitions')
+        return (
+            Submit.objects.filter(task__in=self.get_task_queryset(res_request))
+            .filter(
+                # TODO: filter users here?
+                user__in=get_user_model().objects.all()
+            )
+            .filter(rules.get_Q_for_graded_submits())
+            .order_by("user", "task", "submit_type", "-time", "-id")
+            .distinct("user", "task", "submit_type")
+            .select_related("user", "user__school", "task")
+            .prefetch_related("user__properties", "user__ignored_competitions")
+        )
 
     def create_row(self, res_request, user, cols):
         """
@@ -142,9 +137,9 @@ class ResultsGenerator(object):
         competition = res_request.round.semester.competition
         minimal_year = self.get_minimal_year_of_graduation(res_request, user)
         return (
-            user.graduation >= minimal_year and
-            not user.is_competition_ignored(competition) and
-            user.is_valid_for_competition(competition)
+            user.graduation >= minimal_year
+            and not user.is_competition_ignored(competition)
+            and user.is_valid_for_competition(competition)
         )
 
     def get_minimal_year_of_graduation(self, res_request, user):
@@ -211,7 +206,8 @@ class ResultsGenerator(object):
         """
         row.round_total = sum(
             self.get_cell_total(res_request, cell)
-            for cell in row.cells_by_key.values() if cell.active
+            for cell in row.cells_by_key.values()
+            if cell.active
         )
 
     def get_cell_total(self, res_request, cell):
@@ -322,15 +318,12 @@ class ResultsGenerator(object):
 
 
 class BonusColumnGeneratorMixin(object):
-
     def create_results_cols(self, res_request):
         if not res_request.single_round and res_request.previous_rows_dict:
             yield ResultsCol(key=c.PREVIOUS_POINTS_COLUMN_KEY, name=c.PREVIOUS_POINTS_COLUMN_NAME)
 
         for task in self.get_task_queryset(res_request):
-            yield ResultsCol(
-                key=task.number, name=str(task.number), task=task
-            )
+            yield ResultsCol(key=task.number, name=str(task.number), task=task)
 
         yield ResultsCol(key=c.BONUS_POINTS_COLUMN_KEY, name=c.BONUS_POINTS_COLUMN_NAME)
         yield ResultsCol(key=c.TOTAL_POINTS_COLUMN_KEY, name=c.TOTAL_POINTS_COLUMN_NAME)
@@ -343,17 +336,16 @@ class BonusColumnGeneratorMixin(object):
 
 
 class PrimarySchoolGeneratorMixin(object):
-
     def get_minimal_year_of_graduation(self, res_request, user):
-        return res_request.round.end_time.year + GRADUATION_SCHOOL_YEAR + int(
-            res_request.round.end_time.month > SCHOOL_YEAR_END_MONTH
+        return (
+            res_request.round.end_time.year
+            + GRADUATION_SCHOOL_YEAR
+            + int(res_request.round.end_time.month > SCHOOL_YEAR_END_MONTH)
         )
 
 
 class CategoryTagKeyGeneratorMixin(object):
-
     def get_task_queryset(self, res_request):
-        return Task.objects.filter(
-            round=res_request.round,
-            categories__name=self.tag.key,
-        ).order_by('number')
+        return Task.objects.filter(round=res_request.round, categories__name=self.tag.key).order_by(
+            "number"
+        )

@@ -22,7 +22,7 @@ def lookup(object, key):
         return None
 
 
-@register.assignment_tag
+@register.simple_tag
 def lookup_as(object, key):
     """
     Looks up for key in object.
@@ -52,20 +52,21 @@ def as_list(value):
     return [value]
 
 
-@register.assignment_tag(takes_context=True)
+@register.simple_tag(takes_context=True)
 def is_organizer(context, competition):
     return (
-        context['user'].is_superuser or
-        competition.organizers_group in context['user'].groups.all()
+        context["user"].is_superuser or competition.organizers_group in context["user"].groups.all()
     )
 
 
-@register.assignment_tag(takes_context=True)
+@register.simple_tag(takes_context=True)
 def is_site_organizer(context):
-    return any(map(
-        lambda competition: is_organizer(context, competition),
-        Competition.objects.current_site_only()
-    ))
+    return any(
+        map(
+            lambda competition: is_organizer(context, competition),
+            Competition.objects.current_site_only(),
+        )
+    )
 
 
 @register.filter
@@ -78,7 +79,7 @@ def exclude(object, key):
     return res
 
 
-@register.assignment_tag
+@register.simple_tag
 def exclude_as(object, key):
     return exclude(object, key)
 
@@ -101,4 +102,4 @@ def school_year(school_year):
     if school_year < 1:
         school_year += 9
         is_elementary = True
-    return '{}{}'.format(school_year, 'zš' if is_elementary else '')
+    return "{}{}".format(school_year, "zš" if is_elementary else "")

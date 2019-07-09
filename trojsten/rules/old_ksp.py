@@ -4,23 +4,20 @@ from django.db import models
 
 import trojsten.results.constants as results_constants
 import trojsten.submit.constants as submit_constants
-from trojsten.results.generator import (CategoryTagKeyGeneratorMixin,
-                                        ResultsGenerator)
+from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
 from trojsten.results.representation import ResultsTag
 from trojsten.submit.models import Submit
 
-
 from .default import CompetitionRules
 
-KSP_Z = 'Z'
-KSP_O = 'O'
+KSP_Z = "Z"
+KSP_O = "O"
 
 
 class KSPResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
-
     def is_user_active(self, request, user):
         active = super(KSPResultsGenerator, self).is_user_active(request, user)
-        if self.tag.key == 'KSP_Z':
+        if self.tag.key == "KSP_Z":
             active = active and True  # @TODO implement this condition
         return active
 
@@ -28,23 +25,26 @@ class KSPResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         """
         Returns the queryset of Submits that should be included in the results.
         """
-        submits = super(KSPResultsGenerator, self).get_submit_queryset(res_request).select_related('task__round')
+        submits = (
+            super(KSPResultsGenerator, self)
+            .get_submit_queryset(res_request)
+            .select_related("task__round")
+        )
 
         penalized_submits = []
 
         if res_request.round.second_end_time is not None:
-            penalized_submits = Submit.objects.filter(
-                task__in=self.get_task_queryset(res_request),
-            ).filter(
-                submit_type=submit_constants.SUBMIT_TYPE_SOURCE
-            ).filter(
-                models.Q(time__gte=models.F('task__round__end_time')) &
-                models.Q(time__lte=models.F('task__round__second_end_time'))
-            ).order_by(
-                'user', 'task', '-time', '-id',
-            ).distinct(
-                'user', 'task',
-            ).select_related('user', 'user__school', 'task', 'task__round')
+            penalized_submits = (
+                Submit.objects.filter(task__in=self.get_task_queryset(res_request))
+                .filter(submit_type=submit_constants.SUBMIT_TYPE_SOURCE)
+                .filter(
+                    models.Q(time__gte=models.F("task__round__end_time"))
+                    & models.Q(time__lte=models.F("task__round__second_end_time"))
+                )
+                .order_by("user", "task", "-time", "-id")
+                .distinct("user", "task")
+                .select_related("user", "user__school", "task", "task__round")
+            )
         return chain(submits, penalized_submits)
 
     def source_submit_points(self, previous_points, submit):
@@ -60,7 +60,10 @@ class KSPResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         else:
             if self._comp_cell_value(previous_points) > submit.user_points:
                 return previous_points
-            if previous_points is None or previous_points is results_constants.UNKNOWN_POINTS_SYMBOL:
+            if (
+                previous_points is None
+                or previous_points is results_constants.UNKNOWN_POINTS_SYMBOL
+            ):
                 previous_points = 0
             return previous_points + (submit.user_points - previous_points) / 2
 
@@ -74,9 +77,6 @@ class KSPResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
 class KSPRules(CompetitionRules):
 
-    RESULTS_TAGS = {
-        KSP_Z: ResultsTag(key=KSP_Z, name='Z'),
-        KSP_O: ResultsTag(key=KSP_O, name='O'),
-    }
+    RESULTS_TAGS = {KSP_Z: ResultsTag(key=KSP_Z, name="Z"), KSP_O: ResultsTag(key=KSP_O, name="O")}
 
     RESULTS_GENERATOR_CLASS = KSPResultsGenerator

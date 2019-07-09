@@ -2,9 +2,16 @@ from __future__ import absolute_import
 
 from trojsten.settings.common import *
 
-DEBUG = False
-SENDFILE_BACKEND = 'sendfile.backends.development'
-EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
-ADMINS = MANAGERS = (('Admin', 'admin@example.com'),)
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        "LOCATION": "results-cache",
+    }
+}
 
-ELASTICSEARCH_TESTS = bool(int(env('TROJSTENWEB_ELASTICSEARCH_TESTS', True)))
+DEBUG = False
+SENDFILE_BACKEND = "sendfile.backends.development"
+EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+ADMINS = MANAGERS = (("Admin", "admin@example.com"),)
+
+ELASTICSEARCH_TESTS = bool(int(env("TROJSTENWEB_ELASTICSEARCH_TESTS", True)))

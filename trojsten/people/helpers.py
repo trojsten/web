@@ -11,8 +11,7 @@ def get_similar_users(user):
     """Returns a list of users similar to the specified user."""
     # TODO check birth day as well. (if defined, filter different)
     return User.objects.exclude(pk=user.pk).filter(
-        first_name=user.first_name,
-        last_name=user.last_name,
+        first_name=user.first_name, last_name=user.last_name
     )
 
 
@@ -64,8 +63,7 @@ def merge_users(target_user, source_user, src_selected_fields, src_selected_user
 
     # Migrate all many to many references from source object to target object.
     for related_many_field in filter(
-        lambda f: f.many_to_many,
-        User._meta.get_fields(include_hidden=True),
+        lambda f: f.many_to_many, User._meta.get_fields(include_hidden=True)
     ):
         field_name = related_many_field.name
         related_many_objects = getattr(source_user, field_name).all()
@@ -84,17 +82,12 @@ def get_required_properties_by_competition(user):
         competitions,
     )
     return {
-        competition: set(competition.required_user_props.all()) - set(
-            map(lambda prop: prop.key, user.properties.all())
-        )
+        competition: set(competition.required_user_props.all())
+        - set(map(lambda prop: prop.key, user.properties.all()))
         for competition in competitions_action_required
     }
 
 
 def get_required_properties(user):
     # Merge all sets into one
-    return reduce(
-        lambda x, y: x | y,
-        get_required_properties_by_competition(user).values(),
-        set()
-    )
+    return reduce(lambda x, y: x | y, get_required_properties_by_competition(user).values(), set())

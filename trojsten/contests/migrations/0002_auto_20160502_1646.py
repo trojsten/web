@@ -7,19 +7,19 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('contests', '0001_squashed_0003_auto_20160301_1436'),
-    ]
+    dependencies = [("contests", "0001_squashed_0003_auto_20160301_1436")]
 
     operations = [
         migrations.AlterField(
-            model_name='round',
-            name='solutions_visible',
-            field=models.BooleanField(default=False, verbose_name='vidite\u013enos\u0165 vzor\xe1kov'),
+            model_name="round",
+            name="solutions_visible",
+            field=models.BooleanField(
+                default=False, verbose_name="vidite\u013enos\u0165 vzor\xe1kov"
+            ),
         ),
         migrations.AlterField(
-            model_name='round',
-            name='visible',
-            field=models.BooleanField(default=False, verbose_name='vidite\u013enos\u0165'),
+            model_name="round",
+            name="visible",
+            field=models.BooleanField(default=False, verbose_name="vidite\u013enos\u0165"),
         ),
     ]

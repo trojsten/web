@@ -1,4 +1,4 @@
-{% load utils additional_registration %}
+{% load utils additional_registration i18n %}
 {% load mathfilters %}
 
 {# FIXME(generic_results_stage_2): Unify HTML style #}
@@ -37,7 +37,7 @@
 {% spaceless %}
 {% if row.active or show_staff %}
 <tr
-    {% if user == row.user %}class="active"{% endif %}
+    {% if user.id == row.user.id %}class="active"{% endif %}
     {# @FIXME(css): Hack until css`s are rewritten #}
     {% if not row.active %}style="opacity: 0.5"{% endif %}
 >
@@ -60,21 +60,21 @@
             {% else %}
                 <span class="text-muted glyphicon glyphicon-pushpin"></span>
             {% endif %}
-        {% elif table.has_previous %}
+        {% elif has_previous_rounds %}
             <span class="text-info glyphicon glyphicon-asterisk"></span>
         {% endif %}
     {% endif %}
     </td>
-    <td class="result-name">{{ row.name }}</td>
-    <td class="result-year">{{ row.year | school_year }}</td>
+    <td class="result-name">{{ row.user.name }}</td>
+    <td class="result-year">{{ row.user.year | school_year }}</td>
     <td class="result-school">
-    {% if row.school %}
-        <abbr title="{{ row.school.verbose_name }}" data-toggle="tooltip"
+    {% if row.user.school %}
+        <abbr title="{{ row.user.school.verbose_name }}" data-toggle="tooltip"
               data-placement="top">
-            {{ row.school_name }}
+            {{ row.user.school.name }}
         </abbr>
     {% else %}
-        {{ row.school_name }}
+        {% trans 'Other school' %}
     {% endif %}
     </td>
     {% for cell in row.cell_list %}

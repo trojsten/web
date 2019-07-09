@@ -7,35 +7,20 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('events', '0004_auto_20170916_2053'),
-    ]
+    dependencies = [("events", "0004_auto_20170916_2053")]
 
     operations = [
-        migrations.RemoveField(
-            model_name='registration',
-            name='required_user_properties',
-        ),
+        migrations.RemoveField(model_name="registration", name="required_user_properties"),
         migrations.AlterModelOptions(
-            name='eventparticipant',
-            options={'verbose_name': '\xfa\u010dastn\xedk akcie', 'verbose_name_plural': '\xfa\u010dastn\xedci akcie'},
+            name="eventparticipant",
+            options={
+                "verbose_name": "\xfa\u010dastn\xedk akcie",
+                "verbose_name_plural": "\xfa\u010dastn\xedci akcie",
+            },
         ),
-        migrations.RemoveField(
-            model_name='event',
-            name='links',
-        ),
-        migrations.RemoveField(
-            model_name='event',
-            name='registration',
-        ),
-        migrations.RemoveField(
-            model_name='event',
-            name='registration_deadline',
-        ),
-        migrations.DeleteModel(
-            name='Link',
-        ),
-        migrations.DeleteModel(
-            name='Registration',
-        ),
+        migrations.RemoveField(model_name="event", name="links"),
+        migrations.RemoveField(model_name="event", name="registration"),
+        migrations.RemoveField(model_name="event", name="registration_deadline"),
+        migrations.DeleteModel(name="Link"),
+        migrations.DeleteModel(name="Registration"),
     ]

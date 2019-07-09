@@ -1,0 +1,19 @@
+{
+  "name": "trojstenweb-css",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "watch": "gulp",
+    "build": "gulp less"
+  },
+  "author": "Jakub Šimo",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-cached": "^1.1.1",
+    "gulp-clean-css": "^3.10.0",
+    "gulp-less": "^4.0.1",
+    "gulp-rename": "^1.4.0"
+  }
+}

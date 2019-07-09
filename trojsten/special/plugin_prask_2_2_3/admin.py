@@ -8,7 +8,7 @@ from .models import UserLink
 
 class UserLinkAdmin(admin.ModelAdmin):
     form = select2_modelform(UserLink)
-    list_display = ('user', 'link')
+    list_display = ("user", "link")
 
 
 admin.site.register(UserLink, UserLinkAdmin)

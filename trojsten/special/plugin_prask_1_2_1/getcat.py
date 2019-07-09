@@ -94,7 +94,7 @@ _cats = [
     "http://25.media.tumblr.com/tumblr_m0h4rnt0w81rpvbr3o1_500.gif",
     "http://25.media.tumblr.com/tumblr_lk64ayaE4h1qbhtrto1_500.gif",
     "http://25.media.tumblr.com/tumblr_lhyv2pSdE81qcn249o1_400.gif",
-    "http://25.media.tumblr.com/tumblr_m1kav2Dqxs1qejbiro1_500.gif"
+    "http://25.media.tumblr.com/tumblr_m1kav2Dqxs1qejbiro1_500.gif",
 ]
 
 

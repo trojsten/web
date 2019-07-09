@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib.sites.models import Site
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils.encoding import python_2_unicode_compatible
 
 
@@ -15,11 +15,11 @@ class Thread(models.Model):
     sites = models.ManyToManyField(Site)
 
     class Meta:
-        verbose_name = 'diskusné vlákno'
-        verbose_name_plural = 'diskusné vlákna'
+        verbose_name = "diskusné vlákno"
+        verbose_name_plural = "diskusné vlákna"
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('thread', kwargs={'thread_id': self.id})
+        return reverse("thread", kwargs={"thread_id": self.id})

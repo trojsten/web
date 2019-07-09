@@ -1,0 +1,118 @@
+{% extends "trojsten/layout/main.html" %}
+{% load bootstrap %}
+{% load i18n %}
+{% load utils %}
+{% load sekizai_tags %}
+{% load staticfiles %}
+{% load wiki_tags %}
+
+{% block title %}{% trans 'Diplomas' %}{% endblock %}
+
+{% block page_header %}
+<h1>{% trans 'Diplomas' %}</h1>
+{% endblock %}
+
+{% block page_content %}
+
+
+    <form action="{% url 'view_diplomas' %}" method="post" id="form" enctype='multipart/form-data' class="form-horizontal">
+        {% csrf_token %}
+        {{ form.media }}
+
+        {{ form.participants_data }}
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#multiple"><h4>{% trans "Multiple diplomas" %}</h4></a></li>
+            <li><a data-toggle="tab" href="#single"><h4>{% trans "Single diploma"%}</h4></a></li>
+        </ul>
+
+        <hr style="margin-bottom: 10px; margin-top: 10px; border-color: #FFF">
+
+        <div class="form-group" style="margin-right: 10px">
+            <label style="margin-right: 15px">{{ form.template.label_tag }}</label>
+            {{ form.template }}
+            <button  style="margin-left: 15px" type="button" class="d-inline-block btn btn-default" data-toggle="modal" data-target="#myModal">{% trans "Preview" %}</button>
+        </div>
+
+
+
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <img id='preview_image' src="" class="img-responsive">
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <hr style="margin-bottom: 10px; margin-top: 10px">
+
+        <div class="tab-content">
+
+            <div id="single" class="tab-pane fade" >
+                <div class="container-fluid" style="text-align: center">
+                    <div class="row" id="dummy_form"></div>
+                    <button class="btn btn-lg btn-success" id='form_submit_single' type="submit">{% trans "Generate" %}</button>
+                </div>
+            </div>
+
+            <div id="multiple" class="tab-pane fade active in">
+
+                <div class="row">
+                      <div class="form-group" style="margin-left: 0">
+                        <label >{% trans "Replaceable fields:" %}</label>
+                        <label id="fields_list"></label>
+                    </div>
+                </div>
+
+
+                {{ form.editor }}
+
+                <div class="container-fluid" style="text-align: center">
+
+
+                    <div class="row">
+                        <div id="sources_container" class="container-fluid"></div>
+                    </div>
+
+                    <div class="row">
+                        <hr>
+                        <h4 style="margin-bottom: 20px;">{% trans "Output options" %}</h4>
+                    </div>
+
+                    <div class="row" style="text-align: center;">
+                        <div class="form-group col-sm-6 col-lg-6">
+                            <!-- TODO: option of copying a download link-->
+                        </div>
+
+                        <div class="form-group col-sm-5 col-lg-5">
+                            <label class="control-label">{{ form.join_pdf.label_tag }}</label>
+                                {{ form.join_pdf }}
+                        </div>
+                       <div class=" col-sm-1 col-lg-1">
+                            <button class="btn btn-lg btn-success" id='form_submit_multiple' type="submit">{% trans "Generate" %}</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        {{ form.non_field_errors }}
+        {{ form.source.errors }}
+        {{ form.source }}
+    </form>
+
+
+<div id="tutorial_container"></div>
+
+{% addtoblock "js" %}
+    <script>var template_fields = "{{ template_fields }}";</script>
+    <script src="{% static "diplomas/js/diplomas.js" %}"></script>
+{% endaddtoblock %}
+
+{% endblock %}
