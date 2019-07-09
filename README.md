@@ -21,7 +21,7 @@ pre-commit install --allow-missing-config
 
 Please follow the instalation manual here: https://github.com/trojsten/web/wiki/Návod-na-inštaláciu
 
-### Commiting code
+### Committing code
 
 Please send a pullrequest with descriptive title and all necessary information in the description. Preferably all in english.
 The pullrequest needs to pass automatic checks and have at least one approval from the project maintainters.
