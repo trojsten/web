@@ -33,7 +33,7 @@ We currently check the following things:
   - the code must also pass [`flake8`](http://flake8.pycqa.org/en/latest/) lint check.
 - tests
   - the PR must pass all tests
-  - the PR should also have a sufficent code coverage.
+  - the PR should also have sufficient code coverage.
 - migrations
   - the PR must include all necessary migrations. Note that Django localizes migrations, so make sure your translations are up to date (`./manage.py compilemessages`) before generating migrations.
 
