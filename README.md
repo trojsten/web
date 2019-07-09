@@ -48,7 +48,7 @@ We currently check the following things:
 - https://login.trojsten.sk
 
 ## Related projects
-- https://github.com/koniiiik/ksp_login
+- https://github.com/trojsten/ksp_login
 - https://github.com/trojsten/news
 - https://github.com/trojsten/django-tips
 - https://github.com/trojsten/submit
