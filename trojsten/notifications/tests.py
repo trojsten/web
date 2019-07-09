@@ -1,15 +1,16 @@
-from django.test import TestCase
-from django.utils import timezone
-from trojsten.people.models import User
-from trojsten.contests.models import Competition, Semester, Round, Task
-from trojsten.submit.models import Submit
-from django.contrib.sites.models import Site
 from django.conf import settings
-from django_nyt.models import Subscription, Notification
-from trojsten.notifications import constants, utils
-from django_nyt import models as django_nyt_models
-from trojsten.submit import constants as submit_constants
+from django.contrib.sites.models import Site
+from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
+from django_nyt import models as django_nyt_models
+from django_nyt.models import Notification, Subscription
+
+from trojsten.contests.models import Competition, Round, Semester, Task
+from trojsten.notifications import constants, utils
+from trojsten.people.models import User
+from trojsten.submit import constants as submit_constants
+from trojsten.submit.models import Submit
 
 
 # Create your tests here.

@@ -1,6 +1,8 @@
-from django_nyt.utils import subscribe
-from django_nyt.models import Settings, Subscription, NotificationType, Notification
 from django.contrib.contenttypes.models import ContentType
+from django_nyt.models import (Notification, NotificationType, Settings,
+                               Subscription)
+from django_nyt.utils import subscribe
+
 from .models import IgnoredNotifications
 
 

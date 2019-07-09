@@ -1,15 +1,16 @@
-from django.dispatch import receiver
+from django.contrib.sites.models import Site
 from django.db.models.signals import post_save
-from django_nyt.utils import notify
-from django.utils.translation import ugettext as _
+from django.dispatch import receiver
 from django.urls import reverse
+from django.utils.translation import ugettext as _
+from django_nyt.utils import notify
 
-from trojsten.submit.models import Submit
-from trojsten.submit.constants import (SUBMIT_TYPE_DESCRIPTION,
-                                       SUBMIT_STATUS_REVIEWED,
-                                       SUBMIT_STATUS_IN_QUEUE)
 from trojsten.notifications import constants
 from trojsten.notifications.utils import subscribe_user_auto
+from trojsten.submit.constants import (SUBMIT_STATUS_IN_QUEUE,
+                                       SUBMIT_STATUS_REVIEWED,
+                                       SUBMIT_TYPE_DESCRIPTION)
+from trojsten.submit.models import Submit
 
 
 @receiver(post_save, sender=Submit, dispatch_uid="notifications_submit_review")
@@ -29,10 +30,13 @@ def submit_reviewed(sender, **kwargs):
             'points': instance.points
         }
 
+        site = Site.objects.get_current()
+        url = "//" + site.domain + reverse("task_submit_page", args=(instance.task_id, ))
+
         notify(text,
                constants.NOTIFICATION_SUBMIT_REVIEWED,
                target_object=instance.user,
-               url=reverse("task_submit_page", args=(instance.task_id, )))
+               url=url)
     # Ak bol iba pridany, skontroluj, ci ucastnik subscribuje notifikacie a aplikuj jeho nastavenia.
     elif instance.testing_status == SUBMIT_STATUS_IN_QUEUE:
         subscribe_user_auto(instance.user,
