@@ -5,7 +5,7 @@ import os
 
 from trojsten.people.management.commands.migrate_base_class import MigrateBaseCommand
 
-"""
+r"""
 Restore the mysql database dump and run (replace <passwd> and <user>)
 Alternatively you can export these tables from phpAdmin.
 

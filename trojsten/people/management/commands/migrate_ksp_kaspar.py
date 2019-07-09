@@ -64,7 +64,7 @@ class Command(MigrateBaseCommand):
         )
 
         for l in cursor1:
-            l = dict(zip(fields, l))
+            l = dict(zip(fields, l))  # noqa: E741
             idcko = l["man_id"]
             self.last_contact[idcko].append(int(l["finish"]) - 3)
 
