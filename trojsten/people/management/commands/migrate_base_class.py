@@ -49,26 +49,26 @@ class MigrateBaseCommand(NoArgsCommand):
         self.last_contact = defaultdict(list)
 
         self.CSV_ID_PROPERTY = self.process_property(
-            constants.CSV_ID_PROPERTY_KEY, "(.{1,20}_)?\d+"
+            constants.CSV_ID_PROPERTY_KEY, r"(.{1,20}_)?\d+"
         )
-        self.MOBIL_PROPERTY = self.process_property(constants.MOBIL_PROPERTY_KEY, "\+?\d+\/?\d+")
-        self.NICKNAME_PROPERTY = self.process_property(constants.NICKNAME_PROPERTY_KEY, ".{1,30}")
+        self.MOBIL_PROPERTY = self.process_property(constants.MOBIL_PROPERTY_KEY, r"\+?\d+\/?\d+")
+        self.NICKNAME_PROPERTY = self.process_property(constants.NICKNAME_PROPERTY_KEY, r".{1,30}")
         self.BIRTH_NAME_PROPERTY = self.process_property(
-            constants.BIRTH_NAME_PROPERTY_KEY, ".{1,30}"
+            constants.BIRTH_NAME_PROPERTY_KEY, r".{1,30}"
         )
         # TODO  fix False and stupid values
         self.LAST_CONTACT_PROPERTY = self.process_property(
-            constants.LAST_CONTACT_PROPERTY_KEY, "\d\d\d\d"
+            constants.LAST_CONTACT_PROPERTY_KEY, r"\d\d\d\d"
         )
-        self.FKS_ID_PROPERTY = self.process_property(constants.FKS_ID_PROPERTY_KEY, "\d+")
-        self.KMS_ID_PROPERTY = self.process_property(constants.KMS_ID_PROPERTY_KEY, "\d+")
-        self.KMS_CAMPS_PROPERTY = self.process_property(constants.KMS_CAMPS_PROPERTY_KEY, "\d+")
-        self.KASPAR_ID_PROPERTY = self.process_property(constants.KASPAR_ID_PROPERTY_KEY, "\d+")
-        self.KASPAR_NOTE_PROPERTY = self.process_property(constants.KASPAR_NOTE_PROPERTY_KEY, ".*")
-        self.KSP_CAMPS_PROPERTY = self.process_property(constants.KSP_CAMPS_PROPERTY_KEY, "\d+")
-        self.MEMORY_PROPERTY = self.process_property(constants.MEMORY_PROPERTY_KEY, ".*")
-        self.COMPANY_PROPERTY = self.process_property(constants.COMPANY_PROPERTY_KEY, ".*")
-        self.AFFILIATION_PROPERTY = self.process_property(constants.AFFILIATION_PROPERTY_KEY, ".*")
+        self.FKS_ID_PROPERTY = self.process_property(constants.FKS_ID_PROPERTY_KEY, r"\d+")
+        self.KMS_ID_PROPERTY = self.process_property(constants.KMS_ID_PROPERTY_KEY, r"\d+")
+        self.KMS_CAMPS_PROPERTY = self.process_property(constants.KMS_CAMPS_PROPERTY_KEY, r"\d+")
+        self.KASPAR_ID_PROPERTY = self.process_property(constants.KASPAR_ID_PROPERTY_KEY, r"\d+")
+        self.KASPAR_NOTE_PROPERTY = self.process_property(constants.KASPAR_NOTE_PROPERTY_KEY, r".*")
+        self.KSP_CAMPS_PROPERTY = self.process_property(constants.KSP_CAMPS_PROPERTY_KEY, r"\d+")
+        self.MEMORY_PROPERTY = self.process_property(constants.MEMORY_PROPERTY_KEY, r".*")
+        self.COMPANY_PROPERTY = self.process_property(constants.COMPANY_PROPERTY_KEY, r".*")
+        self.AFFILIATION_PROPERTY = self.process_property(constants.AFFILIATION_PROPERTY_KEY, r".*")
 
     @transaction.atomic
     def process_school(self, old_id, abbr, name, addr_name, street, city, zip_code):
