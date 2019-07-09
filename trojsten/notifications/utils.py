@@ -1,6 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
-from django_nyt.models import (Notification, NotificationType, Settings,
-                               Subscription)
+from django_nyt.models import Notification, NotificationType, Settings, Subscription
 from django_nyt.utils import subscribe
 
 from .models import IgnoredNotifications
@@ -15,12 +14,14 @@ def subscribe_user_auto(user, key, target=None, force=False):
     :param: target: Object to subscribe to
     :param: force: Wether to force subscription. (Ignores and removes any IgnoredNotifications)
     """
-    content_type = ContentType.objects.get_for_model(
-        target) if target is not None else None
+    content_type = (
+        ContentType.objects.get_for_model(target) if target is not None else None
+    )
     object_id = target.pk if target is not None else None
 
     queryset = IgnoredNotifications.objects.filter(
-        user=user, notification_type_id=key, object_id=object_id)
+        user=user, notification_type_id=key, object_id=object_id
+    )
 
     if queryset.exists():
         if not force:
@@ -28,10 +29,12 @@ def subscribe_user_auto(user, key, target=None, force=False):
         else:
             queryset.delete()
 
-    return subscribe(Settings.get_default_setting(user),
-                     key,
-                     content_type=content_type,
-                     object_id=object_id)
+    return subscribe(
+        Settings.get_default_setting(user),
+        key,
+        content_type=content_type,
+        object_id=object_id,
+    )
 
 
 def unsubscribe_user(user, key, target=None, ignore=True):
@@ -43,22 +46,42 @@ def unsubscribe_user(user, key, target=None, ignore=True):
     :param: target: Object to unsubscribe from
     :param: ignore: Wether to add this to IgnoredNotifications. (Default behaviour)
     """
-    content_type = ContentType.objects.get_for_model(
-        target) if target is not None else None
+    content_type = (
+        ContentType.objects.get_for_model(target) if target is not None else None
+    )
     object_id = target.pk if target is not None else None
 
-    notification_type = NotificationType.get_by_key(key,
-                                                    content_type=content_type)
+    notification_type = NotificationType.get_by_key(key, content_type=content_type)
 
-    Subscription.objects.filter(settings__user=user,
-                                notification_type=notification_type,
-                                object_id=object_id).delete()
+    Subscription.objects.filter(
+        settings__user=user, notification_type=notification_type, object_id=object_id
+    ).delete()
 
     if ignore:
         return IgnoredNotifications.objects.get_or_create(
-            user=user,
-            notification_type=notification_type,
-            object_id=object_id)[0]
+            user=user, notification_type=notification_type, object_id=object_id
+        )[0]
+
+
+def unsubscribe_user_subscription(subscription, ignore=True):
+    """
+    Unsubscribe user from `subscription`.
+
+    :param: subscription: Subscription to unsubscribe
+    :param: ignore: Wether to add this to IgnoredNotifications. (Default behaviour)
+    """
+
+    target = None
+    if subscription.object_id:
+        target = (
+            subscription.notification_type.content_type.model_class()
+            .objects.filter(pk=subscription.object_id)
+            .get()
+        )
+
+    return unsubscribe_user(
+        subscription.settings.user, subscription.notification_type.key, target, ignore
+    )
 
 
 def was_notification_sent(key, target=None):
@@ -68,13 +91,14 @@ def was_notification_sent(key, target=None):
     :param: key: NotificationType key.
     :param: target: Object of interest
     """
-    content_type = ContentType.objects.get_for_model(
-        target) if target is not None else None
+    content_type = (
+        ContentType.objects.get_for_model(target) if target is not None else None
+    )
     object_id = target.pk if target is not None else None
 
-    notification_type = NotificationType.get_by_key(key,
-                                                    content_type=content_type)
+    notification_type = NotificationType.get_by_key(key, content_type=content_type)
 
     return Notification.objects.filter(
         subscription__notification_type=notification_type,
-        subscription__object_id=object_id).exists()
+        subscription__object_id=object_id,
+    ).exists()
