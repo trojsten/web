@@ -26,7 +26,7 @@ Please follow the installation manual here: https://github.com/trojsten/web/wiki
 Please send a pull request with a descriptive title and all necessary information in the description. Preferably all in English.
 The pull request needs to pass automatic checks and have at least one approval from the project maintainers.
 
-We currently check following things:
+We currently check the following things:
 - code style
   - the code must follow [black](https://github.com/python/black) codestyle. The easiest way to achieve this is automatically format with the `black` tool. This is also enforced by the pre-commit check. Note that black is currently not included in the project requirements, because it requires Python 3.6+.
   - imports must be sorted alphabetically (within import categories). You can use [`isort`](https://github.com/timothycrosley/isort) to automatically sort imports the correct way. This is also enforced by the pre-commit check.
