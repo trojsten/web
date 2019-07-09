@@ -17,7 +17,7 @@ Activate it with
 pre-commit install --allow-missing-config
 ```
 
-### Running localy
+### Running locally
 
 Please follow the instalation manual here: https://github.com/trojsten/web/wiki/Návod-na-inštaláciu
 
