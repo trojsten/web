@@ -12,7 +12,7 @@ def get_link(request):
         selected = UserLink.objects.filter(user=None)[0:1]
         created = UserLink.objects.filter(pk__in=selected).update(user=user)
         if created == 0:
-            return render(request, 'plugin_prask_2_2_3/nedostatok.html')
+            return render(request, "plugin_prask_2_2_3/nedostatok.html")
 
     link = UserLink.objects.get(user=user).link
     return redirect(link, permanent=False)

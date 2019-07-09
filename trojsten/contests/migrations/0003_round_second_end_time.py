@@ -7,14 +7,14 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('contests', '0002_auto_20170302_2034'),
-    ]
+    dependencies = [("contests", "0002_auto_20170302_2034")]
 
     operations = [
         migrations.AddField(
-            model_name='round',
-            name='second_end_time',
-            field=models.DateTimeField(blank=True, default=None, null=True, verbose_name='druh\xfd koniec'),
-        ),
+            model_name="round",
+            name="second_end_time",
+            field=models.DateTimeField(
+                blank=True, default=None, null=True, verbose_name="druh\xfd koniec"
+            ),
+        )
     ]

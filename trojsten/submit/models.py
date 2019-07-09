@@ -3,9 +3,9 @@
 from __future__ import unicode_literals
 
 import binascii
-
 import os
 from decimal import Decimal
+
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -14,8 +14,7 @@ from django.utils.safestring import mark_safe
 from markdown import markdown
 
 from trojsten.contests.models import Task
-from trojsten.people.constants import (GRADUATION_SCHOOL_YEAR,
-                                       SCHOOL_YEAR_END_MONTH)
+from trojsten.people.constants import GRADUATION_SCHOOL_YEAR, SCHOOL_YEAR_END_MONTH
 from trojsten.people.models import User
 from trojsten.submit import constants as submit_constants
 
@@ -39,24 +38,22 @@ class SubmitManager(models.Manager):
             )
             if tasks[0].round.semester.competition.primary_school_only:
                 minimal_year_of_graduation += GRADUATION_SCHOOL_YEAR
-            submits = submits.exclude(
-                user__graduation__lt=minimal_year_of_graduation
-            ).exclude(
+            submits = submits.exclude(user__graduation__lt=minimal_year_of_graduation).exclude(
                 user__in=User.objects.filter(
                     groups=tasks[0].round.semester.competition.organizers_group
                 )
             )
 
-        return submits.filter(
-            task__in=tasks,
-        ).filter(
-            models.Q(time__lte=models.F('task__round__end_time'))
-            | models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
-        ).order_by(
-            'user', 'task', 'submit_type', '-time', '-id',
-        ).distinct(
-            'user', 'task', 'submit_type'
-        ).select_related('user__school', 'task')
+        return (
+            submits.filter(task__in=tasks)
+            .filter(
+                models.Q(time__lte=models.F("task__round__end_time"))
+                | models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
+            )
+            .order_by("user", "task", "submit_type", "-time", "-id")
+            .distinct("user", "task", "submit_type")
+            .select_related("user__school", "task")
+        )
 
     # @FIXME: This is used for rendering points for each task at task_list view.
     #  Displaying scores for tasks should be implemented in results/rules.
@@ -64,21 +61,19 @@ class SubmitManager(models.Manager):
         """Returns latest submits which belong to specified tasks and user.
         Only one submit per submit type and task is returned.
         """
-        return self.filter(
-            user=user,
-            task__in=tasks,
-        ).filter(
-            (
-                models.Q(task__round__second_end_time__isnull=False)
-                & models.Q(submit_type=submit_constants.SUBMIT_TYPE_SOURCE)
-                & models.Q(time__lte=models.F('task__round__second_end_time'))
+        return (
+            self.filter(user=user, task__in=tasks)
+            .filter(
+                (
+                    models.Q(task__round__second_end_time__isnull=False)
+                    & models.Q(submit_type=submit_constants.SUBMIT_TYPE_SOURCE)
+                    & models.Q(time__lte=models.F("task__round__second_end_time"))
+                )
+                | models.Q(time__lte=models.F("task__round__end_time"))
+                | models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
             )
-            | models.Q(time__lte=models.F('task__round__end_time'))
-            | models.Q(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
-        ).order_by(
-            'task', 'submit_type', '-time', '-id',
-        ).distinct(
-            'task', 'submit_type'
+            .order_by("task", "submit_type", "-time", "-id")
+            .distinct("task", "submit_type")
         )
 
 
@@ -90,36 +85,46 @@ class Submit(models.Model):
     Description submit has points and filename, Source submit has also
     tester response and protocol ID assigned.
     """
-    task = models.ForeignKey(Task, verbose_name='úloha', on_delete=models.CASCADE)
-    time = models.DateTimeField(default=timezone.now, verbose_name='čas')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='odovzdávateľ', on_delete=models.CASCADE)
-    submit_type = models.IntegerField(verbose_name='typ submitu', choices=submit_constants.SUBMIT_TYPES)
-    points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='body')
 
-    filepath = models.CharField(max_length=512, verbose_name='súbor', blank=True)
+    task = models.ForeignKey(Task, verbose_name="úloha", on_delete=models.CASCADE)
+    time = models.DateTimeField(default=timezone.now, verbose_name="čas")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, verbose_name="odovzdávateľ", on_delete=models.CASCADE
+    )
+    submit_type = models.IntegerField(
+        verbose_name="typ submitu", choices=submit_constants.SUBMIT_TYPES
+    )
+    points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="body")
+
+    filepath = models.CharField(max_length=512, verbose_name="súbor", blank=True)
     testing_status = models.CharField(
-        max_length=128, verbose_name='stav testovania', blank=True,
-        choices=submit_constants.SUBMIT_STATUS_CHOICES)
+        max_length=128,
+        verbose_name="stav testovania",
+        blank=True,
+        choices=submit_constants.SUBMIT_STATUS_CHOICES,
+    )
     tester_response = models.CharField(
-        max_length=10, verbose_name='odpoveď testovača', blank=True,
-        help_text='Očakávané odpovede sú %s' % (
-            ', '.join(submit_constants.SUBMIT_VERBOSE_RESPONSE.keys()),
-        )
+        max_length=10,
+        verbose_name="odpoveď testovača",
+        blank=True,
+        help_text="Očakávané odpovede sú %s"
+        % (", ".join(submit_constants.SUBMIT_VERBOSE_RESPONSE.keys()),),
     )
     protocol_id = models.CharField(
-        db_index=True, max_length=128, verbose_name='číslo protokolu', blank=True)
+        db_index=True, max_length=128, verbose_name="číslo protokolu", blank=True
+    )
 
-    reviewer_comment = models.TextField(verbose_name='komentár od opravovateľa', blank=True)
-    protocol = models.TextField(verbose_name='protokol', blank=True, null=True)
+    reviewer_comment = models.TextField(verbose_name="komentár od opravovateľa", blank=True)
+    protocol = models.TextField(verbose_name="protokol", blank=True, null=True)
 
     objects = SubmitManager()
 
     class Meta:
-        verbose_name = 'Submit'
-        verbose_name_plural = 'Submity'
+        verbose_name = "Submit"
+        verbose_name_plural = "Submity"
 
     def __str__(self):
-        return '%s - %s <%s> (%s)' % (
+        return "%s - %s <%s> (%s)" % (
             self.user,
             self.task,
             submit_constants.SUBMIT_TYPES[self.submit_type][1],
@@ -145,7 +150,7 @@ class Submit(models.Model):
         if is_integer:
             return value.quantize(Decimal(1))
         else:
-            return value.quantize(Decimal('1.00'))
+            return value.quantize(Decimal("1.00"))
 
     @property
     def tested(self):
@@ -160,15 +165,16 @@ class Submit(models.Model):
         """
         return Submit.display_decimal_value(
             self.points,
-            self.submit_type == submit_constants.SUBMIT_TYPE_DESCRIPTION or self.task.integer_source_points,
+            self.submit_type == submit_constants.SUBMIT_TYPE_DESCRIPTION
+            or self.task.integer_source_points,
         )
 
 
 @python_2_unicode_compatible
 class ExternalSubmitToken(models.Model):
-    token = models.CharField(verbose_name='token', max_length=40, primary_key=True)
-    name = models.CharField(verbose_name='názov', max_length=64)
-    task = models.ForeignKey(Task, verbose_name='úloha', on_delete=models.CASCADE)
+    token = models.CharField(verbose_name="token", max_length=40, primary_key=True)
+    name = models.CharField(verbose_name="názov", max_length=64)
+    task = models.ForeignKey(Task, verbose_name="úloha", on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         if not self.token:

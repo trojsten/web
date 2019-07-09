@@ -8,15 +8,10 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('people', '0014_auto_20170716_1813'),
-    ]
+    dependencies = [("people", "0014_auto_20170716_1813")]
 
     operations = [
         migrations.AlterModelManagers(
-            name='user',
-            managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
-            ],
-        ),
+            name="user", managers=[("objects", django.contrib.auth.models.UserManager())]
+        )
     ]

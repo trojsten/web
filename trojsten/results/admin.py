@@ -10,7 +10,7 @@ from .models import Results
 
 class ResultsAdmin(admin.ModelAdmin):
     form = select2_modelform(Results)
-    list_display = ('round', 'tag', 'is_single_round', 'has_previous_results', 'time', )
+    list_display = ("round", "tag", "is_single_round", "has_previous_results", "time")
 
 
 admin.site.register(Results, ResultsAdmin)

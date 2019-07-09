@@ -1,4 +1,4 @@
-{% load utils additional_registration %}
+{% load utils additional_registration i18n %}
 {% load mathfilters %}
 
 {# FIXME(generic_results_stage_2): Unify HTML style #}
@@ -37,7 +37,7 @@
 {% spaceless %}
 {% if row.active or show_staff %}
 <tr
-    {% if user == row.user %}class="active"{% endif %}
+    {% if user.id == row.user.id %}class="active"{% endif %}
     {# @FIXME(css): Hack until css`s are rewritten #}
     {% if not row.active %}style="opacity: 0.5"{% endif %}
 >
@@ -74,7 +74,7 @@
             {{ row.user.school.name }}
         </abbr>
     {% else %}
-        {{ row.user.school.name }}
+        {% trans 'Other school' %}
     {% endif %}
     </td>
     {% for cell in row.cell_list %}

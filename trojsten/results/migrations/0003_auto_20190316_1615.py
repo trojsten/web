@@ -5,17 +5,17 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-    dependencies = [
-        ('results', '0002_auto_20180219_2151'),
-    ]
+    dependencies = [("results", "0002_auto_20180219_2151")]
 
     operations = [
         migrations.AlterField(
-            model_name='results',
-            name='serialized_results',
+            model_name="results",
+            name="serialized_results",
             field=django.contrib.postgres.fields.JSONField(blank=True),
         ),
         migrations.RunSQL(
-            'alter table results_results alter column serialized_results type jsonb '
-            'using "serialized_results"::text::jsonb;', reverse_sql='')
+            "alter table results_results alter column serialized_results type jsonb "
+            'using "serialized_results"::text::jsonb;',
+            reverse_sql="",
+        ),
     ]

@@ -1,18 +1,6 @@
 [
   {
     "model": "schools.school",
-    "pk": 1,
-    "fields": {
-      "abbreviation": "",
-      "verbose_name": "Iná škola",
-      "addr_name": "",
-      "street": "",
-      "city": "",
-      "zip_code": ""
-    }
-  },
-  {
-    "model": "schools.school",
     "pk": 2,
     "fields": {
       "abbreviation": "SBánov",

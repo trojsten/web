@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from collections import namedtuple
+
 from trojsten.utils.utils import Serializable
 
-ResultsTag = namedtuple('ResultsTag', ['key', 'name'])
+ResultsTag = namedtuple("ResultsTag", ["key", "name"])
 
 
 class ResultsCell(Serializable):
-
     def __init__(self, points=None, manual_points=None, auto_points=None, active=True):
         self.points = points
         self.manual_points = manual_points
@@ -16,27 +16,28 @@ class ResultsCell(Serializable):
 
 
 class ResultsCol(Serializable):
-
     def __init__(self, key=None, name=None, task=None):
         self.key = key
         self.name = name
         self.task = task
 
     def encode(self):
-        col_data = {
-            'name': self.name,
-            'key': self.key,
-        }
-        if (self.task is not None):
-            col_data['task'] = dict(id=self.task.id, name=self.task.name)
+        col_data = {"name": self.name, "key": self.key}
+        if self.task is not None:
+            col_data["task"] = dict(id=self.task.id, name=self.task.name)
         return col_data
 
 
 class ResultsRow(Serializable):
-
     def __init__(
-        self, user=None, school=None, name=None, year=None, school_name=None,
-        previous=None, active=True
+        self,
+        user=None,
+        school=None,
+        name=None,
+        year=None,
+        school_name=None,
+        previous=None,
+        active=True,
     ):
         if user is not None:
             school = school or user.school
@@ -66,37 +67,36 @@ class ResultsRow(Serializable):
 
     def _serialize_user_data(self):
         return {
-            'id': self.user.id,
-            'username': self.user.username,
-            'name': self.user.get_full_name(),
-            'school': self._serialize_school_data(),
-            'year': self.year,
+            "id": self.user.id,
+            "username": self.user.username,
+            "name": self.user.get_full_name(),
+            "school": self._serialize_school_data(),
+            "year": self.year,
         }
 
     def _serialize_school_data(self):
         if self.school:
             return {
-                'id': self.school.id,
-                'name': self.school_name,
-                'verbose_name': self.school.verbose_name,
+                "id": self.school.id,
+                "name": self.school_name,
+                "verbose_name": self.school.verbose_name,
             }
         else:
             return None
 
     def encode(self):
         row = {
-            'user': self._serialize_user_data(),
-            'cell_list': self.cell_list,
-            'rank': self.rank,
-            'active': self.active
+            "user": self._serialize_user_data(),
+            "cell_list": self.cell_list,
+            "rank": self.rank,
+            "active": self.active,
         }
         if self.previous:
-            row['previous'] = self.previous
+            row["previous"] = self.previous
         return row
 
 
 class Results(Serializable):
-
     def __init__(self, round, tag=None, single_round=True, has_previous=False):
         self.cols = []
         self.rows = []
@@ -114,14 +114,10 @@ class Results(Serializable):
         return iter(self.rows)
 
     def encode(self):
-        return {
-            'cols': self.cols,
-            'rows': self.rows,
-        }
+        return {"cols": self.cols, "rows": self.rows}
 
 
 class ResultsRequest(object):
-
     def __init__(self, round, single_round=True, previous_rows=None):
         self.round = round
         self.single_round = single_round

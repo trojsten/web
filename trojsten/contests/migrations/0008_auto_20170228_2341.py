@@ -8,23 +8,32 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('contests', '0007_auto_20161031_2313_squashed_0009_remove_task_reviewer'),
-    ]
+    dependencies = [("contests", "0007_auto_20161031_2313_squashed_0009_remove_task_reviewer")]
 
     operations = [
         migrations.AlterModelOptions(
-            name='taskpeople',
-            options={'verbose_name': 'Pridelen\xfd \u010dlovek', 'verbose_name_plural': 'Pridelen\xed \u013eudia'},
+            name="taskpeople",
+            options={
+                "verbose_name": "Pridelen\xfd \u010dlovek",
+                "verbose_name_plural": "Pridelen\xed \u013eudia",
+            },
         ),
         migrations.AlterField(
-            model_name='taskpeople',
-            name='role',
-            field=models.IntegerField(choices=[(0, 'opravovate\u013e'), (1, 'solution writer'), (2, 'recenzova\u010d')], verbose_name='funkcia'),
+            model_name="taskpeople",
+            name="role",
+            field=models.IntegerField(
+                choices=[(0, "opravovate\u013e"), (1, "solution writer"), (2, "recenzova\u010d")],
+                verbose_name="funkcia",
+            ),
         ),
         migrations.AlterField(
-            model_name='taskpeople',
-            name='task',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='task_people', to='contests.Task', verbose_name='task'),
+            model_name="taskpeople",
+            name="task",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="task_people",
+                to="contests.Task",
+                verbose_name="task",
+            ),
         ),
     ]
