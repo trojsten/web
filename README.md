@@ -19,7 +19,7 @@ pre-commit install --allow-missing-config
 
 ### Running locally
 
-Please follow the instalation manual here: https://github.com/trojsten/web/wiki/Návod-na-inštaláciu
+Please follow the installation manual here: https://github.com/trojsten/web/wiki/Návod-na-inštaláciu
 
 ### Committing code
 
