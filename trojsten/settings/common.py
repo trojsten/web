@@ -5,6 +5,7 @@ import os
 import sys
 
 from django.contrib.messages import constants as messages
+from django.core.files.storage import FileSystemStorage
 from django.http import UnreadablePostError
 from django.utils.translation import ugettext_lazy as _
 from judge_client import client
@@ -406,9 +407,10 @@ FLUENT_COMMENTS_USE_EMAIL_NOTIFICATION = False
 #
 
 # Task statements settings
-TASK_STATEMENTS_PATH = env(
+_TASK_STATEMENTS_PATH = env(
     "TROJSTENWEB_TASK_STATEMENTS_PATH", os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, "statements")
 )
+TASK_STATEMENTS_STORAGE = FileSystemStorage(location=_TASK_STATEMENTS_PATH)
 TASK_STATEMENTS_TASKS_DIR = env("TROJSTENWEB_TASK_STATEMENTS_TASKS_DIR", "zadania")
 TASK_STATEMENTS_PREFIX_TASK = env("TROJSTENWEB_TASK_STATEMENTS_PREFIX_TASK", "prikl")
 TASK_STATEMENTS_SOLUTIONS_DIR = env("TROJSTENWEB_TASK_STATEMENTS_SOLUTIONS_DIR", "vzoraky")

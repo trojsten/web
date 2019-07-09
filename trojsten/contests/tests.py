@@ -6,6 +6,7 @@ from os import path
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
+from django.core.files.storage import FileSystemStorage
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
@@ -17,7 +18,7 @@ from wiki.models import Article, ArticleRevision, URLPath
 from trojsten.contests import constants
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
-from trojsten.utils.test_utils import get_noexisting_id
+from trojsten.utils.test_utils import TestNonFileSystemStorage, get_noexisting_id
 
 
 class ArchiveTest(TestCase):
@@ -267,7 +268,9 @@ class TaskListTests(TestCase):
 
 
 @override_settings(
-    TASK_STATEMENTS_PATH=path.join(path.dirname(__file__), "test_data", "statements"),
+    TASK_STATEMENTS_STORAGE=FileSystemStorage(
+        location=path.join(path.dirname(__file__), "test_data", "statements")
+    ),
     TASK_STATEMENTS_TASKS_DIR="tasks",
     TASK_STATEMENTS_PREFIX_TASK="",
     TASK_STATEMENTS_SOLUTIONS_DIR="solutions",
@@ -369,7 +372,9 @@ class TaskAndSolutionStatementsTests(TestCase):
 
 
 @override_settings(
-    TASK_STATEMENTS_PATH=path.join(path.dirname(__file__), "test_data", "statements"),
+    TASK_STATEMENTS_STORAGE=FileSystemStorage(
+        location=path.join(path.dirname(__file__), "test_data", "statements")
+    ),
     TASK_STATEMENTS_TASKS_DIR="tasks",
     TASK_STATEMENTS_PREFIX_TASK="",
     TASK_STATEMENTS_SOLUTIONS_DIR="solutions",
@@ -406,12 +411,25 @@ class PdfDownloadTests(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
+    @override_settings(TASK_STATEMENTS_STORAGE=TestNonFileSystemStorage())
+    def test_task_pdf_nonfilesystem_storage(self):
+        round = Round.objects.create(
+            number=1, semester=self.semester, visible=True, solutions_visible=True
+        )
+        filename = round.get_pdf_path(False)
+        settings.TASK_STATEMENTS_STORAGE.add_file(filename)
+        url = reverse("view_pdf", kwargs={"round_id": round.id})
+        response = self.client.get(url)
+        self.assertRedirects(
+            response, "http://example.com/{}".format(filename), fetch_redirect_response=False
+        )
+
     def test_solution_pdf(self):
         round = Round.objects.create(
             number=1, semester=self.semester, visible=True, solutions_visible=True
         )
         url = reverse("view_solutions_pdf", kwargs={"round_id": round.id})
-        response = self.client.get(url)
+        response = self.client.get(url, follow=True)
         self.assertEqual(response.status_code, 200)
 
     def test_missing_task_pdf(self):
@@ -481,6 +499,45 @@ class PdfDownloadTests(TestCase):
         url = reverse("view_solutions_pdf", kwargs={"round_id": round.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+
+@override_settings(
+    TASK_STATEMENTS_STORAGE=FileSystemStorage(
+        location=path.join(path.dirname(__file__), "test_data", "statements")
+    ),
+    TASK_STATEMENTS_TASKS_DIR="tasks",
+    TASK_STATEMENTS_PREFIX_TASK="",
+    TASK_STATEMENTS_PICTURES_DIR="pictures",
+)
+class ShowPictureTests(TestCase):
+    def setUp(self):
+        group = Group.objects.create(name="staff")
+        competition = Competition.objects.create(name="TestCompetition", organizers_group=group)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        semester = Semester.objects.create(
+            number=1, name="Test semester", competition=competition, year=1
+        )
+        self.round = Round.objects.create(
+            number=1, semester=semester, visible=True, solutions_visible=True
+        )
+        self.task = Task.objects.create(number=1, name="Test task", round=self.round)
+        self.url = reverse(
+            "show_picture",
+            kwargs={"task_id": self.task.id, "type": "zadania", "picture": "picture.png"},
+        )
+
+    def test_task_image(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    @override_settings(TASK_STATEMENTS_STORAGE=TestNonFileSystemStorage())
+    def test_task_pdf_nonfilesystem_storage(self):
+        filename = path.join(self.round.get_pictures_path(), "picture.png")
+        settings.TASK_STATEMENTS_STORAGE.add_file(filename)
+        response = self.client.get(self.url)
+        self.assertRedirects(
+            response, "http://example.com/{}".format(filename), fetch_redirect_response=False
+        )
 
 
 class TaskPeopleTests(TestCase):

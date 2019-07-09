@@ -4,7 +4,7 @@ import os
 
 from django.conf import settings
 from django.http import Http404
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from news.models import Entry as NewsEntry
 from sendfile import sendfile
 from wiki.decorators import get_article
@@ -27,11 +27,11 @@ def _statement_view(request, task_id, solution=False):
         raise Http404
     template_data = {"task": task}
     if task.task_file_exists:
-        with open(task.get_path(solution=False)) as f:
+        with settings.TASK_STATEMENTS_STORAGE.open(task.get_path(solution=False)) as f:
             template_data["task_text"] = f.read()
 
     if solution and task.solution_file_exists:
-        with open(task.get_path(solution=True)) as f:
+        with settings.TASK_STATEMENTS_STORAGE.open(task.get_path(solution=True)) as f:
             template_data["solution_text"] = f.read()
     return render(
         request,
@@ -67,10 +67,13 @@ def view_pdf(request, round_id, solution=False):
     if solution and not round.solutions_are_visible_for_user(request.user):
         raise Http404
     path = round.get_pdf_path(solution)
-    if os.path.exists(path):
-        response = sendfile(request, path)
-        response["Content-Disposition"] = 'inline; filename="%s"' % round.get_pdf_name(solution)
-        return response
+    if settings.TASK_STATEMENTS_STORAGE.exists(path):
+        try:
+            response = sendfile(request, settings.TASK_STATEMENTS_STORAGE.path(path))
+            response["Content-Disposition"] = 'inline; filename="%s"' % round.get_pdf_name(solution)
+            return response
+        except NotImplementedError:
+            return redirect(settings.TASK_STATEMENTS_STORAGE.url(path))
     else:
         raise Http404
 
@@ -83,8 +86,11 @@ def show_picture(request, type, task_id, picture):
     if ext not in settings.ALLOWED_PICTURE_EXT:
         raise Http404
     path = os.path.join(task.round.get_pictures_path(), picture)
-    if os.path.exists(path):
-        return sendfile(request, path)
+    if settings.TASK_STATEMENTS_STORAGE.exists(path):
+        try:
+            return sendfile(request, settings.TASK_STATEMENTS_STORAGE.path(path))
+        except NotImplementedError:
+            return redirect(settings.TASK_STATEMENTS_STORAGE.url(path))
     else:
         raise Http404
 
