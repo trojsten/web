@@ -52,3 +52,5 @@ We currently check the following things:
 - https://github.com/trojsten/news
 - https://github.com/trojsten/django-tips
 - https://github.com/trojsten/submit
+- https://github.com/trojsten/judge-client
+- https://github.com/trojsten/web-base
