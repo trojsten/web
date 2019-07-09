@@ -24,7 +24,7 @@ Please follow the installation manual here: https://github.com/trojsten/web/wiki
 ### Committing code
 
 Please send a pull request with a descriptive title and all necessary information in the description. Preferably all in English.
-The pullrequest needs to pass automatic checks and have at least one approval from the project maintainters.
+The pull request needs to pass automatic checks and have at least one approval from the project maintainers.
 
 We currently check following things:
 - code style
