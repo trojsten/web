@@ -53,5 +53,6 @@ def submit_created(sender, **kwargs):
     if instance.testing_status != SUBMIT_STATUS_IN_QUEUE:
         return
 
-    subscribe_user_auto(instance.user, constants.NOTIFICATION_CONTEST_UPDATED,
+    subscribe_user_auto(instance.user,
+                        constants.NOTIFICATION_CONTEST_NEW_ROUND,
                         instance.task.round.semester.competition)

@@ -17,9 +17,8 @@ def subscribe_user_auto(user, key, target=None, force=False):
         target) if target is not None else None
     object_id = target.pk if target is not None else None
 
-    queryset = IgnoredNotifications.objects.filter(user=user,
-                                                   notification_type__key=key,
-                                                   object_id=object_id)
+    queryset = IgnoredNotifications.objects.filter(
+        user=user, notification_type_id=key, object_id=object_id)
 
     if queryset.exists():
         if not force:
@@ -27,10 +26,10 @@ def subscribe_user_auto(user, key, target=None, force=False):
         else:
             queryset.delete()
 
-    subscribe(Settings.get_default_setting(user),
-              key,
-              content_type=content_type,
-              object_id=object_id)
+    return subscribe(Settings.get_default_setting(user),
+                     key,
+                     content_type=content_type,
+                     object_id=object_id)
 
 
 def unsubscribe_user(user, key, target=None, ignore=True):
