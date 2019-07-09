@@ -1,9 +1,5 @@
-from __future__ import unicode_literals
-
-import sys
 from collections import defaultdict
 from datetime import datetime
-from imp import reload
 
 from django.core.management import BaseCommand as NoArgsCommand
 from django.db import transaction
@@ -15,14 +11,11 @@ from trojsten.people.helpers import get_similar_users
 from trojsten.people.models import Address, DuplicateUser, User, UserProperty, UserPropertyKey
 from trojsten.schools.models import School
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
-
 
 class MigrateBaseCommand(NoArgsCommand):
     help = "Base class for importing people."
-    SCHOOLS_IN_FAST_RUN = 100
-    USER_IN_FAST_RUN = 100
+    NUMBER_OF_SCHOOLS_IN_FAST_RUN = 100
+    NUMBER_OF_USERS_IN_FAST_RUN = 100
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -38,7 +31,7 @@ class MigrateBaseCommand(NoArgsCommand):
             dest="fast",
             default=False,
             help="Create only the first {} users and {} schools".format(
-                self.USER_IN_FAST_RUN, self.SCHOOLS_IN_FAST_RUN
+                self.NUMBER_OF_USERS_IN_FAST_RUN, self.NUMBER_OF_SCHOOLS_IN_FAST_RUN
             ),
         )
 
@@ -81,7 +74,7 @@ class MigrateBaseCommand(NoArgsCommand):
     def process_school(self, old_id, abbr, name, addr_name, street, city, zip_code):
 
         self.done_schools += 1
-        if self.fast and self.done_schools > self.SCHOOLS_IN_FAST_RUN:
+        if self.fast and self.done_schools > self.NUMBER_OF_SCHOOLS_IN_FAST_RUN:
             return None
         # TODO improve this, do not work with abbreviations
         if not abbr:
@@ -161,7 +154,7 @@ class MigrateBaseCommand(NoArgsCommand):
         """
         # If we run in the fast mode and we already processed enough users, we skip this one.
         self.done_users += 1
-        if self.fast and self.done_users > self.USER_IN_FAST_RUN:
+        if self.fast and self.done_users > self.NUMBER_OF_USERS_IN_FAST_RUN:
             return None
 
         old_id_property = None
