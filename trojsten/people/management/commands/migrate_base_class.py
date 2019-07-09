@@ -21,7 +21,7 @@ sys.setdefaultencoding("utf-8")
 
 class MigrateBaseCommand(NoArgsCommand):
     help = 'Base class for importing people.'
-    SCHOOLS_INF_FAST_RUN = 100
+    SCHOOLS_IN_FAST_RUN = 100
     USER_IN_FAST_RUN = 100
 
     def add_arguments(self, parser):
@@ -35,7 +35,7 @@ class MigrateBaseCommand(NoArgsCommand):
                             dest='fast',
                             default=False,
                             help='Create only the first {} users and {} schools'.format(
-                                self.USER_IN_FAST_RUN, self.SCHOOLS_INF_FAST_RUN))
+                                self.USER_IN_FAST_RUN, self.SCHOOLS_IN_FAST_RUN))
 
     def handle(self, **options):
         self.dry = options['dry']
@@ -85,7 +85,7 @@ class MigrateBaseCommand(NoArgsCommand):
                        city, zip_code):
 
         self.done_schools += 1
-        if self.fast and self.done_schools > self.SCHOOLS_INF_FAST_RUN:
+        if self.fast and self.done_schools > self.SCHOOLS_IN_FAST_RUN:
             return None
         # TODO improve this, do not work with abbreviations
         if not abbr:
