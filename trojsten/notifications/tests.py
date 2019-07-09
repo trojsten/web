@@ -84,8 +84,6 @@ class SubmitTest(TestCase):
         notification = query.get()
         self.assertIn('10', notification.message)
         self.assertIn(self.task.__str__(), notification.message)
-        self.assertEqual(notification.url,
-                         reverse("task_submit_page", args=(self.task.pk, )))
 
 
 class ContestTest(TestCase):
