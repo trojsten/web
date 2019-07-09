@@ -1,0 +1,11 @@
+{% load i18n %}{% autoescape off %}{% blocktrans with user.first_name as name %}Hello {{ name }}!{% endblocktrans %}
+
+{% blocktrans %}You have new notifications from Trojsten:{% endblocktrans %}
+{% for n in notifications %}
+ * {{ n.message }}
+   https://login.trojsten.sk/wiki/notify/goto/{{n.pk}}
+{% endfor %}
+
+{% trans "Sincerely" %},
+Trojsten
+{% endautoescape %}

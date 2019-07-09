@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-09 22:09+0200\n"
+"POT-Creation-Date: 2019-07-09 22:32+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -360,6 +360,19 @@ msgid ""
 msgstr ""
 "Tvoj popis úlohy \"%(task)s\" bol opravený. Získal si %(points)d bodov."
 
+#: trojsten/notifications/templates/emails/notification_email_message.txt:1
+#, python-format
+msgid "Hello %(name)s!"
+msgstr "Ahoj, %(name)s!"
+
+#: trojsten/notifications/templates/emails/notification_email_message.txt:3
+msgid "You have new notifications from Trojsten:"
+msgstr "Máš nové notifikácie z Trojstenu:"
+
+#: trojsten/notifications/templates/emails/notification_email_message.txt:9
+msgid "Sincerely"
+msgstr "S pozdravom"
+
 #: trojsten/people/admin.py:158
 msgid "Personal info"
 msgstr "Osobné údaje"
@@ -683,8 +696,8 @@ msgid ""
 "you automatically."
 msgstr ""
 "Odoberané udalosti sú také udalosti, o ktorých ťa budeme notifikovať. "
-"Ignorované udalosti sú také udalosti, o ktorých ťa nebudeme notifikovať "
-"a ani ťa neprihlásime na ich odber automaticky."
+"Ignorované udalosti sú také udalosti, o ktorých ťa nebudeme notifikovať a "
+"ani ťa neprihlásime na ich odber automaticky."
 
 #: trojsten/people/templates/trojsten/people/settings.html:122
 msgid "You can use any of the following services to log in to your account."
@@ -894,6 +907,10 @@ msgstr "Úspešne dokončené opravovanie tejto úlohy!"
 #: trojsten/settings/common.py:427
 msgid "Table of Contents"
 msgstr ""
+
+#: trojsten/settings/common.py:540
+msgid "New notifications"
+msgstr "Nové notifikácie"
 
 #: trojsten/submit/constants.py:11
 msgid "reviewed"

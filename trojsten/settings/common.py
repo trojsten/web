@@ -536,3 +536,5 @@ EDITOR_CONFIG = {
     'lineNumbers': True,
     'tabSize': 4
 }
+
+NYT_EMAIL_SUBJECT = _('New notifications')
