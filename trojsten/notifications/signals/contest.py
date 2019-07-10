@@ -17,7 +17,7 @@ def round_published(sender, **kwargs):
         return
 
     site = Site.objects.get_current()
-    url = "//" + site.domain + reverse("task_list", args=(instance.pk,))
+    url = "//%(domain)s%(url)s" % (site.domain, reverse("task_list", args=(instance.pk,)))
 
     text = _("New round started! %(round)s") % {"round": instance}
 

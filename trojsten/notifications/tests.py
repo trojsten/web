@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.test import TestCase
-from django.urls import reverse
 from django.utils import timezone
 from django_nyt import models as django_nyt_models
 from django_nyt.models import Notification, Subscription
@@ -13,7 +12,6 @@ from trojsten.submit import constants as submit_constants
 from trojsten.submit.models import Submit
 
 
-# Create your tests here.
 class SubmitTest(TestCase):
     def setUp(self):
         grad_year = timezone.now().year + 1
@@ -82,8 +80,7 @@ class SubmitTest(TestCase):
         submit.save()
 
         subscription = Subscription.objects.filter(
-            notification_type__key=constants.NOTIFICATION_SUBMIT_REVIEWED,
-            object_id=self.user.pk,
+            notification_type__key=constants.NOTIFICATION_SUBMIT_REVIEWED, object_id=self.user.pk
         ).get()
 
         query = Notification.objects.filter(subscription=subscription, user=self.user)
@@ -113,13 +110,13 @@ class ContestTest(TestCase):
             number=1, name="Test semester", competition=self.competition, year=1
         )
 
-    # Django_nyt si cachuje notification_type, ale my ich po skonceni testu mazeme.
-    # a potom sa to pokazi.
-    # Vid https://github.com/django-wiki/django-nyt/issues/34
+    # Django_nyt is caching notification_type, but we delete them after each test.
+    # This breaks the test.
+    # See https://github.com/django-wiki/django-nyt/issues/34
     def tearDown(self):
         django_nyt_models.clear_notification_type_cache()
 
-    def test_update_invisible(self):
+    def test_update_invisible_to_invisible(self):
         round = Round.objects.create(
             number=1,
             semester=self.semester,
@@ -129,7 +126,7 @@ class ContestTest(TestCase):
             end_time=self.end_time_new,
         )
 
-        subscription = utils.subscribe_user_auto(
+        subscription = utils.subscribe_user(
             self.user, constants.NOTIFICATION_CONTEST_NEW_ROUND, self.competition
         )
 
@@ -137,12 +134,10 @@ class ContestTest(TestCase):
         round.save()
 
         self.assertFalse(
-            Notification.objects.filter(
-                subscription=subscription, user=self.user
-            ).exists()
+            Notification.objects.filter(subscription=subscription, user=self.user).exists()
         )
 
-    def test_update_visible(self):
+    def test_update_invisible_to_visible(self):
         round = Round.objects.create(
             number=1,
             semester=self.semester,
@@ -152,7 +147,7 @@ class ContestTest(TestCase):
             end_time=self.end_time_new,
         )
 
-        saubscription = utils.subscribe_user_auto(
+        subscription = utils.subscribe_user(
             self.user, constants.NOTIFICATION_CONTEST_NEW_ROUND, self.competition
         )
 
@@ -160,12 +155,10 @@ class ContestTest(TestCase):
         round.save()
 
         self.assertTrue(
-            Notification.objects.filter(
-                subscription=saubscription, user=self.user
-            ).exists()
+            Notification.objects.filter(subscription=subscription, user=self.user).exists()
         )
 
-    def test_update_visible_multiple(self):
+    def test_update_visible_to_visible(self):
         round = Round.objects.create(
             number=1,
             semester=self.semester,
@@ -175,7 +168,7 @@ class ContestTest(TestCase):
             end_time=self.end_time_new,
         )
 
-        subscription = utils.subscribe_user_auto(
+        subscription = utils.subscribe_user(
             self.user, constants.NOTIFICATION_CONTEST_NEW_ROUND, self.competition
         )
 

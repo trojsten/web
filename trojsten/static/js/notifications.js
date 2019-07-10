@@ -8,11 +8,11 @@
   let last_count = -1;
 
   let update_data = () => {
-    $.getJSON('/wiki/notify/json/get', (data) => {
+    $.getJSON(window.TROJSTEN_NOTIFY_URL, (data) => {
       let content = []
 
       data.objects.forEach(notification => {
-        content.push('<li role="presentation"><a href="/wiki/notify/goto/'+notification.pk+'"><i class="glyphicon glyphicon-' + (icons[notification.type] || 'info-sign') + '"></i> ' + notification.message + '</a></li>');
+        content.push('<li role="presentation"><a href="'+window.TROJSTEN_NOTIFY_GOTO+notification.pk+'"><i class="glyphicon glyphicon-' + (icons[notification.type] || 'info-sign') + '"></i> ' + notification.message + '</a></li>');
       })
 
       $('#notification-box-content').html(content.join(''))

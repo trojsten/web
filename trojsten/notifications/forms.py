@@ -1,17 +1,16 @@
-from django import forms
 from crispy_forms import layout
 from crispy_forms.helper import FormHelper
+from django import forms
+from django.utils.translation import ugettext_lazy as _
 from django_nyt.models import Subscription
+
 from trojsten.notifications import constants
 from trojsten.notifications.models import IgnoredNotifications
-from trojsten.notifications.utils import unsubscribe_user_subscription
-from django.utils.translation import ugettext_lazy as _
+from trojsten.notifications.utils import unsubscribe_from_subscription
 
 
 def _pretty_subscription_name(subscription):
-    pretty_name = constants.NOTIFICATION_PRETTY_NAMES[
-        subscription.notification_type.key
-    ]
+    pretty_name = constants.NOTIFICATION_PRETTY_NAMES[subscription.notification_type.key]
     if subscription.object_id:
         target = (
             subscription.notification_type.content_type.model_class()
@@ -29,9 +28,7 @@ class NotificationSettingsForm(forms.Form):
         self.user = user
 
         self.helper = FormHelper()
-        self.helper.add_input(
-            layout.Submit("notification_subscription_submit", _("Submit"))
-        )
+        self.helper.add_input(layout.Submit("notification_subscription_submit", _("Submit")))
         self.helper.form_show_labels = True
 
         subscriptions = Subscription.objects.filter(settings__user=self.user).all()
@@ -53,18 +50,16 @@ class NotificationSettingsForm(forms.Form):
         self.fields["ignored"].label = _("Ignored events")
 
     def save(self):
-        subscriptions = Subscription.objects.filter(settings__user=self.user).all()
-        ignored = IgnoredNotifications.objects.filter(user=self.user).all()
+        subscriptions = Subscription.objects.filter(settings__user=self.user)
+        ignored = IgnoredNotifications.objects.filter(user=self.user)
 
         enabled_subscriptions = set(map(int, self.cleaned_data["subscriptions"]))
         enabled_ignored = set(map(int, self.cleaned_data["ignored"]))
 
         for subscription in ignored:
             if subscription.pk not in enabled_ignored:
-                IgnoredNotifications.objects.filter(
-                    user=self.user, pk=subscription.pk
-                ).delete()
+                IgnoredNotifications.objects.filter(user=self.user, pk=subscription.pk).delete()
 
         for subscription in subscriptions:
             if subscription.pk not in enabled_subscriptions:
-                unsubscribe_user_subscription(subscription)
+                unsubscribe_from_subscription(subscription)

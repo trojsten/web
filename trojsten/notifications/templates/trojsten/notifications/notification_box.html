@@ -1,10 +1,14 @@
 {% load i18n sekizai_tags staticfiles %}
+{% if user.is_authenticated %}
 {% addtoblock "js" %}
-    <script>window.TROJSTEN_ICON = "{% static "images/trojsten/logo_small.png" %}"</script>
+    <script>
+      window.TROJSTEN_ICON = "{% static 'images/trojsten/logo_small.png' %}"
+      window.TROJSTEN_NOTIFY_URL = "{% url 'nyt:json_get' %}"
+      window.TROJSTEN_NOTIFY_GOTO = "{% url 'nyt:goto_base' %}"
+    </script>
     <script type="text/javascript" src="{% static 'js/notifications.js' %}"></script>
 {% endaddtoblock %}
 
-{% if user.is_authenticated %}
 <ul class="nav navbar-nav navbar-right" style="margin-right:16px;">
 <li class="dropdown">
     <p class="dropdown-toggle btn btn-primary navbar-btn" id="notification-dropdown" data-toggle="dropdown">
