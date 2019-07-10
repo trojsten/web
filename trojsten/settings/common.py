@@ -476,4 +476,4 @@ DIPLOMA_PARTICIPANTS_ALLOWED_EXTENSIONS = [".csv", ".json"]
 
 EDITOR_CONFIG = {"mode": "python", "lineWrapping": False, "lineNumbers": True, "tabSize": 4}
 
-NYT_EMAIL_SUBJECT = _('New notifications')
+NYT_EMAIL_SUBJECT = _("New notifications")

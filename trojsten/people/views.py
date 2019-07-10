@@ -6,6 +6,7 @@ from ksp_login.forms import UserProfileForm, get_profile_forms
 from social_django.models import UserSocialAuth
 
 from trojsten.contests.models import Competition, Round
+from trojsten.notifications.forms import NotificationSettingsForm
 from trojsten.people.models import User
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED, SUBMIT_TYPE_DESCRIPTION
 from trojsten.submit.models import Submit
@@ -19,7 +20,6 @@ from .forms import (
 )
 from .helpers import get_required_properties
 from .models import UserProperty
-from trojsten.notifications.forms import NotificationSettingsForm
 
 
 class VisibleUserPropForm(forms.ModelForm):
