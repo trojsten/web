@@ -31,7 +31,7 @@ class NotificationSettingsForm(forms.Form):
         self.helper.add_input(layout.Submit("notification_subscription_submit", _("Submit")))
         self.helper.form_show_labels = True
 
-        subscriptions = Subscription.objects.filter(settings__user=self.user).all()
+        subscriptions = Subscription.objects.filter(settings__user=self.user)
         self.fields["subscriptions"] = forms.MultipleChoiceField(
             choices=[(s.pk, _pretty_subscription_name(s)) for s in subscriptions],
             initial=[s.pk for s in subscriptions],
@@ -40,7 +40,7 @@ class NotificationSettingsForm(forms.Form):
         )
         self.fields["subscriptions"].label = _("Subscribed events")
 
-        ignored = IgnoredNotifications.objects.filter(user=self.user).all()
+        ignored = IgnoredNotifications.objects.filter(user=self.user)
         self.fields["ignored"] = forms.MultipleChoiceField(
             choices=[(s.pk, _pretty_subscription_name(s)) for s in ignored],
             initial=[s.pk for s in ignored],

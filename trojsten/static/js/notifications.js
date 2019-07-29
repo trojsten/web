@@ -5,7 +5,6 @@
   }
 
   const original_title = $('title').text()
-  let last_count = -1;
 
   let update_data = () => {
     $.getJSON(window.TROJSTEN_NOTIFY_URL, (data) => {
@@ -26,34 +25,9 @@
         $('#notification-box-content').html('<li role="presentation"><a href="#">Žiadne notifikácie!</a></li>')
         $('title').text(original_title)
       }
-
-      if (last_count != -1 && last_count < data.total_count && Notification.permission == 'granted') {
-        let diff = data.total_count - last_count
-
-        if (diff == 1) {
-          new Notification('Trojsten', {
-            body: data.objects[data.objects.length - 1].message,
-            icon: window.TROJSTEN_ICON
-          })
-        } else {
-          let sklon = 'nových notifikácií'
-          if (diff < 5) {
-            sklon = 'nové notifikácie'
-          }
-
-          new Notification('Trojsten', {
-            body: 'Máš ' + diff + ' ' + sklon + '!',
-            icon: window.TROJSTEN_ICON
-          })
-        }
-      }
-
-      last_count = data.total_count
     })
   }
 
   update_data()
   setInterval(update_data, 5*60*1000)
-
-  Notification.requestPermission()
 })()
