@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-29 11:39+0200\n"
+"POT-Creation-Date: 2019-07-29 11:56+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -80,8 +80,6 @@ msgid "Send notification to reviewers about new code submit"
 msgstr "Zaslať opravovateľom notifikáciu o submite kódu"
 
 #: trojsten/contests/models.py:409
-#, fuzzy
-#| msgid "tasks"
 msgid "task"
 msgstr "úloha"
 
@@ -94,8 +92,6 @@ msgid "reviewer"
 msgstr "opravovateľ"
 
 #: trojsten/contests/models.py:414
-#, fuzzy
-#| msgid "solution-writer"
 msgid "solution writer"
 msgstr "vzorákovač"
 
@@ -343,7 +339,7 @@ msgstr "Nové kolo"
 
 #: trojsten/notifications/constants.py:8
 msgid "Submit reviewed"
-msgstr "Popis opravený"
+msgstr "Popis bol opravený"
 
 #: trojsten/notifications/forms.py:31 trojsten/people/forms.py:533
 #: trojsten/people/forms.py:571
@@ -364,11 +360,11 @@ msgstr "Ignorované udalosti"
 
 #: trojsten/notifications/models.py:13
 msgid "Ignored notification"
-msgstr "Ignorovaný typ notifikácie"
+msgstr "Ignorovaná notifikácia"
 
 #: trojsten/notifications/models.py:14
 msgid "Ignored notifications"
-msgstr "Ignorované typy notifikácie"
+msgstr "Ignorované notifikácie"
 
 #: trojsten/notifications/signals/contest.py:22
 #, python-format
@@ -381,7 +377,8 @@ msgid ""
 "Your description for \"%(task)s\" has been reviewed. You earned %(points)d "
 "points!"
 msgstr ""
-"Tvoj popis úlohy \"%(task)s\" bol opravený. Získal si %(points)d bodov."
+"Tvoj popis úlohy \"%(task)s\" bol opravený. Získal si %(points)d "
+"bodov!"
 
 #: trojsten/notifications/templates/emails/notification_email_message.txt:1
 #, python-format
@@ -394,7 +391,7 @@ msgstr "Máš nové notifikácie z Trojstenu:"
 
 #: trojsten/notifications/templates/emails/notification_email_message.txt:9
 msgid "Sincerely"
-msgstr "S pozdravom"
+msgstr ""
 
 #: trojsten/people/admin.py:170
 msgid "Personal info"
@@ -520,8 +517,6 @@ msgid "Points have to be non-negative and at most {}."
 msgstr "Body musia byť nezáporné a najviac {}."
 
 #: trojsten/people/forms.py:471
-#, fuzzy
-#| msgid "The value has to be integer or {}."
 msgid "The value has to be number or {}."
 msgstr "Hodnota musí byť číslo alebo {}."
 
@@ -693,7 +688,7 @@ msgstr "Súťaže"
 
 #: trojsten/people/templates/trojsten/people/settings.html:24
 msgid "Notifications"
-msgstr "Notifikácie"
+msgstr "Nofitikácie"
 
 #: trojsten/people/templates/trojsten/people/settings.html:26
 #: trojsten/people/templates/trojsten/people/settings.html:28
@@ -709,8 +704,9 @@ msgid "Choose which competitions would you like to participate in:"
 msgstr "Vyber si súťaže, ktoré chceš riešiť:"
 
 #: trojsten/people/templates/trojsten/people/settings.html:112
+#| msgid "Choose which competitions would you like to participate in:"
 msgid "Choose which events would you like to get notified about:"
-msgstr "Vyber si udalosti, o ktorých ťa máme notifikovať:"
+msgstr "Vyber si udalosti, o ktorých chceš byť upozornený:"
 
 #: trojsten/people/templates/trojsten/people/settings.html:116
 msgid ""
@@ -718,9 +714,6 @@ msgid ""
 "are events which you won't get notified about and we will not resubscribe "
 "you automatically."
 msgstr ""
-"Odoberané udalosti sú také udalosti, o ktorých ťa budeme notifikovať. "
-"Ignorované udalosti sú také udalosti, o ktorých ťa nebudeme notifikovať a "
-"ani ťa neprihlásime na ich odber automaticky."
 
 #: trojsten/people/templates/trojsten/people/settings.html:122
 msgid "You can use any of the following services to log in to your account."
