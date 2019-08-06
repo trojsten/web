@@ -51,7 +51,7 @@ django-taggit==1.1.0      # via django-trojsten-news
 django-threadedcomments==1.2
 django-tips==0.7.0
 django-trojsten-news==0.2.2
-django==2.1.10
+django==2.1.11
 djangorestframework==3.9.4
 ecdsa==0.13.2
 elasticsearch==7.0.2
@@ -64,7 +64,6 @@ flake8==3.7.7
 html5lib==1.0.1           # via bleach
 identify==1.4.5           # via pre-commit
 importlib-metadata==0.18  # via pre-commit
-importlib-resources==1.0.2  # via pre-commit
 isort==4.3.21
 jdcal==1.4.1              # via openpyxl
 ksp-login==0.6.1
