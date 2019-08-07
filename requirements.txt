@@ -8,20 +8,20 @@ asn1crypto==0.24.0        # via cryptography
 aspy.yaml==1.3.0          # via pre-commit
 backports.csv==1.0.7
 bcrypt==3.1.7             # via paramiko
-beautifulsoup4==4.7.1     # via bs4
+beautifulsoup4==4.8.0     # via bs4
 bleach==2.1.4             # via wiki
 bs4==0.0.1
 bumpversion==0.5.3
 certifi==2015.04.28
 cffi==1.12.3              # via bcrypt, cryptography, pynacl
-cfgv==2.0.0               # via pre-commit
+cfgv==2.0.1               # via pre-commit
 click==7.0                # via pip-tools
-coverage==4.5.3
+coverage==4.5.4
 cryptography==2.7         # via paramiko
 czech-sort==0.4
 defusedxml==0.6.0         # via odfpy, python3-openid, social-auth-core
 diff-match-patch==20181111  # via django-import-export
-django-autoslug==1.9.4    # via django-trojsten-news
+django-autoslug==1.9.6    # via django-trojsten-news
 django-bootstrap-form==3.4
 django-bulk-update==2.2.0
 django-classy-tags==0.9.0
@@ -51,19 +51,19 @@ django-taggit==1.1.0      # via django-trojsten-news
 django-threadedcomments==1.2
 django-tips==0.7.0
 django-trojsten-news==0.2.2
-django==2.1.10
-djangorestframework==3.9.4
+django==2.1.11
+djangorestframework==3.10.2
 ecdsa==0.13.2
 elasticsearch==7.0.2
 entrypoints==0.3          # via flake8
 et-xmlfile==1.0.1         # via openpyxl
 fabric==1.14.1
-faker==1.0.7
+faker==2.0.0
 first==2.0.2
-flake8==3.7.7
+flake8==3.7.8
 html5lib==1.0.1           # via bleach
 identify==1.4.5           # via pre-commit
-importlib-metadata==0.18  # via pre-commit
+importlib-metadata==0.19  # via pre-commit
 importlib-resources==1.0.2  # via pre-commit
 isort==4.3.21
 jdcal==1.4.1              # via openpyxl
@@ -71,13 +71,13 @@ ksp-login==0.6.1
 markdown==2.6.11          # via django-tips, django-trojsten-news, pymdown-extensions, wiki
 mccabe==0.6.1             # via flake8
 nodeenv==1.3.3            # via pre-commit
-oauthlib==3.0.2           # via django-oauth-toolkit, requests-oauthlib, social-auth-core
+oauthlib==3.1.0           # via django-oauth-toolkit, requests-oauthlib, social-auth-core
 odfpy==1.4.0              # via tablib
 openpyxl==2.6.2           # via tablib
 paramiko==2.6.0           # via fabric
 pillow==6.1.0             # via wiki
-pip-tools==3.8.0
-pre-commit==1.17.0
+pip-tools==4.0.0
+pre-commit==1.18.0
 psycopg2==2.8.3
 pycodestyle==2.5.0        # via flake8
 pycparser==2.19           # via cffi
@@ -88,8 +88,8 @@ pynacl==1.3.0             # via paramiko
 python-akismet==0.4.1     # via django-fluent-comments
 python-dateutil==2.8.0    # via faker
 python3-openid==3.1.0     # via social-auth-core
-pytz==2019.1
-pyyaml==5.1.1
+pytz==2019.2
+pyyaml==5.1.2
 requests-oauthlib==1.2.0  # via social-auth-core
 requests==2.14.2
 six==1.12.0               # via bcrypt, bleach, cfgv, cryptography, faker, html5lib, pip-tools, pre-commit, pynacl, python-dateutil, social-auth-app-django, social-auth-core, trojsten-judge-client
@@ -104,9 +104,9 @@ toml==0.10.0              # via pre-commit
 trojsten-judge-client==1.0.2
 unidecode==1.1.1
 urllib3==1.25.3           # via elasticsearch
-virtualenv==16.6.1        # via pre-commit
+virtualenv==16.7.2        # via pre-commit
 webencodings==0.5.1       # via html5lib
-wiki==0.4.4
+wiki==0.4.5
 xlrd==1.2.0               # via tablib
 xlwt==1.3.0               # via tablib
-zipp==0.5.1               # via importlib-metadata
+zipp==0.5.2               # via importlib-metadata
