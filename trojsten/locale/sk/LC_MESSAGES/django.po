@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-05 22:12+0200\n"
+"POT-Creation-Date: 2019-10-05 22:50+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -351,6 +351,10 @@ msgstr "Odoslať"
 msgid "Subscribed events"
 msgstr "Odoberané udalosti"
 
+#: trojsten/notifications/management/commands/sendnotifications.py:29
+msgid "You have new notifications from Trojsten"
+msgstr "Máš nové notifikácie z Trojstenu"
+
 #: trojsten/notifications/notification_types.py:113
 msgid "New round started"
 msgstr "Začiatok nového kola"
@@ -371,6 +375,23 @@ msgid ""
 "points!"
 msgstr ""
 "Tvoj popis úlohy \"%(task)s\" bol opravený. Získal si %(points)d bodov!"
+
+#: trojsten/notifications/templates/trojsten/notifications/email.txt:3
+#, python-format
+msgid "Hi %(name)s!"
+msgstr "Ahoj %(name)s!"
+
+#: trojsten/notifications/templates/trojsten/notifications/email.txt:5
+msgid "There are few new events waiting for you on Trojsten sites:"
+msgstr "Na stránkach Trojstenu ťa čakajú nové udalosti:"
+
+#: trojsten/notifications/templates/trojsten/notifications/email.txt:9
+msgid ""
+"Best regards,\n"
+"Trojsten"
+msgstr ""
+"S pozdravom,\n"
+"Trojsten"
 
 #: trojsten/people/admin.py:158
 msgid "Personal info"
