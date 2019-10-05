@@ -38,6 +38,7 @@ urlpatterns = common_urlpatterns + [
     url(r'^diskusie/', include('trojsten.threads.urls')),
     url(r'^$', trojsten.views.home_redirect),
     url(r'^wiki/notify/', include('django_nyt.urls')),
+    url(r'^notifications/', include('trojsten.notifications.urls')),
     url(r'^', include('favicon.urls')),
     url(r'^', include('wiki.urls')),
 ]

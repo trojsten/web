@@ -260,6 +260,14 @@ class Round(models.Model):
             unidecode(_('solutions')) if solution else unidecode(_('tasks'))
         )
 
+    def __init__(self, *args, **kwargs):
+        super(Round, self).__init__(*args, **kwargs)
+        self.previous_visible = self.visible
+
+    def save(self, *args, **kwargs):
+        super(Round, self).save(*args, **kwargs)
+        self.previous_visible = self.visible
+
 
 class TaskManager(models.Manager):
     def for_rounds_and_category(self, rounds, category=None):
