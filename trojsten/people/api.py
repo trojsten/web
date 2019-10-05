@@ -6,14 +6,14 @@ from trojsten.contests.models import Competition
 from trojsten.utils.utils import is_true
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def switch_contest_participation(request):
     user = request.user
     try:
-        competition = get_object_or_404(Competition, pk=int(request.POST.get('competition', None)))
+        competition = get_object_or_404(Competition, pk=int(request.POST.get("competition", None)))
     except (TypeError, ValueError):
         return HttpResponseBadRequest()
-    ignored = is_true(request.POST.get('value', 'false'))
+    ignored = is_true(request.POST.get("value", "false"))
 
     if ignored:
         user.ignored_competitions.add(competition)

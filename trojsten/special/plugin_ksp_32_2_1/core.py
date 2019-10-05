@@ -18,7 +18,7 @@ class Level1(object):
 
     @classmethod
     def run(cls, x):
-        return str(2*x+3)
+        return str(2 * x + 3)
 
 
 class Level2(object):
@@ -27,7 +27,7 @@ class Level2(object):
 
     @classmethod
     def run(cls, x):
-        return str((x*(x+1))//2)
+        return str((x * (x + 1)) // 2)
 
 
 class Level3(object):
@@ -48,22 +48,22 @@ class Level4(object):
 
     @classmethod
     def run(cls, x):
-        n = int(x**0.5)//2
-        x -= 4*n*n
-        if x < 2*n+1:
-            res = (-n, n-x)
-        elif x < 4*n+2:
-            res = (-n+1+(x-2*n-1), -n)
-        elif x < 6*n+3:
-            res = (n+1, -n+1+(x-4*n-2))
+        n = int(x ** 0.5) // 2
+        x -= 4 * n * n
+        if x < 2 * n + 1:
+            res = (-n, n - x)
+        elif x < 4 * n + 2:
+            res = (-n + 1 + (x - 2 * n - 1), -n)
+        elif x < 6 * n + 3:
+            res = (n + 1, -n + 1 + (x - 4 * n - 2))
         else:
-            res = (n-(x-6*n-3), n+1)
+            res = (n - (x - 6 * n - 3), n + 1)
         return str(res)
 
 
 class Level5(object):
 
-    TARGET = 'drúže'
+    TARGET = "drúže"
     DATA = []
     FILE = os.path.join(os.path.dirname(__file__), "dom.txt")
 
@@ -71,7 +71,7 @@ class Level5(object):
     def init_data(cls):
         if not cls.DATA:
             with codecs.open(cls.FILE, "r", "utf8") as f:
-                cls.DATA = [""]+list(f)
+                cls.DATA = [""] + list(f)
 
     @classmethod
     def run(cls, x):
@@ -105,7 +105,7 @@ class Level7(object):
 
 class Level8(object):
 
-    TARGET = str(13*7*2*2*2)
+    TARGET = str(13 * 7 * 2 * 2 * 2)
 
     @classmethod
     def divs(cls):
@@ -116,7 +116,7 @@ class Level8(object):
     @classmethod
     def run(cls, x):
         if x == 0:
-            return 'NEKONEČNO'
+            return "NEKONEČNO"
         res = 1
         for i in cls.divs():
             if x == 1:
@@ -130,7 +130,7 @@ class Level8(object):
 
 class Level9(object):
 
-    TARGET = str(1234*1024 + 256)
+    TARGET = str(1234 * 1024 + 256)
 
     @classmethod
     def run(cls, x):
@@ -139,22 +139,22 @@ class Level9(object):
 
 class Level10(object):
 
-    TARGET = '7 SPRÁVNE, 0 NA ZLEJ POZÍCII'
+    TARGET = "7 SPRÁVNE, 0 NA ZLEJ POZÍCII"
     SECRET = "2637033"
 
     @classmethod
     def run(cls, x):
         x = str(int(x))
         if len(x) < 7:
-            return 'KRÁTKE'
+            return "KRÁTKE"
         if len(x) > 7:
-            return 'DLHÉ'
+            return "DLHÉ"
         spravne = 0
         for i in range(7):
             if cls.SECRET[i] == x[i]:
                 spravne += 1
         pozicia = len(list((Counter(cls.SECRET) & Counter(x)).elements()))
-        return '%d SPRÁVNE, %d NA ZLEJ POZÍCII' % (spravne, pozicia-spravne)
+        return "%d SPRÁVNE, %d NA ZLEJ POZÍCII" % (spravne, pozicia - spravne)
 
 
 LEVELS = {

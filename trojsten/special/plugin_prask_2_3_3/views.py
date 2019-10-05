@@ -13,6 +13,4 @@ def solved(request, level):
     if created:
         update_points(user)
 
-    return render(request, 'plugin_prask_2_3_3/level.html', {
-        "created": created,
-    })
+    return render(request, "plugin_prask_2_3_3/level.html", {"created": created})

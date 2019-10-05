@@ -7,14 +7,16 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('contests', '0003_round_second_end_time'),
-    ]
+    dependencies = [("contests", "0003_round_second_end_time")]
 
     operations = [
         migrations.AlterField(
-            model_name='competition',
-            name='required_user_props',
-            field=models.ManyToManyField(blank=True, to='people.UserPropertyKey', verbose_name='Povinn\xe9 vlastnosti \u010dloveka'),
-        ),
+            model_name="competition",
+            name="required_user_props",
+            field=models.ManyToManyField(
+                blank=True,
+                to="people.UserPropertyKey",
+                verbose_name="Povinn\xe9 vlastnosti \u010dloveka",
+            ),
+        )
     ]

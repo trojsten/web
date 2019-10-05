@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import os
+
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
@@ -19,6 +20,7 @@ from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
 from trojsten.submit import constants as submit_constants
 from trojsten.utils import utils
+
 from . import constants
 
 
@@ -34,8 +36,7 @@ class RoundManager(models.Manager):
         res = self.filter(semester__competition__in=competitions)
         if not user.is_superuser:
             res = res.filter(
-                Q(semester__competition__organizers_group__in=user.groups.all())
-                | Q(visible=True)
+                Q(semester__competition__organizers_group__in=user.groups.all()) | Q(visible=True)
             )
         return res
 
@@ -43,36 +44,41 @@ class RoundManager(models.Manager):
     def latest_visible(self, user, all_sites=False):
         """Returns latest visible round for each competition
         """
-        return self.visible(user, all_sites).order_by(
-            'semester__competition', '-end_time', '-number',
-        ).distinct(
-            'semester__competition'
-        ).select_related(
-            'semester__competition'
+        return (
+            self.visible(user, all_sites)
+            .order_by("semester__competition", "-end_time", "-number")
+            .distinct("semester__competition")
+            .select_related("semester__competition")
         )
 
     def active_visible(self, user, all_sites=False):
         """Returns all visible running rounds for each competition
         """
-        return self.visible(user, all_sites).filter(
-            (Q(second_end_time__isnull=False) & Q(second_end_time__gte=timezone.now()))
-            | (Q(second_end_time__isnull=True) & Q(end_time__gte=timezone.now()))
-        ).order_by(
-            '-end_time', '-number',
-        ).select_related(
-            'semester__competition'
+        return (
+            self.visible(user, all_sites)
+            .filter(
+                (Q(second_end_time__isnull=False) & Q(second_end_time__gte=timezone.now()))
+                | (Q(second_end_time__isnull=True) & Q(end_time__gte=timezone.now()))
+            )
+            .order_by("-end_time", "-number")
+            .select_related("semester__competition")
         )
 
     def latest_finished_for_competition(self, competition):
-        return self.filter(semester__competition=competition, visible=True, end_time__lt=timezone.now()) \
-            .order_by('-end_time').first()
+        return (
+            self.filter(
+                semester__competition=competition, visible=True, end_time__lt=timezone.now()
+            )
+            .order_by("-end_time")
+            .first()
+        )
 
 
 class CompetitionManager(models.Manager):
     def current_site_only(self):
         """Returns only competitions belonging to current site
         """
-        return Competition.objects.filter(sites__id=settings.SITE_ID).order_by('pk').all()
+        return Competition.objects.filter(sites__id=settings.SITE_ID).order_by("pk").all()
 
 
 @python_2_unicode_compatible
@@ -80,14 +86,20 @@ class Competition(models.Model):
     """
     Consists of semester.
     """
-    name = models.CharField(max_length=128, verbose_name='názov')
+
+    name = models.CharField(max_length=128, verbose_name="názov")
     sites = models.ManyToManyField(Site)
-    organizers_group = models.ForeignKey(Group, null=True, verbose_name='skupina vedúcich', on_delete=models.CASCADE)
+    organizers_group = models.ForeignKey(
+        Group, null=True, verbose_name="skupina vedúcich", on_delete=models.CASCADE
+    )
     primary_school_only = models.BooleanField(
-        default=False, verbose_name='súťaž je iba pre základoškolákov'
+        default=False, verbose_name="súťaž je iba pre základoškolákov"
     )
     required_user_props = models.ManyToManyField(
-        UserPropertyKey, limit_choices_to={'hidden': False}, verbose_name='Povinné vlastnosti človeka', blank=True
+        UserPropertyKey,
+        limit_choices_to={"hidden": False},
+        verbose_name="Povinné vlastnosti človeka",
+        blank=True,
     )
 
     @property
@@ -97,8 +109,8 @@ class Competition(models.Model):
     objects = CompetitionManager()
 
     class Meta:
-        verbose_name = 'Súťaž'
-        verbose_name_plural = 'Súťaže'
+        verbose_name = "Súťaž"
+        verbose_name_plural = "Súťaže"
 
     def __str__(self):
         return self.name
@@ -109,24 +121,28 @@ class Semester(models.Model):
     """
     Semester consists of several rounds.
     """
-    competition = models.ForeignKey(Competition, verbose_name='súťaž', on_delete=models.CASCADE)
-    name = models.CharField(max_length=32, verbose_name='názov', blank=True)
-    number = models.IntegerField(verbose_name='číslo části')
-    year = models.IntegerField(verbose_name='ročník')
+
+    competition = models.ForeignKey(Competition, verbose_name="súťaž", on_delete=models.CASCADE)
+    name = models.CharField(max_length=32, verbose_name="názov", blank=True)
+    number = models.IntegerField(verbose_name="číslo části")
+    year = models.IntegerField(verbose_name="ročník")
 
     class Meta:
-        verbose_name = 'Časť'
-        verbose_name_plural = 'Časti'
+        verbose_name = "Časť"
+        verbose_name_plural = "Časti"
 
     def __str__(self):
-        return '%i. (%s) časť, %i. ročník %s' \
-               % (self.number, self.name, self.year, self.competition)
+        return "%i. (%s) časť, %i. ročník %s" % (
+            self.number,
+            self.name,
+            self.year,
+            self.competition,
+        )
 
     def short_str(self):
-        return '%i. (%s) časť' \
-               % (self.number, self.name)
+        return "%i. (%s) časť" % (self.number, self.name)
 
-    short_str.short_description = 'Časť'
+    short_str.short_description = "Časť"
 
 
 @python_2_unicode_compatible
@@ -135,20 +151,17 @@ class Round(models.Model):
     Round has tasks.
     Holds information about deadline and such things
     """
-    semester = models.ForeignKey(Semester, verbose_name='časť', on_delete=models.CASCADE)
-    number = models.IntegerField(verbose_name='číslo')
-    start_time = models.DateTimeField(
-        verbose_name='začiatok', default=utils.default_start_time
-    )
-    end_time = models.DateTimeField(
-        verbose_name='koniec', default=utils.default_end_time
-    )
+
+    semester = models.ForeignKey(Semester, verbose_name="časť", on_delete=models.CASCADE)
+    number = models.IntegerField(verbose_name="číslo")
+    start_time = models.DateTimeField(verbose_name="začiatok", default=utils.default_start_time)
+    end_time = models.DateTimeField(verbose_name="koniec", default=utils.default_end_time)
     second_end_time = models.DateTimeField(
-        verbose_name='druhý koniec', blank=True, null=True, default=None,
+        verbose_name="druhý koniec", blank=True, null=True, default=None
     )
-    visible = models.BooleanField(verbose_name='viditeľnosť', default=False)
-    solutions_visible = models.BooleanField(verbose_name='viditeľnosť vzorákov', default=False)
-    results_final = models.BooleanField(verbose_name='výsledky sú finálne', default=False)
+    visible = models.BooleanField(verbose_name="viditeľnosť", default=False)
+    solutions_visible = models.BooleanField(verbose_name="viditeľnosť vzorákov", default=False)
+    results_final = models.BooleanField(verbose_name="výsledky sú finálne", default=False)
 
     objects = RoundManager()
 
@@ -161,56 +174,48 @@ class Round(models.Model):
 
     @property
     def second_phase_running(self):
-        return self.second_end_time is not None and self.end_time < timezone.now() < self.second_end_time
+        return (
+            self.second_end_time is not None
+            and self.end_time < timezone.now() < self.second_end_time
+        )
 
     def get_base_path(self):
         round_dir = str(self.number)
         semester_dir = str(self.semester.number)
         year_dir = str(self.semester.year)
         competition_name = self.semester.competition.name
-        path = os.path.join(
-            settings.TASK_STATEMENTS_PATH,
-            competition_name,
-            year_dir,
-            semester_dir,
-            round_dir,
-        )
+        path = os.path.join(competition_name, year_dir, semester_dir, round_dir)
         return path
 
     def get_path(self, solution=False):
-        path_type = settings.TASK_STATEMENTS_SOLUTIONS_DIR if solution \
+        path_type = (
+            settings.TASK_STATEMENTS_SOLUTIONS_DIR
+            if solution
             else settings.TASK_STATEMENTS_TASKS_DIR
-        path = os.path.join(
-            self.get_base_path(),
-            path_type,
         )
+        path = os.path.join(self.get_base_path(), path_type)
         return path
 
     def get_pdf_path(self, solution=False):
-        pdf_file = settings.TASK_STATEMENTS_SOLUTIONS_PDF if solution \
-            else settings.TASK_STATEMENTS_PDF
-        path = os.path.join(
-            self.get_path(solution),
-            pdf_file,
+        pdf_file = (
+            settings.TASK_STATEMENTS_SOLUTIONS_PDF if solution else settings.TASK_STATEMENTS_PDF
         )
+        path = os.path.join(self.get_path(solution), pdf_file)
         return path
 
     def get_pictures_path(self):
-        path = os.path.join(
-            self.get_base_path(),
-            settings.TASK_STATEMENTS_PICTURES_DIR,
-        )
+        path = os.path.join(self.get_base_path(), settings.TASK_STATEMENTS_PICTURES_DIR)
         return path
 
     @property
     def tasks_pdf_exists(self):
         path = self.get_pdf_path(solution=False)
-        return os.path.exists(path)
+        return settings.TASK_STATEMENTS_STORAGE.exists(path)
 
     @property
     def solutions_pdf_exists(self):
         path = self.get_pdf_path(solution=True)
-        return os.path.exists(path)
+        return settings.TASK_STATEMENTS_STORAGE.exists(path)
 
     def frozen_results_exists(self, single_round=False):
         return FrozenResults.objects.filter(round=self, is_single_round=single_round).exists()
@@ -234,11 +239,11 @@ class Round(models.Model):
         return self.semester.competition.category_set.all()
 
     class Meta:
-        verbose_name = 'Kolo'
-        verbose_name_plural = 'Kolá'
+        verbose_name = "Kolo"
+        verbose_name_plural = "Kolá"
 
     def __str__(self):
-        return '%i. kolo, %i. časť, %i. ročník %s' % (
+        return "%i. kolo, %i. časť, %i. ročník %s" % (
             self.number,
             self.semester.number,
             self.semester.year,
@@ -246,18 +251,18 @@ class Round(models.Model):
         )
 
     def short_str(self):
-        return '%i. kolo' % self.number
+        return "%i. kolo" % self.number
 
-    short_str.short_description = 'kolo'
+    short_str.short_description = "kolo"
 
     def get_pdf_name(self, solution=False):
-        return '%s-%s%i-%s%i-%s.pdf' % (
+        return "%s-%s%i-%s%i-%s.pdf" % (
             self.semester.competition,
-            unidecode(_('year')),
+            unidecode(_("year")),
             self.semester.year,
-            unidecode(_('round')),
+            unidecode(_("round")),
             self.number,
-            unidecode(_('solutions')) if solution else unidecode(_('tasks'))
+            unidecode(_("solutions")) if solution else unidecode(_("tasks")),
         )
 
     def __init__(self, *args, **kwargs):
@@ -275,14 +280,10 @@ class TaskManager(models.Manager):
         """
         if not rounds:
             return self.none()
-        tasks = self.filter(
-            round__in=rounds
-        )
+        tasks = self.filter(round__in=rounds)
         if category is not None:
-            tasks = tasks.filter(
-                category=category
-            )
-        return tasks.order_by('round', 'number')
+            tasks = tasks.filter(category=category)
+        return tasks.order_by("round", "number")
 
 
 @python_2_unicode_compatible
@@ -291,16 +292,17 @@ class Category(models.Model):
     Competition consists of a few categories. Each task belongs to one or more
     categories.
     """
-    name = models.CharField(max_length=16, verbose_name='názov')
-    competition = models.ForeignKey(Competition, verbose_name='súťaž', on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=16, verbose_name="názov")
+    competition = models.ForeignKey(Competition, verbose_name="súťaž", on_delete=models.CASCADE)
 
     @property
     def full_name(self):
-        return '%s-%s' % (self.competition.name, self.name)
+        return "%s-%s" % (self.competition.name, self.name)
 
     class Meta:
-        verbose_name = 'Kategória'
-        verbose_name_plural = 'Kategórie'
+        verbose_name = "Kategória"
+        verbose_name_plural = "Kategórie"
 
     def __str__(self):
         return self.full_name
@@ -312,39 +314,39 @@ class Task(models.Model):
     Task has its number, name, type and points value.
     Task has submits.
     """
-    name = models.CharField(max_length=128, verbose_name='názov')
-    round = models.ForeignKey(Round, verbose_name='kolo', on_delete=models.CASCADE)
-    categories = models.ManyToManyField(Category, verbose_name='kategória', blank=True)
-    number = models.IntegerField(verbose_name='číslo')
-    description_points = models.IntegerField(verbose_name='body za popis', default=0)
-    source_points = models.IntegerField(verbose_name='body za program', default=0)
+
+    name = models.CharField(max_length=128, verbose_name="názov")
+    round = models.ForeignKey(Round, verbose_name="kolo", on_delete=models.CASCADE)
+    categories = models.ManyToManyField(Category, verbose_name="kategória", blank=True)
+    number = models.IntegerField(verbose_name="číslo")
+    description_points = models.IntegerField(verbose_name="body za popis", default=0)
+    source_points = models.IntegerField(verbose_name="body za program", default=0)
     integer_source_points = models.BooleanField(
-        default=True, verbose_name='celočíselné body za program'
+        default=True, verbose_name="celočíselné body za program"
     )
-    has_source = models.BooleanField(verbose_name='odovzdáva sa zdroják', default=False)
-    has_description = models.BooleanField(verbose_name='odovzdáva sa popis', default=False)
+    has_source = models.BooleanField(verbose_name="odovzdáva sa zdroják", default=False)
+    has_description = models.BooleanField(verbose_name="odovzdáva sa popis", default=False)
     has_testablezip = models.BooleanField(
-        verbose_name='odovzdáva sa zip na testovač', default=False
+        verbose_name="odovzdáva sa zip na testovač", default=False
     )
     external_submit_link = models.CharField(
-        max_length=128, verbose_name='Odkaz na externé odovzdávanie',
-        blank=True, null=True,
+        max_length=128, verbose_name="Odkaz na externé odovzdávanie", blank=True, null=True
     )
     email_on_desc_submit = models.BooleanField(
-        verbose_name=_('Send notification to reviewers about new description submit'), default=False
+        verbose_name=_("Send notification to reviewers about new description submit"), default=False
     )
     email_on_code_submit = models.BooleanField(
-        verbose_name=_('Send notification to reviewers about new code submit'), default=False
+        verbose_name=_("Send notification to reviewers about new code submit"), default=False
     )
 
     objects = TaskManager()
 
     class Meta:
-        verbose_name = 'Úloha'
-        verbose_name_plural = 'Úlohy'
+        verbose_name = "Úloha"
+        verbose_name_plural = "Úlohy"
 
     def __str__(self):
-        return '%i. %s, %s' % (self.number, self.name, self.round)
+        return "%i. %s, %s" % (self.number, self.name, self.round)
 
     def has_submit_type(self, submit_type):
         check_field = {
@@ -357,9 +359,9 @@ class Task(models.Model):
 
     @property
     def has_submit_list(self):
-        submit_list_types = set(
-            st for st, _ in submit_constants.SUBMIT_TYPES
-        ) - {submit_constants.SUBMIT_TYPE_EXTERNAL}
+        submit_list_types = set(st for st, _ in submit_constants.SUBMIT_TYPES) - {
+            submit_constants.SUBMIT_TYPE_EXTERNAL
+        }
         return bool(submit_list_types & set(self.get_submit_types()))
 
     def get_submit_types(self):
@@ -370,29 +372,24 @@ class Task(models.Model):
         ]
 
     def get_path(self, solution=False):
-        task_file = '{}{}.html'.format(
-            settings.TASK_STATEMENTS_PREFIX_TASK,
-            self.number,
-        )
+        task_file = "{}{}.html".format(settings.TASK_STATEMENTS_PREFIX_TASK, self.number)
         path = os.path.join(
-            self.round.get_path(solution),
-            settings.TASK_STATEMENTS_HTML_DIR,
-            task_file,
+            self.round.get_path(solution), settings.TASK_STATEMENTS_HTML_DIR, task_file
         )
         return path
 
     def get_absolute_url(self):
-        return reverse('solution_statement', kwargs={'task_id': self.id})
+        return reverse("solution_statement", kwargs={"task_id": self.id})
 
     @property
     def task_file_exists(self):
         path = self.get_path(solution=False)
-        return os.path.exists(path)
+        return settings.TASK_STATEMENTS_STORAGE.exists(path)
 
     @property
     def solution_file_exists(self):
         path = self.get_path(solution=True)
-        return os.path.exists(path)
+        return settings.TASK_STATEMENTS_STORAGE.exists(path)
 
     def visible(self, user):
         return self.round.is_visible_for_user(user)
@@ -408,17 +405,17 @@ class Task(models.Model):
 
 
 class TaskPeople(models.Model):
-    task = models.ForeignKey(Task, verbose_name=_('task'), related_name='task_people', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, verbose_name=_('organizer'), on_delete=models.CASCADE)
-    TASK_ROLE_CHOICES = [
-        (constants.TASK_ROLE_REVIEWER, _('reviewer')),
-        (constants.TASK_ROLE_SOLUTION_WRITER, _('solution writer')),
-        (constants.TASK_ROLE_PROOFREADER, _('proofreader'))
-    ]
-    role = models.IntegerField(
-        choices=TASK_ROLE_CHOICES, verbose_name=_('role')
+    task = models.ForeignKey(
+        Task, verbose_name=_("task"), related_name="task_people", on_delete=models.CASCADE
     )
+    user = models.ForeignKey(User, verbose_name=_("organizer"), on_delete=models.CASCADE)
+    TASK_ROLE_CHOICES = [
+        (constants.TASK_ROLE_REVIEWER, _("reviewer")),
+        (constants.TASK_ROLE_SOLUTION_WRITER, _("solution writer")),
+        (constants.TASK_ROLE_PROOFREADER, _("proofreader")),
+    ]
+    role = models.IntegerField(choices=TASK_ROLE_CHOICES, verbose_name=_("role"))
 
     class Meta:
-        verbose_name = _('Assigned user')
-        verbose_name_plural = _('Assigned people')
+        verbose_name = _("Assigned user")
+        verbose_name_plural = _("Assigned people")

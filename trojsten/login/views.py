@@ -20,23 +20,21 @@ except ImportError:
 
 @login_required
 def login_root_view(request):
-    return render(request, 'trojsten/login/base.html')
+    return render(request, "trojsten/login/base.html")
 
 
 def logout(request):
-    next_url = request.GET.get('next_page', '/')
+    next_url = request.GET.get("next_page", "/")
     response = LogoutView.as_view(next_page=next_url)(request)
-    messages.success(request, _('Logout successful'))
+    messages.success(request, _("Logout successful"))
     if urlparse.urlparse(next_url).netloc:
         return redirect(next_url)
     return response
 
 
 def remote_logout(request):
-    logout_url = urlparse.urljoin(settings.TROJSTEN_LOGIN_PROVIDER_URL, reverse('account_logout'))
-    next_url = request.GET.get('next_page', '/')
+    logout_url = urlparse.urljoin(settings.TROJSTEN_LOGIN_PROVIDER_URL, reverse("account_logout"))
+    next_url = request.GET.get("next_page", "/")
     request.GET = request.GET.copy()
     LogoutView.as_view()(request)
-    return redirect('%s?next_page=%s' % (
-        logout_url, quote(request.build_absolute_uri(next_url))
-    ))
+    return redirect("%s?next_page=%s" % (logout_url, quote(request.build_absolute_uri(next_url))))

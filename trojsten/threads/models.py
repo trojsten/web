@@ -15,11 +15,11 @@ class Thread(models.Model):
     sites = models.ManyToManyField(Site)
 
     class Meta:
-        verbose_name = 'diskusné vlákno'
-        verbose_name_plural = 'diskusné vlákna'
+        verbose_name = "diskusné vlákno"
+        verbose_name_plural = "diskusné vlákna"
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('thread', kwargs={'thread_id': self.id})
+        return reverse("thread", kwargs={"thread_id": self.id})
