@@ -50,7 +50,8 @@ class NotificationType:
     def subscribe_unless_unsubscibed(self, user_model):
         """
         Subscribes user to this notification type, if this user did not unsubscribe manually before.
-        Returns True if new subscription was created, False if user is already subscribed / unsubscribed.
+        Returns True if new subscription was created,
+        False if user is already subscribed / unsubscribed.
         """
         if not Subscription.objects.filter(
             notification_type=self.get_identificator(),

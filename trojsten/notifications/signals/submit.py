@@ -21,7 +21,7 @@ def submit_reviewed(sender, **kwargs):
     # If this submit was reviewed, notify the user.
     if instance.testing_status == SUBMIT_STATUS_REVIEWED:
         SubmitReviewed(instance.user).dispatch({"task": instance.task, "points": instance.points})
-    # If was this submit only added to queue, subscribe the user to future notifications (related to the submit).
+    # If was this submit only added to queue, subscribe the user to future notifications.
     elif instance.testing_status == SUBMIT_STATUS_IN_QUEUE:
         SubmitReviewed(instance.user).subscribe_unless_unsubscibed(instance.user)
 
