@@ -111,7 +111,7 @@ class BaseModelSanitizer(object):
         objects = self.get_objects()
         for obj in objects:
             self.sanitize_single_object(obj)
-        bulk_update(objects, update_fields=self.field_sanitizers.keys())
+        bulk_update(objects, update_fields=list(self.field_sanitizers.keys()))
 
 
 class TaskSanitizer(BaseModelSanitizer):
