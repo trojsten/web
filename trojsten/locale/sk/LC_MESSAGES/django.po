@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-05 22:50+0200\n"
+"POT-Creation-Date: 2019-10-05 23:06+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -71,47 +71,47 @@ msgstr "vzoráky"
 msgid "tasks"
 msgstr "zadania"
 
-#: trojsten/contests/models.py:334
+#: trojsten/contests/models.py:336
 msgid "Send notification to reviewers about new description submit"
 msgstr "Zaslať opravovateľom notifikáciu o submite popisu"
 
-#: trojsten/contests/models.py:337
+#: trojsten/contests/models.py:339
 msgid "Send notification to reviewers about new code submit"
 msgstr "Zaslať opravovateľom notifikáciu o submite kódu"
 
-#: trojsten/contests/models.py:411
+#: trojsten/contests/models.py:409
 #, fuzzy
 #| msgid "tasks"
 msgid "task"
 msgstr "úloha"
 
-#: trojsten/contests/models.py:412
+#: trojsten/contests/models.py:411
 msgid "organizer"
 msgstr "vedúci"
 
-#: trojsten/contests/models.py:414
+#: trojsten/contests/models.py:413
 msgid "reviewer"
 msgstr "opravovateľ"
 
-#: trojsten/contests/models.py:415
+#: trojsten/contests/models.py:414
 #, fuzzy
 #| msgid "solution-writer"
 msgid "solution writer"
 msgstr "vzorákovač"
 
-#: trojsten/contests/models.py:416
+#: trojsten/contests/models.py:415
 msgid "proofreader"
 msgstr "recenzovač"
 
-#: trojsten/contests/models.py:419
+#: trojsten/contests/models.py:417
 msgid "role"
 msgstr "funkcia"
 
-#: trojsten/contests/models.py:423
+#: trojsten/contests/models.py:420
 msgid "Assigned user"
 msgstr "Pridelený človek"
 
-#: trojsten/contests/models.py:424
+#: trojsten/contests/models.py:421
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
 
@@ -337,8 +337,8 @@ msgstr "Iná škola"
 msgid "Logout successful"
 msgstr "Odhlásenie úspešné"
 
-#: trojsten/notifications/forms.py:41 trojsten/people/forms.py:522
-#: trojsten/people/forms.py:560
+#: trojsten/notifications/forms.py:39 trojsten/people/forms.py:533
+#: trojsten/people/forms.py:571
 #: trojsten/people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
 #: trojsten/people/templates/trojsten/people/settings.html:96
 #: trojsten/templates/ksp_login/parts/multiple_forms.html:11
@@ -346,11 +346,11 @@ msgstr "Odhlásenie úspešné"
 msgid "Submit"
 msgstr "Odoslať"
 
-#: trojsten/notifications/forms.py:81
+#: trojsten/notifications/forms.py:72
 msgid "Subscribed events"
 msgstr "Odoberané udalosti"
 
-#: trojsten/notifications/management/commands/sendnotifications.py:29
+#: trojsten/notifications/management/commands/sendnotifications.py:28
 msgid "You have new notifications from Trojsten"
 msgstr "Máš nové notifikácie z Trojstenu"
 
@@ -392,7 +392,7 @@ msgstr ""
 "S pozdravom,\n"
 "Trojsten"
 
-#: trojsten/people/admin.py:158
+#: trojsten/people/admin.py:170
 msgid "Personal info"
 msgstr "Osobné údaje"
 
@@ -522,14 +522,6 @@ msgstr "Hodnota musí byť číslo alebo {}."
 #: trojsten/people/forms.py:520
 msgid "Round"
 msgstr "Kolo"
-
-#: trojsten/people/forms.py:533 trojsten/people/forms.py:571
-#: trojsten/people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
-#: trojsten/people/templates/trojsten/people/settings.html:95
-#: trojsten/templates/ksp_login/parts/multiple_forms.html:11
-#: trojsten/templates/ksp_login/parts/single_form.html:10
-msgid "Submit"
-msgstr "Odoslať"
 
 #: trojsten/people/models.py:92
 msgid "Required field for students."
@@ -918,7 +910,7 @@ msgstr "Ignorovať"
 msgid "Successfully finished reviewing this task!"
 msgstr "Úspešne dokončené opravovanie tejto úlohy!"
 
-#: trojsten/settings/common.py:427
+#: trojsten/settings/common.py:379
 msgid "Table of Contents"
 msgstr ""
 
