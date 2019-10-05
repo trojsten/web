@@ -74,12 +74,12 @@ def settings(request, settings_form=UserProfileForm):
             competition_select_form = IgnoreCompetitionForm(request.user, request.POST)
             if competition_select_form.is_valid():
                 competition_select_form.save()
-                return redirect(reverse('account_settings') + '#contests')
-        elif request.POST.get('notification_subscription_submit', None):
+                return redirect(reverse("account_settings") + "#contests")
+        elif request.POST.get("notification_subscription_submit", None):
             notification_form = NotificationSettingsForm(request.user, request.POST)
             if notification_form.is_valid():
                 notification_form.save()
-                return redirect(reverse('account_settings') + '#notifications')
+                return redirect(reverse("account_settings") + "#notifications")
         else:
             _forms = [form(request.POST, user=request.user) for form in form_classes]
             if all(form.is_valid() for form in _forms):
@@ -98,13 +98,17 @@ def settings(request, settings_form=UserProfileForm):
     if not notification_form:
         notification_form = NotificationSettingsForm(user=request.user)
 
-    return render(request, 'trojsten/people/settings.html', {
-        'account_associations': UserSocialAuth.get_social_auth_for_user(request.user),
-        'forms': _forms,
-        'user_props_form_set': user_props_form_set,
-        'competition_select_form': competition_select_form,
-        'notification_form': notification_form,
-    })
+    return render(
+        request,
+        "trojsten/people/settings.html",
+        {
+            "account_associations": UserSocialAuth.get_social_auth_for_user(request.user),
+            "forms": _forms,
+            "user_props_form_set": user_props_form_set,
+            "competition_select_form": competition_select_form,
+            "notification_form": notification_form,
+        },
+    )
 
 
 def submitted_tasks(request, user_pk, round_pk):

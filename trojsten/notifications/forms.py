@@ -5,8 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from trojsten.notifications import constants
 from trojsten.notifications.models import Subscription
-from trojsten.notifications.notification_types import (RoundStarted,
-                                                       SubmitReviewed)
+from trojsten.notifications.notification_types import RoundStarted, SubmitReviewed
 
 notification_types = [RoundStarted, SubmitReviewed]
 
@@ -37,9 +36,7 @@ class NotificationSettingsForm(forms.Form):
         self.user = user
 
         self.helper = FormHelper()
-        self.helper.add_input(
-            layout.Submit("notification_subscription_submit", _("Submit"))
-        )
+        self.helper.add_input(layout.Submit("notification_subscription_submit", _("Submit")))
         self.helper.form_show_labels = True
 
         subscribed_to = []
@@ -47,9 +44,7 @@ class NotificationSettingsForm(forms.Form):
             user=self.user, status=constants.STATUS_SUBSCRIBED
         ):
             subscribed_to.append(
-                _subscription_uid(
-                    subscription.notification_type, subscription.object_id
-                )
+                _subscription_uid(subscription.notification_type, subscription.object_id)
             )
 
         allowed_subscriptions = []
@@ -63,17 +58,13 @@ class NotificationSettingsForm(forms.Form):
                         "target": target,
                         "type": type,
                         "uid": _subscription_uid(type, target.pk if target else None),
-                        "subscribed": _subscription_uid(
-                            type, target.pk if target else None
-                        )
+                        "subscribed": _subscription_uid(type, target.pk if target else None)
                         in subscribed_to,
                     }
                 )
 
         self.fields["subscriptions"] = forms.MultipleChoiceField(
-            choices=[
-                (s["uid"], _pretty_subscription_name(s)) for s in allowed_subscriptions
-            ],
+            choices=[(s["uid"], _pretty_subscription_name(s)) for s in allowed_subscriptions],
             initial=[s["uid"] for s in allowed_subscriptions if s["subscribed"]],
             widget=forms.CheckboxSelectMultiple,
             required=False,
@@ -88,9 +79,7 @@ class NotificationSettingsForm(forms.Form):
             user=self.user, status=constants.STATUS_SUBSCRIBED
         ):
             subscribed_to.append(
-                _subscription_uid(
-                    subscription.notification_type, subscription.object_id
-                )
+                _subscription_uid(subscription.notification_type, subscription.object_id)
             )
 
         for notification_type in notification_types:

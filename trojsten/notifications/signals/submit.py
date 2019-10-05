@@ -1,11 +1,12 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from trojsten.notifications.notification_types import (RoundStarted,
-                                                       SubmitReviewed)
-from trojsten.submit.constants import (SUBMIT_STATUS_IN_QUEUE,
-                                       SUBMIT_STATUS_REVIEWED,
-                                       SUBMIT_TYPE_DESCRIPTION)
+from trojsten.notifications.notification_types import RoundStarted, SubmitReviewed
+from trojsten.submit.constants import (
+    SUBMIT_STATUS_IN_QUEUE,
+    SUBMIT_STATUS_REVIEWED,
+    SUBMIT_TYPE_DESCRIPTION,
+)
 from trojsten.submit.models import Submit
 
 
@@ -19,9 +20,7 @@ def submit_reviewed(sender, **kwargs):
 
     # If this submit was reviewed, notify the user.
     if instance.testing_status == SUBMIT_STATUS_REVIEWED:
-        SubmitReviewed(instance.user).dispatch(
-            {"task": instance.task, "points": instance.points}
-        )
+        SubmitReviewed(instance.user).dispatch({"task": instance.task, "points": instance.points})
     # If was this submit only added to queue, subscribe the user to future notifications (related to the submit).
     elif instance.testing_status == SUBMIT_STATUS_IN_QUEUE:
         SubmitReviewed(instance.user).subscribe_unless_unsubscibed(instance.user)

@@ -21,10 +21,7 @@ class Migration(migrations.Migration):
                 (
                     "id",
                     models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
                     ),
                 ),
                 ("message", models.TextField()),
@@ -32,10 +29,7 @@ class Migration(migrations.Migration):
                 ("was_read", models.BooleanField(default=False)),
                 ("was_email_sent", models.BooleanField(default=False)),
             ],
-            options={
-                "verbose_name": "Notification",
-                "verbose_name_plural": "Notifications",
-            },
+            options={"verbose_name": "Notification", "verbose_name_plural": "Notifications"},
         ),
         migrations.CreateModel(
             name="Subscription",
@@ -43,34 +37,23 @@ class Migration(migrations.Migration):
                 (
                     "id",
                     models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
                     ),
                 ),
                 (
                     "status",
                     models.IntegerField(
-                        choices=[
-                            (0, "Unsubscribed"),
-                            (1, "Subscribed"),
-                            (2, "Ignored"),
-                        ],
+                        choices=[(0, "Unsubscribed"), (1, "Subscribed"), (2, "Ignored")],
                         verbose_name="Status",
                     ),
                 ),
                 ("notification_type", models.CharField(max_length=50, verbose_name="")),
-                (
-                    "send_emails",
-                    models.BooleanField(default=True, verbose_name="Send emails?"),
-                ),
+                ("send_emails", models.BooleanField(default=True, verbose_name="Send emails?")),
                 ("object_id", models.PositiveIntegerField()),
                 (
                     "content_type",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="contenttypes.ContentType",
+                        on_delete=django.db.models.deletion.CASCADE, to="contenttypes.ContentType"
                     ),
                 ),
                 (
@@ -82,10 +65,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "verbose_name": "Subscription",
-                "verbose_name_plural": "Subscriptions",
-            },
+            options={"verbose_name": "Subscription", "verbose_name_plural": "Subscriptions"},
         ),
         migrations.AddField(
             model_name="notification",

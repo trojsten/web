@@ -11,9 +11,7 @@ class Subscription(models.Model):
     notification_type = models.CharField("", max_length=50)
     send_emails = models.BooleanField("Send emails?", default=True)
 
-    content_type = models.ForeignKey(
-        ContentType, on_delete=models.CASCADE, blank=True, null=True
-    )
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, blank=True, null=True)
     object_id = models.PositiveIntegerField(blank=True, null=True)
 
     class Meta:

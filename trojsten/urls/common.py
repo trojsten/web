@@ -37,9 +37,9 @@ urlpatterns = [
 
 # API
 urlpatterns += [
-    url(r'^api/tips/', include(tips.urls, namespace='tips')),
-    url(r'^api/people/', include(people_api, namespace='people')),
-    url(r'^api/notifications/', include('trojsten.notifications.urls')),
+    url(r"^api/tips/", include(tips.urls, namespace="tips")),
+    url(r"^api/people/", include(people_api, namespace="people")),
+    url(r"^api/notifications/", include("trojsten.notifications.urls")),
 ]
 
 # Override default views in contact_form

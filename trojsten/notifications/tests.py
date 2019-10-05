@@ -54,15 +54,13 @@ class SubmitTest(TestCase):
 
         self.assertTrue(
             Subscription.objects.filter(
-                notification_type=SubmitReviewed().get_identificator(),
-                object_id=self.user.pk,
+                notification_type=SubmitReviewed().get_identificator(), object_id=self.user.pk
             ).exists()
         )
 
         self.assertTrue(
             Subscription.objects.filter(
-                notification_type=RoundStarted().get_identificator(),
-                object_id=self.competition.pk,
+                notification_type=RoundStarted().get_identificator(), object_id=self.competition.pk
             ).exists()
         )
 
@@ -81,8 +79,7 @@ class SubmitTest(TestCase):
         submit.save()
 
         subscription = Subscription.objects.filter(
-            notification_type=SubmitReviewed().get_identificator(),
-            object_id=self.user.pk,
+            notification_type=SubmitReviewed().get_identificator(), object_id=self.user.pk
         ).get()
 
         query = Notification.objects.filter(subscription=subscription, user=self.user)
@@ -124,9 +121,7 @@ class ContestTest(TestCase):
         round.save()
 
         self.assertFalse(
-            Notification.objects.filter(
-                subscription=subscription, user=self.user
-            ).exists()
+            Notification.objects.filter(subscription=subscription, user=self.user).exists()
         )
 
     def test_update_invisible_to_visible(self):
@@ -145,9 +140,7 @@ class ContestTest(TestCase):
         round.save()
 
         self.assertTrue(
-            Notification.objects.filter(
-                subscription=subscription, user=self.user
-            ).exists()
+            Notification.objects.filter(subscription=subscription, user=self.user).exists()
         )
 
     def test_update_visible_to_visible(self):
