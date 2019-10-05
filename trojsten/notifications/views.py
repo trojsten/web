@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, JsonResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, reverse
 
 from .models import Notification
 
@@ -8,8 +8,8 @@ from .models import Notification
 @login_required
 def get_notifications(request):
     notifications = (
-        Notification.objects.filter(user=request.user)
-        .order_by("-was_read", "-created_at")
+        Notification.objects.filter(user=request.user, was_read=False)
+        .order_by("-created_at")
         .select_related("subscription")
         .all()[:10]
     )
@@ -23,6 +23,7 @@ def get_notifications(request):
                 "id": notification.pk,
                 "identificator": notification.subscription.notification_type,
                 "message": notification.message,
+                "url": reverse("read_notification", args=(notification.pk,)),
                 "was_read": notification.was_read,
                 "created_at": notification.created_at,
             }

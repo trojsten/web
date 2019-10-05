@@ -1,0 +1,19 @@
+{% load i18n sekizai_tags staticfiles %}
+{% if user.is_authenticated %}
+{% addtoblock "js" %}
+    <script>
+      window.TROJSTEN_NOTIFY_LIST = "{% url 'list_notifications' %}"
+    </script>
+    <script type="text/javascript" src="{% static 'js/notifications.js' %}"></script>
+{% endaddtoblock %}
+
+<ul class="nav navbar-nav navbar-right" style="margin-right:16px;">
+<li class="dropdown">
+    <p class="dropdown-toggle btn btn-primary navbar-btn" id="notification-dropdown" data-toggle="dropdown">
+      <i class="glyphicon glyphicon-bell"></i>
+      <span class="badge" id="notification-box-number"></span>
+    </p>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="notification-dropdown" id="notification-box-content"></ul>
+</li>
+</ul>
+{% endif %}
