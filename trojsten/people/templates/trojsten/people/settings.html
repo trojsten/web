@@ -21,6 +21,7 @@
         <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">{%  trans "Profile" %}</a></li>
         <li role="presentation"><a href="#props" aria-controls="properties" role="tab" data-toggle="tab">{% trans "Properties" %}</a></li>
         <li role="presentation"><a href="#contests" aria-controls="contests" role="tab" data-toggle="tab">{% trans "Contests" %}</a></li>
+        <li role="presentation"><a href="#notifications" aria-controls="notifications" role="tab" data-toggle="tab">{% trans "Notifications" %}</a></li>
         {% if SITE.is_login_provider %}
         <li role="presentation"><a href="#login" aria-controls="login settings" role="tab" data-toggle="tab">{% trans "Login settings" %}</a></li>
         {% else %}
@@ -104,6 +105,13 @@
             {% trans "Choose which competitions would you like to participate in:" %}
         </p>
         {% crispy competition_select_form %}
+        </div>
+
+        <div role="tabpanel" class="tab-pane fade" id="notifications">
+        <p class="lead">
+            {% trans "Choose which events would you like to be notified about:" %}
+        </p>
+        {% crispy notification_form %}
         </div>
 
         <div role="tabpanel" class="tab-pane fade" id="login">

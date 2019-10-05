@@ -11,22 +11,28 @@ class Subscription(models.Model):
     notification_type = models.CharField("", max_length=50)
     send_emails = models.BooleanField("Send emails?", default=True)
 
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey(
+        ContentType, on_delete=models.CASCADE, blank=True, null=True
+    )
+    object_id = models.PositiveIntegerField(blank=True, null=True)
 
     class Meta:
         verbose_name = "Subscription"
         verbose_name_plural = "Subscriptions"
 
     def __str__(self):
+        if not self.content_type:
+            return "%s (None) for %s" % (self.notification_type, self.user)
         return "%s (%s:%d) for %s" % (
             self.notification_type,
-            self.content_type,
+            self.content_type or None,
             self.object_id,
             self.user,
         )
 
     def get_target(self):
+        if not self.content_type:
+            return None
         return self.content_type.model_class().objects.get(pk=self.object_id)
 
 
