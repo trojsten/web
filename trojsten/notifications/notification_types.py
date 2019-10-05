@@ -110,7 +110,7 @@ class NotificationType:
 
 
 class RoundStarted(NotificationType):
-    name = "Round started"
+    name = _("New round started")
 
     @staticmethod
     def get_available_targets(user_model=None):
@@ -128,7 +128,7 @@ class RoundStarted(NotificationType):
 
 
 class SubmitReviewed(NotificationType):
-    name = "Submit reviewed"
+    name = _("Your submit was reviewed")
 
     @staticmethod
     def get_available_targets(user_model=None):

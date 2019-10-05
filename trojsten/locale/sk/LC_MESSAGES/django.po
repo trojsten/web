@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-08 18:44+0200\n"
+"POT-Creation-Date: 2019-10-05 22:12+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -71,47 +71,47 @@ msgstr "vzoráky"
 msgid "tasks"
 msgstr "zadania"
 
-#: trojsten/contests/models.py:326
+#: trojsten/contests/models.py:334
 msgid "Send notification to reviewers about new description submit"
 msgstr "Zaslať opravovateľom notifikáciu o submite popisu"
 
-#: trojsten/contests/models.py:329
+#: trojsten/contests/models.py:337
 msgid "Send notification to reviewers about new code submit"
 msgstr "Zaslať opravovateľom notifikáciu o submite kódu"
 
-#: trojsten/contests/models.py:403
+#: trojsten/contests/models.py:411
 #, fuzzy
 #| msgid "tasks"
 msgid "task"
 msgstr "úloha"
 
-#: trojsten/contests/models.py:404
+#: trojsten/contests/models.py:412
 msgid "organizer"
 msgstr "vedúci"
 
-#: trojsten/contests/models.py:406
+#: trojsten/contests/models.py:414
 msgid "reviewer"
 msgstr "opravovateľ"
 
-#: trojsten/contests/models.py:407
+#: trojsten/contests/models.py:415
 #, fuzzy
 #| msgid "solution-writer"
 msgid "solution writer"
 msgstr "vzorákovač"
 
-#: trojsten/contests/models.py:408
+#: trojsten/contests/models.py:416
 msgid "proofreader"
 msgstr "recenzovač"
 
-#: trojsten/contests/models.py:411
+#: trojsten/contests/models.py:419
 msgid "role"
 msgstr "funkcia"
 
-#: trojsten/contests/models.py:415
+#: trojsten/contests/models.py:423
 msgid "Assigned user"
 msgstr "Pridelený človek"
 
-#: trojsten/contests/models.py:416
+#: trojsten/contests/models.py:424
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
 
@@ -125,6 +125,9 @@ msgid "Active rounds"
 msgstr "Aktuálne kolá"
 
 #: trojsten/contests/templates/trojsten/contests/dashboard.html:24
+#: trojsten/contests/tests.py:539 trojsten/contests/tests.py:551
+#: trojsten/contests/tests.py:565 trojsten/contests/tests.py:579
+#: trojsten/contests/tests.py:594
 msgid "There is no active round currently."
 msgstr "Aktuálne neprebieha žiadne kolo."
 
@@ -167,28 +170,28 @@ msgid "View the solution."
 msgstr "Pozrieť vzorové riešenie."
 
 # Task Statements
-#: trojsten/contests/templatetags/statements_parts.py:90
+#: trojsten/contests/templatetags/statements_parts.py:93
 #, fuzzy, python-format
 #| msgid "%(count)d day"
 #| msgid_plural "%(count)s days"
 msgid "%(count)d day"
 msgstr "%(count)s deň"
 
-#: trojsten/contests/templatetags/statements_parts.py:93
+#: trojsten/contests/templatetags/statements_parts.py:96
 #, fuzzy, python-format
 #| msgid "%(count)d hour"
 #| msgid_plural "%(count)s hours"
 msgid "%(count)d hour"
 msgstr "%(count)s hodina"
 
-#: trojsten/contests/templatetags/statements_parts.py:96
+#: trojsten/contests/templatetags/statements_parts.py:99
 #, fuzzy, python-format
 #| msgid "%(count)d minute"
 #| msgid_plural "%(count)s minutes"
 msgid "%(count)d minute"
 msgstr "%(count)s minúta"
 
-#: trojsten/contests/templatetags/statements_parts.py:99
+#: trojsten/contests/templatetags/statements_parts.py:102
 #, fuzzy, python-format
 #| msgid "%(count)d second"
 #| msgid_plural "%(count)s seconds"
@@ -335,6 +338,40 @@ msgstr "K tejto šablóne nemáte prístup"
 msgid "Logout successful"
 msgstr "Odhlásenie úspešné"
 
+#: trojsten/notifications/forms.py:41 trojsten/people/forms.py:522
+#: trojsten/people/forms.py:560
+#: trojsten/people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
+#: trojsten/people/templates/trojsten/people/settings.html:96
+#: trojsten/templates/ksp_login/parts/multiple_forms.html:11
+#: trojsten/templates/ksp_login/parts/single_form.html:10
+msgid "Submit"
+msgstr "Odoslať"
+
+#: trojsten/notifications/forms.py:81
+msgid "Subscribed events"
+msgstr "Odoberané udalosti"
+
+#: trojsten/notifications/notification_types.py:113
+msgid "New round started"
+msgstr "Začiatok nového kola"
+
+#: trojsten/notifications/notification_types.py:120
+#, python-format
+msgid "Round %(round)s has started!"
+msgstr "Kolo \"%(round)s\" začalo!"
+
+#: trojsten/notifications/notification_types.py:131
+msgid "Your submit was reviewed"
+msgstr "Ohodnotenie submitu"
+
+#: trojsten/notifications/notification_types.py:139
+#, python-format
+msgid ""
+"Your description for \"%(task)s\" has been reviewed. You earned %(points)d "
+"points!"
+msgstr ""
+"Tvoj popis úlohy \"%(task)s\" bol opravený. Získal si %(points)d bodov!"
+
 #: trojsten/people/admin.py:158
 msgid "Personal info"
 msgstr "Osobné údaje"
@@ -467,14 +504,6 @@ msgstr "Hodnota musí byť číslo alebo {}."
 #: trojsten/people/forms.py:508
 msgid "Round"
 msgstr "Kolo"
-
-#: trojsten/people/forms.py:522 trojsten/people/forms.py:560
-#: trojsten/people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
-#: trojsten/people/templates/trojsten/people/settings.html:95
-#: trojsten/templates/ksp_login/parts/multiple_forms.html:11
-#: trojsten/templates/ksp_login/parts/single_form.html:10
-msgid "Submit"
-msgstr "Odoslať"
 
 #: trojsten/people/models.py:222
 msgid "Value \"{}\" does not match regex \"{}\"."
@@ -638,24 +667,32 @@ msgstr "Vlastnosti"
 msgid "Contests"
 msgstr "Súťaže"
 
-#: trojsten/people/templates/trojsten/people/settings.html:25
-#: trojsten/people/templates/trojsten/people/settings.html:27
+#: trojsten/people/templates/trojsten/people/settings.html:24
+msgid "Notifications"
+msgstr ""
+
+#: trojsten/people/templates/trojsten/people/settings.html:26
+#: trojsten/people/templates/trojsten/people/settings.html:28
 msgid "Login settings"
 msgstr "Nastavenia prihlasovania"
 
-#: trojsten/people/templates/trojsten/people/settings.html:96
+#: trojsten/people/templates/trojsten/people/settings.html:97
 msgid "Add property"
 msgstr "Pridať vlastnosť"
 
-#: trojsten/people/templates/trojsten/people/settings.html:104
+#: trojsten/people/templates/trojsten/people/settings.html:105
 msgid "Choose which competitions would you like to participate in:"
 msgstr "Vyber si súťaže, ktoré chceš riešiť:"
 
 #: trojsten/people/templates/trojsten/people/settings.html:112
+msgid "Choose which events would you like to be notified about:"
+msgstr "Vyber si udalosti, o ktorých chceš byť informovaný:"
+
+#: trojsten/people/templates/trojsten/people/settings.html:120
 msgid "You can use any of the following services to log in to your account."
 msgstr "Možete použiť ľubovoľnú z nasledujúcich služieb na prihlásenie."
 
-#: trojsten/people/templates/trojsten/people/settings.html:133
+#: trojsten/people/templates/trojsten/people/settings.html:141
 #: trojsten/templates/ksp_login/login.html:4
 #: trojsten/templates/ksp_login/login.html:7
 #: trojsten/templates/ksp_login/parts/include_javascript.html:15
@@ -668,7 +705,7 @@ msgstr "Možete použiť ľubovoľnú z nasledujúcich služieb na prihlásenie.
 msgid "Log in"
 msgstr "Prihlásiť sa"
 
-#: trojsten/people/templates/trojsten/people/settings.html:141
+#: trojsten/people/templates/trojsten/people/settings.html:149
 #, python-format
 msgid ""
 "\n"
@@ -683,13 +720,13 @@ msgstr ""
 "stránke</a>.\n"
 "                "
 
-#: trojsten/people/templates/trojsten/people/settings.html:146
+#: trojsten/people/templates/trojsten/people/settings.html:154
 #: trojsten/templates/ksp_login/password.html:5
 #: trojsten/templates/ksp_login/password.html:8
 msgid "Password change"
 msgstr "Zmena hesla"
 
-#: trojsten/people/templates/trojsten/people/settings.html:149
+#: trojsten/people/templates/trojsten/people/settings.html:157
 #, python-format
 msgid ""
 "\n"
@@ -856,7 +893,7 @@ msgstr "Ignorovať"
 msgid "Successfully finished reviewing this task!"
 msgstr "Úspešne dokončené opravovanie tejto úlohy!"
 
-#: trojsten/settings/common.py:426
+#: trojsten/settings/common.py:427
 msgid "Table of Contents"
 msgstr ""
 
