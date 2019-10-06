@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-05 23:06+0200\n"
+"POT-Creation-Date: 2019-10-06 21:57+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -94,8 +94,6 @@ msgid "reviewer"
 msgstr "opravovateľ"
 
 #: trojsten/contests/models.py:414
-#, fuzzy
-#| msgid "solution-writer"
 msgid "solution writer"
 msgstr "vzorákovač"
 
@@ -337,7 +335,7 @@ msgstr "Iná škola"
 msgid "Logout successful"
 msgstr "Odhlásenie úspešné"
 
-#: trojsten/notifications/forms.py:39 trojsten/people/forms.py:533
+#: trojsten/notifications/forms.py:29 trojsten/people/forms.py:533
 #: trojsten/people/forms.py:571
 #: trojsten/people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
 #: trojsten/people/templates/trojsten/people/settings.html:96
@@ -346,28 +344,28 @@ msgstr "Odhlásenie úspešné"
 msgid "Submit"
 msgstr "Odoslať"
 
-#: trojsten/notifications/forms.py:72
+#: trojsten/notifications/forms.py:62
 msgid "Subscribed events"
 msgstr "Odoberané udalosti"
 
-#: trojsten/notifications/management/commands/sendnotifications.py:28
+#: trojsten/notifications/management/commands/sendnotifications.py:29
 msgid "You have new notifications from Trojsten"
 msgstr "Máš nové notifikácie z Trojstenu"
 
-#: trojsten/notifications/notification_types.py:113
+#: trojsten/notifications/notification_types.py:117
 msgid "New round started"
 msgstr "Začiatok nového kola"
 
-#: trojsten/notifications/notification_types.py:120
+#: trojsten/notifications/notification_types.py:124
 #, python-format
 msgid "Round %(round)s has started!"
 msgstr "Kolo \"%(round)s\" začalo!"
 
-#: trojsten/notifications/notification_types.py:131
+#: trojsten/notifications/notification_types.py:135
 msgid "Your submit was reviewed"
 msgstr "Ohodnotenie submitu"
 
-#: trojsten/notifications/notification_types.py:139
+#: trojsten/notifications/notification_types.py:143
 #, python-format
 msgid ""
 "Your description for \"%(task)s\" has been reviewed. You earned %(points)d "
@@ -687,7 +685,7 @@ msgstr "Súťaže"
 
 #: trojsten/people/templates/trojsten/people/settings.html:24
 msgid "Notifications"
-msgstr ""
+msgstr "Notifikácie"
 
 #: trojsten/people/templates/trojsten/people/settings.html:26
 #: trojsten/people/templates/trojsten/people/settings.html:28
