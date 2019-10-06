@@ -11,12 +11,13 @@ register = template.Library()
 
 
 @register.inclusion_tag("trojsten/submit/parts/submit_form.html", takes_context=True)
-def show_submit_form(context, task, user, redirect):
+def show_submit_form(context, task, user, redirect, source_only=False):
     """Renders submit form for specified task"""
     context["task"] = task
     context["competition_ignored"] = user.is_competition_ignored(task.round.semester.competition)
     context["constants"] = constants
     context["redirect_to"] = redirect
+    context["source_only"] = source_only
     if task.has_source:
         context["source_form"] = SourceSubmitForm()
     if task.has_description:
@@ -27,11 +28,12 @@ def show_submit_form(context, task, user, redirect):
 
 
 @register.inclusion_tag("trojsten/submit/parts/submit_list.html")
-def show_submit_list(task, user):
+def show_submit_list(task, user, source_only=False):
     """Renders submit list for specified task and user"""
     data = {"IN_QUEUE": constants.SUBMIT_STATUS_IN_QUEUE}
     data["task"] = task
     data["constants"] = constants
+    data["source_only"] = source_only
     submits = Submit.objects.filter(task=task, user=user)
     data["submits"] = {
         submit_type: submits.filter(submit_type=submit_type).order_by("-time")

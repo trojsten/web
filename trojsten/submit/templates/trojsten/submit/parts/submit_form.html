@@ -1,6 +1,6 @@
 {% load bootstrap additional_registration %}
 {% show_competition_registration %}
-{% if task.has_description %}
+{% if task.has_description and not source_only %}
     {% if competition_ignored %}
       <div class="alert alert-danger">
         Na odovzdávanie popisu si musíš povoliť súťaž <em>{{ task.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
@@ -25,7 +25,6 @@
         {% csrf_token %}
         <div class="form-group" style="min-width:50px;"><label>Kód</label></div>
         {{ source_form | bootstrap_inline }}
-        <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
         <input class="btn btn-primary" type="submit" value="Odovzdaj" />
     </form>
 {% endif %}
@@ -39,7 +38,6 @@
         {% csrf_token %}
         <div class="form-group" style="min-width:50px;"><label>Zip</label></div>
         {{ testablezip_form | bootstrap_inline }}
-        <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
         <input class="btn btn-primary" type="submit" value="Odovzdaj" />
     </form>
 {% endif %}

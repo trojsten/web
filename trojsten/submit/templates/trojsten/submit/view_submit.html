@@ -1,6 +1,7 @@
 {% extends "trojsten/layout/main.html" %}
 {% load staticfiles submit_parts %}
 {% load utils %}
+{% load i18n %}
 
 {% block title %}Detaily submitu{% endblock %}
 
@@ -37,17 +38,37 @@
 
 {% block page_content %}
     {% if source %}
-    <div class="submit-protocol" data-id="{{ submit.id }}" data-ready="{{ protocolReady }}">
-        {% include "trojsten/submit/protocol.html" %}
-    </div>
-    <h3>Odovzdaný program</h3>
-    {% if fileReady %}
-        <pre><code>{{ data }}</code></pre>
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#protocol" aria-controls="protocol" role="tab" data-toggle="tab">{% trans "Protocol" %}</a></li>
+                <li role="presentation"><a href="#source" aria-controls="source" role="tab" data-toggle="tab">{% trans "Program" %}</a></li>
+                <li role="presentation"><a href="#submits" aria-controls="submits" role="tab" data-toggle="tab">{% trans "Submits" %}</a></li>
+            </ul>
+
+            <div class="tab-content" style="margin-top: 1rem;">
+                <div role="tabpanel" class="tab-pane active" id="protocol">
+                    <div class="submit-protocol" data-id="{{ submit.id }}" data-ready="{{ protocolReady }}">
+                        {% include "trojsten/submit/protocol.html" %}
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="source">
+                    {% if fileReady %}
+                        <pre><code>{{ data }}</code></pre>
+                    {% else %}
+                        {% trans "Program source is not available." %}
+                    {% endif %}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="submits">
+                    {% show_submit_form submit.task submit.user "" True %}
+                    {% show_submit_list submit.task submit.user True %}
+                </div>
+            </div>
+        </div>
+
     {% else %}
-        Zdrojový kód programu nie je dostupný
+        {% trans "There are no data about this submit." %}
+
+        {% show_submit_form submit.task submit.user "" True %}
+        {% show_submit_list submit.task submit.user True %}
     {% endif %}
-    {% else %}
-        K tomuto submitu nie sú k dispozícii žiadne dáta
-    {% endif %}
-    {% show_submit_list submit.task submit.user %}
 {% endblock %}

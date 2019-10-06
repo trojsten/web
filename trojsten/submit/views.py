@@ -56,8 +56,10 @@ def protocol_data(submit, force_show_details=False):
             "compileLogPresent": protocol.compile_log is not None,
             "compileLog": protocol.compile_log,
         }
+
         tests = [
             {
+                "set": runtest.name.split(".")[0],
                 "name": runtest.name,
                 "result": runtest.result,
                 "time": runtest.time,
@@ -67,7 +69,24 @@ def protocol_data(submit, force_show_details=False):
             }
             for runtest in protocol.tests
         ]
+
+        sets = {}
+        for runtest in protocol.tests:
+            set_name = runtest.name.split(".")[0]
+            if set_name in sets:
+                sets[set_name]["tests"] += 1
+                sets[set_name]["successfull"] += 1 if runtest.result == "OK" else 0
+            else:
+                sets[set_name] = {"tests": 1, "successfull": 1 if runtest.result == "OK" else 0}
+
+        sets_verbose = {}
+        for s in sets.keys():
+            set = sets[s]
+            sets_verbose[s] = "%d/%d" % (set["successfull"], set["tests"])
+
         template_data["tests"] = tests
+        template_data["sets"] = sets
+        template_data["sets_verbose"] = sets_verbose
         template_data["have_tests"] = len(tests) > 0
         return template_data
     except ProtocolError:
@@ -423,12 +442,7 @@ def task_submit_post(request, task_id, submit_type):
                 if task.email_on_code_submit:
                     send_notification_email(sub, task_id, submit_type)
 
-                success_message = format_html(
-                    "Úspešne si submitol program, výsledok testovania nájdeš "
-                    '<a href="{}">tu</a>',
-                    reverse("view_submit", args=[sub.id]),
-                )
-                messages.add_message(request, messages.SUCCESS, success_message)
+                return redirect(reverse("view_submit", args=[sub.id]))
         else:
             for field in form:
                 for error in field.errors:
