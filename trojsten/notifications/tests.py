@@ -79,10 +79,12 @@ class SubmitTest(TestCase):
         submit.save()
 
         subscription = Subscription.objects.filter(
-            notification_type=SubmitReviewed().get_identificator(), object_id=self.user.pk
+            user=self.user,
+            notification_type=SubmitReviewed().get_identificator(),
+            object_id=self.user.pk,
         ).get()
 
-        query = Notification.objects.filter(subscription=subscription, user=self.user)
+        query = Notification.objects.filter(subscription=subscription)
 
         self.assertTrue(query.exists())
 
@@ -120,9 +122,7 @@ class ContestTest(TestCase):
         round.visible = False
         round.save()
 
-        self.assertFalse(
-            Notification.objects.filter(subscription=subscription, user=self.user).exists()
-        )
+        self.assertFalse(Notification.objects.filter(subscription=subscription).exists())
 
     def test_update_invisible_to_visible(self):
         round = Round.objects.create(
@@ -139,9 +139,7 @@ class ContestTest(TestCase):
         round.visible = True
         round.save()
 
-        self.assertTrue(
-            Notification.objects.filter(subscription=subscription, user=self.user).exists()
-        )
+        self.assertTrue(Notification.objects.filter(subscription=subscription).exists())
 
     def test_update_visible_to_visible(self):
         round = Round.objects.create(
@@ -161,7 +159,7 @@ class ContestTest(TestCase):
         round.visible = True
         round.save()
 
-        query = Notification.objects.filter(subscription=subscription, user=self.user)
+        query = Notification.objects.filter(subscription=subscription)
 
         self.assertTrue(query.exists())
         self.assertEqual(query.count(), 1)

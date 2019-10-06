@@ -35,7 +35,6 @@ class Subscription(models.Model):
 
 
 class Notification(models.Model):
-    user = models.ForeignKey(User, verbose_name="User", on_delete=models.CASCADE)
     subscription = models.ForeignKey(
         Subscription, verbose_name="Subscription", on_delete=models.CASCADE
     )
@@ -52,4 +51,4 @@ class Notification(models.Model):
         verbose_name_plural = "Notifications"
 
     def __str__(self):
-        return "%s (%s)" % (self.message, self.user)
+        return "%s (%s)" % (self.message, self.subscription.user)

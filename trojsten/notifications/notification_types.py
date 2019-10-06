@@ -58,7 +58,7 @@ class NotificationType:
         """
         if not Subscription.objects.filter(
             notification_type=self.get_identificator(),
-            user=user_model,
+            subscription__user=user_model,
             content_type=self.content_type,
             object_id=self.object_id,
         ).exists():
@@ -72,7 +72,7 @@ class NotificationType:
         """
         obj, created = Subscription.objects.update_or_create(
             notification_type=self.get_identificator(),
-            user=user_model,
+            subscription__user=user_model,
             content_type=self.content_type,
             object_id=self.object_id,
             defaults={"status": notification_constants.STATUS_SUBSCRIBED},
@@ -87,7 +87,7 @@ class NotificationType:
 
         obj, created = Subscription.objects.update_or_create(
             notification_type=self.get_identificator(),
-            user=user_model,
+            subscription__user=user_model,
             content_type=self.content_type,
             object_id=self.object_id,
             defaults={"status": notification_constants.STATUS_UNSUBSCRIBED},
@@ -106,7 +106,6 @@ class NotificationType:
         )
         for subscription in subscriptions:
             Notification.objects.create(
-                user=subscription.user,
                 subscription=subscription,
                 message=self.get_message(context),
                 url=self.get_absolute_url(context),

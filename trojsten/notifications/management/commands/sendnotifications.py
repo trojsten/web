@@ -16,8 +16,8 @@ class Command(BaseCommand):
         base_query = Notification.objects.filter(was_email_sent=False, was_read=False)
         root_domain = Site.objects.get(pk=10).domain
 
-        for user in base_query.values("user_id").distinct():
-            user = User.objects.filter(pk=user["user_id"]).get()
+        for user in base_query.values("subscription__user_id").distinct():
+            user = User.objects.filter(pk=user["subscription__user_id"]).get()
             user_notifications = base_query.filter(user=user)
 
             mail_message = render_to_string(
