@@ -3,8 +3,8 @@ from django.contrib.sites.models import Site
 from django.test import TestCase
 from django.utils import timezone
 
-import trojsten.notifications.constants as constants
 from trojsten.contests.models import Competition, Round, Semester, Task
+from trojsten.notifications.constants import SubscriptionStatus
 from trojsten.people.models import User
 from trojsten.submit import constants as submit_constants
 from trojsten.submit.models import Submit
@@ -54,13 +54,13 @@ class SubmitTest(TestCase):
 
         self.assertTrue(
             Subscription.objects.filter(
-                notification_type=SubmitReviewed().get_identificator(), object_id=self.user.pk
+                notification_type=SubmitReviewed().database_key, object_id=self.user.pk
             ).exists()
         )
 
         self.assertTrue(
             Subscription.objects.filter(
-                notification_type=RoundStarted().get_identificator(), object_id=self.competition.pk
+                notification_type=RoundStarted().database_key, object_id=self.competition.pk
             ).exists()
         )
 
@@ -79,9 +79,7 @@ class SubmitTest(TestCase):
         submit.save()
 
         subscription = Subscription.objects.filter(
-            user=self.user,
-            notification_type=SubmitReviewed().get_identificator(),
-            object_id=self.user.pk,
+            user=self.user, notification_type=SubmitReviewed().database_key, object_id=self.user.pk
         ).get()
 
         query = Notification.objects.filter(subscription=subscription)
@@ -182,18 +180,18 @@ class NotificationTypeTest(TestCase):
         notification_type.subscribe(self.user)
         self.assertTrue(
             Subscription.objects.filter(
-                notification_type=notification_type.get_identificator(),
+                notification_type=notification_type.database_key,
                 user=self.user,
-                status=constants.STATUS_SUBSCRIBED,
+                status=SubscriptionStatus.SUBSCRIBED,
             ).exists()
         )
 
         notification_type.unsubscribe(self.user)
         self.assertTrue(
             Subscription.objects.filter(
-                notification_type=notification_type.get_identificator(),
+                notification_type=notification_type.database_key,
                 user=self.user,
-                status=constants.STATUS_UNSUBSCRIBED,
+                status=SubscriptionStatus.UNSUBSCRIBED,
             ).exists()
         )
 
@@ -203,17 +201,17 @@ class NotificationTypeTest(TestCase):
         notification_type.unsubscribe(self.user)
         self.assertTrue(
             Subscription.objects.filter(
-                notification_type=notification_type.get_identificator(),
+                notification_type=notification_type.database_key,
                 user=self.user,
-                status=constants.STATUS_UNSUBSCRIBED,
+                status=SubscriptionStatus.UNSUBSCRIBED,
             ).exists()
         )
 
         notification_type.subscribe_unless_unsubscibed(self.user)
         self.assertFalse(
             Subscription.objects.filter(
-                notification_type=notification_type.get_identificator(),
+                notification_type=notification_type.database_key,
                 user=self.user,
-                status=constants.STATUS_SUBSCRIBED,
+                status=SubscriptionStatus.SUBSCRIBED,
             ).exists()
         )

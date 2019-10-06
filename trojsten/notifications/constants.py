@@ -1,9 +1,12 @@
-STATUS_SUBSCRIBED = 1
-STATUS_UNSUBSCRIBED = 0
-STATUS_IGNORED = 2
+from enum import IntEnum
+
+
+class SubscriptionStatus(IntEnum):
+    UNSUBSCRIBED = 0
+    SUBSCRIBED = 1
+
 
 STATUSES = [
-    (STATUS_UNSUBSCRIBED, "Unsubscribed"),
-    (STATUS_SUBSCRIBED, "Subscribed"),
-    (STATUS_IGNORED, "Ignored"),
+    (SubscriptionStatus.UNSUBSCRIBED, "Unsubscribed"),
+    (SubscriptionStatus.SUBSCRIBED, "Subscribed"),
 ]

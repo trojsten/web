@@ -3,13 +3,14 @@ from django.contrib.sites.models import Site
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
-import trojsten.notifications.constants as notification_constants
 from trojsten.contests.models import Competition
+from trojsten.notifications.constants import SubscriptionStatus
 from trojsten.notifications.models import Notification, Subscription
 
 
 class NotificationType:
     name = ""
+    database_key = None
 
     def __init__(self, target_model=None):
         self.target_model = target_model
@@ -19,10 +20,6 @@ class NotificationType:
         if target_model is not None:
             self.content_type = ContentType.objects.get_for_model(target_model)
             self.object_id = target_model.pk
-
-    def get_identificator(self):
-        """Returns identificator of this notification type."""
-        return self.__class__.__name__
 
     def get_message(self, context={}):
         """
@@ -57,8 +54,8 @@ class NotificationType:
         False if user is already subscribed / unsubscribed.
         """
         if not Subscription.objects.filter(
-            notification_type=self.get_identificator(),
-            subscription__user=user_model,
+            notification_type=self.database_key,
+            user=user_model,
             content_type=self.content_type,
             object_id=self.object_id,
         ).exists():
@@ -71,11 +68,11 @@ class NotificationType:
         Subscribes user to this notification type.
         """
         obj, created = Subscription.objects.update_or_create(
-            notification_type=self.get_identificator(),
-            subscription__user=user_model,
+            notification_type=self.database_key,
+            user=user_model,
             content_type=self.content_type,
             object_id=self.object_id,
-            defaults={"status": notification_constants.STATUS_SUBSCRIBED},
+            defaults={"status": SubscriptionStatus.SUBSCRIBED},
         )
 
         return obj
@@ -86,11 +83,11 @@ class NotificationType:
         """
 
         obj, created = Subscription.objects.update_or_create(
-            notification_type=self.get_identificator(),
-            subscription__user=user_model,
+            notification_type=self.database_key,
+            user=user_model,
             content_type=self.content_type,
             object_id=self.object_id,
-            defaults={"status": notification_constants.STATUS_UNSUBSCRIBED},
+            defaults={"status": SubscriptionStatus.UNSUBSCRIBED},
         )
 
         return obj
@@ -102,7 +99,7 @@ class NotificationType:
         subscriptions = Subscription.objects.filter(
             content_type=self.content_type,
             object_id=self.object_id,
-            status=notification_constants.STATUS_SUBSCRIBED,
+            status=SubscriptionStatus.SUBSCRIBED,
         )
         for subscription in subscriptions:
             Notification.objects.create(
@@ -114,6 +111,7 @@ class NotificationType:
 
 class RoundStarted(NotificationType):
     name = _("New round started")
+    database_key = 1
 
     @staticmethod
     def get_available_targets(user_model=None):
@@ -132,6 +130,7 @@ class RoundStarted(NotificationType):
 
 class SubmitReviewed(NotificationType):
     name = _("Your submit was reviewed")
+    database_key = 2
 
     @staticmethod
     def get_available_targets(user_model=None):
@@ -148,3 +147,6 @@ class SubmitReviewed(NotificationType):
             "domain": site.domain,
             "url": reverse("task_submit_page", args=(context["task"].pk,)),
         }
+
+
+TYPES = {1: RoundStarted, 2: SubmitReviewed}

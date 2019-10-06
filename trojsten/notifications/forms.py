@@ -3,11 +3,9 @@ from crispy_forms.helper import FormHelper
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from trojsten.notifications import constants
+from trojsten.notifications.constants import SubscriptionStatus
 from trojsten.notifications.models import Subscription
-from trojsten.notifications.notification_types import RoundStarted, SubmitReviewed
-
-notification_types = [RoundStarted, SubmitReviewed]
+from trojsten.notifications.notification_types import TYPES
 
 
 def _pretty_subscription_name(subscription):
@@ -31,17 +29,17 @@ class NotificationSettingsForm(forms.Form):
 
         subscribed_to = []
         for subscription in Subscription.objects.filter(
-            user=self.user, status=constants.STATUS_SUBSCRIBED
+            user=self.user, status=SubscriptionStatus.SUBSCRIBED
         ):
             subscribed_to.append(
                 _subscription_uid(subscription.notification_type, subscription.object_id)
             )
 
         allowed_subscriptions = []
-        for notification_type in notification_types:
+        for notification_type in TYPES.values():
             targets = notification_type.get_available_targets(self.user)
             for target in targets:
-                type = notification_type().get_identificator()
+                type = notification_type().database_key
                 allowed_subscriptions.append(
                     {
                         "name": notification_type.name,
@@ -66,16 +64,16 @@ class NotificationSettingsForm(forms.Form):
 
         subscribed_to = []
         for subscription in Subscription.objects.filter(
-            user=self.user, status=constants.STATUS_SUBSCRIBED
+            user=self.user, status=SubscriptionStatus.SUBSCRIBED
         ):
             subscribed_to.append(
                 _subscription_uid(subscription.notification_type, subscription.object_id)
             )
 
-        for notification_type in notification_types:
+        for notification_type in TYPES.values():
             targets = notification_type.get_available_targets(self.user)
             for target in targets:
-                type = notification_type().get_identificator()
+                type = notification_type().database_key
                 uid = _subscription_uid(type, target.pk)
 
                 if uid in enabled_subscriptions and uid not in subscribed_to:
