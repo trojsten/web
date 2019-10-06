@@ -43,7 +43,7 @@ class SubmitAdmin(admin.ModelAdmin):
         "protocol_id",
     )
 
-    get_points = attribute_format(attribute="user_points", description="body")
+    get_points = attribute_format(attribute="user_points", description="body", order="points")
 
     get_task_name = get_related(
         attribute_chain=("task", "name"), description="úloha", order="task__name"
