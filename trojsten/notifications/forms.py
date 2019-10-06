@@ -11,16 +11,6 @@ notification_types = [RoundStarted, SubmitReviewed]
 
 
 def _pretty_subscription_name(subscription):
-    # pretty_name = constants.NOTIFICATION_PRETTY_NAMES[subscription.notification_type.key]
-    # if subscription.object_id:
-    #     target = (
-    #         subscription.notification_type.content_type.model_class()
-    #         .objects.filter(pk=subscription.object_id)
-    #         .get()
-    #     )
-    #     return "%s (%s)" % (pretty_name, target)
-    # else:
-    #     return "%s" % (pretty_name,)
     return "%s (%s)" % (subscription["name"], subscription["target"])
 
 

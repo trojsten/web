@@ -27,25 +27,28 @@ class NotificationType:
     def get_message(self, context={}):
         """
         Returns notification message to be used in user interface.
-        * You should override this in your notification type.
+
+        You should override this in your notification type.
         """
-        pass
+        raise NotImplementedError()
 
     @staticmethod
     def get_available_targets(user_model=None):
         """
         Returns QuerySet (or other iterable) of available targets.
         Used in notification settings UI.
-        * You should override this in your notification type.
+
+        You should override this in your notification type.
         """
-        pass
+        raise NotImplementedError()
 
     def get_absolute_url(self, context={}):
         """
         Get URL this notification will link to.
-        * You should override this in your notification type.
+
+        You should override this in your notification type.
         """
-        pass
+        raise NotImplementedError()
 
     def subscribe_unless_unsubscibed(self, user_model):
         """
