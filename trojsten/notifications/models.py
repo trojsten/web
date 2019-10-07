@@ -29,7 +29,12 @@ class Subscription(models.Model):
             self.user,
         )
 
-    def get_target(self):
+    @property
+    def target(self):
+        """
+        Target object of this subscription.
+        ex. if you subscribe to news of Site(1), this will return the object Site(1).
+        """
         if not self.content_type:
             return None
         return self.content_type.model_class().objects.get(pk=self.object_id)
