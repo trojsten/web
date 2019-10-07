@@ -80,8 +80,6 @@ msgid "Send notification to reviewers about new code submit"
 msgstr "Zaslať opravovateľom notifikáciu o submite kódu"
 
 #: trojsten/contests/models.py:409
-#, fuzzy
-#| msgid "tasks"
 msgid "task"
 msgstr "úloha"
 
