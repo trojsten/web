@@ -6,54 +6,12 @@
 </div>
 {% endif %}
 
-
-{% addtoblock "css" %}
-{% comment %} <style>
-.protocol-set {
-    margin-bottom: 8px;
-}
-
-.protocol-dot {
-    width: 10px;
-    height: 10px;
-    background: #ddd;
-    margin: 2px;
-}
-
-.protocol-dot-ok {
-    background: #4cd137;
-}
-
-.protocol-dot-err {
-    background: #e84118;
-}
-</style> {% endcomment %}
-{% endaddtoblock %}
-
 {% if protocolReady %}
     {% if compileLogPresent %}
         <h4>Výstup z kompilátora</h4>
         <pre>{{ compileLog }}</pre>
     {% endif %}
     {% if have_tests %}
-
-        {% comment %} {% for test in tests %}
-            {% ifchanged test.set %}
-            {% if not forloop.first %}</div></div>{% endif %}
-
-            <div class="protocol-set">
-                <b>Sada {{ test.set }}</b>
-                <div style="display: flex; flex-wrap: wrap;">
-            {% endifchanged %}
-
-            <div class="protocol-dot protocol-dot-{%if test.result == "OK" %}ok{% elif test.result != "IGN" %}err{% endif %}"
-                data-input="{{ test.name }}"
-                data-result="{{ submit_verbose_response|lookup:test.result }}"
-                data-time="{{ test.time }} ms"></div>
-
-            {% if forloop.last %}</div></div>{% endif %}
-        {% endfor %} {% endcomment %}
-
         {% for test in tests %}
             {% ifchanged test.set %}
             {% if not forloop.first %}</div>{% endif %}
@@ -84,73 +42,9 @@
 
         <br>
 
-        <style>
-
-        .protocol-set {
-            display: flex;
-            overflow-x: scroll;
-        }
-
-        .protocol-result {
-            font-weight: bold;
-        }
-
-        .protocol-time {
-            font-size: 0.8em;
-        }
-
-        .protocol-set-name {
-            font-size: 0.9em;
-        }
-
-        .protocol-set-result {
-            font-size: 1em;
-        }
-
-        @media (min-width: 992px) {
-            .protocol-set {
-                flex-wrap: wrap;
-                overflow-x: visible;
-            }
-        }
-
-        .protocol-box {
-            flex-shrink: 0;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-
-            border: 1px solid #f5f5f5;
-            border: 1px solid #ddd;
-            background: #fff;
-        }
-
-        .protocol-ok {
-            background: #d6df75;
-            border: 1px solid #d0da60;
-        }
-
-        .protocol-wa {
-            background: #f6b8b2;
-            border: 1px solid #f3a49b;
-        }
-
-        .protocol-tle {
-            background: #f9d190;
-            border: 1px solid #f8c778;
-        }
-
-        .protocol-ign {
-            background: #f5f5f5;
-        }
-        </style>
-
         {% for test in tests %}
             {% if test.showDetails %}
-                <div>
+                <div id="details-{{ test.name }}">
                     Porovnanie výstupov pre <b>{{ test.name }}</b>:
                     <pre><samp>{{ test.details }}</samp></pre>
                 </div>
@@ -160,19 +54,3 @@
 {% else %}
     Protokol testovania nie je dostupný
 {% endif %}
-
-{% addtoblock "js" %}
-<script>
-$('.protocol-box[data-input]').tooltip({
-    html: true,
-    title: function () {
-        tooltip = '<b>' + $(this).data('input') + '</b><br>'
-        tooltip += $(this).data('result')
-        if ($(this).data('has-details') === 'True') {
-            tooltip += '<br><small>Porovnanie výstupov pod tabuľkou</small>'
-        }
-        return tooltip
-    }
-})
-</script>
-{% endaddtoblock %}

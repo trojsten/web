@@ -31,13 +31,36 @@
             });
         });
 
+        function register_protocol_events() {
+            $('.protocol-box[data-input]').tooltip({
+                html: true,
+                title: function () {
+                    tooltip = '<b>' + $(this).data('input') + '</b><br>'
+                    tooltip += $(this).data('result')
+                    if ($(this).data('has-details') === 'True') {
+                        tooltip += '<br><small>Porovnanie výstupov pod tabuľkou</small>'
+                    }
+                    return tooltip
+                }
+            })
+
+            $('.protocol-box[data-has-details=True]').click(function () {
+                document.getElementById('details-'+$(this).data('input')).scrollIntoView()
+            })
+        }
+
         if ($('.submit-protocol').data('ready') == 'False') {
             var current_id = $('.submit-protocol').data('id');
             poll_submit(current_id, function() {
                 $.get('/odovzdavanie/ajax/submit/' + current_id + '/protokol/', function(data) {
                     $('.submit-protocol').html(data);
+                    register_protocol_events()
                 });
             });
+        }
+
+        if ($('.submit-protocol').data('ready') == 'True') {
+            register_protocol_events()
         }
 
         function download_reviewer_comment(id, callback) {
