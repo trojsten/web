@@ -19,7 +19,7 @@
     font-size: 1em;
 }
 
-@media (min-width: 992px) {
+@media (min-width: @screen-md-min) {
     .protocol-set {
         flex-wrap: wrap;
         overflow-x: visible;
@@ -35,28 +35,28 @@
     justify-content: center;
     flex-direction: column;
 
-    border: 1px solid #f5f5f5;
-    border: 1px solid #ddd;
+    border: 1px solid darken(#fff, 5%);
     background: #fff;
 }
 
 .protocol-ok {
-    background: #d6df75;
-    border: 1px solid #d0da60;
+    background: @state-success-bg;
+    border: 1px solid darken(@state-success-bg, 5%);
 }
 
 .protocol-wa {
-    background: #f6b8b2;
-    border: 1px solid #f3a49b;
+    background: @state-danger-bg;
+    border: 1px solid darken(@state-danger-bg, 5%);
 }
 
 .protocol-tle {
-    background: #f9d190;
-    border: 1px solid #f8c778;
+    background: @state-warning-bg;
+    border: 1px solid darken(@state-warning-bg, 5%);
 }
 
 .protocol-ign {
-    background: #f5f5f5;
+    background: @gray-lighter;
+    border: 1px solid darken(@gray-lighter, 5%);
 }
 
 .protocol-box[data-has-details=True] {
