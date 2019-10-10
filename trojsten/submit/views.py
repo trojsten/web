@@ -69,23 +69,22 @@ def protocol_data(submit, force_show_details=False):
             for runtest in protocol.tests
         ]
 
-        sets = {}
-        for runtest in protocol.tests:
-            set_name = runtest.name.split(".")[0]
-            if set_name in sets:
-                sets[set_name]["tests"] += 1
-                sets[set_name]["successfull"] += 1 if runtest.result == "OK" else 0
+        test_sets = {}
+        for test in tests:
+            test_set_name = test["set"]
+            if test_set_name in test_sets:
+                test_sets[test_set_name]["total"] += 1
+                test_sets[test_set_name]["ok"] += 1 if test["result"] == "OK" else 0
             else:
-                sets[set_name] = {"tests": 1, "successfull": 1 if runtest.result == "OK" else 0}
+                test_sets[test_set_name] = {"total": 1, "ok": 1 if test["result"] == "OK" else 0}
 
-        sets_verbose = {}
-        for s in sets.keys():
-            set = sets[s]
-            sets_verbose[s] = "%d/%d" % (set["successfull"], set["tests"])
+        test_sets_verbose = {}
+        for key, test_set in test_sets.items():
+            test_sets_verbose[key] = "%d/%d" % (test_set["ok"], test_set["total"])
 
         template_data["tests"] = tests
-        template_data["sets"] = sets
-        template_data["sets_verbose"] = sets_verbose
+        template_data["test_sets"] = test_sets
+        template_data["test_sets_verbose"] = test_sets_verbose
         template_data["have_tests"] = len(tests) > 0
         return template_data
     except ProtocolError:

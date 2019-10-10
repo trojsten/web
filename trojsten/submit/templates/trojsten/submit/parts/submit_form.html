@@ -1,6 +1,6 @@
 {% load bootstrap additional_registration %}
 {% show_competition_registration %}
-{% if task.has_description and not source_only %}
+{% if task.has_description and not show_only_source %}
     {% if competition_ignored %}
       <div class="alert alert-danger">
         Na odovzdávanie popisu si musíš povoliť súťaž <em>{{ task.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
