@@ -59,8 +59,8 @@
                     {% endif %}
                 </div>
                 <div role="tabpanel" class="tab-pane" id="submits">
-                    {% show_submit_form submit.task submit.user "" True %}
-                    {% show_submit_list submit.task submit.user True %}
+                    {% show_submit_form submit.task submit.user "" show_only_source=True %}
+                    {% show_submit_list submit.task submit.user show_only_source=True %}
                 </div>
             </div>
         </div>
@@ -68,7 +68,7 @@
     {% else %}
         {% trans "There are no data about this submit." %}
 
-        {% show_submit_form submit.task submit.user "" True %}
-        {% show_submit_list submit.task submit.user True %}
+        {% show_submit_form submit.task submit.user "" show_only_source=True %}
+        {% show_submit_list submit.task submit.user show_only_source=True %}
     {% endif %}
 {% endblock %}
