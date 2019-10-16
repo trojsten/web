@@ -1,6 +1,16 @@
+.protocol-sets {
+    overflow-x: scroll;
+}
+
 .protocol-set {
     display: flex;
-    overflow-x: scroll;
+    flex-wrap: nowrap;
+}
+
+@media (min-width: @screen-md-min) {
+    .protocol-set {
+        flex-wrap: wrap;
+    }
 }
 
 .protocol-result {
@@ -17,13 +27,6 @@
 
 .protocol-set-result {
     font-size: 1em;
-}
-
-@media (min-width: @screen-md-min) {
-    .protocol-set {
-        flex-wrap: wrap;
-        overflow-x: visible;
-    }
 }
 
 .protocol-box {
@@ -59,6 +62,6 @@
     border: 1px solid darken(@gray-lighter, 5%);
 }
 
-.protocol-box[data-has-details=True] {
+.protocol-has-details {
     cursor: pointer;
 }

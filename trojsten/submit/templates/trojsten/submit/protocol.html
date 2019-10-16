@@ -12,33 +12,31 @@
         <pre>{{ compileLog }}</pre>
     {% endif %}
     {% if have_tests %}
-        {% for test in tests %}
-            {% ifchanged test.set %}
-            {% if not forloop.first %}</div>{% endif %}
-
+        <div class="protocol-sets">
+        {% for test_set in test_sets.values %}
             <div class="protocol-set">
                 <div class="protocol-box">
                     <span class="protocol-set-name">
-                        {% if test.set == '00' %}
+                        {% if test_set.name == '00' %}
                             sample
                         {% else %}
-                            {{ test.set }}
+                            {{ test_set.name }}
                         {% endif %}
                     </span>
-                    <span class="protocol-set-result">{{ test_sets_verbose|lookup:test.set }}</span>
+                    <span class="protocol-set-result">{{ test_set.ok }}/{{ test_set.tests|length }}</span>
                 </div>
-            {% endifchanged %}
 
-            <div class="protocol-box protocol-{%if test.result == "OK" %}ok{% elif test.result == "IGN" %}ign{% elif test.result == "WA" %}wa{% else %}tle{% endif %}"
-                data-input="{{ test.name }}"
-                data-result="{{ submit_verbose_response|lookup:test.result }}"
-                data-has-details="{{ test.showDetails }}">
-                <span class="protocol-result">{{ test.result }}</span>
-                <span class="protocol-time">{{ test.time }} ms</span>
+                {% for test in test_set.tests %}
+                <div class="protocol-box with-tooltip {% if test.showDetails %}protocol-has-details{% endif %} protocol-{%if test.result == "OK" %}ok{% elif test.result == "IGN" %}ign{% elif test.result == "WA" %}wa{% else %}tle{% endif %}"
+                    title="<b>{{ test.name }}</b><br>{{ submit_verbose_response|lookup:test.result }}{% if test.showDetails %}<br><small>Porovnanie výstupov pod tabuľkou</small>{% endif %}"
+                    data-input="{{ test.name }}">
+                    <span class="protocol-result">{{ test.result }}</span>
+                    <span class="protocol-time">{{ test.time }} ms</span>
+                </div>
+                {% endfor %}
             </div>
-
-            {% if forloop.last %}</div>{% endif %}
         {% endfor %}
+        </div>
 
         <br>
 

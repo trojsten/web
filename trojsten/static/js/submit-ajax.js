@@ -32,19 +32,11 @@
         });
 
         function register_protocol_events() {
-            $('.protocol-box[data-input]').tooltip({
-                html: true,
-                title: function () {
-                    tooltip = '<b>' + $(this).data('input') + '</b><br>'
-                    tooltip += $(this).data('result')
-                    if ($(this).data('has-details') === 'True') {
-                        tooltip += '<br><small>Porovnanie výstupov pod tabuľkou</small>'
-                    }
-                    return tooltip
-                }
+            $('.protocol-box.with-tooltip').tooltip({
+                html: true
             })
 
-            $('.protocol-box[data-has-details=True]').click(function () {
+            $('.protocol-has-details').click(function () {
                 document.getElementById('details-'+$(this).data('input')).scrollIntoView()
             })
         }

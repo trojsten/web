@@ -73,18 +73,17 @@ def protocol_data(submit, force_show_details=False):
         for test in tests:
             test_set_name = test["set"]
             if test_set_name in test_sets:
-                test_sets[test_set_name]["total"] += 1
+                test_sets[test_set_name]["tests"].append(test)
                 test_sets[test_set_name]["ok"] += 1 if test["result"] == "OK" else 0
             else:
-                test_sets[test_set_name] = {"total": 1, "ok": 1 if test["result"] == "OK" else 0}
-
-        test_sets_verbose = {}
-        for key, test_set in test_sets.items():
-            test_sets_verbose[key] = "%d/%d" % (test_set["ok"], test_set["total"])
+                test_sets[test_set_name] = {
+                    "name": test_set_name,
+                    "tests": [test],
+                    "ok": 1 if test["result"] == "OK" else 0,
+                }
 
         template_data["tests"] = tests
         template_data["test_sets"] = test_sets
-        template_data["test_sets_verbose"] = test_sets_verbose
         template_data["have_tests"] = len(tests) > 0
         return template_data
     except ProtocolError:
