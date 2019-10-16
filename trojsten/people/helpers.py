@@ -9,6 +9,7 @@ from .models import User, UserProperty, UserPropertyKey
 
 def get_similar_users(user):
     """Returns a list of users similar to the specified user."""
+    # TODO check birth day as well. (if defined, filter different)
     return User.objects.exclude(pk=user.pk).filter(
         first_name=user.first_name, last_name=user.last_name
     )
