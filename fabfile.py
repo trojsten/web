@@ -1,9 +1,12 @@
+import os
 import time
 
-import os
 from fabric.api import env
 from fabric.context_managers import cd, prefix, quiet
-from fabric.operations import get, local as fabric_local, run as fabric_run, sudo
+from fabric.operations import get
+from fabric.operations import local as fabric_local
+from fabric.operations import run as fabric_run
+from fabric.operations import sudo
 
 """
 Fabric deployment scripts for github.com:trojsten/web
@@ -179,8 +182,8 @@ def branch(name):
 
 def after_pull():
     install_requirements()
-    migrate()
     compile_translations()
+    migrate()
 
 
 def update(target=None):
