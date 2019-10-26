@@ -32,6 +32,7 @@ elasticsearch
 faker
 first
 ksp-login>=0.6
+openpyxl<3 # Remove when we upgrade to py3.6+ on beta.
 psycopg2>=2.7.3.1
 pymdown-extensions<3.0
 pytz
