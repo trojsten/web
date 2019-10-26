@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from trojsten.settings.development import *
 
 SITE_ID = 10

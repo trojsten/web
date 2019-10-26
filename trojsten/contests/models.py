@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 import os
 
 from django.conf import settings
@@ -11,7 +9,6 @@ from django.db import models
 from django.db.models import Q
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 from unidecode import unidecode
 
@@ -81,7 +78,6 @@ class CompetitionManager(models.Manager):
         return Competition.objects.filter(sites__id=settings.SITE_ID).order_by("pk").all()
 
 
-@python_2_unicode_compatible
 class Competition(models.Model):
     """
     Consists of semester.
@@ -116,7 +112,6 @@ class Competition(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class Semester(models.Model):
     """
     Semester consists of several rounds.
@@ -145,7 +140,6 @@ class Semester(models.Model):
     short_str.short_description = "Časť"
 
 
-@python_2_unicode_compatible
 class Round(models.Model):
     """
     Round has tasks.
@@ -278,7 +272,6 @@ class TaskManager(models.Manager):
         return tasks.order_by("round", "number")
 
 
-@python_2_unicode_compatible
 class Category(models.Model):
     """
     Competition consists of a few categories. Each task belongs to one or more
@@ -300,7 +293,6 @@ class Category(models.Model):
         return self.full_name
 
 
-@python_2_unicode_compatible
 class Task(models.Model):
     """
     Task has its number, name, type and points value.

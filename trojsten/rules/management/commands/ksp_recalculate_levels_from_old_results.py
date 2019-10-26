@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from django.utils.six import text_type
