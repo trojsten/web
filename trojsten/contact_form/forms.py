@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from contact_form import forms as contact_forms
 from django import forms
 from django.conf import settings

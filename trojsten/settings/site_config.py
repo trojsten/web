@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
-
 class BaseSite(object):
     name = None
     short_name = None

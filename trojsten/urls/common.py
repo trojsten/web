@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import django
 import tips.urls
 from django.conf import settings

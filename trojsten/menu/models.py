@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 import re
 
 from django.contrib.sites.models import Site
@@ -9,7 +7,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import models
 from django.urls import resolve, reverse
-from django.utils.encoding import python_2_unicode_compatible
 from sortedm2m.fields import SortedManyToManyField
 
 
@@ -40,7 +37,6 @@ def validate_url(value):
     )
 
 
-@python_2_unicode_compatible
 class MenuItem(models.Model):
     name = models.CharField(max_length=64, verbose_name="názov")
     url = models.CharField(
@@ -94,7 +90,6 @@ class MenuItem(models.Model):
                 return True
 
 
-@python_2_unicode_compatible
 class MenuGroup(models.Model):
     name = models.CharField(
         max_length=64,

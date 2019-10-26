@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 from collections import defaultdict
 
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 from trojsten.contests.models import Semester
 from trojsten.events.models import Event
@@ -50,7 +47,6 @@ class KSPLevelManager(models.Manager):
         return self.for_users_in_semester_as_dict(semester_pk, users_pks=[user_pk])[user_pk]
 
 
-@python_2_unicode_compatible
 class KSPLevel(models.Model):
     """
     Camp attendance or good results in KSP semester can increase user's level as implemented in

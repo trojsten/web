@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 import binascii
 import os
 from decimal import Decimal
@@ -9,7 +7,6 @@ from decimal import Decimal
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.safestring import mark_safe
 from markdown import markdown
 
@@ -77,7 +74,6 @@ class SubmitManager(models.Manager):
         )
 
 
-@python_2_unicode_compatible
 class Submit(models.Model):
     """
     Submit holds information about its task and person who submitted it.
@@ -170,7 +166,6 @@ class Submit(models.Model):
         )
 
 
-@python_2_unicode_compatible
 class ExternalSubmitToken(models.Model):
     token = models.CharField(verbose_name="token", max_length=40, primary_key=True)
     name = models.CharField(verbose_name="názov", max_length=64)

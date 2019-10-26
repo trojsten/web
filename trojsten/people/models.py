@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 import re
 
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django_countries.fields import CountryField
 from unidecode import unidecode
@@ -28,13 +25,11 @@ class AbstractAddress(models.Model):
         verbose_name_plural = "Adresy"
 
 
-@python_2_unicode_compatible
 class Address(AbstractAddress):
     def __str__(self):
         return "%s, %s, %s, %s" % (self.street, self.town, self.postal_code, self.country)
 
 
-@python_2_unicode_compatible
 class SchoolAddress(AbstractAddress):
     addr_name = models.CharField(max_length=100, blank=True, verbose_name="názov v adrese")
     recipient = models.CharField(max_length=100, blank=True, verbose_name="meno adresáta")
@@ -46,7 +41,6 @@ class SchoolAddress(AbstractAddress):
         abstract = True
 
 
-@python_2_unicode_compatible
 class User(AbstractUser):
     """
     Holds, provide access to or manages all informations
@@ -177,7 +171,6 @@ class UserPropertyManager(models.Manager):
             return self.filter(key__hidden=False)
 
 
-@python_2_unicode_compatible
 class UserPropertyKey(models.Model):
     """
     Type of key for additional user properties.
@@ -197,7 +190,6 @@ class UserPropertyKey(models.Model):
         verbose_name_plural = "kľúče dodatočnej vlastnosti"
 
 
-@python_2_unicode_compatible
 class UserProperty(models.Model):
     """
     Additional user properties, can be called as related_name in QuerySet of User.
@@ -232,7 +224,6 @@ class UserProperty(models.Model):
             return False
 
 
-@python_2_unicode_compatible
 class DuplicateUser(models.Model):
     """
     Merge candidate users - users with duplicit name or other properties.
