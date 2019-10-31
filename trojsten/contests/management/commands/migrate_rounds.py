@@ -3,8 +3,7 @@
 import csv
 import re
 
-import pytz
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from trojsten.contests.models import Competition, Round, Semester
@@ -18,7 +17,8 @@ class Command(BaseCommand):
         fname = options["fname"]
 
         semester_re = re.compile(
-            r"(?P<semester_number>\d+)\. \((?P<semester_name>.*)\) časť, (?P<year>\d+)\. ročník (?P<competition>.*)"
+            r"(?P<semester_number>\d+)\. \((?P<semester_name>.*)\) časť, "
+            r"(?P<year>\d+)\. ročník (?P<competition>.*)"
         )
 
         date_re = re.compile(r"(?P<day>\d{1,2})\.(?P<month>\d{1,2})\.(?P<year>\d{4})")
@@ -26,7 +26,12 @@ class Command(BaseCommand):
         time_re = re.compile(r"(?P<hour>\d{1,2}):(?P<minute>\d{1,2}):(?P<second>\d{1,2})")
 
         def get_or_create_semester(semester):
-            """Parses string like: '1. (Zimná) časť, 9. ročník FKS' and createws semester out of it."""
+            """
+            Gets or creates semester based on data parsed from provided string.
+
+            Parses string like: '1. (Zimná) časť, 9. ročník FKS'
+            and returns Semester object matching it.
+            """
             parsed_semester = semester_re.match(semester).groupdict()
             competition = Competition.objects.get(name=parsed_semester["competition"])
             semester, created = Semester.objects.get_or_create(
