@@ -4,7 +4,12 @@
 {% addtoblock "js" %}
     <script type="text/javascript" src="{% static 'js/vendor/jquery.floatThead.min.js' %}"></script>
     <script type="text/javascript">
-        $(() => $('.results-table').floatThead({top:60}));
+        $(() => $('.results-table').floatThead({
+            top: 60,
+            responsiveContainer: function($table){
+                return $table.closest('.table-responsive');
+            }
+        }));
     </script>
 {% endaddtoblock %}
 
