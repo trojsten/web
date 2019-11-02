@@ -26,6 +26,9 @@
         $('#notification-box-content').html('<li role="presentation"><a href="#">Žiadne notifikácie!</a></li>')
         $('title').text(original_title)
       }
+
+      $('#notification-box-content').append('<li role="presentation" class="divider"></li>')
+      $('#notification-box-content').append('<li role="presentation"><a href="/ucet/#notifications"><i class="glyphicon glyphicon-cog"></i> Nastavenia notifikácií</a></li>')
     })
   }
 
