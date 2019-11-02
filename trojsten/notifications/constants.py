@@ -1,12 +1,6 @@
-from enum import IntEnum
+from django.utils.translation import ugettext_lazy as _
 
-
-class SubscriptionStatus(IntEnum):
-    UNSUBSCRIBED = 0
-    SUBSCRIBED = 1
-
-
-STATUSES = [
-    (SubscriptionStatus.UNSUBSCRIBED, "Unsubscribed"),
-    (SubscriptionStatus.SUBSCRIBED, "Subscribed"),
-]
+CHANNELS = {
+    "submit_reviewed": _("Your submit was reviewed"),
+    "round_started": _("New round started"),
+}

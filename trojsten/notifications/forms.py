@@ -3,19 +3,8 @@ from crispy_forms.helper import FormHelper
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from trojsten.notifications.constants import SubscriptionStatus
-from trojsten.notifications.models import Subscription
-from trojsten.notifications.notification_types import TYPES
-
-
-def _pretty_subscription_name(subscription):
-    return "%s (%s)" % (subscription["name"], subscription["target"])
-
-
-def _subscription_uid(type, target_pk):
-    if not target_pk:
-        return "%s" % (type,)
-    return "%s:%s" % (type, target_pk)
+from trojsten.notifications.constants import CHANNELS
+from trojsten.notifications.models import UnsubscribedChannel
 
 
 class NotificationSettingsForm(forms.Form):
@@ -27,57 +16,27 @@ class NotificationSettingsForm(forms.Form):
         self.helper.add_input(layout.Submit("notification_subscription_submit", _("Submit")))
         self.helper.form_show_labels = True
 
-        subscribed_to = []
-        for subscription in Subscription.objects.filter(
-            user=self.user, status=SubscriptionStatus.SUBSCRIBED
-        ):
-            subscribed_to.append(
-                _subscription_uid(subscription.notification_type, subscription.object_id)
-            )
+        unsubscribed_from = UnsubscribedChannel.objects.filter(user=user).values_list(
+            "channel", flat=True
+        )
 
-        allowed_subscriptions = []
-        for notification_type in TYPES.values():
-            targets = notification_type.get_available_targets(self.user)
-            for target in targets:
-                type = notification_type().database_key
-                allowed_subscriptions.append(
-                    {
-                        "name": notification_type.name,
-                        "target": target,
-                        "type": type,
-                        "uid": _subscription_uid(type, target.pk if target else None),
-                        "subscribed": _subscription_uid(type, target.pk if target else None)
-                        in subscribed_to,
-                    }
-                )
-
-        self.fields["subscriptions"] = forms.MultipleChoiceField(
-            choices=[(s["uid"], _pretty_subscription_name(s)) for s in allowed_subscriptions],
-            initial=[s["uid"] for s in allowed_subscriptions if s["subscribed"]],
+        self.fields["unsubscribed"] = forms.MultipleChoiceField(
+            choices=CHANNELS.items(),
+            initial=unsubscribed_from,
             widget=forms.CheckboxSelectMultiple,
             required=False,
         )
-        self.fields["subscriptions"].label = _("Subscribed events")
+        self.fields["unsubscribed"].label = _("Unsubscribed events")
 
     def save(self):
-        enabled_subscriptions = self.cleaned_data["subscriptions"]
+        new_unsubscribed = self.cleaned_data["unsubscribed"]
 
-        subscribed_to = []
-        for subscription in Subscription.objects.filter(
-            user=self.user, status=SubscriptionStatus.SUBSCRIBED
-        ):
-            subscribed_to.append(
-                _subscription_uid(subscription.notification_type, subscription.object_id)
-            )
+        unsubscribed_from = UnsubscribedChannel.objects.filter(user=self.user).values_list(
+            "channel", flat=True
+        )
 
-        for notification_type in TYPES.values():
-            targets = notification_type.get_available_targets(self.user)
-            for target in targets:
-                type = notification_type().database_key
-                uid = _subscription_uid(type, target.pk)
-
-                if uid in enabled_subscriptions and uid not in subscribed_to:
-                    notification_type(target).subscribe(self.user)
-
-                if uid not in enabled_subscriptions and uid in subscribed_to:
-                    notification_type(target).unsubscribe(self.user)
+        for channel in CHANNELS.keys():
+            if channel in unsubscribed_from and channel not in new_unsubscribed:
+                UnsubscribedChannel.objects.filter(user=self.user, channel=channel).delete()
+            if channel not in unsubscribed_from and channel in new_unsubscribed:
+                UnsubscribedChannel.objects.get_or_create(user=self.user, channel=channel)

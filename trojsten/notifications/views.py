@@ -8,20 +8,18 @@ from .models import Notification
 @login_required
 def get_notifications(request):
     notifications = (
-        Notification.objects.filter(subscription__user=request.user, was_read=False)
+        Notification.objects.filter(user=request.user, was_read=False)
         .order_by("-created_at")
-        .select_related("subscription")
         .all()[:10]
     )
 
     serialized = []
-    unread = 0
 
     for notification in notifications:
         serialized.append(
             {
                 "id": notification.pk,
-                "identificator": notification.subscription.notification_type,
+                "channel": notification.channel,
                 "message": notification.message,
                 "url": reverse("read_notification", args=(notification.pk,)),
                 "was_read": notification.was_read,
@@ -29,10 +27,7 @@ def get_notifications(request):
             }
         )
 
-        if not notification.was_read:
-            unread += 1
-
-    return JsonResponse({"notifications": serialized, "unread": unread})
+    return JsonResponse({"notifications": serialized, "unread": len(notifications)})
 
 
 @login_required
