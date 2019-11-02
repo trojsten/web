@@ -2,10 +2,8 @@
 from django.contrib.sites.models import Site
 from django.db import models
 from django.urls import reverse
-from django.utils.encoding import python_2_unicode_compatible
 
 
-@python_2_unicode_compatible
 class Thread(models.Model):
     """
     Placeholder model for conversation.

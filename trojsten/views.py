@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse

@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 import logging
 
 from django.core.management.base import BaseCommand
@@ -50,16 +48,16 @@ class Command(BaseCommand):
             )
 
             # Semester that was running in the same time as the camp.
+            # If no semester was running during the camp, the last running semester at the time.
             # For this semester the levels remain unchanged.
             last_semester_before_level_up = rounds_with_semesters[0].semester
             # The semester from which the participants were invited.
-            associated_semester = rounds_with_semesters[1].semester
+            associated_semester = camp.semester
 
             new_rules_start = timezone.datetime(
                 year=2017, month=9, day=1, tzinfo=timezone.get_default_timezone()
             )
-            associated_semester_from_old_rules = rounds_with_semesters[1].end_time < new_rules_start
-            if associated_semester_from_old_rules:
+            if associated_semester.round_set.first().end_time < new_rules_start:
                 max_points_in_levels = {1: 120, 2: 140, 3: 160, 4: 180}
                 level_up_score_thresholds = {l: x // 2 for l, x in max_points_in_levels.items()}
             else:

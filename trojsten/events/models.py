@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.html import mark_safe
 from markdown import markdown
 
@@ -20,7 +17,6 @@ class EventTypeManager(models.Manager):
         return Site.objects.get_current().eventtype_set.all()
 
 
-@python_2_unicode_compatible
 class EventType(models.Model):
     """
     Type of event e.g. camp
@@ -43,7 +39,6 @@ class EventType(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class EventPlace(models.Model):
     name = models.CharField(max_length=100, verbose_name="názov")
     address = models.ForeignKey("people.Address", null=True, blank=True, on_delete=models.CASCADE)
@@ -56,7 +51,6 @@ class EventPlace(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name="názov")
     type = models.ForeignKey(EventType, verbose_name="typ akcie", on_delete=models.CASCADE)
@@ -104,7 +98,6 @@ class Event(models.Model):
         return mark_safe(markdown(self.text, safe_mode=False))
 
 
-@python_2_unicode_compatible
 class EventParticipant(models.Model):
     PARTICIPANT = 0
     RESERVE = 1

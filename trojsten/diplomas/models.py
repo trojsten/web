@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 import re
 
 from django.contrib.auth.models import Group
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from .constants import FIELD_SEARCH_PATTERN
@@ -20,7 +17,6 @@ class DiplomaDataSourceManager(models.Manager):
         return self.get_queryset().filter(is_default=True) or []
 
 
-@python_2_unicode_compatible
 class DiplomaDataSource(models.Model):
     name = models.CharField(max_length=128, verbose_name=_("Source name"))
     class_name = models.CharField(
@@ -42,7 +38,6 @@ class DiplomaDataSource(models.Model):
         verbose_name_plural = _("Data sources for diplomas")
 
 
-@python_2_unicode_compatible
 class DiplomaTemplate(models.Model):
     name = models.CharField(max_length=128, verbose_name=_("Name"))
     svg = models.TextField()

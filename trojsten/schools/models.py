@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 import trojsten.people.models
 
 
-@python_2_unicode_compatible
 class School(models.Model):
     abbreviation = models.CharField(
         max_length=100, blank=True, verbose_name="skratka", help_text="Sktatka názvu školy."

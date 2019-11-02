@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from os import path
 
 from django.conf import settings
@@ -338,10 +336,13 @@ class TaskAndSolutionStatementsTests(TestCase):
         response = self.client.get(self.task_url)
         self.assertContains(response, "Test task")
         self.assertContains(response, "test <b>html</b> task statement")
+        self.assertIsInstance(response.context["task_text"], str)
         response = self.client.get(self.solution_url)
         self.assertContains(response, "Test task")
         self.assertContains(response, "test <b>html</b> solution statement")
         self.assertContains(response, "test <b>html</b> task statement")
+        self.assertIsInstance(response.context["solution_text"], str)
+        self.assertIsInstance(response.context["task_text"], str)
 
     def test_statement_logged_in(self):
         self.client.force_login(self.nonstaff_user)
@@ -623,6 +624,11 @@ class DashboardTest(TestCase):
     def setUp(self):
         self.site = Site.objects.get(pk=settings.SITE_ID)
         self.url = reverse("dashboard")
+        competition = Competition.objects.create(name="TestCompetition")
+        competition.sites.add(self.site)
+        self.semester = Semester.objects.create(
+            number=1, name="Test semester 1", competition=competition, year=1
+        )
 
     def test_dashboard_no_round(self):
         response = self.client.get(self.url)
@@ -630,13 +636,13 @@ class DashboardTest(TestCase):
         self.assertContains(response, _("There is no active round currently."))
 
     def test_active_round(self):
-        competition = Competition.objects.create(name="TestCompetition")
-        competition.sites.add(self.site)
-        semester = Semester.objects.create(
-            number=1, name="Test semester 1", competition=competition, year=1
-        )
         round = Round.objects.create(
-            number=1, semester=semester, solutions_visible=True, visible=True
+            number=1,
+            semester=self.semester,
+            solutions_visible=True,
+            visible=True,
+            start_time=timezone.now() + timezone.timedelta(-8),
+            end_time=timezone.now() + timezone.timedelta(8),
         )
 
         response = self.client.get(self.url)
@@ -645,16 +651,21 @@ class DashboardTest(TestCase):
         self.assertContains(response, round)
 
     def test_two_rounds(self):
-        competition = Competition.objects.create(name="TestCompetition")
-        competition.sites.add(self.site)
-        semester = Semester.objects.create(
-            number=1, name="Test semester 1", competition=competition, year=1
-        )
         round1 = Round.objects.create(
-            number=1, semester=semester, solutions_visible=True, visible=True
+            number=1,
+            semester=self.semester,
+            solutions_visible=True,
+            visible=True,
+            start_time=timezone.now() + timezone.timedelta(-8),
+            end_time=timezone.now() + timezone.timedelta(8),
         )
         round2 = Round.objects.create(
-            number=2, semester=semester, solutions_visible=True, visible=True
+            number=2,
+            semester=self.semester,
+            solutions_visible=True,
+            visible=True,
+            start_time=timezone.now() + timezone.timedelta(-8),
+            end_time=timezone.now() + timezone.timedelta(8),
         )
 
         response = self.client.get(self.url)
@@ -664,28 +675,24 @@ class DashboardTest(TestCase):
         self.assertContains(response, round2)
 
     def test_invisible_round(self):
-        competition = Competition.objects.create(name="TestCompetition")
-        competition.sites.add(self.site)
-        semester = Semester.objects.create(
-            number=1, name="Test semester 1", competition=competition, year=1
+        Round.objects.create(
+            number=1,
+            semester=self.semester,
+            visible=False,
+            start_time=timezone.now() + timezone.timedelta(-8),
+            end_time=timezone.now() + timezone.timedelta(8),
         )
-        Round.objects.create(number=1, semester=semester, visible=False)
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, _("There is no active round currently."))
 
     def test_inactive_round(self):
-        competition = Competition.objects.create(name="TestCompetition")
-        competition.sites.add(self.site)
-        semester = Semester.objects.create(
-            number=1, name="Test semester 1", competition=competition, year=1
-        )
         start = timezone.now() + timezone.timedelta(-8)
         end = timezone.now() + timezone.timedelta(-5)
 
         Round.objects.create(
-            number=1, semester=semester, visible=True, start_time=start, end_time=end
+            number=1, semester=self.semester, visible=True, start_time=start, end_time=end
         )
 
         response = self.client.get(self.url)

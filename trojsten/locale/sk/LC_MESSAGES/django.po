@@ -1055,7 +1055,7 @@ msgstr ""
 # Login
 #: trojsten/templates/ksp_login/parts/login_box.html:22
 msgid "Site administration"
-msgstr "Registrácia"
+msgstr "Správa stránky"
 
 #: trojsten/templates/ksp_login/parts/login_box.html:29
 msgid "Settings"
