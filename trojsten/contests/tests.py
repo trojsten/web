@@ -15,6 +15,7 @@ from wiki.models import Article, ArticleRevision, URLPath
 
 from trojsten.contests import constants
 from trojsten.contests.models import Competition, Round, Semester, Task
+from trojsten.notifications.models import Notification
 from trojsten.people.models import User
 from trojsten.utils.test_utils import TestNonFileSystemStorage, get_noexisting_id
 
@@ -721,3 +722,73 @@ class DashboardTest(TestCase):
                 self.assertNotContains(response, "Test news entry %d" % i)
             else:
                 self.assertContains(response, "Test news entry %d" % i)
+
+
+class ContestTest(TestCase):
+    def setUp(self):
+        grad_year = timezone.now().year + 1
+        self.user = User.objects.create_user(
+            username="jozko",
+            first_name="Jozko",
+            last_name="Mrkvicka",
+            password="pass",
+            graduation=grad_year,
+        )
+        self.competition = Competition.objects.create(name="TestCompetition")
+        self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.start_time_old = timezone.now() + timezone.timedelta(-10)
+        self.end_time_new = timezone.now() + timezone.timedelta(10)
+        self.semester = Semester.objects.create(
+            number=1, name="Test semester", competition=self.competition, year=1
+        )
+
+    def test_update_invisible_to_invisible(self):
+        round = Round.objects.create(
+            number=1,
+            semester=self.semester,
+            visible=False,
+            solutions_visible=False,
+            start_time=self.start_time_old,
+            end_time=self.end_time_new,
+        )
+
+        round.visible = False
+        round.save()
+
+        self.assertFalse(Notification.objects.filter(channel="round_started").exists())
+
+    def test_update_invisible_to_visible(self):
+        round = Round.objects.create(
+            number=1,
+            semester=self.semester,
+            visible=False,
+            solutions_visible=False,
+            start_time=self.start_time_old,
+            end_time=self.end_time_new,
+        )
+
+        round.visible = True
+        round.save()
+
+        self.assertTrue(Notification.objects.filter(channel="round_started").exists())
+
+    def test_update_visible_to_visible(self):
+        round = Round.objects.create(
+            number=1,
+            semester=self.semester,
+            visible=False,
+            solutions_visible=False,
+            start_time=self.start_time_old,
+            end_time=self.end_time_new,
+        )
+
+        round.visible = True
+        round.save()
+
+        round.visible = True
+        round.save()
+
+        query = Notification.objects.filter(channel="round_started")
+
+        self.assertTrue(query.exists())
+        self.assertEqual(query.count(), 1)

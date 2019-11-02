@@ -20,6 +20,7 @@ from judge_client import constants as judge_constants
 
 from trojsten.contests.constants import TASK_ROLE_REVIEWER
 from trojsten.contests.models import Competition, Round, Semester, Task, TaskPeople
+from trojsten.notifications.models import Notification
 from trojsten.people.models import User
 from trojsten.submit import constants
 from trojsten.submit.forms import SubmitAdminForm
@@ -1125,3 +1126,50 @@ class SubmitDetailTests(TestCase):
 
         self.assertContains(response, "0.sample.a.in")
         self.assertContains(response, "OK")
+
+
+class NotificationTest(TestCase):
+    def setUp(self):
+        grad_year = timezone.now().year + 1
+        self.user = User.objects.create_user(
+            username="jozko",
+            first_name="Jozko",
+            last_name="Mrkvicka",
+            password="pass",
+            graduation=grad_year,
+        )
+        self.competition = Competition.objects.create(name="TestCompetition")
+        self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.start_time_old = timezone.now() + timezone.timedelta(-10)
+        self.end_time_new = timezone.now() + timezone.timedelta(10)
+        self.semester = Semester.objects.create(
+            number=1, name="Test semester", competition=self.competition, year=1
+        )
+        self.round = Round.objects.create(
+            number=1,
+            semester=self.semester,
+            visible=True,
+            solutions_visible=False,
+            start_time=self.start_time_old,
+            end_time=self.end_time_new,
+        )
+        self.task = Task.objects.create(
+            number=1, name="Test task", round=self.round, has_source=True
+        )
+
+    def test_submit_should_notify(self):
+        submit = Submit(
+            task=self.task,
+            user=self.user,
+            submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            points=0,
+            testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
+        )
+        submit.save()
+
+        submit.testing_status = constants.SUBMIT_STATUS_REVIEWED
+        submit.points = 10
+        submit.save()
+
+        query = Notification.objects.filter(channel="submit_reviewed")
+        self.assertTrue(query.exists())

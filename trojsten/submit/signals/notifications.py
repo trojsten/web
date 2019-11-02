@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from trojsten.notifications.utils import notify
+from trojsten.notifications.utils import notify_user
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED, SUBMIT_TYPE_DESCRIPTION
 from trojsten.submit.models import Submit
 
@@ -25,8 +25,8 @@ def submit_reviewed(sender, **kwargs):
             "url": reverse("task_submit_page", args=(instance.task.pk,)),
         }
 
-        notify(
-            [instance.user],
+        notify_user(
+            instance.user,
             "submit_reviewed",
             _('Your description for "%(task)s" has been reviewed. You earned %(points)d points!')
             % {"task": instance.task, "points": instance.points},

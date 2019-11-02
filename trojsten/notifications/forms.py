@@ -20,23 +20,28 @@ class NotificationSettingsForm(forms.Form):
             "channel", flat=True
         )
 
-        self.fields["unsubscribed"] = forms.MultipleChoiceField(
+        subscribed_to = []
+        for channel in CHANNELS.keys():
+            if channel not in unsubscribed_from:
+                subscribed_to.append(channel)
+
+        self.fields["subscribed"] = forms.MultipleChoiceField(
             choices=CHANNELS.items(),
-            initial=unsubscribed_from,
+            initial=subscribed_to,
             widget=forms.CheckboxSelectMultiple,
             required=False,
         )
-        self.fields["unsubscribed"].label = _("Unsubscribed events")
+        self.fields["subscribed"].label = _("Subscribed events")
 
     def save(self):
-        new_unsubscribed = self.cleaned_data["unsubscribed"]
+        new_subscribed = self.cleaned_data["subscribed"]
 
         unsubscribed_from = UnsubscribedChannel.objects.filter(user=self.user).values_list(
             "channel", flat=True
         )
 
         for channel in CHANNELS.keys():
-            if channel in unsubscribed_from and channel not in new_unsubscribed:
+            if channel in unsubscribed_from and channel in new_subscribed:
                 UnsubscribedChannel.objects.filter(user=self.user, channel=channel).delete()
-            if channel not in unsubscribed_from and channel in new_unsubscribed:
+            if channel not in unsubscribed_from and channel not in new_subscribed:
                 UnsubscribedChannel.objects.get_or_create(user=self.user, channel=channel)

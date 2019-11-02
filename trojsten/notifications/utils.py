@@ -16,8 +16,22 @@ def notify(users, channel, message, url):
         "user__pk", flat=True
     )
 
+    notifications = []
+
     for user in users:
         if user.pk in unsubscribed:
             continue
 
-        Notification.objects.create(user=user, channel=channel, message=message, url=url)
+        notifications.append(Notification(user=user, channel=channel, message=message, url=url))
+
+    # @TODO: Use Celery to create notifications asynchronously
+    Notification.objects.bulk_create(notifications)
+
+
+def notify_user(user, channel, message, url):
+    """
+    Notifies a single user.
+
+    See notify().
+    """
+    notify([user], channel, message, url)

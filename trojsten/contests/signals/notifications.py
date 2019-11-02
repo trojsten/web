@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from trojsten.contests.models import Round
 from trojsten.notifications.utils import notify
+from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
 from trojsten.people.models import User
 
 
@@ -17,9 +18,10 @@ def round_published(sender, **kwargs):
     if not instance.visible or instance.previous_visible:
         return
 
-    current_year = timezone.now().year
+    date = timezone.now()
+    current_year = date.year + int(date.month > SCHOOL_YEAR_END_MONTH)
     users = User.objects.filter(graduation__gte=current_year).exclude(
-        ignored_competitions__pk=instance.semester.competition.pk
+        ignored_competitions=instance.semester.competition
     )
 
     site = Site.objects.get_current()

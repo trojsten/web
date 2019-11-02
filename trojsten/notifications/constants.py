@@ -1,6 +1,3 @@
-from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
-CHANNELS = {
-    "submit_reviewed": _("Your submit was reviewed"),
-    "round_started": _("New round started"),
-}
+CHANNELS = getattr(settings, "TROJSTEN_NOTIFICATION_CHANNELS", {})

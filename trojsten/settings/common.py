@@ -475,3 +475,8 @@ else:
 DIPLOMA_PARTICIPANTS_ALLOWED_EXTENSIONS = [".csv", ".json"]
 
 EDITOR_CONFIG = {"mode": "python", "lineWrapping": False, "lineNumbers": True, "tabSize": 4}
+
+TROJSTEN_NOTIFICATION_CHANNELS = {
+    "submit_reviewed": _("Your submit was reviewed"),
+    "round_started": _("New round started"),
+}

@@ -2,7 +2,7 @@
 {% if user.is_authenticated %}
 {% addtoblock "js" %}
     <script>
-      window.TROJSTEN_NOTIFY_LIST = "{% url 'list_notifications' %}"
+      window.TROJSTEN_NOTIFY_LIST_URL = "{% url 'list_notifications' %}"
     </script>
     <script type="text/javascript" src="{% static 'js/notifications.js' %}"></script>
 {% endaddtoblock %}

@@ -8,7 +8,7 @@
 
 
   let update_data = () => {
-    $.getJSON(window.TROJSTEN_NOTIFY_LIST, (data) => {
+    $.getJSON(window.TROJSTEN_NOTIFY_LIST_URL, (data) => {
       let content = []
 
       data.notifications.forEach(notification => {
