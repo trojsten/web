@@ -31,13 +31,28 @@
             });
         });
 
+        function register_protocol_events() {
+            $('.protocol-box.with-tooltip').tooltip({
+                html: true
+            })
+
+            $('.protocol-has-details').click(function () {
+                document.getElementById('details-'+$(this).data('input')).scrollIntoView()
+            })
+        }
+
         if ($('.submit-protocol').data('ready') == 'False') {
             var current_id = $('.submit-protocol').data('id');
             poll_submit(current_id, function() {
                 $.get('/odovzdavanie/ajax/submit/' + current_id + '/protokol/', function(data) {
                     $('.submit-protocol').html(data);
+                    register_protocol_events()
                 });
             });
+        }
+
+        if ($('.submit-protocol').data('ready') == 'True') {
+            register_protocol_events()
         }
 
         function download_reviewer_comment(id, callback) {

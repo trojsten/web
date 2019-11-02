@@ -1,0 +1,67 @@
+.protocol-sets {
+    overflow-x: scroll;
+}
+
+.protocol-set {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+@media (min-width: @screen-md-min) {
+    .protocol-set {
+        flex-wrap: wrap;
+    }
+
+    .protocol-sets {
+        overflow-x: hidden;
+    }
+}
+
+.protocol-result {
+    font-weight: bold;
+}
+
+.protocol-time {
+    font-size: 0.8em;
+}
+
+.protocol-set-name {
+    font-size: 0.9em;
+}
+
+.protocol-set-result {
+    font-size: 1em;
+}
+
+.protocol-box {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    border: 1px solid darken(#fff, 5%);
+
+    &.bg-success {
+        border: 1px solid darken(@state-success-bg, 5%);
+    }
+
+    &.bg-danger {
+        border: 1px solid darken(@state-danger-bg, 5%);
+    }
+
+    &.bg-warning {
+        border: 1px solid darken(@state-warning-bg, 5%);
+    }
+
+    &.bg-gray {
+        background: @gray-lighter;
+        border: 1px solid darken(@gray-lighter, 5%);
+    }
+
+    &.has-details {
+        cursor: pointer;
+    }
+}

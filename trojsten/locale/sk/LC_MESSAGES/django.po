@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-02 17:47+0100\n"
+"POT-Creation-Date: 2019-10-06 21:54+0200\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -1006,11 +1006,31 @@ msgstr "Pozri komentár"
 msgid "Details"
 msgstr "Detaily"
 
-#: trojsten/submit/views.py:336
+#: trojsten/submit/templates/trojsten/submit/view_submit.html:43
+msgid "Protocol"
+msgstr "Protokol"
+
+#: trojsten/submit/templates/trojsten/submit/view_submit.html:44
+msgid "Program"
+msgstr "Program"
+
+#: trojsten/submit/templates/trojsten/submit/view_submit.html:45
+msgid "Submits"
+msgstr "Submity"
+
+#: trojsten/submit/templates/trojsten/submit/view_submit.html:58
+msgid "Program source is not available."
+msgstr "Zdrojový kód programu nie je k dispozícií."
+
+#: trojsten/submit/templates/trojsten/submit/view_submit.html:69
+msgid "There are no data about this submit."
+msgstr "K tomuto submitu neexistujú žiadne dáta."
+
+#: trojsten/submit/views.py:355
 msgid "[Trojstenweb] User submission detected"
 msgstr "[Trojstenweb] Nový submit uživateľa"
 
-#: trojsten/submit/views.py:338
+#: trojsten/submit/views.py:357
 #, python-brace-format
 msgid ""
 "{name} submitted solution to task {task}\n"
@@ -1019,7 +1039,7 @@ msgstr ""
 "Uživateľ {name} submitol riešenie úlohy {task}\n"
 "\n"
 
-#: trojsten/submit/views.py:340
+#: trojsten/submit/views.py:359
 #, python-brace-format
 msgid ""
 "Link for reviewing: {review_link}\n"
@@ -1028,7 +1048,7 @@ msgstr ""
 "Link na opravovanie: {review_link}\n"
 "\n"
 
-#: trojsten/submit/views.py:344
+#: trojsten/submit/views.py:363
 #, python-brace-format
 msgid ""
 "Submit link: {submit_link}\n"
@@ -1039,7 +1059,7 @@ msgstr ""
 "\n"
 "Toto je automatizovaná správa, neodpovedajte na ňu"
 
-#: trojsten/submit/views.py:466
+#: trojsten/submit/views.py:480
 msgid ""
 "You have successfully submitted your description, it will be reviewed after "
 "the round finishes."
@@ -1047,7 +1067,7 @@ msgstr ""
 "Úspešne sa ti podarilo submitnúť popis, po skončení kola ti ho vedúci "
 "opravia."
 
-#: trojsten/submit/views.py:475
+#: trojsten/submit/views.py:489
 msgid ""
 "You have submitted your description after the deadline. It is not counted in "
 "results."
