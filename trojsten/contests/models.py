@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 import os
 
 from django.conf import settings
@@ -11,7 +9,6 @@ from django.db import models
 from django.db.models import Q
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 from unidecode import unidecode
 
@@ -24,7 +21,87 @@ from trojsten.utils import utils
 from . import constants
 
 
+class CompetitionManager(models.Manager):
+    def current_site_only(self):
+        """Returns only competitions belonging to current site
+        """
+        return Competition.objects.filter(sites__id=settings.SITE_ID).order_by("pk").all()
+
+
+class Competition(models.Model):
+    """
+    Consists of semester.
+    """
+
+    name = models.CharField(max_length=128, verbose_name="názov")
+    sites = models.ManyToManyField(Site)
+    organizers_group = models.ForeignKey(
+        Group, null=True, verbose_name="skupina vedúcich", on_delete=models.CASCADE
+    )
+    primary_school_only = models.BooleanField(
+        default=False, verbose_name="súťaž je iba pre základoškolákov"
+    )
+    required_user_props = models.ManyToManyField(
+        UserPropertyKey,
+        limit_choices_to={"hidden": False},
+        verbose_name="Povinné vlastnosti človeka",
+        blank=True,
+    )
+
+    @property
+    def rules(self):
+        return get_rules_for_competition(self)
+
+    objects = CompetitionManager()
+
+    class Meta:
+        verbose_name = "Súťaž"
+        verbose_name_plural = "Súťaže"
+
+    def __str__(self):
+        return self.name
+
+
+class SemesterManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related("competition")
+
+
+class Semester(models.Model):
+    """
+    Semester consists of several rounds.
+    """
+
+    competition = models.ForeignKey(Competition, verbose_name="súťaž", on_delete=models.CASCADE)
+    name = models.CharField(max_length=32, verbose_name="názov", blank=True)
+    number = models.IntegerField(verbose_name="číslo části")
+    year = models.IntegerField(verbose_name="ročník")
+
+    objects = SemesterManager()
+
+    class Meta:
+        verbose_name = "Časť"
+        verbose_name_plural = "Časti"
+
+    def __str__(self):
+        # All foreign keys here should be added to the select_related list in the RoundManager.
+        return "%i. (%s) časť, %i. ročník %s" % (
+            self.number,
+            self.name,
+            self.year,
+            self.competition,
+        )
+
+    def short_str(self):
+        return "%i. (%s) časť" % (self.number, self.name)
+
+    short_str.short_description = "Časť"
+
+
 class RoundManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related("semester__competition")
+
     def visible(self, user, all_sites=False):
         """Returns only rounds visible for user
         """
@@ -74,78 +151,6 @@ class RoundManager(models.Manager):
         )
 
 
-class CompetitionManager(models.Manager):
-    def current_site_only(self):
-        """Returns only competitions belonging to current site
-        """
-        return Competition.objects.filter(sites__id=settings.SITE_ID).order_by("pk").all()
-
-
-@python_2_unicode_compatible
-class Competition(models.Model):
-    """
-    Consists of semester.
-    """
-
-    name = models.CharField(max_length=128, verbose_name="názov")
-    sites = models.ManyToManyField(Site)
-    organizers_group = models.ForeignKey(
-        Group, null=True, verbose_name="skupina vedúcich", on_delete=models.CASCADE
-    )
-    primary_school_only = models.BooleanField(
-        default=False, verbose_name="súťaž je iba pre základoškolákov"
-    )
-    required_user_props = models.ManyToManyField(
-        UserPropertyKey,
-        limit_choices_to={"hidden": False},
-        verbose_name="Povinné vlastnosti človeka",
-        blank=True,
-    )
-
-    @property
-    def rules(self):
-        return get_rules_for_competition(self)
-
-    objects = CompetitionManager()
-
-    class Meta:
-        verbose_name = "Súťaž"
-        verbose_name_plural = "Súťaže"
-
-    def __str__(self):
-        return self.name
-
-
-@python_2_unicode_compatible
-class Semester(models.Model):
-    """
-    Semester consists of several rounds.
-    """
-
-    competition = models.ForeignKey(Competition, verbose_name="súťaž", on_delete=models.CASCADE)
-    name = models.CharField(max_length=32, verbose_name="názov", blank=True)
-    number = models.IntegerField(verbose_name="číslo části")
-    year = models.IntegerField(verbose_name="ročník")
-
-    class Meta:
-        verbose_name = "Časť"
-        verbose_name_plural = "Časti"
-
-    def __str__(self):
-        return "%i. (%s) časť, %i. ročník %s" % (
-            self.number,
-            self.name,
-            self.year,
-            self.competition,
-        )
-
-    def short_str(self):
-        return "%i. (%s) časť" % (self.number, self.name)
-
-    short_str.short_description = "Časť"
-
-
-@python_2_unicode_compatible
 class Round(models.Model):
     """
     Round has tasks.
@@ -243,6 +248,7 @@ class Round(models.Model):
         verbose_name_plural = "Kolá"
 
     def __str__(self):
+        # All foreign keys here should be added to the select_related list in the RoundManager.
         return "%i. kolo, %i. časť, %i. ročník %s" % (
             self.number,
             self.semester.number,
@@ -275,6 +281,9 @@ class Round(models.Model):
 
 
 class TaskManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related("round__semester__competition")
+
     def for_rounds_and_category(self, rounds, category=None):
         """Returns tasks which belong to specified rounds and category
         """
@@ -286,7 +295,6 @@ class TaskManager(models.Manager):
         return tasks.order_by("round", "number")
 
 
-@python_2_unicode_compatible
 class Category(models.Model):
     """
     Competition consists of a few categories. Each task belongs to one or more
@@ -308,7 +316,6 @@ class Category(models.Model):
         return self.full_name
 
 
-@python_2_unicode_compatible
 class Task(models.Model):
     """
     Task has its number, name, type and points value.
@@ -346,6 +353,8 @@ class Task(models.Model):
         verbose_name_plural = "Úlohy"
 
     def __str__(self):
+        # All (transitive) foreign keys here should be also added
+        # to the select_related list in the TaskManager.
         return "%i. %s, %s" % (self.number, self.name, self.round)
 
     def has_submit_type(self, submit_type):

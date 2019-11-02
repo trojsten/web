@@ -4,15 +4,11 @@
 # Create new frozen result models and, probably, throw the old models and data out.
 
 
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 
-@python_2_unicode_compatible
 class FrozenResults(models.Model):
     round = models.ForeignKey("contests.Round", verbose_name="kolo", on_delete=models.CASCADE)
     is_single_round = models.BooleanField(verbose_name="vynechať predošlé kolá")
@@ -38,7 +34,6 @@ class FrozenResults(models.Model):
         )
 
 
-@python_2_unicode_compatible
 class FrozenPoints(models.Model):
     task = models.ForeignKey("contests.Task", verbose_name="úloha", on_delete=models.CASCADE)
     description_points = models.CharField(max_length=10, verbose_name="body za popis")
@@ -57,7 +52,6 @@ class FrozenPoints(models.Model):
         )
 
 
-@python_2_unicode_compatible
 class FrozenUserResult(models.Model):
     frozenresults = models.ForeignKey(
         "FrozenResults", verbose_name="výsledkovka", on_delete=models.CASCADE
@@ -84,7 +78,6 @@ class FrozenUserResult(models.Model):
         return "%s %s" % (self.frozenresults, self.fullname)
 
 
-@python_2_unicode_compatible
 class Results(models.Model):
     round = models.ForeignKey("contests.Round", verbose_name="kolo", on_delete=models.CASCADE)
     tag = models.CharField(max_length=50, blank=True, null=True, verbose_name="tag/kategória")

@@ -1,5 +1,12 @@
 {% load utils additional_registration i18n %}
-{% load mathfilters %}
+{% load mathfilters sekizai_tags staticfiles %}
+
+{% addtoblock "js" %}
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.floatThead.min.js' %}"></script>
+    <script type="text/javascript">
+        $(() => $('.results-table').floatThead({top:60}));
+    </script>
+{% endaddtoblock %}
 
 {# FIXME(generic_results_stage_2): Unify HTML style #}
 

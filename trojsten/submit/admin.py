@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 from django.contrib import admin
 from django.utils.encoding import force_text
 from easy_select2 import select2_modelform
@@ -43,7 +41,7 @@ class SubmitAdmin(admin.ModelAdmin):
         "protocol_id",
     )
 
-    get_points = attribute_format(attribute="user_points", description="body")
+    get_points = attribute_format(attribute="user_points", description="body", order="points")
 
     get_task_name = get_related(
         attribute_chain=("task", "name"), description="úloha", order="task__name"
