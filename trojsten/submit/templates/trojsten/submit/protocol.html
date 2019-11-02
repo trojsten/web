@@ -27,7 +27,7 @@
                 </div>
 
                 {% for test in test_set.tests %}
-                <div class="protocol-box with-tooltip {% if test.showDetails %}protocol-has-details{% endif %} protocol-{%if test.result == "OK" %}ok{% elif test.result == "IGN" %}ign{% elif test.result == "WA" %}wa{% else %}tle{% endif %}"
+                <div class="protocol-box with-tooltip {% if test.showDetails %}has-details{% endif %} {%if test.result == "OK" %}bg-success{% elif test.result == "IGN" %}bg-gray{% elif test.result == "WA" %}bg-danger{% else %}bg-warning{% endif %}"
                     title="<b>{{ test.name }}</b><br>{{ submit_verbose_response|lookup:test.result }}{% if test.showDetails %}<br><small>Porovnanie výstupov pod tabuľkou</small>{% endif %}"
                     data-input="{{ test.name }}">
                     <span class="protocol-result">{{ test.result }}</span>

@@ -39,29 +39,25 @@
     flex-direction: column;
 
     border: 1px solid darken(#fff, 5%);
-    background: #fff;
-}
 
-.protocol-ok {
-    background: @state-success-bg;
-    border: 1px solid darken(@state-success-bg, 5%);
-}
+    &.bg-success {
+        border: 1px solid darken(@state-success-bg, 5%);
+    }
 
-.protocol-wa {
-    background: @state-danger-bg;
-    border: 1px solid darken(@state-danger-bg, 5%);
-}
+    &.bg-danger {
+        border: 1px solid darken(@state-danger-bg, 5%);
+    }
 
-.protocol-tle {
-    background: @state-warning-bg;
-    border: 1px solid darken(@state-warning-bg, 5%);
-}
+    &.bg-warning {
+        border: 1px solid darken(@state-warning-bg, 5%);
+    }
 
-.protocol-ign {
-    background: @gray-lighter;
-    border: 1px solid darken(@gray-lighter, 5%);
-}
+    &.bg-gray {
+        background: @gray-lighter;
+        border: 1px solid darken(@gray-lighter, 5%);
+    }
 
-.protocol-has-details {
-    cursor: pointer;
+    &.has-details {
+        cursor: pointer;
+    }
 }
