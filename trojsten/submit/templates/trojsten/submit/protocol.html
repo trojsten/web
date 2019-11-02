@@ -5,45 +5,50 @@
     Tento program čaká na otestovanie
 </div>
 {% endif %}
-{% if protocolReady %}
-{% if compileLogPresent %}
-    <h4>Výstup z kompilátora</h4>
-    <pre>{{ compileLog }}</pre>
-{% endif %}
-{% if have_tests %}
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Vstup</th>
-                <th>Výsledok</th>
-                <th>Čas</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for test in tests %}
-                <tr class="{%if test.result == "OK" %}success{% elif test.result == "IGN" %}warning{% else %}danger{% endif %}">
-                    <td>{{ test.name }}
-                        {% if test.showDetails %}
-                            <a data-toggle="collapse" href="#collapse{{ forloop.counter0 }}">Porovnanie výstupov</a>
-                        {% endif %}
-                    </td>
-                    <td><span data-toggle="tooltip" data-placement="auto" title="{{ test.result }}">{{ submit_verbose_response|lookup:test.result }}</span></td>
-                    <td>{{ test.time }} ms</td>
-                </tr>
 
-                    {% if test.showDetails %}
-                <tr>
-                <td colspan="3"  style="padding:0">
-                    <div class="collapse" id="collapse{{ forloop.counter0 }}">
-                        <pre><samp>{{ test.details }}</samp></pre>
-                    </div>
-                </td>
-                </tr>
-                   {% endif %}
-            {% endfor %}
-        </tbody>
-    </table>
-{% endif %}
+{% if protocolReady %}
+    {% if compileLogPresent %}
+        <h4>Výstup z kompilátora</h4>
+        <pre>{{ compileLog }}</pre>
+    {% endif %}
+    {% if have_tests %}
+        <div class="protocol-sets">
+        {% for test_set in test_sets.values %}
+            <div class="protocol-set">
+                <div class="protocol-box">
+                    <span class="protocol-set-name">
+                        {% if test_set.name == '00' %}
+                            sample
+                        {% else %}
+                            {{ test_set.name }}
+                        {% endif %}
+                    </span>
+                    <span class="protocol-set-result">{{ test_set.ok }}/{{ test_set.tests|length }}</span>
+                </div>
+
+                {% for test in test_set.tests %}
+                <div class="protocol-box with-tooltip {% if test.showDetails %}has-details{% endif %} {%if test.result == "OK" %}bg-success{% elif test.result == "IGN" %}bg-gray{% elif test.result == "WA" %}bg-danger{% else %}bg-warning{% endif %}"
+                    title="<b>{{ test.name }}</b><br>{{ submit_verbose_response|lookup:test.result }}{% if test.showDetails %}<br><small>Porovnanie výstupov pod tabuľkou</small>{% endif %}"
+                    data-input="{{ test.name }}">
+                    <span class="protocol-result">{{ test.result }}</span>
+                    <span class="protocol-time">{{ test.time }} ms</span>
+                </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        </div>
+
+        <br>
+
+        {% for test in tests %}
+            {% if test.showDetails %}
+                <div id="details-{{ test.name }}">
+                    Porovnanie výstupov pre <b>{{ test.name }}</b>:
+                    <pre><samp>{{ test.details }}</samp></pre>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 {% else %}
     Protokol testovania nie je dostupný
 {% endif %}

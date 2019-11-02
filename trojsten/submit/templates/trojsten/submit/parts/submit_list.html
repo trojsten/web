@@ -4,7 +4,7 @@
 {% if task.has_description or task.has_source or task.has_testablezip %}
 <h2>Odovzdané súbory</h2>
 {% endif %}
-{% if task.has_description %}
+{% if task.has_description and not show_only_source %}
     <h3>Popis</h3>
     <table class="table table-hover">
         <thead>

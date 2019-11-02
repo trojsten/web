@@ -15,7 +15,6 @@ from django.core.mail import send_mail
 from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.utils.html import format_html
 from django.utils.translation import ugettext as _
 from judge_client import constants as judge_constants
 from judge_client.client import ProtocolError
@@ -56,8 +55,10 @@ def protocol_data(submit, force_show_details=False):
             "compileLogPresent": protocol.compile_log is not None,
             "compileLog": protocol.compile_log,
         }
+
         tests = [
             {
+                "set": runtest.name.split(".")[0],
                 "name": runtest.name,
                 "result": runtest.result,
                 "time": runtest.time,
@@ -67,7 +68,22 @@ def protocol_data(submit, force_show_details=False):
             }
             for runtest in protocol.tests
         ]
+
+        test_sets = {}
+        for test in tests:
+            test_set_name = test["set"]
+            if test_set_name in test_sets:
+                test_sets[test_set_name]["tests"].append(test)
+                test_sets[test_set_name]["ok"] += 1 if test["result"] == "OK" else 0
+            else:
+                test_sets[test_set_name] = {
+                    "name": test_set_name,
+                    "tests": [test],
+                    "ok": 1 if test["result"] == "OK" else 0,
+                }
+
         template_data["tests"] = tests
+        template_data["test_sets"] = test_sets
         template_data["have_tests"] = len(tests) > 0
         return template_data
     except ProtocolError:
@@ -423,12 +439,7 @@ def task_submit_post(request, task_id, submit_type):
                 if task.email_on_code_submit:
                     send_notification_email(sub, task_id, submit_type)
 
-                success_message = format_html(
-                    "Úspešne si submitol program, výsledok testovania nájdeš "
-                    '<a href="{}">tu</a>',
-                    reverse("view_submit", args=[sub.id]),
-                )
-                messages.add_message(request, messages.SUCCESS, success_message)
+                return redirect(reverse("view_submit", args=[sub.id]))
         else:
             for field in form:
                 for error in field.errors:
