@@ -28,11 +28,11 @@ def _statement_view(request, task_id, solution=False):
     template_data = {"task": task}
     if task.task_file_exists:
         with settings.TASK_STATEMENTS_STORAGE.open(task.get_path(solution=False)) as f:
-            template_data["task_text"] = f.read()
+            template_data["task_text"] = f.read().decode()
 
     if solution and task.solution_file_exists:
         with settings.TASK_STATEMENTS_STORAGE.open(task.get_path(solution=True)) as f:
-            template_data["solution_text"] = f.read()
+            template_data["solution_text"] = f.read().decode()
     return render(
         request,
         "trojsten/contests/view_{}_statement.html".format("solution" if solution else "task"),
