@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-06 21:57+0200\n"
+"POT-Creation-Date: 2019-11-02 17:47+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -110,6 +110,11 @@ msgstr "Pridelený človek"
 #: trojsten/contests/models.py:421
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
+
+#: trojsten/contests/signals/notifications.py:31
+#, python-format
+msgid "Round %(round)s has started!"
+msgstr "Kolo \"%(round)s\" začalo!"
 
 #: trojsten/contests/templates/trojsten/contests/dashboard.html:6
 #: trojsten/contests/templates/trojsten/contests/dashboard.html:9
@@ -333,7 +338,15 @@ msgstr "Iná škola"
 msgid "Logout successful"
 msgstr "Odhlásenie úspešné"
 
-#: trojsten/notifications/forms.py:29 trojsten/people/forms.py:533
+#: trojsten/notifications/constants.py:4
+msgid "Your submit was reviewed"
+msgstr "Ohodnotenie submitu"
+
+#: trojsten/notifications/constants.py:5
+msgid "New round started"
+msgstr "Začiatok nového kola"
+
+#: trojsten/notifications/forms.py:16 trojsten/people/forms.py:533
 #: trojsten/people/forms.py:571
 #: trojsten/people/templates/admin/people/duplicateuser/merge_duplicate_users.html:31
 #: trojsten/people/templates/trojsten/people/settings.html:96
@@ -342,34 +355,30 @@ msgstr "Odhlásenie úspešné"
 msgid "Submit"
 msgstr "Odoslať"
 
-#: trojsten/notifications/forms.py:62
-msgid "Subscribed events"
-msgstr "Odoberané udalosti"
+#: trojsten/notifications/forms.py:29
+msgid "Unsubscribed events"
+msgstr "Ignorované udalosti"
 
 #: trojsten/notifications/management/commands/sendnotifications.py:29
 msgid "You have new notifications from Trojsten"
 msgstr "Máš nové notifikácie z Trojstenu"
 
-#: trojsten/notifications/notification_types.py:117
-msgid "New round started"
-msgstr "Začiatok nového kola"
+#: trojsten/notifications/models.py:12
+msgid "Unsubscribed channel"
+msgstr "Ignorovaná udalosť"
 
-#: trojsten/notifications/notification_types.py:124
-#, python-format
-msgid "Round %(round)s has started!"
-msgstr "Kolo \"%(round)s\" začalo!"
+#: trojsten/notifications/models.py:13
+msgid "Unsubscribed channels"
+msgstr "Ignorované udalosti"
 
-#: trojsten/notifications/notification_types.py:135
-msgid "Your submit was reviewed"
-msgstr "Ohodnotenie submitu"
+#: trojsten/notifications/models.py:31
+msgid "Notification"
+msgstr "Notifikácia"
 
-#: trojsten/notifications/notification_types.py:143
-#, python-format
-msgid ""
-"Your description for \"%(task)s\" has been reviewed. You earned %(points)d "
-"points!"
-msgstr ""
-"Tvoj popis úlohy \"%(task)s\" bol opravený. Získal si %(points)d bodov!"
+#: trojsten/notifications/models.py:32
+#: trojsten/people/templates/trojsten/people/settings.html:24
+msgid "Notifications"
+msgstr "Notifikácie"
 
 #: trojsten/notifications/templates/trojsten/notifications/email.txt:3
 #, python-format
@@ -681,10 +690,6 @@ msgstr "Vlastnosti"
 msgid "Contests"
 msgstr "Súťaže"
 
-#: trojsten/people/templates/trojsten/people/settings.html:24
-msgid "Notifications"
-msgstr "Notifikácie"
-
 #: trojsten/people/templates/trojsten/people/settings.html:26
 #: trojsten/people/templates/trojsten/people/settings.html:28
 msgid "Login settings"
@@ -699,8 +704,8 @@ msgid "Choose which competitions would you like to participate in:"
 msgstr "Vyber si súťaže, ktoré chceš riešiť:"
 
 #: trojsten/people/templates/trojsten/people/settings.html:112
-msgid "Choose which events would you like to be notified about:"
-msgstr "Vyber si udalosti, o ktorých chceš byť informovaný:"
+msgid "Choose which events you do not want to be notified about:"
+msgstr "Vyber si udalosti, o ktorých nechceš byť informovaný:"
 
 #: trojsten/people/templates/trojsten/people/settings.html:120
 msgid "You can use any of the following services to log in to your account."
@@ -970,6 +975,14 @@ msgstr "Tu môžeš nahrať súbor s popisom riešenia"
 #: trojsten/submit/forms.py:84
 msgid "You can attach a submit file only to descriptions."
 msgstr "Nahrať súbor môžeš len k popisom."
+
+#: trojsten/submit/signals/notifications.py:31
+#, python-format
+msgid ""
+"Your description for \"%(task)s\" has been reviewed. You earned %(points)d "
+"points!"
+msgstr ""
+"Tvoj popis úlohy \"%(task)s\" bol opravený. Získal si %(points)d bodov!"
 
 #: trojsten/submit/templates/trojsten/submit/all_submits_page.html:7
 #: trojsten/submit/templates/trojsten/submit/all_submits_page.html:10
