@@ -336,10 +336,13 @@ class TaskAndSolutionStatementsTests(TestCase):
         response = self.client.get(self.task_url)
         self.assertContains(response, "Test task")
         self.assertContains(response, "test <b>html</b> task statement")
+        self.assertIsInstance(response.context["task_text"], str)
         response = self.client.get(self.solution_url)
         self.assertContains(response, "Test task")
         self.assertContains(response, "test <b>html</b> solution statement")
         self.assertContains(response, "test <b>html</b> task statement")
+        self.assertIsInstance(response.context["solution_text"], str)
+        self.assertIsInstance(response.context["task_text"], str)
 
     def test_statement_logged_in(self):
         self.client.force_login(self.nonstaff_user)
