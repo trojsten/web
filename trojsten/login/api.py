@@ -23,7 +23,7 @@ def get_current_user_info(request):
 
 @json_response
 def is_authenticated(request):
-    return {"authenticated": request.user.is_authenticated()}
+    return {"authenticated": request.user.is_authenticated}
 
 
 def _autologin_urls():
