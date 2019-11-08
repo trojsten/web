@@ -9,6 +9,8 @@ trojsten/statements/*
 version.txt
 .venv
 .coverage
+dist
+*.egg-info
 
 # locale
 *.mo
