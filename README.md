@@ -9,13 +9,15 @@ Trojstenovy web
 
 ## Getting started
 
-This project uses [pre-commit](https://pre-commit.com/). 
+This project uses [pre-commit](https://pre-commit.com/).
 You can install it using `pip install pre-commit` and it's also included in [the project requirements](https://github.com/trojsten/web/blob/master/requirements.txt).
 
-Activate it with 
+Activate it with
 ```bash
 pre-commit install --allow-missing-config
 ```
+
+For dependency management we use [Poetry](https://poetry.eustace.io/). See https://poetry.eustace.io/docs/#installation for installation manual.
 
 ### Running locally
 
