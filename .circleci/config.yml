@@ -2,15 +2,14 @@ version: 2
 
 .base: &base
   docker:
-      - image: trojsten/web-base:latest
-      - image: postgres:9.5
-        environment:
-          POSTGRES_DB: trojsten
-          POSTGRES_USER: trojsten
-          
-      # - image: elasticsearch:2.4.6
-  working_directory: ~/web
+    - image: trojsten/web-base:latest
+    - image: postgres:9.5
+      environment:
+        POSTGRES_DB: trojsten
+        POSTGRES_USER: trojsten
 
+    # - image: elasticsearch:2.4.6
+  working_directory: ~/web
 
 jobs:
   build:
@@ -20,47 +19,43 @@ jobs:
       - save_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - ~/web      
+            - ~/web
       - restore_cache:
           keys:
-            - v2-dependencies-{{ checksum "requirements.txt" }}
+            - v3-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
+            - v3-dependencies-
       - run:
           name: install dependencies
           command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
+            poetry install
       - save_cache:
           paths:
-            - ./venv
-          key: v2-dependencies-{{ checksum "requirements.txt" }}
+            - ~/.cache/pypoetry/virtualenvs
+          key: v3-dependencies-{{ checksum "poetry.lock" }}
   test:
     <<: *base
-    environment:        
-        TROJSTENWEB_DATABASE_URL: 127.0.0.1
-        DJANGO_SETTINGS_MODULE: trojsten.settings.test
-        TROJSTENWEB_ELASTICSEARCH_TESTS: 0
-        # TROJSTENWEB_HAYSTACK_CONNECTIONS_URL: http://elasticsearch:9200
+    environment:
+      TROJSTENWEB_DATABASE_URL: 127.0.0.1
+      DJANGO_SETTINGS_MODULE: trojsten.settings.test
+      TROJSTENWEB_ELASTICSEARCH_TESTS: 0
+      # TROJSTENWEB_HAYSTACK_CONNECTIONS_URL: http://elasticsearch:9200
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v2-dependencies-{{ checksum "requirements.txt" }}
+            - v3-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
+            - v3-dependencies-
       - run:
           name: run tests
-          command: |          
-            . venv/bin/activate
-            bash -c 'cd trojsten; python ../manage.py compilemessages;'
-            coverage run manage.py test
+          command: |
+            bash  -c 'cd trojsten; poetry run ../manage.py compilemessages'
+            poetry run coverage run manage.py test
       - run:
           name: upload coverage
-          command: | 
-            . venv/bin/activate
+          command: |
             curl -s https://codecov.io/bash | bash
   lint:
     <<: *base
@@ -69,33 +64,31 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v2-dependencies-{{ checksum "requirements.txt" }}
+            - v3-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
+            - v3-dependencies-
       - run:
           name: flake8
           command: |
-            . venv/bin/activate
-            flake8 trojsten
+            poetry run flake8 trojsten
   migrations:
-    <<: *base    
-    environment:        
-        TROJSTENWEB_DATABASE_URL: 127.0.0.1
+    <<: *base
+    environment:
+      TROJSTENWEB_DATABASE_URL: 127.0.0.1
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v2-dependencies-{{ checksum "requirements.txt" }}
+            - v3-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
+            - v3-dependencies-
       - run:
           name: check-migrations
           command: |
-            . venv/bin/activate
             # Migrations are localized, so translations have to be available for the consistent behaviour.
-            bash -c 'cd trojsten; python ../manage.py compilemessages;'
-            python manage.py makemigrations --dry-run --check
+            bash  -c 'cd trojsten; poetry run ../manage.py compilemessages'
+            poetry run ./manage.py makemigrations --dry-run --check
   black:
     <<: *base
     steps:
@@ -103,13 +96,12 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v2-dependencies-{{ checksum "requirements.txt" }}
+            - v3-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
+            - v3-dependencies-
       - run:
           name: black
           command: |
-            . venv/bin/activate
             black --check trojsten
   isort:
     <<: *base
@@ -118,20 +110,19 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v2-dependencies-{{ checksum "requirements.txt" }}
+            - v3-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
+            - v3-dependencies-
       - run:
           name: isort
           command: |
-            . venv/bin/activate
-            isort -rc trojsten --check
+            poetry run isort -rc trojsten --check
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - build      
+      - build
       - test:
           requires:
             - build
@@ -147,4 +138,3 @@ workflows:
       - isort:
           requires:
             - build
-   
