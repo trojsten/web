@@ -1,17 +1,18 @@
 FROM trojsten/web-base:latest
 
+RUN ln -s /root/.poetry/bin/poetry /usr/local/bin/poetry
+
 ENV PYTHONUNBUFFERED=0
 
 COPY ./fonts/* /usr/share/fonts/
 RUN fc-cache -f -v
 
-COPY ./requirements.txt /web/requirements.txt
+COPY . /web
+
 WORKDIR /web
 
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
-
-COPY . /web
+RUN poetry config settings.virtualenvs.create false && \
+    poetry install -n
 
 RUN python manage.py compilemessages
 
