@@ -476,7 +476,7 @@ DIPLOMA_PARTICIPANTS_ALLOWED_EXTENSIONS = [".csv", ".json"]
 
 EDITOR_CONFIG = {"mode": "python", "lineWrapping": False, "lineNumbers": True, "tabSize": 4}
 
-TROJSTEN_NOTIFICATION_CHANNELS = {
-    "submit_reviewed": _("Your submit was reviewed"),
-    "round_started": _("New round started"),
-}
+TROJSTEN_NOTIFICATION_CHANNELS = [
+    {"key": "submit_reviewed", "name": _("Your submit was reviewed"), "icon": "thumbs-up"},
+    {"key": "round_started", "name": _("New round started"), "icon": "plus"},
+]

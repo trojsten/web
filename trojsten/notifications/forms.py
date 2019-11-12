@@ -3,8 +3,8 @@ from crispy_forms.helper import FormHelper
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from trojsten.notifications.constants import CHANNELS
 from trojsten.notifications.models import UnsubscribedChannel
+from trojsten.notifications.settings import CHANNELS
 
 
 class NotificationSettingsForm(forms.Form):
@@ -21,12 +21,15 @@ class NotificationSettingsForm(forms.Form):
         )
 
         subscribed_to = []
-        for channel in CHANNELS.keys():
-            if channel not in unsubscribed_from:
-                subscribed_to.append(channel)
+        choices = []
+        for channel in CHANNELS:
+            choices.append((channel["key"], channel["name"]))
+
+            if channel["key"] not in unsubscribed_from:
+                subscribed_to.append(channel["key"])
 
         self.fields["subscribed"] = forms.MultipleChoiceField(
-            choices=CHANNELS.items(),
+            choices=choices,
             initial=subscribed_to,
             widget=forms.CheckboxSelectMultiple,
             required=False,
@@ -40,8 +43,8 @@ class NotificationSettingsForm(forms.Form):
             "channel", flat=True
         )
 
-        for channel in CHANNELS.keys():
-            if channel in unsubscribed_from and channel in new_subscribed:
-                UnsubscribedChannel.objects.filter(user=self.user, channel=channel).delete()
-            if channel not in unsubscribed_from and channel not in new_subscribed:
-                UnsubscribedChannel.objects.get_or_create(user=self.user, channel=channel)
+        for channel in CHANNELS:
+            if channel["key"] in unsubscribed_from and channel["key"] in new_subscribed:
+                UnsubscribedChannel.objects.filter(user=self.user, channel=channel["key"]).delete()
+            if channel["key"] not in unsubscribed_from and channel["key"] not in new_subscribed:
+                UnsubscribedChannel.objects.get_or_create(user=self.user, channel=channel["key"])

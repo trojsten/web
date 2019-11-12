@@ -1,18 +1,12 @@
 (function () {
-  const icons = {
-    'submit_reviewed': 'thumbs-up',
-    'round_started': 'plus',
-  }
-
   const original_title = $('title').text()
-
 
   let update_data = () => {
     $.getJSON(window.TROJSTEN_NOTIFY_LIST_URL, (data) => {
       let content = []
 
       data.notifications.forEach(notification => {
-        content.push('<li role="presentation"><a href="'+notification.url+'"><i class="glyphicon glyphicon-' + (icons[notification.channel] || 'info-sign') + '"></i> ' + notification.message + '</a></li>');
+        content.push('<li role="presentation"><a href="'+notification.url+'"><i class="glyphicon glyphicon-' + (data.icons[notification.channel] || 'info-sign') + '"></i> ' + notification.message + '</a></li>');
       })
 
       $('#notification-box-content').html(content.join(''))

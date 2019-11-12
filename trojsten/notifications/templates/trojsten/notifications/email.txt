@@ -4,7 +4,7 @@
 
 {% blocktrans %}There are few new events waiting for you on Trojsten sites:{% endblocktrans %}
 
-{% for notification in notifications %}- {{ notification.message }} <https://{{ domain }}{% url 'read_notification' notification.pk %}>
+{% for notification in notifications %}- {{ notification.message }} <https://{{ domain }}{% url 'notification_view' notification.pk %}>
 {% endfor %}
 {% blocktrans %}Best regards,
 Trojsten{% endblocktrans %}

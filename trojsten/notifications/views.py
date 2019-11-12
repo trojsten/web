@@ -3,6 +3,7 @@ from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, reverse
 
 from .models import Notification
+from .settings import CHANNELS
 
 
 @login_required
@@ -13,21 +14,24 @@ def get_notifications(request):
         .all()[:10]
     )
 
-    serialized = []
+    icons = {}
+    for channel in CHANNELS:
+        icons[channel["key"]] = channel["icon"]
 
+    serialized = []
     for notification in notifications:
         serialized.append(
             {
                 "id": notification.pk,
                 "channel": notification.channel,
                 "message": notification.message,
-                "url": reverse("read_notification", args=(notification.pk,)),
+                "url": reverse("notification_view", args=(notification.pk,)),
                 "was_read": notification.was_read,
                 "created_at": notification.created_at,
             }
         )
 
-    return JsonResponse({"notifications": serialized, "unread": len(notifications)})
+    return JsonResponse({"icons": icons, "notifications": serialized, "unread": len(notifications)})
 
 
 @login_required
