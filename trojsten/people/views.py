@@ -6,6 +6,7 @@ from ksp_login.forms import UserProfileForm, get_profile_forms
 from social_django.models import UserSocialAuth
 
 from trojsten.contests.models import Competition, Round
+from trojsten.notifications.forms import NotificationSettingsForm
 from trojsten.people.models import User
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED, SUBMIT_TYPE_DESCRIPTION
 from trojsten.submit.models import Submit
@@ -61,6 +62,7 @@ def settings(request, settings_form=UserProfileForm):
     _forms = None
     user_props_form_set = None
     competition_select_form = None
+    notification_form = None
 
     if request.method == "POST":
         if request.POST.get("user_props_submit", None):
@@ -73,6 +75,11 @@ def settings(request, settings_form=UserProfileForm):
             if competition_select_form.is_valid():
                 competition_select_form.save()
                 return redirect(reverse("account_settings") + "#contests")
+        elif request.POST.get("notification_subscription_submit", None):
+            notification_form = NotificationSettingsForm(request.user, request.POST)
+            if notification_form.is_valid():
+                notification_form.save()
+                return redirect(reverse("account_settings") + "#notifications")
         else:
             _forms = [form(request.POST, user=request.user) for form in form_classes]
             if all(form.is_valid() for form in _forms):
@@ -88,6 +95,8 @@ def settings(request, settings_form=UserProfileForm):
         )
     if not competition_select_form:
         competition_select_form = IgnoreCompetitionForm(user=request.user)
+    if not notification_form:
+        notification_form = NotificationSettingsForm(user=request.user)
 
     return render(
         request,
@@ -97,6 +106,7 @@ def settings(request, settings_form=UserProfileForm):
             "forms": _forms,
             "user_props_form_set": user_props_form_set,
             "competition_select_form": competition_select_form,
+            "notification_form": notification_form,
         },
     )
 

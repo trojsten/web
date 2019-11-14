@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-03 13:53+0100\n"
+"POT-Creation-Date: 2019-11-14 18:16+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -86,6 +86,10 @@ msgstr "Pridelený človek"
 
 msgid "Assigned people"
 msgstr "Pridelení ľudia"
+
+#, python-format
+msgid "Round %(round)s has started!"
+msgstr "Kolo %(round)s začalo!"
 
 msgid "Dashboard"
 msgstr "Nástenka"
@@ -251,6 +255,41 @@ msgstr "Iná škola"
 msgid "Logout successful"
 msgstr "Odhlásenie úspešné"
 
+msgid "Submit"
+msgstr "Odoslať"
+
+msgid "Subscribed events"
+msgstr "Odoberané udalosti"
+
+msgid "You have new notifications from Trojsten"
+msgstr "Máš nové notifikácie z Trojstenu"
+
+msgid "Unsubscribed channel"
+msgstr "Unsubscribnuté kanály"
+
+msgid "Unsubscribed channels"
+msgstr "Unsubscribnutý kanál"
+
+msgid "Notification"
+msgstr "Notifikácia"
+
+msgid "Notifications"
+msgstr "Notifikácie"
+
+#, python-format
+msgid "Hi %(name)s!"
+msgstr "Ahoj, %(name)s!"
+
+msgid "There are few new events waiting for you on Trojsten sites:"
+msgstr "Na stránkach Trojstenu ťa čakajú nové udalosti:"
+
+msgid ""
+"Best regards,\n"
+"Trojsten"
+msgstr ""
+"S pozdravom,\n"
+"Trojsten"
+
 msgid "Personal info"
 msgstr "Osobné údaje"
 
@@ -349,9 +388,6 @@ msgstr "Hodnota musí byť číslo alebo {}."
 
 msgid "Round"
 msgstr "Kolo"
-
-msgid "Submit"
-msgstr "Odoslať"
 
 msgid "Required field for students."
 msgstr "Povinné pre žiakov."
@@ -484,6 +520,18 @@ msgstr "Pridať vlastnosť"
 
 msgid "Choose which competitions would you like to participate in:"
 msgstr "Vyber si súťaže, ktoré chceš riešiť:"
+
+#, fuzzy
+#| msgid "Choose which competitions would you like to participate in:"
+msgid "Choose which events would you like to be notified about:"
+msgstr "Vyber si udalosti, o ktorých chceš dostávať notifikácie:"
+
+msgid ""
+"If you don't want to be notified about a contest, disable it in the Contests "
+"tab above."
+msgstr ""
+"Ak nechceš dostávať notifikácie o nejakej zo súťaží, vypni si ju v záložke "
+"Súťaže vyššie."
 
 msgid "You can use any of the following services to log in to your account."
 msgstr "Možete použiť ľubovoľnú z nasledujúcich služieb na prihlásenie."
@@ -631,6 +679,12 @@ msgstr "Úspešne dokončené opravovanie tejto úlohy!"
 msgid "Table of Contents"
 msgstr ""
 
+msgid "Your submit was reviewed"
+msgstr "Ohodnotenie submitu"
+
+msgid "New round started"
+msgstr "Začiatok nového kola"
+
 msgid "reviewed"
 msgstr "opravený"
 
@@ -676,6 +730,13 @@ msgstr "Tu môžeš nahrať súbor s popisom riešenia"
 
 msgid "You can attach a submit file only to descriptions."
 msgstr "Nahrať súbor môžeš len k popisom."
+
+#, python-format
+msgid ""
+"Your description for \"%(task)s\" has been reviewed. You earned %(points)d "
+"points!"
+msgstr ""
+"Tvoj popis úlohy \"%(task)s\" bol opravený. Získal si %(points)d bodov!"
 
 msgid "My submitted tasks"
 msgstr "Moje odovzdané úlohy"

@@ -218,7 +218,7 @@ INSTALLED_APPS = (
     "trojsten",
     "trojsten.utils",
     "trojsten.people",
-    "trojsten.contests",
+    "trojsten.contests.apps.ContestsConfig",
     "trojsten.diplomas",
     "trojsten.events",
     "trojsten.submit.apps.SubmitConfig",
@@ -231,6 +231,7 @@ INSTALLED_APPS = (
     "trojsten.login",
     "trojsten.schools",
     "trojsten.contact_form",
+    "trojsten.notifications.apps.NotificationsConfig",
     "django_countries",
     # Keep this under trojsten to let trojsten override templates.
     "news",
@@ -474,3 +475,8 @@ else:
 DIPLOMA_PARTICIPANTS_ALLOWED_EXTENSIONS = [".csv", ".json"]
 
 EDITOR_CONFIG = {"mode": "python", "lineWrapping": False, "lineNumbers": True, "tabSize": 4}
+
+TROJSTEN_NOTIFICATION_CHANNELS = [
+    {"key": "submit_reviewed", "name": _("Your submit was reviewed"), "icon": "thumbs-up"},
+    {"key": "round_started", "name": _("New round started"), "icon": "plus"},
+]
