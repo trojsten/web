@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   db:
     image: postgres:10.1-alpine
@@ -12,6 +12,9 @@ services:
       - POSTGRES_DB=trojsten
   web:
     image: trojstenweb:latest
+    build:
+      context: .
+      dockerfile: ./docker/dev/Dockerfile
     ports:
       - "8000:8000"
     volumes:
@@ -30,7 +33,9 @@ services:
       - TROJSTENWEB_LOGIN_PROVIDER_URL=http://10.47.0.4:8047
     command: python manage.py runserver 0.0.0.0:8000
   login:
-    build: .
+    build:
+      context: .
+      dockerfile: ./docker/dev/Dockerfile
     image: trojstenweb:latest
     ports:
       - "8047:8047"
