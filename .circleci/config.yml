@@ -22,17 +22,19 @@ jobs:
             - ~/web
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "poetry.lock" }}
+            - v4-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v3-dependencies-
+            - v4-dependencies-
       - run:
           name: install dependencies
           command: |
+            python3 -m venv venv
+            . venv/bin/activate
             poetry install
       - save_cache:
           paths:
-            - ~/.cache/pypoetry/virtualenvs
-          key: v3-dependencies-{{ checksum "poetry.lock" }}
+            - ./venv
+          key: v4-dependencies-{{ checksum "poetry.lock" }}
   test:
     <<: *base
     environment:
@@ -45,12 +47,13 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "poetry.lock" }}
+            - v4-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v3-dependencies-
+            - v4-dependencies-
       - run:
           name: run tests
           command: |
+            . venv/bin/activate
             bash  -c 'cd trojsten; poetry run ../manage.py compilemessages'
             poetry run coverage run manage.py test
       - run:
@@ -64,12 +67,13 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "poetry.lock" }}
+            - v4-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v3-dependencies-
+            - v4-dependencies-
       - run:
           name: flake8
           command: |
+            . venv/bin/activate
             poetry run flake8 trojsten
   migrations:
     <<: *base
@@ -80,12 +84,13 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "poetry.lock" }}
+            - v4-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v3-dependencies-
+            - v4-dependencies-
       - run:
           name: check-migrations
           command: |
+            . venv/bin/activate
             # Migrations are localized, so translations have to be available for the consistent behaviour.
             bash  -c 'cd trojsten; poetry run ../manage.py compilemessages'
             poetry run ./manage.py makemigrations --dry-run --check
@@ -96,12 +101,13 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "poetry.lock" }}
+            - v4-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v3-dependencies-
+            - v4-dependencies-
       - run:
           name: black
           command: |
+            . venv/bin/activate
             black --check trojsten
   isort:
     <<: *base
@@ -110,12 +116,13 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "poetry.lock" }}
+            - v4-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v3-dependencies-
+            - v4-dependencies-
       - run:
           name: isort
           command: |
+            . venv/bin/activate
             poetry run isort -rc trojsten --check
 
 workflows:
