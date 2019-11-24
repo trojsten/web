@@ -14,6 +14,7 @@ from .common import urlpatterns as common_urlpatterns
 
 urlpatterns = common_urlpatterns + [
     url(r"^admin/", admin.site.urls),
+    url(r"^ucet/login/$", trojsten.views.login_redirect),
     url(r"^ucet/", include("ksp_login.urls")),
     url(
         r"^ucet/additional_registration/?$",
