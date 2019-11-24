@@ -24,7 +24,7 @@ def login_redirect(request):
     if request.user.is_authenticated:
         return home_redirect(request)
 
-    return redirect(settings.TROJSTEN_LOGIN_PROVIDER_URL)
+    return redirect(settings.TROJSTEN_LOGIN_PROVIDER_URL, next=request.GET.get("next"))
 
 
 # Custom view for haystack SearchView
