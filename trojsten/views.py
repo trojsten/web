@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -18,13 +17,6 @@ def home_redirect(request):
             return redirect(reverse("dashboard"))
 
     return article.ArticleView.as_view()(request, path="")
-
-
-def login_redirect(request):
-    if request.user.is_authenticated:
-        return home_redirect(request)
-
-    return redirect(settings.TROJSTEN_LOGIN_PROVIDER_URL, next=request.GET.get("next"))
 
 
 # Custom view for haystack SearchView
