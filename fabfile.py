@@ -113,12 +113,9 @@ def load_fixtures():
 def install_requirements():
     with cd(env.project_path):
         with prefix("workon %s" % env.virtualenv_name):
-            if env.build_requirements:
-                run("bash build_requirements.sh")
-            if hasattr(env, "requirements_file") and env.requirements_file:
-                run("pip install -r {}".format(env.requirements_file))
-            else:
-                run("pip install -r requirements.txt --exists-action w")
+            if not env.local:
+                run("pip install poetry")
+            run("poetry install --no-dev")
 
 
 def manage(*args):
