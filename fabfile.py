@@ -26,8 +26,8 @@ env.roledefs = {
         "use_sudo": False,
         "server_configuration": "/home/trojstenweb/uwsgi/*.yaml",
         "local": False,
-        "build_requirements": False,
-        "requirements_file": "requirements.txt",
+        "install_poetry": False,
+        "dev_packages": False,
     },
     "beta": {
         "hosts": ["inteligent.trojsten.sk:22100"],
@@ -39,8 +39,8 @@ env.roledefs = {
         "shell": "/usr/local/bin/bash -l -c",
         "server_configuration": "/usr/local/www/trojstenweb/*.yaml",
         "local": False,
-        "build_requirements": False,
-        "requirements_file": "requirements.txt",
+        "install_poetry": True,
+        "dev_packages": True,
     },
     "local": {
         "user": os.environ.get("USER"),
@@ -50,7 +50,8 @@ env.roledefs = {
         "db_name": "trojsten",
         "use_sudo": False,
         "local": True,
-        "build_requirements": False,
+        "install_poetry": False,
+        "dev_packages": True,
     },
 }
 
@@ -113,9 +114,9 @@ def load_fixtures():
 def install_requirements():
     with cd(env.project_path):
         with prefix("workon %s" % env.virtualenv_name):
-            if not env.local:
+            if env.install_poetry:
                 run("pip install poetry")
-            run("poetry install --no-dev")
+            run("poetry install{}".format("" if env.dev_packages else " --no-dev"))
 
 
 def manage(*args):
