@@ -1,3 +1,5 @@
+import logging
+
 import django
 import tips.urls
 from django.conf import settings
@@ -49,13 +51,16 @@ urlpatterns += [
 
 # Include django debug toolbar views
 if settings.DEBUG:
-    import debug_toolbar
+    try:
+        import debug_toolbar
 
-    urlpatterns += [
-        url(
-            r"^media/(?P<path>.*)$",
-            django.views.static.serve,
-            {"document_root": settings.MEDIA_ROOT},
-        ),
-        url(r"^__debug__/", include(debug_toolbar.urls)),
-    ]
+        urlpatterns += [
+            url(
+                r"^media/(?P<path>.*)$",
+                django.views.static.serve,
+                {"document_root": settings.MEDIA_ROOT},
+            ),
+            url(r"^__debug__/", include(debug_toolbar.urls)),
+        ]
+    except ImportError as e:
+        logging.warning(e)

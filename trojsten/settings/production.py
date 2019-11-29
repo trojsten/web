@@ -9,8 +9,6 @@ def requiredenv(name):
     return os.environ.get(name)
 
 
-DEBUG = False
-
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 SENDFILE_BACKEND = "sendfile.backends.xsendfile"
 
