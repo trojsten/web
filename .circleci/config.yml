@@ -54,11 +54,12 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            bash  -c 'cd trojsten; poetry run ../manage.py compilemessages'
-            poetry run coverage run manage.py test
+            bash -c 'cd trojsten; python ../manage.py compilemessages'
+            coverage run manage.py test
       - run:
           name: upload coverage
           command: |
+            . venv/bin/activate
             curl -s https://codecov.io/bash | bash
   lint:
     <<: *base
@@ -74,7 +75,7 @@ jobs:
           name: flake8
           command: |
             . venv/bin/activate
-            poetry run flake8 trojsten
+            flake8 trojsten
   migrations:
     <<: *base
     environment:
@@ -92,8 +93,8 @@ jobs:
           command: |
             . venv/bin/activate
             # Migrations are localized, so translations have to be available for the consistent behaviour.
-            bash  -c 'cd trojsten; poetry run ../manage.py compilemessages'
-            poetry run ./manage.py makemigrations --dry-run --check
+            bash  -c 'cd trojsten; python ../manage.py compilemessages'
+            python ./manage.py makemigrations --dry-run --check
   black:
     <<: *base
     steps:
@@ -123,7 +124,7 @@ jobs:
           name: isort
           command: |
             . venv/bin/activate
-            poetry run isort -rc trojsten --check
+            isort -rc trojsten --check
 
 workflows:
   version: 2
