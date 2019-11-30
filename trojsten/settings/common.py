@@ -297,7 +297,11 @@ LOGGING = {
         "console": {"level": "DEBUG", "class": "logging.StreamHandler", "formatter": "simple"},
     },
     "loggers": {
-        "django.request": {"handlers": ["mail_admins"], "level": "ERROR", "propagate": True},
+        "django.request": {
+            "handlers": ["mail_admins", "console"],
+            "level": "ERROR",
+            "propagate": True,
+        },
         "management_commands": {"handlers": ["console"], "level": "INFO", "propagate": True},
     },
 }
