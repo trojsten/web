@@ -37,8 +37,6 @@ RUN set -x \
     zlib-dev \
     && rm -rf /var/cache/apk/*
 
-RUN pip install --no-cache-dir --upgrade setuptools
-
 COPY --from=builder /tmp/build/requirements.txt /
 RUN set -x \
     && pip install --root /install --no-warn-script-location -r requirements.txt
@@ -74,8 +72,8 @@ COPY --from=installer /install /
 COPY ./fonts/* /usr/share/fonts/
 RUN fc-cache -f -v
 
-COPY ./manage.py /web/
-COPY ./trojsten /web/
+COPY ./manage.py /web/manage.py
+COPY ./trojsten /web/trojsten
 
 WORKDIR /web
 
