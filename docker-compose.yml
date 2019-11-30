@@ -15,7 +15,7 @@ x-webenv: &webenv
 
 services:
   db:
-    image: postgres:10.1-alpine
+    image: postgres:12-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
@@ -43,6 +43,8 @@ services:
     <<: *web
     ports:
       - "8047:8047"
+    volumes:
+      - .:/web
     networks:
       trojsten:
         ipv4_address: 10.47.0.4

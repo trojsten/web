@@ -5,12 +5,10 @@ x-web: &web
   build:
     context: .
     dockerfile: ./docker/prod/Dockerfile
-  volumes:
-    - .:/web
 
 services:
   db:
-    image: postgres:10.1-alpine
+    image: postgres:12-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
@@ -19,6 +17,35 @@ services:
     environment:
       - POSTGRES_USER=trojsten
       - POSTGRES_DB=trojsten
+  static:
+    image: trojsten/web-static:latest
+    build:
+      context: .
+      dockerfile: ./docker/prod/nginx/Dockerfile
+    ports:
+      - "8000:80"
+  login:
+    <<: *web
+    ports:
+      - "8010:80"
+    networks:
+      trojsten:
+        ipv4_address: 10.47.1.10
+    depends_on:
+      - db
+    env_file:
+      - ./docker/prod/web.env
+    environment:
+      - DJANGO_SETTINGS_MODULE=trojsten.settings.login
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;10.47.0.110
+      - TROJSTENWEB_LOGIN_KEY
+      - TROJSTENWEB_LOGIN_SECRET
+      - TROJSTENWEB_FACEBOOK_KEY
+      - TROJSTENWEB_FACEBOOK_SECRET
+      - TROJSTENWEB_GOOGLE_OAUTH2_KEY
+      - TROJSTENWEB_GOOGLE_OAUTH2_SECRET
+      - TROJSTENWEB_GITHUB_KEY
+      - TROJSTENWEB_GITHUB_SECRET
   ksp:
     <<: *web
     ports:
@@ -32,7 +59,7 @@ services:
       - TROJSTENWEB_LOGIN_SECRET
     networks:
       trojsten:
-        ipv4_address: 10.47.0.101
+        ipv4_address: 10.47.1.1
     depends_on:
       - db
       - login
@@ -49,7 +76,7 @@ services:
       - TROJSTENWEB_LOGIN_SECRET
     networks:
       trojsten:
-        ipv4_address: 10.47.0.102
+        ipv4_address: 10.47.1.2
     depends_on:
       - db
       - login
@@ -66,32 +93,10 @@ services:
       - TROJSTENWEB_LOGIN_SECRET
     networks:
       trojsten:
-        ipv4_address: 10.47.0.103
+        ipv4_address: 10.47.1.3
     depends_on:
       - db
       - login
-  login:
-    <<: *web
-    ports:
-      - "8010:80"
-    networks:
-      trojsten:
-        ipv4_address: 10.47.0.110
-    depends_on:
-      - db
-    env_file:
-      - ./docker/prod/web.env
-    environment:
-      - DJANGO_SETTINGS_MODULE=trojsten.settings.login
-      - TROJSTENWEB_LOGIN_KEY
-      - TROJSTENWEB_LOGIN_SECRET
-      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;10.47.0.110
-      - TROJSTENWEB_FACEBOOK_KEY
-      - TROJSTENWEB_FACEBOOK_SECRET
-      - TROJSTENWEB_GOOGLE_OAUTH2_KEY
-      - TROJSTENWEB_GOOGLE_OAUTH2_SECRET
-      - TROJSTENWEB_GITHUB_KEY
-      - TROJSTENWEB_GITHUB_SECRET
 
 volumes:
   db_data:
