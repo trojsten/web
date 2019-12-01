@@ -1,4 +1,5 @@
 .env
+production.env
 *.log
 *.pot
 *.py[co]
