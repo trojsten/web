@@ -44,7 +44,11 @@ RUN set -x \
 FROM base
 
 # These are not strictly dependencies of trojsten-web, but are required for production
-RUN pip install --no-cache-dir 'gunicorn<20'
+RUN set -x \
+    && pip install --no-cache-dir 'gunicorn<20' \
+    && apk add nginx \
+    && ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
 
 RUN set -x \
     \
@@ -67,6 +71,8 @@ RUN set -x \
     # Clean up
     && rm -rf /var/cache/apk/*
 
+COPY ./docker/prod/nginx/staticfiles.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=installer /install /
 
 COPY ./fonts/* /usr/share/fonts/
@@ -77,6 +83,7 @@ COPY ./trojsten /web/trojsten
 
 WORKDIR /web
 
+ENV TROJSTENWEB_STATIC_ROOT=/static
 ENV DJANGO_SETTINGS_MODULE=trojsten.settings.production
 RUN python manage.py collectstatic --noinput
 

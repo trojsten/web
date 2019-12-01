@@ -18,12 +18,10 @@ services:
       - POSTGRES_USER=trojsten
       - POSTGRES_DB=trojsten
   static:
-    image: trojsten/web-static:latest
-    build:
-      context: .
-      dockerfile: ./docker/prod/nginx/Dockerfile
+    <<: *web
     ports:
       - "8000:80"
+    command: "nginx -g 'pid /tmp/nginx.pid; daemon off;'"
   login:
     <<: *web
     ports:
@@ -62,7 +60,6 @@ services:
         ipv4_address: 10.47.1.1
     depends_on:
       - db
-      - login
   prask:
     <<: *web
     ports:
@@ -79,7 +76,6 @@ services:
         ipv4_address: 10.47.1.2
     depends_on:
       - db
-      - login
   fks:
     <<: *web
     ports:
@@ -96,7 +92,6 @@ services:
         ipv4_address: 10.47.1.3
     depends_on:
       - db
-      - login
 
 volumes:
   db_data:
