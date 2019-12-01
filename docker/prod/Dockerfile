@@ -77,6 +77,9 @@ COPY ./trojsten /web/trojsten
 
 WORKDIR /web
 
+ENV DJANGO_SETTINGS_MODULE=trojsten.settings.production
+RUN python manage.py collectstatic --noinput
+
 ENV GUNICORN_WORKERS 2
 ENV GUNICORN_HOST 0.0.0.0:80
 CMD gunicorn --bind ${GUNICORN_HOST} --workers=${GUNICORN_WORKERS} trojsten.wsgi:application

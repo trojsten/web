@@ -1,3 +1,5 @@
+import warnings
+
 from django.core.exceptions import ImproperlyConfigured
 
 from trojsten.settings.common import *
@@ -5,7 +7,7 @@ from trojsten.settings.common import *
 
 def requiredenv(name):
     if name not in os.environ:
-        raise ImproperlyConfigured("Value %s missing in environment configuration" % name)
+        warnings.warn("Value %s missing in environment configuration" % name)
     return os.environ.get(name)
 
 
