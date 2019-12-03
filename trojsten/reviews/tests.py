@@ -173,13 +173,11 @@ class ReviewTest(TestCase):
         # Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
         # Posledna cast za next je double quoted, posledne next je len quoted.
         url = reverse(self.url_name, kwargs={"task_pk": 1})
-        response = self.client.get(url, follow=True)
-        login_url = settings.LOGIN_URL
-        admin_login_url = "?next=%s" % reverse("admin:login")
-        last_url = quote(url, safe="")
-        last_url = quote("?next=%s" % last_url, safe="")
-        redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
-        self.assertRedirects(response, redirect_to)
+        response = self.client.get(url)
+        redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
+
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(response["Location"], redirect_to)
 
     def test_redirect_to_admin_login(self):
         # Tato url nie je vobec quoted.
@@ -312,13 +310,11 @@ class DownloadLatestSubmits(TestCase):
         # Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
         # Posledna cast za next je double quoted, posledne next je len quoted.
         url = reverse(self.url_name, kwargs={"task_pk": 1})
-        response = self.client.get(url, follow=True)
-        login_url = settings.LOGIN_URL
-        admin_login_url = "?next=%s" % reverse("admin:login")
-        last_url = quote(url, safe="")
-        last_url = quote("?next=%s" % last_url, safe="")
-        redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
-        self.assertRedirects(response, redirect_to)
+        response = self.client.get(url)
+        redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
+
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(response["Location"], redirect_to)
 
     def test_redirect_to_admin_login(self):
         # Tato url nie je vobec quoted.
@@ -682,13 +678,11 @@ class ReviewEditTest(TestCase):
         # Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
         # Posledna cast za next je double quoted, posledne next je len quoted.
         url = reverse(self.url_name, kwargs={"task_pk": 1, "submit_pk": 1})
-        response = self.client.get(url, follow=True)
-        login_url = settings.LOGIN_URL
-        admin_login_url = "?next=%s" % reverse("admin:login")
-        last_url = quote(url, safe="")
-        last_url = quote("?next=%s" % last_url, safe="")
-        redirect_to = "%s%s%s" % (login_url, admin_login_url, last_url)
-        self.assertRedirects(response, redirect_to)
+        response = self.client.get(url)
+        redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
+
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(response["Location"], redirect_to)
 
     def test_redirect_to_admin_login(self):
         # Tato url nie je vobec quoted.

@@ -55,9 +55,7 @@ DATABASES = {
     },
 }
 
-TESTING = False
 if "test" in sys.argv:
-    TESTING = True
     if "kaspar" in DATABASES:
         del DATABASES["kaspar"]
 
