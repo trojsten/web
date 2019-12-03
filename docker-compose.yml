@@ -32,7 +32,7 @@ services:
     depends_on:
       - db
       - login
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python -Wa manage.py runserver 0.0.0.0:8000
   login:
     <<: *web
     ports:
@@ -46,7 +46,7 @@ services:
       DJANGO_SETTINGS_MODULE: trojsten.settings.login_dev
       TROJSTENWEB_DEVELOPMENT_SITE_ID: 10
       TROJSTENWEB_ALLOWED_HOSTS: localhost;127.0.0.1;10.47.0.4
-    command: python manage.py runserver 0.0.0.0:8047
+    command: python -Wa manage.py runserver 0.0.0.0:8047
 
 volumes:
   db_data:
