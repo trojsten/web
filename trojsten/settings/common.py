@@ -314,6 +314,10 @@ LOGIN_URL = "/ucet/login/"
 LOGIN_ERROR_URL = "/ucet/login/"
 LOGIN_REDIRECT_URL = "/ucet/"
 TROJSTEN_LOGIN_PROVIDER_URL = env("TROJSTENWEB_LOGIN_PROVIDER_URL", "https://login.trojsten.sk")
+# This is for internal bakend calls.
+TROJSTEN_LOGIN_PROVIDER_INTERNAL_URL = env(
+    "TROJSTENWEB_LOGIN_PROVIDER_INTERNAL_URL", TROJSTEN_LOGIN_PROVIDER_URL
+)
 
 #
 # Included packages settings
