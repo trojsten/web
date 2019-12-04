@@ -11,65 +11,40 @@ RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poet
     && ln -s /root/.poetry/bin/poetry /usr/local/bin/poetry
 
 COPY . /tmp/build
+
+WORKDIR /tmp/build
+
 RUN set -x \
-    && cd /tmp/build \
     && poetry export -f requirements.txt > requirements.txt
+
 
 FROM base AS installer
 
+COPY ./docker/common/install_build_deps /tmp/build
+
 RUN set -x \
-    \
-    # Build dependencies
-    && apk add --update --no-cache \
-    freetype-dev \
-    fribidi-dev \
-    gcc \
-    harfbuzz-dev \
-    jpeg-dev \
-    lcms2-dev \
-    libffi-dev \
-    musl-dev \
-    openjpeg-dev \
-    postgresql-dev \
-    tcl-dev \
-    tiff-dev \
-    tk-dev \
-    zlib-dev \
-    && rm -rf /var/cache/apk/*
+    && sh /tmp/build/install_build_deps.sh
 
 COPY --from=builder /tmp/build/requirements.txt /
 RUN set -x \
     && pip install --root /install --no-warn-script-location -r requirements.txt
 
+
 FROM base
+
+COPY ./docker/common/install_runtime_deps /tmp/build
 
 # These are not strictly dependencies of trojsten-web, but are required for production
 RUN set -x \
     && pip install --no-cache-dir 'gunicorn<20' \
     && apk add nginx \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
-    && ln -sf /dev/stderr /var/log/nginx/error.log
-
-RUN set -x \
-    \
-    # Runtime dependencies
-    && apk add --update --no-cache \
-    freetype \
-    fribidi \
-    gettext \
-    harfbuzz \
-    jpeg \
-    lcms2 \
-    libpq \
-    musl \
-    openjpeg \
-    tcl \
-    tiff \
-    tk \
-    zlib \
+    && ln -sf /dev/stderr /var/log/nginx/error.log \
+    && sh /tmp/build/install_runtime_deps.sh \
     \
     # Clean up
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/cache/apk/* \
+    && rm -rf /tmp/build
 
 COPY ./docker/prod/nginx/staticfiles.conf /etc/nginx/conf.d/default.conf
 
