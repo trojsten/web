@@ -175,9 +175,7 @@ class ReviewTest(TestCase):
         url = reverse(self.url_name, kwargs={"task_pk": 1})
         response = self.client.get(url)
         redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
-
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(response["Location"], redirect_to)
+        self.assertRedirects(response, redirect_to, fetch_redirect_response=False)
 
     def test_redirect_to_admin_login(self):
         # Tato url nie je vobec quoted.
@@ -312,9 +310,7 @@ class DownloadLatestSubmits(TestCase):
         url = reverse(self.url_name, kwargs={"task_pk": 1})
         response = self.client.get(url)
         redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
-
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(response["Location"], redirect_to)
+        self.assertRedirects(response, redirect_to, fetch_redirect_response=False)
 
     def test_redirect_to_admin_login(self):
         # Tato url nie je vobec quoted.
@@ -680,9 +676,7 @@ class ReviewEditTest(TestCase):
         url = reverse(self.url_name, kwargs={"task_pk": 1, "submit_pk": 1})
         response = self.client.get(url)
         redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
-
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(response["Location"], redirect_to)
+        self.assertRedirects(response, redirect_to, fetch_redirect_response=False)
 
     def test_redirect_to_admin_login(self):
         # Tato url nie je vobec quoted.
