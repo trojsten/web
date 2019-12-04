@@ -305,8 +305,7 @@ class DownloadLatestSubmits(TestCase):
         self.url_name = "admin:download_latest_submits"
 
     def test_redirect_to_login(self):
-        # Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
-        # Posledna cast za next je double quoted, posledne next je len quoted.
+        # Should send user to administrator login
         url = reverse(self.url_name, kwargs={"task_pk": 1})
         response = self.client.get(url)
         redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
@@ -671,8 +670,7 @@ class ReviewEditTest(TestCase):
         self.url_name = "admin:review_edit"
 
     def test_redirect_to_login(self):
-        # Najprv sa posle na login, potom na admin login, a az potom na povodnu stranku.
-        # Posledna cast za next je double quoted, posledne next je len quoted.
+        # Should send user to administrator login
         url = reverse(self.url_name, kwargs={"task_pk": 1, "submit_pk": 1})
         response = self.client.get(url)
         redirect_to = "%s?next=%s" % (reverse("admin:login"), url)
