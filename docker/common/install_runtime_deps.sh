@@ -7,6 +7,7 @@ apk add --update --no-cache --virtual runtime-deps \
     jpeg \
     lcms2 \
     libpq \
+    librsvg \
     musl \
     openjpeg \
     tcl \

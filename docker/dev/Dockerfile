@@ -10,7 +10,8 @@ RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poet
 COPY ./docker/common /tmp/build
 
 RUN set -x \
-    && sh /tmp/build/install_build_deps.sh
+    && sh /tmp/build/install_build_deps.sh \
+    && sh /tmp/build/install_runtime_deps.sh
 
 COPY ./fonts/* /usr/share/fonts/
 

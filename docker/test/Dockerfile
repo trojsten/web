@@ -11,6 +11,7 @@ COPY ./docker/common /tmp/build
 
 RUN set -x \
     && sh /tmp/build/install_build_deps.sh \
+    && sh /tmp/build/install_runtime_deps.sh \
     && pip install black
 
 COPY ./fonts/* /usr/share/fonts/
