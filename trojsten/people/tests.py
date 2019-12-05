@@ -401,7 +401,7 @@ class SettingsViewTests(TestCase):
     def test_login_redirect(self):
         response = self.client.get(self.url)
         redirect_to = "%s?next=%s" % (settings.LOGIN_URL, self.url)
-        self.assertRedirects(response, redirect_to)
+        self.assertRedirects(response, redirect_to, fetch_redirect_response=False)
 
     def test_non_staff_see_only_visible_props(self):
         non_staff_user = User.objects.create_user(
@@ -861,7 +861,7 @@ class AdditionalRegistrationViewsTest(TestCase):
     def test_no_login(self):
         response = self.client.get(self.url)
         redirect_to = "%s?next=%s" % (settings.LOGIN_URL, self.url)
-        self.assertRedirects(response, redirect_to)
+        self.assertRedirects(response, redirect_to, fetch_redirect_response=False)
 
     def test_all_set(self):
         self.client.force_login(self.user)

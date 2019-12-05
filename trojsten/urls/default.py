@@ -1,6 +1,7 @@
 import news.urls
 from django.conf.urls import include, url
 from django.contrib import admin
+from social_django.views import auth as social_auth
 
 import trojsten.contests.urls
 import trojsten.contests.views
@@ -14,6 +15,7 @@ from .common import urlpatterns as common_urlpatterns
 
 urlpatterns = common_urlpatterns + [
     url(r"^admin/", admin.site.urls),
+    url(r"^ucet/login/$", social_auth, {"backend": "trojsten"}),
     url(r"^ucet/", include("ksp_login.urls")),
     url(
         r"^ucet/additional_registration/?$",

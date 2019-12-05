@@ -71,7 +71,7 @@ class SubmitListTests(TestCase):
     def test_redirect_to_login(self):
         response = self.client.get(self.list_url)
         redirect_to = "%s?next=%s" % (settings.LOGIN_URL, reverse("active_rounds_submit_page"))
-        self.assertRedirects(response, redirect_to)
+        self.assertRedirects(response, redirect_to, fetch_redirect_response=False)
 
     def test_no_round(self):
         self.client.force_login(self.non_staff_user)
@@ -270,7 +270,7 @@ class SubmitTaskTests(TestCase):
             reverse("task_submit_page", kwargs={"task_id": 47}),
         )
         response = self.client.get(url)
-        self.assertRedirects(response, redirect_to)
+        self.assertRedirects(response, redirect_to, fetch_redirect_response=False)
 
     def test_non_existing_task(self):
         url = reverse("task_submit_page", kwargs={"task_id": get_noexisting_id(Task)})
@@ -599,7 +599,8 @@ class JsonProtokolTest(TestCase):
             settings.LOGIN_URL,
             reverse("view_protocol", kwargs={"submit_id": self.submit.id}),
         )
-        self.assertRedirects(response, redirect_to)
+        self.assertRedirects(response, redirect_to, fetch_redirect_response=False)
+
         non_staff_user2 = User.objects.create_user(
             username="jurko",
             first_name="Jozko",
@@ -926,7 +927,7 @@ class AllSubmitsListTest(TestCase):
     def test_redirect_to_login(self):
         response = self.client.get(self.url)
         redirect_to = "%s?next=%s" % (settings.LOGIN_URL, reverse("all_submits_description_page"))
-        self.assertRedirects(response, redirect_to)
+        self.assertRedirects(response, redirect_to, fetch_redirect_response=False)
 
     def test_in_queue_submit(self):
         self.client.force_login(self.non_staff_user)
