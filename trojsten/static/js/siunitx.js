@@ -311,7 +311,7 @@ window.MathJax = {
         'open-bracket': Literal('('),
         'output-close-uncertainty': Literal(')'),
         'output-complex-root': Literal('\\mathrm{i}'), // done
-        'output-decimal-marker': Literal('.'),
+        'output-decimal-marker': Literal(','),
         'output-exponent-marker': Literal(''),
         'output-open-uncertainty': Literal('('),
         'separate-uncertainty': Switch(false),
@@ -560,6 +560,7 @@ window.MathJax = {
         mmHg: ['mmHg'],
         nauticmile: [';'],
         neper: ['Np'],
+        percent: ['%'],
       })));
       MathJax.Extension["TeX/siunitx"].SIUnits = SIUnits;
 
@@ -1037,7 +1038,7 @@ window.MathJax = {
           function reescape(s) {
             return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
           };
-          var decimal_sep = '(?:\\.|,)';
+          var decimal_sep = '(?:\\,|.)';
           var sign = '(\\+|-|\\\\pm|\\\\mp|\\\\le|\\\\leq|\\\\ll|\\\\ge|\\\\geq|\\\\gg|\\\\sim)';
           var digit = '[0-9]';
           var complex_root = '(?:i|j)';
@@ -1124,7 +1125,7 @@ window.MathJax = {
               }
             }
 
-            return integer + '.' + decimal;
+            return integer + ',' + decimal;
           }
           var exp = !!m[9];
           if (!(m[2] || m[3] || m[4]) && exp) {
