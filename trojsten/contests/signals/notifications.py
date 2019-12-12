@@ -5,10 +5,12 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from trojsten.contests.models import Round
-from trojsten.notifications.utils import notify
+from trojsten.contests.models import Round, Task
+from trojsten.notifications.utils import notify, notify_user
 from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
 from trojsten.people.models import User
+from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED, SUBMIT_TYPE_DESCRIPTION
+from trojsten.submit.models import Submit
 
 
 @receiver(post_save, sender=Round, dispatch_uid="notifications__contest_publish")
@@ -31,3 +33,39 @@ def round_published(sender, **kwargs):
     }
 
     notify(users, "round_started", _("Round %(round)s has started!" % {"round": instance}), url)
+
+
+@receiver(post_save, sender=Task, dispatch_uid="notifications__task_points_visible")
+def task_description_points_visibility_change(sender, **kwargs):
+    instance = kwargs["instance"]
+
+    if not instance.description_points_visible or instance.previous_description_points_visible:
+        return
+
+    site = Site.objects.get_current()
+
+    # Get latest submit for every user.
+    submits = (
+        Submit.objects.filter(
+            submit_type=SUBMIT_TYPE_DESCRIPTION,
+            task=instance,
+            testing_status=SUBMIT_STATUS_REVIEWED,
+        )
+        .select_related("user")
+        .order_by("user_id", "-time")
+        .distinct("user_id")
+    )
+
+    for submit in submits:
+        url = "//%(domain)s%(url)s" % {
+            "domain": site.domain,
+            "url": reverse("task_list", args=(instance.pk,)),
+        }
+
+        notify_user(
+            submit.user,
+            "submit_reviewed",
+            _('Your description for "%(task)s" has been reviewed. You earned %(points)d points!')
+            % {"task": instance, "points": submit.points},
+            url,
+        )

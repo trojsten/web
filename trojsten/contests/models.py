@@ -360,6 +360,14 @@ class Task(models.Model):
         # to the select_related list in the TaskManager.
         return "%i. %s, %s" % (self.number, self.name, self.round)
 
+    def __init__(self, *args, **kwargs):
+        super(Task, self).__init__(*args, **kwargs)
+        self.previous_description_points_visible = self.description_points_visible
+
+    def save(self, *args, **kwargs):
+        super(Task, self).save(*args, **kwargs)
+        self.previous_description_points_visible = self.description_points_visible
+
     def has_submit_type(self, submit_type):
         check_field = {
             submit_constants.SUBMIT_TYPE_SOURCE: self.has_source,
