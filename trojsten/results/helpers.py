@@ -64,7 +64,10 @@ class UserResult(object):
 
     def add_task_points(self, task, submit_type, points, submit_status):
         if submit_type == submit_constants.SUBMIT_TYPE_DESCRIPTION:
-            if submit_status == submit_constants.SUBMIT_STATUS_REVIEWED:
+            if (
+                submit_status == submit_constants.SUBMIT_STATUS_REVIEWED
+                and task.description_points_visible
+            ):
                 self.tasks[task.id].set_description_points(points)
             else:
                 self.tasks[task.id].set_description_pending()
