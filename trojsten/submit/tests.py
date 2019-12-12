@@ -921,7 +921,14 @@ class AllSubmitsListTest(TestCase):
             end_time=self.end_time,
         )
         self.task = Task.objects.create(
-            number=1, name="Test task", round=round, has_testablezip=True
+            number=1,
+            name="Test task",
+            round=round,
+            has_testablezip=True,
+            description_points_visible=True,
+        )
+        self.task_nopoints = Task.objects.create(
+            number=2, name="Test task", round=round, has_testablezip=True
         )
 
     def test_redirect_to_login(self):
@@ -983,6 +990,27 @@ class AllSubmitsListTest(TestCase):
         self.assertContains(response, "Test task")
         self.assertContains(response, "Opravené")
         self.assertContains(response, "7,00")
+
+    def test_reviewed_submit_hidden_points(self):
+        self.client.force_login(self.non_staff_user)
+        Submit.objects.create(
+            task=self.task,
+            user=self.non_staff_user,
+            submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
+            points=0,
+        )
+        Submit.objects.create(
+            task=self.task_nopoints,
+            user=self.non_staff_user,
+            submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED,
+            points=7,
+        )
+        response = self.client.get(self.url)
+        self.assertContains(response, "Test task")
+        self.assertNotContains(response, "Opravené")
+        self.assertNotContains(response, "7,00")
 
 
 class TestSubmitNotificationEmails(TestCase):
@@ -1155,22 +1183,78 @@ class NotificationTest(TestCase):
             end_time=self.end_time_new,
         )
         self.task = Task.objects.create(
-            number=1, name="Test task", round=self.round, has_source=True
+            number=1,
+            name="Test task",
+            round=self.round,
+            has_source=True,
+            description_points_visible=True,
+        )
+        self.task_nopoints = Task.objects.create(
+            number=2, name="Test task", round=self.round, has_source=True
         )
 
+    def test_submit_should_not_notify_hidden_points(self):
+        Submit.objects.create(
+            task=self.task_nopoints,
+            user=self.user,
+            submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
+            points=0,
+        )
+        Submit.objects.create(
+            task=self.task_nopoints,
+            user=self.user,
+            submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED,
+            points=7,
+        )
+
+        query = Notification.objects.filter(channel="submit_reviewed")
+        self.assertFalse(query.exists())
+
     def test_submit_should_notify(self):
-        submit = Submit(
+        Submit.objects.create(
             task=self.task,
             user=self.user,
             submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
-            points=0,
             testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
+            points=0,
         )
-        submit.save()
-
-        submit.testing_status = constants.SUBMIT_STATUS_REVIEWED
-        submit.points = 10
-        submit.save()
+        Submit.objects.create(
+            task=self.task,
+            user=self.user,
+            submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED,
+            points=7,
+        )
 
         query = Notification.objects.filter(channel="submit_reviewed")
         self.assertTrue(query.exists())
+
+    def test_edit_should_notify(self):
+        submit = Submit.objects.create(
+            task=self.task,
+            user=self.user,
+            submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED,
+            points=7,
+        )
+        submit.points = 10
+        submit.save()
+
+        query = Notification.objects.filter(channel="submit_updated")
+        self.assertTrue(query.exists())
+
+    def test_edit_should_not_notify(self):
+        submit = Submit.objects.create(
+            task=self.task,
+            user=self.user,
+            submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED,
+            points=7,
+        )
+        submit.reviewer_comment = "no comment"
+        submit.save()
+
+        query = Notification.objects.filter(channel="submit_updated")
+        self.assertFalse(query.exists())
