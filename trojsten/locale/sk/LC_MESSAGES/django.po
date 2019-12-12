@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-12 18:28+0100\n"
+"POT-Creation-Date: 2019-12-12 21:52+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
@@ -93,6 +93,13 @@ msgstr "Pridelení ľudia"
 #, python-format
 msgid "Round %(round)s has started!"
 msgstr "Kolo %(round)s začalo!"
+
+#, python-format
+msgid ""
+"Your description for \"%(task)s\" has been reviewed. You earned %(points)d "
+"points!"
+msgstr ""
+"Tvoj popis úlohy \"%(task)s\" bol opravený. Získal si %(points)d bodov!"
 
 msgid "Dashboard"
 msgstr "Nástenka"
@@ -685,6 +692,9 @@ msgstr ""
 msgid "Your submit was reviewed"
 msgstr "Ohodnotenie submitu"
 
+msgid "Your submit was updated"
+msgstr "Aktualizázia submitu"
+
 msgid "New round started"
 msgstr "Začiatok nového kola"
 
@@ -736,10 +746,11 @@ msgstr "Nahrať súbor môžeš len k popisom."
 
 #, python-format
 msgid ""
-"Your description for \"%(task)s\" has been reviewed. You earned %(points)d "
-"points!"
+"Points for your description for \"%(task)s\" were updated to %(points)d "
+"points"
 msgstr ""
-"Tvoj popis úlohy \"%(task)s\" bol opravený. Získal si %(points)d bodov!"
+"Tvoje body za popis úlohy \"%(task)s\" boli upravené. Získal si %(points)d "
+"bodov."
 
 msgid "My submitted tasks"
 msgstr "Moje odovzdané úlohy"
