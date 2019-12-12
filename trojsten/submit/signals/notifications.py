@@ -17,18 +17,35 @@ def submit_reviewed(sender, **kwargs):
     if instance.submit_type != SUBMIT_TYPE_DESCRIPTION:
         return
 
-    # If this submit was reviewed, notify the user.
-    if instance.testing_status == SUBMIT_STATUS_REVIEWED:
-        site = Site.objects.get_current()
-        url = "//%(domain)s%(url)s" % {
-            "domain": site.domain,
-            "url": reverse("task_submit_page", args=(instance.task.pk,)),
-        }
+    # Only send notifications for reviewed submits.
+    if instance.testing_status != SUBMIT_STATUS_REVIEWED:
+        return
 
+    # Do not send notifications if we do not display points to users.
+    if not instance.task.description_points_visible:
+        return
+
+    site = Site.objects.get_current()
+    url = "//%(domain)s%(url)s" % {
+        "domain": site.domain,
+        "url": reverse("task_submit_page", args=(instance.task.pk,)),
+    }
+
+    # If this submit was reviewed, notify the user.
+    if kwargs["created"]:
         notify_user(
             instance.user,
             "submit_reviewed",
             _('Your description for "%(task)s" has been reviewed. You earned %(points)d points!')
+            % {"task": instance.task, "points": instance.points},
+            url,
+        )
+    # If we changed points, notify the user.
+    elif instance.previous_points != instance.points:
+        notify_user(
+            instance.user,
+            "submit_updated",
+            _('Points for your description for "%(task)s" were updated to %(points)d points')
             % {"task": instance.task, "points": instance.points},
             url,
         )

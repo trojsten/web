@@ -478,5 +478,6 @@ EDITOR_CONFIG = {"mode": "python", "lineWrapping": False, "lineNumbers": True, "
 
 TROJSTEN_NOTIFICATION_CHANNELS = [
     {"key": "submit_reviewed", "name": _("Your submit was reviewed"), "icon": "thumbs-up"},
+    {"key": "submit_updated", "name": _("Your submit was updated"), "icon": "pencil"},
     {"key": "round_started", "name": _("New round started"), "icon": "plus"},
 ]
