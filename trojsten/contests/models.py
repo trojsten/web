@@ -345,6 +345,9 @@ class Task(models.Model):
     email_on_code_submit = models.BooleanField(
         verbose_name=_("Send notification to reviewers about new code submit"), default=False
     )
+    description_points_visible = models.BooleanField(
+        verbose_name=_("Show description points"), default=False
+    )
 
     objects = TaskManager()
 
