@@ -269,7 +269,11 @@ class TaskListTests(TestCase):
 
     def test_my_points_hidden(self):
         task = Task.objects.create(
-            number=1, name="Test task", round=self.round, description_points=12
+            number=1,
+            name="Test task",
+            round=self.round,
+            description_points=12,
+            has_description=True,
         )
         Submit.objects.create(
             task=task,
@@ -290,6 +294,7 @@ class TaskListTests(TestCase):
             round=self.round,
             description_points=12,
             description_points_visible=True,
+            has_description=True,
         )
         Submit.objects.create(
             task=task,
