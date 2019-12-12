@@ -267,6 +267,42 @@ class TaskListTests(TestCase):
         # @ToDo: translations
         self.assertContains(response, "Test task")
 
+    def test_my_points_hidden(self):
+        task = Task.objects.create(
+            number=1, name="Test task", round=self.round, description_points=12
+        )
+        Submit.objects.create(
+            task=task,
+            user=self.nonstaff_user,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            points=5,
+        )
+
+        self.client.force_login(self.nonstaff_user)
+        response = self.client.get(self.url)
+        self.assertContains(response, "popis:&nbsp;??")
+
+    def test_my_points_visible(self):
+        task = Task.objects.create(
+            number=1,
+            name="Test task",
+            round=self.round,
+            description_points=12,
+            description_points_visible=True,
+        )
+        Submit.objects.create(
+            task=task,
+            user=self.nonstaff_user,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            points=5,
+        )
+
+        self.client.force_login(self.nonstaff_user)
+        response = self.client.get(self.url)
+        self.assertContains(response, "popis:&nbsp;5")
+
 
 @override_settings(
     TASK_STATEMENTS_STORAGE=FileSystemStorage(
