@@ -362,11 +362,11 @@ class Task(models.Model):
 
     def __init__(self, *args, **kwargs):
         super(Task, self).__init__(*args, **kwargs)
-        self.previous_description_points_visible = self.description_points_visible
+        self.last_saved_description_points_visible = self.description_points_visible
 
     def save(self, *args, **kwargs):
         super(Task, self).save(*args, **kwargs)
-        self.previous_description_points_visible = self.description_points_visible
+        self.last_saved_description_points_visible = self.description_points_visible
 
     def has_submit_type(self, submit_type):
         check_field = {

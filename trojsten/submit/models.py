@@ -129,11 +129,11 @@ class Submit(models.Model):
 
     def __init__(self, *args, **kwargs):
         super(Submit, self).__init__(*args, **kwargs)
-        self.previous_points = self.points
+        self.last_saved_points = self.points
 
     def save(self, *args, **kwargs):
         super(Submit, self).save(*args, **kwargs)
-        self.previous_points = self.points
+        self.last_saved_points = self.points
 
     @property
     def filename(self):

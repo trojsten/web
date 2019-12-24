@@ -15,31 +15,31 @@ from trojsten.submit.models import Submit
 
 @receiver(post_save, sender=Round, dispatch_uid="notifications__contest_publish")
 def round_published(sender, **kwargs):
-    instance = kwargs["instance"]
+    round = kwargs["instance"]
 
-    if not instance.visible or instance.previous_visible:
+    if not round.visible or round.previous_visible:
         return
 
     date = timezone.now()
     current_year = date.year + int(date.month > SCHOOL_YEAR_END_MONTH)
     users = User.objects.filter(graduation__gte=current_year).exclude(
-        ignored_competitions=instance.semester.competition
+        ignored_competitions=round.semester.competition
     )
 
     site = Site.objects.get_current()
     url = "//%(domain)s%(url)s" % {
         "domain": site.domain,
-        "url": reverse("task_list", args=(instance.pk,)),
+        "url": reverse("task_list", args=(round.pk,)),
     }
 
-    notify(users, "round_started", _("Round %(round)s has started!" % {"round": instance}), url)
+    notify(users, "round_started", _("Round %(round)s has started!" % {"round": round}), url)
 
 
-@receiver(post_save, sender=Task, dispatch_uid="notifications__task_points_visible")
+@receiver(post_save, sender=Task, dispatch_uid="notifications__task_points_visibility_changed")
 def task_description_points_visibility_change(sender, **kwargs):
-    instance = kwargs["instance"]
+    task = kwargs["instance"]
 
-    if not instance.description_points_visible or instance.previous_description_points_visible:
+    if not task.description_points_visible or task.last_saved_description_points_visible:
         return
 
     site = Site.objects.get_current()
@@ -47,9 +47,7 @@ def task_description_points_visibility_change(sender, **kwargs):
     # Get latest submit for every user.
     submits = (
         Submit.objects.filter(
-            submit_type=SUBMIT_TYPE_DESCRIPTION,
-            task=instance,
-            testing_status=SUBMIT_STATUS_REVIEWED,
+            submit_type=SUBMIT_TYPE_DESCRIPTION, task=task, testing_status=SUBMIT_STATUS_REVIEWED
         )
         .select_related("user")
         .order_by("user_id", "-time")
@@ -59,13 +57,13 @@ def task_description_points_visibility_change(sender, **kwargs):
     for submit in submits:
         url = "//%(domain)s%(url)s" % {
             "domain": site.domain,
-            "url": reverse("task_list", args=(instance.pk,)),
+            "url": reverse("task_list", args=(task.pk,)),
         }
 
         notify_user(
             submit.user,
             "submit_reviewed",
             _('Your description for "%(task)s" has been reviewed. You earned %(points)d points!')
-            % {"task": instance, "points": submit.points},
+            % {"task": task, "points": submit.points},
             url,
         )
