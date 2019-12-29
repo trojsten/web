@@ -1,0 +1,52 @@
+{% extends "trojsten/layout/main.html" %}
+{% load polls_parts %}
+
+{% block title %}Anketa{% endblock %}
+
+{% block page_header %}
+
+<h1> Anketa </h1>
+
+{% endblock %}
+
+{% block page_content %}
+
+{% if not questions %}
+
+    Neexistujú žiadne ankety.
+
+{% else %}
+
+    <h1> {{ current.text }} </h1>
+
+    {% show_time current %}
+
+    <form method="POST">
+    {% csrf_token %}
+    
+    <table>
+    {% for voteanswer in answers %}
+        <tr>
+            <td margin="10px" style="padding:0 10px 0 10px">{{ voteanswer.0 }}</td>
+            <td margin="10px" style="padding:0 10px 0 10px">{{ voteanswer.1 }} </td>
+            {% if not current.expired and request.user.is_authenticated %}
+            <td style="padding:0 10px 0 10px"><button class="btn btn-primary" type="submit" name="action" value="vote{{ voteanswer.2 }}">Hlasuj </button></td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </table>
+
+    {% if not current.expired and not request.user.is_authenticated %}
+    <p class="text-danger">Na hlasovanie sa musíš prihlásiť</p>
+    {% endif %}
+
+    </form>
+        <h3>Všetky ankety</h3>
+        
+        <ul>
+        {% for question in questions %}
+            <li><a href="{% url 'view_question' pk=question.pk %}">{{ question.text }}</a></li>
+        {% endfor %}
+        </ul>
+{% endif %}
+{% endblock %}

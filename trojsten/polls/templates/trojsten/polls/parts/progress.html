@@ -1,0 +1,22 @@
+{% load polls_parts staticfiles i18n %}
+{% if remaining.days >= 0 %}
+
+    <script type="text/javascript" src="{% static 'js/roundprogressbar.js' %}">
+    </script>
+<div class="roundprogressbar" data-precision="{{ remaining|progress_time_precision }}" >
+  <div class="row">
+    <div class="col-md-5"><em>Hlasujte do: {{ current.deadline }}</em></div>
+    <div class="col-md-7">
+      <div class="progress">
+        <div class="progress-bar {{ progressbar_class }}" role="progressbar"
+             aria-valuenow="{{ elapsed.days }}" aria-valuemin="0"
+             aria-valuemax="{{ full.days }}" style="width: {{ percent }}%;">
+          {{ remaining|progress_time }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+  <div class="alert alert-info" role="alert">V tejto ankete už nie je možné hlasovať.</div>
+{% endif %}

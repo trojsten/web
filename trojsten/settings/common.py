@@ -104,7 +104,7 @@ TIME_ZONE = env("TROJSTENWEB_TIME_ZONE", "Europe/Bratislava")
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = env("TROJSTENWEB_LANGUAGE_CODE", "sk-SK")
 
-SITE_ID = 1
+SITE_ID = 4 
 
 SITES = site_config.SITES
 
@@ -230,6 +230,7 @@ INSTALLED_APPS = (
     "trojsten.dbsanitizer",
     "trojsten.login",
     "trojsten.schools",
+    "trojsten.polls",
     "trojsten.contact_form",
     "trojsten.notifications.apps.NotificationsConfig",
     "django_countries",

@@ -3,6 +3,8 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from social_django.views import auth as social_auth
 
+import trojsten.polls.urls
+import trojsten.polls.views
 import trojsten.contests.urls
 import trojsten.contests.views
 import trojsten.diplomas.urls
@@ -43,6 +45,7 @@ urlpatterns = common_urlpatterns + [
     url(r"^specialne/", include("trojsten.special.urls")),
     url(r"^komentare/", include("fluent_comments.urls")),
     url(r"^diskusie/", include("trojsten.threads.urls")),
+    url(r"^anketa/", include(trojsten.polls.urls)),
     url(r"^$", trojsten.views.home_redirect),
     url(r"^wiki/notify/", include("django_nyt.urls")),
     url(r"^", include("favicon.urls")),
