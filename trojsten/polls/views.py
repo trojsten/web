@@ -8,23 +8,10 @@ from .models import Question, Answer, Vote
 from datetime import datetime
 
 
-def create_default_questions():
-    q = Question(text = "Čo znamená skratka LTT?",
-                deadline = datetime(2018, 12, 31, 23, 59, 59),
-                answers = "Lacná trápna taška\nLen trochu tuniaka\nLietam tam tiež",
-                answer_count = 3)
-    q.save()
-    q = Question(text = "Ktorý je najlepší programovací jazyk?",
-                answers = "Predsa HTML\nJava\nJavaScript\nRuby\nPython\nC\nC++\nPascal", answer_count = 8)
-    q.save()
-
-
 def view_question(request, pk=None):
     questions = Question.objects.filter(created_date__lte = timezone.now()).order_by('-created_date')
     if not questions:
         return render(request, 'trojsten/polls/view_question.html', {'questions': [], 'user': request.user})
-        #create_default_questions()
-        #questions = Question.objects.filter(created_date__lte = timezone.now()).order_by('-created_date')
     if pk is None:
         pk = questions[0].pk
     current = get_object_or_404(Question, pk=pk)
