@@ -17,8 +17,8 @@ def view_question(request, pk=None):
     current = get_object_or_404(Question, pk=pk)
     current.expired = current.deadline<=timezone.now()
     
+    user = request.user
     if request.method == "POST":
-        user = request.user
         if not user.is_authenticated:
             # You must be logged in
             messages.add_message(request, messages.ERROR, "Pre hlasovanie sa musíš prihlásiť.")
@@ -46,10 +46,12 @@ def view_question(request, pk=None):
         return redirect('view_question', pk=pk)
     
     given_votes = Vote.objects.filter(answer__question=current)
+    user_vote = None if not user.is_authenticated else given_votes.filter(user=user).first()
+    user_vote_pk = None if user_vote is None else user_vote.answer.pk
     answers = Answer.objects.filter(question=current)
     votes = {answer: 0 for answer in answers}
     for vote in given_votes:
         votes[vote.answer] += 1
     zipped = list((votes[answer], answer.text, answer.pk) for answer in votes)
     zipped.sort(reverse=True)
-    return render(request, 'trojsten/polls/view_question.html', {'questions': questions, 'current': current, 'votes': votes, 'answers': zipped})
+    return render(request, 'trojsten/polls/view_question.html', {'questions': questions, 'current': current, 'votes': votes, 'answers': zipped, 'user_vote': user_vote_pk, 'range2': range(2)})
