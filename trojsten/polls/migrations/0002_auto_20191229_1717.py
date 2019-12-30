@@ -9,26 +9,26 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls', '0001_initial'),
+        ("polls", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='answer',
-            name='text2',
-            field=models.CharField(default='a', max_length=1000),
+            model_name="answer",
+            name="text2",
+            field=models.CharField(default="a", max_length=1000),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='question',
-            name='text2',
-            field=models.CharField(default='a', max_length=1000),
+            model_name="question",
+            name="text2",
+            field=models.CharField(default="a", max_length=1000),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='vote',
-            name='text2',
-            field=models.CharField(default='a', max_length=1000),
+            model_name="vote",
+            name="text2",
+            field=models.CharField(default="a", max_length=1000),
             preserve_default=False,
         ),
     ]

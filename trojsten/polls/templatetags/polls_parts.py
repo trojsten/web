@@ -1,10 +1,10 @@
+from datetime import datetime
+
 from django import template
 from django.conf import settings
 from django.utils import timezone
 
-from datetime import datetime
 from trojsten.polls.models import Question
-
 
 register = template.Library()
 
@@ -24,7 +24,8 @@ def show_time(context, current_question):
         progressbar_class = settings.ROUND_PROGRESS_DEFAULT_CLASS
     percent = 100 * elapsed.days // full.days if full.days > 0 else 100
     print("Percent is", percent, full.days, elapsed.days)
-    context.update( {
+    context.update(
+        {
             "current": current_question,
             "start": start,
             "end": end,
@@ -33,15 +34,15 @@ def show_time(context, current_question):
             "elapsed": elapsed,
             "percent": percent,
             "progressbar_class": progressbar_class,
-        })
+        }
+    )
     return context
 
 
-
 def get_type(number):
-    if number==1:
+    if number == 1:
         return 0
-    elif 2<=number<=4:
+    elif 2 <= number <= 4:
         return 1
     else:
         return 2

@@ -6,20 +6,11 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls', '0002_auto_20191229_1717'),
+        ("polls", "0002_auto_20191229_1717"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='answer',
-            name='text2',
-        ),
-        migrations.RemoveField(
-            model_name='question',
-            name='text2',
-        ),
-        migrations.RemoveField(
-            model_name='vote',
-            name='text2',
-        ),
+        migrations.RemoveField(model_name="answer", name="text2",),
+        migrations.RemoveField(model_name="question", name="text2",),
+        migrations.RemoveField(model_name="vote", name="text2",),
     ]

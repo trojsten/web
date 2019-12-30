@@ -3,12 +3,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from social_django.views import auth as social_auth
 
-import trojsten.polls.urls
-import trojsten.polls.views
 import trojsten.contests.urls
 import trojsten.contests.views
 import trojsten.diplomas.urls
 import trojsten.people.views
+import trojsten.polls.urls
+import trojsten.polls.views
 import trojsten.results.urls
 import trojsten.submit.urls
 import trojsten.submit.views
