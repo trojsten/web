@@ -1,9 +1,9 @@
 {% load polls_parts staticfiles i18n %}
 {% if remaining.days >= 0 %}
 
-    <script type="text/javascript" src="{% static 'js/roundprogressbar.js' %}">
+    <script type="text/javascript" src="{% static 'js/pollprogressbar.js' %}">
     </script>
-<div class="roundprogressbar" data-precision="{{ remaining|progress_time_precision }}" >
+<div class="pollprogressbar" data-precision="{{ remaining|progress_time_precision }}" >
   <div class="row">
     <div class="col-md-5"><em>Hlasujte do: {{ current.deadline }}</em></div>
     <div class="col-md-7">
