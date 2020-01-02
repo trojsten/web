@@ -1,49 +1,43 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.translation import ugettext as _
 
 from .models import Answer, Question, Vote
+from collections import namedtuple
+
+
+RatedAnswer = namedtuple('RatedAnswer', ['votes', 'text', 'pk'])
 
 
 def view_question(request, pk=None):
     questions = Question.objects.filter(created_date__lte=timezone.now()).order_by("-created_date")
     if not questions:
         return render(
-            request, "trojsten/polls/view_question.html", {"questions": [], "user": request.user}
+            request, "trojsten/polls/view_question.html", {"questions": None, "user": request.user}
         )
     if pk is None:
         pk = questions[0].pk
     current = get_object_or_404(Question, pk=pk)
-    current.expired = current.deadline <= timezone.now()
 
     user = request.user
     if request.method == "POST":
         if not user.is_authenticated:
-            # You must be logged in
-            messages.add_message(request, messages.ERROR, "Pre hlasovanie sa musíš prihlásiť.")
+            messages.add_message(request, messages.ERROR, _("You need to sign in in order to vote."))
             return redirect("view_question", pk=pk)
 
-        answer_pk = int(request.POST.get("action")[4:])
         if current.expired:
-            # Deadline is over
             messages.add_message(
-                request, messages.ERROR, "V tejto ankete už nie je možné hlasovať."
+                request, messages.ERROR, _("This poll has already finished and no more voting is possible.")
             )
             return redirect("view_question", pk=pk)
+        answer_pk = int(request.POST.get("action")[4:])
         answer = Answer.objects.filter(question=current, pk=answer_pk).first()
         if answer is None:
-            # Invalid vote
-            messages.add_message(request, messages.ERROR, "Neplatný hlas.")
+            messages.add_message(request, messages.ERROR, _("Invalid vote."))
             return redirect("view_question", pk=pk)
 
-        existing = Vote.objects.filter(user=user, answer__question=current)
-        if existing:
-            existing[0].answer = answer
-            existing[0].save()
-            for e in existing[1:]:  # This shouldn't happen (user having two votes)
-                e.delete()
-        else:
-            Vote.objects.create(user=user, answer=answer)
+        Vote.objects.update_or_create(user=user, answer__question=current, defaults={'answer': answer})
         return redirect("view_question", pk=pk)
 
     given_votes = Vote.objects.filter(answer__question=current)
@@ -53,8 +47,8 @@ def view_question(request, pk=None):
     votes = {answer: 0 for answer in answers}
     for vote in given_votes:
         votes[vote.answer] += 1
-    zipped = list((votes[answer], answer.text, answer.pk) for answer in votes)
-    zipped.sort(reverse=True)
+    rated_answers = list(RatedAnswer(votes[answer], answer.text, answer.pk) for answer in votes)
+    rated_answers.sort(reverse=True)
     return render(
         request,
         "trojsten/polls/view_question.html",
@@ -62,8 +56,7 @@ def view_question(request, pk=None):
             "questions": questions,
             "current": current,
             "votes": votes,
-            "answers": zipped,
+            "answers": rated_answers,
             "user_vote": user_vote_pk,
-            "range2": range(2),
         },
     )

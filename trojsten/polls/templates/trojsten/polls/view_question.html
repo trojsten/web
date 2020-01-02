@@ -25,12 +25,12 @@
     {% csrf_token %}
     
     <table>
-    {% for voteanswer in answers %}
+    {% for answer in answers %}
         <tr>
-            <td margin="10px" style="padding:0 10px 0 10px">{% if voteanswer.2 == user_vote %}<b>{% endif %} {{ voteanswer.0 }} {% if voteanswer.2 == user_vote %}</b>{% endif %}</td>
-            <td margin="10px" style="padding:0 10px 0 10px">{% if voteanswer.2 == user_vote %}<b>{% endif %} {{ voteanswer.1 }} {% if voteanswer.2 == user_vote %}</b>{% endif %}</td>
+            <td class="poll-margin poll-cell">{% if answer.pk == user_vote %}<b>{% endif %} {{ answer.votes }} {% if answer.pk == user_vote %}</b>{% endif %}</td>
+            <td class="poll-margin poll-cell">{% if answer.pk == user_vote %}<b>{% endif %} {{ answer.text }} {% if answer.pk == user_vote %}</b>{% endif %}</td>
             {% if not current.expired and request.user.is_authenticated %}
-            <td style="padding:0 10px 0 10px"><button class="btn btn-primary" type="submit" name="action" value="vote{{ voteanswer.2 }}">Hlasuj </button></td>
+            <td class="poll-cell"><button class="btn btn-primary" type="submit" name="action" value="vote{{ answer.pk }}">Hlasuj </button></td>
             {% endif %}
         </tr>
     {% endfor %}

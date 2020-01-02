@@ -134,19 +134,31 @@ msgstr "Pozrieť vzorové riešenie."
 # Task Statements
 #, python-format
 msgid "%(count)d day"
-msgstr "%(count)d deň"
+msgid_plural "%(count)d days"
+msgstr[0] "%(count)d deň"
+msgstr[1] "%(count)d dni"
+msgstr[2] "%(count)d dní"
 
 #, python-format
 msgid "%(count)d hour"
-msgstr "%(count)d hodina"
+msgid_plural "%(count)d hours"
+msgstr[0] "%(count)d hodina"
+msgstr[1] "%(count)d hodiny"
+msgstr[2] "%(count)d hodín"
 
 #, python-format
 msgid "%(count)d minute"
-msgstr "%(count)d minúta"
+msgid_plural "%(count)d minutes"
+msgstr[0] "%(count)d minúta"
+msgstr[1] "%(count)d minúty"
+msgstr[2] "%(count)d minút"
 
 #, python-format
 msgid "%(count)d second"
-msgstr "%(count)d sekunda"
+msgid_plural "%(count)d second"
+msgstr[0] "%(count)d sekunda"
+msgstr[1] "%(count)d sekundy"
+msgstr[2] "%(count)d sekúnd"
 
 msgid "authorized groups"
 msgstr "autorizované skupiny"
@@ -904,3 +916,23 @@ msgstr ""
 
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
+
+msgid "You need to sign in in order to vote."
+msgstr "Pre hlasovanie sa musíš prihlásiť."
+
+msgid "This poll has already finished and no more voting is possible."
+msgstr "V tejto ankete už nie je možné hlasovať."
+
+msgid "Invalid vote."
+msgstr "Neplatný hlas."
+
+#, python-brace-format
+msgid "Answer \"{answer}\" to question \"{question}\""
+msgstr "Odpoveď \"{answer}\" na otázku \"{question}\""
+
+#, python-brace-format
+msgid "Vote for {answer}"
+msgstr "Hlas pre {answer}"
+
+msgid "A vote of this user for this question already exists."
+msgstr "Hlas tohto užívateľa pre túto otázku už existuje."
