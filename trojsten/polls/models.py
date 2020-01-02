@@ -1,7 +1,7 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
-from django.core.exceptions import ValidationError
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext as _
@@ -31,7 +31,9 @@ class Answer(models.Model):
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
 
     def __str__(self):
-        return _("Answer \"{answer}\" to question \"{question}\"").format(answer=self.text, question=str(self.question))
+        return _('Answer "{answer}" to question "{question}"').format(
+            answer=self.text, question=str(self.question)
+        )
 
 
 class Vote(models.Model):
@@ -41,12 +43,14 @@ class Vote(models.Model):
 
     def __str__(self):
         return _("Vote for {answer}").format(answer=str(self.answer))
-    
+
     def validate_unique(self, *args, **kwargs):
         super(Vote, self).validate_unique(*args, **kwargs)
 
-        if self.__class__.objects.filter(answer__question=self.answer.question, user=self.user).exists():
+        if self.__class__.objects.filter(
+            answer__question=self.answer.question, user=self.user
+        ).exists():
             raise ValidationError(
                 message=_("A vote of this user for this question already exists."),
-                code='vote.validate_unique',
+                code="vote.validate_unique",
             )

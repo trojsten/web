@@ -1,13 +1,13 @@
+from collections import namedtuple
+
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from .models import Answer, Question, Vote
-from collections import namedtuple
 
-
-RatedAnswer = namedtuple('RatedAnswer', ['votes', 'text', 'pk'])
+RatedAnswer = namedtuple("RatedAnswer", ["votes", "text", "pk"])
 
 
 def view_question(request, pk=None):
@@ -23,12 +23,16 @@ def view_question(request, pk=None):
     user = request.user
     if request.method == "POST":
         if not user.is_authenticated:
-            messages.add_message(request, messages.ERROR, _("You need to sign in in order to vote."))
+            messages.add_message(
+                request, messages.ERROR, _("You need to sign in in order to vote.")
+            )
             return redirect("view_question", pk=pk)
 
         if current.expired:
             messages.add_message(
-                request, messages.ERROR, _("This poll has already finished and no more voting is possible.")
+                request,
+                messages.ERROR,
+                _("This poll has already finished and no more voting is possible."),
             )
             return redirect("view_question", pk=pk)
         answer_pk = int(request.POST.get("action")[4:])
@@ -37,7 +41,9 @@ def view_question(request, pk=None):
             messages.add_message(request, messages.ERROR, _("Invalid vote."))
             return redirect("view_question", pk=pk)
 
-        Vote.objects.update_or_create(user=user, answer__question=current, defaults={'answer': answer})
+        Vote.objects.update_or_create(
+            user=user, answer__question=current, defaults={"answer": answer}
+        )
         return redirect("view_question", pk=pk)
 
     given_votes = Vote.objects.filter(answer__question=current)
