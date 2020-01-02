@@ -1,8 +1,6 @@
-from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import ugettext as _
 
 from trojsten.people.models import User
 
@@ -103,12 +101,3 @@ class PollTest(TestCase):
         )
         answer2 = Answer.objects.create(text="4", question=question2)
         Vote.objects.create(created_date=self.start_time_old, user=user, answer=answer2)
-        # for vote in Vote.objects.all():
-        #     vote.validate_unique()
-        with self.assertRaisesMessage(
-            ValidationError, _("A vote of this user for this question already exists.")
-        ):
-            bad_vote = Vote.objects.create(
-                created_date=self.start_time_old, user=user, answer=human
-            )
-            bad_vote.validate_unique()
