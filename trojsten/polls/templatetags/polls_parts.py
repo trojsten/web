@@ -1,7 +1,7 @@
 from django import template
 from django.conf import settings
 from django.utils import timezone
-from django.utils.translation import ungettext as _
+from django.utils.translation import ngettext as _
 
 register = template.Library()
 
