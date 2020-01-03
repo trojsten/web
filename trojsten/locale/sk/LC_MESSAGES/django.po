@@ -1,9 +1,8 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-14 18:16+0100\n"
+"POT-Creation-Date: 2020-01-03 20:56+0100\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 msgid "Subject"
 msgstr "Predmet"
@@ -134,19 +133,35 @@ msgstr "Pozrieť vzorové riešenie."
 # Task Statements
 #, python-format
 msgid "%(count)d day"
-msgstr "%(count)d deň"
+msgid_plural "%(count)d days"
+msgstr[0] "%(count)d deň"
+msgstr[1] "%(count)d dni"
+msgstr[2] "%(count)d dňa"
+msgstr[3] "%(count)d dní"
 
 #, python-format
 msgid "%(count)d hour"
-msgstr "%(count)d hodina"
+msgid_plural "%(count)d hours"
+msgstr[0] "%(count)d hodina"
+msgstr[1] "%(count)d hodiny"
+msgstr[2] "%(count)d hodiny"
+msgstr[3] "%(count)d hodín"
 
 #, python-format
 msgid "%(count)d minute"
-msgstr "%(count)d minúta"
+msgid_plural "%(count)d minutes"
+msgstr[0] "%(count)d minúta"
+msgstr[1] "%(count)d minúty"
+msgstr[2] "%(count)d minúty"
+msgstr[3] "%(count)d minút"
 
 #, python-format
 msgid "%(count)d second"
-msgstr "%(count)d sekunda"
+msgid_plural "%(count)d seconds"
+msgstr[0] "%(count)d sekunda"
+msgstr[1] "%(count)d sekundy"
+msgstr[2] "%(count)d sekundy"
+msgstr[3] "%(count)d sekúnd"
 
 msgid "authorized groups"
 msgstr "autorizované skupiny"
