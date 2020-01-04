@@ -1,4 +1,4 @@
-FROM python:3.7-alpine3.10 AS base
+FROM python:3.8-alpine3.11 AS base
 
 ENV PYTHONUNBUFFERED=0
 
@@ -9,9 +9,10 @@ FROM base AS builder
 RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python \
     && ln -s /root/.poetry/bin/poetry /usr/local/bin/poetry
 
-COPY . /tmp/build
+COPY ./pyproject.toml /tmp/build/
+COPY ./poetry.lock /tmp/build/
 
-WORKDIR /tmp/build
+WORKDIR /tmp/build/
 
 RUN set -x \
     && poetry export -f requirements.txt > requirements.txt
@@ -19,7 +20,7 @@ RUN set -x \
 
 FROM base AS installer
 
-COPY ./docker/common/install_build_deps /tmp/build
+COPY ./docker/common/install_build_deps.sh /tmp/build/
 
 RUN set -x \
     && sh /tmp/build/install_build_deps.sh
@@ -31,7 +32,7 @@ RUN set -x \
 
 FROM base
 
-COPY ./docker/common/install_runtime_deps /tmp/build
+COPY ./docker/common/install_runtime_deps.sh /tmp/build/
 
 # These are not strictly dependencies of trojsten-web, but are required for production
 RUN set -x \
@@ -59,6 +60,7 @@ WORKDIR /web
 
 ENV TROJSTENWEB_STATIC_ROOT=/static
 ENV DJANGO_SETTINGS_MODULE=trojsten.settings.production
+RUN python manage.py compilemessages
 RUN python manage.py collectstatic --noinput
 
 ENV GUNICORN_WORKERS 2

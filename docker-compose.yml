@@ -28,7 +28,7 @@ services:
     environment:
       <<: *webenv
       DJANGO_SETTINGS_MODULE: trojsten.settings.development
-      TROJSTENWEB_LOGIN_PROVIDER_URL: http://10.47.0.4:8047
+      TROJSTENWEB_LOGIN_PROVIDER_URL: http://login:8047
     depends_on:
       - db
       - login
@@ -45,7 +45,7 @@ services:
       <<: *webenv
       DJANGO_SETTINGS_MODULE: trojsten.settings.login_dev
       TROJSTENWEB_DEVELOPMENT_SITE_ID: 10
-      TROJSTENWEB_ALLOWED_HOSTS: localhost;127.0.0.1;10.47.0.4
+      TROJSTENWEB_ALLOWED_HOSTS: localhost;127.0.0.1;login
     command: python -Wa manage.py runserver 0.0.0.0:8047
 
 volumes:

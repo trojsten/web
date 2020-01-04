@@ -1,12 +1,11 @@
 version: "3.7"
-
 x-web: &web
   image: trojsten/web:latest
   build:
     context: .
     dockerfile: ./docker/prod/Dockerfile
   env_file:
-    - ./docker/prod/web.env
+    - example.env
     - production.env
 
 services:
@@ -30,14 +29,14 @@ services:
       - db
     environment:
       - DJANGO_SETTINGS_MODULE=trojsten.settings.login
-      - TROJSTENWEB_ALLOWED_HOSTS=login.trojsten.sk;betalogin.trojsten.sk;login;localhost;127.0.0.1;
+      - TROJSTENWEB_ALLOWED_HOSTS=login;localhost;127.0.0.1;
   ksp:
     <<: *web
     ports:
       - "8001:80"
     environment:
       - DJANGO_SETTINGS_MODULE=trojsten.settings.ksp
-      - TROJSTENWEB_ALLOWED_HOSTS=ksp.sk;beta.ksp.sk;localhost;127.0.0.1;
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
     depends_on:
       - db
   prask:
@@ -46,7 +45,7 @@ services:
       - "8002:80"
     environment:
       - DJANGO_SETTINGS_MODULE=trojsten.settings.prask
-      - TROJSTENWEB_ALLOWED_HOSTS=prask.ksp.sk;beta.prask.ksp.sk;localhost;127.0.0.1;
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
     depends_on:
       - db
   fks:
@@ -55,7 +54,7 @@ services:
       - "8003:80"
     environment:
       - DJANGO_SETTINGS_MODULE=trojsten.settings.fks
-      - TROJSTENWEB_ALLOWED_HOSTS=fks.sk;beta.fks.sk;localhost;127.0.0.1;
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
     depends_on:
       - db
   kms:
@@ -64,7 +63,7 @@ services:
       - "8004:80"
     environment:
       - DJANGO_SETTINGS_MODULE=trojsten.settings.kms
-      - TROJSTENWEB_ALLOWED_HOSTS=kms.sk;beta.kms.sk;localhost;127.0.0.1;
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
     depends_on:
       - db
   wiki:
@@ -73,7 +72,7 @@ services:
       - "8006:80"
     environment:
       - DJANGO_SETTINGS_MODULE=trojsten.settings.wiki
-      - TROJSTENWEB_ALLOWED_HOSTS=wiki.trojsten.sk;beta.wiki.trojsten.sk;localhost;127.0.0.1;
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
     depends_on:
       - db
   ufo:
@@ -82,7 +81,7 @@ services:
       - "8007:80"
     environment:
       - DJANGO_SETTINGS_MODULE=trojsten.settings.ufo
-      - TROJSTENWEB_ALLOWED_HOSTS=ufo.fks.sk;beta.ufo.fks.sk;localhost;127.0.0.1;
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
     depends_on:
       - db
   fx:
@@ -91,7 +90,7 @@ services:
       - "8008:80"
     environment:
       - DJANGO_SETTINGS_MODULE=trojsten.settings.fx
-      - TROJSTENWEB_ALLOWED_HOSTS=fx.fks.sk;beta.fx.fks.sk;localhost;127.0.0.1;
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
     depends_on:
       - db
 

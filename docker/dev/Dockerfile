@@ -1,4 +1,4 @@
-FROM python:3.7-alpine3.10
+FROM python:3.8-alpine3.11
 
 ENV PYTHONUNBUFFERED=0
 
@@ -7,7 +7,7 @@ RUN apk add --no-cache curl
 RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python \
     && ln -s /root/.poetry/bin/poetry /usr/local/bin/poetry
 
-COPY ./docker/common /tmp/build
+COPY ./docker/common/ /tmp/build/
 
 RUN set -x \
     && sh /tmp/build/install_build_deps.sh \
@@ -17,13 +17,15 @@ COPY ./fonts/* /usr/share/fonts/
 
 RUN fc-cache -f -v
 
-COPY . /web
+COPY ./pyproject.toml /install/
+COPY ./poetry.lock /install/
 
-WORKDIR /web
+WORKDIR /install
 
 RUN poetry config virtualenvs.create false && \
-    poetry install -n
+    poetry install --no-interaction --no-root
 
-RUN python manage.py compilemessages
+# We will mount source directory to /web
+WORKDIR /web
 
-CMD python manage.py runserver 0.0.0.0:8000
+CMD python manage.py compilemessages && python manage.py runserver 0.0.0.0:8000
