@@ -5,9 +5,8 @@ ENV PYTHONUNBUFFERED=0
 RUN apk add --no-cache --virtual common-deps curl
 
 FROM base AS builder
-# Install prerelease poetry
 
-RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python /dev/stdin -p \
+RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python \
     && ln -s /root/.poetry/bin/poetry /usr/local/bin/poetry
 
 COPY . /tmp/build
