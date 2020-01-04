@@ -4,7 +4,7 @@ $(document).ready(function() {
   if (url.match('#')) {
       $('a[role="tab"][href="#' + url.split('#')[1] + '"]').tab('show');
   }
-}); 
+});
 
 // Change hash for page-reload
 $('a[role="tab"]').on('shown.bs.tab', function (e) {
