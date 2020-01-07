@@ -16,7 +16,7 @@ class TaskGenerator:
     integer_source_points = True
 
     @classmethod
-    def generate(cls, number: int, parent_round: Round, **kwargs) -> Task:
+    def generate(cls, parent_round: Round, number: int, **kwargs) -> Task:
         return Task.objects.create(
             round=parent_round,
             name=lorem.get_word(count=random.randint(*cls.name_length)),
