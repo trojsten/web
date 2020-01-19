@@ -77,7 +77,7 @@ class PollTest(TestCase):
                 password="pass",
                 graduation=2100,
             )
-            Vote.objects.create(created_date=self.start_time_old, user=user, answer=human)
+            Vote.objects.create(user=user, answer=human)
         for i in range(count2):
             user = User.objects.create_user(
                 username="jozko" + str(i + 100),
@@ -86,7 +86,7 @@ class PollTest(TestCase):
                 password="pass",
                 graduation=2100,
             )
-            Vote.objects.create(created_date=self.start_time_old, user=user, answer=robot)
+            Vote.objects.create(user=user, answer=robot)
         response = self.client.get(self.list_url)
         self.assertContains(response, str(count1))
         self.assertContains(response, str(count2))
@@ -100,4 +100,4 @@ class PollTest(TestCase):
             created_date=self.start_time_old, deadline=self.end_time_new, text="2+2?"
         )
         answer2 = Answer.objects.create(text="4", question=question2)
-        Vote.objects.create(created_date=self.start_time_old, user=user, answer=answer2)
+        Vote.objects.create(user=user, answer=answer2)
