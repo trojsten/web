@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django import template
-from django.conf import settings
-from django.utils import timezone
-from django.utils.translation import ngettext
 
 from trojsten.contests.models import Category, Task
 from trojsten.results.manager import get_results_tags_for_rounds
 from trojsten.submit.models import Submit
+from trojsten.utils import utils
 
 from ..helpers import get_points_from_submits, slice_tag_list
 
@@ -60,55 +58,16 @@ def show_progress(context, round, results=False):
     else:
         start = round.start_time
         end = round.end_time
-
-    full = end - start
-    remaining = end - timezone.now()
-    elapsed = full - remaining
-    if remaining.days <= settings.ROUND_PROGRESS_DANGER_DAYS:
-        progressbar_class = settings.ROUND_PROGRESS_DANGER_CLASS
-    elif remaining.days <= settings.ROUND_PROGRESS_WARNING_DAYS:
-        progressbar_class = settings.ROUND_PROGRESS_WARNING_CLASS
-    else:
-        progressbar_class = settings.ROUND_PROGRESS_DEFAULT_CLASS
-    context.update(
-        {
-            "round": round,
-            "results": results,
-            "start": start,
-            "end": end,
-            "full": full,
-            "remaining": remaining,
-            "elapsed": elapsed,
-            "percent": 100 * elapsed.days // full.days if full.days > 0 else 100,
-            "progressbar_class": progressbar_class,
-        }
-    )
+    data = utils.get_progressbar_data(start, end)
+    context.update({"round": round, "results": results, **data})
     return context
 
 
 @register.filter
 def progress_time(delta):
-    if delta.days >= 1:
-        count = delta.days
-        return ngettext("%(count)d day", "%(count)d days", count) % {"count": count}
-    elif delta.seconds // 3600 >= 1:
-        count = delta.seconds // 3600
-        return ngettext("%(count)d hour", "%(count)d hours", count) % {"count": count}
-    elif delta.seconds // 60 >= 1:
-        count = delta.seconds // 60
-        return ngettext("%(count)d minute", "%(count)d minutes", count) % {"count": count}
-    else:
-        count = delta.seconds
-        return ngettext("%(count)d second", "%(count)d seconds", count) % {"count": count}
+    return utils.progress_time(delta)
 
 
 @register.filter
 def progress_time_precision(delta):
-    if delta.days >= 1:
-        return "DAY"
-    elif delta.seconds // 3600 >= 1:
-        return "HOUR"
-    elif delta.seconds // 60 >= 1:
-        return "MINUTE"
-    else:
-        return "SECOND"
+    return utils.progress_time_precision(delta)

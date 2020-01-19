@@ -48,7 +48,6 @@ def view_question(request, pk=None):
 
     given_votes = Vote.objects.filter(answer__question=current)
     user_vote = None if not user.is_authenticated else given_votes.filter(user=user).first()
-    user_vote_pk = None if user_vote is None else user_vote.answer.pk
     answers = Answer.objects.filter(question=current)
     votes = {answer: 0 for answer in answers}
     for vote in given_votes:
@@ -63,6 +62,6 @@ def view_question(request, pk=None):
             "current": current,
             "votes": votes,
             "answers": rated_answers,
-            "user_vote": user_vote_pk,
+            "user_vote": user_vote,
         },
     )

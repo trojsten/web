@@ -6,11 +6,11 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
+from trojsten.utils import utils
+
 
 def after_30_days():
-    now = timezone.now()
-    end = now + timedelta(days=30)
-    return end.replace(hour=23, minute=59, second=59)
+    return utils.default_end_time() + timedelta(days=30)
 
 
 class Question(models.Model):
@@ -38,7 +38,6 @@ class Answer(models.Model):
 
 class Vote(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    created_date = models.DateTimeField(default=timezone.now)
     answer = models.ForeignKey("Answer", on_delete=models.CASCADE)
 
     def __str__(self):

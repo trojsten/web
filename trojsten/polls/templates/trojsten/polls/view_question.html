@@ -27,8 +27,8 @@
     <table>
     {% for answer in answers %}
         <tr>
-            <td class="poll-margin poll-cell">{% if answer.pk == user_vote %}<b>{% endif %} {{ answer.votes }} {% if answer.pk == user_vote %}</b>{% endif %}</td>
-            <td class="poll-margin poll-cell">{% if answer.pk == user_vote %}<b>{% endif %} {{ answer.text }} {% if answer.pk == user_vote %}</b>{% endif %}</td>
+            <td class="poll-margin poll-cell">{% if answer.pk == user_vote.answer.pk %}<b>{% endif %} {{ answer.votes }} {% if answer == user_vote.answer.pk %}</b>{% endif %}</td>
+            <td class="poll-margin poll-cell">{% if answer.pk == user_vote.answer.pk %}<b>{% endif %} {{ answer.text }} {% if answer == user_vote.answer.pk %}</b>{% endif %}</td>
             {% if not current.expired and request.user.is_authenticated %}
             <td class="poll-cell"><button class="btn btn-primary" type="submit" name="action" value="vote{{ answer.pk }}">Hlasuj </button></td>
             {% endif %}
