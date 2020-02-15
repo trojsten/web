@@ -1,4 +1,4 @@
-{% load statements_parts sekizai_tags staticfiles i18n %}
+{% load statements_parts sekizai_tags staticfiles i18n progressbar %}
 {% if remaining.days >= 0 %}
 {% addtoblock "js" %}
     <script type="text/javascript" src="{% static 'js/roundprogressbar.js' %}">

@@ -5,7 +5,7 @@ from django import template
 from trojsten.contests.models import Category, Task
 from trojsten.results.manager import get_results_tags_for_rounds
 from trojsten.submit.models import Submit
-from trojsten.utils import utils
+from trojsten.utils.templatetags import progressbar
 
 from ..helpers import get_points_from_submits, slice_tag_list
 
@@ -58,16 +58,6 @@ def show_progress(context, round, results=False):
     else:
         start = round.start_time
         end = round.end_time
-    data = utils.get_progressbar_data(start, end)
+    data = progressbar.get_progressbar_data(start, end)
     context.update({"round": round, "results": results, **data})
     return context
-
-
-@register.filter
-def progress_time(delta):
-    return utils.progress_time(delta)
-
-
-@register.filter
-def progress_time_precision(delta):
-    return utils.progress_time_precision(delta)
