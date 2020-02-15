@@ -2,10 +2,8 @@ import json
 from datetime import time
 from decimal import Decimal
 
-from django.conf import settings
 from django.http import HttpResponse
 from django.utils import timezone
-from django.utils.translation import ngettext
 
 
 def is_true(value):
