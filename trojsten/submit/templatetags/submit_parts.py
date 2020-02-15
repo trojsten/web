@@ -92,7 +92,7 @@ def show_submits_for_user_and_competition(context, competition):
     "trojsten/submit/parts/submits_for_user_and_semester.html", takes_context=True
 )
 def show_submits_for_user_and_semester(context, semester):
-    template_data = {"rounds": reversed(semester.round_set.all())}
+    template_data = {"rounds": reversed(semester.round_set.visible(context["user"]).all())}
     context.update(template_data)
     return context
 

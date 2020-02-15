@@ -1,138 +1,138 @@
-[  
-   {  
+[
+   {
       "pk":4,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"/?home",
          "glyphicon":"glyphicon-home",
          "name":"Domov",
          "active_url_pattern":"^/$"
       }
    },
-   {  
+   {
       "pk":5,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"/novinky/strana/1/",
          "glyphicon":"glyphicon-info-sign",
          "name":"Novinky",
          "active_url_pattern":"news_list"
       }
    },
-   {  
+   {
       "pk":6,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"/archiv/",
          "glyphicon":"glyphicon-inbox",
          "name":"Arch\u00edv",
          "active_url_pattern":"^/archiv/$"
       }
    },
-   {  
+   {
       "pk":7,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"@camp_event_list",
          "glyphicon":"glyphicon-tree-conifer",
          "name":"S\u00fastredenia",
          "active_url_pattern":"camp_event_list"
       }
    },
-   {  
+   {
       "pk":8,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"http://klub.trojsten.sk/",
          "glyphicon":"glyphicon-heart",
          "name":"Klub",
          "active_url_pattern":""
       }
    },
-   {  
+   {
       "pk":9,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"http://akademia.trojsten.sk",
          "glyphicon":"glyphicon-briefcase",
          "name":"Akad\u00e9mia",
          "active_url_pattern":""
       }
    },
-   {  
+   {
       "pk":10,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"/veduci/",
          "glyphicon":"glyphicon-book",
          "name":"Ved\u00facovsk\u00e1 wiki",
          "active_url_pattern":"^/veduci/.*$"
       }
    },
-   {  
+   {
       "pk":11,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"@active_rounds_task_list",
          "glyphicon":"glyphicon-list",
          "name":"Zadania a vzor\u00e1ky",
          "active_url_pattern":"active_rounds_task_list task_list task_statement solution_statement"
       }
    },
-   {  
+   {
       "pk":12,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"@view_latest_results",
          "glyphicon":"glyphicon-sort-by-attributes",
          "name":"V\u00fdsledky",
          "active_url_pattern":"view_latest_results view_results"
       }
    },
-   {  
+   {
       "pk":13,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"@active_rounds_submit_page",
          "glyphicon":"glyphicon-upload",
          "name":"Odovzd\u00e1vanie",
          "active_url_pattern":"active_rounds_submit_page task_submit_page round_submit_page"
       }
    },
-   {  
+   {
       "pk":14,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"/faq/",
          "glyphicon":"glyphicon-question-sign",
          "name":"FAQ",
          "active_url_pattern":"^/faq/$"
       }
    },
-   {  
+   {
       "pk":15,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"/pravidla/",
          "glyphicon":"glyphicon-list-alt",
          "name":"Pravidl\u00e1",
          "active_url_pattern":"^/pravidla/$"
       }
    },
-   {  
+   {
       "pk":16,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"/organizatori/",
          "glyphicon":"glyphicon-star",
          "name":"Organiz\u00e1tori",
          "active_url_pattern":"^/organizatori/$"
       }
    },
-   {  
+   {
       "pk":17,
       "model":"menu.menuitem",
-      "fields":{  
+      "fields":{
          "url":"https://liahen.ksp.sk/",
          "glyphicon":"glyphicon-new-window",
          "name":"Liahe\u0148",
@@ -149,13 +149,13 @@
          "active_url_pattern":"view_diplomas"
       }
    },
-   {  
+   {
       "pk":1,
       "model":"menu.menugroup",
-      "fields":{  
+      "fields":{
          "site":1,
          "position":0,
-         "items":[  
+         "items":[
             4,
             5,
             6
@@ -164,13 +164,13 @@
          "staff_only":false
       }
    },
-   {  
+   {
       "pk":2,
       "model":"menu.menugroup",
-      "fields":{  
+      "fields":{
          "site":1,
          "position":1,
-         "items":[  
+         "items":[
             10,
             18
          ],
@@ -178,13 +178,13 @@
          "staff_only":true
       }
    },
-   {  
+   {
       "pk":3,
       "model":"menu.menugroup",
-      "fields":{  
+      "fields":{
          "site":1,
          "position":2,
-         "items":[  
+         "items":[
             11,
             12,
             13
@@ -193,13 +193,13 @@
          "staff_only":false
       }
    },
-   {  
+   {
       "pk":4,
       "model":"menu.menugroup",
-      "fields":{  
+      "fields":{
          "site":1,
          "position":3,
-         "items":[  
+         "items":[
             7,
             8,
             9
@@ -208,13 +208,13 @@
          "staff_only":false
       }
    },
-   {  
+   {
       "pk":5,
       "model":"menu.menugroup",
-      "fields":{  
+      "fields":{
          "site":1,
          "position":4,
-         "items":[  
+         "items":[
             14,
             15,
             16,
@@ -224,13 +224,13 @@
          "staff_only":false
       }
    },
-   {  
+   {
       "pk":6,
       "model":"menu.menugroup",
-      "fields":{  
+      "fields":{
          "site":2,
          "position":0,
-         "items":[  
+         "items":[
             4,
             5,
             6
@@ -239,13 +239,13 @@
          "staff_only":false
       }
    },
-   {  
+   {
       "pk":7,
       "model":"menu.menugroup",
-      "fields":{  
+      "fields":{
          "site":2,
          "position":1,
-         "items":[  
+         "items":[
             10,
             18
          ],
@@ -253,13 +253,13 @@
          "staff_only":true
       }
    },
-   {  
+   {
       "pk":8,
       "model":"menu.menugroup",
-      "fields":{  
+      "fields":{
          "site":2,
          "position":2,
-         "items":[  
+         "items":[
             11,
             12,
             13
@@ -268,13 +268,13 @@
          "staff_only":false
       }
    },
-   {  
+   {
       "pk":9,
       "model":"menu.menugroup",
-      "fields":{  
+      "fields":{
          "site":2,
          "position":3,
-         "items":[  
+         "items":[
             7,
             8,
             9
@@ -283,13 +283,13 @@
          "staff_only":false
       }
    },
-   {  
+   {
       "pk":10,
       "model":"menu.menugroup",
-      "fields":{  
+      "fields":{
          "site":2,
          "position":4,
-         "items":[  
+         "items":[
             14,
             15,
             16,

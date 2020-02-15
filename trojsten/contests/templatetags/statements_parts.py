@@ -3,7 +3,7 @@
 from django import template
 from django.conf import settings
 from django.utils import timezone
-from django.utils.translation import ungettext as _
+from django.utils.translation import ngettext
 
 from trojsten.contests.models import Category, Task
 from trojsten.results.manager import get_results_tags_for_rounds
@@ -90,16 +90,16 @@ def show_progress(context, round, results=False):
 def progress_time(delta):
     if delta.days >= 1:
         count = delta.days
-        return _("%(count)d day", "%(count)d days", count) % {"count": count}
+        return ngettext("%(count)d day", "%(count)d days", count) % {"count": count}
     elif delta.seconds // 3600 >= 1:
         count = delta.seconds // 3600
-        return _("%(count)d hour", "%(count)d hours", count) % {"count": count}
+        return ngettext("%(count)d hour", "%(count)d hours", count) % {"count": count}
     elif delta.seconds // 60 >= 1:
         count = delta.seconds // 60
-        return _("%(count)d minute", "%(count)d minutes", count) % {"count": count}
+        return ngettext("%(count)d minute", "%(count)d minutes", count) % {"count": count}
     else:
         count = delta.seconds
-        return _("%(count)d second", "%(count)d seconds", count) % {"count": count}
+        return ngettext("%(count)d second", "%(count)d seconds", count) % {"count": count}
 
 
 @register.filter

@@ -909,12 +909,12 @@ class AllSubmitsListTest(TestCase):
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         self.start_time = timezone.now() + timezone.timedelta(-10)
         self.end_time = timezone.now() + timezone.timedelta(10)
-        semester = Semester.objects.create(
+        self.semester = Semester.objects.create(
             number=1, name="Test semester", competition=competition, year=1
         )
-        round = Round.objects.create(
+        self.round = Round.objects.create(
             number=1,
-            semester=semester,
+            semester=self.semester,
             visible=True,
             solutions_visible=False,
             start_time=self.start_time,
@@ -923,12 +923,13 @@ class AllSubmitsListTest(TestCase):
         self.task = Task.objects.create(
             number=1,
             name="Test task",
-            round=round,
+            round=self.round,
             has_testablezip=True,
             description_points_visible=True,
         )
+
         self.task_nopoints = Task.objects.create(
-            number=2, name="Test task", round=round, has_testablezip=True
+            number=2, name="Test task", round=self.round, has_testablezip=True
         )
 
     def test_redirect_to_login(self):
@@ -1000,6 +1001,23 @@ class AllSubmitsListTest(TestCase):
             testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
             points=0,
         )
+
+        round2 = Round.objects.create(number=2, semester=self.semester, visible=False)
+
+        response = self.client.get(self.url)
+        self.assertContains(response, self.round)
+        self.assertNotContains(response, round2)
+
+    def test_invisible_round(self):
+        self.client.force_login(self.non_staff_user)
+        Submit.objects.create(
+            task=self.task,
+            user=self.non_staff_user,
+            submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_IN_QUEUE,
+            points=0,
+        )
+
         Submit.objects.create(
             task=self.task_nopoints,
             user=self.non_staff_user,
