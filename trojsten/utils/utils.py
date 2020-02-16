@@ -2,8 +2,31 @@ import json
 from datetime import time
 from decimal import Decimal
 
+from django.conf import settings
 from django.http import HttpResponse
 from django.utils import timezone
+
+
+def get_progressbar_data(start, end):
+    full = end - start
+    remaining = end - timezone.now()
+    elapsed = full - remaining
+    percent = 100 * elapsed.days // full.days if full.days > 0 else 100
+    if remaining.days <= settings.ROUND_PROGRESS_DANGER_DAYS:
+        progressbar_class = settings.ROUND_PROGRESS_DANGER_CLASS
+    elif remaining.days <= settings.ROUND_PROGRESS_WARNING_DAYS:
+        progressbar_class = settings.ROUND_PROGRESS_WARNING_CLASS
+    else:
+        progressbar_class = settings.ROUND_PROGRESS_DEFAULT_CLASS
+    return {
+        "start": start,
+        "end": end,
+        "full": full,
+        "remaining": remaining,
+        "elapsed": elapsed,
+        "percent": percent,
+        "progressbar_class": progressbar_class,
+    }
 
 
 def is_true(value):
