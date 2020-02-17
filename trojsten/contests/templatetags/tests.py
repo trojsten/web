@@ -10,6 +10,7 @@ class ProgressBarTest(TestCase):
         self.template = Template(
             """
             {% load statements_parts %}
+            {% load progressbar %}
             {{ remaining|progress_time }}
             """
         )

@@ -230,6 +230,7 @@ INSTALLED_APPS = (
     "trojsten.dbsanitizer",
     "trojsten.login",
     "trojsten.schools",
+    "trojsten.polls",
     "trojsten.contact_form",
     "trojsten.notifications.apps.NotificationsConfig",
     "django_countries",
