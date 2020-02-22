@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-03 20:56+0100\n"
+"POT-Creation-Date: 2020-01-04 18:11+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
 msgid "Subject"
@@ -592,6 +592,26 @@ msgstr ""
 "                    Heslo si môžeš zmeniť <a href=\"%(passwd_url)s\">tu</"
 "a>.\n"
 "                "
+
+#, python-brace-format
+msgid "Answer \"{answer}\" to question \"{question}\""
+msgstr "Odpoveď \"{answer}\" na otázku \"{question}\""
+
+#, python-brace-format
+msgid "Vote for {answer}"
+msgstr "Hlas pre {answer}"
+
+msgid "A vote of this user for this question already exists."
+msgstr "Hlas tohto užívateľa pre túto otázku už existuje."
+
+msgid "You need to sign in in order to vote."
+msgstr "Pre hlasovanie sa musíš prihlásiť."
+
+msgid "This poll has already finished and no more voting is possible."
+msgstr "V tejto ankete už nie je možné hlasovať."
+
+msgid "Invalid vote."
+msgstr "Neplatný hlas."
 
 #, python-format
 msgid "File must be a ZIP archive: %s"
