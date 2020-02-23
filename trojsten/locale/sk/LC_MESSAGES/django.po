@@ -62,6 +62,9 @@ msgstr "Zaslať opravovateľom notifikáciu o submite popisu"
 msgid "Send notification to reviewers about new code submit"
 msgstr "Zaslať opravovateľom notifikáciu o submite kódu"
 
+msgid "Show description points"
+msgstr "Zobrazovať body za popis vo výsledkovke"
+
 msgid "task"
 msgstr "úloha"
 
@@ -89,6 +92,13 @@ msgstr "Pridelení ľudia"
 #, python-format
 msgid "Round %(round)s has started!"
 msgstr "Kolo %(round)s začalo!"
+
+#, python-format
+msgid ""
+"Your description for \"%(task)s\" has been reviewed. You earned %(points)d "
+"points!"
+msgstr ""
+"Tvoj popis úlohy \"%(task)s\" bol opravený. Získal si %(points)d bodov!"
 
 msgid "Dashboard"
 msgstr "Nástenka"
@@ -717,6 +727,9 @@ msgstr ""
 msgid "Your submit was reviewed"
 msgstr "Ohodnotenie submitu"
 
+msgid "Your submit was updated"
+msgstr "Aktualizázia submitu"
+
 msgid "New round started"
 msgstr "Začiatok nového kola"
 
@@ -768,10 +781,11 @@ msgstr "Nahrať súbor môžeš len k popisom."
 
 #, python-format
 msgid ""
-"Your description for \"%(task)s\" has been reviewed. You earned %(points)d "
-"points!"
+"Points for your description for \"%(task)s\" were updated to %(points)d "
+"points"
 msgstr ""
-"Tvoj popis úlohy \"%(task)s\" bol opravený. Získal si %(points)d bodov!"
+"Tvoje body za popis úlohy \"%(task)s\" boli upravené. Získal si %(points)d "
+"bodov."
 
 msgid "My submitted tasks"
 msgstr "Moje odovzdané úlohy"

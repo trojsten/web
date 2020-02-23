@@ -35,6 +35,14 @@ def show_submit_list(task, user, show_only_source=False):
     data["constants"] = constants
     data["show_only_source"] = show_only_source
     submits = Submit.objects.filter(task=task, user=user)
+
+    # Hide reviewed descriptions when description_points_visible is disabled
+    if not task.description_points_visible:
+        submits = submits.exclude(
+            submit_type=constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED,
+        )
+
     data["submits"] = {
         submit_type: submits.filter(submit_type=submit_type).order_by("-time")
         for submit_type, _ in constants.SUBMIT_TYPES
