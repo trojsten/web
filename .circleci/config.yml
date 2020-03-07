@@ -2,7 +2,7 @@ version: 2
 
 .base: &base
   docker:
-    - image: trojsten/web-base:latest
+    - image: trojsten/web-test:latest
     - image: postgres:9.5
       environment:
         POSTGRES_DB: trojsten
@@ -23,9 +23,9 @@ jobs:
             - ~/web
       - restore_cache:
           keys:
-            - v4-dependencies-{{ checksum "poetry.lock" }}
+            - v5-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
       - run:
           name: install dependencies
           command: |
@@ -35,7 +35,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-{{ checksum "poetry.lock" }}
+          key: v5-dependencies-{{ checksum "poetry.lock" }}
   test:
     <<: *base
     environment:
@@ -48,9 +48,9 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v4-dependencies-{{ checksum "poetry.lock" }}
+            - v5-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
       - run:
           name: run tests
           command: |
@@ -69,9 +69,9 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v4-dependencies-{{ checksum "poetry.lock" }}
+            - v5-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
       - run:
           name: flake8
           command: |
@@ -86,9 +86,9 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v4-dependencies-{{ checksum "poetry.lock" }}
+            - v5-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
       - run:
           name: check-migrations
           command: |
@@ -103,9 +103,9 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v4-dependencies-{{ checksum "poetry.lock" }}
+            - v5-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
       - run:
           name: black
           command: |
@@ -118,9 +118,9 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-            - v4-dependencies-{{ checksum "poetry.lock" }}
+            - v5-dependencies-{{ checksum "poetry.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
       - run:
           name: isort
           command: |

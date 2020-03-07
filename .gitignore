@@ -1,9 +1,10 @@
 .env
+production.env
 *.log
 *.pot
 *.py[co]
 local_settings.py
-media/*
+/media/*
 /static/*
 trojsten/statements/*
 version.txt

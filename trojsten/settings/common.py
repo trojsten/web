@@ -298,7 +298,11 @@ LOGGING = {
         "console": {"level": "DEBUG", "class": "logging.StreamHandler", "formatter": "simple"},
     },
     "loggers": {
-        "django.request": {"handlers": ["mail_admins"], "level": "ERROR", "propagate": True},
+        "django.request": {
+            "handlers": ["mail_admins", "console"],
+            "level": "ERROR",
+            "propagate": True,
+        },
         "management_commands": {"handlers": ["console"], "level": "INFO", "propagate": True},
     },
 }
@@ -311,6 +315,10 @@ LOGIN_URL = "/ucet/login/"
 LOGIN_ERROR_URL = "/ucet/login/"
 LOGIN_REDIRECT_URL = "/ucet/"
 TROJSTEN_LOGIN_PROVIDER_URL = env("TROJSTENWEB_LOGIN_PROVIDER_URL", "https://login.trojsten.sk")
+# This is for internal bakend calls.
+TROJSTEN_LOGIN_PROVIDER_INTERNAL_URL = env(
+    "TROJSTENWEB_LOGIN_PROVIDER_INTERNAL_URL", TROJSTEN_LOGIN_PROVIDER_URL
+)
 
 #
 # Included packages settings

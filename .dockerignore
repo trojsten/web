@@ -1,4 +1,69 @@
 .git
-.env
 .gitignore
 .dockerignore
+
+.env
+production.env
+*.log
+*.pot
+*.py[co]
+local_settings.py
+/media/*
+/static/*
+trojsten/statements/*
+version.txt
+.venv
+.coverage
+dist
+*.egg-info
+
+# locale
+*.mo
+
+#nodejs
+**/node_modules/**
+npm-debug.log
+
+# Vim-specific
+.*.swp
+Session.vim
+
+# Sublime-specific
+*.sublime-project
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/
+
+# PyLint
+.pylintrc
+
+# IntelliJ editors
+*.idea
+*.iml
+
+# db dump
+*archiv.ksp.sk/*
+
+# Dev only files
+/after_pull.sh
+/.circleci/
+/.codeclimate.yml
+/css/
+/.csslintrc
+/data/
+/design/
+/dist/
+/docker-compose.prod.yml
+/docker-compose.yml
+/.eslintignore
+/.eslintrc
+/fabfile.py
+/.gitlab-ci.yml
+/.isort.cfg
+/LICENSE
+/.pre-commit-config.yaml
+/production.example.env*
+/run_login.sh*
+/setup.cfg
+/version.txt*

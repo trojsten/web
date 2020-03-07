@@ -6,8 +6,8 @@ class TrojstenOAuth2(BaseOAuth2):
     name = "trojsten"
     ID_KEY = "id"
     AUTHORIZATION_URL = "%s/oauth/authorize/" % settings.TROJSTEN_LOGIN_PROVIDER_URL
-    ACCESS_TOKEN_URL = "%s/oauth/token/" % settings.TROJSTEN_LOGIN_PROVIDER_URL
-    USER_DATA_URL = "%s/api/me/" % settings.TROJSTEN_LOGIN_PROVIDER_URL
+    ACCESS_TOKEN_URL = "%s/oauth/token/" % settings.TROJSTEN_LOGIN_PROVIDER_INTERNAL_URL
+    USER_DATA_URL = "%s/api/me/" % settings.TROJSTEN_LOGIN_PROVIDER_INTERNAL_URL
     ACCESS_TOKEN_METHOD = "POST"
     REDIRECT_STATE = False
     EXTRA_DATA = [("id", "id")]
