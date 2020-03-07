@@ -13,10 +13,12 @@ from django.utils.translation import ugettext_lazy as _
 from news.models import Entry as NewsEntry
 from wiki.models import Article, ArticleRevision, URLPath
 
+import trojsten.submit.constants as submit_constants
 from trojsten.contests import constants
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.notifications.models import Notification
 from trojsten.people.models import User
+from trojsten.submit.models import Submit
 from trojsten.utils.test_utils import TestNonFileSystemStorage, get_noexisting_id
 
 
@@ -264,6 +266,47 @@ class TaskListTests(TestCase):
         response = self.client.get(self.url)
         # @ToDo: translations
         self.assertContains(response, "Test task")
+
+    def test_my_points_hidden(self):
+        task = Task.objects.create(
+            number=1,
+            name="Test task",
+            round=self.round,
+            description_points=12,
+            has_description=True,
+        )
+        Submit.objects.create(
+            task=task,
+            user=self.nonstaff_user,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            points=5,
+        )
+
+        self.client.force_login(self.nonstaff_user)
+        response = self.client.get(self.url)
+        self.assertContains(response, "popis:&nbsp;??")
+
+    def test_my_points_visible(self):
+        task = Task.objects.create(
+            number=1,
+            name="Test task",
+            round=self.round,
+            description_points=12,
+            description_points_visible=True,
+            has_description=True,
+        )
+        Submit.objects.create(
+            task=task,
+            user=self.nonstaff_user,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            points=5,
+        )
+
+        self.client.force_login(self.nonstaff_user)
+        response = self.client.get(self.url)
+        self.assertContains(response, "popis:&nbsp;5")
 
 
 @override_settings(
@@ -724,7 +767,7 @@ class DashboardTest(TestCase):
                 self.assertContains(response, "Test news entry %d" % i)
 
 
-class ContestTest(TestCase):
+class RoundNotificationTest(TestCase):
     def setUp(self):
         grad_year = timezone.now().year + 1
         self.user = User.objects.create_user(
@@ -792,3 +835,56 @@ class ContestTest(TestCase):
 
         self.assertTrue(query.exists())
         self.assertEqual(query.count(), 1)
+
+
+class TaskNotificationTest(TestCase):
+    def setUp(self):
+        grad_year = timezone.now().year + 1
+        self.user = User.objects.create_user(
+            username="jozko",
+            first_name="Jozko",
+            last_name="Mrkvicka",
+            password="pass",
+            graduation=grad_year,
+        )
+        self.competition = Competition.objects.create(name="TestCompetition")
+        self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.start_time_old = timezone.now() + timezone.timedelta(-10)
+        self.end_time_new = timezone.now() + timezone.timedelta(10)
+        self.semester = Semester.objects.create(
+            number=1, name="Test semester", competition=self.competition, year=1
+        )
+        self.round = Round.objects.create(
+            number=1,
+            semester=self.semester,
+            visible=True,
+            solutions_visible=False,
+            start_time=self.start_time_old,
+            end_time=self.end_time_new,
+        )
+        self.task = Task.objects.create(number=1, name="Test task", round=self.round)
+
+    def test_show_points(self):
+        Submit.objects.create(
+            task=self.task,
+            user=self.user,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            points=5,
+        )
+        Submit.objects.create(
+            task=self.task,
+            user=self.user,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            points=7,
+        )
+
+        self.assertFalse(Notification.objects.filter(channel="submit_reviewed").exists())
+
+        self.task.description_points_visible = True
+        self.task.save()
+
+        notification = Notification.objects.filter(channel="submit_reviewed")
+        self.assertTrue(notification.exists())
+        self.assertEqual(notification.count(), 1)

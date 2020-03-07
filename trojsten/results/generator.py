@@ -162,7 +162,10 @@ class ResultsGenerator(object):
         """
         cell = row.cells_by_key[submit.task.number]
         if submit.submit_type == submit_constants.SUBMIT_TYPE_DESCRIPTION:
-            if submit.testing_status == submit_constants.SUBMIT_STATUS_REVIEWED:
+            if (
+                submit.testing_status == submit_constants.SUBMIT_STATUS_REVIEWED
+                and submit.task.description_points_visible
+            ):
                 points = submit.user_points
             else:
                 points = c.UNKNOWN_POINTS_SYMBOL
