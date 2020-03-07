@@ -15,7 +15,7 @@ readme = "README.md"
 bs4 = "^0.0.1"
 certifi = "=2015.04.28"
 czech_sort = "^0.4.0"
-django = "^2.1"
+django = "^2.2"
 django-bootstrap-form = "^3.4"
 django-bulk-update = "^2.2"
 django-classy-tags = "^0.9.0"
@@ -47,7 +47,6 @@ first = "^2.0"
 ksp-login = "^0.6.1"
 openpyxl = "<3" # Remove when we upgrade to py3.6+ on beta.
 psycopg2 = "^2.8"
-pymdown-extensions = "<3" # TODO: why?
 python = "^3.5"
 pytz = "^2019.3"
 pyyaml = "^5.1"
@@ -55,7 +54,8 @@ requests = "<=2.15" # to maintain compatibility with old openssl on prod.
 social-auth-app-django = "^3.1"
 trojsten-judge-client = "^1.0"
 Unidecode = "^1.1"
-wiki = "^0.4.5"
+wiki = "^0.5"
+pymdown-extensions = "^5"
 
 [tool.poetry.dev-dependencies]
 bumpversion = "^0.5.3"
