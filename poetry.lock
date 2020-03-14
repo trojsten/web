@@ -281,7 +281,7 @@ description = "Django select2 theme for select input widgets."
 name = "django-easy-select2"
 optional = false
 python-versions = "*"
-version = "1.3.4"
+version = "1.5.6"
 
 [[package]]
 category = "main"
@@ -332,7 +332,7 @@ Django = ">=2.0"
 diff-match-patch = "*"
 
 [package.dependencies.tablib]
-extras = ["xls", "ods", "html", "yaml", "xlsx"]
+extras = ["html", "yaml", "xls", "xlsx", "ods"]
 version = ">=0.14.0"
 
 [[package]]
@@ -1176,7 +1176,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pathlib2", "unittest2", "jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "67aa2daab51510ccf4b4d26eb4931fa5b70fc2eaa3957af6567d13b9ac446f78"
+content-hash = "7db8dffab645eea07a31915195109347d396e6dda0da98a84bdaf05bd1b1559e"
 python-versions = "^3.5"
 
 [metadata.files]
@@ -1311,7 +1311,7 @@ django-dotenv = [
     {file = "django_dotenv-1.4.2-py2.py3-none-any.whl", hash = "sha256:a9b1b40a70bd321acd231926acedb9bd2c5e873e33a1873b34a7276d196a765e"},
 ]
 django-easy-select2 = [
-    {file = "django-easy-select2-1.3.4.tar.gz", hash = "sha256:7cde7dbd4fcccd3de11333f8f1729c13e0b6da6a1f2a6c8d1a2cb8c7567a8a41"},
+    {file = "django-easy-select2-1.5.6.tar.gz", hash = "sha256:d32d46b91028e22afecef66b488ae23a29ab94c2a43bd216bb2cd2094d4be223"},
 ]
 django-favicon = [
     {file = "django-favicon-0.1.3.tar.gz", hash = "sha256:6b2783fceef91c0e0111c0675f87bb80bf381ec00f0c13e52458a032adda1421"},
