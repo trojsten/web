@@ -28,7 +28,8 @@ services:
     environment:
       <<: *webenv
       DJANGO_SETTINGS_MODULE: trojsten.settings.development
-      TROJSTENWEB_LOGIN_PROVIDER_URL: http://login:8047
+      TROJSTENWEB_LOGIN_PROVIDER_URL: http://localhost:8047
+      TROJSTENWEB_LOGIN_PROVIDER_INTERNAL_URL: http://login:8047
     depends_on:
       - db
       - login
