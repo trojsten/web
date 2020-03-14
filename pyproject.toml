@@ -25,7 +25,7 @@ django-cors-headers = "^3.1"
 django-countries = "^5.5"
 django-crispy-forms = "^1.8"
 django-dotenv = "^1.4"
-django-easy-select2 = "<=1.3.4" # TODO: Why?
+django-easy-select2 = "^1.5"
 django-favicon = "^0.1.3"
 django-fluent-comments = "^2.1"
 django-haystack = "^2.8"
