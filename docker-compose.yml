@@ -12,6 +12,7 @@ x-webenv: &webenv
   TROJSTENWEB_DATABASE_URL: db
   TROJSTENWEB_DATABASE_USER: trojsten
   TROJSTENWEB_DATABASE_NAME: trojsten
+  TROJSTENWEB_DATABASE_PASSWORD: trojsten
 
 services:
   db:
@@ -21,6 +22,7 @@ services:
     environment:
       - POSTGRES_USER=trojsten
       - POSTGRES_DB=trojsten
+      - POSTGRES_PASSWORD=trojsten
   web:
     <<: *web
     ports:
