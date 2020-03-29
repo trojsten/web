@@ -88,9 +88,6 @@ def checkout(target):
 
 def pull():
     with cd(env.project_path):
-        if env.build_requirements:
-            run("git reset HEAD requirements*")
-            run("git checkout -- requirements*")
         run("git pull")
 
 
@@ -115,7 +112,7 @@ def install_requirements():
     with cd(env.project_path):
         with prefix("workon %s" % env.virtualenv_name):
             if env.install_poetry:
-                run("pip install poetry")
+                run("pip install poetry -U")
             run("poetry install{}".format("" if env.dev_packages else " --no-dev"))
 
 
