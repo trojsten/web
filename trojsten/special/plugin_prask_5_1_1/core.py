@@ -2,6 +2,7 @@
 
 import codecs
 import os
+import re
 
 """Prask zwarte doos forked from ./plugin_ksp_32_2_1 created by Sysel"""
 
@@ -179,13 +180,45 @@ class Level4(object):
         return cls.DATA[x % 365]
 
 
-class Level5(object):
+# class Level5(object):
+#
+#     TARGET = "5268"
+#
+#     @classmethod
+#     def run(cls, x, try_count):
+#         return str(abs(x - try_count))
 
-    TARGET = "5268"
+
+class Level5(object):
+    TABLE_MATCH = [
+        "pit",
+        "spot",
+        "spate",
+        "slap two",
+        "respite"
+    ]
+
+    TABLE_NEGATIVE = [
+        "pt",
+        "Pot",
+        "peat",
+        "part"
+    ]
+    TARGET = True
 
     @classmethod
     def run(cls, x, try_count):
-        return str(abs(x - try_count))
+        str_x = str(x)
+        match_array = []
+        neg_array = []
+
+        for i in cls.TABLE_MATCH:
+            match_array.append(1 if re.match(r"^" + str_x + "$", i) is not None else -1)
+        for j in cls.TABLE_NEGATIVE:
+            neg_array.append(1 if re.match(r"^" + str_x + "$", j) is None else -1)
+        good = -1 not in match_array and -1 not in neg_array
+
+        return good, match_array, neg_array
 
 
 class Level6(object):

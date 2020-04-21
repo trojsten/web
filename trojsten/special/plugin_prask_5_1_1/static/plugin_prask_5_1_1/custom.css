@@ -1,3 +1,21 @@
 .fixed-width {
   width: 12rem !important;
 }
+
+th {
+  text-align: center;
+}
+
+.left {
+  float: left;
+  background: pink;
+  text-align: center;
+
+}
+
+.right {
+  float: right;
+  background: cyan;
+  text-align: center;
+
+}
