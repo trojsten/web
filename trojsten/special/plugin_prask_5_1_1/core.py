@@ -6,7 +6,7 @@ import re
 
 """Prask zwarte doos forked from ./plugin_ksp_32_2_1 created by Sysel"""
 
-__author__ = "Siegrift"
+__author__ = "SamoM"
 
 
 class Level1(object):
@@ -213,12 +213,15 @@ class Level5(object):
         neg_array = []
 
         for i in cls.TABLE_MATCH:
-            match_array.append(1 if re.match(r"^" + str_x + "$", i) is not None else -1)
+            match_array.append('green' if re.match(str_x, i) is not None else 'red')
         for j in cls.TABLE_NEGATIVE:
-            neg_array.append(1 if re.match(r"^" + str_x + "$", j) is None else -1)
-        good = -1 not in match_array and -1 not in neg_array
+            neg_array.append('blue' if re.match(str_x, j) is None else 'yellow')
+        # TODO 'good' ide ako ma, dokonca aj web ukazuje dobre
+        #   ale match_array, neg_array nefunguje
+        good = 'red' not in match_array and 'yellow' not in neg_array
 
-        return good, match_array, neg_array
+        # return good, match_array, neg_array
+        return good, [1,1,1,1,1], [-1, -1, -1, -1]
 
 
 class Level6(object):

@@ -70,6 +70,8 @@ def run(request, level=1):
 
     _output, match, neg = LEVELS[level].run(_input, userlevel.try_count)
 
+    print(_output, match, neg)
+
     examples_match = [[i, j] for i, j in zip(LEVELS[level].TABLE_MATCH, match)]
     examples_neg = [[i, j] for i, j in zip(LEVELS[level].TABLE_NEGATIVE, neg)]
 

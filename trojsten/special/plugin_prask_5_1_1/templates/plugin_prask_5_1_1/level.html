@@ -182,28 +182,32 @@
 
              <!-- TODO zacinam dorabat vypis tabuliek pre regexy -->
             <!-- MATCH -->
-          <table class="left" style="width:40%">
+
+
+          <div>
+            <table class="left" style="width:40%">
               {% for example, color in examples_match %}
               <tr>
-                  <th bgcolor='{% if color == 1 %}green{% elif color == -1 %}red{% else %}gray{% endif %}'>
-                      {{ example }}
+                  <th bgcolor={{ color }}>
+                      {{ example }} {{ color }} {{ examples_match }}
                   </th>
               </tr>
               {% endfor %}
-          </table>
+            </table>
 
             <!-- NEGATIVE -->
 
-          <table class="right" style="width:40%">
+            <table class="right" style="width:40%">
               {% for example, color in examples_neg %}
               <tr>
-                  <th bgcolor='{% if color == 1 %}blue{% elif color == -1 %}yellow{% else %}gray{% endif %}'>
+                  <th bgcolor='{% if color == 1 %}blue{% elif color %} == -1 %}yellow{% else %}gray{% endif %}'>
 
-                      {{ example }}
+                      {{ example }} {{ color }}
                   </th>
               </tr>
               {% endfor %}
-          </table>
+            </table>
+          </div>
 
           <form class="form-inline" role="form" id="valueForm">
             {% csrf_token %}
@@ -218,12 +222,18 @@
                       placeholder="Zadaj regex"
               >
             </div>
-            <button type="submit" class="btn btn-default">Pošli</button>
+            <button type="submit" class="btn btn-default"
+                    onclick="change_table({{ examples_match }}, {{ examples_neg }})">Pošli</button>
+
+               <!--TODO-->
+
+
+
           </form>
 
-          <div>
-            <p>{{ neg }}</p>
-          </div>
+          <!--<div>-->
+            <!--<p>{{ neg }}</p>-->
+          <!--</div>-->
           <div class="results">
             <table id='resultsTable'>
             </table>
