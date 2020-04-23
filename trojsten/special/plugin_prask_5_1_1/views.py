@@ -22,7 +22,7 @@ def main(request, level=1):
 
     target = LEVELS[level].TARGET
     examples_match = [[i, 0] for i in LEVELS[level].TABLE_MATCH]
-    examples_neg = [[i, 0] for i in LEVELS[level].TABLE_NEGATIVE]
+    examples_neg = [[i, 5] for i in LEVELS[level].TABLE_NEGATIVE]
 
     try_set = []
     for x in userlevel.try_set.order_by("id"):

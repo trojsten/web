@@ -218,10 +218,10 @@ class Level5(object):
             neg_array.append('blue' if re.match(str_x, j) is None else 'yellow')
         # TODO 'good' ide ako ma, dokonca aj web ukazuje dobre
         #   ale match_array, neg_array nefunguje
-        good = 'red' not in match_array and 'yellow' not in neg_array
+        good = 'red' not in match_array     # and 'yellow' not in neg_array
 
-        # return good, match_array, neg_array
-        return good, [1,1,1,1,1], [-1, -1, -1, -1]
+        return good, match_array, neg_array
+        # return good, [1,1,1,1,1], [-1, -1, -1, -1]
 
 
 class Level6(object):
