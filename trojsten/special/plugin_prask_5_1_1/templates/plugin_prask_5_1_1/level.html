@@ -15,7 +15,7 @@
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
   <link href="{% static "plugin_ksp_32_1_1/cover.css" %}" rel="stylesheet">
   <link href="{% static "plugin_ksp_32_1_1/zwarte.css" %}" rel="stylesheet">
-    <!--TODO nacitava akoby stray subor bez left right-->
+    <!--TODO nacitava akoby stary css subor ->  bez left right class-->
   <link href="{% static "plugin_prask_5_1_1/custom.css" %}" rel="stylesheet">
 
   <style id="holderjs-style" type="text/css"></style>
@@ -51,7 +51,7 @@
                   Gratulujeme!<br/>
                   Tvoj regex sa zhoduje s výrazmi tabuľke 1 A ZÁROVEŇ nezhoduje s výrazmi v tabuľke 2.</code>
                   na <span id="try-count">{{ try_count }}</span>
-                  pokus{{ try_count_ending }}.
+                  pokus{{ try_count_ending }}. {{ ma }} {{ne}}
               </p>
           {% else %}
               <p class="lead">
@@ -64,35 +64,17 @@
               </p>
           {% endif %}
 
-             <!-- TODO zacinam dorabat vypis tabuliek pre regexy -->
-            <!-- MATCH -->
+             <!-- TODO dorabanie vypisu tabuliek pre regexy -->
 
 
           <div>
 
-
-            <table id='match' class="left" style="width:40%">
-              <!--{% for example, color in examples_match %}-->
-              <!--<tr>-->
-                  <!--<th bgcolor={{ color }}>-->
-                      <!--{{ example }} {{ color }} {{ examples_match }}-->
-                  <!--</th>-->
-              <!--</tr>-->
-              <!--{% endfor %}-->
-            </table>
+            <!-- MATCH -->
+            <table id='match' class="left" style="width:40%"></table>
 
             <!-- NEGATIVE -->
+            <table id='neg' class="right" style="width:40%"></table>
 
-            <table id='neg' class="right" style="width:40%">
-              <!--{% for example, color in examples_neg %}-->
-              <!--<tr>-->
-                  <!--<th bgcolor='{% if color == 1 %}blue{% elif color %} == -1 %}yellow{% else %}gray{% endif %}'>-->
-
-                      <!--{{ example }} {{ color }}-->
-                  <!--</th>-->
-              <!--</tr>-->
-              <!--{% endfor %}-->
-            </table>
           </div>
 
           <form class="form-inline" role="form" id="valueForm">
@@ -112,6 +94,7 @@
                     onclick="change_table({{ examples_match }}, {{ examples_neg }})">Pošli</button>
 
                <!--TODO-->
+               <!-- po kliku sa nemeni obsah, ale 'good' funguje-->
 
 
 
@@ -151,7 +134,7 @@
   </script>
 
   <!--FIXME my-->
-  <script type="text/javascript">window.change_table({{ match}}, {{ neg }});</script>
+  <script type="text/javascript">window.change_table({{ examples_match}}, {{ examples_neg }});</script>
 
   <script src='{% static "js/bootstrap.min.js" %}'></script>
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->

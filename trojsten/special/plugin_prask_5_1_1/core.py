@@ -207,18 +207,18 @@ class Level5(object):
     TARGET = True
 
     @classmethod
-    def run(cls, x, try_count):
-        str_x = str(x)
+    def run(cls, regex, try_count):
+        regex = str(regex)
         match_array = []
         neg_array = []
 
         for i in cls.TABLE_MATCH:
-            match_array.append('green' if re.match(str_x, i) is not None else 'red')
+            match_array.append('green' if re.match(regex, i) is not None else 'red')
         for j in cls.TABLE_NEGATIVE:
-            neg_array.append('blue' if re.match(str_x, j) is None else 'yellow')
+            neg_array.append('green' if re.match(regex, j) is None else 'red')
         # TODO 'good' ide ako ma, dokonca aj web ukazuje dobre
         #   ale match_array, neg_array nefunguje
-        good = 'red' not in match_array     # and 'yellow' not in neg_array
+        good = 'red' not in match_array     # and 'red' not in neg_array
 
         return good, match_array, neg_array
         # return good, [1,1,1,1,1], [-1, -1, -1, -1]
