@@ -45,3 +45,9 @@ def read_notification(request, notification_id):
     notification.save()
 
     return redirect(notification.url)
+
+
+@login_required
+def read_all_notifications(request):
+    Notification.objects.filter(user=request.user, was_read=False).update(was_read=True)
+    return JsonResponse({"ok": True})
