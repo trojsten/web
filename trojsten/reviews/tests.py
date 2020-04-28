@@ -262,6 +262,17 @@ class ReviewTest(TestCase):
         self.assertNotContains(response, comment)
         self.assertContains(response, multi_line_comment)
 
+    def test_submitted_at_end_of_round(self):
+        self.client.force_login(self.staff)
+        url = reverse(self.url_name, kwargs={"task_pk": self.task.id})
+
+        submit = Submit.objects.create(task=self.task, user=self.user, submit_type=1, points=5)
+        submit.time = self.task.round.end_time
+        submit.save()
+
+        response = self.client.get(url)
+        self.assertContains(response, self.user.get_full_name())
+
 
 @override_settings(SUBMIT_PATH=tempfile.mkdtemp(dir=path.join(path.dirname(__file__), "test_data")))
 class DownloadLatestSubmits(TestCase):
