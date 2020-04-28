@@ -26,7 +26,7 @@
       if (data.unread > 0) {
         $('#notification-box-content').append('<li role="presentation" id="notifications-read-all"><a href="#"><i class="glyphicon glyphicon-remove"></i> Označiť všetky za prečítané</a></li>')
         $("#notifications-read-all").click(() => {
-          $.getJSON(window.TROJSTEN_NOTIFY_READ_ALL_URL, update_data)
+          $.postJSON(window.TROJSTEN_NOTIFY_READ_ALL_URL, update_data)
         })
       }
 
