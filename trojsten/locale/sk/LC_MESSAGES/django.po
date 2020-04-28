@@ -546,8 +546,6 @@ msgstr "Pridať vlastnosť"
 msgid "Choose which competitions would you like to participate in:"
 msgstr "Vyber si súťaže, ktoré chceš riešiť:"
 
-#, fuzzy
-#| msgid "Choose which competitions would you like to participate in:"
 msgid "Choose which events would you like to be notified about:"
 msgstr "Vyber si udalosti, o ktorých chceš dostávať notifikácie:"
 
