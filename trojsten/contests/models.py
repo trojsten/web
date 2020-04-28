@@ -345,6 +345,9 @@ class Task(models.Model):
     email_on_code_submit = models.BooleanField(
         verbose_name=_("Send notification to reviewers about new code submit"), default=False
     )
+    description_points_visible = models.BooleanField(
+        verbose_name=_("Show description points"), default=False
+    )
 
     objects = TaskManager()
 
@@ -356,6 +359,14 @@ class Task(models.Model):
         # All (transitive) foreign keys here should be also added
         # to the select_related list in the TaskManager.
         return "%i. %s, %s" % (self.number, self.name, self.round)
+
+    def __init__(self, *args, **kwargs):
+        super(Task, self).__init__(*args, **kwargs)
+        self.last_saved_description_points_visible = self.description_points_visible
+
+    def save(self, *args, **kwargs):
+        super(Task, self).save(*args, **kwargs)
+        self.last_saved_description_points_visible = self.description_points_visible
 
     def has_submit_type(self, submit_type):
         check_field = {

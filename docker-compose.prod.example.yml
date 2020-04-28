@@ -1,0 +1,98 @@
+version: "3.7"
+x-web: &web
+  image: trojsten/web:latest
+  build:
+    context: .
+    dockerfile: ./docker/prod/Dockerfile
+  env_file:
+    - example.env
+    - production.env
+
+services:
+  db:
+    image: postgres:12-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=trojsten
+      - POSTGRES_DB=trojsten
+  static:
+    <<: *web
+    ports:
+      - "8000:80"
+    command: "nginx -g 'pid /tmp/nginx.pid; daemon off;'"
+  login:
+    <<: *web
+    ports:
+      - "8010:80"
+    depends_on:
+      - db
+    environment:
+      - DJANGO_SETTINGS_MODULE=trojsten.settings.login
+      - TROJSTENWEB_ALLOWED_HOSTS=login;localhost;127.0.0.1;
+  ksp:
+    <<: *web
+    ports:
+      - "8001:80"
+    environment:
+      - DJANGO_SETTINGS_MODULE=trojsten.settings.ksp
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
+    depends_on:
+      - db
+  prask:
+    <<: *web
+    ports:
+      - "8002:80"
+    environment:
+      - DJANGO_SETTINGS_MODULE=trojsten.settings.prask
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
+    depends_on:
+      - db
+  fks:
+    <<: *web
+    ports:
+      - "8003:80"
+    environment:
+      - DJANGO_SETTINGS_MODULE=trojsten.settings.fks
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
+    depends_on:
+      - db
+  kms:
+    <<: *web
+    ports:
+      - "8004:80"
+    environment:
+      - DJANGO_SETTINGS_MODULE=trojsten.settings.kms
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
+    depends_on:
+      - db
+  wiki:
+    <<: *web
+    ports:
+      - "8006:80"
+    environment:
+      - DJANGO_SETTINGS_MODULE=trojsten.settings.wiki
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
+    depends_on:
+      - db
+  ufo:
+    <<: *web
+    ports:
+      - "8007:80"
+    environment:
+      - DJANGO_SETTINGS_MODULE=trojsten.settings.ufo
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
+    depends_on:
+      - db
+  fx:
+    <<: *web
+    ports:
+      - "8008:80"
+    environment:
+      - DJANGO_SETTINGS_MODULE=trojsten.settings.fx
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
+    depends_on:
+      - db
+
+volumes:
+  db_data:

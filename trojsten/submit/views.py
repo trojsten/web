@@ -238,6 +238,9 @@ def all_submits_page(request, submit_type):
         .select_related(
             "task__round", "task__round__semester", "task__round__semester__competition"
         )
+        .exclude(
+            task__description_points_visible=False, testing_status=constants.SUBMIT_STATUS_REVIEWED
+        )
         .order_by(
             "task__round__semester__competition",
             "-task__round__semester__year",

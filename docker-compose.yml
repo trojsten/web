@@ -1,60 +1,55 @@
-version: '3'
+version: "3.7"
+
+x-web: &web
+  image: trojstenweb:latest
+  build:
+    context: .
+    dockerfile: ./docker/dev/Dockerfile
+  volumes:
+    - .:/web
+
+x-webenv: &webenv
+  TROJSTENWEB_DATABASE_URL: db
+  TROJSTENWEB_DATABASE_USER: trojsten
+  TROJSTENWEB_DATABASE_NAME: trojsten
+  TROJSTENWEB_DATABASE_PASSWORD: trojsten
+
 services:
   db:
-    image: postgres:10.1-alpine
+    image: postgres:12-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
-    networks:
-      trojsten:
-        ipv4_address: 10.47.0.2
     environment:
       - POSTGRES_USER=trojsten
       - POSTGRES_DB=trojsten
+      - POSTGRES_PASSWORD=trojsten
   web:
-    image: trojstenweb:latest
+    <<: *web
     ports:
       - "8000:8000"
-    volumes:
-      - .:/web
-    networks:
-      trojsten:
-        ipv4_address: 10.47.0.3
+    environment:
+      <<: *webenv
+      DJANGO_SETTINGS_MODULE: trojsten.settings.development
+      TROJSTENWEB_LOGIN_PROVIDER_URL: http://localhost:8047
+      TROJSTENWEB_LOGIN_PROVIDER_INTERNAL_URL: http://login:8047
     depends_on:
       - db
       - login
-    environment:
-      - DJANGO_SETTINGS_MODULE=trojsten.settings.development
-      - TROJSTENWEB_DATABASE_URL=db
-      - TROJSTENWEB_DATABASE_USER=trojsten
-      - TROJSTENWEB_DATABASE_NAME=trojsten
-      - TROJSTENWEB_LOGIN_PROVIDER_URL=http://10.47.0.4:8047
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python -Wa manage.py runserver 0.0.0.0:8000
   login:
-    build: .
-    image: trojstenweb:latest
+    <<: *web
     ports:
       - "8047:8047"
     volumes:
       - .:/web
-    networks:
-      trojsten:
-        ipv4_address: 10.47.0.4
     depends_on:
       - db
     environment:
-      - DJANGO_SETTINGS_MODULE=trojsten.settings.login_dev
-      - TROJSTENWEB_DEVELOPMENT_SITE_ID=10
-      - TROJSTENWEB_DATABASE_URL=db
-      - TROJSTENWEB_DATABASE_USER=trojsten
-      - TROJSTENWEB_DATABASE_NAME=trojsten
-      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;10.47.0.4
-    command: python manage.py runserver 0.0.0.0:8047
+      <<: *webenv
+      DJANGO_SETTINGS_MODULE: trojsten.settings.login_dev
+      TROJSTENWEB_DEVELOPMENT_SITE_ID: 10
+      TROJSTENWEB_ALLOWED_HOSTS: localhost;127.0.0.1;login
+    command: python -Wa manage.py runserver 0.0.0.0:8047
 
 volumes:
   db_data:
-
-networks:
-  trojsten:
-    ipam:
-      config:
-        - subnet: 10.47.0.0/16

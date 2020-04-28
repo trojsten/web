@@ -9,6 +9,7 @@ from django.core.files.storage import FileSystemStorage
 from django.http import UnreadablePostError
 from django.utils.translation import ugettext_lazy as _
 from judge_client import client
+from pymdownx import emoji
 
 import trojsten.special.installed_apps
 
@@ -110,7 +111,6 @@ SITES = site_config.SITES
 
 NAVBAR_SITES = []
 
-
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
@@ -144,7 +144,6 @@ STATIC_ROOT = env("TROJSTENWEB_STATIC_ROOT", os.path.join(PROJECT_DIR, "static")
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = env("TROJSTENWEB_STATIC_URL", "/static/")
-
 
 # Additional locations of static files
 STATICFILES_DIRS = ()
@@ -230,6 +229,7 @@ INSTALLED_APPS = (
     "trojsten.dbsanitizer",
     "trojsten.login",
     "trojsten.schools",
+    "trojsten.polls",
     "trojsten.contact_form",
     "trojsten.notifications.apps.NotificationsConfig",
     "django_countries",
@@ -297,7 +297,11 @@ LOGGING = {
         "console": {"level": "DEBUG", "class": "logging.StreamHandler", "formatter": "simple"},
     },
     "loggers": {
-        "django.request": {"handlers": ["mail_admins"], "level": "ERROR", "propagate": True},
+        "django.request": {
+            "handlers": ["mail_admins", "console"],
+            "level": "ERROR",
+            "propagate": True,
+        },
         "management_commands": {"handlers": ["console"], "level": "INFO", "propagate": True},
     },
 }
@@ -310,6 +314,10 @@ LOGIN_URL = "/ucet/login/"
 LOGIN_ERROR_URL = "/ucet/login/"
 LOGIN_REDIRECT_URL = "/ucet/"
 TROJSTEN_LOGIN_PROVIDER_URL = env("TROJSTENWEB_LOGIN_PROVIDER_URL", "https://login.trojsten.sk")
+# This is for internal bakend calls.
+TROJSTEN_LOGIN_PROVIDER_INTERNAL_URL = env(
+    "TROJSTENWEB_LOGIN_PROVIDER_INTERNAL_URL", TROJSTEN_LOGIN_PROVIDER_URL
+)
 
 #
 # Included packages settings
@@ -353,9 +361,27 @@ OAUTH2_PROVIDER = {
 }
 
 # Common markdown settings
-MARKDOWN_EXTENSIONS = ["pymdownx.github", "attr_list", "codehilite", "sane_lists"]
+MARKDOWN_EXTENSIONS = [
+    "attr_list",
+    "codehilite",
+    "sane_lists",
+    "markdown.extensions.tables",
+    "pymdownx.magiclink",
+    "pymdownx.betterem",
+    "pymdownx.tilde",
+    "pymdownx.emoji",
+    "pymdownx.tasklist",
+    "pymdownx.superfences",
+]
 
-MARKDOWN_EXTENSIONS_CONFIGS = {"pymdownx.github": {"no_nl2br": True}}
+MARKDOWN_EXTENSIONS_CONFIGS = {
+    "pymdownx.tilde": {"subscript": False},
+    "pymdownx.emoji": {
+        "emoji_index": emoji.gemoji,
+        "alt": "unicode",
+        "options": {"attributes": {"align": "absmiddle", "height": "20px", "width": "20px"}},
+    },
+}
 
 MARKDOWN_SETTINGS = {
     "safe_mode": False,
@@ -478,5 +504,6 @@ EDITOR_CONFIG = {"mode": "python", "lineWrapping": False, "lineNumbers": True, "
 
 TROJSTEN_NOTIFICATION_CHANNELS = [
     {"key": "submit_reviewed", "name": _("Your submit was reviewed"), "icon": "thumbs-up"},
+    {"key": "submit_updated", "name": _("Your submit was updated"), "icon": "pencil"},
     {"key": "round_started", "name": _("New round started"), "icon": "plus"},
 ]

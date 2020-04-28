@@ -266,7 +266,12 @@ class KMSRulesTest(TestCase):
         self.tasks = []
         for i in range(1, 11):
             self.tasks.append(
-                Task.objects.create(number=i, name="Test task {}".format(i), round=self.round)
+                Task.objects.create(
+                    number=i,
+                    name="Test task {}".format(i),
+                    round=self.round,
+                    description_points_visible=True,
+                )
             )
             cat = []
             if i <= 7:
@@ -512,7 +517,12 @@ class KSPRulesOneUserTest(TestCase):
 
         self.tasks = []
         for i in range(1, 9):
-            task = Task.objects.create(number=i, name="Test task {}".format(i), round=self.round)
+            task = Task.objects.create(
+                number=i,
+                name="Test task {}".format(i),
+                round=self.round,
+                description_points_visible=True,
+            )
             task.save()
             self.tasks.append(task)
 

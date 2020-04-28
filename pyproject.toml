@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "trojstenweb"
-version = "2.4.2"
+version = "2.5.1"
 description = "Trojsten web"
 authors = ["Trojsten Tech Team <tech.group@trojsten.sk>"]
 license = "MIT"
@@ -15,7 +15,7 @@ readme = "README.md"
 bs4 = "^0.0.1"
 certifi = "=2015.04.28"
 czech_sort = "^0.4.0"
-django = "^2.1"
+django = "^2.2"
 django-bootstrap-form = "^3.4"
 django-bulk-update = "^2.2"
 django-classy-tags = "^0.9.0"
@@ -25,11 +25,11 @@ django-cors-headers = "^3.1"
 django-countries = "^5.5"
 django-crispy-forms = "^1.8"
 django-dotenv = "^1.4"
-django-easy-select2 = "<=1.3.4" # TODO: Why?
+django-easy-select2 = "^1.5"
 django-favicon = "^0.1.3"
 django-fluent-comments = "^2.1"
 django-haystack = "^2.8"
-django-import-export = "^1.2"
+django-import-export = "^2"
 django-mathfilters = "^0.4.0"
 django-oauth-toolkit = "<1.2.0"
 django-recaptcha2 = "^1.4"
@@ -47,7 +47,6 @@ first = "^2.0"
 ksp-login = "^0.6.1"
 openpyxl = "<3" # Remove when we upgrade to py3.6+ on beta.
 psycopg2 = "^2.8"
-pymdown-extensions = "<3" # TODO: why?
 python = "^3.5"
 pytz = "^2019.3"
 pyyaml = "^5.1"
@@ -55,7 +54,8 @@ requests = "<=2.15" # to maintain compatibility with old openssl on prod.
 social-auth-app-django = "^3.1"
 trojsten-judge-client = "^1.0"
 Unidecode = "^1.1"
-wiki = "^0.4.5"
+wiki = "^0.5"
+pymdown-extensions = "^5"
 
 [tool.poetry.dev-dependencies]
 bumpversion = "^0.5.3"
