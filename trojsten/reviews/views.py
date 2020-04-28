@@ -212,8 +212,8 @@ def download_all_submits(request, task_pk, download_reviews=False):
                         ]
                     if submit.protocol:
                         zipper.writestr(
-                            submit.protocol,
                             submit_protocol_download_filename(submit, description_submit_id, i),
+                            submit.protocol,
                         )
                     else:
                         errors += [_("Missing protocol of user %s") % submit.user.get_full_name()]
