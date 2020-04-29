@@ -1,6 +1,7 @@
 # coding: utf-8
 import os
 
+import magic
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -36,13 +37,13 @@ class DescriptionSubmitForm(forms.Form):
 
     def clean_submit_file(self):
         sfile = self.cleaned_data["submit_file"]
-        extension = os.path.splitext(sfile.name)[1]
-        if extension.lower() not in settings.SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS:
+        mimetype = magic.from_buffer(self.cleaned_data["submit_file"].read(2048), mime=True)
+        if mimetype not in settings.SUBMIT_DESCRIPTION_ALLOWED_MIMETYPES:
             raise forms.ValidationError(
                 format_html(
-                    "Zaslaný súbor má nepodporovanú príponu {extension}<br />"
-                    "Podporované prípony sú {allowed}",
-                    extension=escape(extension),
+                    "Zaslaný súbor má nepodporovaný formát: {mimetype}<br />"
+                    "Podporované sú súbory {allowed}",
+                    mimetype=escape(mimetype),
                     allowed=escape(" ".join(settings.SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS)),
                 )
             )

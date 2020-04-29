@@ -56,6 +56,7 @@ trojsten-judge-client = "^1.0"
 Unidecode = "^1.1"
 wiki = "^0.5"
 pymdown-extensions = "^5"
+python-magic = "^0.4.15"
 
 [tool.poetry.dev-dependencies]
 bumpversion = "^0.5.3"

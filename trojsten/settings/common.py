@@ -466,6 +466,14 @@ SUBMIT_PATH = env(
     "TROJSTENWEB_SUBMIT_PATH", os.path.join(PROJECT_DIR, PROJECT_MODULE_NAME, "submits")
 )
 SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS = [".pdf", ".txt", ".md", ".rtf", ".doc", ".docx", ".odt"]
+SUBMIT_DESCRIPTION_ALLOWED_MIMETYPES = [
+    "application/pdf",
+    "text/plain",
+    "text/rtf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.oasis.opendocument.text",
+]
 UPLOADED_FILENAME_MAXLENGTH = int(env("TROJSTENWEB_UPLOADED_FILENAME_MAXLENGTH", "100000"))
 PROTOCOL_FILE_EXTENSION = env("TROJSTENWEB_PROTOCOL_FILE_EXTENSION", ".protokol")
 TESTER_URL = env("TROJSTENWEB_TESTER_URL", "experiment")
