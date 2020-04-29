@@ -99,22 +99,24 @@
         </td>
         <td style="text-align: center;">
             {% if task.description_points > 0 %}
-                {% if task_points.description_pending or task_points.description_points %}
-                <i class="glyphicon glyphicon-comment" style="color: limegreen;" data-toggle="tooltip" data-placement="top" data-original-title="popis: odovzdaný"></i>
+                {% if task_points.description_pending %}
+                <i class="glyphicon glyphicon-comment task-status-submitted" data-toggle="tooltip" data-placement="top" data-original-title="popis: čaká na opravenie"></i>
+                {% elif task_points.submitted_description %}
+                <i class="glyphicon glyphicon-comment task-status-ok" data-toggle="tooltip" data-placement="top" data-original-title="popis: opravený"></i>
                 {% else %}
-                <i class="glyphicon glyphicon-comment text-muted" data-toggle="tooltip" data-placement="top" data-original-title="popis: neodovzdaný"></i>
+                <i class="glyphicon glyphicon-comment task-status-empty" data-toggle="tooltip" data-placement="top" data-original-title="popis: neodovzdaný"></i>
                 {% endif %}
             {% endif %}
 
             {% if task.source_points > 0 %}
                 {% if task_points.submitted_source %}
                 {% if task_points.source_points == task.source_points %}
-                <i class="glyphicon glyphicon-floppy-disk" style="color: limegreen;" data-toggle="tooltip" data-placement="top" data-original-title="program: odovzdaný ({{ task_points.source_points }}b)"></i>
+                <i class="glyphicon glyphicon-floppy-disk task-status-ok" data-toggle="tooltip" data-placement="top" data-original-title="program: odovzdaný ({{ task_points.source_points }}b)"></i>
                 {% else %}
-                <i class="glyphicon glyphicon-floppy-disk text-warning" data-toggle="tooltip" data-placement="top" data-original-title="program: odovzdaný ({{ task_points.source_points }}b)"></i>
+                <i class="glyphicon glyphicon-floppy-disk task-status-wrong"  data-toggle="tooltip" data-placement="top" data-original-title="program: odovzdaný ({{ task_points.source_points }}b)"></i>
                 {% endif %}
                 {% else %}
-                <i class="glyphicon glyphicon-floppy-disk text-muted" data-toggle="tooltip" data-placement="top" data-original-title="program: neodovzdaný"></i>
+                <i class="glyphicon glyphicon-floppy-disk task-status-empty" data-toggle="tooltip" data-placement="top" data-original-title="program: neodovzdaný"></i>
                 {% endif %}
             {% endif %}
         </td>

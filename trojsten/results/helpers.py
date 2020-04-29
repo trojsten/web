@@ -17,6 +17,7 @@ class TaskPoints(object):
         self.description_points = 0
         self.submitted = False
         self.submitted_source = False
+        self.submitted_description = False
         self.description_pending = False
 
     @property
@@ -30,10 +31,12 @@ class TaskPoints(object):
 
     def set_description_points(self, points):
         self.submitted = True
+        self.submitted_description = True
         self.description_points = points
 
     def set_description_pending(self):
         self.submitted = True
+        self.submitted_description = True
         self.description_pending = True
         self.description_points = 0
 
