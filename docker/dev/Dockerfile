@@ -17,6 +17,8 @@ COPY ./fonts/* /usr/share/fonts/
 
 RUN fc-cache -f -v
 
+RUN pip install pip==20.0.2
+
 COPY ./pyproject.toml /install/
 COPY ./poetry.lock /install/
 
