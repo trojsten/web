@@ -133,9 +133,9 @@ def submit_directory(submit, order=0):
 
 
 def submit_download_filename(submit, order=0):
-    extension = submit.filename.split(".")[-1]
+    _, extension = os.path.splitext(os.path.basename(submit.filepath))
     name = unidecode(submit.user.get_full_name().lower().replace(" ", "_"))
-    return "%03d_%s_%s/%s.%s" % (order, name, submit.pk, name, extension)
+    return "%03d_%s_%s/%s%s" % (order, name, submit.pk, name, extension)
 
 
 def submit_source_download_filename(submit, description_submit_id, order=0):
