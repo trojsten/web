@@ -288,6 +288,14 @@ class DownloadLatestSubmits(TestCase):
         )
         self.staff.is_staff = True
         self.staff.save()
+        self.protocol = """<protokol><runLog>
+        <test><name>0.sample.a.in</name><resultCode>1</resultCode><resultMsg>OK</resultMsg><time>28</time></test>
+        <test><name>0.sample.b.in</name><resultCode>1</resultCode><resultMsg>OK</resultMsg><time>28</time></test>
+        <score>100</score><details>
+        Score: 100
+        </details><finalResult>1</finalResult><finalMessage>OK (OK: 100 %)</finalMessage>
+        </runLog></protokol>
+        """
 
         group = Group.objects.create(name="Test Group")
         group.user_set.add(self.staff)
@@ -414,11 +422,14 @@ class DownloadLatestSubmits(TestCase):
             points=5,
             submit_type=submit_constants.SUBMIT_TYPE_SOURCE,
             filepath=path.join(path.dirname(__file__), "test_data", "submits", "source.cpp"),
+            protocol=self.protocol,
+            protocol_id="test_id_47",
         )
         submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
         submit.save()
 
         submit_file = helpers.submit_source_download_filename(submit, desc_submit.id, 0)
+        protocol_file = helpers.submit_protocol_download_filename(submit, desc_submit.id, 0)
 
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={"task_pk": self.task.id})
@@ -428,6 +439,7 @@ class DownloadLatestSubmits(TestCase):
 
         self.assertIsNone(zipped_file.testzip())
         self.assertIn(submit_file, zipped_file.namelist())
+        self.assertIn(protocol_file, zipped_file.namelist())
         zipped_file.close()
         f.close()
 
