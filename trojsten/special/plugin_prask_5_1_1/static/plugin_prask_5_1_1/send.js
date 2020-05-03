@@ -27,6 +27,8 @@ $('#valueForm').submit( function(){
         add_row(data.input, data.output, data.solved);
         submit_url = data.next_url;
 
+        console.log('volam', data.examples_match, data.examples_neg)
+        change_table(data.examples_match, data.examples_neg)
     }).error(function(err) {
         $("#valueForm :input").prop("disabled", false);
         document.getElementById("value").focus();

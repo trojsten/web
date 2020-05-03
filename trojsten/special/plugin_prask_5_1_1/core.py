@@ -212,6 +212,8 @@ class Level5(object):
         match_array = []
         neg_array = []
 
+        print('ideme')
+
         for i in cls.TABLE_MATCH:
             match_array.append('green' if re.match(regex, i) is not None else 'red')
         for j in cls.TABLE_NEGATIVE:
