@@ -27,8 +27,8 @@ $('#valueForm').submit( function(){
         add_row(data.input, data.output, data.solved);
         submit_url = data.next_url;
 
-        console.log('volam', data.examples_match, data.examples_neg)
-        change_table(data.examples_match, data.examples_neg)
+        // console.log('volam', data.examples_match, data.examples_neg);
+        change_table(data.examples_match, data.examples_neg);
     }).error(function(err) {
         $("#valueForm :input").prop("disabled", false);
         document.getElementById("value").focus();
@@ -43,62 +43,24 @@ function add_row(input, output, solved){
         '</td><td class="t-output"><code class="'+
         (solved ? 'solved' : '')+
         '">'+
-        output+
+        (solved ? 'Správne' : 'Nesprávne') +
         '</code></td></tr>'
     );
 }
-
-// function change_table(match, neg, examples_match, examples_neg){
-//   // $('#match').clear();
-//   // $('#neg').clear();
-//   $("#match").find("tbody").empty();
-//   $("#neg").find("tbody").empty();
-//
-//
-//   var i;
-//   for (i = 0; i < match.length; i++) {
-//     word_ = match[i][0];
-//     color_ = match[i][1];
-//     $('#match').prepend(
-//         '<tr><th bgcolor="' + color_ + '">'+
-//         word_ +
-//         '</th></tr>'
-//     );
-//   }
-//
-//   for (i = 0; i < neg.length; i++) {
-//     word_ = neg[i][0];
-//     color_ = neg[i][1];
-//     $('#neg').prepend(
-//         '<tr><th bgcolor="' + color_ + '">'+
-//         word_ + color_ +
-//         '</th></tr>'
-//     );
-//   }
-// }
 
 function change_table(examples_match, examples_neg){
   $("#match").find("tbody").empty();
   $("#neg").find("tbody").empty();
 
-    $('#match').prepend(
-        '<tr><th>'+
-        examples_match +
-        '</th></tr>'
-    );
+  // console.log('volam', examples_match, examples_neg)
+  $('#match').append('<tr><th bgcolor="#8b008b"> Regexu vyhovujúce </th></tr>');
+  $('#neg').append('<tr><th bgcolor="#8b008b"> Regexu nevyhovujúce </th></tr>');
 
-    word_ = examples_match[0][0];
-    color_ = examples_match[0][1];
-    $('#match').prepend(
-        '<tr><th bgcolor="' + color_ + '">'+
-        word_ +
-        '</th></tr>'
-    );
   var i;
   for (i = 0; i < examples_match.length; i++) {
     word_ = examples_match[i][0];
     color_ = examples_match[i][1];
-    $('#match').prepend(
+    $('#match').append(
         '<tr><th bgcolor="' + color_ + '">'+
         word_ +
         '</th></tr>'
@@ -108,70 +70,9 @@ function change_table(examples_match, examples_neg){
   for (i = 0; i < examples_neg.length; i++) {
     word_ = examples_neg[i][0];
     color_ = examples_neg[i][1];
-    $('#neg').prepend(
+    $('#neg').append(
         '<tr><th bgcolor="' + color_ + '">'+
-        word_ + color_ +
-        '</th></tr>'
-    );
-  }
-}
-
-function change_table_start(examples_match, examples_neg){
-  $("#match").find("tbody").empty();
-  $("#neg").find("tbody").empty();
-
-
-  var i;
-  for (i = 0; i < examples_match.length; i++) {
-    word_ = examples_match[i][0];
-    color_ = examples_match[i][1];
-    $('#match').prepend(
-        '<tr><th bgcolor="' + color_ + '">'+
-        word_ + color_ +
-        '</th></tr>'
-    );
-  }
-
-  for (i = 0; i < examples_neg.length; i++) {
-    word_ = examples_neg[i][0];
-    color_ = examples_neg[i][1];
-    $('#neg').prepend(
-        '<tr><th bgcolor="' + color_ + '">'+
-        'aaa' + Math.floor(Math.random() * 10) +
-        '</th></tr>'
-    );
-  }
-}
-
-
-function change_table_next(examples_match, examples_neg){
-  $("#match").find("tbody").empty();
-  $("#neg").find("tbody").empty();
-
-
-    $('#match').prepend(
-        '<tr><th>'+
-        examples_match +
-        '</th></tr>'
-    );
-
-  var i;
-  for (i = 0; i < examples_match.length; i++) {
-    word_ = examples_match[i][0];
-    color_ = examples_match[i][1];
-    $('#match').prepend(
-        '<tr><th bgcolor="' + color_ + '">'+
-        word_ + 8 +
-        '</th></tr>'
-    );
-  }
-
-  for (i = 0; i < examples_neg.length; i++) {
-    word_ = examples_neg[i][0];
-    color_ = examples_neg[i][1];
-    $('#neg').prepend(
-        '<tr><th bgcolor="' + color_ + '">'+
-        'aaa' + Math.floor(Math.random() * 10) +
+        word_ +
         '</th></tr>'
     );
   }

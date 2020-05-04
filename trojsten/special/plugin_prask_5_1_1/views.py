@@ -21,18 +21,16 @@ def main(request, level=1):
     userlevel, _ = UserLevel.objects.get_or_create(level_id=level, user=user)
 
     target = LEVELS[level].TARGET
-    examples_match = [[i, 0] for i in LEVELS[level].TABLE_MATCH]
-    examples_neg = [[i, 0] for i in LEVELS[level].TABLE_NEGATIVE]
+    examples_match = [[i, 'darkorange'] for i in LEVELS[level].TABLE_MATCH]
+    examples_neg = [[i, 'darkorange'] for i in LEVELS[level].TABLE_NEGATIVE]
 
     try_set = []
     for x in userlevel.try_set.order_by("id"):
-        try_set.append((x.input, x.output, x.output == target))
+        try_set.append((x.input, x.output, True if x.output == 'True' else False))
 
     levels = [[i + 1, False] for i in range(MAX_LEVELS)]
     for x in UserLevel.objects.filter(user=user):
         levels[x.level_id - 1][1] = x.solved
-
-    print("vypis_1")
 
     return render(
         request,
@@ -46,7 +44,6 @@ def main(request, level=1):
             "try_count_ending": {1: "", 2: "y", 3: "y", 4: "y"}.get(userlevel.try_count, "ov"),
             "examples_match": examples_match,
             "examples_neg": examples_neg,
-            "ne": [0,0,0,0],
             "maximum": LEVELS[level].MAXIMUM
             if hasattr(LEVELS[level], "MAXIMUM")
             else DEFAULT_MAXIMUM,
@@ -72,14 +69,9 @@ def run(request, level=1):
         return HttpResponseBadRequest()
 
     _output, match, neg = LEVELS[level].run(_input, userlevel.try_count)
-    # _output = True
-    # print(_output, match, neg)
 
     examples_match = [[i, j] for i, j in zip(LEVELS[level].TABLE_MATCH, match)]
     examples_neg = [[i, j] for i, j in zip(LEVELS[level].TABLE_NEGATIVE, neg)]
-
-    # examples_match = [[i, 4] for i in LEVELS[level].TABLE_MATCH]
-    # examples_neg = [[i, 5] for i in LEVELS[level].TABLE_NEGATIVE]
 
     solved = _output
     solved_right_now = solved and not userlevel.solved
@@ -96,10 +88,6 @@ def run(request, level=1):
     return HttpResponse(
         json.dumps(
             {
-                # return render(
-                #     request,
-                #     "plugin_prask_5_1_1/level.html",
-                #     {
                 "level": level,
                 "input": str(_input),
                 "output": "Správne " if _output else "Nesprávne",
@@ -108,7 +96,6 @@ def run(request, level=1):
                 "try_count": userlevel.try_count,
                 "examples_match": examples_match,
                 "examples_neg": examples_neg,
-                "ma": 782,
                 "next_url": reverse(
                     "plugin_zwarte:run", args=(level,), current_app=request.resolver_match.namespace
                 ),

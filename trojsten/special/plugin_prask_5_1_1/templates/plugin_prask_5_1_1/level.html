@@ -15,7 +15,6 @@
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
   <link href="{% static "plugin_ksp_32_1_1/cover.css" %}" rel="stylesheet">
   <link href="{% static "plugin_ksp_32_1_1/zwarte.css" %}" rel="stylesheet">
-    <!--TODO nacitava akoby stary css subor ->  bez left right class-->
   <link href="{% static "plugin_prask_5_1_1/custom.css" %}" rel="stylesheet">
 
   <style id="holderjs-style" type="text/css"></style>
@@ -51,7 +50,7 @@
                   Gratulujeme!<br/>
                   Tvoj regex sa zhoduje s výrazmi tabuľke 1 A ZÁROVEŇ nezhoduje s výrazmi v tabuľke 2.</code>
                   na <span id="try-count">{{ try_count }}</span>
-                  pokus{{ try_count_ending }}. {{ ma }} {{ne}}
+                  pokus{{ try_count_ending }}.
               </p>
           {% else %}
               <p class="lead">
@@ -59,44 +58,46 @@
 
                 <br/>
 
-                  Zatiaľ si mal(a) <span id="try-count">{{ try_count }}</span>
-                  {% if try_count == 1 %}pokus{% elif try_count < 5 %}pokusy{% else %}pokusov{% endif %}.
+                  Počet doterajších pokusov: <span id="try-count">{{ try_count }}</span>.
               </p>
           {% endif %}
-
-             <!-- TODO dorabanie vypisu tabuliek pre regexy -->
 
 
           <div>
 
-            <!-- MATCH -->
-            <table id='match' class="left" style="width:40%"></table>
+            <div>
+              <!-- MATCH -->
+              <table id='match' class="left" style="width:40%">
 
-            <!-- NEGATIVE -->
-            <table id='neg' class="right" style="width:40%"></table>
+              </table>
+            </div>
 
+            <div>
+              <!-- NEGATIVE -->
+              <table id='neg' class="right" style="width:40%">
+              </table>
+            </div>
           </div>
 
           <form class="form-inline" role="form" id="valueForm">
             {% csrf_token %}
             <div class="form-group">
-              <label class="sr-only" for="value">Zadaj číslo</label>
-              <input
-                      type="string"
-                      min="0"
-                      max={{maximum}}
-                      class="form-control fixed-width"
-                      id="value"
-                      placeholder="Zadaj regex"
-              >
+              <div>
+                <!--TODO input text box field width-->
+                <input
+                        type="string"
+                        min="0"
+                        max={{maximum}}
+                        class="form-control fixed-width"
+                        id="value"
+                        placeholder="Zadaj regex"
+                >
+              </div>
+              <div>
+                <button type="submit" class="btn btn-default"
+                      onclick="change_table({{ examples_match }}, {{ examples_neg }})">Pošli</button>
+              </div>
             </div>
-            <button type="submit" class="btn btn-default"
-                    onclick="change_table({{ examples_match }}, {{ examples_neg }})">Pošli</button>
-
-               <!--TODO-->
-               <!-- po kliku sa nemeni obsah, ale 'good' funguje-->
-
-
 
           </form>
           <div class="results">
