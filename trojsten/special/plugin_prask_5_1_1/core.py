@@ -4,8 +4,6 @@ import codecs
 import os
 import re
 
-"""Prask zwarte doos forked from ./plugin_ksp_32_2_1 created by Sysel"""
-
 __author__ = "SamoM"
 
 
@@ -18,7 +16,7 @@ def run_regex_check(cls, regex, try_count):
         match_array.append('green' if re.match(regex, i) is not None else 'red')
     for j in cls.TABLE_NEGATIVE:
         neg_array.append('green' if re.match(regex, j) is None else 'red')
-    good = 'red' not in match_array and 'red' not in neg_array
+    good = 'red' not in match_array #and 'red' not in neg_array
 
     return good, match_array, neg_array
 
@@ -168,7 +166,6 @@ class Level7(object):
         "spot",
         "spate",
         "slap two",
-        "respite"
     ]
 
     TABLE_NEGATIVE = [
@@ -192,7 +189,6 @@ class Level8(object):
         "spot",
         "spate",
         "slap two",
-        "respite"
     ]
 
     TABLE_NEGATIVE = [
@@ -216,7 +212,6 @@ class Level9(object):
         "spot",
         "spate",
         "slap two",
-        "respite"
     ]
 
     TABLE_NEGATIVE = [
@@ -240,7 +235,6 @@ class Level10(object):
         "spot",
         "spate",
         "slap two",
-        "respite"
     ]
 
     TABLE_NEGATIVE = [

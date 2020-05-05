@@ -12,10 +12,9 @@ $('#valueForm').submit( function(){
         }
     }).done(function(data) {
 
-        if(data.refresh){
-            location.reload();
-            return;
-        }
+        location.reload();
+
+        $("#last_input").text(data.last_input);
 
         $("#valueForm :input").prop("disabled", false);
         document.getElementById("value").focus();
@@ -27,7 +26,6 @@ $('#valueForm').submit( function(){
         add_row(data.input, data.output, data.solved);
         submit_url = data.next_url;
 
-        // console.log('volam', data.examples_match, data.examples_neg);
         change_table(data.examples_match, data.examples_neg);
     }).error(function(err) {
         $("#valueForm :input").prop("disabled", false);
@@ -37,6 +35,7 @@ $('#valueForm').submit( function(){
 });
 
 function add_row(input, output, solved){
+
     $('#resultsTable').prepend(
         '<tr><td class="t-input">'+
         input+
@@ -49,10 +48,10 @@ function add_row(input, output, solved){
 }
 
 function change_table(examples_match, examples_neg){
+
   $("#match").find("tbody").empty();
   $("#neg").find("tbody").empty();
 
-  // console.log('volam', examples_match, examples_neg)
   $('#match').append('<tr><th bgcolor="#8b008b"> Regexu vyhovujúce </th></tr>');
   $('#neg').append('<tr><th bgcolor="#8b008b"> Regexu nevyhovujúce </th></tr>');
 

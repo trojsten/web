@@ -20,12 +20,14 @@ def main(request, level=1):
     user = request.user
     userlevel, _ = UserLevel.objects.get_or_create(level_id=level, user=user)
 
-    target = LEVELS[level].TARGET
     examples_match = [[i, 'darkorange'] for i in LEVELS[level].TABLE_MATCH]
     examples_neg = [[i, 'darkorange'] for i in LEVELS[level].TABLE_NEGATIVE]
 
     try_set = []
+    last_input = None
+
     for x in userlevel.try_set.order_by("id"):
+        last_input = x.input
         try_set.append((x.input, x.output, True if x.output == 'True' else False))
 
     levels = [[i + 1, False] for i in range(MAX_LEVELS)]
@@ -36,6 +38,7 @@ def main(request, level=1):
         request,
         "plugin_prask_5_1_1/level.html",
         {
+            "last_input": last_input,
             "level": level,
             "levels": levels,
             "solved": userlevel.solved,
@@ -85,11 +88,17 @@ def run(request, level=1):
         userlevel.save()
         update_points(user)
 
+    last_input = None
+    for x in userlevel.try_set.order_by("id"):
+        last_input = x.input
+
     return HttpResponse(
         json.dumps(
             {
+                "answer"
                 "level": level,
-                "input": str(_input),
+                "input": _input,
+                "last_input": last_input,
                 "output": "Správne " if _output else "Nesprávne",
                 "solved": solved,
                 "refresh": solved_right_now,

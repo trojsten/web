@@ -20,11 +20,3 @@ th {
   text-align: center;
 
 }
-
-/*.form-group  {*/
-  /*width: 100px;*/
-/*}*/
-
-form-control fixed-width  {
-  width: 100px;
-}

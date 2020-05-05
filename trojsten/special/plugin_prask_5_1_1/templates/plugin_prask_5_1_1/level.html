@@ -48,13 +48,19 @@
           {% if solved %}
               <p class="lead">
                   Gratulujeme!<br/>
-                  Tvoj regex sa zhoduje s výrazmi tabuľke 1 A ZÁROVEŇ nezhoduje s výrazmi v tabuľke 2.</code>
-                  na <span id="try-count">{{ try_count }}</span>
+                  Tvoj regex <code id="good" class="solved">{{ last_input }}</code>
+                  je správny! Zvládol si to na <span id="try-count">{{ try_count }}</span>
                   pokus{{ try_count_ending }}.
               </p>
+          {% elif try_count == 0 %}
+              <p class="lead">
+                  Vytvor regex, ktorý vyhovuje/nevyhovuje slovám z tabuliek.
+              </p>
+
+
           {% else %}
               <p class="lead">
-                  Vytvor regex, ktorý sa zhoduje s výrazmi tabuľke 1 A ZÁROVEŇ nezhoduje s výrazmi v tabuľke 2.
+                Regex <code id="last_input">{{ last_input }}</code> nie je správna odpoveď.
 
                 <br/>
 
@@ -67,14 +73,14 @@
 
             <div>
               <!-- MATCH -->
-              <table id='match' class="left" style="width:40%">
+              <table id='match' class="left" style="width:27%">
 
               </table>
             </div>
 
             <div>
               <!-- NEGATIVE -->
-              <table id='neg' class="right" style="width:40%">
+              <table id='neg' class="right" style="width:27%">
               </table>
             </div>
           </div>
@@ -83,15 +89,15 @@
             {% csrf_token %}
             <div class="form-group">
               <div>
-                <!--TODO input text box field width-->
                 <input
-                        type="string"
+                        type="text"
                         min="0"
                         max={{maximum}}
-                        class="form-control fixed-width"
+                        class="form-control"
                         id="value"
                         placeholder="Zadaj regex"
-                >
+                        size="30"
+                />
               </div>
               <div>
                 <button type="submit" class="btn btn-default"
