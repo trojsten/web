@@ -288,6 +288,14 @@ class DownloadLatestSubmits(TestCase):
         )
         self.staff.is_staff = True
         self.staff.save()
+        self.protocol = """<protokol><runLog>
+        <test><name>0.sample.a.in</name><resultCode>1</resultCode><resultMsg>OK</resultMsg><time>28</time></test>
+        <test><name>0.sample.b.in</name><resultCode>1</resultCode><resultMsg>OK</resultMsg><time>28</time></test>
+        <score>100</score><details>
+        Score: 100
+        </details><finalResult>1</finalResult><finalMessage>OK (OK: 100 %)</finalMessage>
+        </runLog></protokol>
+        """
 
         group = Group.objects.create(name="Test Group")
         group.user_set.add(self.staff)
@@ -414,11 +422,14 @@ class DownloadLatestSubmits(TestCase):
             points=5,
             submit_type=submit_constants.SUBMIT_TYPE_SOURCE,
             filepath=path.join(path.dirname(__file__), "test_data", "submits", "source.cpp"),
+            protocol=self.protocol,
+            protocol_id="test_id_47",
         )
         submit.time = self.task.round.start_time + timezone.timedelta(0, 5)
         submit.save()
 
         submit_file = helpers.submit_source_download_filename(submit, desc_submit.id, 0)
+        protocol_file = helpers.submit_protocol_download_filename(submit, desc_submit.id, 0)
 
         self.client.force_login(self.staff)
         url = reverse(self.url_name, kwargs={"task_pk": self.task.id})
@@ -428,6 +439,7 @@ class DownloadLatestSubmits(TestCase):
 
         self.assertIsNone(zipped_file.testzip())
         self.assertIn(submit_file, zipped_file.namelist())
+        self.assertIn(protocol_file, zipped_file.namelist())
         zipped_file.close()
         f.close()
 
@@ -857,3 +869,71 @@ class PointFormSetTests(TestCase):
             self.data, form_kwargs={"max_points": self.task.description_points}
         )
         self.assertFalse(form_set.is_valid())
+
+
+class ZIPUploadTests(TestCase):
+    def setUp(self):
+        year = timezone.now().year + 2
+        self.user1 = User.objects.create_user(
+            username="TestUser1",
+            password="password",
+            first_name="Jozko",
+            last_name="Mrkvicka",
+            graduation=year,
+            pk=1,
+        )
+        self.staff = User.objects.create_user(
+            username="TestStaff",
+            password="password",
+            first_name="Jozko",
+            last_name="Veduci",
+            graduation=2014,
+            pk=2,
+        )
+        self.staff.is_staff = True
+        self.staff.save()
+
+        group = Group.objects.create(name="Test Group")
+        group.user_set.add(self.staff)
+        competition = Competition.objects.create(name="TestCompetition", organizers_group=group)
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        semester = Semester.objects.create(
+            number=1, name="Test semester 1", year=1, competition=competition
+        )
+
+        test_round = Round.objects.create(
+            number=1,
+            semester=semester,
+            solutions_visible=True,
+            visible=True,
+            start_time=timezone.now() + timezone.timedelta(-4),
+            end_time=timezone.now() + timezone.timedelta(-1),
+        )
+        self.task = Task.objects.create(
+            number=2, name="TestTask2", round=test_round, description_points=9
+        )
+
+        submit = Submit.objects.create(
+            pk=1,
+            task=self.task,
+            user=self.user1,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            points=0,
+            testing_status=submit_constants.SUBMIT_STATUS_IN_QUEUE,
+        )
+        submit.time = test_round.end_time + timezone.timedelta(hours=-1)
+        submit.save()
+
+    def test_upload(self):
+        self.client.force_login(self.staff)
+        with open(path.join(path.dirname(__file__), "test_data", "zip_all.zip"), "rb") as zip:
+            response = self.client.post(
+                reverse("admin:review_task", kwargs={"task_pk": self.task.id}),
+                {"Upload": "Upload", "file": zip},
+                follow=True,
+            )
+
+            self.assertContains(response, "Super riesenie!")
+            self.assertContains(response, "11")
+            self.assertContains(response, "0123.pdf")
+            self.assertNotContains(response, "Thumbs.db")
