@@ -20,6 +20,11 @@
   <style id="holderjs-style" type="text/css"></style>
 
 </head>
+
+<!--FIXME problem so 'solved'-->
+<body onload="change({{ examples_match }}, {{ examples_neg }}, {{ solved }}, {{ solved }}, {{ try_count }},
+{{ last_input }}, {{last_input}})">
+<!--<body onload="change_text({{ solved }}, {{ solved }}, {{ try_count }}, {{ last_input }}, {{ last_input }})">-->
 <body onload="change_table({{ examples_match }}, {{ examples_neg }})">
   <div class="site-wrapper">
     <div class="site-wrapper-inner">
@@ -45,29 +50,31 @@
 
         <div class="inner cover">
           <h1 class="cover-heading">Level {{ level }}</h1>
-          {% if solved %}
-              <p class="lead">
-                  Gratulujeme!<br/>
-                  Tvoj regex <code id="good" class="solved">{{ last_input }}</code>
-                  je správny! Zvládol si to na <span id="try-count">{{ try_count }}</span>
-                  pokus{{ try_count_ending }}.
-              </p>
-          {% elif try_count == 0 %}
-              <p class="lead">
-                  Vytvor regex, ktorý vyhovuje/nevyhovuje slovám z tabuliek.
-              </p>
+          <div id="task_state">
+            {{ task }}
+            <!--{% if solved %}-->
+                <!--<p class="lead">-->
+                    <!--Gratulujeme!<br/>-->
+                    <!--Tvoj regex <code id="good" class="solved">{{ last_input }}</code>-->
+                    <!--je správny! Zvládol si to na <span id="try-count">{{ try_count }}</span>-->
+                    <!--pokus{{ try_count_ending }}.-->
+                <!--</p>-->
+            <!--{% elif try_count == 0 %}-->
+                <!--<p class="lead">-->
+                    <!--Vytvor regex, ktorý vyhovuje/nevyhovuje slovám z tabuliek.-->
+                <!--</p>-->
 
 
-          {% else %}
-              <p class="lead">
-                Regex <code id="last_input">{{ last_input }}</code> nie je správna odpoveď.
+            <!--{% else %}-->
+                <!--<p class="lead">-->
+                  Regex <code id="last_input">{{ last_input }}</code> nie je správna odpoveď.
 
-                <br/>
+                  <br/>
 
-                  Počet doterajších pokusov: <span id="try-count">{{ try_count }}</span>.
-              </p>
-          {% endif %}
-
+                    Počet doterajších pokusov: <span id="try-count">{{ try_count }}</span>.
+                <!--</p>-->
+            <!--{% endif %}-->
+          </div>
 
           <div>
 

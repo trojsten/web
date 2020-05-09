@@ -47,6 +47,7 @@ def main(request, level=1):
             "try_count_ending": {1: "", 2: "y", 3: "y", 4: "y"}.get(userlevel.try_count, "ov"),
             "examples_match": examples_match,
             "examples_neg": examples_neg,
+            "task": '',
             "maximum": LEVELS[level].MAXIMUM
             if hasattr(LEVELS[level], "MAXIMUM")
             else DEFAULT_MAXIMUM,
@@ -92,6 +93,8 @@ def run(request, level=1):
     for x in userlevel.try_set.order_by("id"):
         last_input = x.input
 
+    solved_before = userlevel.solved if userlevel.solved else solved
+
     return HttpResponse(
         json.dumps(
             {
@@ -101,10 +104,12 @@ def run(request, level=1):
                 "last_input": last_input,
                 "output": "Správne " if _output else "Nesprávne",
                 "solved": solved,
+                "solved_before": solved_before,  # userlevel.solved,
                 "refresh": solved_right_now,
                 "try_count": userlevel.try_count,
                 "examples_match": examples_match,
                 "examples_neg": examples_neg,
+                "task": '',
                 "next_url": reverse(
                     "plugin_zwarte:run", args=(level,), current_app=request.resolver_match.namespace
                 ),
