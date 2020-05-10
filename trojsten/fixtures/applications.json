@@ -4,11 +4,13 @@
     "fields": {
         "client_id": "2uDyDhLKULKxzDyrpwabt0TLWsc2Weq9GaNUfwWD",
         "user": 1,
-        "redirect_uris": "http://localhost:8000/ucet/complete/trojsten/\nhttp://127.0.0.1:8000/ucet/complete/trojsten/",
+        "redirect_uris": "http://localhost:8000/ucet/complete/trojsten/\r\nhttp://localhost:8001/ucet/complete/trojsten/\r\nhttp://localhost:8002/ucet/complete/trojsten/\r\nhttp://localhost:8003/ucet/complete/trojsten/\r\nhttp://localhost:8004/ucet/complete/trojsten/\r\nhttp://localhost:8006/ucet/complete/trojsten/\r\nhttp://localhost:8007/ucet/complete/trojsten/\r\nhttp://localhost:8008/ucet/complete/trojsten/\r\nhttp://localhost:8010/ucet/complete/trojsten/\r\nhttp://localhost:9000/ucet/complete/trojsten/\r\nhttp://127.0.0.1:8000/ucet/complete/trojsten/\r\nhttp://127.0.0.1:8001/ucet/complete/trojsten/\r\nhttp://127.0.0.1:8002/ucet/complete/trojsten/\r\nhttp://127.0.0.1:8003/ucet/complete/trojsten/\r\nhttp://127.0.0.1:8004/ucet/complete/trojsten/\r\nhttp://127.0.0.1:8006/ucet/complete/trojsten/\r\nhttp://127.0.0.1:8007/ucet/complete/trojsten/\r\nhttp://127.0.0.1:8008/ucet/complete/trojsten/\r\nhttp://127.0.0.1:8010/ucet/complete/trojsten/\r\nhttp://127.0.0.1:9000/ucet/complete/trojsten/",
         "client_type": "confidential",
         "authorization_grant_type": "authorization-code",
         "client_secret": "8osYrtZPMAMaWBmc3KePnyJ87euqrrcXZHbKPVbnLTWoR8MLCmNT1bqhIOsJbn6NK0WkQA19jePbyw7iGtdQ05Q1rbXjaEaRtfDI9OHDlBVfd9CUM7Ve0lxdXjhI3Ldj",
         "name": "localhost_login",
-        "skip_authorization": true
+        "skip_authorization": true,
+        "created": "2017-07-02T11:05:16.763Z",
+        "updated": "2019-12-02T20:12:45.565Z"
     }
 }]
