@@ -53,9 +53,7 @@ function add_row(input, output, solved) {
 function change(examples_match, examples_neg, solved, solved_before, try_count, input, last_input) {
     console.log(typeof solved);
     change_table(examples_match, examples_neg);
-    console.log('b');
     change_text(solved, solved_before, try_count, input, last_input);
-    console.log('c');
 }
 
 function change_table(examples_match, examples_neg) {
@@ -86,6 +84,9 @@ function change_table(examples_match, examples_neg) {
             '</th></tr>'
         );
     }
+
+    document.getElementById("task_state").innerHTML = "";
+    $('#task_state').append('Vytvor regex, ktorý vyhovuje/nevyhovuje slovám z tabuliek.')
 }
 
 function change_text(solved, solved_before, try_count, input, last_input) {
@@ -96,7 +97,7 @@ function change_text(solved, solved_before, try_count, input, last_input) {
     if (solved || solved_before) {
         $('#task_state').append('Gratulujeme!\n' +
             'Tvoj regex <code id="good" class="solved">' + last_input + '</code>\n' +
-            'je správny! Zvládol si to na <span id="try-count">' + try_count + '</span>\n' +
+            'je správny! Zvládol si to na <span id="try-count">' + try_count + '.</span>\n' +
             'pokus');
     } else {
         if (try_count === 0)  {
