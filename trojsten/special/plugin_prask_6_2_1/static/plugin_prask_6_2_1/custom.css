@@ -1,0 +1,22 @@
+.fixed-width {
+  width: 12rem !important;
+}
+
+th {
+  text-align: center;
+}
+
+.left {
+  border: 5px solid black;
+  float: left;
+  background: darkorange;
+  text-align: center;
+}
+
+.right {
+  border: 5px solid black;
+  float: right;
+  background: darkorange;
+  text-align: center;
+
+}
