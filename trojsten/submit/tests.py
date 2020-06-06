@@ -1402,3 +1402,96 @@ class SubmitPagePoints(TestCase):
         response = self.client.get(url)
         self.assertContains(response, "Neopravené")
         self.assertNotContains(response, "7,00")
+
+
+class DescriptionSubmitUploadTests(TestCase):
+    def setUp(self):
+        year = timezone.now().year + 2
+        self.user1 = User.objects.create_user(
+            username="TestUser1",
+            password="password",
+            first_name="Jozko",
+            last_name="Mrkvicka",
+            graduation=year,
+            pk=1,
+        )
+
+        competition = Competition.objects.create(name="TestCompetition")
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        semester = Semester.objects.create(
+            number=1, name="Test semester 1", year=1, competition=competition
+        )
+
+        test_round = Round.objects.create(
+            number=1,
+            semester=semester,
+            solutions_visible=True,
+            visible=True,
+            start_time=timezone.now() + timezone.timedelta(-4),
+            end_time=timezone.now() + timezone.timedelta(10),
+        )
+        self.task = Task.objects.create(
+            number=2, name="TestTask2", round=test_round, description_points=9, has_description=True
+        )
+
+    def test_upload_allowed(self):
+        self.client.force_login(self.user1)
+
+        files = [
+            "description.odt",
+            "description.pdf",
+            "description.rtf",
+            "description.txt",
+            "description.docx",
+        ]
+
+        for file in files:
+            with open(path.join(path.dirname(__file__), "test_data", file), "rb") as f:
+                response = self.client.post(
+                    reverse(
+                        "task_submit_post",
+                        kwargs={
+                            "task_id": self.task.id,
+                            "submit_type": constants.SUBMIT_TYPE_DESCRIPTION,
+                        },
+                    ),
+                    {"submit_file": f},
+                    follow=True,
+                )
+
+                self.assertNotContains(response, "Zaslaný súbor má nepodporovaný formát")
+                self.assertContains(
+                    response,
+                    _(
+                        "You have successfully submitted your description, "
+                        "it will be reviewed after the round finishes."
+                    ),
+                )
+
+    def test_upload_not_allowed(self):
+        self.client.force_login(self.user1)
+
+        files = ["description.png", "fake.pdf"]
+
+        for file in files:
+            with open(path.join(path.dirname(__file__), "test_data", file), "rb") as f:
+                response = self.client.post(
+                    reverse(
+                        "task_submit_post",
+                        kwargs={
+                            "task_id": self.task.id,
+                            "submit_type": constants.SUBMIT_TYPE_DESCRIPTION,
+                        },
+                    ),
+                    {"submit_file": f},
+                    follow=True,
+                )
+
+                self.assertContains(response, "Zaslaný súbor má nepodporovaný formát")
+                self.assertNotContains(
+                    response,
+                    _(
+                        "You have successfully submitted your description, "
+                        "it will be reviewed after the round finishes."
+                    ),
+                )
