@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "trojstenweb"
-version = "2.5.1"
+version = "2.5.3"
 description = "Trojsten web"
 authors = ["Trojsten Tech Team <tech.group@trojsten.sk>"]
 license = "MIT"

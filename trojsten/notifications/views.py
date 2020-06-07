@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, reverse
+from django.views.decorators.http import require_POST
 
 from .models import Notification
 from .settings import CHANNELS
@@ -45,3 +46,10 @@ def read_notification(request, notification_id):
     notification.save()
 
     return redirect(notification.url)
+
+
+@login_required
+@require_POST
+def read_all_notifications(request):
+    Notification.objects.filter(user=request.user, was_read=False).update(was_read=True)
+    return JsonResponse({"ok": True})

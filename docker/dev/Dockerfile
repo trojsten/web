@@ -17,6 +17,11 @@ COPY ./fonts/* /usr/share/fonts/
 
 RUN fc-cache -f -v
 
+# Fix pip version to a known working one (source image often gets re-released when new pip
+# gets released, but is cached locally, this can cause problems for new developers and deploys
+# that are non-trivial to debug)
+RUN pip install pip==20.0.2
+
 COPY ./pyproject.toml /install/
 COPY ./poetry.lock /install/
 

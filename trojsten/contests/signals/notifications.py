@@ -32,7 +32,7 @@ def round_published(sender, **kwargs):
         "url": reverse("task_list", args=(round.pk,)),
     }
 
-    notify(users, "round_started", _("Round %(round)s has started!" % {"round": round}), url)
+    notify(users, "round_started", _("Round %(round)s has started!") % {"round": round}, url)
 
 
 @receiver(post_save, sender=Task, dispatch_uid="notifications__task_points_visibility_changed")
