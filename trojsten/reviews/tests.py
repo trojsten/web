@@ -16,6 +16,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
+from django.utils.translation import ugettext_lazy as _
 
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.people.models import User
@@ -261,6 +262,21 @@ class ReviewTest(TestCase):
         response = self.client.get(url)
         self.assertNotContains(response, comment)
         self.assertContains(response, multi_line_comment)
+
+    def test_hidden_points_alert(self):
+        self.client.force_login(self.staff)
+        url = reverse(self.url_name, kwargs={"task_pk": self.task.id})
+        self.task.description_points_visible = False
+        self.task.save()
+
+        response = self.client.get(url)
+        self.assertContains(response, _("Description points are hidden in results!"))
+
+        self.task.description_points_visible = True
+        self.task.save()
+
+        response = self.client.get(url)
+        self.assertNotContains(response, _("Description points are hidden in results!"))
 
 
 @override_settings(SUBMIT_PATH=tempfile.mkdtemp(dir=path.join(path.dirname(__file__), "test_data")))
