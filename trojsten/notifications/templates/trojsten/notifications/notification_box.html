@@ -3,6 +3,7 @@
 {% addtoblock "js" %}
     <script>
       window.TROJSTEN_NOTIFY_LIST_URL = "{% url 'notification_list' %}"
+      window.TROJSTEN_NOTIFY_READ_ALL_URL = "{% url 'notification_read_all' %}"
     </script>
     <script type="text/javascript" src="{% static 'js/notifications.js' %}"></script>
 {% endaddtoblock %}
