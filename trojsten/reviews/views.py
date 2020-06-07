@@ -212,8 +212,8 @@ def download_all_submits(request, task_pk, download_reviews=False):
                         ]
                     if submit.protocol:
                         zipper.writestr(
-                            submit.protocol,
                             submit_protocol_download_filename(submit, description_submit_id, i),
+                            submit.protocol,
                         )
                     else:
                         errors += [_("Missing protocol of user %s") % submit.user.get_full_name()]
@@ -264,6 +264,7 @@ def zip_upload(request, task_pk):
                 continue
 
             pk = match.group(RE_SUBMIT_PK)
+            extension = ".%s" % (match.group(RE_FILENAME).split(".")[-1])
             if Submit.objects.filter(pk=pk).exists():
                 user_pk = Submit.objects.get(pk=pk).user.pk
                 if user_pk not in user_data:
@@ -281,7 +282,7 @@ def zip_upload(request, task_pk):
                         user_data[user_pk]["comment"] = archive.read(form_data["filename"])
                     except:  # noqa: E722 @FIXME
                         pass
-                else:
+                elif extension.lower() in settings.SUBMIT_DESCRIPTION_ALLOWED_EXTENSIONS:
                     user_data[user_pk]["filename"] = form_data["filename"]
 
     initial = [user_data[user] for user in user_data if "filename" in user_data[user]]
