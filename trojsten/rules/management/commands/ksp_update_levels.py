@@ -59,7 +59,7 @@ class Command(BaseCommand):
             )
             if associated_semester.round_set.first().end_time < new_rules_start:
                 max_points_in_levels = {1: 120, 2: 140, 3: 160, 4: 180}
-                level_up_score_thresholds = {l: x // 2 for l, x in max_points_in_levels.items()}
+                level_up_score_thresholds = {lvl: x // 2 for lvl, x in max_points_in_levels.items()}
             else:
                 level_up_score_thresholds = None
             updates = level_updates_from_camp_attendance(
