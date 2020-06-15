@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-04 18:11+0000\n"
+"POT-Creation-Date: 2020-06-07 14:06+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
 ">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
@@ -141,39 +141,6 @@ msgstr "Kolo už skončilo."
 
 msgid "View the solution."
 msgstr "Pozrieť vzorové riešenie."
-
-# Task Statements
-#, python-format
-msgid "%(count)d day"
-msgid_plural "%(count)d days"
-msgstr[0] "%(count)d deň"
-msgstr[1] "%(count)d dni"
-msgstr[2] "%(count)d dňa"
-msgstr[3] "%(count)d dní"
-
-#, python-format
-msgid "%(count)d hour"
-msgid_plural "%(count)d hours"
-msgstr[0] "%(count)d hodina"
-msgstr[1] "%(count)d hodiny"
-msgstr[2] "%(count)d hodiny"
-msgstr[3] "%(count)d hodín"
-
-#, python-format
-msgid "%(count)d minute"
-msgid_plural "%(count)d minutes"
-msgstr[0] "%(count)d minúta"
-msgstr[1] "%(count)d minúty"
-msgstr[2] "%(count)d minúty"
-msgstr[3] "%(count)d minút"
-
-#, python-format
-msgid "%(count)d second"
-msgid_plural "%(count)d seconds"
-msgstr[0] "%(count)d sekunda"
-msgstr[1] "%(count)d sekundy"
-msgstr[2] "%(count)d sekundy"
-msgstr[3] "%(count)d sekúnd"
 
 msgid "authorized groups"
 msgstr "autorizované skupiny"
@@ -649,6 +616,12 @@ msgstr "Upraviť"
 msgid "Task"
 msgstr "Úloha"
 
+msgid "Description points are hidden in results!"
+msgstr "Body za popis sa nezobrazujú vo výsledkovke!"
+
+msgid "You can change this in task settings."
+msgstr "Toto môžeš zmeniť vo vlastnostiach úlohy."
+
 msgid "Download all original solutions"
 msgstr "Stiahnuť všetky pôvodné riešenia"
 
@@ -953,3 +926,36 @@ msgstr ""
 
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
+
+# Task Statements
+#, python-format
+msgid "%(count)d day"
+msgid_plural "%(count)d days"
+msgstr[0] "%(count)d deň"
+msgstr[1] "%(count)d dni"
+msgstr[2] "%(count)d dňa"
+msgstr[3] "%(count)d dní"
+
+#, python-format
+msgid "%(count)d hour"
+msgid_plural "%(count)d hours"
+msgstr[0] "%(count)d hodina"
+msgstr[1] "%(count)d hodiny"
+msgstr[2] "%(count)d hodiny"
+msgstr[3] "%(count)d hodín"
+
+#, python-format
+msgid "%(count)d minute"
+msgid_plural "%(count)d minutes"
+msgstr[0] "%(count)d minúta"
+msgstr[1] "%(count)d minúty"
+msgstr[2] "%(count)d minúty"
+msgstr[3] "%(count)d minút"
+
+#, python-format
+msgid "%(count)d second"
+msgid_plural "%(count)d seconds"
+msgstr[0] "%(count)d sekunda"
+msgstr[1] "%(count)d sekundy"
+msgstr[2] "%(count)d sekundy"
+msgstr[3] "%(count)d sekúnd"
