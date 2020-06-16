@@ -285,7 +285,7 @@ class TaskListTests(TestCase):
 
         self.client.force_login(self.nonstaff_user)
         response = self.client.get(self.url)
-        self.assertContains(response, "popis:&nbsp;??")
+        self.assertContains(response, "<b>??</b>&nbsp;/&nbsp;12")
 
     def test_my_points_visible(self):
         task = Task.objects.create(
@@ -306,7 +306,7 @@ class TaskListTests(TestCase):
 
         self.client.force_login(self.nonstaff_user)
         response = self.client.get(self.url)
-        self.assertContains(response, "popis:&nbsp;5")
+        self.assertContains(response, "<b>5</b>&nbsp;/&nbsp;12")
 
 
 @override_settings(

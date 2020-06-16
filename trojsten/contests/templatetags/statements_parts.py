@@ -37,6 +37,18 @@ def show_task_list(context, round):
         submits = Submit.objects.latest_for_user(tasks, context["user"])
         results = get_points_from_submits(tasks, submits)
         data["points"] = results
+
+    show_source_col = False
+    show_description_col = False
+    for task in tasks:
+        if task.description_points > 0:
+            show_description_col = True
+        if task.source_points > 0:
+            show_source_col = True
+
+    data["show_description_col"] = show_description_col
+    data["show_source_col"] = show_source_col
+
     context.update(data)
     return context
 
