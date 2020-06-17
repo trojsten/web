@@ -123,6 +123,17 @@ class IKSSite(BaseSite):
     url = "http://iksko.org"
 
 
+class SUSISite(BaseSite):
+    name = "SUSI"
+    short_name = "SUSI"
+    url = "http://susi.sk"
+    has_logo = True
+    folder = "susi"
+    css_folder = "susi"
+    theme_color = "#4a6fd8"
+    organizers_email = "susi@susi.sk"
+
+
 SITES = {
     1: KSPSite(),
     2: PraskSite(),
@@ -134,4 +145,5 @@ SITES = {
     8: FXSite(),
     9: IKSSite(),
     10: LoginSite(),
+    11: SUSISite(),
 }

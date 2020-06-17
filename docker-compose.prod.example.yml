@@ -93,6 +93,15 @@ services:
       - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
     depends_on:
       - db
+  susi:
+    <<: *web
+    ports:
+      - "8011:80"
+    environment:
+      - DJANGO_SETTINGS_MODULE=trojsten.settings.susi
+      - TROJSTENWEB_ALLOWED_HOSTS=localhost;127.0.0.1;
+    depends_on:
+      - db
 
 volumes:
   db_data:

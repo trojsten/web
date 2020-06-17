@@ -6,8 +6,8 @@ const cleanCSS = require('gulp-clean-css');
 
 const distDest = '../trojsten/static/css/';
 
-gulp.task('less', function() {
-  return gulp.src('src/{ksp,fks,kms,trojsten}.less')
+gulp.task('less', function () {
+  return gulp.src('src/{ksp,fks,kms,susi,trojsten}.less')
     .pipe(cache('less'))
     .pipe(less())
     .pipe(cleanCSS())
@@ -18,7 +18,7 @@ gulp.task('less', function() {
     .pipe(gulp.dest(distDest));
 });
 
-gulp.task('watch', function(){
+gulp.task('watch', function () {
   gulp.watch('src/*.less', ['less']);
 });
 

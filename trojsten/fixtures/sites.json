@@ -70,5 +70,13 @@
         },
         "model": "sites.site",
         "pk": 10
+    },
+    {
+        "fields": {
+            "domain": "susi.sk",
+            "name": "susi"
+        },
+        "model": "sites.site",
+        "pk": 11
     }
 ]
