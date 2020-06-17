@@ -15,10 +15,10 @@ STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesSto
 SENDFILE_BACKEND = "sendfile.backends.xsendfile"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = requiredenv("TROJSTENWEB_EMAIL_HOST")
-EMAIL_PORT = requiredenv("TROJSTENWEB_EMAIL_PORT")
-EMAIL_HOST_USER = requiredenv("TROJSTENWEB_EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = requiredenv("TROJSTENWEB_EMAIL_HOST_PASSWORD")
+EMAIL_HOST = env("TROJSTENWEB_EMAIL_HOST", "localhost")
+EMAIL_PORT = env("TROJSTENWEB_EMAIL_PORT", 25)
+EMAIL_HOST_USER = env("TROJSTENWEB_EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = env("TROJSTENWEB_EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = bool_env("TROJSTENWEB_EMAIL_USE_TLS", True)
 
 # Top secret keys for production settings
