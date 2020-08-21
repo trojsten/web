@@ -124,14 +124,14 @@ class IKSSite(BaseSite):
 
 
 class SUSISite(BaseSite):
-    name = "SUSI"
-    short_name = "SUSI"
-    url = "http://susi.sk"
+    name = "Súťaž v šifrovaní"
+    short_name = "SUŠI"
+    url = "https://susi.trojsten.sk"
     has_logo = True
     folder = "susi"
     css_folder = "susi"
-    theme_color = "#4a6fd8"
-    organizers_email = "susi@susi.sk"
+    theme_color = "#FFFF00"
+    organizers_email = "susi@trojsten.sk"
 
 
 SITES = {
