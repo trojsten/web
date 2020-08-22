@@ -130,7 +130,7 @@ class SUSISite(BaseSite):
     has_logo = True
     folder = "susi"
     css_folder = "susi"
-    theme_color = "#FFFF00"
+    theme_color = "#CD3C37"
     organizers_email = "susi@trojsten.sk"
 
 
