@@ -15,6 +15,10 @@ repos:
     rev: v2.2.3
     hooks:
       - id: end-of-file-fixer
-        exclude: "setup.cfg"
+        exclude: >
+          (?x)^(
+              "setup.cfg"|
+              trojsten/static/.*
+          )$
       - id: mixed-line-ending
       - id: trailing-whitespace

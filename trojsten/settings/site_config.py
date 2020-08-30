@@ -123,6 +123,17 @@ class IKSSite(BaseSite):
     url = "http://iksko.org"
 
 
+class SUSISite(BaseSite):
+    name = "Súťaž v šifrovaní"
+    short_name = "SUŠI"
+    url = "https://susi.trojsten.sk"
+    has_logo = True
+    folder = "susi"
+    css_folder = "susi"
+    theme_color = "#CD3C37"
+    organizers_email = "susi@trojsten.sk"
+
+
 SITES = {
     1: KSPSite(),
     2: PraskSite(),
@@ -134,4 +145,5 @@ SITES = {
     8: FXSite(),
     9: IKSSite(),
     10: LoginSite(),
+    11: SUSISite(),
 }
