@@ -17,7 +17,7 @@ repos:
       - id: end-of-file-fixer
         exclude: >
           (?x)^(
-              "setup.cfg"|
+              setup.cfg|
               trojsten/static/.*
           )$
       - id: mixed-line-ending
