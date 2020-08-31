@@ -339,6 +339,12 @@ class Task(models.Model):
     external_submit_link = models.CharField(
         max_length=128, verbose_name="Odkaz na externé odovzdávanie", blank=True, null=True
     )
+    has_text_submit = models.BooleanField(
+        verbose_name="odovzdáva sa text", default=False
+    )
+    text_submit_solution = models.CharField(
+        max_length=128, verbose_name="správne riešenie pri odoovzdávaní textu", blank=True, null=True
+    )
     email_on_desc_submit = models.BooleanField(
         verbose_name=_("Send notification to reviewers about new description submit"), default=False
     )
@@ -374,6 +380,7 @@ class Task(models.Model):
             submit_constants.SUBMIT_TYPE_DESCRIPTION: self.has_description,
             submit_constants.SUBMIT_TYPE_TESTABLE_ZIP: self.has_testablezip,
             submit_constants.SUBMIT_TYPE_EXTERNAL: bool(self.external_submit_link),
+            submit_constants.SUBMIT_TYPE_TEXT: self.has_text_submit,
         }
         return check_field[submit_type]
 

@@ -6,6 +6,7 @@ import logging
 import os
 
 import six
+from datetime import timedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -15,6 +16,7 @@ from django.core.mail import send_mail
 from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from judge_client import constants as judge_constants
 from judge_client.client import ProtocolError
@@ -499,7 +501,30 @@ def task_submit_post(request, task_id, submit_type):
             return redirect(request.POST["redirect_to"])
         else:
             return redirect(reverse("task_submit_page", kwargs={"task_id": int(task_id)}))
-
+    elif submit_type == constants.SUBMIT_TYPE_TEXT:
+        submitted_text = 'yes'  # TODO FIX it to get text from request
+        solution = task.text_submit_solution.lower()
+        submitted_text = unidecode(submitted_text.replace(" ", "").lower())
+        if submitted_text == solution:
+            if task.round.can_submit():
+                points = 6
+            elif timezone.now() < task.round.end_time + timedelta(days=4):
+                points = 4
+            elif timezone.now() < task.round.end_time + timedelta(days=7):
+                points = 2
+            else:
+                points = 0
+        else:
+            points = 0
+        sub = Submit(
+            task=task,
+            user=request.user,
+            submit_type=submit_type,
+            points=points,
+            testing_status=constants.SUBMIT_STATUS_FINISHED,
+            text=submitted_text,
+        )
+        sub.save()
     else:
         # Only Description and Source and Zip submitting is developed currently
         raise Http404

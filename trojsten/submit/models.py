@@ -77,9 +77,11 @@ class SubmitManager(models.Manager):
 class Submit(models.Model):
     """
     Submit holds information about its task and person who submitted it.
-    There are 2 types of submits. Description submit and source submit.
+    There are 3 types of submits. Description submit, source submit and
+    text submit.
     Description submit has points and filename, Source submit has also
-    tester response and protocol ID assigned.
+    tester response and protocol ID assigned and Text submit has text
+    instead of filename
     """
 
     task = models.ForeignKey(Task, verbose_name="úloha", on_delete=models.CASCADE)
@@ -92,6 +94,7 @@ class Submit(models.Model):
     )
     points = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="body")
 
+    text = models.CharField(max_length=512, verbose_name="text", blank=True)
     filepath = models.CharField(max_length=512, verbose_name="súbor", blank=True)
     testing_status = models.CharField(
         max_length=128,

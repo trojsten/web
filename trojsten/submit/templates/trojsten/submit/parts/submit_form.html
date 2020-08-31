@@ -50,3 +50,17 @@
     <p>Tento príklad sa odovzdáva na zvlášť stránke. </p>
     <a class="btn btn-primary" href="{{task.external_submit_link}}">Stránka s odovzdávaním</a>
 {% endif %}
+{% if task.has_text_submit %}
+    {% if competition_ignored %}
+      <div class="alert alert-danger">
+        Tvoje riešenie sa neráta do výsledkovky. Ak to chceš zmeniť, povoľ si súťaž <em>{{ task.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
+      </div>
+    {% endif %}
+    <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=constants.SUBMIT_TYPE_SOURCE %}">
+        {% csrf_token %}
+        <div class="form-group" style="min-width:150px;"><label>Riešenie</label></div>
+<!--  TODO  Need to switch input type to text field.-->
+        {{ source_form | bootstrap_inline }}
+        <input class="btn btn-primary" type="submit" value="Odovzdaj" />
+    </form>
+{% endif %}
