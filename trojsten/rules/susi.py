@@ -124,7 +124,10 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         if self.tag.key == SUSI_BLYSKAVICA:
             active = active and (
-                (coefficient > SUSI_AGAT_MAX_COEFFICIENT or user in request.has_submit_in_blyskavica)
+                (
+                    coefficient > SUSI_AGAT_MAX_COEFFICIENT
+                    or user in request.has_submit_in_blyskavica
+                )
                 and not (self.get_graduation_status(user, request.round))
             )
 
