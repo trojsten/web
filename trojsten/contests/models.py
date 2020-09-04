@@ -23,8 +23,7 @@ from . import constants
 
 class CompetitionManager(models.Manager):
     def current_site_only(self):
-        """Returns only competitions belonging to current site
-        """
+        """Returns only competitions belonging to current site"""
         return Competition.objects.filter(sites__id=settings.SITE_ID).order_by("pk").all()
 
 
@@ -103,8 +102,7 @@ class RoundManager(models.Manager):
         return super().get_queryset().select_related("semester__competition")
 
     def visible(self, user, all_sites=False):
-        """Returns only rounds visible for user
-        """
+        """Returns only rounds visible for user"""
         if all_sites:
             competitions = Competition.objects.all()
         else:
@@ -119,8 +117,7 @@ class RoundManager(models.Manager):
 
     # @FIXME(unused): Was used only by actual results, moved to Rules.
     def latest_visible(self, user, all_sites=False):
-        """Returns latest visible round for each competition
-        """
+        """Returns latest visible round for each competition"""
         return (
             self.visible(user, all_sites)
             .order_by("semester__competition", "-end_time", "-number")
@@ -129,8 +126,7 @@ class RoundManager(models.Manager):
         )
 
     def active_visible(self, user, all_sites=False):
-        """Returns all visible running rounds for each competition
-        """
+        """Returns all visible running rounds for each competition"""
         return (
             self.visible(user, all_sites)
             .filter(
@@ -285,8 +281,7 @@ class TaskManager(models.Manager):
         return super().get_queryset().select_related("round__semester__competition")
 
     def for_rounds_and_category(self, rounds, category=None):
-        """Returns tasks which belong to specified rounds and category
-        """
+        """Returns tasks which belong to specified rounds and category"""
         if not rounds:
             return self.none()
         tasks = self.filter(round__in=rounds)
@@ -339,11 +334,12 @@ class Task(models.Model):
     external_submit_link = models.CharField(
         max_length=128, verbose_name="Odkaz na externé odovzdávanie", blank=True, null=True
     )
-    has_text_submit = models.BooleanField(
-        verbose_name="odovzdáva sa text", default=False
-    )
+    has_text_submit = models.BooleanField(verbose_name="odovzdáva sa text", default=False)
     text_submit_solution = models.CharField(
-        max_length=128, verbose_name="správne riešenie pri odoovzdávaní textu", blank=True, null=True
+        max_length=128,
+        verbose_name="správne riešenie pri odoovzdávaní textu",
+        blank=True,
+        null=True,
     )
     email_on_desc_submit = models.BooleanField(
         verbose_name=_("Send notification to reviewers about new description submit"), default=False

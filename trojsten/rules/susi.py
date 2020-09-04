@@ -41,7 +41,9 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             successful_semesters = self.susi_camps.get(user.pk, 0)
             puzzlehunt_participations = self.puzzlehunt_participations.get(user.pk, 0)
             trojsten_camps = self.trojsten_camps.get(user.pk, 0)
-            self.coefficients[user] = 5 * successful_semesters + 3 * puzzlehunt_participations + trojsten_camps
+            self.coefficients[user] = (
+                5 * successful_semesters + 3 * puzzlehunt_participations + trojsten_camps
+            )
 
         return self.coefficients[user]
 
@@ -71,9 +73,9 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                 ),
                 Q(going=True) | Q(type=EventParticipant.PARTICIPANT),
             )
-                .values("user")
-                .annotate(camps=Count("event__semester", distinct=True))
-                .values_list("user", "camps")
+            .values("user")
+            .annotate(camps=Count("event__semester", distinct=True))
+            .values_list("user", "camps")
         )
 
         # We ignore camps that happened before SUSI_YEARS_OF_CAMPS_HISTORY years, so we don't
@@ -113,14 +115,14 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         if self.tag.key == SUSI_ALEF:
             active = active and (
-                    (coefficient <= SUSI_ALEF_MAX_COEFFICIENT) and not self.get_graduation_status(user, request.round)
+                (coefficient <= SUSI_ALEF_MAX_COEFFICIENT)
+                and not self.get_graduation_status(user, request.round)
             )
 
         if self.tag.key == SUSI_BET:
             active = active and (
-                    (coefficient > SUSI_ALEF_MAX_COEFFICIENT or user in request.has_submit_in_bet) and not (
-                        self.get_graduation_status(user, request.round)
-                    )
+                (coefficient > SUSI_ALEF_MAX_COEFFICIENT or user in request.has_submit_in_bet)
+                and not (self.get_graduation_status(user, request.round))
             )
 
         if self.tag.key == SUSI_GIMEL:
@@ -133,8 +135,9 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         # Count only tasks your coefficient is eligible for, ignoring category Gimel
         for key in row.cells_by_key:
-            if SUSI_ELIGIBLE_FOR_TASK_BOUND[key] < coefficient and not \
-                    self.get_graduation_status(row.user, request.round):
+            if SUSI_ELIGIBLE_FOR_TASK_BOUND[key] < coefficient and not self.get_graduation_status(
+                row.user, request.round
+            ):
                 row.cells_by_key[key].active = False
 
         # Prepare list of pairs consisting of cell and its points.
