@@ -4,9 +4,9 @@
 import json
 import logging
 import os
+from datetime import timedelta
 
 import six
-from datetime import timedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -502,7 +502,7 @@ def task_submit_post(request, task_id, submit_type):
         else:
             return redirect(reverse("task_submit_page", kwargs={"task_id": int(task_id)}))
     elif submit_type == constants.SUBMIT_TYPE_TEXT:
-        submitted_text = 'yes'  # TODO FIX it to get text from request
+        submitted_text = "yes"  # TODO FIX it to get text from request
         solution = task.text_submit_solution.lower()
         submitted_text = unidecode(submitted_text.replace(" ", "").lower())
         if submitted_text == solution:
