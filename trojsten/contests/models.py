@@ -341,6 +341,18 @@ class Task(models.Model):
         blank=True,
         null=True,
     )
+    susi_first_hint = models.CharField(
+        max_length=128,
+        verbose_name="susi maly hint",
+        blank=True,
+        null=True,
+    )
+    susi_second_hint = models.CharField(
+        max_length=128,
+        verbose_name="susi velky hint",
+        blank=True,
+        null=True,
+    )
     email_on_desc_submit = models.BooleanField(
         verbose_name=_("Send notification to reviewers about new description submit"), default=False
     )
