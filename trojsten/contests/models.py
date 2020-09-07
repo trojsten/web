@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -180,6 +181,20 @@ class Round(models.Model):
             self.second_end_time is not None
             and self.end_time < timezone.now() < self.second_end_time
         )
+
+    @property
+    def small_hint_public(self):
+        end = self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Small Hint"])
+        if timezone.now() > end:
+            return True
+        return False
+
+    @property
+    def big_hint_public(self):
+        end = self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Big Hint"])
+        if timezone.now() > end:
+            return True
+        return False
 
     def get_base_path(self):
         round_dir = str(self.number)

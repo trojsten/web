@@ -81,6 +81,19 @@
     {% endif %}
     </div>
 
+    {% if task.round.semester.competition.name != "Suši" %}
+        <h2>Nápovedy</h2>
+        {% if task.round.small_hint_public %}
+            <h4>Malá nápoveda</h4>
+            {{ task.susi_first_hint }}
+        {% endif %}
+        {% if task.round.small_hint_public %}
+            <h4>Veľká nápoveda</h4>
+            {{ task.susi_second_hint }}
+        {% endif %}
+    {% endif %}
+
+
     <h2>Otázky a diskusia</h2>
     <p>
        Po skončení kola budete mať príležitosť na diskutovanie o riešeniach

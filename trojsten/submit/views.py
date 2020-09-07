@@ -524,15 +524,15 @@ def task_submit_post_susi(request, task_id, submit_type):
         solution = task.text_submit_solution.lower()
         submitted_text = unidecode(submitted_text.replace(" ", "").lower())
         if submitted_text == solution:
-            if task.round.can_submit:
-                points = constants.SUSI_POINTS_ALLOCATION["Full"]
-            elif timezone.now() < task.round.end_time + timedelta(
+            if timezone.now() < task.round.end_time - timedelta(
                 days=constants.SUSI_HINT_DATES["Small Hint"]
             ):
-                points = constants.SUSI_POINTS_ALLOCATION["Small Hint"]
-            elif timezone.now() < task.round.end_time + timedelta(
+                points = constants.SUSI_POINTS_ALLOCATION["Full"]
+            elif timezone.now() < task.round.end_time - timedelta(
                 days=constants.SUSI_HINT_DATES["Big Hint"]
             ):
+                points = constants.SUSI_POINTS_ALLOCATION["Small Hint"]
+            elif timezone.now() < task.round.end_time:
                 points = constants.SUSI_POINTS_ALLOCATION["Big Hint"]
             else:
                 points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
@@ -547,28 +547,39 @@ def task_submit_post_susi(request, task_id, submit_type):
             text=submitted_text,
         )
         sub.save()
+
+        if task.round.can_submit:
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                _("You have successfully submitted your solution."),
+            )
+        else:
+            messages.add_message(
+                request,
+                messages.WARNING,
+                _(
+                    "You have submitted your description after the deadline. "
+                    "It is not counted in results."
+                ),
+            )
+        if points > 0:
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                _("Your solution is correct. You gain {} points.".format(points)),
+            )
+        else:
+            messages.add_message(
+                request,
+                messages.ERROR,
+                _("Your solution is incorrect. You gain {} points.".format(points)),
+            )
+
     else:
         for field in form:
             for error in field.errors:
                 messages.add_message(request, messages.ERROR, "%s: %s" % (field.label, error))
-    if task.round.can_submit:
-        messages.add_message(
-            request,
-            messages.SUCCESS,
-            _(
-                "You have successfully submitted your description, "
-                "it will be reviewed after the round finishes."
-            ),
-        )
-    else:
-        messages.add_message(
-            request,
-            messages.WARNING,
-            _(
-                "You have submitted your description after the deadline. "
-                "It is not counted in results."
-            ),
-        )
 
     if "redirect_to" in request.POST and request.POST["redirect_to"]:
         return redirect(request.POST["redirect_to"])
