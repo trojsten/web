@@ -28,7 +28,12 @@ from unidecode import unidecode
 
 from trojsten.contests import constants as contest_consts
 from trojsten.contests.models import Competition, Round, Task
-from trojsten.submit.forms import DescriptionSubmitForm, SourceSubmitForm, TestableZipSubmitForm
+from trojsten.submit.forms import (
+    DescriptionSubmitForm,
+    SourceSubmitForm,
+    TestableZipSubmitForm,
+    TextSubmitForm,
+)
 from trojsten.submit.helpers import (
     get_description_file_path,
     get_path,
@@ -502,20 +507,37 @@ def task_submit_post(request, task_id, submit_type):
         else:
             return redirect(reverse("task_submit_page", kwargs={"task_id": int(task_id)}))
     elif submit_type == constants.SUBMIT_TYPE_TEXT:
-        submitted_text = "yes"  # TODO FIX it to get text from request
+        return task_submit_post_susi(request, task_id, submit_type)
+    else:
+        # Only Description and Source and Zip and Text submitting is developed currently
+        raise Http404
+
+
+@login_required
+def task_submit_post_susi(request, task_id, submit_type):
+    """Spracovanie uploadnuteho submitu pre susi"""
+    task = get_object_or_404(Task, pk=task_id)
+    form = TextSubmitForm(request.POST)
+
+    if form.is_valid():
+        submitted_text = form.cleaned_data["submitted_text"]
         solution = task.text_submit_solution.lower()
         submitted_text = unidecode(submitted_text.replace(" ", "").lower())
         if submitted_text == solution:
             if task.round.can_submit():
-                points = 6
-            elif timezone.now() < task.round.end_time + timedelta(days=4):
-                points = 4
-            elif timezone.now() < task.round.end_time + timedelta(days=7):
-                points = 2
+                points = constants.SUSI_POINTS_ALLOCATION["Full"]
+            elif timezone.now() < task.round.end_time + timedelta(
+                days=constants.SUSI_HINT_DATES["Small Hint"]
+            ):
+                points = constants.SUSI_POINTS_ALLOCATION["Small Hint"]
+            elif timezone.now() < task.round.end_time + timedelta(
+                days=constants.SUSI_HINT_DATES["Big Hint"]
+            ):
+                points = constants.SUSI_POINTS_ALLOCATION["Big Hint"]
             else:
-                points = 0
+                points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
         else:
-            points = 0
+            points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
         sub = Submit(
             task=task,
             user=request.user,
@@ -526,8 +548,32 @@ def task_submit_post(request, task_id, submit_type):
         )
         sub.save()
     else:
-        # Only Description and Source and Zip submitting is developed currently
-        raise Http404
+        for field in form:
+            for error in field.errors:
+                messages.add_message(request, messages.ERROR, "%s: %s" % (field.label, error))
+    if task.round.can_submit:
+        messages.add_message(
+            request,
+            messages.SUCCESS,
+            _(
+                "You have successfully submitted your description, "
+                "it will be reviewed after the round finishes."
+            ),
+        )
+    else:
+        messages.add_message(
+            request,
+            messages.WARNING,
+            _(
+                "You have submitted your description after the deadline. "
+                "It is not counted in results."
+            ),
+        )
+
+    if "redirect_to" in request.POST and request.POST["redirect_to"]:
+        return redirect(request.POST["redirect_to"])
+    else:
+        return redirect(reverse("task_submit_page", kwargs={"task_id": int(task_id)}))
 
 
 @api_view(["POST"])

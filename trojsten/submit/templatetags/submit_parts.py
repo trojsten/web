@@ -2,7 +2,12 @@ from django import template
 from judge_client import constants as judge_constants
 
 from trojsten.contests.models import Task
-from trojsten.submit.forms import DescriptionSubmitForm, SourceSubmitForm, TestableZipSubmitForm
+from trojsten.submit.forms import (
+    DescriptionSubmitForm,
+    SourceSubmitForm,
+    TestableZipSubmitForm,
+    TextSubmitForm,
+)
 
 from .. import constants
 from ..models import Submit
@@ -24,6 +29,8 @@ def show_submit_form(context, task, user, redirect, show_only_source=False):
         context["description_form"] = DescriptionSubmitForm()
     if task.has_testablezip:
         context["testablezip_form"] = TestableZipSubmitForm()
+    if task.has_text_submit:
+        context["text_submit_form"] = TextSubmitForm()
     return context
 
 

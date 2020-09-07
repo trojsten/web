@@ -57,3 +57,15 @@ EXT_MAPPING = {
     ".java": ".java",
     ".zip": ".zip",
 }
+
+SUSI_POINTS_ALLOCATION = {
+    "Full": 6,
+    "Small Hint": 4,
+    "Big Hint": 2,
+    "Incorrect": 0,
+}
+
+SUSI_HINT_DATES = {
+    "Small Hint": 4,
+    "Big Hint": 7,
+}

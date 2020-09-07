@@ -20,6 +20,7 @@ SUSI_AGAT_MAX_COEFFICIENT = 8
 SUSI_ELIGIBLE_FOR_TASK_BOUND = [8, 8, 1000, 1000, 1000, 1000, 1000]
 
 SUSI_CAMP_TYPE = "SuŠi sústredenie"
+SUSI_CAMP_TYPE_ID = 7
 
 SUSI_YEARS_OF_CAMPS_HISTORY = 10
 
@@ -84,7 +85,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         self.susi_camps = dict(
             EventParticipant.objects.filter(
                 Q(
-                    event__type__name=SUSI_CAMP_TYPE,
+                    event__type__id=SUSI_CAMP_TYPE_ID,
                     event__end_time__lt=round.end_time,
                     event__end_time__year__gte=round.end_time.year - SUSI_YEARS_OF_CAMPS_HISTORY,
                 ),
@@ -158,8 +159,6 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             cell.active = False
 
     def calculate_row_round_total(self, res_request, row, cols):
-        # coefficient = self.get_user_coefficient(row.user, res_request.round)
-
         row.round_total = sum(
             self.get_cell_total(res_request, cell)
             for key, cell in row.cells_by_key.items()

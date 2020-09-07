@@ -100,3 +100,7 @@ class SubmitAdminForm(forms.ModelForm):
     class Meta:
         model = Submit
         fields = "__all__"
+
+
+class TextSubmitForm(forms.Form):
+    submitted_text = forms.CharField(label="Riešenie:", max_length=512)

@@ -4,6 +4,7 @@ import os
 
 from django.conf import settings
 from django.contrib.auth.models import Group
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.sites.models import Site
 from django.db import models
 from django.db.models import Q
@@ -336,22 +337,32 @@ class Task(models.Model):
     )
     has_text_submit = models.BooleanField(verbose_name="odovzdáva sa text", default=False)
     text_submit_solution = models.CharField(
-        max_length=128,
-        verbose_name="správne riešenie pri odoovzdávaní textu",
+        max_length=512,
+        verbose_name="správne riešenie pri odovzdávaní textu",
         blank=True,
         null=True,
     )
-    susi_first_hint = models.CharField(
-        max_length=128,
-        verbose_name="susi maly hint",
+    susi_first_hint = ArrayField(
+        models.CharField(
+            max_length=128,
+            verbose_name="malý hint",
+            blank=True,
+            null=True,
+        ),
         blank=True,
         null=True,
+        default=list,
     )
-    susi_second_hint = models.CharField(
-        max_length=128,
-        verbose_name="susi velky hint",
+    susi_second_hint = ArrayField(
+        models.CharField(
+            max_length=128,
+            verbose_name="veľký hint",
+            blank=True,
+            null=True,
+        ),
         blank=True,
         null=True,
+        default=list,
     )
     email_on_desc_submit = models.BooleanField(
         verbose_name=_("Send notification to reviewers about new description submit"), default=False
