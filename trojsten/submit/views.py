@@ -524,7 +524,7 @@ def task_submit_post_susi(request, task_id, submit_type):
         solution = task.text_submit_solution.lower()
         submitted_text = unidecode(submitted_text.replace(" ", "").lower())
         if submitted_text == solution:
-            if task.round.can_submit():
+            if task.round.can_submit:
                 points = constants.SUSI_POINTS_ALLOCATION["Full"]
             elif timezone.now() < task.round.end_time + timedelta(
                 days=constants.SUSI_HINT_DATES["Small Hint"]
