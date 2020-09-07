@@ -85,11 +85,23 @@
         <h2>Nápovedy</h2>
         {% if task.round.small_hint_public %}
             <h4>Malá nápoveda</h4>
-            {{ task.susi_first_hint }}
+            {% if task.susi_small_hint|length > 0 %}
+                {% for hint in task.susi_small_hint %}
+                    {{ hint }}
+                {% endfor %}
+           {% else %}
+               Pre túto úlohu nebola zverejnená malá nápoveda.
+           {% endif %}
         {% endif %}
         {% if task.round.small_hint_public %}
             <h4>Veľká nápoveda</h4>
-            {{ task.susi_second_hint }}
+            {% if task.susi_big_hint|length > 0 %}
+                {% for hint in task.susi_big_hint %}
+                    {{ hint }}
+                {% endfor %}
+            {% else %}
+                Pre túto úlohu nebola zverejnená veľká nápoveda.
+            {% endif %}
         {% endif %}
     {% endif %}
 

@@ -357,7 +357,7 @@ class Task(models.Model):
         blank=True,
         null=True,
     )
-    susi_first_hint = ArrayField(
+    susi_small_hint = ArrayField(
         models.CharField(
             max_length=128,
             verbose_name="malý hint",
@@ -368,7 +368,7 @@ class Task(models.Model):
         null=True,
         default=list,
     )
-    susi_second_hint = ArrayField(
+    susi_big_hint = ArrayField(
         models.CharField(
             max_length=128,
             verbose_name="veľký hint",
