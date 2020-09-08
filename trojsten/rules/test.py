@@ -25,6 +25,14 @@ from trojsten.rules.kms import (
 )
 from trojsten.rules.ksp import KSP_ALL, KSP_L1, KSP_L2, KSP_L3, KSP_L4
 from trojsten.rules.models import KSPLevel
+from trojsten.rules.susi import (
+    SUSI_AGAT,
+    SUSI_BLYSKAVICA,
+    SUSI_CAMP_TYPE,
+    SUSI_CIFERSKY_CECH,
+    SUSIResultsGenerator,
+    SUSIRules,
+)
 from trojsten.submit.models import Submit
 
 SOURCE = submit_constants.SUBMIT_TYPE_SOURCE
@@ -242,7 +250,7 @@ class KMSRulesTest(TestCase):
     def setUp(self):
         time = datetime.datetime(2004, 4, 7, 12, 47)
         self.time = timezone.make_aware(time)
-        # pk = 2 sets rules to KMSRules
+        # pk = 7 sets rules to KMSRules
         self.competition = Competition.objects.create(name="TestCompetition", pk=7)
         self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         self.competition.save()
@@ -877,3 +885,321 @@ class KSPRulesOneUserTest(TestCase):
         self.assertEqual(cells[2].auto_points, "5")
         self.assertEqual(cells[2].manual_points, "9")
         self.assertEqual(cells[2].points, "14")
+
+
+class SusiCoefficientTest(TestCase):
+    def setUp(self):
+        time = datetime.datetime(2047, 4, 7, 12, 47)
+        self.time = timezone.make_aware(time)
+
+        group = Group.objects.create(name="skupina")
+        self.place = EventPlace.objects.create(name="Horna dolna")
+        self.type_camp = EventType.objects.create(
+            name=SUSI_CAMP_TYPE, organizers_group=group, is_camp=True
+        )
+        self.type_camp_kms = EventType.objects.create(
+            name=KMS_CAMP_TYPE, organizers_group=group, is_camp=True
+        )
+
+        competition = Competition.objects.create(name="TestCompetition")
+        competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.semesters = []
+        self.camps = []
+        self.other_camps = []
+        for (year, semester_number) in [(1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2)]:
+            self.semesters.append(
+                Semester.objects.create(
+                    year=year, number=semester_number, name="Test semester", competition=competition
+                )
+            )
+            self.other_camps.append(
+                Event.objects.create(
+                    name="KMS camp",
+                    type=self.type_camp_kms,
+                    semester=self.semesters[-1],
+                    place=self.place,
+                    start_time=self.time,
+                    end_time=self.time,
+                )
+            )
+            self.camps.append(
+                Event.objects.create(
+                    name="Susi camp",
+                    type=self.type_camp,
+                    semester=self.semesters[-1],
+                    place=self.place,
+                    start_time=self.time,
+                    end_time=self.time,
+                )
+            )
+        self.current_semester = self.semesters[-1]
+        self.start = self.time + timezone.timedelta(2)
+        self.end = self.time + timezone.timedelta(4)
+        self.round = Round.objects.create(
+            number=1,
+            semester=self.current_semester,
+            visible=True,
+            solutions_visible=False,
+            start_time=self.start,
+            end_time=self.end,
+        )
+
+        graduation_year = self.round.end_time.year + int(
+            self.round.end_time.month > SCHOOL_YEAR_END_MONTH
+        )
+        self.test_user = User.objects.create(
+            username="test_user",
+            password="password",
+            first_name="Jozko",
+            last_name="Mrkvicka",
+            graduation=graduation_year + 3,
+        )
+        self.tag = SUSIRules.RESULTS_TAGS[SUSI_BLYSKAVICA]
+
+    def test_susi_camps_only(self):
+        # Coefficient = 5: successful semesters = 1, other camps = 0
+        EventParticipant.objects.create(
+            event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
+        )
+        generator = SUSIResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 5)
+
+    def test_other_camps_only(self):
+        # Coefficient = 1: successful semesters = 0, other camps = 1
+        EventParticipant.objects.create(
+            event=self.other_camps[0],
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=True,
+        )
+        generator = SUSIResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
+
+    def test_all_camps(self):
+        # Coefficient = 5: successful semesters = 1, other camps = 1
+        EventParticipant.objects.create(
+            event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
+        )
+        EventParticipant.objects.create(
+            event=self.other_camps[0],
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=True,
+        )
+        generator = SUSIResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 6)
+
+    def test_ignore_not_going_reserve(self):
+        # Coefficient = 0: successful semesters = 0, other camps = 0
+        EventParticipant.objects.create(
+            event=self.camps[0], user=self.test_user, type=EventParticipant.RESERVE, going=False
+        )
+        generator = SUSIResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
+
+    def test_count_not_going_participant(self):
+        # Coefficient = 5: successful semesters = 1, other camps = 0
+        EventParticipant.objects.create(
+            event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=False
+        )
+        generator = SUSIResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 5)
+
+    def test_ignore_not_going_participant_other_camp(self):
+        # Coefficient = 0: successful semesters = 0, other camps = 0
+        EventParticipant.objects.create(
+            event=self.other_camps[0],
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=False,
+        )
+        generator = SUSIResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
+
+    def test_many_camps(self):
+        # Coefficient = 13: successful semesters = 2, other camps = 3
+        for i in range(2):
+            EventParticipant.objects.create(
+                event=self.camps[i],
+                user=self.test_user,
+                type=EventParticipant.PARTICIPANT,
+                going=True,
+            )
+        for i in range(3):
+            EventParticipant.objects.create(
+                event=self.other_camps[i],
+                user=self.test_user,
+                type=EventParticipant.PARTICIPANT,
+                going=True,
+            )
+        generator = SUSIResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 13)
+
+
+class SUSIRulesTest(TestCase):
+    def setUp(self):
+        time = datetime.datetime.now() - timezone.timedelta(days=365)
+        self.time = timezone.make_aware(time)
+        # pk = 9 sets rules to SUSIRules
+        self.competition = Competition.objects.create(name="TestCompetition", pk=9)
+        self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.competition.save()
+        self.semester = Semester.objects.create(
+            number=1, name="Test semester", competition=self.competition, year=47
+        )
+        self.start = self.time + timezone.timedelta(-4)
+        self.end = self.time + timezone.timedelta(4)
+        self.round = Round.objects.create(
+            number=1,
+            semester=self.semester,
+            visible=True,
+            solutions_visible=False,
+            start_time=self.start,
+            end_time=self.end,
+        )
+
+        self.group = Group.objects.create(name="skupina")
+        self.type_camp = EventType.objects.create(
+            name=SUSI_CAMP_TYPE, organizers_group=self.group, is_camp=True
+        )
+        self.type_other_camp = EventType.objects.create(
+            name=KMS_CAMP_TYPE, organizers_group=self.group, is_camp=True
+        )
+
+        category_agat = Category.objects.create(name=SUSI_AGAT, competition=self.competition)
+        category_blyskavica = Category.objects.create(
+            name=SUSI_BLYSKAVICA, competition=self.competition
+        )
+        category_cifersky_cech = Category.objects.create(
+            name=SUSI_CIFERSKY_CECH, competition=self.competition
+        )
+
+        self.tasks = []
+        for i in range(1, 8):
+            self.tasks.append(
+                Task.objects.create(
+                    number=i,
+                    name="Test task {}".format(i),
+                    round=self.round,
+                    description_points_visible=True,
+                )
+            )
+            cat = []
+            if i <= 5:
+                cat += [category_agat]
+            if i >= 3:
+                cat += [category_blyskavica, category_cifersky_cech]
+            self.tasks[-1].categories.set(cat)
+            self.tasks[-1].save()
+
+        self.url = reverse("view_latest_results")
+
+    def _create_submits(self, user, points):
+        for i in range(len(points)):
+            if points[i] >= 0:
+                submit = Submit.objects.create(
+                    task=self.tasks[i],
+                    user=user,
+                    submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+                    points=points[i],
+                    testing_status="reviewed",
+                )
+                submit.time = self.end + timezone.timedelta(-1)
+                submit.save()
+
+    def _create_user_with_coefficient(self, coefficient, username="test_user"):
+        user = User.objects.create(
+            username=username,
+            password="password",
+            first_name="Jozko",
+            last_name="Mrkvicka",
+            graduation=self.round.end_time.year + 3,
+        )
+        place = EventPlace.objects.create(name="Horna dolna")
+        for i in range(coefficient):
+            semester = Semester.objects.create(
+                number=i + 1, name="Test semester", competition=self.competition, year=i + 1
+            )
+            camp = Event.objects.create(
+                name="KMS camp",
+                type=self.type_other_camp,
+                semester=semester,
+                place=place,
+                start_time=self.time,
+                end_time=self.time + timezone.timedelta(-(i + 1) * 30),
+            )
+            EventParticipant.objects.create(
+                event=camp, user=user, type=EventParticipant.PARTICIPANT, going=True
+            )
+        return user
+
+    def test_create_user_with_coefficient(self):
+        for i in range(0, 12):
+            user = self._create_user_with_coefficient(i, "testuser%d" % i)
+            generator = SUSIResultsGenerator(SUSIRules.RESULTS_TAGS[SUSI_BLYSKAVICA])
+            self.assertEqual(generator.get_user_coefficient(user, self.round), i)
+
+    def test_blyskavica_only_user(self):
+        points = [6, 4, 0, 5, 1, 2, 2]
+        user = self._create_user_with_coefficient(9)
+        self._create_submits(user, points)
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_BLYSKAVICA)
+        row_b = get_row_for_user(scoreboard, user)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_AGAT)
+        row_a = get_row_for_user(scoreboard, user)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_CIFERSKY_CECH)
+        row_c = get_row_for_user(scoreboard, user)
+        self.assertTrue(row_b.active)
+        self.assertFalse(row_a.active)
+        # self.assertFalse(row_c.active)
+
+    def test_agat_only_user(self):
+        points = [6, 4, 0, 5, 1]
+        user = self._create_user_with_coefficient(8)
+        self._create_submits(user, points)
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_BLYSKAVICA)
+        row_b = get_row_for_user(scoreboard, user)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_AGAT)
+        row_a = get_row_for_user(scoreboard, user)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_CIFERSKY_CECH)
+        row_c = get_row_for_user(scoreboard, user)
+        self.assertTrue(row_a.active)
+        self.assertFalse(row_b.active)
+        # self.assertFalse(row_c.active)
+
+    def test_cifersky_cech_user(self):
+        points = [6, 4, 0, 5, 1, 2, 2]
+        user = self._create_user_with_coefficient(1)
+        user.graduation = 10
+        user.save()
+        self._create_submits(user, points)
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_BLYSKAVICA)
+        row_b = get_row_for_user(scoreboard, user)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_AGAT)
+        row_a = get_row_for_user(scoreboard, user)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_CIFERSKY_CECH)
+        row_c = get_row_for_user(scoreboard, user)
+        self.assertFalse(row_a.active)
+        self.assertFalse(row_b.active)
+        self.assertTrue(row_c.active)
+
+    def test_agat_blyskavica_user(self):
+        points = [6, 4, 0, 5, 1, 2, 2]
+        user = self._create_user_with_coefficient(1)
+        self._create_submits(user, points)
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_BLYSKAVICA)
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        row_b = get_row_for_user(scoreboard, user)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_AGAT)
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        row_a = get_row_for_user(scoreboard, user)
+        self.assertEqual(row_a.cell_list[col_to_index_map["sum"]].points, "16")
+        self.assertEqual(row_b.cell_list[col_to_index_map["sum"]].points, "10")

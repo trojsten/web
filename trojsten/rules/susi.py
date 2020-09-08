@@ -17,10 +17,10 @@ SUSI_CIFERSKY_CECH = "cifersky cech"
 
 
 SUSI_AGAT_MAX_COEFFICIENT = 8
-SUSI_ELIGIBLE_FOR_TASK_BOUND = [8, 8, 1000, 1000, 1000, 1000, 1000]
+SUSI_ELIGIBLE_FOR_TASK_BOUND = [0, 8, 8, 1000, 1000, 1000, 1000, 1000]
 
 SUSI_CAMP_TYPE = "SuŠi sústredenie"
-SUSI_CAMP_TYPE_ID = 7
+# SUSI_CAMP_TYPE_ID = 7
 
 SUSI_YEARS_OF_CAMPS_HISTORY = 10
 
@@ -30,8 +30,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         super(SUSIResultsGenerator, self).__init__(tag)
         self.susi_camps = None
         self.trojsten_camps = None
-        self.puzzlehunt_participations = None
-        self.has_graduated = None
+        self.puzzlehunt_participations = {}
         self.coefficients = {}
 
     def get_user_coefficient(self, user, round):
@@ -49,7 +48,9 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         return self.coefficients[user]
 
     def get_graduation_status(self, user, res_request):
-        minimal_year = self.get_minimal_year_of_graduation(res_request, user)
+        minimal_year = super(SUSIResultsGenerator, self).get_minimal_year_of_graduation(
+            res_request, user
+        )
         return user.graduation < minimal_year
 
     def prepare_coefficients(self, round):
@@ -80,7 +81,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         self.susi_camps = dict(
             EventParticipant.objects.filter(
                 Q(
-                    event__type__id=SUSI_CAMP_TYPE_ID,
+                    event__type__name=SUSI_CAMP_TYPE,
                     event__end_time__lt=round.end_time,
                     event__end_time__year__gte=round.end_time.year - SUSI_YEARS_OF_CAMPS_HISTORY,
                 ),
@@ -93,7 +94,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         # TODO Fill dictionary with values of property "SUSI_Ucasti_na_sifrovackach" for all
         # susi participants
-        self.puzzlehunt_participations = None
+        self.puzzlehunt_participations = {}
 
     def run(self, res_request):
         self.prepare_coefficients(res_request.round)
