@@ -550,7 +550,7 @@ def task_submit_post_susi(request, task_id, submit_type):
             user=request.user,
             submit_type=submit_type,
             points=points,
-            testing_status=constants.SUBMIT_STATUS_FINISHED,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED,
             text=submitted_text,
             tester_response=response,
         )
