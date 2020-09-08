@@ -196,6 +196,14 @@ class Round(models.Model):
             return True
         return False
 
+    @property
+    def small_hint_date(self):
+        return self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Small Hint"])
+
+    @property
+    def big_hint_date(self):
+        return self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Big Hint"])
+
     def get_base_path(self):
         round_dir = str(self.number)
         semester_dir = str(self.semester.number)
