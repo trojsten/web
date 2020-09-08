@@ -538,6 +538,10 @@ def task_submit_post_susi(request, task_id, submit_type):
                 points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
         else:
             points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
+        wrong_submits = len(
+            Submit.objects.filter(task=task, user=request.user,).exclude(text=solution)
+        )
+        points = max(points - wrong_submits // constants.SUSI_WRONG_SUBMITS_TO_PENALTY, 0)
         sub = Submit(
             task=task,
             user=request.user,

@@ -48,12 +48,9 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         return self.coefficients[user]
 
-    def get_graduation_status(self, user, round):
-        if user not in self.has_graduated:
-            if not self.has_graduated:
-                self.prepare_coefficients(round)
-
-        return self.has_graduated[user]
+    def get_graduation_status(self, user, res_request):
+        minimal_year = self.get_minimal_year_of_graduation(res_request, user)
+        return user.graduation < minimal_year
 
     def prepare_coefficients(self, round):
         """
@@ -67,14 +64,12 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         self.trojsten_camps = dict(
             EventParticipant.objects.filter(
                 Q(
-                    # TODO I think commenting next line will retrieve participations in
-                    # all trojsten camps
-                    # event__type__name=SUSI_CAMP_TYPE,
                     event__end_time__lt=round.end_time,
                     event__end_time__year__gte=round.end_time.year - SUSI_YEARS_OF_CAMPS_HISTORY,
                 ),
-                Q(going=True) | Q(type=EventParticipant.PARTICIPANT),
+                Q(going=True),
             )
+            .exclude(Q(event__type__name=SUSI_CAMP_TYPE))
             .values("user")
             .annotate(camps=Count("event__semester", distinct=True))
             .values_list("user", "camps")
@@ -100,10 +95,6 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         # susi participants
         self.puzzlehunt_participations = None
 
-        # TODO Fill dictionary with booleans, indicating whether a participant has ended
-        #  high school or not
-        self.has_graduated = None
-
     def run(self, res_request):
         self.prepare_coefficients(res_request.round)
         res_request.has_submit_in_blyskavica = set()
@@ -113,6 +104,9 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             res_request.has_submit_in_blyskavica.add(submit.user)
         return super(SUSIResultsGenerator, self).run(res_request)
 
+    def get_minimal_year_of_graduation(self, res_request, user):
+        return -1
+
     def is_user_active(self, request, user):
         active = super(SUSIResultsGenerator, self).is_user_active(request, user)
         coefficient = self.get_user_coefficient(user, request.round)
@@ -120,7 +114,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         if self.tag.key == SUSI_AGAT:
             active = active and (
                 (coefficient <= SUSI_AGAT_MAX_COEFFICIENT)
-                and not self.get_graduation_status(user, request.round)
+                and not self.get_graduation_status(user, request)
             )
 
         if self.tag.key == SUSI_BLYSKAVICA:
@@ -129,7 +123,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                     coefficient > SUSI_AGAT_MAX_COEFFICIENT
                     or user in request.has_submit_in_blyskavica
                 )
-                and not (self.get_graduation_status(user, request.round))
+                and not (self.get_graduation_status(user, request))
             )
 
         if self.tag.key == SUSI_CIFERSKY_CECH:
@@ -143,7 +137,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         # Count only tasks your coefficient is eligible for, ignoring category Cifersky Cech
         for key in row.cells_by_key:
             if SUSI_ELIGIBLE_FOR_TASK_BOUND[key] < coefficient and not self.get_graduation_status(
-                row.user, request.round
+                row.user, request
             ):
                 row.cells_by_key[key].active = False
 
