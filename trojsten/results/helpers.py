@@ -114,8 +114,7 @@ class FrozenUser(object):
 
 
 def get_results_data(submits):
-    """Returns results data for each user who has submitted at least one task
-    """
+    """Returns results data for each user who has submitted at least one task"""
     res = defaultdict(UserResult)
     for submit in submits:
         res[submit.user].add_task_points(
