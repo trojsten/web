@@ -4,7 +4,6 @@
 import json
 import logging
 import os
-from datetime import timedelta
 
 import six
 from django.conf import settings
