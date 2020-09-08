@@ -532,7 +532,7 @@ def task_submit_post_susi(request, task_id, submit_type):
                 points -= constants.SUSI_POINTS_ALLOCATION["Small Hint Deduction"]
             elif timezone.now() > task.round.big_hint_date and len(task.susi_big_hint) > 0:
                 points -= constants.SUSI_POINTS_ALLOCATION["Big Hint Deduction"]
-            else:
+            elif timezone.now() > task.round.end_time:
                 points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
         else:
             response = "WA"
@@ -557,7 +557,9 @@ def task_submit_post_susi(request, task_id, submit_type):
 
         if task.round.can_submit:
             messages.add_message(
-                request, messages.SUCCESS, _("You have successfully submitted your solution."),
+                request,
+                messages.SUCCESS,
+                _("You have successfully submitted your solution."),
             )
         else:
             messages.add_message(
