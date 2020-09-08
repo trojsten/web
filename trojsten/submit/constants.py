@@ -71,3 +71,5 @@ SUSI_HINT_DATES = {
     "Small Hint": 7,
     "Big Hint": 3,
 }
+
+SUSI_WRONG_SUBMITS_TO_PENALTY = 5
