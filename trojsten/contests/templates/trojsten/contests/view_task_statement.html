@@ -63,6 +63,11 @@
         {% endif %}
     </div>
     <div class="task-submit">
+
+    {% if task.round.semester.competition.name == "Suši" %}
+        {% include "./parts/susi_hints.html" %}
+    {% endif %}
+
     {% if task.get_submit_types|length > 0 %}
         <h2>Odovzdávanie</h2>
         {% if request.user.is_authenticated %}
@@ -80,31 +85,6 @@
         <p class="text-danger">Tento príklad momentálne nemá možnosť odovzdávania.</p>
     {% endif %}
     </div>
-
-    {% if task.round.semester.competition.name != "Suši" %}
-        <h2>Nápovedy</h2>
-        {% if task.round.small_hint_public %}
-            <h4>Malá nápoveda</h4>
-            {% if task.susi_small_hint|length > 0 %}
-                {% for hint in task.susi_small_hint %}
-                    {{ hint }}
-                {% endfor %}
-           {% else %}
-               Pre túto úlohu nebola zverejnená malá nápoveda.
-           {% endif %}
-        {% endif %}
-        {% if task.round.small_hint_public %}
-            <h4>Veľká nápoveda</h4>
-            {% if task.susi_big_hint|length > 0 %}
-                {% for hint in task.susi_big_hint %}
-                    {{ hint }}
-                {% endfor %}
-            {% else %}
-                Pre túto úlohu nebola zverejnená veľká nápoveda.
-            {% endif %}
-        {% endif %}
-    {% endif %}
-
 
     <h2>Otázky a diskusia</h2>
     <p>

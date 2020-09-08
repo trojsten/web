@@ -1,0 +1,23 @@
+<h2>Nápovedy</h2>
+
+    <h4>Malá nápoveda</h4>
+    {% if task.round.small_hint_public and task.susi_small_hint|length > 0 %}
+        {% for hint in task.susi_small_hint %}
+            {{ hint }}
+        {% endfor %}
+    {% elif task.susi_small_hint|length > 0 %}
+        Bude zverejnená {{ task.round.small_hint_date }}.
+    {% else %}
+        Pre túto úlohu nebude zverejnená.
+    {% endif %}
+
+    <h4>Veľká nápoveda</h4>
+    {% if task.round.big_hint_public and task.susi_big_hint|length > 0 %}
+        {% for hint in task.susi_big_hint %}
+            {{ hint }}
+        {% endfor %}
+    {% elif task.susi_big_hint|length > 0 %}
+        Bude zverejnená {{ task.round.big_hint_date }}.
+    {% else %}
+        Pre túto úlohu nebude zverejnená.
+    {% endif %}

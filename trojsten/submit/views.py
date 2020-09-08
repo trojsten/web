@@ -4,7 +4,6 @@
 import json
 import logging
 import os
-from datetime import timedelta
 
 import six
 from django.conf import settings
@@ -524,22 +523,25 @@ def task_submit_post_susi(request, task_id, submit_type):
         solution = task.text_submit_solution.lower()
         submitted_text = unidecode(submitted_text.replace(" ", "").lower())
         if submitted_text == solution:
-            if timezone.now() < task.round.end_time - timedelta(
-                days=constants.SUSI_HINT_DATES["Small Hint"]
+            response = "OK"
+            points = constants.SUSI_POINTS_ALLOCATION["Full"]
+            if (
+                task.round.small_hint_date < timezone.now() < task.round.big_hint_date
+                and len(task.susi_small_hint) > 0
             ):
-                points = constants.SUSI_POINTS_ALLOCATION["Full"]
-            elif timezone.now() < task.round.end_time - timedelta(
-                days=constants.SUSI_HINT_DATES["Big Hint"]
-            ):
-                points = constants.SUSI_POINTS_ALLOCATION["Small Hint"]
-            elif timezone.now() < task.round.end_time:
-                points = constants.SUSI_POINTS_ALLOCATION["Big Hint"]
+                points -= constants.SUSI_POINTS_ALLOCATION["Small Hint Deduction"]
+            elif timezone.now() > task.round.big_hint_date and len(task.susi_big_hint) > 0:
+                points -= constants.SUSI_POINTS_ALLOCATION["Big Hint Deduction"]
             else:
                 points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
         else:
+            response = "WA"
             points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
         wrong_submits = len(
-            Submit.objects.filter(task=task, user=request.user,).exclude(text=solution)
+            Submit.objects.filter(
+                task=task,
+                user=request.user,
+            ).exclude(text=solution)
         )
         points = max(points - wrong_submits // constants.SUSI_WRONG_SUBMITS_TO_PENALTY, 0)
         sub = Submit(
@@ -547,8 +549,9 @@ def task_submit_post_susi(request, task_id, submit_type):
             user=request.user,
             submit_type=submit_type,
             points=points,
-            testing_status=constants.SUBMIT_STATUS_FINISHED,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED,
             text=submitted_text,
+            tester_response=response,
         )
         sub.save()
 
@@ -565,7 +568,7 @@ def task_submit_post_susi(request, task_id, submit_type):
                     "It is not counted in results."
                 ),
             )
-        if points > 0:
+        if submitted_text == solution:
             messages.add_message(
                 request,
                 messages.SUCCESS,
