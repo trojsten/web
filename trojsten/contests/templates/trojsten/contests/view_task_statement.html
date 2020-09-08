@@ -64,7 +64,7 @@
     </div>
     <div class="task-submit">
 
-    {% if task.round.semester.competition.name != "Suši" %}
+    {% if task.round.semester.competition.name == "Suši" %}
         {% include "./parts/susi_hints.html" %}
     {% endif %}
 

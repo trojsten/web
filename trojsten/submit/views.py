@@ -524,6 +524,7 @@ def task_submit_post_susi(request, task_id, submit_type):
         solution = task.text_submit_solution.lower()
         submitted_text = unidecode(submitted_text.replace(" ", "").lower())
         if submitted_text == solution:
+            response = "OK"
             points = constants.SUSI_POINTS_ALLOCATION["Full"]
             if (
                 task.round.small_hint_date < timezone.now() < task.round.big_hint_date
@@ -535,9 +536,13 @@ def task_submit_post_susi(request, task_id, submit_type):
             else:
                 points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
         else:
+            response = "WA"
             points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
         wrong_submits = len(
-            Submit.objects.filter(task=task, user=request.user,).exclude(text=solution)
+            Submit.objects.filter(
+                task=task,
+                user=request.user,
+            ).exclude(text=solution)
         )
         points = max(points - wrong_submits // constants.SUSI_WRONG_SUBMITS_TO_PENALTY, 0)
         sub = Submit(
@@ -547,6 +552,7 @@ def task_submit_post_susi(request, task_id, submit_type):
             points=points,
             testing_status=constants.SUBMIT_STATUS_FINISHED,
             text=submitted_text,
+            tester_response=response,
         )
         sub.save()
 
