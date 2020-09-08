@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -181,6 +182,20 @@ class Round(models.Model):
             and self.end_time < timezone.now() < self.second_end_time
         )
 
+    @property
+    def small_hint_public(self):
+        end = self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Small Hint"])
+        if timezone.now() > end:
+            return True
+        return False
+
+    @property
+    def big_hint_public(self):
+        end = self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Big Hint"])
+        if timezone.now() > end:
+            return True
+        return False
+
     def get_base_path(self):
         round_dir = str(self.number)
         semester_dir = str(self.semester.number)
@@ -342,7 +357,7 @@ class Task(models.Model):
         blank=True,
         null=True,
     )
-    susi_first_hint = ArrayField(
+    susi_small_hint = ArrayField(
         models.CharField(
             max_length=128,
             verbose_name="malý hint",
@@ -353,7 +368,7 @@ class Task(models.Model):
         null=True,
         default=list,
     )
-    susi_second_hint = ArrayField(
+    susi_big_hint = ArrayField(
         models.CharField(
             max_length=128,
             verbose_name="veľký hint",

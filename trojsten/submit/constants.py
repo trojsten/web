@@ -58,6 +58,7 @@ EXT_MAPPING = {
     ".zip": ".zip",
 }
 
+# How many points will be assigned for submit
 SUSI_POINTS_ALLOCATION = {
     "Full": 6,
     "Small Hint": 4,
@@ -65,9 +66,10 @@ SUSI_POINTS_ALLOCATION = {
     "Incorrect": 0,
 }
 
+# How many days before end of the round will the hints be revealed
 SUSI_HINT_DATES = {
-    "Small Hint": 4,
-    "Big Hint": 7,
+    "Small Hint": 7,
+    "Big Hint": 3,
 }
 
 SUSI_WRONG_SUBMITS_TO_PENALTY = 5
