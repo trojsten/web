@@ -34,7 +34,8 @@ def get_rounds_by_year(user, competition):
 
 
 def get_points_from_submits(tasks, submits):
-    """Returns results data for each task"""
+    """Returns results data for each task
+    """
     res = UserResult()
     for submit in submits:
         res.add_task_points(
