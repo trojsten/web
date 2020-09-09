@@ -519,26 +519,24 @@ def task_submit_post_susi(request, task_id, submit_type):
     form = TextSubmitForm(request.POST)
 
     if form.is_valid():
+        now = timezone.now()
         submitted_text = form.cleaned_data["submitted_text"]
         solution = task.text_submit_solution.lower()
         submitted_text = unidecode(submitted_text.replace(" ", "").lower())
         if submitted_text == solution:
             response = "OK"
             points = constants.SUSI_POINTS_ALLOCATION["Full"]
-            if (
-                task.round.small_hint_date < timezone.now() < task.round.big_hint_date
-                and len(task.susi_small_hint) > 0
-            ):
+            if task.round.small_hint_date < now <= task.round.big_hint_date and len(task.susi_small_hint) > 0:
                 points -= constants.SUSI_POINTS_ALLOCATION["Small Hint Deduction"]
-            elif timezone.now() > task.round.big_hint_date and len(task.susi_big_hint) > 0:
+            elif task.round.big_hint_date < now <= task.round.end_time and len(task.susi_big_hint) > 0:
                 points -= constants.SUSI_POINTS_ALLOCATION["Big Hint Deduction"]
-            elif timezone.now() > task.round.end_time:
+            elif now > task.round.end_time:
                 points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
         else:
             response = "WA"
             points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
         wrong_submits = len(
-            Submit.objects.filter(task=task, user=request.user,).exclude(text=solution)
+            Submit.objects.filter(task=task, user=request.user, time__lte=task.round.end_time).exclude(text=solution)
         )
         points = max(points - wrong_submits // constants.SUSI_WRONG_SUBMITS_TO_PENALTY, 0)
         sub = Submit(
