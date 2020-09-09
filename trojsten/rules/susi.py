@@ -12,9 +12,9 @@ from trojsten.submit.models import Submit
 from .default import CompetitionRules
 from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 
-SUSI_AGAT = "agat"
-SUSI_BLYSKAVICA = "blyskavica"
-SUSI_CIFERSKY_CECH = "cifersky cech"
+SUSI_AGAT = "Agát"
+SUSI_BLYSKAVICA = "Blýskavica"
+SUSI_CIFERSKY_CECH = "Ciferský-cech"
 
 
 SUSI_AGAT_MAX_COEFFICIENT = 8
@@ -176,12 +176,12 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             yield col
 
 
-class SUSIRules(FinishedRounds, CompetitionRules):
+class SUSIRules(CompetitionRules):
 
     RESULTS_TAGS = {
-        SUSI_AGAT: ResultsTag(key=SUSI_AGAT, name="Agat"),
-        SUSI_BLYSKAVICA: ResultsTag(key=SUSI_BLYSKAVICA, name="Blyskavica"),
-        SUSI_CIFERSKY_CECH: ResultsTag(key=SUSI_CIFERSKY_CECH, name="Cifersky Cech"),
+        SUSI_AGAT: ResultsTag(key=SUSI_AGAT, name=SUSI_AGAT),
+        SUSI_BLYSKAVICA: ResultsTag(key=SUSI_BLYSKAVICA, name=SUSI_BLYSKAVICA),
+        SUSI_CIFERSKY_CECH: ResultsTag(key=SUSI_CIFERSKY_CECH, name=SUSI_CIFERSKY_CECH),
     }
 
     RESULTS_GENERATOR_CLASS = SUSIResultsGenerator
