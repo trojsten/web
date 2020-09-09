@@ -10,7 +10,6 @@ from trojsten.results.representation import ResultsCell, ResultsCol, ResultsTag
 from trojsten.submit.models import Submit
 
 from .default import CompetitionRules
-from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 
 SUSI_AGAT = "Agát"
 SUSI_BLYSKAVICA = "Blýskavica"

@@ -560,7 +560,9 @@ def task_submit_post_susi(request, task_id, submit_type):
 
         if task.round.can_submit:
             messages.add_message(
-                request, messages.SUCCESS, _("You have successfully submitted your solution."),
+                request,
+                messages.SUCCESS,
+                _("You have successfully submitted your solution."),
             )
         else:
             messages.add_message(
