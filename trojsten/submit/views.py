@@ -538,10 +538,7 @@ def task_submit_post_susi(request, task_id, submit_type):
             response = "WA"
             points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
         wrong_submits = len(
-            Submit.objects.filter(
-                task=task,
-                user=request.user,
-            ).exclude(text=solution)
+            Submit.objects.filter(task=task, user=request.user,).exclude(text=solution)
         )
         points = max(points - wrong_submits // constants.SUSI_WRONG_SUBMITS_TO_PENALTY, 0)
         sub = Submit(
@@ -557,9 +554,7 @@ def task_submit_post_susi(request, task_id, submit_type):
 
         if task.round.can_submit:
             messages.add_message(
-                request,
-                messages.SUCCESS,
-                _("You have successfully submitted your solution."),
+                request, messages.SUCCESS, _("You have successfully submitted your solution."),
             )
         else:
             messages.add_message(

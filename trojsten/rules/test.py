@@ -13,7 +13,7 @@ import trojsten.submit.constants as submit_constants
 from trojsten.contests.models import Category, Competition, Round, Semester, Task
 from trojsten.events.models import Event, EventParticipant, EventPlace, EventType
 from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
-from trojsten.people.models import User
+from trojsten.people.models import User, UserProperty, UserPropertyKey
 from trojsten.rules.kms import (
     COEFFICIENT_COLUMN_KEY,
     KMS_ALFA,
@@ -26,6 +26,7 @@ from trojsten.rules.kms import (
 from trojsten.rules.ksp import KSP_ALL, KSP_L1, KSP_L2, KSP_L3, KSP_L4
 from trojsten.rules.models import KSPLevel
 from trojsten.rules.susi import (
+    PUZZLEHUNT_PARTICIPATIONS_KEY_NAME,
     SUSI_AGAT,
     SUSI_BLYSKAVICA,
     SUSI_CAMP_TYPE,
@@ -947,6 +948,9 @@ class SusiCoefficientTest(TestCase):
         graduation_year = self.round.end_time.year + int(
             self.round.end_time.month > SCHOOL_YEAR_END_MONTH
         )
+        self.puzzlehunt_key = UserPropertyKey.objects.create(
+            key_name=PUZZLEHUNT_PARTICIPATIONS_KEY_NAME, regex=r"^-?(\d{1,2})$"
+        )
         self.test_user = User.objects.create(
             username="test_user",
             password="password",
@@ -954,6 +958,7 @@ class SusiCoefficientTest(TestCase):
             last_name="Mrkvicka",
             graduation=graduation_year + 3,
         )
+        UserProperty.objects.create(user=self.test_user, key=self.puzzlehunt_key, value="0")
         self.tag = SUSIRules.RESULTS_TAGS[SUSI_BLYSKAVICA]
 
     def test_susi_camps_only(self):
@@ -1035,6 +1040,30 @@ class SusiCoefficientTest(TestCase):
         generator = SUSIResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 13)
 
+    def test_puzzle_hunt_participations(self):
+        participations = UserProperty.objects.get(user=self.test_user, key=self.puzzlehunt_key)
+        participations.value = "1"
+        participations.save()
+        generator = SUSIResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
+
+    def test_coefficient_all(self):
+        participations = UserProperty.objects.get(user=self.test_user, key=self.puzzlehunt_key)
+        participations.value = "3"
+        participations.save()
+        EventParticipant.objects.create(
+            event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True,
+        )
+        for i in range(2):
+            EventParticipant.objects.create(
+                event=self.other_camps[i],
+                user=self.test_user,
+                type=EventParticipant.PARTICIPANT,
+                going=True,
+            )
+        generator = SUSIResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 16)
+
 
 class SUSIRulesTest(TestCase):
     def setUp(self):
@@ -1093,6 +1122,9 @@ class SUSIRulesTest(TestCase):
             self.tasks[-1].save()
 
         self.url = reverse("view_latest_results")
+        self.puzzlehunt_key = UserPropertyKey.objects.create(
+            key_name=PUZZLEHUNT_PARTICIPATIONS_KEY_NAME, regex=r"^-?(\d{1,2})$"
+        )
 
     def _create_submits(self, user, points):
         for i in range(len(points)):
@@ -1115,6 +1147,7 @@ class SUSIRulesTest(TestCase):
             last_name="Mrkvicka",
             graduation=self.round.end_time.year + 3,
         )
+        UserProperty.objects.create(user=user, key=self.puzzlehunt_key, value="0")
         place = EventPlace.objects.create(name="Horna dolna")
         for i in range(coefficient):
             semester = Semester.objects.create(

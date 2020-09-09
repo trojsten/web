@@ -3,6 +3,7 @@
 from django.db.models import Count, Q
 
 from trojsten.events.models import EventParticipant
+from trojsten.people.models import UserPropertyKey
 from trojsten.results.constants import COEFFICIENT_COLUMN_KEY
 from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
 from trojsten.results.representation import ResultsCell, ResultsCol, ResultsTag
@@ -24,13 +25,15 @@ SUSI_CAMP_TYPE = "SuŠi sústredenie"
 
 SUSI_YEARS_OF_CAMPS_HISTORY = 10
 
+PUZZLEHUNT_PARTICIPATIONS_KEY_NAME = "SuŠi účasti na šifrovačkách"
+
 
 class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
     def __init__(self, tag):
         super(SUSIResultsGenerator, self).__init__(tag)
         self.susi_camps = None
         self.trojsten_camps = None
-        self.puzzlehunt_participations = {}
+        self.puzzlehunt_participations_key = None
         self.coefficients = {}
 
     def get_user_coefficient(self, user, round):
@@ -39,7 +42,9 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                 self.prepare_coefficients(round)
 
             successful_semesters = self.susi_camps.get(user.pk, 0)
-            puzzlehunt_participations = self.puzzlehunt_participations.get(user.pk, 0)
+            puzzlehunt_participations = int(
+                user.get_properties()[self.puzzlehunt_participations_key]
+            )
             trojsten_camps = self.trojsten_camps.get(user.pk, 0)
             self.coefficients[user] = (
                 5 * successful_semesters + 3 * puzzlehunt_participations + trojsten_camps
@@ -92,9 +97,9 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             .values_list("user", "camps")
         )
 
-        # TODO Fill dictionary with values of property "SUSI_Ucasti_na_sifrovackach" for all
-        # susi participants
-        self.puzzlehunt_participations = {}
+        self.puzzlehunt_participations_key = UserPropertyKey.objects.get(
+            key_name=PUZZLEHUNT_PARTICIPATIONS_KEY_NAME
+        )
 
     def run(self, res_request):
         self.prepare_coefficients(res_request.round)
