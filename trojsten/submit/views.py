@@ -526,9 +526,15 @@ def task_submit_post_susi(request, task_id, submit_type):
         if submitted_text == solution:
             response = "OK"
             points = constants.SUSI_POINTS_ALLOCATION["Full"]
-            if task.round.small_hint_date < now <= task.round.big_hint_date and len(task.susi_small_hint) > 0:
+            if (
+                task.round.small_hint_date < now <= task.round.big_hint_date
+                and len(task.susi_small_hint) > 0
+            ):
                 points -= constants.SUSI_POINTS_ALLOCATION["Small Hint Deduction"]
-            elif task.round.big_hint_date < now <= task.round.end_time and len(task.susi_big_hint) > 0:
+            elif (
+                task.round.big_hint_date < now <= task.round.end_time
+                and len(task.susi_big_hint) > 0
+            ):
                 points -= constants.SUSI_POINTS_ALLOCATION["Big Hint Deduction"]
             elif now > task.round.end_time:
                 points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
@@ -536,7 +542,9 @@ def task_submit_post_susi(request, task_id, submit_type):
             response = "WA"
             points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
         wrong_submits = len(
-            Submit.objects.filter(task=task, user=request.user, time__lte=task.round.end_time).exclude(text=solution)
+            Submit.objects.filter(
+                task=task, user=request.user, time__lte=task.round.end_time
+            ).exclude(text=solution)
         )
         points = max(points - wrong_submits // constants.SUSI_WRONG_SUBMITS_TO_PENALTY, 0)
         sub = Submit(
