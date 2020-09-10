@@ -11,13 +11,9 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameField(
-            model_name="task",
-            old_name="susi_second_hint",
-            new_name="susi_big_hint",
+            model_name="task", old_name="susi_second_hint", new_name="susi_big_hint",
         ),
         migrations.RenameField(
-            model_name="task",
-            old_name="susi_first_hint",
-            new_name="susi_small_hint",
+            model_name="task", old_name="susi_first_hint", new_name="susi_small_hint",
         ),
     ]

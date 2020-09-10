@@ -1052,10 +1052,7 @@ class SusiCoefficientTest(TestCase):
         participations.value = "3"
         participations.save()
         EventParticipant.objects.create(
-            event=self.camps[0],
-            user=self.test_user,
-            type=EventParticipant.PARTICIPANT,
-            going=True,
+            event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True,
         )
         for i in range(2):
             EventParticipant.objects.create(
@@ -1186,10 +1183,8 @@ class SUSIRulesTest(TestCase):
         scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_AGAT)
         row_a = get_row_for_user(scoreboard, user)
         scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_CIFERSKY_CECH)
-        # row_c = get_row_for_user(scoreboard, user)
         self.assertTrue(row_b.active)
         self.assertFalse(row_a.active)
-        # self.assertFalse(row_c.active)
 
     def test_agat_only_user(self):
         points = [6, 4, 0, 5, 1]
@@ -1202,10 +1197,8 @@ class SUSIRulesTest(TestCase):
         scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_AGAT)
         row_a = get_row_for_user(scoreboard, user)
         scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_CIFERSKY_CECH)
-        # row_c = get_row_for_user(scoreboard, user)
         self.assertTrue(row_a.active)
         self.assertFalse(row_b.active)
-        # self.assertFalse(row_c.active)
 
     def test_cifersky_cech_user(self):
         points = [6, 4, 0, 5, 1, 2, 2]
