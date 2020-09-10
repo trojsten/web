@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-07 14:06+0000\n"
+"POT-Creation-Date: 2020-09-10 11:56+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
 ">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
@@ -832,6 +832,21 @@ msgid ""
 msgstr ""
 "Nahral si svoj popis riešenia po termíne kola. Nebude zarátaný vo "
 "výsledkovke."
+
+msgid "You have successfully submitted your solution."
+msgstr "Úspešne sa ti podarilo submitnúť riešenie."
+
+msgid ""
+"You have submitted your solution after the deadline. It is not counted in "
+"results."
+msgstr ""
+"Nahral si svoje riešenie po termíne kola. Nebude zarátané vo výsledkovke."
+
+msgid "Your solution is correct. You gain %(points)d points."
+msgstr "Tvoje riešenie je správne. Získavaš %(points)d bodov."
+
+msgid "Your solution is incorrect. You gain %(points)d points."
+msgstr "Tvoje riešenie je nesprávne. Získavaš %(points)d bodov."
 
 msgid "Preview of your comment"
 msgstr "Náhľad komentára"

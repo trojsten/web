@@ -569,7 +569,7 @@ def task_submit_post_susi(request, task_id, submit_type):
                 request,
                 messages.WARNING,
                 _(
-                    "You have submitted your description after the deadline. "
+                    "You have submitted your solution after the deadline. "
                     "It is not counted in results."
                 ),
             )
@@ -577,13 +577,13 @@ def task_submit_post_susi(request, task_id, submit_type):
             messages.add_message(
                 request,
                 messages.SUCCESS,
-                _("Your solution is correct. You gain {} points.".format(points)),
+                _("Your solution is correct. You gain %(points)d points.") % {"points": points},
             )
         else:
             messages.add_message(
                 request,
                 messages.ERROR,
-                _("Your solution is incorrect. You gain {} points.".format(points)),
+                _("Your solution is incorrect. You gain %(points)d points.") % {"points": points},
             )
 
     else:
