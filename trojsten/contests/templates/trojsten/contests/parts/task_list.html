@@ -9,7 +9,7 @@
             Všetky
         </a>
     </li>
-    {% for category in categories %}
+    {% for category in categories|dictsort:"name" %}
     <li>
         <a href="#category-tab-{{ category }}" role="tab" data-toggle="tab"
            onclick="$('#task-list-{{ round.id }} tr:not(.category-{{ category }})').hide();$('#task-list-{{ round.id }} tr.category-{{ category }}').show();$('#task-list-{{ round.id }} thead>tr').show();">

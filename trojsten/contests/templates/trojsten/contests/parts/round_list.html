@@ -13,7 +13,11 @@
           <tr>
             <td>
               <a href="{% url 'task_list' round_id=round.id %}">
-                {{ round.number }}. kolo
+                {% if round.semester.competition.name == "Suši" and round.number == 3 %}
+                  Outdoor kolo
+                {% else %}
+                  {{ round.number }}. kolo
+                {% endif %}
               </a>
               {% if not round.visible %}
                 <span class="label label-danger">skryté</span>

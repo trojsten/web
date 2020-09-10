@@ -269,15 +269,25 @@ class Round(models.Model):
 
     def __str__(self):
         # All foreign keys here should be added to the select_related list in the RoundManager.
-        return "%i. kolo, %i. časť, %i. ročník %s" % (
-            self.number,
-            self.semester.number,
-            self.semester.year,
-            self.semester.competition,
-        )
+        if self.semester.competition.name == "Suši" and self.number == 3:
+            return "Outdoor kolo, %i. časť, %i. ročník %s" % (
+                self.semester.number,
+                self.semester.year,
+                self.semester.competition,
+            )
+        else:
+            return "%i. kolo, %i. časť, %i. ročník %s" % (
+                self.number,
+                self.semester.number,
+                self.semester.year,
+                self.semester.competition,
+            )
 
     def short_str(self):
-        return "%i. kolo" % self.number
+        if self.semester.competition.name == "Suši" and self.number == 3:
+            return "Outdoor kolo"
+        else:
+            return "%i. kolo" % self.number
 
     short_str.short_description = "kolo"
 
@@ -366,13 +376,23 @@ class Task(models.Model):
         null=True,
     )
     susi_small_hint = ArrayField(
-        models.CharField(max_length=128, verbose_name="malý hint", blank=True, null=True,),
+        models.CharField(
+            max_length=128,
+            verbose_name="malý hint",
+            blank=True,
+            null=True,
+        ),
         blank=True,
         null=True,
         default=list,
     )
     susi_big_hint = ArrayField(
-        models.CharField(max_length=128, verbose_name="veľký hint", blank=True, null=True,),
+        models.CharField(
+            max_length=128,
+            verbose_name="veľký hint",
+            blank=True,
+            null=True,
+        ),
         blank=True,
         null=True,
         default=list,

@@ -8,7 +8,12 @@
 <h1>
     Zadania
     <small>
-        {{ round.number }}. kola {{ round.semester.number }}. časti
+        {% if round.semester.competition.name == "Suši" and round.number == 3 %}
+          Outdoor kola
+        {% else %}
+          {{ round.number }}. kola
+        {% endif %}
+        {{ round.semester.number }}. časti
         {{ round.semester.year }}. ročníka {{ round.semester.competition.name }}
         {% if not round.visible %}
             <span class="label label-danger">skryté</span>
