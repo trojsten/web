@@ -6,18 +6,27 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('old_submit', '0005_auto_20180915_2002'),
+        ("old_submit", "0005_auto_20180915_2002"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='submit',
-            name='text',
-            field=models.CharField(blank=True, max_length=512, verbose_name='text'),
+            model_name="submit",
+            name="text",
+            field=models.CharField(blank=True, max_length=512, verbose_name="text"),
         ),
         migrations.AlterField(
-            model_name='submit',
-            name='submit_type',
-            field=models.IntegerField(choices=[(0, 'source'), (1, 'description'), (2, 'testable_zip'), (3, 'external'), (4, 'text')], verbose_name='typ submitu'),
+            model_name="submit",
+            name="submit_type",
+            field=models.IntegerField(
+                choices=[
+                    (0, "source"),
+                    (1, "description"),
+                    (2, "testable_zip"),
+                    (3, "external"),
+                    (4, "text"),
+                ],
+                verbose_name="typ submitu",
+            ),
         ),
     ]

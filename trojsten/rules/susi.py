@@ -195,13 +195,5 @@ class SUSIRules(CompetitionRules):
             visible=True,
             end_time__gte=timezone.now()
             - timezone.timedelta(days=MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS),
-        )
-        rounds = rounds.order_by("-end_time", "-number")
-        if (
-            rounds[0].number == 3
-            and rounds[0].end_time > timezone.now()
-            and rounds[1].end_time > timezone.now()
-        ):
-            return rounds[1:2]
-        else:
-            return rounds[:1]
+        ).exclude(number=3, end_time__gte=timezone.now())
+        return rounds.order_by("-end_time", "-number")[:1]
