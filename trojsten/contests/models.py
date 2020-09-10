@@ -370,10 +370,7 @@ class Task(models.Model):
     )
     has_text_submit = models.BooleanField(verbose_name="odovzdáva sa text", default=False)
     text_submit_solution = models.CharField(
-        max_length=512,
-        verbose_name="správne riešenie pri odovzdávaní textu",
-        blank=True,
-        null=True,
+        max_length=512, verbose_name="správne riešenie pri odovzdávaní textu", blank=True, null=True
     )
     susi_small_hint = ArrayField(
         models.CharField(max_length=128, verbose_name="malý hint", blank=True, null=True),
