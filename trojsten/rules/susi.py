@@ -18,7 +18,7 @@ from .default import CompetitionRules
 
 SUSI_AGAT = "Agát"
 SUSI_BLYSKAVICA = "Blýskavica"
-SUSI_CIFERSKY_CECH = "Ciferský-cech"
+SUSI_CIFERSKY_CECH = "Cíferský-cech"
 
 
 SUSI_AGAT_MAX_COEFFICIENT = 8
