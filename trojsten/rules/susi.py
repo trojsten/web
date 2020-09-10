@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from django.db.models import Count, Q
+from django.utils import timezone
 
+from trojsten.contests.models import Round
 from trojsten.events.models import EventParticipant
 from trojsten.people.models import UserPropertyKey
-from trojsten.results.constants import COEFFICIENT_COLUMN_KEY
+from trojsten.results.constants import (
+    COEFFICIENT_COLUMN_KEY,
+    MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS,
+)
 from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
 from trojsten.results.representation import ResultsCell, ResultsCol, ResultsTag
 from trojsten.submit.models import Submit
@@ -184,3 +189,20 @@ class SUSIRules(CompetitionRules):
     }
 
     RESULTS_GENERATOR_CLASS = SUSIResultsGenerator
+
+    def get_actual_result_rounds(self, competition):
+        rounds = Round.objects.filter(
+            semester__competition=competition,
+            visible=True,
+            end_time__gte=timezone.now()
+            - timezone.timedelta(days=MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS),
+        )
+        rounds = rounds.order_by("-end_time", "-number")
+        if (
+            rounds[0].number == 3
+            and rounds[0].end_time > timezone.now()
+            and rounds[1].end_time > timezone.now()
+        ):
+            return rounds[1:2]
+        else:
+            return rounds[:1]
