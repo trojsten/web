@@ -24,11 +24,11 @@ SUSI_CIFERSKY_CECH = "Cíferský-cech"
 SUSI_AGAT_MAX_COEFFICIENT = 8
 SUSI_ELIGIBLE_FOR_TASK_BOUND = [0, 8, 8, 1000, 1000, 1000, 1000, 1000]
 
-SUSI_CAMP_TYPE = "SuŠi sústredenie"
+SUSI_CAMP_TYPE = "Suši sústredenie"
 
 SUSI_YEARS_OF_CAMPS_HISTORY = 10
 
-PUZZLEHUNT_PARTICIPATIONS_KEY_NAME = "SuŠi účasti na šifrovačkách"
+PUZZLEHUNT_PARTICIPATIONS_KEY_NAME = "Suši účasti na šifrovačkách"
 
 
 class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
@@ -148,7 +148,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
     def deactivate_row_cells(self, request, row, cols):
         coefficient = self.get_user_coefficient(row.user, request.round)
 
-        # Count only tasks your coefficient is eligible for, ignoring category Cifersky Cech
+        # Count only tasks your coefficient is eligible for, ignoring category Cifersky-cech
         for key in row.cells_by_key:
             if SUSI_ELIGIBLE_FOR_TASK_BOUND[key] < coefficient and not self.get_graduation_status(
                 row.user, request
@@ -187,9 +187,9 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 class SUSIRules(CompetitionRules):
 
     RESULTS_TAGS = {
+        SUSI_CIFERSKY_CECH: ResultsTag(key=SUSI_CIFERSKY_CECH, name=SUSI_CIFERSKY_CECH),
         SUSI_AGAT: ResultsTag(key=SUSI_AGAT, name=SUSI_AGAT),
         SUSI_BLYSKAVICA: ResultsTag(key=SUSI_BLYSKAVICA, name=SUSI_BLYSKAVICA),
-        SUSI_CIFERSKY_CECH: ResultsTag(key=SUSI_CIFERSKY_CECH, name=SUSI_CIFERSKY_CECH),
     }
 
     RESULTS_GENERATOR_CLASS = SUSIResultsGenerator
