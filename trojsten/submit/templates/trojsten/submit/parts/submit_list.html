@@ -108,16 +108,14 @@
             </tr>
         </thead>
         <tbody>
-        {% for submit in submits|lookup:constants.SUBMIT_TYPE_TEXT %}
-        <tr class="{{ submit|submitclass }}" data-id="{{ submit.id }}">
-                <td>{{ submit.time }}</td>
-                <td>{{ submit.text }}</td>
-                <td>{{ submit.tester_response }}</td>
-                <td>{{ submit.points }}</td>
-                <td><a class="btn btn-primary btn-xs" href="{% url 'view_submit' submit_id=submit.id %}">{% trans 'Detaily' %}</a></td>
-            </tr>
-
-        {% endfor %}
+            {% for submit in submits|lookup:constants.SUBMIT_TYPE_TEXT %}
+                <tr class="{{ submit|submitclass }}" data-id="{{ submit.id }}">
+                    <td>{{ submit.time }}</td>
+                    <td>{{ submit.text }}</td>
+                    <td>{{ submit.tester_response }}</td>
+                    <td>{{ submit.points }}</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 {% endif %}
