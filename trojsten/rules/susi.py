@@ -107,9 +107,14 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
     def run(self, res_request):
         self.prepare_coefficients(res_request.round)
         res_request.has_submit_in_blyskavica = set()
-        for submit in Submit.objects.filter(
-            task__round__semester=res_request.round.semester, task__categories__name=SUSI_BLYSKAVICA
-        ).select_related("user"):
+        for submit in (
+            Submit.objects.filter(
+                task__round__semester=res_request.round.semester,
+                task__categories__name=SUSI_BLYSKAVICA,
+            )
+            .exclude(task__categories__name=SUSI_AGAT)
+            .select_related("user")
+        ):
             res_request.has_submit_in_blyskavica.add(submit.user)
         return super(SUSIResultsGenerator, self).run(res_request)
 

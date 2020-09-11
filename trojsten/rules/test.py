@@ -1052,7 +1052,7 @@ class SusiCoefficientTest(TestCase):
         participations.value = "3"
         participations.save()
         EventParticipant.objects.create(
-            event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True,
+            event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
         )
         for i in range(2):
             EventParticipant.objects.create(
@@ -1067,7 +1067,7 @@ class SusiCoefficientTest(TestCase):
 
 class SUSIRulesTest(TestCase):
     def setUp(self):
-        time = datetime.datetime.now() - timezone.timedelta(days=365)
+        time = datetime.datetime.now()
         self.time = timezone.make_aware(time)
         # pk = 9 sets rules to SUSIRules
         self.competition = Competition.objects.create(name="TestCompetition", pk=9)
@@ -1113,11 +1113,11 @@ class SUSIRulesTest(TestCase):
                     description_points_visible=True,
                 )
             )
-            cat = []
+            cat = [category_cifersky_cech]
             if i <= 5:
                 cat += [category_agat]
             if i >= 3:
-                cat += [category_blyskavica, category_cifersky_cech]
+                cat += [category_blyskavica]
             self.tasks[-1].categories.set(cat)
             self.tasks[-1].save()
 
