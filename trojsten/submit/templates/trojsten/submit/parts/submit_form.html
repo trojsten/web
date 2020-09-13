@@ -56,7 +56,7 @@
         Na odovzdávanie popisu si musíš povoliť súťaž <em>{{ task.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
       </div>
     {% else %}
-      <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post' task_id=task.id submit_type=constants.SUBMIT_TYPE_TEXT %}">
+      <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post_text' task_id=task.id %}">
           {% csrf_token %}
           <div class="form-group" style="min-width:50px;"><label>Riešenie</label></div>
           {{ text_submit_form | bootstrap_inline }}

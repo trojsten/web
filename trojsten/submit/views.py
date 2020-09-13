@@ -15,7 +15,6 @@ from django.core.mail import send_mail
 from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.translation import ugettext as _
 from judge_client import constants as judge_constants
 from judge_client.client import ProtocolError
@@ -505,56 +504,43 @@ def task_submit_post(request, task_id, submit_type):
             return redirect(request.POST["redirect_to"])
         else:
             return redirect(reverse("task_submit_page", kwargs={"task_id": int(task_id)}))
-    elif submit_type == constants.SUBMIT_TYPE_TEXT:
-        return task_submit_post_susi(request, task_id, submit_type)
     else:
-        # Only Description and Source and Zip and Text submitting is developed currently
         raise Http404
 
 
 @login_required
-def task_submit_post_susi(request, task_id, submit_type):
-    """Spracovanie uploadnuteho submitu pre susi"""
+def task_submit_post_text(request, task_id):
+    """Spracovanie uploadnuteho textoveho submitu"""
+
+    # Raise Not Found when submitting non existent task
     task = get_object_or_404(Task, pk=task_id)
+
+    # Raise Not Found when submitting non-submittable submit type
+    if not task.has_submit_type(constants.SUBMIT_TYPE_TEXT):
+        raise Http404
+
+    # Raise Not Found when not submitting through POST
+    if request.method != "POST":
+        raise Http404
+
     form = TextSubmitForm(request.POST)
 
     if form.is_valid():
-        now = timezone.now()
         submitted_text = form.cleaned_data["submitted_text"]
-        solution = task.text_submit_solution.lower()
         submitted_text = unidecode(submitted_text.replace(" ", "").lower())
-        if submitted_text == solution:
-            response = "OK"
-            points = constants.SUSI_POINTS_ALLOCATION["Full"]
-            if (
-                task.round.susi_small_hint_date < now <= task.round.susi_big_hint_date
-                and len(task.susi_small_hint) > 0
-            ):
-                points -= constants.SUSI_POINTS_ALLOCATION["Small Hint Deduction"]
-            elif (
-                task.round.susi_big_hint_date < now <= task.round.end_time
-                and len(task.susi_big_hint) > 0
-            ):
-                points -= constants.SUSI_POINTS_ALLOCATION["Big Hint Deduction"]
-            elif now > task.round.end_time:
-                points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
-        else:
-            response = "WA"
-            points = constants.SUSI_POINTS_ALLOCATION["Incorrect"]
-        wrong_submits = len(
-            Submit.objects.filter(
-                task=task, user=request.user, time__lte=task.round.end_time
-            ).exclude(text=solution)
+
+        grading = task.round.semester.competition.rules.grade_text_submit(
+            task, request.user, submitted_text
         )
-        points = max(points - wrong_submits // constants.SUSI_WRONG_SUBMITS_TO_PENALTY, 0)
+
         sub = Submit(
             task=task,
             user=request.user,
-            submit_type=submit_type,
-            points=points,
+            submit_type=constants.SUBMIT_TYPE_TEXT,
+            points=grading.points,
             testing_status=constants.SUBMIT_STATUS_REVIEWED,
             text=submitted_text,
-            tester_response=response,
+            tester_response=grading.response,
         )
         sub.save()
 
@@ -571,17 +557,19 @@ def task_submit_post_susi(request, task_id, submit_type):
                     "It is not counted in results."
                 ),
             )
-        if submitted_text == solution:
+        if grading.response == "OK":
             messages.add_message(
                 request,
                 messages.SUCCESS,
-                _("Your solution is correct. You gain %(points)d points.") % {"points": points},
+                _("Your solution is correct. You gain %(points)d points.")
+                % {"points": grading.points},
             )
         else:
             messages.add_message(
                 request,
                 messages.ERROR,
-                _("Your solution is incorrect. You gain %(points)d points.") % {"points": points},
+                _("Your solution is incorrect. You gain %(points)d points.")
+                % {"points": grading.points},
             )
 
     else:

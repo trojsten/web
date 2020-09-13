@@ -57,19 +57,3 @@ EXT_MAPPING = {
     ".java": ".java",
     ".zip": ".zip",
 }
-
-
-SUSI_POINTS_ALLOCATION = {
-    "Full": 6,  # How many points will be assigned for submit
-    "Small Hint Deduction": 2,  # How many points will be deducted if small hint is public
-    "Big Hint Deduction": 4,  # How many points will be deducted if big hint is public
-    "Incorrect": 0,  # How many points will be assigned for wrong submit and after deadline submit
-}
-
-# How many days before end of the round will the hints be revealed
-SUSI_HINT_DATES = {
-    "Small Hint": 7,
-    "Big Hint": 3,
-}
-
-SUSI_WRONG_SUBMITS_TO_PENALTY = 5

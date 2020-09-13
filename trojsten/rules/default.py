@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from collections import namedtuple
+
 from django.db import models
 from django.utils import timezone
 
@@ -44,6 +46,20 @@ class CompetitionRules(object):
             - timezone.timedelta(days=MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS),
         )
         return rounds.order_by("-end_time", "-number")[:1]
+
+    def grade_text_submit(self, task, user, submitted_text):
+        Grading = namedtuple("Grading", ["response", "points"])
+        solution = task.text_submit_solution[0].lower()
+        if solution == submitted_text:
+            response = "OK"
+            if timezone.now() < task.round.end_time:
+                points = 1
+            else:
+                points = 0
+        else:
+            response = "WA"
+            points = 0
+        return Grading(response, points)
 
 
 class FinishedRoundsResultsRulesMixin:

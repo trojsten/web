@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from collections import namedtuple
+
 from django.db.models import Count, Q
 from django.utils import timezone
 
@@ -12,23 +14,10 @@ from trojsten.results.constants import (
 )
 from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
 from trojsten.results.representation import ResultsCell, ResultsCol, ResultsTag
+from trojsten.rules.susi_constants import *
 from trojsten.submit.models import Submit
 
 from .default import CompetitionRules
-
-SUSI_AGAT = "Agát"
-SUSI_BLYSKAVICA = "Blýskavica"
-SUSI_CIFERSKY_CECH = "Cíferský-cech"
-
-
-SUSI_AGAT_MAX_COEFFICIENT = 8
-SUSI_ELIGIBLE_FOR_TASK_BOUND = [0, 8, 8, 1000, 1000, 1000, 1000, 1000]
-
-SUSI_CAMP_TYPE = "Suši sústredenie"
-
-SUSI_YEARS_OF_CAMPS_HISTORY = 10
-
-PUZZLEHUNT_PARTICIPATIONS_KEY_NAME = "Suši účasti na šifrovačkách"
 
 
 class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
@@ -210,3 +199,36 @@ class SUSIRules(CompetitionRules):
             return qs.get()
         else:
             return None
+
+    def grade_text_submit(self, task, user, submitted_text):
+        now = timezone.now()
+        Grading = namedtuple("Grading", ["response", "points"])
+        solution = task.text_submit_solution[0].lower()
+        if solution == submitted_text:
+            response = "OK"
+            points = SUSI_POINTS_ALLOCATION[0]
+            if (
+                task.round.susi_small_hint_date < now <= task.round.susi_big_hint_date
+                and len(task.susi_small_hint) > 0
+            ):
+                points -= SUSI_POINTS_ALLOCATION[1]
+            elif (
+                task.round.susi_big_hint_date < now <= task.round.end_time
+                and len(task.susi_big_hint) > 0
+            ):
+                points -= SUSI_POINTS_ALLOCATION[2]
+            elif now > task.round.end_time:
+                points = SUSI_POINTS_ALLOCATION[3]
+        else:
+            response = "WA"
+            points = SUSI_POINTS_ALLOCATION[3]
+
+        wrong_submits = len(
+            Submit.objects.filter(task=task, user=user, time__lte=task.round.end_time).exclude(
+                text=solution
+            )
+        )
+
+        points = max(points - wrong_submits // SUSI_WRONG_SUBMITS_TO_PENALTY, 0)
+
+        return Grading(response, points)

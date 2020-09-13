@@ -17,6 +17,7 @@ from unidecode import unidecode
 from trojsten.people.models import User, UserPropertyKey
 from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
+from trojsten.rules.susi_constants import SUSI_HINT_DAYS
 from trojsten.submit import constants as submit_constants
 from trojsten.utils import utils
 
@@ -199,25 +200,25 @@ class Round(models.Model):
 
     @property
     def susi_small_hint_public(self):
-        end = self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Small Hint"])
+        end = self.end_time - timedelta(days=SUSI_HINT_DAYS[0])
         if timezone.now() > end:
             return True
         return False
 
     @property
     def susi_big_hint_public(self):
-        end = self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Big Hint"])
+        end = self.end_time - timedelta(days=SUSI_HINT_DAYS[1])
         if timezone.now() > end:
             return True
         return False
 
     @property
     def susi_small_hint_date(self):
-        return self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Small Hint"])
+        return self.end_time - timedelta(days=SUSI_HINT_DAYS[0])
 
     @property
     def susi_big_hint_date(self):
-        return self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Big Hint"])
+        return self.end_time - timedelta(days=SUSI_HINT_DAYS[1])
 
     def get_base_path(self):
         round_dir = str(self.number)
@@ -383,9 +384,16 @@ class Task(models.Model):
     external_submit_link = models.CharField(
         max_length=128, verbose_name="Odkaz na externé odovzdávanie", blank=True, null=True
     )
-    has_text_submit = models.BooleanField(verbose_name="odovzdáva sa text", default=False)
-    text_submit_solution = models.CharField(
-        max_length=512, verbose_name="správne riešenie pri odovzdávaní textu", blank=True, null=True
+    text_submit_solution = ArrayField(
+        models.CharField(
+            max_length=512,
+            verbose_name="správne riešenie pri odovzdávaní textu",
+            blank=True,
+            null=True,
+        ),
+        blank=True,
+        null=True,
+        default=list,
     )
     susi_small_hint = ArrayField(
         models.CharField(max_length=128, verbose_name="malý hint", blank=True, null=True),
@@ -427,6 +435,10 @@ class Task(models.Model):
     def save(self, *args, **kwargs):
         super(Task, self).save(*args, **kwargs)
         self.last_saved_description_points_visible = self.description_points_visible
+
+    @property
+    def has_text_submit(self):
+        return len(self.text_submit_solution) > 0
 
     def has_submit_type(self, submit_type):
         check_field = {
