@@ -25,14 +25,13 @@ from trojsten.rules.kms import (
 )
 from trojsten.rules.ksp import KSP_ALL, KSP_L1, KSP_L2, KSP_L3, KSP_L4
 from trojsten.rules.models import KSPLevel
-from trojsten.rules.susi import (
+from trojsten.rules.susi import SUSIResultsGenerator, SUSIRules
+from trojsten.rules.susi_constants import (
     PUZZLEHUNT_PARTICIPATIONS_KEY_NAME,
     SUSI_AGAT,
     SUSI_BLYSKAVICA,
     SUSI_CAMP_TYPE,
     SUSI_CIFERSKY_CECH,
-    SUSIResultsGenerator,
-    SUSIRules,
 )
 from trojsten.submit.models import Submit
 
