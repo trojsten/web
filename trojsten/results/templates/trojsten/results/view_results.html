@@ -7,14 +7,14 @@
 {% block page_header %}
 <h1>Výsledky<small>
 {% if single_round %}
-    {% if round.semester.competition.name == "Suši" and round.number == 3 %}
+    {% if round.susi_is_outdoor %}
       Outdoor kola
     {% else %}
       {{ round.number }}. kola
     {% endif %}
 {% else %}
     po
-    {% if round.semester.competition.name == "Suši" and round.number == 3 %}
+    {% if round.susi_is_outdoor %}
       Outdoor kole
     {% else %}
       {{ round.number }}. kole

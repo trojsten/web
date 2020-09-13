@@ -84,6 +84,14 @@ class Semester(models.Model):
         verbose_name = "Časť"
         verbose_name_plural = "Časti"
 
+    @property
+    def start_time(self):
+        return self.round_set.order_by("start_time")[0].start_time
+
+    @property
+    def end_time(self):
+        return self.round_set.order_by("end_time").reverse()[0].end_time
+
     def __str__(self):
         # All foreign keys here should be added to the select_related list in the RoundManager.
         return "%i. (%s) časť, %i. ročník %s" % (
@@ -183,25 +191,32 @@ class Round(models.Model):
         )
 
     @property
-    def small_hint_public(self):
+    def susi_is_outdoor(self):
+        if self.number == 100 and self.semester.competition.id == 9:
+            return True
+        else:
+            return False
+
+    @property
+    def susi_small_hint_public(self):
         end = self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Small Hint"])
         if timezone.now() > end:
             return True
         return False
 
     @property
-    def big_hint_public(self):
+    def susi_big_hint_public(self):
         end = self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Big Hint"])
         if timezone.now() > end:
             return True
         return False
 
     @property
-    def small_hint_date(self):
+    def susi_small_hint_date(self):
         return self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Small Hint"])
 
     @property
-    def big_hint_date(self):
+    def susi_big_hint_date(self):
         return self.end_time - timedelta(days=submit_constants.SUSI_HINT_DATES["Big Hint"])
 
     def get_base_path(self):
@@ -269,7 +284,7 @@ class Round(models.Model):
 
     def __str__(self):
         # All foreign keys here should be added to the select_related list in the RoundManager.
-        if self.semester.competition.name == "Suši" and self.number == 3:
+        if self.susi_is_outdoor:
             return "Outdoor kolo, %i. časť, %i. ročník %s" % (
                 self.semester.number,
                 self.semester.year,
@@ -284,7 +299,7 @@ class Round(models.Model):
             )
 
     def short_str(self):
-        if self.semester.competition.name == "Suši" and self.number == 3:
+        if self.susi_is_outdoor:
             return "Outdoor kolo"
         else:
             return "%i. kolo" % self.number

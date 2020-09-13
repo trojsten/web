@@ -527,12 +527,12 @@ def task_submit_post_susi(request, task_id, submit_type):
             response = "OK"
             points = constants.SUSI_POINTS_ALLOCATION["Full"]
             if (
-                task.round.small_hint_date < now <= task.round.big_hint_date
+                task.round.susi_small_hint_date < now <= task.round.susi_big_hint_date
                 and len(task.susi_small_hint) > 0
             ):
                 points -= constants.SUSI_POINTS_ALLOCATION["Small Hint Deduction"]
             elif (
-                task.round.big_hint_date < now <= task.round.end_time
+                task.round.susi_big_hint_date < now <= task.round.end_time
                 and len(task.susi_big_hint) > 0
             ):
                 points -= constants.SUSI_POINTS_ALLOCATION["Big Hint Deduction"]

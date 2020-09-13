@@ -8,7 +8,7 @@
 <h1>
     Zadania
     <small>
-        {% if round.semester.competition.name == "Suši" and round.number == 3 %}
+        {% if round.susi_is_outdoor %}
           Outdoor kola
         {% else %}
           {{ round.number }}. kola

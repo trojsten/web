@@ -73,7 +73,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         self.trojsten_camps = dict(
             EventParticipant.objects.filter(
                 Q(
-                    event__end_time__lt=round.end_time,
+                    event__end_time__lt=round.semester.start_time,
                     event__end_time__year__gte=round.end_time.year - SUSI_YEARS_OF_CAMPS_HISTORY,
                 ),
                 Q(going=True),
@@ -90,7 +90,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             EventParticipant.objects.filter(
                 Q(
                     event__type__name=SUSI_CAMP_TYPE,
-                    event__end_time__lt=round.end_time,
+                    event__end_time__lt=round.semester.start_time,
                     event__end_time__year__gte=round.end_time.year - SUSI_YEARS_OF_CAMPS_HISTORY,
                 ),
                 Q(going=True) | Q(type=EventParticipant.PARTICIPANT),
@@ -200,5 +200,13 @@ class SUSIRules(CompetitionRules):
             visible=True,
             end_time__gte=timezone.now()
             - timezone.timedelta(days=MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS),
-        ).exclude(number=3, end_time__gte=timezone.now())
+        ).exclude(number=100, end_time__gte=timezone.now())
         return rounds.order_by("-end_time", "-number")[:1]
+
+    def get_previous_round(self, round):
+        previous_number = min(round.number - 1, 2)
+        qs = round.semester.round_set.filter(number=previous_number)
+        if qs:
+            return qs.get()
+        else:
+            return None
