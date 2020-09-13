@@ -5,6 +5,7 @@ from collections import namedtuple
 from django.db.models import Count, Q
 from django.utils import timezone
 
+import trojsten.rules.susi_constants as constants
 from trojsten.contests.models import Round
 from trojsten.events.models import EventParticipant
 from trojsten.people.models import UserPropertyKey
@@ -14,7 +15,6 @@ from trojsten.results.constants import (
 )
 from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
 from trojsten.results.representation import ResultsCell, ResultsCol, ResultsTag
-import trojsten.rules.susi_constants as constants
 from trojsten.submit.models import Submit
 
 from .default import CompetitionRules
