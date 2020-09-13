@@ -14,7 +14,7 @@ from trojsten.results.constants import (
 )
 from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
 from trojsten.results.representation import ResultsCell, ResultsCol, ResultsTag
-from trojsten.rules.susi_constants import *
+import trojsten.rules.susi_constants as constants
 from trojsten.submit.models import Submit
 
 from .default import CompetitionRules
@@ -63,11 +63,12 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             EventParticipant.objects.filter(
                 Q(
                     event__end_time__lt=round.semester.start_time,
-                    event__end_time__year__gte=round.end_time.year - SUSI_YEARS_OF_CAMPS_HISTORY,
+                    event__end_time__year__gte=round.end_time.year
+                    - constants.SUSI_YEARS_OF_CAMPS_HISTORY,
                 ),
                 Q(going=True),
             )
-            .exclude(Q(event__type__name=SUSI_CAMP_TYPE))
+            .exclude(Q(event__type__name=constants.SUSI_CAMP_TYPE))
             .values("user")
             .annotate(camps=Count("event__semester", distinct=True))
             .values_list("user", "camps")
@@ -78,9 +79,10 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         self.susi_camps = dict(
             EventParticipant.objects.filter(
                 Q(
-                    event__type__name=SUSI_CAMP_TYPE,
+                    event__type__name=constants.SUSI_CAMP_TYPE,
                     event__end_time__lt=round.semester.start_time,
-                    event__end_time__year__gte=round.end_time.year - SUSI_YEARS_OF_CAMPS_HISTORY,
+                    event__end_time__year__gte=round.end_time.year
+                    - constants.SUSI_YEARS_OF_CAMPS_HISTORY,
                 ),
                 Q(going=True) | Q(type=EventParticipant.PARTICIPANT),
             )
@@ -90,7 +92,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         )
 
         self.puzzlehunt_participations_key = UserPropertyKey.objects.get(
-            key_name=PUZZLEHUNT_PARTICIPATIONS_KEY_NAME
+            key_name=constants.PUZZLEHUNT_PARTICIPATIONS_KEY_NAME
         )
 
     def run(self, res_request):
@@ -99,9 +101,9 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         for submit in (
             Submit.objects.filter(
                 task__round__semester=res_request.round.semester,
-                task__categories__name=SUSI_BLYSKAVICA,
+                task__categories__name=constants.SUSI_BLYSKAVICA,
             )
-            .exclude(task__categories__name=SUSI_AGAT)
+            .exclude(task__categories__name=constants.SUSI_AGAT)
             .select_related("user")
         ):
             res_request.has_submit_in_blyskavica.add(submit.user)
@@ -114,22 +116,22 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         active = super(SUSIResultsGenerator, self).is_user_active(request, user)
         coefficient = self.get_user_coefficient(user, request.round)
 
-        if self.tag.key == SUSI_AGAT:
+        if self.tag.key == constants.SUSI_AGAT:
             active = active and (
-                (coefficient <= SUSI_AGAT_MAX_COEFFICIENT)
+                (coefficient <= constants.SUSI_AGAT_MAX_COEFFICIENT)
                 and not self.get_graduation_status(user, request)
             )
 
-        if self.tag.key == SUSI_BLYSKAVICA:
+        if self.tag.key == constants.SUSI_BLYSKAVICA:
             active = active and (
                 (
-                    coefficient > SUSI_AGAT_MAX_COEFFICIENT
+                    coefficient > constants.SUSI_AGAT_MAX_COEFFICIENT
                     or user in request.has_submit_in_blyskavica
                 )
                 and not (self.get_graduation_status(user, request))
             )
 
-        if self.tag.key == SUSI_CIFERSKY_CECH:
+        if self.tag.key == constants.SUSI_CIFERSKY_CECH:
             active = active
 
         return active
@@ -139,9 +141,9 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         # Count only tasks your coefficient is eligible for, ignoring category Cifersky-cech
         for key in row.cells_by_key:
-            if SUSI_ELIGIBLE_FOR_TASK_BOUND[key] < coefficient and not self.get_graduation_status(
-                row.user, request
-            ):
+            if constants.SUSI_ELIGIBLE_FOR_TASK_BOUND[
+                key
+            ] < coefficient and not self.get_graduation_status(row.user, request):
                 row.cells_by_key[key].active = False
 
         # Prepare list of pairs consisting of cell and its points.
@@ -176,9 +178,13 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 class SUSIRules(CompetitionRules):
 
     RESULTS_TAGS = {
-        SUSI_CIFERSKY_CECH: ResultsTag(key=SUSI_CIFERSKY_CECH, name=SUSI_CIFERSKY_CECH),
-        SUSI_AGAT: ResultsTag(key=SUSI_AGAT, name=SUSI_AGAT),
-        SUSI_BLYSKAVICA: ResultsTag(key=SUSI_BLYSKAVICA, name=SUSI_BLYSKAVICA),
+        constants.SUSI_CIFERSKY_CECH: ResultsTag(
+            key=constants.SUSI_CIFERSKY_CECH, name=constants.SUSI_CIFERSKY_CECH
+        ),
+        constants.SUSI_AGAT: ResultsTag(key=constants.SUSI_AGAT, name=constants.SUSI_AGAT),
+        constants.SUSI_BLYSKAVICA: ResultsTag(
+            key=constants.SUSI_BLYSKAVICA, name=constants.SUSI_BLYSKAVICA
+        ),
     }
 
     RESULTS_GENERATOR_CLASS = SUSIResultsGenerator
@@ -206,22 +212,22 @@ class SUSIRules(CompetitionRules):
         solution = task.text_submit_solution[0].lower()
         if solution == submitted_text:
             response = "OK"
-            points = SUSI_POINTS_ALLOCATION[0]
+            points = constants.SUSI_POINTS_ALLOCATION[0]
             if (
                 task.round.susi_small_hint_date < now <= task.round.susi_big_hint_date
                 and len(task.susi_small_hint) > 0
             ):
-                points -= SUSI_POINTS_ALLOCATION[1]
+                points -= constants.SUSI_POINTS_ALLOCATION[1]
             elif (
                 task.round.susi_big_hint_date < now <= task.round.end_time
                 and len(task.susi_big_hint) > 0
             ):
-                points -= SUSI_POINTS_ALLOCATION[2]
+                points -= constants.SUSI_POINTS_ALLOCATION[2]
             elif now > task.round.end_time:
-                points = SUSI_POINTS_ALLOCATION[3]
+                points = constants.SUSI_POINTS_ALLOCATION[3]
         else:
             response = "WA"
-            points = SUSI_POINTS_ALLOCATION[3]
+            points = constants.SUSI_POINTS_ALLOCATION[3]
 
         wrong_submits = len(
             Submit.objects.filter(task=task, user=user, time__lte=task.round.end_time).exclude(
@@ -229,6 +235,6 @@ class SUSIRules(CompetitionRules):
             )
         )
 
-        points = max(points - wrong_submits // SUSI_WRONG_SUBMITS_TO_PENALTY, 0)
+        points = max(points - wrong_submits // constants.SUSI_WRONG_SUBMITS_TO_PENALTY, 0)
 
         return Grading(response, points)
