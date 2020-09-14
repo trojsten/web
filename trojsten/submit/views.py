@@ -15,6 +15,7 @@ from django.core.mail import send_mail
 from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.translation import ngettext
 from django.utils.translation import ugettext as _
 from judge_client import constants as judge_constants
 from judge_client.client import ProtocolError
@@ -561,14 +562,22 @@ def task_submit_post_text(request, task_id):
             messages.add_message(
                 request,
                 messages.SUCCESS,
-                _("Your solution is correct. You gain %(points)d points.")
+                ngettext(
+                    "Your solution is correct. You gain %(points)d point.",
+                    "Your solution is correct. You gain %(points)d points.",
+                    grading.points,
+                )
                 % {"points": grading.points},
             )
         else:
             messages.add_message(
                 request,
                 messages.ERROR,
-                _("Your solution is incorrect. You gain %(points)d points.")
+                ngettext(
+                    "Your solution is incorrect. You gain %(points)d point.",
+                    "Your solution is incorrect. You gain %(points)d points.",
+                    grading.points,
+                )
                 % {"points": grading.points},
             )
 

@@ -842,11 +842,21 @@ msgid ""
 msgstr ""
 "Nahral si svoje riešenie po termíne kola. Nebude zarátané vo výsledkovke."
 
-msgid "Your solution is correct. You gain %(points)d points."
-msgstr "Tvoje riešenie je správne. Získavaš %(points)d bodov."
+#, python-format
+msgid "Your solution is correct. You gain %(points)d point."
+msgid_plural "Your solution is correct. You gain %(points)d points."
+msgstr[0] "Tvoje riešenie je správne. Získavaš %(points)d bod."
+msgstr[1] "Tvoje riešenie je správne. Získavaš %(points)d body."
+msgstr[2] "Tvoje riešenie je správne. Získavaš %(points)d bodu."
+msgstr[3] "Tvoje riešenie je správne. Získavaš %(points)d bodov."
 
-msgid "Your solution is incorrect. You gain %(points)d points."
-msgstr "Tvoje riešenie je nesprávne. Získavaš %(points)d bodov."
+#, python-format
+msgid "Your solution is incorrect. You gain %(points)d point."
+msgid_plural "Your solution is incorrect. You gain %(points)d points."
+msgstr[0] "Tvoje riešenie je nesprávne. Získavaš %(points)d bod."
+msgstr[1] "Tvoje riešenie je nesprávne. Získavaš %(points)d body."
+msgstr[2] "Tvoje riešenie je nesprávne. Získavaš %(points)d bodu."
+msgstr[3] "Tvoje riešenie je nesprávne. Získavaš %(points)d bodov."
 
 msgid "Preview of your comment"
 msgstr "Náhľad komentára"

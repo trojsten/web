@@ -17,7 +17,11 @@ from unidecode import unidecode
 from trojsten.people.models import User, UserPropertyKey
 from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
-from trojsten.rules.susi_constants import SUSI_HINT_DAYS
+from trojsten.rules.susi_constants import (
+    SUSI_COMPETITION_ID,
+    SUSI_HINT_DAYS,
+    SUSI_OUTDOOR_ROUND_NUMBER,
+)
 from trojsten.submit import constants as submit_constants
 from trojsten.utils import utils
 
@@ -193,24 +197,20 @@ class Round(models.Model):
 
     @property
     def susi_is_outdoor(self):
-        if self.number == 100 and self.semester.competition.id == 9:
-            return True
-        else:
-            return False
+        return (
+            self.number == SUSI_OUTDOOR_ROUND_NUMBER
+            and self.semester.competition.id == SUSI_COMPETITION_ID
+        )
 
     @property
     def susi_small_hint_public(self):
         end = self.end_time - timedelta(days=SUSI_HINT_DAYS[0])
-        if timezone.now() > end:
-            return True
-        return False
+        return timezone.now() > end
 
     @property
     def susi_big_hint_public(self):
         end = self.end_time - timedelta(days=SUSI_HINT_DAYS[1])
-        if timezone.now() > end:
-            return True
-        return False
+        return timezone.now() > end
 
     @property
     def susi_small_hint_date(self):

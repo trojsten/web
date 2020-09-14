@@ -195,7 +195,7 @@ class SUSIRules(CompetitionRules):
             visible=True,
             end_time__gte=timezone.now()
             - timezone.timedelta(days=MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS),
-        ).exclude(number=100, end_time__gte=timezone.now())
+        ).exclude(number=constants.SUSI_OUTDOOR_ROUND_NUMBER, end_time__gte=timezone.now())
         return rounds.order_by("-end_time", "-number")[:1]
 
     def get_previous_round(self, round):
@@ -209,8 +209,8 @@ class SUSIRules(CompetitionRules):
     def grade_text_submit(self, task, user, submitted_text):
         now = timezone.now()
         Grading = namedtuple("Grading", ["response", "points"])
-        solution = task.text_submit_solution[0].lower()
-        if solution == submitted_text:
+        solution = [solution.lower() for solution in task.text_submit_solution]
+        if submitted_text in solution:
             response = "OK"
             points = constants.SUSI_POINTS_ALLOCATION[0]
             if (
