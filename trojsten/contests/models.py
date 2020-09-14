@@ -386,23 +386,20 @@ class Task(models.Model):
     )
     text_submit_solution = ArrayField(
         models.CharField(
-            max_length=512,
-            verbose_name="správne riešenie pri odovzdávaní textu",
-            blank=True,
-            null=True,
+            max_length=512, verbose_name="textové riešenia (oddeľ čiarkou)", blank=True, null=True,
         ),
         blank=True,
         null=True,
         default=list,
     )
     susi_small_hint = ArrayField(
-        models.CharField(max_length=128, verbose_name="malý hint", blank=True, null=True),
+        models.CharField(max_length=128, verbose_name="Suši malý hint", blank=True, null=True),
         blank=True,
         null=True,
         default=list,
     )
     susi_big_hint = ArrayField(
-        models.CharField(max_length=128, verbose_name="veľký hint", blank=True, null=True),
+        models.CharField(max_length=128, verbose_name="Suši veľký hint", blank=True, null=True),
         blank=True,
         null=True,
         default=list,
