@@ -64,7 +64,7 @@
     </div>
     <div class="task-submit">
 
-    {% if task.round.semester.competition.id == 9 %}
+    {% if task.round.semester.competition.id == SUSI_COMPETITION_ID %}
         {% include "./parts/susi_hints.html" %}
     {% endif %}
 

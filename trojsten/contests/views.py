@@ -10,6 +10,7 @@ from sendfile import sendfile
 from wiki.decorators import get_article
 
 from trojsten.contests.models import Competition, Round, Task
+from trojsten.rules.susi_constants import SUSI_COMPETITION_ID
 from trojsten.utils.utils import is_true
 
 from . import constants
@@ -25,7 +26,7 @@ def _statement_view(request, task_id, solution=False):
     task = get_object_or_404(Task, pk=task_id)
     if not task.visible(request.user) or (solution and not task.solution_visible(request.user)):
         raise Http404
-    template_data = {"task": task}
+    template_data = {"task": task, "SUSI_COMPETITION_ID": SUSI_COMPETITION_ID}
     if task.task_file_exists:
         with settings.TASK_STATEMENTS_STORAGE.open(task.get_path(solution=False)) as f:
             template_data["task_text"] = f.read().decode()
