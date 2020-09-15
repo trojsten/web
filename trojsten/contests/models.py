@@ -18,9 +18,10 @@ from trojsten.people.models import User, UserPropertyKey
 from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
 from trojsten.rules.susi_constants import (
+    SUSI_BIG_HINT_DAYS,
     SUSI_COMPETITION_ID,
-    SUSI_HINT_DAYS,
     SUSI_OUTDOOR_ROUND_NUMBER,
+    SUSI_SMALL_HINT_DAYS,
 )
 from trojsten.submit import constants as submit_constants
 from trojsten.utils import utils
@@ -93,9 +94,11 @@ class Semester(models.Model):
     def start_time(self):
         return self.round_set.order_by("start_time")[0].start_time
 
+    # Adding new rounds to a semester alters this property, thus it should only be used with
+    # semesters that have already ended unless accounted for.
     @property
     def end_time(self):
-        return self.round_set.order_by("end_time").reverse()[0].end_time
+        return self.round_set.order_by("-end_time")[0].end_time
 
     def __str__(self):
         # All foreign keys here should be added to the select_related list in the RoundManager.
@@ -182,6 +185,13 @@ class Round(models.Model):
     objects = RoundManager()
 
     @property
+    def number_str(self):
+        if self.susi_is_outdoor:
+            return "Outdoor"
+        else:
+            return "%i." % self.number
+
+    @property
     def can_submit(self):
         end = self.end_time if self.second_end_time is None else self.second_end_time
         if timezone.now() <= end:
@@ -204,21 +214,21 @@ class Round(models.Model):
 
     @property
     def susi_small_hint_public(self):
-        end = self.end_time - timedelta(days=SUSI_HINT_DAYS[0])
+        end = self.end_time - timedelta(days=SUSI_SMALL_HINT_DAYS)
         return timezone.now() > end
 
     @property
     def susi_big_hint_public(self):
-        end = self.end_time - timedelta(days=SUSI_HINT_DAYS[1])
+        end = self.end_time - timedelta(days=SUSI_BIG_HINT_DAYS)
         return timezone.now() > end
 
     @property
     def susi_small_hint_date(self):
-        return self.end_time - timedelta(days=SUSI_HINT_DAYS[0])
+        return self.end_time - timedelta(days=SUSI_SMALL_HINT_DAYS)
 
     @property
     def susi_big_hint_date(self):
-        return self.end_time - timedelta(days=SUSI_HINT_DAYS[1])
+        return self.end_time - timedelta(days=SUSI_BIG_HINT_DAYS)
 
     def get_base_path(self):
         round_dir = str(self.number)
@@ -285,25 +295,14 @@ class Round(models.Model):
 
     def __str__(self):
         # All foreign keys here should be added to the select_related list in the RoundManager.
-        if self.susi_is_outdoor:
-            return "Outdoor kolo, %i. časť, %i. ročník %s" % (
-                self.semester.number,
-                self.semester.year,
-                self.semester.competition,
-            )
-        else:
-            return "%i. kolo, %i. časť, %i. ročník %s" % (
-                self.number,
-                self.semester.number,
-                self.semester.year,
-                self.semester.competition,
-            )
+        return self.number_str + " kolo, %i. časť, %i. ročník %s" % (
+            self.semester.number,
+            self.semester.year,
+            self.semester.competition,
+        )
 
     def short_str(self):
-        if self.susi_is_outdoor:
-            return "Outdoor kolo"
-        else:
-            return "%i. kolo" % self.number
+        return self.number_str + " kolo"
 
     short_str.short_description = "kolo"
 
@@ -386,24 +385,14 @@ class Task(models.Model):
     )
     text_submit_solution = ArrayField(
         models.CharField(
-            max_length=512, verbose_name="textové riešenia (oddeľ čiarkou)", blank=True, null=True,
+            max_length=512, verbose_name="textové riešenia (oddeľ čiarkou)", blank=True, default="",
         ),
         blank=True,
         null=True,
         default=list,
     )
-    susi_small_hint = ArrayField(
-        models.CharField(max_length=128, verbose_name="Suši malý hint", blank=True, null=True),
-        blank=True,
-        null=True,
-        default=list,
-    )
-    susi_big_hint = ArrayField(
-        models.CharField(max_length=128, verbose_name="Suši veľký hint", blank=True, null=True),
-        blank=True,
-        null=True,
-        default=list,
-    )
+    susi_small_hint = models.TextField(verbose_name="Suši malý hint", blank=True, default="")
+    susi_big_hint = models.TextField(verbose_name="Suši velký hint", blank=True, default="")
     email_on_desc_submit = models.BooleanField(
         verbose_name=_("Send notification to reviewers about new description submit"), default=False
     )

@@ -8,11 +8,7 @@
 <h1>
     Zadania
     <small>
-        {% if round.susi_is_outdoor %}
-          Outdoor kola
-        {% else %}
-          {{ round.number }}. kola
-        {% endif %}
+        {{ round.number_str }} kola
         {{ round.semester.number }}. časti
         {{ round.semester.year }}. ročníka {{ round.semester.competition.name }}
         {% if not round.visible %}

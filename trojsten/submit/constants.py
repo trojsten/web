@@ -29,6 +29,9 @@ SUBMIT_TYPES = [
 ]
 VIEWABLE_EXTENSIONS = [".pdf", ".txt"]
 
+SUBMIT_RESPONSE_OK = "OK"
+SUBMIT_RESPONSE_WA = "WA"
+
 SUBMIT_VERBOSE_RESPONSE = {
     "WA": _("Wrong answer"),
     "CERR": _("Compilation error"),

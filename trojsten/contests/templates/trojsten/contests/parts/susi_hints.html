@@ -2,16 +2,14 @@
 
     <h3>Malá nápoveda</h3>
     {% if task.round.susi_small_hint_public and task.susi_small_hint|length > 0 %}
-        {% for hint in task.susi_small_hint %}
-            <a class="btn btn-primary" role="button" data-toggle="collapse" href="#susi_small_hint" aria-expanded="false" aria-controls="susi_small_hint">
-                Zobraziť malú nápovedu
-            </a>
-            <div class="collapse" id="susi_small_hint">
-                <div class="well">
-                    {{ hint }}
-                </div>
+        <a class="btn btn-primary" role="button" data-toggle="collapse" href="#susi_small_hint" aria-expanded="false" aria-controls="susi_small_hint">
+            Zobraziť malú nápovedu
+        </a>
+        <div class="collapse" id="susi_small_hint">
+            <div class="well">
+                {{ task.susi_small_hint }}
             </div>
-        {% endfor %}
+        </div>
     {% elif task.susi_small_hint|length > 0 %}
         Bude zverejnená {{ task.round.susi_small_hint_date }}.
     {% else %}
@@ -20,16 +18,14 @@
 
     <h3>Veľká nápoveda</h3>
     {% if task.round.susi_big_hint_public and task.susi_big_hint|length > 0 %}
-        {% for hint in task.susi_big_hint %}
-            <a class="btn btn-primary" role="button" data-toggle="collapse" href="#susi_big_hint" aria-expanded="false" aria-controls="susi_big_hint">
-                Zobraziť veľkú nápovedu
-            </a>
-            <div class="collapse" id="susi_big_hint">
-                <div class="well">
-                    {{ hint }}
-                </div>
+        <a class="btn btn-primary" role="button" data-toggle="collapse" href="#susi_big_hint" aria-expanded="false" aria-controls="susi_big_hint">
+            Zobraziť veľkú nápovedu
+        </a>
+        <div class="collapse" id="susi_big_hint">
+            <div class="well">
+                {{ task.susi_big_hint }}
             </div>
-        {% endfor %}
+        </div>
     {% elif task.susi_big_hint|length > 0 %}
         Bude zverejnená {{ task.round.susi_big_hint_date }}.
     {% else %}

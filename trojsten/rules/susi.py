@@ -15,6 +15,7 @@ from trojsten.results.constants import (
 )
 from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
 from trojsten.results.representation import ResultsCell, ResultsCol, ResultsTag
+from trojsten.submit.constants import SUBMIT_RESPONSE_OK, SUBMIT_RESPONSE_WA
 from trojsten.submit.models import Submit
 
 from .default import CompetitionRules
@@ -211,7 +212,7 @@ class SUSIRules(CompetitionRules):
         Grading = namedtuple("Grading", ["response", "points"])
         solution = [solution.lower() for solution in task.text_submit_solution]
         if submitted_text in solution:
-            response = "OK"
+            response = SUBMIT_RESPONSE_OK
             points = constants.SUSI_POINTS_ALLOCATION[0]
             if (
                 task.round.susi_small_hint_date < now <= task.round.susi_big_hint_date
@@ -226,7 +227,7 @@ class SUSIRules(CompetitionRules):
             elif now > task.round.end_time:
                 points = constants.SUSI_POINTS_ALLOCATION[3]
         else:
-            response = "WA"
+            response = SUBMIT_RESPONSE_WA
             points = constants.SUSI_POINTS_ALLOCATION[3]
 
         wrong_submits = len(

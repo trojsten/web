@@ -23,6 +23,7 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
     context = {
         "round": round,
         "scoreboards": scoreboards,
+        "single_round": scoreboards[0].scoreboard.is_single_round,
         "selected_tag": tag_key,
         "show_staff": is_true(request.GET.get("show_staff", False)),
     }
