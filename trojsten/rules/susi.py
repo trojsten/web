@@ -19,6 +19,7 @@ from trojsten.submit.constants import SUBMIT_RESPONSE_OK, SUBMIT_RESPONSE_WA
 from trojsten.submit.models import Submit
 
 from .default import CompetitionRules
+from .kms import KMS_MO_FINALS_TYPE
 
 
 class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
@@ -70,6 +71,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                 Q(going=True),
             )
             .exclude(Q(event__type__name=constants.SUSI_CAMP_TYPE))
+            .exclude(Q(event__type__name=KMS_MO_FINALS_TYPE))
             .values("user")
             .annotate(camps=Count("event__semester", distinct=True))
             .values_list("user", "camps")
