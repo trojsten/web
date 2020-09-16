@@ -889,7 +889,7 @@ class KSPRulesOneUserTest(TestCase):
 
 class SusiCoefficientTest(TestCase):
     def setUp(self):
-        time = datetime.datetime(2047, 4, 7, 12, 47)
+        time = datetime.datetime(2007, 4, 7, 12, 47)
         self.time = timezone.make_aware(time)
 
         group = Group.objects.create(name="skupina")
@@ -1016,6 +1016,20 @@ class SusiCoefficientTest(TestCase):
             user=self.test_user,
             type=EventParticipant.PARTICIPANT,
             going=False,
+        )
+        generator = SUSIResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
+
+    def test_ignore_ckmo_participant(self):
+        group = Group.objects.create(name="skupinamo")
+        type_mo = EventType.objects.create(
+            name=KMS_MO_FINALS_TYPE, organizers_group=group, is_camp=False
+        )
+        ckmo = Event.objects.create(
+            name="CKMO", type=type_mo, place=self.place, start_time=self.time, end_time=self.time,
+        )
+        EventParticipant.objects.create(
+            event=ckmo, user=self.test_user, type=EventParticipant.PARTICIPANT, going=True,
         )
         generator = SUSIResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
