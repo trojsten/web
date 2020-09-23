@@ -391,6 +391,8 @@ class SubmitTaskTests(TestCase):
         self.assertNotContains(response, "Popis")
         # @ToDo: translations
         self.assertNotContains(response, "Kód")
+        # @ToDo: translations
+        self.assertNotContains(response, "Riešenie")
 
     def test_task_with_source(self):
         round = Round.objects.create(
