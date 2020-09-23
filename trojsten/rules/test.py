@@ -1245,3 +1245,63 @@ class SUSIRulesTest(TestCase):
         row_a = get_row_for_user(scoreboard, user)
         self.assertEqual(row_a.cell_list[col_to_index_map["sum"]].points, "16")
         self.assertEqual(row_b.cell_list[col_to_index_map["sum"]].points, "10")
+
+
+class TextSubmitTest(TestCase):
+    def setUp(self):
+        time = datetime.datetime.now()
+        self.time = timezone.make_aware(time)
+        self.competition = Competition.objects.create(name="TestCompetition")
+        self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.competition.save()
+        self.semester = Semester.objects.create(
+            number=1, name="Test semester", competition=self.competition, year=47
+        )
+        self.start = self.time + timezone.timedelta(-4)
+        self.end = self.time + timezone.timedelta(4)
+        self.round = Round.objects.create(
+            number=1,
+            semester=self.semester,
+            visible=True,
+            solutions_visible=False,
+            start_time=self.start,
+            end_time=self.end,
+        )
+
+        graduation_year = self.round.end_time.year + int(
+            self.round.end_time.month > SCHOOL_YEAR_END_MONTH
+        )
+        self.puzzlehunt_key = UserPropertyKey.objects.create(
+            key_name=PUZZLEHUNT_PARTICIPATIONS_KEY_NAME, regex=r"^-?(\d{1,2})$"
+        )
+        self.test_user = User.objects.create(
+            username="test_user",
+            password="password",
+            first_name="Jozko",
+            last_name="Mrkvicka",
+            graduation=graduation_year + 3,
+        )
+        UserProperty.objects.create(user=self.test_user, key=self.puzzlehunt_key, value="0")
+        self.solutions = ["s", "so", "sol", "solutions"]
+
+    def test_grade_text_submit(self):
+        points = 6
+        for real_solution in self.solutions:
+            for user_solution in self.solutions:
+                task = Task.objects.create(
+                    number=1,
+                    name="Test task",
+                    round=self.round,
+                    description_points=points,
+                    description_points_visible=True,
+                    text_submit_solution=[real_solution],
+                )
+                grading = self.competition.rules.grade_text_submit(
+                    task, self.test_user, user_solution
+                )
+                if real_solution == user_solution:
+                    self.assertEqual(grading.response, submit_constants.SUBMIT_RESPONSE_OK)
+                    self.assertEqual(grading.points, points)
+                else:
+                    self.assertEqual(grading.response, submit_constants.SUBMIT_RESPONSE_WA)
+                    self.assertEqual(grading.points, 0)

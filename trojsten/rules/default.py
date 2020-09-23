@@ -51,13 +51,10 @@ class CompetitionRules(object):
         Grading = namedtuple("Grading", ["response", "points"])
         solution = [solution.lower() for solution in task.text_submit_solution]
         if submitted_text in solution:
-            response = "OK"
-            if timezone.now() < task.round.end_time:
-                points = task.description_points
-            else:
-                points = 0
+            response = submit_constants.SUBMIT_RESPONSE_OK
+            points = task.description_points
         else:
-            response = "WA"
+            response = submit_constants.SUBMIT_RESPONSE_WA
             points = 0
         return Grading(response, points)
 
