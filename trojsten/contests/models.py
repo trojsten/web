@@ -215,22 +215,20 @@ class Round(models.Model):
         )
 
     @property
-    def susi_small_hint_public(self):
-        end = self.end_time - timedelta(days=SUSI_SMALL_HINT_DAYS)
-        return timezone.now() > end
-
-    @property
-    def susi_big_hint_public(self):
-        end = self.end_time - timedelta(days=SUSI_BIG_HINT_DAYS)
-        return timezone.now() > end
-
-    @property
     def susi_small_hint_date(self):
         return self.end_time - timedelta(days=SUSI_SMALL_HINT_DAYS)
 
     @property
     def susi_big_hint_date(self):
         return self.end_time - timedelta(days=SUSI_BIG_HINT_DAYS)
+
+    @property
+    def susi_small_hint_public(self):
+        return timezone.now() > self.susi_small_hint_date
+
+    @property
+    def susi_big_hint_public(self):
+        return timezone.now() > self.susi_big_hint_date
 
     def get_base_path(self):
         round_dir = str(self.number)
