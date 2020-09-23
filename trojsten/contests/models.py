@@ -94,10 +94,12 @@ class Semester(models.Model):
     def start_time(self):
         return self.round_set.order_by("start_time")[0].start_time
 
-    # Adding new rounds to a semester alters this property, thus it should only be used with
-    # semesters that have already ended unless accounted for.
     @property
     def end_time(self):
+        """
+        Adding new rounds to a semester alters this property, thus it should only be used with
+        semesters that have already ended unless accounted for.
+        """
         return self.round_set.order_by("-end_time")[0].end_time
 
     def __str__(self):
