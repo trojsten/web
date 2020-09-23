@@ -36,6 +36,10 @@ class SmokeTest(TestCase):
     def test_login(self):
         self._assert_homepage_loads()
 
+    @override_settings(SITE_ID=11, ROOT_URL_CONFIG="trojsten.urls.default")
+    def test_susi(self):
+        self._assert_homepage_loads()
+
     def _assert_homepage_loads(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.status_code, 200)
