@@ -390,7 +390,7 @@ class Task(models.Model):
             max_length=512, verbose_name="textové riešenia (oddeľ čiarkou)", blank=True, default="",
         ),
         blank=True,
-        null=True,
+        null=False,
         default=list,
     )
     susi_small_hint = models.TextField(verbose_name="Suši malý hint", blank=True, default="")
