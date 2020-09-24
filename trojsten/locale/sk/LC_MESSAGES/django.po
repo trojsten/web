@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-07 14:06+0000\n"
+"POT-Creation-Date: 2020-09-10 11:56+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
 ">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
@@ -832,6 +832,31 @@ msgid ""
 msgstr ""
 "Nahral si svoj popis riešenia po termíne kola. Nebude zarátaný vo "
 "výsledkovke."
+
+msgid "You have successfully submitted your solution."
+msgstr "Úspešne sa ti podarilo submitnúť riešenie."
+
+msgid ""
+"You have submitted your solution after the deadline. It is not counted in "
+"results."
+msgstr ""
+"Nahral si svoje riešenie po termíne kola. Nebude zarátané vo výsledkovke."
+
+#, python-format
+msgid "Your solution is correct. You gain %(points)d point."
+msgid_plural "Your solution is correct. You gain %(points)d points."
+msgstr[0] "Tvoje riešenie je správne. Získavaš %(points)d bod."
+msgstr[1] "Tvoje riešenie je správne. Získavaš %(points)d body."
+msgstr[2] "Tvoje riešenie je správne. Získavaš %(points)d bodu."
+msgstr[3] "Tvoje riešenie je správne. Získavaš %(points)d bodov."
+
+#, python-format
+msgid "Your solution is incorrect. You gain %(points)d point."
+msgid_plural "Your solution is incorrect. You gain %(points)d points."
+msgstr[0] "Tvoje riešenie je nesprávne. Získavaš %(points)d bod."
+msgstr[1] "Tvoje riešenie je nesprávne. Získavaš %(points)d body."
+msgstr[2] "Tvoje riešenie je nesprávne. Získavaš %(points)d bodu."
+msgstr[3] "Tvoje riešenie je nesprávne. Získavaš %(points)d bodov."
 
 msgid "Preview of your comment"
 msgstr "Náhľad komentára"

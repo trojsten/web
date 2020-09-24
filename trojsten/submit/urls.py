@@ -10,6 +10,11 @@ urlpatterns = [
         r"^(?P<task_id>\d+)/(?P<submit_type>\d+)/$", views.task_submit_post, name="task_submit_post"
     ),
     url(
+        r"^(?P<task_id>\d+)/text_submit/$",
+        views.task_submit_post_text,
+        name="task_submit_post_text",
+    ),
+    url(
         r"^ajax/submit/(?P<submit_id>\d+)/info.json$",
         views.poll_submit_info,
         name="poll_submit_info",

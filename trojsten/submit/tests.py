@@ -202,6 +202,25 @@ class SubmitListTests(TestCase):
         # @ToDo: translations
         self.assertContains(response, "Zip")
 
+    def test_task_with_text_submit(self):
+        round = Round.objects.create(
+            number=1,
+            semester=self.semester,
+            visible=True,
+            solutions_visible=False,
+            start_time=self.start_time_old,
+            end_time=self.end_time_new,
+        )
+        Task.objects.create(
+            number=1, name="Test task", round=round, text_submit_solution=["solution"],
+        )
+        self.client.force_login(self.non_staff_user)
+        response = self.client.get(self.list_url)
+        # @ToDo: translations
+        self.assertNotContains(response, "Tento príklad momentálne nemá možnosť odovzdávania.")
+        # @ToDo: translations
+        self.assertContains(response, "Riešenie")
+
     def tesk_task_with_all_submit_types(self):
         round = Round.objects.create(
             number=1,
@@ -218,6 +237,7 @@ class SubmitListTests(TestCase):
             has_testablezip=True,
             has_description=True,
             has_source=True,
+            text_submit_solution=["solution"],
         )
         self.client.force_login(self.non_staff_user)
         response = self.client.get(self.list_url)
@@ -229,6 +249,8 @@ class SubmitListTests(TestCase):
         self.assertContains(response, "Popis")
         # @ToDo: translations
         self.assertContains(response, "Kód")
+        # @ToDo: translations
+        self.assertContains(response, "Riešenie")
 
 
 class SubmitTaskTests(TestCase):
@@ -369,6 +391,8 @@ class SubmitTaskTests(TestCase):
         self.assertNotContains(response, "Popis")
         # @ToDo: translations
         self.assertNotContains(response, "Kód")
+        # @ToDo: translations
+        self.assertNotContains(response, "Riešenie")
 
     def test_task_with_source(self):
         round = Round.objects.create(
@@ -418,6 +442,24 @@ class SubmitTaskTests(TestCase):
         # @ToDo: translations
         self.assertContains(response, "Zip")
 
+    def test_task_with_text_submit(self):
+        round = Round.objects.create(
+            number=1,
+            semester=self.semester,
+            visible=True,
+            solutions_visible=False,
+            start_time=self.start_time_old,
+            end_time=self.end_time_new,
+        )
+        task = Task.objects.create(
+            number=1, name="Test task", round=round, text_submit_solution=["solution"]
+        )
+        url = reverse("task_submit_page", kwargs={"task_id": task.id})
+        self.client.force_login(self.non_staff_user)
+        response = self.client.get(url)
+        # @ToDo: translations
+        self.assertContains(response, "Riešenie")
+
     def test_task_with_all_submit_types(self):
         round = Round.objects.create(
             number=1,
@@ -434,6 +476,7 @@ class SubmitTaskTests(TestCase):
             has_testablezip=True,
             has_description=True,
             has_source=True,
+            text_submit_solution=["solution"],
         )
         url = reverse("task_submit_page", kwargs={"task_id": task.id})
         self.client.force_login(self.non_staff_user)
@@ -444,6 +487,8 @@ class SubmitTaskTests(TestCase):
         self.assertContains(response, "Popis")
         # @ToDo: translations
         self.assertContains(response, "Kód")
+        # @ToDo: translations
+        self.assertContains(response, "Riešenie")
 
 
 class JsonSubmitTest(TestCase):

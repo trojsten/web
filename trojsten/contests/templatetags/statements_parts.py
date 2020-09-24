@@ -25,6 +25,7 @@ def show_task_list(context, round):
         Category.objects.filter(task__in=tasks.values_list("pk", flat=True))
         .distinct()
         .select_related("competition")
+        .order_by("name")
     )
 
     data = {

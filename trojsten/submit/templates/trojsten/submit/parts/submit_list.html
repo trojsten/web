@@ -1,7 +1,7 @@
 {% load utils %}
 {% load submit_parts %}
 {% load i18n %}
-{% if task.has_description or task.has_source or task.has_testablezip %}
+{% if task.has_description or task.has_source or task.has_testablezip or task.has_text_solution %}
 <h2>Odovzdané súbory</h2>
 {% endif %}
 {% if task.has_description and not show_only_source %}
@@ -94,6 +94,28 @@
         {% endfor %}
         {% endif %}
 
+        </tbody>
+    </table>
+{% endif %}
+{% if task.has_text_submit %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Čas</th>
+                <th>Riešenie</th>
+                <th>Stav</th>
+                <th>Body</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for submit in submits|lookup:constants.SUBMIT_TYPE_TEXT %}
+                <tr class="{{ submit|submitclass }}" data-id="{{ submit.id }}">
+                    <td>{{ submit.time }}</td>
+                    <td>{{ submit.text }}</td>
+                    <td>{{ submit.tester_response_verbose }}</td>
+                    <td>{{ submit.points }}</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 {% endif %}

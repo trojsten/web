@@ -13,7 +13,7 @@
           <tr>
             <td>
               <a href="{% url 'task_list' round_id=round.id %}">
-                {{ round.number }}. kolo
+                {{ round.short_str }}
               </a>
               {% if not round.visible %}
                 <span class="label label-danger">skryté</span>

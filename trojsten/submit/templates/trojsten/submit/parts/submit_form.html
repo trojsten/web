@@ -50,3 +50,18 @@
     <p>Tento príklad sa odovzdáva na zvlášť stránke. </p>
     <a class="btn btn-primary" href="{{task.external_submit_link}}">Stránka s odovzdávaním</a>
 {% endif %}
+{% if task.has_text_submit%}
+    {% if competition_ignored %}
+      <div class="alert alert-danger">
+        Na odovzdávanie popisu si musíš povoliť súťaž <em>{{ task.round.semester.competition }}</em> v <a href="{% url "trojsten_account_settings" %}#contests" class="alert-link">nastaveniach</a>.
+      </div>
+    {% else %}
+      <form class="form-inline" enctype="multipart/form-data" method="post" action="{% url 'task_submit_post_text' task_id=task.id %}">
+          {% csrf_token %}
+          <div class="form-group" style="min-width:50px;"><label>Riešenie</label></div>
+          {{ text_submit_form | bootstrap_inline }}
+          <input type="hidden" name="redirect_to" value="{{ redirect_to }}" />
+          <input class="btn btn-primary" type="submit" value="Odovzdaj" />
+      </form>
+    {% endif %}
+{% endif %}

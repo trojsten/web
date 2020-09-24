@@ -63,7 +63,10 @@ class UserResult(object):
         return self.previous_rounds_points + sum(t.sum for t in self.tasks.values())
 
     def add_task_points(self, task, submit_type, points, submit_status):
-        if submit_type == submit_constants.SUBMIT_TYPE_DESCRIPTION:
+        if (
+            submit_type == submit_constants.SUBMIT_TYPE_DESCRIPTION
+            or submit_type == submit_constants.SUBMIT_TYPE_TEXT
+        ):
             if (
                 submit_status == submit_constants.SUBMIT_STATUS_REVIEWED
                 and task.description_points_visible
@@ -111,8 +114,7 @@ class FrozenUser(object):
 
 
 def get_results_data(submits):
-    """Returns results data for each user who has submitted at least one task
-    """
+    """Returns results data for each user who has submitted at least one task"""
     res = defaultdict(UserResult)
     for submit in submits:
         res[submit.user].add_task_points(

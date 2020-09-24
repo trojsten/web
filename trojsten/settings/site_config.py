@@ -125,7 +125,7 @@ class IKSSite(BaseSite):
 
 class SUSISite(BaseSite):
     name = "Súťaž v šifrovaní"
-    short_name = "SUŠI"
+    short_name = "Suši"
     url = "https://susi.trojsten.sk"
     has_logo = True
     folder = "susi"
