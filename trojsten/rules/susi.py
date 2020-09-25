@@ -36,9 +36,12 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                 self.prepare_coefficients(round)
 
             successful_semesters = self.susi_camps.get(user.pk, 0)
-            puzzlehunt_participations = int(
-                user.get_properties()[self.puzzlehunt_participations_key]
-            )
+            try:
+                puzzlehunt_participations = int(
+                    user.get_properties()[self.puzzlehunt_participations_key]
+                )
+            except KeyError:
+                puzzlehunt_participations = 0
             trojsten_camps = self.trojsten_camps.get(user.pk, 0)
             self.coefficients[user] = (
                 5 * successful_semesters + 3 * puzzlehunt_participations + trojsten_camps
@@ -144,9 +147,10 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         # Count only tasks your coefficient is eligible for, ignoring category Cifersky-cech
         for key in row.cells_by_key:
-            if constants.SUSI_ELIGIBLE_FOR_TASK_BOUND[
-                key
-            ] < coefficient and not self.get_graduation_status(row.user, request):
+            if (
+                constants.SUSI_ELIGIBLE_FOR_TASK_BOUND[key] < coefficient
+                and self.tag.key != constants.SUSI_CIFERSKY_CECH
+            ):
                 row.cells_by_key[key].active = False
 
         # Prepare list of pairs consisting of cell and its points.
