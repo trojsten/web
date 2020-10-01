@@ -221,24 +221,28 @@ class SUSIRules(CompetitionRules):
             response = SUBMIT_RESPONSE_OK
             points = constants.SUSI_POINTS_ALLOCATION[0]
             if (
-                task.round.susi_small_hint_date < now <= task.round.susi_big_hint_date
+                task.round.end_time < now <= task.round.susi_big_hint_date
                 and len(task.susi_small_hint) > 0
             ):
                 points -= constants.SUSI_POINTS_ALLOCATION[1]
             elif (
-                task.round.susi_big_hint_date < now <= task.round.end_time
+                task.round.susi_big_hint_date < now
+                and task.round.second_phase_running
                 and len(task.susi_big_hint) > 0
             ):
                 points -= constants.SUSI_POINTS_ALLOCATION[2]
-            elif now > task.round.end_time:
+            elif now > task.round.end_time and not task.round.second_phase_running:
                 points = constants.SUSI_POINTS_ALLOCATION[3]
         else:
             response = SUBMIT_RESPONSE_WA
             points = constants.SUSI_POINTS_ALLOCATION[3]
 
+        max_time = task.round.second_end_time
+        if max_time is None:
+            max_time = task.round.end_time
         wrong_submits = len(
-            Submit.objects.filter(task=task, user=user, time__lte=task.round.end_time).exclude(
-                text=solution
+            Submit.objects.filter(task=task, user=user, time__lte=max_time).exclude(
+                text__in=solution
             )
         )
 

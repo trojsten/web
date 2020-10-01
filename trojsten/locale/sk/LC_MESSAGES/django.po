@@ -136,6 +136,17 @@ msgstr ""
 "ktoré dostanete časť bodov.\n"
 "      "
 
+msgid ""
+"\n"
+"      <strong>Hints have been published.</strong>\n"
+"      You can still submit your solutions but you receive only partial points for them.\n"
+"      "
+msgstr ""
+"\n"
+"      <strong>Nápovedy boli zverejnené.</strong>\n"
+"      Ešte stále môžete odovzdávať vaše riešenia, ale dostanete za ne len čiastočné body.\n"
+"      "
+
 msgid "The round has finished."
 msgstr "Kolo už skončilo."
 

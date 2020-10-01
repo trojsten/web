@@ -22,12 +22,21 @@
     </div>
   </div>
   {% if round.second_phase_running %}
+    {% if submit_programs %}
     <div class="alert alert-info">
       {% blocktrans %}
       Don't submit descriptions.
       You can still <strong>submit your programs</strong> and receive points for them.
       {% endblocktrans %}
     </div>
+    {% else %}
+    <div class="alert alert-info">
+      {% blocktrans %}
+      <strong>Hints have been published.</strong>
+      You can still submit your solutions but you receive only partial points for them.
+      {% endblocktrans %}
+    </div>
+    {% endif %}
   {% endif %}
 </div>
 {% else %}

@@ -942,6 +942,7 @@ class SusiCoefficientTest(TestCase):
             solutions_visible=False,
             start_time=self.start,
             end_time=self.end,
+            second_end_time=self.end + timezone.timedelta(7),
         )
 
         graduation_year = self.round.end_time.year + int(
@@ -1098,6 +1099,7 @@ class SUSIRulesTest(TestCase):
             solutions_visible=False,
             start_time=self.start,
             end_time=self.end,
+            second_end_time=self.end + timezone.timedelta(7),
         )
 
         self.group = Group.objects.create(name="skupina")
