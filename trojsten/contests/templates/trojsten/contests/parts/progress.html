@@ -7,7 +7,14 @@
 <div class="roundprogressbar" id="progressbar-{{ round.id }}" data-id="{{ round.id }}" data-precision="{{ remaining|progress_time_precision }}" data-isresults={{ results }}>
   <div class="row">
     {% if round.second_phase_running %}
-      <div class="col-md-5"><em>{% trans "Submit programs until" %}: {{ end }}</em></div>
+      <div class="col-md-5"><em>
+        {% if submit_programs %}
+          {% trans "Submit programs until" %}:
+        {% else %}
+          {% trans "Solve with hints until" %}:
+        {% endif %}
+        {{ end }}</em>
+      </div>
     {% else %}
       <div class="col-md-5"><em>{% trans "End of the round" %}: {{ end }}</em></div>
     {% endif %}

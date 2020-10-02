@@ -120,6 +120,9 @@ msgstr "Viac noviniek &raquo;"
 msgid "Submit programs until"
 msgstr "Doprogramovanie do"
 
+msgid "Solve with hints until"
+msgstr "Riešenie s nápovedami do"
+
 msgid "End of the round"
 msgstr "Koniec kola"
 
