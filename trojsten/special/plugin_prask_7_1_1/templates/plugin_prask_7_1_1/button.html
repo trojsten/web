@@ -1,0 +1,21 @@
+{% extends "plugin_prask_7_1_1/level_base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+<script type="text/javascript">
+  BUTTON_SUBMIT_URL = '{% url "plugin_permonik:get_button_password" %}';
+</script>
+{% endblock head %}
+
+{% block content %}
+<form role="form" id="buttonForm">
+  {% csrf_token %}
+  <button disabled type="submit">Stlač ma!</button>
+</form>
+<p id="password"></p>
+{% endblock content %}
+
+{% block bottom_js %}
+<script src='{% static "plugin_prask_7_1_1/button.js" %}'></script>
+{% endblock bottom_js %}
+

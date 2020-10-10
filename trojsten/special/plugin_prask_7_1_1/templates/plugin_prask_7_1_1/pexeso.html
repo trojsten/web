@@ -1,0 +1,15 @@
+{% extends "plugin_prask_7_1_1/level_base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+<link href="{% static "plugin_prask_7_1_1/pexeso.css" %}" rel="stylesheet">
+{% endblock head %}
+
+{% block content %}
+Super, máš prvé body :)
+<table class="table" id="gameTable"></table>
+{% endblock content %}
+
+{% block bottom_js %}
+<script src='{% static "plugin_prask_7_1_1/pexeso.js" %}'></script>
+{% endblock bottom_js %}

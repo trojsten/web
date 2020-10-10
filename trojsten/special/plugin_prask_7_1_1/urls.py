@@ -9,5 +9,7 @@ app_name = "plugin_permonik"
 urlpatterns = [
     url(r"^$", RedirectView.as_view(url='intro/', permanent=True)),
     url(r"^intro/$", views.intro),
-    url(r"^get_hint/(?P<level>\d+)/", views.get_hint, name="get_hint"),
-] + [url(fr"^{lvl.url}/$", views.level, {"level": id}) for (id, lvl) in enumerate(LEVELS)]
+    url(r"^get_hint/(?P<level>\d+)/$", views.get_hint, name="get_hint"),
+    url(r"^get_button_password/$", views.get_button_password, name="get_button_password"),
+    url(r"^get_input_password/$", views.get_input_password, name="get_input_password"),
+] + [url(fr"^{lvl.url}/$", views.level, {"level": id, "source_fname": lvl.source_fname}) for (id, lvl) in enumerate(LEVELS)]

@@ -1,0 +1,30 @@
+{% extends "plugin_prask_7_1_1/level_base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<div>
+  <input id="uzivatelskyVstup" type="text"></input>
+  <button onclick="zvalidujHandler()" type="submit">Zvaliduj</button>
+</div>
+{% endblock content %}
+
+{% block bottom_js %}
+<script type="text/javascript">
+  function je_validny(txt) {
+    if (txt.length != 5) return false;
+    if (txt[0] != txt[3] || txt[0] != 'b') return false;
+    if (!$.isNumeric(txt[1]) || !$.isNumeric(txt[2])) return false;
+    const a = parseInt(txt[1])
+    const b = parseInt(txt[2])
+    if (a == 0 || 9 * a != b) return false
+    if (txt[4] != 'k') return false
+    return true
+  }
+
+  function zvalidujHandler(e) {
+    const txt = document.getElementById('uzivatelskyVstup').value
+    if (je_validny(txt)) alert("Správne!")
+    else alert("Skús to znovu.")
+  }
+</script>
+{% endblock bottom_js %}
