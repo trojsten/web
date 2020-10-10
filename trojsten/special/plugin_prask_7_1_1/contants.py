@@ -14,5 +14,5 @@ LEVELS = [
     Level("b19bk", "cookie.html", "Hint k levelu č."),
     Level("hihihihi", "input.html", "Hint k levelu č."),
     Level("abrakadabra", "abeceda.html", "Hint k levelu č."),
-    Level("10", "finish.html", "Hmm, žiadny hint tu nie je, vyhral/a si :P")
+    Level("7", "finish.html", "Hmm, žiadny hint tu nie je, vyhral/a si :P")
 ]
