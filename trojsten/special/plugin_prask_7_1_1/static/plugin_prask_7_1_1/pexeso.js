@@ -55,10 +55,10 @@ function createTile(i, j, gameState) {
   tile.classList.add("tile");
   const img = document.createElement("img");
   img.src = `${IMG_URL}${gameState.tiles[pos]}.png`;
-  img.style.visibility = "hidden";
+  img.style.opacity = "0";
   const overlay = document.createElement("div");
-  overlay.onclick = function () { img.style.visibility = "visible"; gameState.turnTile(pos); }
-  gameState.tileHideClbks[pos] = () => { img.style.visibility = "hidden"; }
+  overlay.onclick = function () { img.style.opacity = "100%"; gameState.turnTile(pos); }
+  gameState.tileHideClbks[pos] = () => { img.style.opacity = "0"; }
   tile.appendChild(img);
   tile.appendChild(overlay);
   return tile;

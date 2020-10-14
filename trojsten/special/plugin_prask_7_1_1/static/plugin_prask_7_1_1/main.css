@@ -1,0 +1,25 @@
+html {
+    font-family: "Fira Code", monospace;
+}
+body{
+    visibility:hidden;
+    background: black;
+    color: lime;
+    padding: 1rem;
+}
+
+#cursor::before{
+    content: "|";
+}
+
+
+
+button {
+    border:1px solid lime;
+    padding: 0.75rem 1rem;
+    color: lime;
+    background-color: black;
+    margin: 10px;
+    font-family: "Fira Code", monospace;
+    font-size: large;
+}
