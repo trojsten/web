@@ -5,14 +5,14 @@ class Level:
         self.hint = hint
         
 LEVELS = [
-    Level("letsplay", "pexeso.html", "Hint k levelu 1."),
-    Level("level2", "urlchange.html", "Hint k levelu 2."),
-    Level("level3", "insource.html", "Hint k levelu 3."),
-    Level("malina", "morse.html", "Hint k levelu č."),
-    Level("morseout", "button.html", "Hint k levelu č."),
-    Level("slamastika", "validator.html", "Hint k levelu č."),
-    Level("b19bk", "cookie.html", "Hint k levelu č."),
-    Level("hihihihi", "input.html", "Hint k levelu č."),
-    Level("abrakadabra", "abeceda.html", "Hint k levelu č."),
+    Level("letsplay", "pexeso.html", "Je to skoro ako pexeso."),
+    Level("level2", "urlchange.html", "Pozri sa na URL aktuálnej stránky :)"),
+    Level("level3", "insource.html", "Ak heslo nevidno na stránke, mohlo sa zašiť niekam do kódu."),
+    Level("malina", "morse.html", "Jeden pes je dlhý, druhý zase krátky. Nie sú to Morseho psi?"),
+    Level("morseout", "button.html", "Prefix ukazoval, že cez Developer Tools (F12) môžeme meniť stránku. Už len stačí spraviť tlačidlo stlačitelné :P"),
+    Level("slamastika", "validator.html", "Čo to po tebe len ten validátor chce? Nie je niekde kód, podľa ktorého validuje?"),
+    Level("b19bk", "cookie.html", "Na obrázku je sušienka, anglicky cookie. Tie tušim Prefix spomínal vo videu."),
+    Level("hihihihi", "input.html", "Ale veď naraz môžem objednať iba 10 rezňov!! Hmm, nedá sa tento limit zväčšiť kdesi v kóde?"),
+    Level("abrakadabra", "abeceda.html", "Koľko písmen má ABECEDA?"),
     Level("7", "finish.html", "Hmm, žiadny hint tu nie je, vyhral/a si :P")
 ]

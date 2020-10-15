@@ -15,6 +15,8 @@ body, html, .table
   border: 1px solid lime;
   width: 100px;
   height: 100px;
+  padding: 0;
+  margin: 0;
 }
 
 .tile > img {

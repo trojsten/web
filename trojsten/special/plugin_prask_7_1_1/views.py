@@ -28,7 +28,7 @@ def handle_cookie_level(request, level):
 
 @login_required()
 def level(request, level, source_fname):
-    mark_level_solved(request.user, level)
+    mark_level_solved(request.user, level-1)
     specials = {"cookies": {}, "variables": {}}
     if source_fname == "cookie.html":
         specials = handle_cookie_level(request, level)
@@ -47,8 +47,7 @@ def level(request, level, source_fname):
         "%a, %d-%b-%Y %H:%M:%S GMT")
     for key in specials["cookies"]:
         response.set_cookie(
-            key, specials["cookies"][key],max_age=max_cookie_age, expires=cookie_expires,
-            domain=settings.SESSION_COOKIE_DOMAIN, secure=settings.SESSION_COOKIE_SECURE or None)
+            key, specials["cookies"][key],max_age=max_cookie_age, expires=cookie_expires, samesite='lax')
     return response
 
 @login_required()

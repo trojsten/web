@@ -16,7 +16,7 @@ def get_task():
 
 def update_points(user):
     solved = UserLevel.objects.filter(user=user.id, solved=True)
-    points = solved.count() * 1.5 - solved.filter(used_hint=True).count() * 0.1
+    points = solved.count() * 1.5 - solved.filter(used_hint=True).count() * 0.5
     submit = Submit(
         task=get_task(),
         user=user,
