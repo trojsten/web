@@ -15,11 +15,23 @@ body{
 
 
 button {
-    border:1px solid lime;
+    border:2px solid lime;
     padding: 0.75rem 1rem;
     color: lime;
     background-color: black;
     margin: 10px;
     font-family: "Fira Code", monospace;
     font-size: large;
+}
+button:hover{
+    color: black;
+    background-color: lime;
+    cursor: pointer;
+}
+
+button:disabled{
+    color:#555;
+    background-color: #111;
+    border-color: #555;
+    cursor: default;
 }

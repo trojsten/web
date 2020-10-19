@@ -35,10 +35,15 @@ recursivelyApplyFunction = (element, fx, timeDelta=0,depth=0) => {
     });
 }
 setTimeout(() =>{
-recursivelyMakeSpans(document.querySelector("body"));
-recursivelyApplyFunction(document.querySelector("body"),hideFunction);
-recursivelyApplyFunction(document.querySelector("body"), showFunction,50);
+recursivelyMakeSpans(document.querySelector("#level"));
+recursivelyApplyFunction(document.querySelector("#level"),hideFunction);
+recursivelyApplyFunction(document.querySelector("#level"), showFunction,50);
+setTimeout(() =>{
+    document.querySelectorAll("span").forEach(x=>x.outerHTML=x.innerHTML)
+    document.normalize();
+},time)
 },1000)
+
 //document.querySelectorAll("span").forEach(span=> span.style.visibility = "visible");
 
 //TODO: pexeso
