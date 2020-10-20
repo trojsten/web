@@ -2,7 +2,7 @@ html {
     font-family: "Fira Code", monospace;
 }
 body{
-    visibility:hidden;
+    visibility: hidden;
     background: black;
     color: lime;
     padding: 1rem;
@@ -12,6 +12,9 @@ body{
     content: "|";
 }
 
+.visible{
+    visibility: visible;
+}
 
 
 button {
