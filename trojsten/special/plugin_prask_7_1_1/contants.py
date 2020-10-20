@@ -11,7 +11,7 @@ LEVELS = [
     Level("malina", "morse.html", "Jeden pes je dlhý, druhý zase gulatý. Nie sú to Morseho psi?"),
     Level("woof", "button.html", "Prefix ukazoval, že cez Developer Tools (F12) môžeme meniť stránku. Skús tak spraviť tlačidlo stlačitelné. Anglicky slovo 'disabled' znamená 'zakázaný' :P"),
     Level("slamastika", "validator.html", "Čo to po tebe len ten validátor chce? Nie je niekde kód, podľa ktorého validuje?"),
-    Level("b19bk", "cookie.html", "Na obrázku je sušienka, anglicky cookie. Tie tušim Prefix spomínal vo videu."),
+    Level("m3dv3d", "cookie.html", "Na obrázku je sušienka, anglicky cookie. Tie tušim Prefix spomínal vo videu."),
     Level("hihihihi", "input.html", "Ale veď naraz môžem objednať iba 10 rezňov!! Hmm, nedá sa tento limit zväčšiť kdesi v kóde?"),
     Level("abrakadabra", "abeceda.html", "Koľko písmen má ABECEDA?"),
     Level("7", "finish.html", "Hmm, žiadny hint tu nie je, vyhral/a si :P")
