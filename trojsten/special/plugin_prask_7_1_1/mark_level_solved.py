@@ -14,6 +14,7 @@ def get_task():
         get_task._cache = Task.objects.get(pk=PERMONIK_TASK_ID)
         return get_task._cache
 
+
 def update_points(user):
     solved = UserLevel.objects.filter(user=user.id, solved=True)
     points = solved.count() * 1.5 - solved.filter(used_hint=True).count() * 0.5
@@ -25,6 +26,7 @@ def update_points(user):
         testing_status="OK",
     )
     submit.save()
+
 
 def mark_level_solved(user, level_id):
     userlevel, _ = UserLevel.objects.get_or_create(level_id=level_id, user=user)

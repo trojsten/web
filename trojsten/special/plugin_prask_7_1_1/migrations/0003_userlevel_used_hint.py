@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('plugin_prask_7_1_1', '0002_auto_20201003_1030'),
+        ("plugin_prask_7_1_1", "0002_auto_20201003_1030"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='userlevel',
-            name='used_hint',
+            model_name="userlevel",
+            name="used_hint",
             field=models.BooleanField(default=False),
         ),
     ]

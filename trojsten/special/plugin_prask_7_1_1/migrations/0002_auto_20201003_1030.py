@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('plugin_prask_7_1_1', '0001_initial'),
+        ("plugin_prask_7_1_1", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='userlevel',
-            name='level_id',
+            model_name="userlevel",
+            name="level_id",
             field=models.IntegerField(),
         ),
     ]
