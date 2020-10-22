@@ -9,7 +9,7 @@ LEVELS = [
     Level("letsplay", "pexeso.html", "Je to skoro ako pexeso."),
     Level("level2", "urlchange.html", "Pozri sa na URL aktuálnej stránky :)"),
     Level("level3", "insource.html", "Ak heslo nevidno na stránke, mohlo sa zašiť niekam do kódu."),
-    Level("malina", "morse.html", "Jeden pes je dlhý, druhý zase gulatý. Nie sú to Morseho psi?"),
+    Level("malina", "morse.html", "Jeden pes je dlhý, druhý zase guľatý. Nie sú to Morseho psy?"),
     Level(
         "woof",
         "button.html",
@@ -26,13 +26,13 @@ LEVELS = [
     Level(
         "m3dv3d",
         "cookie.html",
-        "Na obrázku je sušienka, anglicky cookie. Tie tušim Prefix spomínal vo videu.",
+        "Na obrázku je sušienka, anglicky \"cookie\". Tie tuším Prefix spomínal vo videu :P",
     ),
     Level(
         "hihihihi",
         "input.html",
         (
-            "Ale veď naraz môžem objednať iba 10 rezňov!! Hmm, nedá sa tento limit zväčšiť "
+            "Ale veď naraz môžem objednať iba 10 rezňov! Hmm, nedá sa tento limit zväčšiť "
             "kdesi v kóde?"
         ),
     ),

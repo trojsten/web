@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 
-from .contants import LEVELS
+from .constants import LEVELS
 from .mark_level_solved import mark_level_solved
 from .models import UserLevel
 

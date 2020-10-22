@@ -3,7 +3,7 @@ from django.views.generic.base import RedirectView
 
 from trojsten.special.plugin_prask_7_1_1 import views
 
-from .contants import LEVELS
+from .constants import LEVELS
 
 app_name = "plugin_permonik"
 
