@@ -26,7 +26,7 @@ LEVELS = [
     Level(
         "m3dv3d",
         "cookie.html",
-        "Na obrázku je sušienka, anglicky \"cookie\". Tie tuším Prefix spomínal vo videu :P",
+        'Na obrázku je sušienka, anglicky "cookie". Tie tuším Prefix spomínal vo videu :P',
     ),
     Level(
         "hihihihi",
