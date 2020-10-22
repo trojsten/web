@@ -4,6 +4,7 @@ from collections import namedtuple
 
 from django.db.models import Count, Q
 from django.utils import timezone
+from unidecode import unidecode
 
 import trojsten.rules.susi_constants as constants
 from trojsten.contests.models import Round
@@ -216,8 +217,10 @@ class SUSIRules(CompetitionRules):
     def grade_text_submit(self, task, user, submitted_text):
         now = timezone.now()
         Grading = namedtuple("Grading", ["response", "points"])
-        solution = [solution.lower() for solution in task.text_submit_solution]
-        if submitted_text in solution:
+        solutions = [
+            unidecode(solution.replace(" ", "").lower()) for solution in task.text_submit_solution
+        ]
+        if submitted_text in solutions:
             response = SUBMIT_RESPONSE_OK
             points = constants.SUSI_POINTS_ALLOCATION[0]
             if (
@@ -242,7 +245,7 @@ class SUSIRules(CompetitionRules):
             max_time = task.round.end_time
         wrong_submits = len(
             Submit.objects.filter(task=task, user=user, time__lte=max_time).exclude(
-                text__in=solution
+                text__in=solutions
             )
         )
 
