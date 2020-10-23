@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from trojsten.contests.models import Task
 from trojsten.submit.constants import SUBMIT_TYPE_EXTERNAL
 from trojsten.submit.models import Submit
@@ -7,12 +9,9 @@ from .models import UserLevel
 PERMONIK_TASK_ID = 1994
 
 
+@lru_cache(maxsize=1)
 def get_task():
-    try:
-        return get_task._cache
-    except AttributeError:
-        get_task._cache = Task.objects.get(pk=PERMONIK_TASK_ID)
-        return get_task._cache
+    return Task.objects.get(pk=PERMONIK_TASK_ID)
 
 
 def update_points(user):

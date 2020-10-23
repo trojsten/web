@@ -58,7 +58,6 @@ neoScreen = () => {
     }, 1000)
 }
 neoScreen();
-//document.querySelectorAll("span").forEach(span=> span.style.visibility = "visible");
 
 //TODO: pexeso
 //TODO: tlačidlá

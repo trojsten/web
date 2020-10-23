@@ -35,7 +35,7 @@ def level(request, level, source_fname):
         specials = handle_cookie_level(request, level)
     response = render(
         request,
-        f"plugin_prask_7_1_1/{source_fname}",
+        "plugin_prask_7_1_1/" + source_fname,
         {
             "level": level,
             **specials["variables"],

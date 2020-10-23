@@ -1,9 +1,6 @@
-class Level:
-    def __init__(self, url, source_fname, hint):
-        self.url = url
-        self.source_fname = source_fname
-        self.hint = hint
+import collections
 
+Level = collections.namedtuple("Level", ["url", "source_fname", "hint"])
 
 LEVELS = [
     Level("letsplay", "pexeso.html", "Je to skoro ako pexeso."),
