@@ -215,6 +215,7 @@ class SUSIRules(CompetitionRules):
             return None
 
     def grade_text_submit(self, task, user, submitted_text):
+        submitted_text = unidecode(submitted_text.replace(" ", "").lower())
         now = timezone.now()
         Grading = namedtuple("Grading", ["response", "points"])
         solutions = [
