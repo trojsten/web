@@ -14,6 +14,6 @@ urlpatterns = [
     url(r"^get_button_password/$", views.get_button_password, name="get_button_password"),
     url(r"^get_input_password/$", views.get_input_password, name="get_input_password"),
 ] + [
-    url(fr"^{lvl.url}/$", views.level, {"level": id, "source_fname": lvl.source_fname})
+    url(r"^%s/$" % lvl.url, views.level, {"level": id, "source_fname": lvl.source_fname})
     for (id, lvl) in enumerate(LEVELS)
 ]
