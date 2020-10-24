@@ -18,7 +18,7 @@ LEVELS = [
     Level(
         "slamastika",
         "validator.html",
-        "Čo to po tebe len ten validátor chce? Nie je niekde kód, podľa ktorého validuje?",
+        "Čo to po tebe ten validátor chce? Nie je niekde kód, podľa ktorého validuje?",
     ),
     Level(
         "m3dv3d",

@@ -4,9 +4,6 @@ $('#hintForm').submit( function(e) {
   $.ajax({
         type: 'POST',
         url: HINT_URL,
-        headers: {
-            "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val(),
-        }
     }).done(function(data) {
       $('#hintText').text(data.hint);
     }).fail(function(err) {
