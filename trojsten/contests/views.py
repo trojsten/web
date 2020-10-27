@@ -57,10 +57,17 @@ def task_list(request, round_id):
 
 
 def active_rounds_task_list(request):
-    rounds = Round.objects.active_visible(request.user).order_by("end_time")
+    rounds = Round.objects.active_visible(request.user).order_by("end_time").filter(prask_intro_round=-1)
     competitions = Competition.objects.current_site_only()
     template_data = {"rounds": rounds, "competitions": competitions}
     return render(request, "trojsten/contests/list_active_rounds_tasks.html", template_data)
+
+
+def prask_intro_rounds(request):
+    rounds = Round.objects.active_visible(request.user).order_by("end_time").exclude(prask_intro_round=-1)
+    competitions = Competition.objects.current_site_only()
+    template_data = {"rounds": rounds, "competitions": competitions, "user": request.user}
+    return render(request, "trojsten/contests/prask_intro_rounds.html", template_data)
 
 
 def view_pdf(request, round_id, solution=False):
@@ -103,7 +110,7 @@ def ajax_progressbar(request, round_id):
 
 
 def dashboard(request):
-    rounds = Round.objects.active_visible(request.user).order_by("end_time")
+    rounds = Round.objects.active_visible(request.user).order_by("end_time").filter(prask_intro_round=-1)
     competitions = Competition.objects.current_site_only()
     news = (
         NewsEntry.objects.filter(sites__id=settings.SITE_ID)

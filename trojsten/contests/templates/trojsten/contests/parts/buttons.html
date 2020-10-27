@@ -21,10 +21,19 @@
     Odovzdaj riešenia
 </a>
 
-{% for results_tag in results_tags %}
-<a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-danger"
-   href="{% url 'view_results' round_id=round.id tag_key=results_tag.key %}">
-    Výsledky {{ results_tag.name }}
-</a>
-{% endfor %}
+{% if round.prask_intro_round == -1 %}
+  {% for results_tag in results_tags %}
+  <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-danger"
+    href="{% url 'view_results' round_id=round.id tag_key=results_tag.key %}">
+      Výsledky {{ results_tag.name }}
+  </a>
+  {% endfor %}
+{% else %}
+  {% for results_tag in results_tags %}
+  <a class="btn-statements btn btn-sm col-md-2 col-sm-3 col-xs-12 btn-danger"
+    href="{% url 'view_results' round_id=round.id tag_key=results_tag.key %}">
+      Výsledky {{ results_tag.name }}
+  </a>
+  {% endfor %}
+{% endif %}
 </div>

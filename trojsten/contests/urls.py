@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
     url(r"^zadania/(?P<task_id>\d+)/$", views.task_statement, name="task_statement"),
     url(r"^riesenia/(?P<task_id>\d+)/$", views.solution_statement, name="solution_statement"),
+    url(r"^uvodna-sada/$", views.prask_intro_rounds, name="prask_intro_rounds"),
     url(r"^(?P<round_id>\d+)/$", views.task_list, name="task_list"),
     url(r"^$", views.active_rounds_task_list, name="active_rounds_task_list"),
     url(r"^pdf/(?P<round_id>\d+)/", views.view_pdf, name="view_pdf"),

@@ -20,6 +20,8 @@
 
 {% include 'trojsten/results/parts/results_content.html' %}
 
-{% show_archive active_competition=round.semester.competition %}
+{% if round.prask_intro_round == -1 %}
+  {% show_archive active_competition=round.semester.competition %}
+{% endif %}
 
 {% endblock %}
