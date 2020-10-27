@@ -4,6 +4,7 @@ from collections import namedtuple
 
 from django.db.models import Count, Q
 from django.utils import timezone
+from unidecode import unidecode
 
 import trojsten.rules.susi_constants as constants
 from trojsten.contests.models import Round
@@ -36,9 +37,12 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                 self.prepare_coefficients(round)
 
             successful_semesters = self.susi_camps.get(user.pk, 0)
-            puzzlehunt_participations = int(
-                user.get_properties()[self.puzzlehunt_participations_key]
-            )
+            try:
+                puzzlehunt_participations = int(
+                    user.get_properties()[self.puzzlehunt_participations_key]
+                )
+            except KeyError:
+                puzzlehunt_participations = 0
             trojsten_camps = self.trojsten_camps.get(user.pk, 0)
             self.coefficients[user] = (
                 5 * successful_semesters + 3 * puzzlehunt_participations + trojsten_camps
@@ -144,9 +148,10 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         # Count only tasks your coefficient is eligible for, ignoring category Cifersky-cech
         for key in row.cells_by_key:
-            if constants.SUSI_ELIGIBLE_FOR_TASK_BOUND[
-                key
-            ] < coefficient and not self.get_graduation_status(row.user, request):
+            if (
+                constants.SUSI_ELIGIBLE_FOR_TASK_BOUND[key] < coefficient
+                and self.tag.key != constants.SUSI_CIFERSKY_CECH
+            ):
                 row.cells_by_key[key].active = False
 
         # Prepare list of pairs consisting of cell and its points.
@@ -210,31 +215,38 @@ class SUSIRules(CompetitionRules):
             return None
 
     def grade_text_submit(self, task, user, submitted_text):
+        submitted_text = unidecode(submitted_text.replace(" ", "").lower())
         now = timezone.now()
         Grading = namedtuple("Grading", ["response", "points"])
-        solution = [solution.lower() for solution in task.text_submit_solution]
-        if submitted_text in solution:
+        solutions = [
+            unidecode(solution.replace(" ", "").lower()) for solution in task.text_submit_solution
+        ]
+        if submitted_text in solutions:
             response = SUBMIT_RESPONSE_OK
             points = constants.SUSI_POINTS_ALLOCATION[0]
             if (
-                task.round.susi_small_hint_date < now <= task.round.susi_big_hint_date
+                task.round.end_time < now <= task.round.susi_big_hint_date
                 and len(task.susi_small_hint) > 0
             ):
                 points -= constants.SUSI_POINTS_ALLOCATION[1]
             elif (
-                task.round.susi_big_hint_date < now <= task.round.end_time
+                task.round.susi_big_hint_date < now
+                and task.round.second_phase_running
                 and len(task.susi_big_hint) > 0
             ):
                 points -= constants.SUSI_POINTS_ALLOCATION[2]
-            elif now > task.round.end_time:
+            elif now > task.round.end_time and not task.round.second_phase_running:
                 points = constants.SUSI_POINTS_ALLOCATION[3]
         else:
             response = SUBMIT_RESPONSE_WA
             points = constants.SUSI_POINTS_ALLOCATION[3]
 
+        max_time = task.round.second_end_time
+        if max_time is None:
+            max_time = task.round.end_time
         wrong_submits = len(
-            Submit.objects.filter(task=task, user=user, time__lte=task.round.end_time).exclude(
-                text=solution
+            Submit.objects.filter(task=task, user=user, time__lte=max_time).exclude(
+                text__in=solutions
             )
         )
 

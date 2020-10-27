@@ -120,6 +120,9 @@ msgstr "Viac noviniek &raquo;"
 msgid "Submit programs until"
 msgstr "Doprogramovanie do"
 
+msgid "Solve with hints until"
+msgstr "Riešenie s nápovedami do"
+
 msgid "End of the round"
 msgstr "Koniec kola"
 
@@ -134,6 +137,17 @@ msgstr ""
 "      Popisy už neodovzdávajte.\n"
 "      Ešte stále však <strong>môžete odosielať vaše programy</strong>, za "
 "ktoré dostanete časť bodov.\n"
+"      "
+
+msgid ""
+"\n"
+"      <strong>Hints have been published.</strong>\n"
+"      You can still submit your solutions but you receive only partial points for them.\n"
+"      "
+msgstr ""
+"\n"
+"      <strong>Nápovedy boli zverejnené.</strong>\n"
+"      Ešte stále môžete odovzdávať vaše riešenia, ale dostanete za ne len čiastočné body.\n"
 "      "
 
 msgid "The round has finished."
