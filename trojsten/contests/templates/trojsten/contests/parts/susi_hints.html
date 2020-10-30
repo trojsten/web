@@ -11,7 +11,7 @@
             </div>
         </div>
     {% elif task.susi_small_hint|length > 0 %}
-        Bude zverejnená {{ task.round.susi_small_hint_date }}.
+        Bude zverejnená {{ task.round.end_time }}.
     {% else %}
         Pre túto úlohu nebude zverejnená.
     {% endif %}

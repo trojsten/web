@@ -528,7 +528,6 @@ def task_submit_post_text(request, task_id):
 
     if form.is_valid():
         submitted_text = form.cleaned_data["submitted_text"]
-        submitted_text = unidecode(submitted_text.replace(" ", "").lower())
 
         grading = task.round.semester.competition.rules.grade_text_submit(
             task, request.user, submitted_text

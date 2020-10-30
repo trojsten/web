@@ -942,6 +942,7 @@ class SusiCoefficientTest(TestCase):
             solutions_visible=False,
             start_time=self.start,
             end_time=self.end,
+            second_end_time=self.end + timezone.timedelta(7),
         )
 
         graduation_year = self.round.end_time.year + int(
@@ -1098,6 +1099,7 @@ class SUSIRulesTest(TestCase):
             solutions_visible=False,
             start_time=self.start,
             end_time=self.end,
+            second_end_time=self.end + timezone.timedelta(7),
         )
 
         self.group = Group.objects.create(name="skupina")
@@ -1286,20 +1288,56 @@ class TextSubmitTest(TestCase):
 
     def test_grade_text_submit(self):
         points = 6
+        task = Task.objects.create(
+            number=1,
+            name="Test task",
+            round=self.round,
+            description_points=points,
+            description_points_visible=True,
+            text_submit_solution=["a"],
+        )
         for real_solution in self.solutions:
+            task.text_submit_solution = [real_solution]
+            task.save()
             for user_solution in self.solutions:
-                task = Task.objects.create(
-                    number=1,
-                    name="Test task",
-                    round=self.round,
-                    description_points=points,
-                    description_points_visible=True,
-                    text_submit_solution=[real_solution],
-                )
                 grading = self.competition.rules.grade_text_submit(
                     task, self.test_user, user_solution
                 )
                 if real_solution == user_solution:
+                    self.assertEqual(grading.response, submit_constants.SUBMIT_RESPONSE_OK)
+                    self.assertEqual(grading.points, points)
+                else:
+                    self.assertEqual(grading.response, submit_constants.SUBMIT_RESPONSE_WA)
+                    self.assertEqual(grading.points, 0)
+
+    def test_grade_text_in_susi_ignores_diacritic(self):
+        points = 6
+        solutions = {
+            "mačka": 1,
+            "Macka": 1,
+            "mac ka": 1,
+            "ma čka": 1,
+            "macká": 1,
+            "mackab": 2,
+            "mack": 3,
+            "mačk": 3,
+            "maška": 4,
+        }
+        task = Task.objects.create(
+            number=1,
+            name="Test task",
+            round=self.round,
+            description_points=points,
+            description_points_visible=True,
+            text_submit_solution=["a"],
+        )
+        rules = SUSIRules()
+        for real_solution, real_eq_class in solutions.items():
+            task.text_submit_solution = [real_solution]
+            task.save()
+            for user_solution, user_eq_class in solutions.items():
+                grading = rules.grade_text_submit(task, self.test_user, user_solution)
+                if real_eq_class == user_eq_class:
                     self.assertEqual(grading.response, submit_constants.SUBMIT_RESPONSE_OK)
                     self.assertEqual(grading.points, points)
                 else:

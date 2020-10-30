@@ -6,7 +6,7 @@ SUSI_COMPETITION_ID = 9
 SUSI_OUTDOOR_ROUND_NUMBER = 100
 
 SUSI_AGAT_MAX_COEFFICIENT = 8
-SUSI_ELIGIBLE_FOR_TASK_BOUND = (0, 8, 8, 1000, 1000, 1000, 1000, 1000)
+SUSI_ELIGIBLE_FOR_TASK_BOUND = (0, 8, 8, 10000, 10000, 10000, 10000, 10000)
 
 # If big hint is public, points won't be deducted for small hint regardless of
 # whether it is public or not.
@@ -17,9 +17,8 @@ SUSI_POINTS_ALLOCATION = (
     0,  # How many points will be assigned for wrong submit and after deadline submit
 )
 
-# How many days before end of the round will the hints be revealed
-SUSI_SMALL_HINT_DAYS = 7
-SUSI_BIG_HINT_DAYS = 3
+# How many days after the end of the round will the big hint be revealed
+SUSI_BIG_HINT_DAYS = 4
 
 SUSI_WRONG_SUBMITS_TO_PENALTY = 5
 
