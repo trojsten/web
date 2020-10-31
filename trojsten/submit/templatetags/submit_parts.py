@@ -78,8 +78,7 @@ def submitclass(submit):
 
 @register.inclusion_tag("trojsten/submit/parts/round_submit_form.html", takes_context=True)
 def round_submit_form(context, round):
-    """View, showing submit form for all tasks from round
-    """
+    """View, showing submit form for all tasks from round"""
     tasks = Task.objects.filter(round=round).order_by("number")
     template_data = {"round": round, "tasks": tasks}
     context.update(template_data)
