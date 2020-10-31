@@ -21,7 +21,6 @@ from trojsten.rules.susi_constants import (
     SUSI_BIG_HINT_DAYS,
     SUSI_COMPETITION_ID,
     SUSI_OUTDOOR_ROUND_NUMBER,
-    SUSI_SMALL_HINT_DAYS,
 )
 from trojsten.submit import constants as submit_constants
 from trojsten.utils import utils
@@ -215,16 +214,12 @@ class Round(models.Model):
         )
 
     @property
-    def susi_small_hint_date(self):
-        return self.end_time - timedelta(days=SUSI_SMALL_HINT_DAYS)
-
-    @property
     def susi_big_hint_date(self):
-        return self.end_time - timedelta(days=SUSI_BIG_HINT_DAYS)
+        return self.end_time + timedelta(days=SUSI_BIG_HINT_DAYS)
 
     @property
     def susi_small_hint_public(self):
-        return timezone.now() > self.susi_small_hint_date
+        return timezone.now() > self.end_time
 
     @property
     def susi_big_hint_public(self):
