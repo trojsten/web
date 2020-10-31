@@ -380,7 +380,10 @@ class Task(models.Model):
     )
     text_submit_solution = ArrayField(
         models.CharField(
-            max_length=512, verbose_name="textové riešenia (oddeľ čiarkou)", blank=True, default="",
+            max_length=512,
+            verbose_name="textové riešenia (oddeľ čiarkou)",
+            blank=True,
+            default="",
         ),
         blank=True,
         null=False,

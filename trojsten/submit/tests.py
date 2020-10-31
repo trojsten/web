@@ -212,7 +212,10 @@ class SubmitListTests(TestCase):
             end_time=self.end_time_new,
         )
         Task.objects.create(
-            number=1, name="Test task", round=round, text_submit_solution=["solution"],
+            number=1,
+            name="Test task",
+            round=round,
+            text_submit_solution=["solution"],
         )
         self.client.force_login(self.non_staff_user)
         response = self.client.get(self.list_url)
