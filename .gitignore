@@ -40,3 +40,6 @@ Session.vim
 
 # db dump
 *archiv.ksp.sk/*
+
+# Mac directories meta
+.DS_Store
