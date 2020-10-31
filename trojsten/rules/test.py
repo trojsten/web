@@ -1027,10 +1027,17 @@ class SusiCoefficientTest(TestCase):
             name=KMS_MO_FINALS_TYPE, organizers_group=group, is_camp=False
         )
         ckmo = Event.objects.create(
-            name="CKMO", type=type_mo, place=self.place, start_time=self.time, end_time=self.time,
+            name="CKMO",
+            type=type_mo,
+            place=self.place,
+            start_time=self.time,
+            end_time=self.time,
         )
         EventParticipant.objects.create(
-            event=ckmo, user=self.test_user, type=EventParticipant.PARTICIPANT, going=True,
+            event=ckmo,
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=True,
         )
         generator = SUSIResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)

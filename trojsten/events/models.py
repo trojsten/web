@@ -12,8 +12,7 @@ from trojsten.contests.models import Semester
 
 class EventTypeManager(models.Manager):
     def current_site_only(self):
-        """Returns only event types belonging to current site
-        """
+        """Returns only event types belonging to current site"""
         return Site.objects.get_current().eventtype_set.all()
 
 
@@ -70,8 +69,7 @@ class Event(models.Model):
 
     @property
     def participants(self):
-        """Returns a list of EventParticipant, which are not organisers and are going to the Event.
-        """
+        """Returns a list of EventParticipant, which are not organisers and are going to the Event."""
         return (
             self.eventparticipant_set.filter(going=True)
             .exclude(type=EventParticipant.ORGANIZER)

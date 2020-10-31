@@ -5,8 +5,7 @@ register = template.Library()
 
 @register.inclusion_tag("trojsten/results/parts/results_table.html", takes_context=True)
 def show_results_table(context, scoreboard, show_staff=False):
-    """Displays results for specified tasks and category
-    """
+    """Displays results for specified tasks and category"""
 
     context.update(
         {
