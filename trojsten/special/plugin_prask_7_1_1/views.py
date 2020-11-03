@@ -93,7 +93,7 @@ def get_input_password(request):
     if request.method != "POST" or schnitzels is None:
         return HttpResponseBadRequest("Request must contain schnitzels.")
 
-    password = f"Objednali ste si {schnitzels} rezňov."
+    password = "Objednali ste si {schnitzels} rezňov.".format(schnitzels=schnitzels)
     if schnitzels == "1000000":
         password += ' Heslo je "abrakadabra".'
     return HttpResponse(
