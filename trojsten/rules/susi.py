@@ -151,6 +151,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             if (
                 constants.SUSI_ELIGIBLE_FOR_TASK_BOUND[key] < coefficient
                 and self.tag.key != constants.SUSI_CIFERSKY_CECH
+                and request.round.number != constants.SUSI_OUTDOOR_ROUND_NUMBER
             ):
                 row.cells_by_key[key].active = False
 
