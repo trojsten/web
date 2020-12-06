@@ -1,6 +1,6 @@
 $('#hintForm').submit( function(e) {
   e.preventDefault();
-  if (!confirm("Pozor, zobrazením nápovedy stratíš tretinu z maximálneho počtu bodov za vyriešený level. Nie je to ale nič hrozné, takže sa neboj nápovedy používať ak sa zasekneš!")) return false;
+  if (!confirm("Pozor, po zobrazení nápovedy môžeš za level získať najviac 7 bodov z pôvodných 10. Nie je to ale nič hrozné, takže sa neboj nápovedy používať, ak sa zasekneš!")) return false;
   $.ajax({
         type: 'POST',
         url: HINT_URL,
