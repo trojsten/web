@@ -4,7 +4,8 @@ from .default import CompetitionRules
 
 
 class PraskResultsGenerator(PrimarySchoolGeneratorMixin, ResultsGenerator):
-    pass
+    def get_minimal_year_of_graduation(self, res_request, user):
+        return super().get_minimal_year_of_graduation(res_request, user) - 1
 
 
 class PraskRules(CompetitionRules):
