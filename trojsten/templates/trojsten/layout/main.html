@@ -4,8 +4,8 @@
 {% block page_layout %}
 <header>{% include "trojsten/layout/header.html" %}</header>
 <div class="container">
-  <div class="row">
-    <nav class="col-md-3 col-sm-3 col-xs-6 offcanvas-xs nav-menu">{% navigation %}</nav>
+  <div class="row row-offcanvas row-offcanvas-left">
+    <nav class="col-md-3 col-sm-3 col-xs-6 nav-menu sidebar-offcanvas">{% navigation %}</nav>
     <div class="col-md-9 col-sm-9 col-xs-12 main-content">
         <div class="page-header">
             {% block page_header %}{% endblock %}
