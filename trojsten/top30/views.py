@@ -23,7 +23,8 @@ def get_best(counts):
 
 def get_reviewers(all_sites=False):
     query = Submit.objects.filter(
-        submit_type=SUBMIT_TYPE_DESCRIPTION, testing_status=SUBMIT_STATUS_REVIEWED,
+        submit_type=SUBMIT_TYPE_DESCRIPTION,
+        testing_status=SUBMIT_STATUS_REVIEWED,
     )
     if not all_sites:
         competitions = Competition.objects.current_site_only()
