@@ -57,7 +57,7 @@ def task_description_points_visibility_change(sender, **kwargs):
     for submit in submits:
         url = "//%(domain)s%(url)s" % {
             "domain": site.domain,
-            "url": reverse("task_list", args=(task.pk,)),
+            "url": reverse("task_submit_page", args=(task.pk,)),
         }
 
         notify_user(
