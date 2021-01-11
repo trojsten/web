@@ -7,7 +7,9 @@
 {% block page_header %}
 <h1>Výsledky<small>
 {% if single_round %}
-    {{ round.number }}. kola{% else %}po {{ round.number }}. kole
+    {{ round.number_str }} kola
+{% else %}
+    po {{ round.number_str }} kole
 {% endif %}
 {{ round.semester.number }}. časti {{ round.semester.year }}. ročníka
 {{ round.semester.competition }}

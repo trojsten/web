@@ -4,6 +4,7 @@ from django import template
 
 from trojsten.contests.models import Category, Task
 from trojsten.results.manager import get_results_tags_for_rounds
+from trojsten.rules.susi_constants import SUSI_COMPETITION_ID
 from trojsten.submit.models import Submit
 from trojsten.utils import utils
 
@@ -25,6 +26,7 @@ def show_task_list(context, round):
         Category.objects.filter(task__in=tasks.values_list("pk", flat=True))
         .distinct()
         .select_related("competition")
+        .order_by("name")
     )
 
     data = {
@@ -59,5 +61,12 @@ def show_progress(context, round, results=False):
         start = round.start_time
         end = round.end_time
     data = utils.get_progressbar_data(start, end)
-    context.update({"round": round, "results": results, **data})
+    context.update(
+        {
+            "round": round,
+            "results": results,
+            "submit_programs": round.semester.competition.id != SUSI_COMPETITION_ID,
+            **data,
+        }
+    )
     return context

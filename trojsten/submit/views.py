@@ -15,6 +15,7 @@ from django.core.mail import send_mail
 from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.translation import ngettext
 from django.utils.translation import ugettext as _
 from judge_client import constants as judge_constants
 from judge_client.client import ProtocolError
@@ -26,7 +27,12 @@ from unidecode import unidecode
 
 from trojsten.contests import constants as contest_consts
 from trojsten.contests.models import Competition, Round, Task
-from trojsten.submit.forms import DescriptionSubmitForm, SourceSubmitForm, TestableZipSubmitForm
+from trojsten.submit.forms import (
+    DescriptionSubmitForm,
+    SourceSubmitForm,
+    TestableZipSubmitForm,
+    TextSubmitForm,
+)
 from trojsten.submit.helpers import (
     get_description_file_path,
     get_path,
@@ -499,10 +505,92 @@ def task_submit_post(request, task_id, submit_type):
             return redirect(request.POST["redirect_to"])
         else:
             return redirect(reverse("task_submit_page", kwargs={"task_id": int(task_id)}))
+    else:
+        raise Http404
+
+
+@login_required
+def task_submit_post_text(request, task_id):
+    """Spracovanie uploadnuteho textoveho submitu"""
+
+    # Raise Not Found when submitting non existent task
+    task = get_object_or_404(Task, pk=task_id)
+
+    # Raise Not Found when submitting non-submittable submit type
+    if not task.has_submit_type(constants.SUBMIT_TYPE_TEXT):
+        raise Http404
+
+    # Raise Not Found when not submitting through POST
+    if request.method != "POST":
+        raise Http404
+
+    form = TextSubmitForm(request.POST)
+
+    if form.is_valid():
+        submitted_text = form.cleaned_data["submitted_text"]
+
+        grading = task.round.semester.competition.rules.grade_text_submit(
+            task, request.user, submitted_text
+        )
+
+        sub = Submit(
+            task=task,
+            user=request.user,
+            submit_type=constants.SUBMIT_TYPE_TEXT,
+            points=grading.points,
+            testing_status=constants.SUBMIT_STATUS_REVIEWED,
+            text=submitted_text,
+            tester_response=grading.response,
+        )
+        sub.save()
+
+        if task.round.can_submit:
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                _("You have successfully submitted your solution."),
+            )
+        else:
+            messages.add_message(
+                request,
+                messages.WARNING,
+                _(
+                    "You have submitted your solution after the deadline. "
+                    "It is not counted in results."
+                ),
+            )
+        if grading.response == "OK":
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                ngettext(
+                    "Your solution is correct. You gain %(points)d point.",
+                    "Your solution is correct. You gain %(points)d points.",
+                    grading.points,
+                )
+                % {"points": grading.points},
+            )
+        else:
+            messages.add_message(
+                request,
+                messages.ERROR,
+                ngettext(
+                    "Your solution is incorrect. You gain %(points)d point.",
+                    "Your solution is incorrect. You gain %(points)d points.",
+                    grading.points,
+                )
+                % {"points": grading.points},
+            )
 
     else:
-        # Only Description and Source and Zip submitting is developed currently
-        raise Http404
+        for field in form:
+            for error in field.errors:
+                messages.add_message(request, messages.ERROR, "%s: %s" % (field.label, error))
+
+    if "redirect_to" in request.POST and request.POST["redirect_to"]:
+        return redirect(request.POST["redirect_to"])
+    else:
+        return redirect(reverse("task_submit_page", kwargs={"task_id": int(task_id)}))
 
 
 @api_view(["POST"])

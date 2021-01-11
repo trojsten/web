@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import os
+from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import Group
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.sites.models import Site
 from django.db import models
 from django.db.models import Q
@@ -15,6 +17,11 @@ from unidecode import unidecode
 from trojsten.people.models import User, UserPropertyKey
 from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
+from trojsten.rules.susi_constants import (
+    SUSI_BIG_HINT_DAYS,
+    SUSI_COMPETITION_ID,
+    SUSI_OUTDOOR_ROUND_NUMBER,
+)
 from trojsten.submit import constants as submit_constants
 from trojsten.utils import utils
 
@@ -23,8 +30,7 @@ from . import constants
 
 class CompetitionManager(models.Manager):
     def current_site_only(self):
-        """Returns only competitions belonging to current site
-        """
+        """Returns only competitions belonging to current site"""
         return Competition.objects.filter(sites__id=settings.SITE_ID).order_by("pk").all()
 
 
@@ -83,6 +89,18 @@ class Semester(models.Model):
         verbose_name = "Časť"
         verbose_name_plural = "Časti"
 
+    @property
+    def start_time(self):
+        return self.round_set.order_by("start_time")[0].start_time
+
+    @property
+    def end_time(self):
+        """
+        Adding new rounds to a semester alters this property, thus it should only be used with
+        semesters that have already ended unless accounted for.
+        """
+        return self.round_set.order_by("-end_time")[0].end_time
+
     def __str__(self):
         # All foreign keys here should be added to the select_related list in the RoundManager.
         return "%i. (%s) časť, %i. ročník %s" % (
@@ -103,8 +121,7 @@ class RoundManager(models.Manager):
         return super().get_queryset().select_related("semester__competition")
 
     def visible(self, user, all_sites=False):
-        """Returns only rounds visible for user
-        """
+        """Returns only rounds visible for user"""
         if all_sites:
             competitions = Competition.objects.all()
         else:
@@ -119,8 +136,7 @@ class RoundManager(models.Manager):
 
     # @FIXME(unused): Was used only by actual results, moved to Rules.
     def latest_visible(self, user, all_sites=False):
-        """Returns latest visible round for each competition
-        """
+        """Returns latest visible round for each competition"""
         return (
             self.visible(user, all_sites)
             .order_by("semester__competition", "-end_time", "-number")
@@ -129,8 +145,7 @@ class RoundManager(models.Manager):
         )
 
     def active_visible(self, user, all_sites=False):
-        """Returns all visible running rounds for each competition
-        """
+        """Returns all visible running rounds for each competition"""
         return (
             self.visible(user, all_sites)
             .filter(
@@ -171,6 +186,13 @@ class Round(models.Model):
     objects = RoundManager()
 
     @property
+    def number_str(self):
+        if self.susi_is_outdoor:
+            return "Outdoor"
+        else:
+            return "%i." % self.number
+
+    @property
     def can_submit(self):
         end = self.end_time if self.second_end_time is None else self.second_end_time
         if timezone.now() <= end:
@@ -183,6 +205,25 @@ class Round(models.Model):
             self.second_end_time is not None
             and self.end_time < timezone.now() < self.second_end_time
         )
+
+    @property
+    def susi_is_outdoor(self):
+        return (
+            self.number == SUSI_OUTDOOR_ROUND_NUMBER
+            and self.semester.competition.id == SUSI_COMPETITION_ID
+        )
+
+    @property
+    def susi_big_hint_date(self):
+        return self.end_time + timedelta(days=SUSI_BIG_HINT_DAYS)
+
+    @property
+    def susi_small_hint_public(self):
+        return timezone.now() > self.end_time
+
+    @property
+    def susi_big_hint_public(self):
+        return timezone.now() > self.susi_big_hint_date
 
     def get_base_path(self):
         round_dir = str(self.number)
@@ -249,15 +290,14 @@ class Round(models.Model):
 
     def __str__(self):
         # All foreign keys here should be added to the select_related list in the RoundManager.
-        return "%i. kolo, %i. časť, %i. ročník %s" % (
-            self.number,
+        return self.number_str + " kolo, %i. časť, %i. ročník %s" % (
             self.semester.number,
             self.semester.year,
             self.semester.competition,
         )
 
     def short_str(self):
-        return "%i. kolo" % self.number
+        return self.number_str + " kolo"
 
     short_str.short_description = "kolo"
 
@@ -285,8 +325,7 @@ class TaskManager(models.Manager):
         return super().get_queryset().select_related("round__semester__competition")
 
     def for_rounds_and_category(self, rounds, category=None):
-        """Returns tasks which belong to specified rounds and category
-        """
+        """Returns tasks which belong to specified rounds and category"""
         if not rounds:
             return self.none()
         tasks = self.filter(round__in=rounds)
@@ -339,6 +378,19 @@ class Task(models.Model):
     external_submit_link = models.CharField(
         max_length=128, verbose_name="Odkaz na externé odovzdávanie", blank=True, null=True
     )
+    text_submit_solution = ArrayField(
+        models.CharField(
+            max_length=512,
+            verbose_name="textové riešenia (oddeľ čiarkou)",
+            blank=True,
+            default="",
+        ),
+        blank=True,
+        null=False,
+        default=list,
+    )
+    susi_small_hint = models.TextField(verbose_name="Suši malý hint", blank=True, default="")
+    susi_big_hint = models.TextField(verbose_name="Suši velký hint", blank=True, default="")
     email_on_desc_submit = models.BooleanField(
         verbose_name=_("Send notification to reviewers about new description submit"), default=False
     )
@@ -368,12 +420,17 @@ class Task(models.Model):
         super(Task, self).save(*args, **kwargs)
         self.last_saved_description_points_visible = self.description_points_visible
 
+    @property
+    def has_text_submit(self):
+        return len(self.text_submit_solution) > 0
+
     def has_submit_type(self, submit_type):
         check_field = {
             submit_constants.SUBMIT_TYPE_SOURCE: self.has_source,
             submit_constants.SUBMIT_TYPE_DESCRIPTION: self.has_description,
             submit_constants.SUBMIT_TYPE_TESTABLE_ZIP: self.has_testablezip,
             submit_constants.SUBMIT_TYPE_EXTERNAL: bool(self.external_submit_link),
+            submit_constants.SUBMIT_TYPE_TEXT: self.has_text_submit,
         }
         return check_field[submit_type]
 

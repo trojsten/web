@@ -1,8 +1,10 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-04 18:11+0000\n"
+"POT-Creation-Date: 2020-09-10 11:56+0000\n"
 "Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
+">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 msgid "Subject"
 msgstr "Predmet"
@@ -118,6 +120,9 @@ msgstr "Viac noviniek &raquo;"
 msgid "Submit programs until"
 msgstr "Doprogramovanie do"
 
+msgid "Solve with hints until"
+msgstr "Riešenie s nápovedami do"
+
 msgid "End of the round"
 msgstr "Koniec kola"
 
@@ -134,44 +139,22 @@ msgstr ""
 "ktoré dostanete časť bodov.\n"
 "      "
 
+msgid ""
+"\n"
+"      <strong>Hints have been published.</strong>\n"
+"      You can still submit your solutions but you receive only partial points for them.\n"
+"      "
+msgstr ""
+"\n"
+"      <strong>Nápovedy boli zverejnené.</strong>\n"
+"      Ešte stále môžete odovzdávať vaše riešenia, ale dostanete za ne len čiastočné body.\n"
+"      "
+
 msgid "The round has finished."
 msgstr "Kolo už skončilo."
 
 msgid "View the solution."
 msgstr "Pozrieť vzorové riešenie."
-
-# Task Statements
-#, python-format
-msgid "%(count)d day"
-msgid_plural "%(count)d days"
-msgstr[0] "%(count)d deň"
-msgstr[1] "%(count)d dni"
-msgstr[2] "%(count)d dňa"
-msgstr[3] "%(count)d dní"
-
-#, python-format
-msgid "%(count)d hour"
-msgid_plural "%(count)d hours"
-msgstr[0] "%(count)d hodina"
-msgstr[1] "%(count)d hodiny"
-msgstr[2] "%(count)d hodiny"
-msgstr[3] "%(count)d hodín"
-
-#, python-format
-msgid "%(count)d minute"
-msgid_plural "%(count)d minutes"
-msgstr[0] "%(count)d minúta"
-msgstr[1] "%(count)d minúty"
-msgstr[2] "%(count)d minúty"
-msgstr[3] "%(count)d minút"
-
-#, python-format
-msgid "%(count)d second"
-msgid_plural "%(count)d seconds"
-msgstr[0] "%(count)d sekunda"
-msgstr[1] "%(count)d sekundy"
-msgstr[2] "%(count)d sekundy"
-msgstr[3] "%(count)d sekúnd"
 
 msgid "authorized groups"
 msgstr "autorizované skupiny"
@@ -647,6 +630,12 @@ msgstr "Upraviť"
 msgid "Task"
 msgstr "Úloha"
 
+msgid "Description points are hidden in results!"
+msgstr "Body za popis sa nezobrazujú vo výsledkovke!"
+
+msgid "You can change this in task settings."
+msgstr "Toto môžeš zmeniť vo vlastnostiach úlohy."
+
 msgid "Download all original solutions"
 msgstr "Stiahnuť všetky pôvodné riešenia"
 
@@ -858,6 +847,31 @@ msgstr ""
 "Nahral si svoj popis riešenia po termíne kola. Nebude zarátaný vo "
 "výsledkovke."
 
+msgid "You have successfully submitted your solution."
+msgstr "Úspešne sa ti podarilo submitnúť riešenie."
+
+msgid ""
+"You have submitted your solution after the deadline. It is not counted in "
+"results."
+msgstr ""
+"Nahral si svoje riešenie po termíne kola. Nebude zarátané vo výsledkovke."
+
+#, python-format
+msgid "Your solution is correct. You gain %(points)d point."
+msgid_plural "Your solution is correct. You gain %(points)d points."
+msgstr[0] "Tvoje riešenie je správne. Získavaš %(points)d bod."
+msgstr[1] "Tvoje riešenie je správne. Získavaš %(points)d body."
+msgstr[2] "Tvoje riešenie je správne. Získavaš %(points)d bodu."
+msgstr[3] "Tvoje riešenie je správne. Získavaš %(points)d bodov."
+
+#, python-format
+msgid "Your solution is incorrect. You gain %(points)d point."
+msgid_plural "Your solution is incorrect. You gain %(points)d points."
+msgstr[0] "Tvoje riešenie je nesprávne. Získavaš %(points)d bod."
+msgstr[1] "Tvoje riešenie je nesprávne. Získavaš %(points)d body."
+msgstr[2] "Tvoje riešenie je nesprávne. Získavaš %(points)d bodu."
+msgstr[3] "Tvoje riešenie je nesprávne. Získavaš %(points)d bodov."
+
 msgid "Preview of your comment"
 msgstr "Náhľad komentára"
 
@@ -951,3 +965,36 @@ msgstr ""
 
 msgid "This article was last modified:"
 msgstr "Čas poslednej úpravy:"
+
+# Task Statements
+#, python-format
+msgid "%(count)d day"
+msgid_plural "%(count)d days"
+msgstr[0] "%(count)d deň"
+msgstr[1] "%(count)d dni"
+msgstr[2] "%(count)d dňa"
+msgstr[3] "%(count)d dní"
+
+#, python-format
+msgid "%(count)d hour"
+msgid_plural "%(count)d hours"
+msgstr[0] "%(count)d hodina"
+msgstr[1] "%(count)d hodiny"
+msgstr[2] "%(count)d hodiny"
+msgstr[3] "%(count)d hodín"
+
+#, python-format
+msgid "%(count)d minute"
+msgid_plural "%(count)d minutes"
+msgstr[0] "%(count)d minúta"
+msgstr[1] "%(count)d minúty"
+msgstr[2] "%(count)d minúty"
+msgstr[3] "%(count)d minút"
+
+#, python-format
+msgid "%(count)d second"
+msgid_plural "%(count)d seconds"
+msgstr[0] "%(count)d sekunda"
+msgstr[1] "%(count)d sekundy"
+msgstr[2] "%(count)d sekundy"
+msgstr[3] "%(count)d sekúnd"

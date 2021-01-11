@@ -71,7 +71,7 @@ def edit_review(filecontent, filename, submit, user, points, comment=""):
 def get_latest_submits_for_task(task):
     description_submits = (
         task.submit_set.filter(
-            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION, time__lt=task.round.end_time
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION, time__lte=task.round.end_time
         )
         .exclude(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
         .select_related("user")
@@ -79,7 +79,7 @@ def get_latest_submits_for_task(task):
 
     source_submits = (
         task.submit_set.filter(
-            submit_type=submit_constants.SUBMIT_TYPE_SOURCE, time__lt=task.round.end_time
+            submit_type=submit_constants.SUBMIT_TYPE_SOURCE, time__lte=task.round.end_time
         )
         .exclude(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
         .select_related("user")

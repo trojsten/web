@@ -18,6 +18,7 @@ from trojsten.contests import constants
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.notifications.models import Notification
 from trojsten.people.models import User
+from trojsten.rules.susi_constants import SUSI_BIG_HINT_DAYS
 from trojsten.submit.models import Submit
 from trojsten.utils.test_utils import TestNonFileSystemStorage, get_noexisting_id
 
@@ -888,3 +889,49 @@ class TaskNotificationTest(TestCase):
         notification = Notification.objects.filter(channel="submit_reviewed")
         self.assertTrue(notification.exists())
         self.assertEqual(notification.count(), 1)
+
+
+class TaskMethodTest(TestCase):
+    def setUp(self):
+        self.competition = Competition.objects.create(name="TestCompetition")
+        self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.semester = Semester.objects.create(
+            number=1, name="Test semester", competition=self.competition, year=1
+        )
+        self.start_time = timezone.now() + timezone.timedelta(-100)
+
+    def test_hints_public(self):
+        end_time1 = timezone.now() + timezone.timedelta(minutes=1)
+        week = timezone.timedelta(days=7)
+        round = Round.objects.create(
+            number=1,
+            semester=self.semester,
+            visible=True,
+            solutions_visible=False,
+            start_time=self.start_time,
+            end_time=end_time1,
+            second_end_time=end_time1 + week,
+        )
+        self.assertFalse(round.susi_small_hint_public)
+        self.assertFalse(round.susi_big_hint_public)
+
+        end_time2 = timezone.now() + timezone.timedelta(minutes=-1)
+        round.end_time = end_time2
+        round.second_end_time = round.end_time + week
+        round.save()
+        self.assertTrue(round.susi_small_hint_public)
+        self.assertFalse(round.susi_big_hint_public)
+
+        end_time3 = timezone.now() + timezone.timedelta(days=-SUSI_BIG_HINT_DAYS, minutes=1)
+        round.end_time = end_time3
+        round.second_end_time = round.end_time + week
+        round.save()
+        self.assertTrue(round.susi_small_hint_public)
+        self.assertFalse(round.susi_big_hint_public)
+
+        end_time4 = timezone.now() + timezone.timedelta(days=-SUSI_BIG_HINT_DAYS, minutes=-1)
+        round.end_time = end_time4
+        round.second_end_time = round.end_time + week
+        round.save()
+        self.assertTrue(round.susi_small_hint_public)
+        self.assertTrue(round.susi_big_hint_public)

@@ -1,0 +1,33 @@
+<h2>Nápovedy</h2>
+
+    <h3>Malá nápoveda</h3>
+    {% if task.round.susi_small_hint_public and task.susi_small_hint|length > 0 %}
+        <a class="btn btn-primary" role="button" data-toggle="collapse" href="#susi_small_hint" aria-expanded="false" aria-controls="susi_small_hint">
+            Zobraziť malú nápovedu
+        </a>
+        <div class="collapse" id="susi_small_hint">
+            <div class="well">
+                {{ task.susi_small_hint }}
+            </div>
+        </div>
+    {% elif task.susi_small_hint|length > 0 %}
+        Bude zverejnená {{ task.round.end_time }}.
+    {% else %}
+        Pre túto úlohu nebude zverejnená.
+    {% endif %}
+
+    <h3>Veľká nápoveda</h3>
+    {% if task.round.susi_big_hint_public and task.susi_big_hint|length > 0 %}
+        <a class="btn btn-primary" role="button" data-toggle="collapse" href="#susi_big_hint" aria-expanded="false" aria-controls="susi_big_hint">
+            Zobraziť veľkú nápovedu
+        </a>
+        <div class="collapse" id="susi_big_hint">
+            <div class="well">
+                {{ task.susi_big_hint }}
+            </div>
+        </div>
+    {% elif task.susi_big_hint|length > 0 %}
+        Bude zverejnená {{ task.round.susi_big_hint_date }}.
+    {% else %}
+        Pre túto úlohu nebude zverejnená.
+    {% endif %}

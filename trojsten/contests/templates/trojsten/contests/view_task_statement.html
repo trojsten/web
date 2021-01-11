@@ -63,6 +63,11 @@
         {% endif %}
     </div>
     <div class="task-submit">
+
+    {% if task.round.semester.competition.id == SUSI_COMPETITION_ID %}
+        {% include "./parts/susi_hints.html" %}
+    {% endif %}
+
     {% if task.get_submit_types|length > 0 %}
         <h2>Odovzdávanie</h2>
         {% if request.user.is_authenticated %}

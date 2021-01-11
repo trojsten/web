@@ -1,0 +1,11 @@
+{% extends "plugin_prask_7_1_1/level_base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<div>
+    {% if password %}
+    <p>Heslo je "{{ password }}"</p>
+    {% endif %}
+    <img src="{% static 'plugin_prask_7_1_1/chocolate_chip.jpg' %}" />
+</div>
+{% endblock content %}

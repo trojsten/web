@@ -9,8 +9,7 @@ from .helpers import get_scoreboards_for_rounds
 
 
 def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
-    """Displays results for specified round_ids and category_id
-    """
+    """Displays results for specified round_ids and category_id"""
     round = get_object_or_404(
         Round.objects.visible(request.user)
         .select_related("semester__competition")
@@ -23,6 +22,7 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
     context = {
         "round": round,
         "scoreboards": scoreboards,
+        "single_round": scoreboards[0].scoreboard.is_single_round,
         "selected_tag": tag_key,
         "show_staff": is_true(request.GET.get("show_staff", False)),
     }
@@ -30,8 +30,7 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
 
 
 def view_latest_results(request):
-    """Displays results for latest rounds for each competition
-    """
+    """Displays results for latest rounds for each competition"""
     rounds = [
         round
         for competition in Competition.objects.current_site_only()

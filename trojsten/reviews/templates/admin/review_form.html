@@ -13,6 +13,11 @@
 
 {% block content %}
 <h1>Opravovanie úlohy: {{ task }}</h1>
+
+{% if not task.description_points_visible %}
+<p style="color: red"><b>{% trans 'Description points are hidden in results!' %}</b> {% trans 'You can change this in task settings.' %}</p>
+{% endif %}
+
 <h2>Stiahnuť riešenia</h2>
 <a href="{% url 'admin:download_latest_submits' task.pk %}">
     {% trans 'Download all original solutions' %}

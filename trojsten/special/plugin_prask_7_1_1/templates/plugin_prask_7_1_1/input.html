@@ -1,0 +1,31 @@
+{% extends "plugin_prask_7_1_1/level_base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+<script type="text/javascript">
+  INPUT_SUBMIT_URL = '{% url "plugin_permonik:get_input_password" %}';
+</script>
+<style>
+  #schnitzels {
+    width: 100px;
+    height: 30px;
+  }
+</style>
+{% endblock head %}
+
+{% block content %}
+<div>
+  <p>Koľko rezňov by si si dal/a?</p>
+  <p>Hmmm, milión!</p>
+  <form role="form" id="inputForm">
+    {% csrf_token %}
+    <input id="schnitzels" type="number" min="0" max="10" placeholder="1"></input>
+    <button type="submit">Objednať</button>
+  </form>
+  <p id="password"></p>
+</div>
+{% endblock content %}
+
+{% block bottom_js %}
+<script src='{% static "plugin_prask_7_1_1/input.js" %}'></script>
+{% endblock bottom_js %}

@@ -9,18 +9,21 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 MIDDLEWARE += ("oauth2_provider.middleware.OAuth2TokenMiddleware",)
 
-AUTHENTICATION_BACKENDS = tuple(
-    env(
-        "TROJSTENWEB_AUTHENTICATION_BACKENDS",
-        ";".join(
-            (
-                "social_core.backends.google.GoogleOpenId",
-                "ksp_login.backends.LaunchpadAuth",
-                "social_core.backends.open_id.OpenIdAuth",
-            )
-        ),
-    ).split(";")
-) + ("oauth2_provider.backends.OAuth2Backend", "django.contrib.auth.backends.ModelBackend")
+AUTHENTICATION_BACKENDS = (
+    tuple(
+        env(
+            "TROJSTENWEB_AUTHENTICATION_BACKENDS",
+            ";".join(
+                (
+                    "social_core.backends.google.GoogleOpenId",
+                    "ksp_login.backends.LaunchpadAuth",
+                    "social_core.backends.open_id.OpenIdAuth",
+                )
+            ),
+        ).split(";")
+    )
+    + ("oauth2_provider.backends.OAuth2Backend", "django.contrib.auth.backends.ModelBackend")
+)
 
 SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.social_details",

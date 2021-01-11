@@ -2,7 +2,12 @@ from django import template
 from judge_client import constants as judge_constants
 
 from trojsten.contests.models import Task
-from trojsten.submit.forms import DescriptionSubmitForm, SourceSubmitForm, TestableZipSubmitForm
+from trojsten.submit.forms import (
+    DescriptionSubmitForm,
+    SourceSubmitForm,
+    TestableZipSubmitForm,
+    TextSubmitForm,
+)
 
 from .. import constants
 from ..models import Submit
@@ -24,6 +29,8 @@ def show_submit_form(context, task, user, redirect, show_only_source=False):
         context["description_form"] = DescriptionSubmitForm()
     if task.has_testablezip:
         context["testablezip_form"] = TestableZipSubmitForm()
+    if task.has_text_submit:
+        context["text_submit_form"] = TextSubmitForm()
     return context
 
 
@@ -71,8 +78,7 @@ def submitclass(submit):
 
 @register.inclusion_tag("trojsten/submit/parts/round_submit_form.html", takes_context=True)
 def round_submit_form(context, round):
-    """View, showing submit form for all tasks from round
-    """
+    """View, showing submit form for all tasks from round"""
     tasks = Task.objects.filter(round=round).order_by("number")
     template_data = {"round": round, "tasks": tasks}
     context.update(template_data)
