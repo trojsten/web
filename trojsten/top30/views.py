@@ -9,6 +9,8 @@ from trojsten.people.models import User
 from trojsten.submit.constants import SUBMIT_STATUS_REVIEWED, SUBMIT_TYPE_DESCRIPTION
 from trojsten.submit.models import Submit
 
+TOP_N = 30
+
 
 def round_if_int(number):
     return round(number) if number == round(number) else number
@@ -16,9 +18,9 @@ def round_if_int(number):
 
 def get_best(counts):
     return sorted(
-        [(round_if_int(value), user.get_full_name()) for user, value in counts.items()],
+        ((round_if_int(value), user.get_full_name()) for user, value in counts.items()),
         reverse=True,
-    )[:30]
+    )[:TOP_N]
 
 
 def get_reviewers(all_sites=False):
@@ -55,7 +57,7 @@ def get_camp_people(org, all_sites=False):
     if not all_sites:
         event_types = EventType.objects.current_site_only()
         query = query.filter(event__type__in=event_types)
-    pariticipations = query.values("user").annotate(count=Count("user")).order_by("-count")[:30]
+    pariticipations = query.values("user").annotate(count=Count("user")).order_by("-count")[:TOP_N]
     return [
         (value["count"], User.objects.get(id=value["user"]).get_full_name())
         for value in pariticipations
@@ -68,7 +70,6 @@ def view_leaderboard(request):
         request,
         "trojsten/top30/top30.html",
         {
-            # "foo" : get_reviewers(),
             "leaderboards": [
                 (_("Most submissions reviewed"), get_reviewers(all_sites)),
                 (_("Most camps organized"), get_camp_people(True, all_sites)),
