@@ -15,7 +15,6 @@ AUTHENTICATION_BACKENDS = (
             "TROJSTENWEB_AUTHENTICATION_BACKENDS",
             ";".join(
                 (
-                    "social_core.backends.google.GoogleOpenId",
                     "ksp_login.backends.LaunchpadAuth",
                     "social_core.backends.open_id.OpenIdAuth",
                 )
