@@ -1,6 +1,4 @@
 # coding: utf-8
-import os
-
 import magic
 from django import forms
 from django.conf import settings
