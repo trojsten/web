@@ -13,5 +13,4 @@ apk add --update --no-cache --virtual runtime-deps \
     tcl \
     tiff \
     tk \
-    zlib \
-    libmagic
+    zlib
