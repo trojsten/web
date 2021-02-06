@@ -52,10 +52,10 @@ class LoginLinksTest(TestCase):
     def test_links_login(self):
         response = self.client.get("/", follow=True)
         self.assertNotContains(response, "Kontakt")
-        self.assertNotContains(response, "Sponzori")
+        self.assertNotContains(response, "Partneri")
 
     @override_settings(SITE_ID=1, ROOT_URL_CONFIG="trojsten.urls.default")
     def test_links_other(self):
         response = self.client.get("/", follow=True)
         self.assertContains(response, "Kontakt")
-        self.assertContains(response, "Sponzori")
+        self.assertContains(response, "Partneri")
