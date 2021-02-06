@@ -1,0 +1,39 @@
+{% extends "trojsten/layout/main.html" %}
+{% load i18n %}
+
+{% block title %}TOP 30{% endblock %}
+
+{% block page_header %}
+
+<h1> TOP 30 </h1>
+
+{% endblock %}
+
+{% block page_content %}
+
+{% for heading, leaderboard in leaderboards %}
+    {% if leaderboard %}
+        <h2> {{ heading }} </h2>
+        
+        <table class="table table-hover table-condensed">
+            {% for score, name in leaderboard %}
+            <tr>
+                <td class="poll-margin poll-cell"> {{ forloop.counter }}. </td>
+                <td class="poll-margin poll-cell"> {{ name }} </td>
+                <td class="poll-margin poll-cell"> {{ score }} </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endfor %}
+<br>
+{% if all_sites %}
+    <a href="?" class="btn btn-default btn-sm">
+        {% trans "This site only" %}
+    </a>
+{% else %}
+    <a href="?all_sites=True" class="btn btn-default btn-sm">
+        {% trans "Include all sites" %}
+    </a>
+{% endif %}
+{% endblock %}

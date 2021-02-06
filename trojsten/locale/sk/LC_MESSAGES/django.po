@@ -998,3 +998,18 @@ msgstr[0] "%(count)d sekunda"
 msgstr[1] "%(count)d sekundy"
 msgstr[2] "%(count)d sekundy"
 msgstr[3] "%(count)d sekúnd"
+
+msgid "Most submissions reviewed"
+msgstr "Najviac opravených riešení"
+
+msgid "Most camps organized"
+msgstr "Najviac zorganizovaných sústredení"
+
+msgid "Most camps attended"
+msgstr "Najviac účastí na sústredeniach"
+
+msgid "This site only"
+msgstr "Len tento seminár"
+
+msgid "Include all sites"
+msgstr "Zahrnúť všetky semináre"

@@ -12,6 +12,7 @@ import trojsten.polls.views
 import trojsten.results.urls
 import trojsten.submit.urls
 import trojsten.submit.views
+import trojsten.top30.urls
 
 from .common import urlpatterns as common_urlpatterns
 
@@ -46,6 +47,7 @@ urlpatterns = common_urlpatterns + [
     url(r"^komentare/", include("fluent_comments.urls")),
     url(r"^diskusie/", include("trojsten.threads.urls")),
     url(r"^ankety/", include(trojsten.polls.urls)),
+    url(r"^top30/", include(trojsten.top30.urls)),
     url(r"^$", trojsten.views.home_redirect),
     url(r"^wiki/notify/", include("django_nyt.urls")),
     url(r"^", include("favicon.urls")),

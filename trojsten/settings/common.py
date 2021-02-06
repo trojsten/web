@@ -230,6 +230,7 @@ INSTALLED_APPS = (
     "trojsten.login",
     "trojsten.schools",
     "trojsten.polls",
+    "trojsten.top30",
     "trojsten.contact_form",
     "trojsten.notifications.apps.NotificationsConfig",
     "django_countries",
