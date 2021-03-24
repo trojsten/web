@@ -185,7 +185,6 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
 
 class SUSIRules(CompetitionRules):
-
     RESULTS_TAGS = {
         constants.SUSI_CIFERSKY_CECH: ResultsTag(
             key=constants.SUSI_CIFERSKY_CECH, name=constants.SUSI_CIFERSKY_CECH
@@ -199,13 +198,23 @@ class SUSIRules(CompetitionRules):
     RESULTS_GENERATOR_CLASS = SUSIResultsGenerator
 
     def get_actual_result_rounds(self, competition):
-        rounds = Round.objects.filter(
+        active_rounds = Round.objects.filter(
             semester__competition=competition,
             visible=True,
+            second_end_time__gte=timezone.now(),
+        )
+        if len(active_rounds) > 0:
+            return active_rounds.order_by("number")[:1]
+
+        finished_rounds = Round.objects.filter(
+            semester__competition=competition,
+            visible=True,
+            second_end_time__lte=timezone.now(),
             end_time__gte=timezone.now()
             - timezone.timedelta(days=MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS),
-        ).exclude(number=constants.SUSI_OUTDOOR_ROUND_NUMBER, end_time__gte=timezone.now())
-        return rounds.order_by("-end_time", "-number")[:1]
+        )
+
+        return finished_rounds.order_by("number")[:1]
 
     def get_previous_round(self, round):
         previous_number = min(round.number - 1, 2)
