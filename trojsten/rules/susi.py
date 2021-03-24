@@ -204,7 +204,7 @@ class SUSIRules(CompetitionRules):
             second_end_time__gte=timezone.now(),
         )
         if len(active_rounds) > 0:
-            return active_rounds.order_by("number")[:1]
+            return active_rounds.order_by("number", "end_time")[:1]
 
         finished_rounds = Round.objects.filter(
             semester__competition=competition,
@@ -213,8 +213,7 @@ class SUSIRules(CompetitionRules):
             end_time__gte=timezone.now()
             - timezone.timedelta(days=MAX_DAYS_TO_SHOW_ROUND_IN_ACTUAL_RESULTS),
         )
-
-        return finished_rounds.order_by("number")[:1]
+        return finished_rounds.order_by("-end_time", "-number")[:1]
 
     def get_previous_round(self, round):
         previous_number = min(round.number - 1, 2)
