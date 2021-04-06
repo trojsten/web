@@ -1,0 +1,58 @@
+
+.background {
+  width: 1182px;
+  height: 656px;
+  position: relative;
+}
+
+.background > img {
+  width: 1182px;
+  height: 656px;
+}
+
+.door {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
+.mouse {
+  pointer-events: none;
+  width: 70px;
+  height: 70px;
+  position: absolute;
+}
+
+.mouse-img {
+  position: relative;
+  top: -5px;
+  width: 100%;
+  height: 100%;
+}
+
+.block {
+  position: absolute;
+  opacity: 0.45;
+  cursor: pointer;
+}
+
+.reset {
+  cursor: pointer;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: 53px;
+  left: 53px;
+  cursor: pointer;
+}
+
+.finish {
+  cursor: pointer;
+  position: absolute;
+  width: 90px;
+  height: 50px;
+  top: 530px;
+  left: 1018px;
+  cursor: pointer;
+}

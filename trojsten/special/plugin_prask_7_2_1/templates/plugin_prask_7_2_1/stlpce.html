@@ -1,0 +1,105 @@
+{% extends "plugin_prask_7_2_1/level_base.html" %}
+{% load static %}
+
+{% block head %}
+<script type="text/javascript">
+function validate() {
+  let ans = {
+    "color": null,
+    "food": null,
+    "season": null,
+    "genre": null
+  }
+  Object.keys(ans)
+          .map((key) => [$(`input[name="${key}"]`).filter((_i,x) => x.checked)[0]]
+                          .map(x => ans[key] = x ? x.value : null))
+
+  if (!ans.color || !ans.food || !ans.season || !ans.genre) {
+    alert('Musíš zvoliť práve jednu možnosť v každej kategórii.')
+  } else if (ans.color != "white" || ans.food != "carrot" || ans.season != "winter" || ans.genre != "animated") {
+    alert("Zle.")
+  } else {
+    alert("Správne.")
+  }
+
+}
+
+</script>
+
+<style>
+  .columns {
+    display: flex;
+    align-items: center;
+
+  }
+
+  .kontajner {
+    padding-bottom: 40px;
+  }
+</style>
+{% endblock head %}
+
+{% block content %}
+<div class="kontajner no-neoscreen">
+  <form onsubmit="return false">
+    <div class="columns">
+      <fieldset id="color">
+        <input type="radio" value="white" name="color">
+        <label>Biela</label>
+        <br />
+        <input type="radio" value="blue" name="color">
+        <label>Modrá</label>
+        <br />
+        <input type="radio" value="orange" name="color">
+        <label>Oranžová</label>
+        <br />
+        <input type="radio" value="green" name="color">
+        <label>Zelená</label>
+      </fieldset>
+
+      <fieldset id="food">
+        <input type="radio" value="fish" name="food">
+        <label>Ryba</label>
+        <br />
+        <input type="radio" value="steak" name="food">
+        <label>Steak</label>
+        <br />
+        <input type="radio" value="carrot" name="food">
+        <label>Mrkva</label>
+        <br />
+        <input type="radio" value="apple" name="food">
+        <label>Jablko</label>
+      </fieldset>
+
+      <fieldset id="season">
+        <input type="radio" value="spring" name="season">
+        <label>Jar</label>
+        <br />
+        <input type="radio" value="summer" name="season">
+        <label>Leto</label>
+        <br />
+        <input type="radio" value="fall" name="season">
+        <label>Jeseň</label>
+        <br />
+        <input type="radio" value="winter" name="season">
+        <label>Zima</label>
+      </fieldset>
+
+      <fieldset id="genre">
+        <input type="radio" value="thriller" name="genre">
+        <label>Thriller</label>
+        <br />
+        <input type="radio" value="horror" name="genre">
+        <label>Horor</label>
+        <br />
+        <input type="radio" value="animated" name="genre">
+        <label>Animák</label>
+        <br />
+        <input type="radio" value="series" name="genre">
+        <label>Seriál</label>
+      </fieldset>
+      <button class="fancy small" onclick="validate()">Tuna stlač!</button>
+    </div>
+  </form>
+</div>
+{% endblock content %}

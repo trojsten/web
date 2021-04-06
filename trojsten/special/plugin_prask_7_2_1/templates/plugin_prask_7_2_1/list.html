@@ -1,0 +1,36 @@
+{% extends "plugin_prask_7_2_1/level_base.html" %}
+{% block head %}
+<style>
+  table {
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  tr {
+    padding: 10px;
+  }
+  th, td {
+    padding: 10px 30px;
+    border: 1px solid green;
+
+  }
+</style>
+{% endblock head %}
+
+{% block content %}
+<table class="entries no-neoscreen">
+  <tr>
+    <th>Id</th>
+    <th>Label1</th>
+    <th>Label2</th>
+    <th>Hash</th>
+  </tr>
+  {% for i in entries %}
+  <tr>
+    <td>{{i.id}}</td>
+    <td>{{i.staci}}</td>
+    <td>{{i.zadat}}</td>
+    <td>{{i.hash}}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock content %}
