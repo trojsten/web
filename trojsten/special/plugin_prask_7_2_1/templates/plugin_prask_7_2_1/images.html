@@ -1,0 +1,49 @@
+{% extends "plugin_prask_7_2_1/level_base.html" %}
+{% load static %}
+
+{% block head %}
+<style>
+  .piece {
+    position: fixed;
+  }
+
+  .tl {
+    left: 0;
+    top: 0;
+  }
+
+  .tr {
+    right: 0;
+    top: 0;
+  }
+
+  .bl {
+    left:0;
+    bottom: 0;
+  }
+
+  .br {
+    right:0;
+    bottom:0;
+  }
+
+  .centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+  }
+</style>
+{% endblock head %}
+
+{% block content %}
+<img class="piece bl" src="{% static 'plugin_prask_7_2_1/qtl.png' %}" />
+<img class="piece br" src="{% static 'plugin_prask_7_2_1/qtr.png' %}" />
+<img class="piece tl" src="{% static 'plugin_prask_7_2_1/qbl.png' %}" />
+<img class="piece tr" src="{% static 'plugin_prask_7_2_1/qbr.png' %}" />
+<div class="centered">
+  {% include "plugin_prask_7_2_1/hint.html" %}
+</div>
+{% endblock content %}
+
+{% block hint %}
+{% endblock hint %}

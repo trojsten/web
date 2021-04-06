@@ -1,0 +1,36 @@
+{% extends "plugin_prask_7_2_1/level_base.html" %}
+{% load static %}
+{% block head %}
+<script src='{% static "plugin_prask_7_2_1/logic.js" %}'></script>
+
+<script type="text/javascript">
+function action(idx) {
+  if (idx == 720) {
+    ukazHeslo()
+  } else {
+    tuHesloNieJe()
+  }
+}
+
+function tuHesloNieJe() {
+  alert('Tu heslo nie je.')
+}
+
+function init() {
+  const buttons = document.getElementById("buttons");
+  for (let i = 0; i < 1000; ++i) {
+    const btn = document.createElement("button")
+    btn.classList.add("fancy", "small")
+    btn.setAttribute('onclick', `action(${i})`)
+    btn.innerText = "Klikni!"
+    buttons.appendChild(btn)
+  }
+}
+
+window.onload = init;
+</script>
+{% endblock head %}
+
+{% block content %}
+<div id="buttons" class="no-neoscreen"></div>
+{% endblock content %}

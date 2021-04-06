@@ -1,0 +1,45 @@
+html {
+    font-family: "Fira Code", monospace;
+}
+body{
+    visibility: hidden;
+    background: black;
+    color: lime;
+    padding: 1rem;
+}
+
+#cursor::before{
+    content: "|";
+}
+
+.visible{
+    visibility: visible;
+}
+
+
+button.fancy {
+    border:2px solid lime;
+    padding: 0.75rem 1rem;
+    color: lime;
+    background-color: black;
+    margin: 10px;
+    font-family: "Fira Code", monospace;
+    font-size: large;
+}
+button.fancy:hover{
+    color: black;
+    background-color: lime;
+    cursor: pointer;
+}
+
+button.fancy:disabled{
+    color:#555;
+    background-color: #111;
+    border-color: #555;
+    cursor: default;
+}
+
+button.small {
+    padding: 0.6rem 0.7rem;
+    font-size: medium;
+}
