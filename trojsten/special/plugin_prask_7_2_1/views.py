@@ -4,7 +4,7 @@ import logging
 import random
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 from .constants import LEVELS, LIST_LEVEL_PWD
@@ -23,9 +23,9 @@ def intro(request):
 
 
 def randPermute(str, rand):
-    l = list(str)
-    random.shuffle(l, rand)
-    return "".join(l)
+    list_str = list(str)
+    random.shuffle(list_str, rand)
+    return "".join(list_str)
 
 
 def getListEntries():
@@ -54,14 +54,19 @@ def level(request, level, source_fname):
     mark_level_solved(request.user, level - 1)
     specials = {"cookies": {}, "variables": {}}
 
-    REQUEST_LEVEL_GET_PARAMS = "fbclid=IwAR1enbuNFPHzhrG_9fdjFwGx6HqBPQro0UyDtGajCo9twqU6MwKwQ7_oUW8&utm_medium=cpc&tar=a30d29b63f343d4f326fae63c27c4c224c147aeb87b6a126e3dd385858a986ef&password=pokuta&hl=cs&pli=1"
+    REQUEST_LEVEL_GET_PARAMS = (
+        "fbclid=IwAR1enbuNFPHzhrG_9fdjFwGx6HqBPQro0UyD"
+        "tGajCo9twqU6MwKwQ7_oUW8&utm_medium=cpc&tar=a3"
+        "0d29b63f343d4f326fae63c27c4c224c147aeb87b6a12"
+        "6e3dd385858a986ef&password=pokuta&hl=cs&pli=1"
+    )
     if source_fname == "request.html" and request.GET.urlencode() != REQUEST_LEVEL_GET_PARAMS:
         return redirect(request.path_info + "?" + REQUEST_LEVEL_GET_PARAMS)
 
     if source_fname == "heslo.html":
         uname = request.GET.get("username")
         pwd = request.GET.get("password")
-        if uname == None or pwd == None:
+        if uname is None or pwd is None:
             return redirect(request.path_info + "?" + "username=&password=")
 
         if uname == "chad" and pwd == "357159":
@@ -71,7 +76,7 @@ def level(request, level, source_fname):
 
     if source_fname == "list.html":
         page, per_page = request.GET.get("page"), request.GET.get("per_page")
-        if page == None or per_page == None:
+        if page is None or per_page is None:
             return redirect(request.path_info + "?" + "page=1&per_page=5")
 
         page, per_page = int(page), int(per_page)
