@@ -1,0 +1,9 @@
+{% extends "plugin_prask_7_2_1/level_base.html" %}
+{% load static %}
+
+{% block content %}
+  <p>Super, si v leveli 3! V tomto a v niektorých nasledujúcich leveloch sa ti zíde vedieť
+    niečo o GET parametroch. Pripravili sme si preto <a target="_blank" href="{% url 'plugin_prask_7_2_1:get_params' %}">krátky text.</a></p>
+
+  <p>A tu je niečo zo života Chada: <img src="{% static 'plugin_prask_7_2_1/chad.jpg' %}"/></p>
+{% endblock content %}

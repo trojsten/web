@@ -1,0 +1,39 @@
+{% extends "plugin_prask_7_2_1/level_base.html" %}
+{% load static %}
+
+{% block head %}
+<link href="{% static 'plugin_prask_7_2_1/mouse.css' %}" rel="stylesheet">
+<style>
+  .mouse-right {
+    background: center / contain no-repeat url('{% static "plugin_prask_7_2_1/mouse_right.png" %}');
+    left: -30px;
+  }
+
+  .mouse-left {
+    background: center / contain no-repeat url('{% static "plugin_prask_7_2_1/mouse_left.png" %}');
+    left: -10px;
+  }
+
+  .mouse-left-mov {
+    background: center / contain no-repeat url('{% static "plugin_prask_7_2_1/mouse_left_mov.png" %}');
+    width: 120px;
+  }
+
+  .mouse-right-mov {
+    background: center / contain no-repeat url('{% static "plugin_prask_7_2_1/mouse_right_mov.png" %}');
+    width: 120px;
+    left: -80px;
+  }
+</style>
+{% endblock head %}
+
+{% block content %}
+Super, máš prvé body :)
+<div class="background no-neoscreen" id="gameboard">
+  <img src="{% static 'plugin_prask_7_2_1/mouse_background.jpg' %}" />
+</div>
+{% endblock content %}
+
+{% block bottom_js %}
+<script src='{% static "plugin_prask_7_2_1/mouse.js" %}'></script>
+{% endblock bottom_js %}
