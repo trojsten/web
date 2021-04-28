@@ -32,6 +32,7 @@ from trojsten.rules.susi_constants import (
     SUSI_BLYSKAVICA,
     SUSI_CAMP_TYPE,
     SUSI_CIFERSKY_CECH,
+    SUSI_OUTDOOR_ROUND_NUMBER,
 )
 from trojsten.submit.models import Submit
 
@@ -1097,9 +1098,9 @@ class SUSIRulesTest(TestCase):
         self.semester = Semester.objects.create(
             number=1, name="Test semester", competition=self.competition, year=47
         )
-        self.start = self.time + timezone.timedelta(-4)
+        self.start = self.time + timezone.timedelta(-21)
         self.end = self.time + timezone.timedelta(4)
-        self.round = Round.objects.create(
+        self.round1 = Round.objects.create(
             number=1,
             semester=self.semester,
             visible=True,
@@ -1107,6 +1108,24 @@ class SUSIRulesTest(TestCase):
             start_time=self.start,
             end_time=self.end,
             second_end_time=self.end + timezone.timedelta(7),
+        )
+        self.round2 = Round.objects.create(
+            number=2,
+            semester=self.semester,
+            visible=True,
+            solutions_visible=False,
+            start_time=self.start,
+            end_time=self.end + timezone.timedelta(7),
+            second_end_time=self.end + timezone.timedelta(14),
+        )
+        self.round_outdoor = Round.objects.create(
+            number=SUSI_OUTDOOR_ROUND_NUMBER,
+            semester=self.semester,
+            visible=True,
+            solutions_visible=False,
+            start_time=self.start,
+            end_time=self.end + timezone.timedelta(7),
+            second_end_time=self.end + timezone.timedelta(14),
         )
 
         self.group = Group.objects.create(name="skupina")
@@ -1131,7 +1150,7 @@ class SUSIRulesTest(TestCase):
                 Task.objects.create(
                     number=i,
                     name="Test task {}".format(i),
-                    round=self.round,
+                    round=self.round1,
                     description_points_visible=True,
                 )
             )
@@ -1167,7 +1186,7 @@ class SUSIRulesTest(TestCase):
             password="password",
             first_name="Jozko",
             last_name="Mrkvicka",
-            graduation=self.round.end_time.year + 3,
+            graduation=self.round1.end_time.year + 3,
         )
         UserProperty.objects.create(user=user, key=self.puzzlehunt_key, value="0")
         place = EventPlace.objects.create(name="Horna dolna")
@@ -1192,7 +1211,7 @@ class SUSIRulesTest(TestCase):
         for i in range(0, 12):
             user = self._create_user_with_coefficient(i, "testuser%d" % i)
             generator = SUSIResultsGenerator(SUSIRules.RESULTS_TAGS[SUSI_BLYSKAVICA])
-            self.assertEqual(generator.get_user_coefficient(user, self.round), i)
+            self.assertEqual(generator.get_user_coefficient(user, self.round1), i)
 
     def test_blyskavica_only_user(self):
         points = [6, 4, 0, 5, 1, 2, 2]
@@ -1254,6 +1273,36 @@ class SUSIRulesTest(TestCase):
         row_a = get_row_for_user(scoreboard, user)
         self.assertEqual(row_a.cell_list[col_to_index_map["sum"]].points, "16")
         self.assertEqual(row_b.cell_list[col_to_index_map["sum"]].points, "10")
+
+    def test_results_ordering(self):
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_AGAT)
+        self.assertEqual(scoreboard.round.number, 1)
+
+        self.round1.end_time = self.time + timezone.timedelta(-14)
+        self.round1.second_end_time = self.time + timezone.timedelta(-7)
+        self.round1.save()
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_AGAT)
+        self.assertEqual(scoreboard.round.number, 2)
+
+        self.round2.end_time = self.time + timezone.timedelta(-7)
+        self.round2.second_end_time = self.time + timezone.timedelta(-1)
+        self.round2.save()
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_AGAT)
+        self.assertEqual(scoreboard.round.number, SUSI_OUTDOOR_ROUND_NUMBER)
+
+        self.round_outdoor.end_time = self.time + timezone.timedelta(-7)
+        self.round_outdoor.second_end_time = self.time + timezone.timedelta(-1)
+        self.round_outdoor.save()
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+        scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_AGAT)
+        self.assertEqual(scoreboard.round.number, SUSI_OUTDOOR_ROUND_NUMBER)
 
 
 class TextSubmitTest(TestCase):
