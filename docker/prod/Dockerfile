@@ -26,8 +26,24 @@ RUN set -x \
     && sh /tmp/build/install_build_deps.sh
 
 COPY --from=builder /tmp/build/requirements.txt /
-RUN set -x \
-    && pip install --root /install --no-warn-script-location -r requirements.txt
+
+# Explanation of flags:
+#
+#   - `--ignore-installed`: If a package is installed locally, it wouldn't get installed to the alternate root.
+#     This options ignores locally-installed packages, ensuring that all packages are installed to the alternate root.
+#   - `--no-compile`: Don't write Python bytecode (smaller image size)
+#   - `--no-deps`: Don't resolve dependencies. In first invocation dependency resolution should be completely
+#     unnecessary, since the file should contain locked versions of all needed dependencies.
+#     In the second invocation dependency resolution is outright harmful, since wheels that will be built as part
+#     of the install process will contain version constraints from `pyproject.toml`, not from `poetry.lock` - so we
+#     may end up installing a newer version of dependency than the one specified in our lock file.
+#     (moreover, if a project contains local dependencies, the resulting wheel will have invalid METADATA and the
+#     install would fail - https://github.com/python-poetry/poetry/issues/3148.)
+#   - `--no-warn-script-location`: Don't generate warnings that destination for script executables is not in $PATH.
+#     That's expected since we are installing to a different root.
+#   - `--root`: Install everything to this alternate root directory - we will later copy it to the real root
+#     in the final stage, leaving all build dependencies behind.
+RUN pip install -r requirements.txt --ignore-installed --no-compile --no-deps --no-warn-script-location --root /install
 
 
 FROM base
