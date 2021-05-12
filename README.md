@@ -48,6 +48,7 @@ We currently check the following things:
 - https://kms.sk
 - https://wiki.trojsten.sk
 - https://login.trojsten.sk
+- https://susi.trojsten.sk
 
 ## Related projects
 - https://github.com/trojsten/ksp_login
