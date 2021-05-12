@@ -160,4 +160,5 @@ workflows:
             - build
   build_docker_and_push:
     jobs:
-      - docker_build
+      - docker_build:
+          context: trojstenweb-cloud
