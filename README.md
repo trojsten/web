@@ -40,7 +40,7 @@ We currently check the following things:
   - the PR must include all necessary migrations. Note that Django localizes migrations, so make sure your translations are up to date (`./manage.py compilemessages`) before generating migrations.
 
 ## Sites running on this:
-- https://ksp.sk
+- https://www.ksp.sk
 - https://prask.ksp.sk
 - https://fks.sk
 - https://ufo.fks.sk
