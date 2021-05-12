@@ -25,8 +25,8 @@ COPY ./docker/common/install_build_deps.sh /tmp/build/
 RUN set -x \
     && sh /tmp/build/install_build_deps.sh
 
+WORKDIR /
 COPY --from=builder /tmp/build/requirements.txt /
-
 # Explanation of flags:
 #
 #   - `--ignore-installed`: If a package is installed locally, it wouldn't get installed to the alternate root.

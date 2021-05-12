@@ -126,6 +126,17 @@ jobs:
           command: |
             . venv/bin/activate
             isort -rc trojsten --check
+  docker_build:
+    docker:
+      - image: docker:git
+    working_directory: ~/web
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: |
+          TAG=test
+          docker build -t trojsten/web:$TAG -f docker/prod/Dockerfile .
+
 
 workflows:
   version: 2
@@ -147,3 +158,6 @@ workflows:
       - isort:
           requires:
             - build
+  build_docker_and_push:
+    jobs:
+      - docker_build
