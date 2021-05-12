@@ -134,8 +134,11 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: |
-          TAG=test
-          docker build -t trojsten/web:$TAG -f docker/prod/Dockerfile .
+          TAG=europe-west3-docker.pkg.dev/trojstenweb-294517/trojstenweb/trojstenweb-test:1
+          docker build -t $TAG -f docker/prod/Dockerfile .
+          echo "$GCLOUD_SERVICE_KEY" | docker login -u "$GCLOUD_KEY_TYPE" --password-stdin "https://${GCLOUD_REPO_LOCATION}-docker.pkg.dev"
+          docker push $TAG
+
 
 
 workflows:
