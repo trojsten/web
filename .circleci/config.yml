@@ -192,6 +192,8 @@ workflows:
       - docker_build
       - docker_push:
           context: trojstenweb-cloud
+          requires:
+            - docker_build
           filters:
             branches:
               only: ci-test-master
