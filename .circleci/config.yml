@@ -1,6 +1,16 @@
-version: 2
+version: 2.1
 
-.base: &base
+executors:
+  docker-publisher:
+    environment:
+      IMAGE_NAME: europe-west3-docker.pkg.dev/trojstenweb-294517/trojstenweb/trojstenweb-test
+      VERSION: 1
+    docker:
+      - image: docker:git
+    working_directory: ~/web
+
+
+.base: &base # TODO turn this into an executor
   docker:
     - image: trojsten/web-test:latest
     - image: postgres:9.5
@@ -127,18 +137,34 @@ jobs:
             . venv/bin/activate
             isort -rc trojsten --check
   docker_build:
-    docker:
-      - image: docker:git
-    working_directory: ~/web
+    executor: docker-publisher
     steps:
       - checkout
       - setup_remote_docker
-      - run: |
-          TAG=europe-west3-docker.pkg.dev/trojstenweb-294517/trojstenweb/trojstenweb-test:1
-          docker build -t $TAG -f docker/prod/Dockerfile .
-          echo "$GCLOUD_SERVICE_KEY" | docker login -u "$GCLOUD_KEY_TYPE" --password-stdin "https://${GCLOUD_REPO_LOCATION}-docker.pkg.dev"
-          docker push $TAG
-
+      - run:
+          name: Build Docker image
+          command: docker build -t $IMAGE_NAME:$VERSION -f docker/prod/Dockerfile .
+      - run:
+          name: Save Docker image
+          command: docker save -o image.tar $IMAGE_NAME:$VERSION
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image.tar
+  docker_push:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$GCLOUD_SERVICE_KEY" | docker login -u "$GCLOUD_KEY_TYPE" --password-stdin "https://${GCLOUD_REPO_LOCATION}-docker.pkg.dev"
+            docker push $IMAGE_NAME:$VERSION
 
 
 workflows:
@@ -163,5 +189,9 @@ workflows:
             - build
   build_docker_and_push:
     jobs:
-      - docker_build:
+      - docker_build
+      - docker_push:
           context: trojstenweb-cloud
+          filters:
+            branches:
+              only: ci-test-master
