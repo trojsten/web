@@ -77,12 +77,14 @@ WORKDIR /web
 ENV TROJSTENWEB_STATIC_ROOT=/static
 ENV DJANGO_SETTINGS_MODULE=trojsten.settings.production
 RUN python manage.py compilemessages
-RUN python manage.py collectstatic --noinput
 
 ENV GUNICORN_WORKERS 2
 ENV GUNICORN_HOST 0.0.0.0:80
-CMD gunicorn --bind ${GUNICORN_HOST} --workers=${GUNICORN_WORKERS} trojsten.wsgi:application
 
-STOPSIGNAL SIGHUP
-HEALTHCHECK CMD curl -fIsS http://localhost:8000/ || exit 1
-EXPOSE 3031 8080
+COPY ./docker/prod/entrypoint.sh /
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+# STOPSIGNAL SIGHUP
+# HEALTHCHECK CMD curl -fIsS http://localhost:80/ || exit 1
+EXPOSE 80
