@@ -59,5 +59,5 @@ EXT_MAPPING = {
     ".cs": ".cs",
     ".java": ".java",
     ".zip": ".zip",
-    ".rs": ".rs"
+    ".rs": ".rs",
 }
