@@ -11,7 +11,9 @@ from django.db import models
 from django.db.models import Q
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.html import mark_safe
 from django.utils.translation import ugettext as _
+from markdown import markdown
 from unidecode import unidecode
 
 from trojsten.people.models import User, UserPropertyKey
@@ -479,6 +481,14 @@ class Task(models.Model):
 
     def get_assigned_people_for_role(self, role):
         return [line.user for line in TaskPeople.objects.filter(task=self, role=role)]
+
+    @property
+    def rendered_susi_small_hint(self):
+        return mark_safe(markdown(self.susi_small_hint, safe_mode=False))
+
+    @property
+    def rendered_susi_big_hint(self):
+        return mark_safe(markdown(self.susi_big_hint, safe_mode=False))
 
 
 class TaskPeople(models.Model):
