@@ -190,7 +190,7 @@ class Round(models.Model):
     @property
     def number_str(self):
         if self.susi_is_outdoor:
-            return "Outdoor"
+            return "Objavné"
         else:
             return "%i." % self.number
 
