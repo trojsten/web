@@ -6,7 +6,7 @@ SUSI_COMPETITION_ID = 9
 SUSI_OUTDOOR_ROUND_NUMBER = 100
 
 SUSI_AGAT_MAX_COEFFICIENT = 8
-SUSI_ELIGIBLE_FOR_TASK_BOUND = (0, 8, 8, 10000, 10000, 10000, 10000, 10000)
+SUSI_ELIGIBLE_FOR_TASK_BOUND = (0, 8, 8, 8, 10000, 10000, 10000, 10000, 10000)
 
 # If big hint is public, points won't be deducted for small hint regardless of
 # whether it is public or not.

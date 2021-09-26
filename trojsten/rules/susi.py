@@ -155,17 +155,6 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             ):
                 row.cells_by_key[key].active = False
 
-        # Prepare list of pairs consisting of cell and its points.
-        tasks = [
-            (cell, self.get_cell_total(request, cell))
-            for key, cell in row.cells_by_key.items()
-            if row.cells_by_key[key].active
-        ]
-
-        # Count only the best 5 tasks
-        for cell, _ in sorted(tasks, key=lambda x: x[1])[:-5]:
-            cell.active = False
-
     def calculate_row_round_total(self, res_request, row, cols):
         row.round_total = sum(
             self.get_cell_total(res_request, cell)
