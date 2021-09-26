@@ -1145,7 +1145,7 @@ class SUSIRulesTest(TestCase):
         )
 
         self.tasks = []
-        for i in range(1, 8):
+        for i in range(1, 9):
             self.tasks.append(
                 Task.objects.create(
                     number=i,
@@ -1157,7 +1157,7 @@ class SUSIRulesTest(TestCase):
             cat = [category_cifersky_cech]
             if i <= 5:
                 cat += [category_agat]
-            if i >= 3:
+            if i >= 4:
                 cat += [category_blyskavica]
             self.tasks[-1].categories.set(cat)
             self.tasks[-1].save()
@@ -1214,7 +1214,7 @@ class SUSIRulesTest(TestCase):
             self.assertEqual(generator.get_user_coefficient(user, self.round1), i)
 
     def test_blyskavica_only_user(self):
-        points = [6, 4, 0, 5, 1, 2, 2]
+        points = [6, 2, 4, 0, 5, 1, 2, 2]
         user = self._create_user_with_coefficient(9)
         self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
@@ -1228,7 +1228,7 @@ class SUSIRulesTest(TestCase):
         self.assertFalse(row_a.active)
 
     def test_agat_only_user(self):
-        points = [6, 4, 0, 5, 1]
+        points = [6, 2, 4, 0, 5]
         user = self._create_user_with_coefficient(8)
         self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
@@ -1242,7 +1242,7 @@ class SUSIRulesTest(TestCase):
         self.assertFalse(row_b.active)
 
     def test_cifersky_cech_user(self):
-        points = [6, 4, 0, 5, 1, 2, 2]
+        points = [6, 2, 4, 0, 5, 1, 2, 2]
         user = self._create_user_with_coefficient(1)
         user.graduation = 10
         user.save()
@@ -1255,24 +1255,26 @@ class SUSIRulesTest(TestCase):
         row_a = get_row_for_user(scoreboard, user)
         scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_CIFERSKY_CECH)
         row_c = get_row_for_user(scoreboard, user)
+        col_to_index_map = get_col_to_index_map(scoreboard)
         self.assertFalse(row_a.active)
         self.assertFalse(row_b.active)
         self.assertTrue(row_c.active)
+        self.assertEqual(row_c.cell_list[col_to_index_map["sum"]].points, "22")
 
     def test_agat_blyskavica_user(self):
-        points = [6, 4, 0, 5, 1, 2, 2]
+        points = [6, 2, 4, 0, 5, 1, 2, 2]
         user = self._create_user_with_coefficient(1)
         self._create_submits(user, points)
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
         scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_BLYSKAVICA)
-        col_to_index_map = get_col_to_index_map(scoreboard)
+        col_to_index_map_b = get_col_to_index_map(scoreboard)
         row_b = get_row_for_user(scoreboard, user)
         scoreboard = get_scoreboard(response.context["scoreboards"], SUSI_AGAT)
-        col_to_index_map = get_col_to_index_map(scoreboard)
+        col_to_index_map_a = get_col_to_index_map(scoreboard)
         row_a = get_row_for_user(scoreboard, user)
-        self.assertEqual(row_a.cell_list[col_to_index_map["sum"]].points, "16")
-        self.assertEqual(row_b.cell_list[col_to_index_map["sum"]].points, "10")
+        self.assertEqual(row_a.cell_list[col_to_index_map_a["sum"]].points, "17")
+        self.assertEqual(row_b.cell_list[col_to_index_map_b["sum"]].points, "10")
 
     def test_results_ordering(self):
         response = self.client.get("%s?single_round=True" % self.url)
