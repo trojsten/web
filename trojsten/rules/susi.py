@@ -143,18 +143,6 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         return active
 
-    def deactivate_row_cells(self, request, row, cols):
-        coefficient = self.get_user_coefficient(row.user, request.round)
-
-        # Count only tasks your coefficient is eligible for, ignoring category Cifersky-cech
-        for key in row.cells_by_key:
-            if (
-                constants.SUSI_ELIGIBLE_FOR_TASK_BOUND[key] < coefficient
-                and self.tag.key != constants.SUSI_CIFERSKY_CECH
-                and request.round.number != constants.SUSI_OUTDOOR_ROUND_NUMBER
-            ):
-                row.cells_by_key[key].active = False
-
     def calculate_row_round_total(self, res_request, row, cols):
         row.round_total = sum(
             self.get_cell_total(res_request, cell)
