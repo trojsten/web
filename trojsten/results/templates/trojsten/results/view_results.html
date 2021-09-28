@@ -6,10 +6,18 @@
 
 {% block page_header %}
 <h1>Výsledky<small>
-{% if single_round %}
-    {{ round.number_str }} kola
+{% if task.round.semester.competition.id == SUSI_COMPETITION_ID and task.round.number == SUSI_OUTDOOR_ROUND_NUMBER %}
+    {% if single_round %}
+        objavného kola
+    {% else %}
+        po objavnom kole
+    {% endif %}
 {% else %}
-    po {{ round.number_str }} kole
+    {% if single_round %}
+        {{ round.number_str }} kola
+    {% else %}
+        po {{ round.number_str }} kole
+    {% endif %}
 {% endif %}
 {{ round.semester.number }}. časti {{ round.semester.year }}. ročníka
 {{ round.semester.competition }}

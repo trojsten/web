@@ -8,7 +8,12 @@
 <h1>
     Zadania
     <small>
-        {{ round.number_str }} kola
+        {% if task.round.semester.competition.id == SUSI_COMPETITION_ID and task.round.number == SUSI_OUTDOOR_ROUND_NUMBER %}
+            objavného
+        {% else %}
+            {{ round.number_str }}
+        {% endif %}
+        kola
         {{ round.semester.number }}. časti
         {{ round.semester.year }}. ročníka {{ round.semester.competition.name }}
         {% if not round.visible %}
