@@ -7,7 +7,7 @@
         </a>
         <div class="collapse" id="susi_small_hint">
             <div class="well">
-                {{ task.susi_small_hint }}
+                {{ task.rendered_susi_small_hint }}
             </div>
         </div>
     {% elif task.susi_small_hint|length > 0 %}
@@ -23,7 +23,7 @@
         </a>
         <div class="collapse" id="susi_big_hint">
             <div class="well">
-                {{ task.susi_big_hint }}
+                {{ task.rendered_susi_big_hint }}
             </div>
         </div>
     {% elif task.susi_big_hint|length > 0 %}
