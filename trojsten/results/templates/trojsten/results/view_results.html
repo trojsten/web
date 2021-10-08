@@ -6,7 +6,7 @@
 
 {% block page_header %}
 <h1>Výsledky<small>
-{% if task.round.semester.competition.id == SUSI_COMPETITION_ID and task.round.number == SUSI_OUTDOOR_ROUND_NUMBER %}
+{% if is_susi_outdoor %}
     {% if single_round %}
         objavného kola
     {% else %}
