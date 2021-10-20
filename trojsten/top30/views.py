@@ -73,7 +73,7 @@ def view_leaderboard(request):
             "leaderboards": [
                 (_("Most submissions reviewed"), get_reviewers(all_sites)),
                 (_("Most camps organized"), get_camp_people(True, all_sites)),
-                (_("Most camps attended"), get_camp_people(False)),
+                (_("Most camps attended"), get_camp_people(False, all_sites)),
             ],
             "all_sites": all_sites,
         },
