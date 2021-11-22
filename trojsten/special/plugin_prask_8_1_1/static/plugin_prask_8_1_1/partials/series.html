@@ -1,0 +1,27 @@
+<div class="main-menu">
+    <div class="menu-wrapper">
+        <div class="row heading">Vyber si sériu:</div>
+        <div class="row">
+            <div class="grid-wrapper-wrapper">
+                <div class="grid-wrapper">
+                    <div class="grid">
+                        <div class="items-wrapper">
+                            <a class="item" ng-repeat="(key, value) in series" ng-href="#/levels/{{key}}">
+                                <div class="image">
+                                    <img ng-src="{{value.image}}">
+                                </div>
+                                <div class="name">{{value.name}}</div>
+                                <div class="description">{{value.description}}</div>
+                                <div class="ranked" ng-class="value.rated ? 'ranked-green' : ''">{{value.rated ? '(súťažná)' : '(nesúťažná)'}}</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <a class="btn btn-default btn-left bottom" href="{{ staticUrlPrefix }}/assets/tutorial.pdf" target="_blank">Skôr ako začneš hrať, prečítaj si návod :)</a>
+            <a class="btn btn-default btn-right bottom" href="mailto:roman.sobkuliak@trojsten.sk">Technické problémy? Kontaktuj nás.</a>
+        </div>
+    </div>
+</div>
