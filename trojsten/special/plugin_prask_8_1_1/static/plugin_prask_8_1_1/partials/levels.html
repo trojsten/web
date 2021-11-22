@@ -1,0 +1,30 @@
+<div class="main-menu">
+    <div class="menu-wrapper">
+        <div class="row">
+            <div class="heading heading-left">Séria: {{seriesName}}</div>
+            <div class="heading heading-right">Vyber si level:</div>
+        </div>
+        <div class="row">
+            <div class="grid-wrapper-wrapper">
+                <div class="grid-wrapper">
+                    <div class="grid">
+                        <div class="items-wrapper">
+                            <a class="item" ng-repeat="level in levels" ng-href="#/game/{{level.id}}">
+                                <div class="image">
+                                    <img ng-src="{{level.image}}">
+                                    <i class="solved fa fa-check" ng-show="level.solved"></i>
+                                </div>
+                                <div class="name">{{level.name}}</div>
+                                <div class="description">{{level.description}}</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <a class="btn btn-default btn-left bottom" href="{{ staticUrlPrefix }}/assets/tutorial.pdf" target="_blank">Skôr ako začneš hrať, prečítaj si návod :)</a>
+            <a class="btn btn-default btn-right bottom" href="mailto:roman.sobkuliak@trojsten.sk">Technické problémy? Kontaktuj nás.</a>
+        </div>
+    </div>
+</div>
