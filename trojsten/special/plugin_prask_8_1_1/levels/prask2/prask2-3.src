@@ -1,0 +1,29 @@
+{
+    "name": "3 - Komprimácia",
+    "briefing": "Nie je tu žiaden trik. Cestu musíš programu popísať celú. Musíš ale šetriť príkazmi.",
+    "hint": "Všimni si, aké postupnosti príkazov používaš najčastejšie a napíš si na ne funkcie.",
+    "battery_limit": 200,
+    "memory_limit": 30,
+    "start": [4, 5],
+    "startFacing": 0,
+    "map": [
+        "jjjjjjjjjjjjjjjjjjjjjj",
+        "jjjjjjjjjjjjjFFFFFFFFj",
+        "jjjjjjjjjjjjjFjjjjjjFj",
+        "jjjjjjjjjjjjjFjjjjjjFj",
+        "jjjjjjjjjjjjjFjjjjjjFj",
+        "jjjjFFFFFFFFFFjjjjjjFj",
+        "jjjjjjjjjjjjjjjjjjjjFj",
+        "jjjjjjjjjjjjjjjjjjjjFj",
+        "jFFFFFFFFFFFFFFFFjjjFj",
+        "jFjjjjjjjjjjjjjjFjjjFj",
+        "jFjjjjjjjjjjjjjjFjjjFj",
+        "jFjjjjjjjjjjjjjjFjjjFj",
+        "jFjjjjjjjjjjjjjjFjjjFj",
+        "jFjjjjjjjjjjjjjjFjjjFj",
+        "jFFFFFFFFFFFFEjjFFFFFj",
+        "jjjjjjjjjjjjjjjjjjjjjj"
+    ],
+    "torch_logic": {
+    }
+}

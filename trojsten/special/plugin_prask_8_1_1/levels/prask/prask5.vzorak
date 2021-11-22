@@ -1,0 +1,17 @@
+funkcia0
+
+aha funkcia0:
+funkcia1 ak nesvieti
+funkcia2 ak svieti
+
+aha funkcia1:
+krok
+krok
+funkcia0
+
+aha funkcia2:
+doprava
+krok
+krok
+dolava
+funkcia0

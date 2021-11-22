@@ -1,0 +1,139 @@
+{
+  "logic_map": [
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false
+    ],
+    [
+      false,
+      false,
+      true,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  ],
+  "hint": "V tutori\u00e1loch sa nach\u00e1dzaj\u00fa podobne vyzeraj\u00face levely. Mo\u017eno sta\u010d\u00ed ich rie\u0161enie trochu upravi\u0165.",
+  "torch_logic": {
+    "4": {
+      "3": [
+        {
+          "x": 4,
+          "not": true,
+          "y": 2
+        }
+      ]
+    },
+    "2": {
+      "4": [
+        {
+          "x": 3,
+          "not": true,
+          "y": 4
+        }
+      ]
+    },
+    "3": {
+      "1": [
+        {
+          "x": 2,
+          "not": true,
+          "y": 1
+        }
+      ]
+    }
+  },
+  "startX": 1,
+  "briefing": "Ka\u017ed\u00fd prep\u00edna\u010d vyp\u00edna jet torch priamo za n\u00edm.",
+  "map": [
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "F",
+      "M",
+      "J",
+      "F",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "M",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "J",
+      "W"
+    ],
+    [
+      "W",
+      "E",
+      "J",
+      "M",
+      "F",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ]
+  ],
+  "startFacing": 0,
+  "battery_limit": 40,
+  "name": "2 - U\u010dko",
+  "memory_limit": 8,
+  "startY": 1
+}

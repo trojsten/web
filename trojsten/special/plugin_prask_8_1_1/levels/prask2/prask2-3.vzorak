@@ -1,0 +1,39 @@
+funkcia3
+funkcia6
+
+funkcia4
+
+funkcia3
+funkcia4
+
+funkcia9
+funkcia4
+
+funkcia4
+
+funkcia6
+
+funkcia9
+funkcia6
+
+funkcia6
+
+funkcia9
+funkcia6
+
+aha funkcia4:
+    funkcia3
+    krok
+    doprava
+aha funkcia3:
+    krok
+    krok
+    krok
+aha funkcia6:
+    funkcia3
+    funkcia3
+    dolava
+aha funkcia9:
+    funkcia3
+    funkcia3
+    funkcia3

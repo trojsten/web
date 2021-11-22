@@ -1,0 +1,17 @@
+{
+    "name": "4 - Svetielka",
+    "briefing": "Presuň svetielka zo začiatku chodby na jej koniec.",
+    "hint": "Uvedom si, čo máš vlastne urobiť a skús to urobiť čo najjednoduchšie.",
+    "battery_limit": 500,
+    "memory_limit": 25,
+    "start": [16, 1],
+    "startFacing": 2,
+    "map": [
+        "WWWWWWWWWWWWWWWWWWWW",
+        "WmmmmmMMMMMMMMMMMjEW",
+        "WWWWWWWWWWWWWWWWWWWW"
+    ],
+    "torch_logic": {
+        "(17,1)": "JUST(1,1) OR JUST(2,1) OR JUST(3,1) OR JUST(4,1) OR JUST(5,1) OR JUST(6,1) OR JUST(7,1) OR JUST(8,1) OR JUST(9,1) OR JUST(10,1) OR JUST(11,1) OR NOT(12,1) OR NOT(13,1) OR NOT(14,1) OR NOT(15,1) OR NOT(16,1)"
+    }
+}

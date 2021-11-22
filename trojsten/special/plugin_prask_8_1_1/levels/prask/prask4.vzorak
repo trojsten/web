@@ -1,0 +1,27 @@
+funkcia0
+
+aha funkcia0:
+krok
+prepni
+funkcia1 ak stena vpredu
+krok
+funkcia0
+
+aha funkcia1:
+dolava
+krok
+dolava
+funkcia2
+
+aha funkcia2:
+krok
+prepni
+funkcia3 ak stena vpredu
+krok
+funkcia2
+
+aha funkcia3:
+doprava
+krok
+doprava
+funkcia0

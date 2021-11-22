@@ -1,0 +1,38 @@
+{
+    "name": "Tutoriál 5: Schody",
+    "briefing": "Robot si nedokáže zapamätať dostatok príkazov na to, aby mohol prejsť celé schody manuálne. Najskôr ho nauč, ako prejsť jeden schod. Potom mu stačí prejsť všetkých 9 schodov",
+    "battery_limit": 100,
+    "memory_limit": 15,
+    "map": [
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "F", "F", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "F", "F", "W", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "F", "F", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "F", "F", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "F", "F", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "F", "F", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "F", "F", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "F", "F", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "F", "F", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "E", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]
+    ],
+    "torch_logic": {},
+    "startX": 1,
+    "startY": 1,
+    "startFacing": 0,
+    "logic_map": [
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false]
+    ]
+}

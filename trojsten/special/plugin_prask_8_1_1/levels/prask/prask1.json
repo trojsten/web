@@ -1,0 +1,249 @@
+{
+  "memory_limit": 20,
+  "startX": 2,
+  "torch_logic": {
+    "3": {
+      "5": [
+        {
+          "y": 7,
+          "not": true,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 1,
+          "not": false,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 2,
+          "not": false,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 3,
+          "not": false,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 4,
+          "not": false,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 5,
+          "not": false,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 6,
+          "not": false,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 8,
+          "not": false,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 9,
+          "not": false,
+          "x": 1
+        }
+      ]
+    }
+  },
+  "hint": "Spr\u00e1vny prep\u00edna\u010d je st\u00e1le na tom istom mieste. Mo\u017eno ti pom\u00f4\u017ee, ke\u010f si sprav\u00ed\u0161 viac programov.",
+  "name": "1 - Komnata",
+  "startY": 5,
+  "logic_map": [
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  ],
+  "map": [
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "F",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "F",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "F",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "F",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "F",
+      "J",
+      "E",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "F",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "F",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "F",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "F",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ]
+  ],
+  "startFacing": 0,
+  "briefing": "Pr\u00e1ve jeden prep\u00edna\u010d vyp\u00edna jet torch pri dver\u00e1ch. Ostatn\u00e9 musia zosta\u0165 vypnut\u00e9.",
+  "battery_limit": 50
+}

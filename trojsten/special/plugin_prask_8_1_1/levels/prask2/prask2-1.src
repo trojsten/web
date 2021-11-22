@@ -1,0 +1,21 @@
+{
+    "name": "1 - Tam a späť",
+    "briefing": "Postupne povypínaj prepínače a dostaň sa do cieľa.",
+    "hint": "Pomôže ti riešenie úloh Schody a Hrebeň z predošlej série.",
+    "battery_limit": 200,
+    "memory_limit": 10,
+    "start": [7, 1],
+    "startFacing": 0,
+    "map": [
+        "WWWWWWWWWWWWWW",
+        "WEjmjmjFmjmjmW",
+        "WWWWWWWWWWWWWW"
+    ],
+    "torch_logic": {
+        "(2,1)": "JUST(12,1)",
+        "(4,1)": "JUST(10,1)",
+        "(6,1)": "JUST(8,1)",
+        "(9,1)": "JUST(5,1)",
+        "(11,1)": "JUST(3,1)"
+    }
+}

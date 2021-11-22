@@ -1,0 +1,66 @@
+{
+    "name": "Tutoriál 9: Naozaj?",
+    "briefing": "A čo keď treba vypnúť iba niektoré torche?",
+    "battery_limit": 100,
+    "memory_limit": 7,
+    "map": [
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "M", "J", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "M", "J", "W", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "M", "J", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "M", "J", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "M", "J", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "M", "J", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "M", "J", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "M", "J", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "M", "J", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "E", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]
+    ],
+    "torch_logic": {
+        "2":{
+            "1": [{"x": 1, "y": 1, "not": false}]
+        },
+        "3":{
+            "2": [{"x": 2, "y": 2, "not": false}]
+        },
+        "4":{
+            "3": [{"x": 3, "y": 3, "not": false}]
+        },
+        "5":{
+            "4": [{"x": 4, "y": 4, "not": false}]
+        },
+        "6":{
+            "5": [{"x": 5, "y": 5, "not": false}]
+        },
+        "7":{
+            "6": [{"x": 6, "y": 6, "not": false}]
+        },
+        "8":{
+            "7": [{"x": 7, "y": 7, "not": false}]
+        },
+        "9":{
+            "8": [{"x": 8, "y": 8, "not": false}]
+        },
+        "10":{
+            "9": [{"x": 9, "y": 9, "not": false}]
+        }
+    },
+    "startX": 1,
+    "startY": 1,
+    "startFacing": 0,
+    "logic_map": [
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, true, true, false, false, false, false, false, false, false, false, false],
+        [false, false, true, true, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, true, true, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, true, true, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, true, true, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false]
+    ]
+}

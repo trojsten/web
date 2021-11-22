@@ -1,0 +1,21 @@
+{
+    "name": "1 - Krok",
+    "briefing": "Dostaň robota do cieľa.",
+    "hint": "Stačí si prečítať návod. Do každého riadku programu napíš jeden príkaz.",
+    "battery_limit": 10,
+    "memory_limit": 2,
+    "map": [
+        ["W", "W", "W", "W", "W"],
+        ["W", "F", "F", "E", "W"],
+        ["W", "W", "W", "W", "W"]
+    ],
+    "torch_logic": {},
+    "startX": 1,
+    "startY": 1,
+    "startFacing": 0,
+    "logic_map": [
+        [false, false, false, false, false],
+        [false, false, false, false, false],
+        [false, false, false, false, false]
+    ]
+}

@@ -1,0 +1,19 @@
+{
+    "name": "5 - Tajná kombinácia",
+    "briefing": "Jet torch sa vypne iba ak budú rozsvietené tie správne prepínače.",
+    "hint": "Skús napísať program, ktorý postupne vytvorí všetky kombinácie. Potom sa už len stačí pozerať, kedy sa Jet Torch vypne.",
+    "battery_limit": 1500,
+    "memory_limit": 50,
+    "start": [1, 1],
+    "startFacing": 0,
+    "map": [
+        "WWWWWWWWW",
+        "WMMMMMMMW",
+        "WWWWWWWjW",
+        "WWWWWWWEW",
+        "WWWWWWWWW"
+    ],
+    "torch_logic": {
+        "(7,2)": "JUST(1,1) OR NOT(2,1) OR NOT(3,1) OR JUST(4,1) OR NOT(5,1) OR NOT(6,1) OR JUST(7,1)"
+    }
+}

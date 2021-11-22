@@ -1,0 +1,34 @@
+prepni
+funkcia0
+
+aha funkcia0:
+funkcia1
+prepni
+funkcia3
+funkcia2
+
+aha funkcia1:
+krok
+funkcia8 ak stena vpredu
+funkcia1 ak nesvieti
+
+aha funkcia2:
+krok
+funkcia2 ak nesvieti
+funkcia3
+krok
+prepni
+funkcia0
+
+aha funkcia3:
+doprava
+doprava
+
+aha funkcia8:
+prepni
+funkcia3
+funkcia9
+
+aha funkcia9:
+krok
+funkcia9
