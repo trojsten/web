@@ -14,4 +14,5 @@ apk add --update --no-cache --virtual runtime-deps \
     tiff \
     tk \
     zlib \
-    libmagic
+    libmagic \
+    nodejs-npm
