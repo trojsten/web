@@ -1,0 +1,38 @@
+{
+    "name": "Tutoriál 6: Znova schody",
+    "briefing": "A čo ak by mal robot ešte menej pamäte? Keď už vie ako prejde jeden schod, naučme ho prejsť aj 3 naraz.",
+    "battery_limit": 100,
+    "memory_limit": 10,
+    "map": [
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "F", "F", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "F", "F", "W", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "F", "F", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "F", "F", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "F", "F", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "F", "F", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "F", "F", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "F", "F", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "F", "F", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "E", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]
+    ],
+    "torch_logic": {},
+    "startX": 1,
+    "startY": 1,
+    "startFacing": 0,
+    "logic_map": [
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false]
+    ]
+}

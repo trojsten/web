@@ -1,0 +1,16 @@
+{
+    "name": "7 - Dlhá chodba",
+    "briefing": "Za málo peňazí, veľa muziky. Máš len tri príkazy na to, aby robot prešiel celú chodbu.",
+    "hint": "Ako pôjdem donekonečna dopredu? Nezabudni, že funkcia môže zavolať aj samú seba.",
+    "battery_limit": 30,
+    "memory_limit": 3,
+    "start": [1, 1],
+    "startFacing": 0,
+    "map": [
+        "WWWWWWWWWWWWWW",
+        "WFFFFFFFFFFFEW",
+        "WWWWWWWWWWWWWW"
+    ],
+    "torch_logic": {
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "name": "Tutoriál 3: Tlačítko",
+    "briefing": "JetTorch treba vypnút. Inak robot neprejde!",
+    "battery_limit": 15,
+    "memory_limit": 15,
+    "map": [
+        ["W", "W", "W", "W", "W", "W", "W"],
+        ["W", "F", "M", "W", "F", "F", "W"],
+        ["W", "F", "F", "J", "F", "E", "W"],
+        ["W", "F", "M", "W", "F", "F", "W"],
+        ["W", "W", "W", "W", "W", "W", "W"]
+    ],
+    "torch_logic": {
+        "3": {
+            "2": [{"x": 2, "y": 1, "not": true}, "&", {"x": 2, "y": 3, "not": true}]
+        }
+    },
+    "startX": 1,
+    "startY": 2,
+    "startFacing": 0,
+    "logic_map": [
+        [false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false],
+        [false, false, false, true, false, false, false],
+        [false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false]
+    ]
+}

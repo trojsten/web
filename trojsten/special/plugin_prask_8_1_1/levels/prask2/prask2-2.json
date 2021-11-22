@@ -1,0 +1,454 @@
+{
+  "logic_map": [
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  ],
+  "hint": "Najprv sa trocha pohraj s prep\u00edna\u010dmi a zisti, ako funguj\u00fa. Nezabudni, \u017ee m\u00f4\u017ee\u0161 pou\u017e\u00edva\u0165 funkcie.",
+  "briefing": "S\u00e1m zisti ako funguj\u00fa prep\u00edna\u010de v tejto miestnosti. Nemalo by to by\u0165 zlo\u017eit\u00e9.",
+  "battery_limit": 100,
+  "map": [
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "M",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "M",
+      "J",
+      "F",
+      "J",
+      "F",
+      "J",
+      "M",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "J",
+      "W",
+      "W",
+      "F",
+      "W",
+      "W",
+      "J",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "F",
+      "W",
+      "W",
+      "F",
+      "W",
+      "W",
+      "F",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "J",
+      "F",
+      "F",
+      "F",
+      "F",
+      "F",
+      "J",
+      "J",
+      "J",
+      "J",
+      "E",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "F",
+      "W",
+      "W",
+      "F",
+      "W",
+      "W",
+      "F",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "J",
+      "W",
+      "W",
+      "F",
+      "W",
+      "W",
+      "J",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "M",
+      "J",
+      "F",
+      "J",
+      "F",
+      "J",
+      "M",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "M",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ]
+  ],
+  "torch_logic": {
+    "9": {
+      "5": [
+        {
+          "x": 5,
+          "not": true,
+          "y": 1
+        }
+      ]
+    },
+    "10": {
+      "5": [
+        {
+          "x": 5,
+          "not": true,
+          "y": 9
+        }
+      ]
+    },
+    "2": {
+      "5": [
+        {
+          "x": 2,
+          "not": true,
+          "y": 2
+        },
+        "&",
+        {
+          "x": 2,
+          "not": true,
+          "y": 8
+        }
+      ]
+    },
+    "5": {
+      "8": [
+        {
+          "x": 2,
+          "not": true,
+          "y": 8
+        },
+        "&",
+        {
+          "x": 8,
+          "not": true,
+          "y": 8
+        }
+      ],
+      "2": [
+        {
+          "x": 2,
+          "not": true,
+          "y": 2
+        },
+        "&",
+        {
+          "x": 8,
+          "not": true,
+          "y": 2
+        }
+      ]
+    },
+    "8": {
+      "7": [
+        {
+          "x": 8,
+          "not": false,
+          "y": 8
+        }
+      ],
+      "3": [
+        {
+          "x": 8,
+          "not": false,
+          "y": 2
+        }
+      ]
+    },
+    "11": {
+      "5": [
+        {
+          "x": 1,
+          "not": true,
+          "y": 5
+        }
+      ]
+    }
+  },
+  "startX": 5,
+  "name": "2 - Tam kde sa skr\u00fdval bazilisk",
+  "startY": 5,
+  "memory_limit": 32,
+  "startFacing": 0
+}

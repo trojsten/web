@@ -1,0 +1,34 @@
+{
+    "name": "4 - Nauč robota",
+    "briefing": "Všimni si, že v programe môže byť len osem príkazov.",
+    "hint": "Nedostatok príkazov? Mapu tvoria 4 rovnaké úseky. Nauč robota prejsť jeden úsek a štyrikrát mu povedz, aby zopakoval naučenú vec.",
+    "battery_limit": 20,
+    "memory_limit": 8,
+    "map": [
+        ["W", "W", "W", "W" , "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "F", "M", "J" , "F", "M", "J", "F", "M", "J", "F", "M", "J", "E", "W"],
+        ["W", "W", "W", "W" , "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]
+    ],
+    "torch_logic": {
+        "3": {
+                "1": [{"x": 2, "y": 1, "not": true}]
+        },
+        "6": {
+                "1": [{"x": 5, "y": 1, "not": true}]
+        },
+        "9": {
+                "1": [{"x": 8, "y": 1, "not": true}]
+        },
+        "12": {
+                "1": [{"x": 11, "y": 1, "not": true}]
+        }
+    },
+    "startX": 1,
+    "startY": 1,
+    "startFacing": 0,
+    "logic_map": [
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, true, false, false, true, false, false, true, false, false, true, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+    ]
+}

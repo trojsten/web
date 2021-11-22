@@ -1,0 +1,29 @@
+{
+    "name": "5 - Zeleno modrá cesta",
+    "briefing": "Prepínače nevypínajú ani nezapínajú žiadne jet torche. Napriek tomu tam byť musia.",
+    "hint": "Spomeň si, že v podmienke sa nemôžeš pýtať na jet torche. Takže sa v podmienke musíš pýtať na niečo iné.",
+    "battery_limit": 200,
+    "memory_limit": 12,
+    "start": [1, 2],
+    "startFacing": 0,
+    "map": [
+        "WWWWWWWWWWWWWWWWWWWWWWWW",
+        "WjjjjjjWWWWWWWWWWWWWWWWW",
+        "WMFMFmjWWWWWWWWWWWWWWWWW",
+        "WjjjjFjWWWWWWWWWWWWWWWWW",
+        "WWWWjmjWWWWWWWWWWWWWWWWW",
+        "WWWWjFjjjWWWWWWWWWWWWWWW",
+        "WWWWjMFmjWWWWWWWWWWWWWWW",
+        "WWWWjjjFjjjjjjjjjWWWWWWW",
+        "WWWWWWjMFMFMFMFmjWWWWWWW",
+        "WWWWWWjjjjjjjjjFjjjWWWWW",
+        "WWWWWWWWWWWWWWjMFmjWWWWW",
+        "WWWWWWWWWWWWWWjjjFjjjjjW",
+        "WWWWWWWWWWWWWWWWjMFMFmjW",
+        "WWWWWWWWWWWWWWWWjjjjjFjW",
+        "WWWWWWWWWWWWWWWWWWWWjEjW",
+        "WWWWWWWwWWWWWWWWWWWWWWWW"
+    ],
+    "torch_logic": {
+    }
+}

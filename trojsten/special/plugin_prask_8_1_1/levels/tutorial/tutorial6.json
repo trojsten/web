@@ -1,0 +1,30 @@
+{
+    "name": "6 - Hooore a Dooole",
+    "briefing": "To isté čo pred chvíľou. Trikrát po sebe.",
+    "hint": "Celý prechádzajúci program vie byť tiež funkcia.",
+    "battery_limit": 100,
+    "memory_limit": 18,
+    "map":
+        [
+        [ "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" ],
+        [ "W" , "F" , "F" , "W" , "W" , "W" , "F" , "F" , "F" , "W" , "W" , "W" , "F" , "F" , "F" , "W" , "W" , "W" , "F" , "E" , "W" ],
+        [ "W" , "W" , "F" , "F" , "W" , "W" , "F" , "W" , "F" , "F" , "W" , "W" , "F" , "W" , "F" , "F" , "W" , "W" , "F" , "W" , "W" ],
+        [ "W" , "W" , "W" , "F" , "F" , "W" , "F" , "W" , "W" , "F" , "F" , "W" , "F" , "W" , "W" , "F" , "F" , "W" , "F" , "W" , "W" ],
+        [ "W" , "W" , "W" , "W" , "F" , "F" , "F" , "W" , "W" , "W" , "F" , "F" , "F" , "W" , "W" , "W" , "F" , "F" , "F" , "W" , "W" ],
+        [ "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" ]
+        ],
+    "torch_logic":
+        {},
+    "startX": 1,
+    "startY": 1,
+    "startFacing": 0,
+    "logic_map":
+        [
+        [ false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false ],
+        [ false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false ],
+        [ false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false ],
+        [ false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false ],
+        [ false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false ],
+        [ false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false ]
+        ]
+}

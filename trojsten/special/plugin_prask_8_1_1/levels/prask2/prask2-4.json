@@ -1,0 +1,247 @@
+{
+  "startY": 1,
+  "logic_map": [
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  ],
+  "memory_limit": 25,
+  "startFacing": 2,
+  "hint": "Uvedom si, \u010do m\u00e1\u0161 vlastne urobi\u0165 a sk\u00fas to urobi\u0165 \u010do najjednoduch\u0161ie.",
+  "battery_limit": 500,
+  "briefing": "Presu\u0148 svetielka zo za\u010diatku chodby na jej koniec.",
+  "torch_logic": {
+    "17": {
+      "1": [
+        {
+          "x": 1,
+          "not": false,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 2,
+          "not": false,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 3,
+          "not": false,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 4,
+          "not": false,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 5,
+          "not": false,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 6,
+          "not": false,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 7,
+          "not": false,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 8,
+          "not": false,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 9,
+          "not": false,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 10,
+          "not": false,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 11,
+          "not": false,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 12,
+          "not": true,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 13,
+          "not": true,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 14,
+          "not": true,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 15,
+          "not": true,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 16,
+          "not": true,
+          "y": 1
+        }
+      ]
+    }
+  },
+  "name": "4 - Svetielka",
+  "map": [
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "J",
+      "E",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ]
+  ],
+  "startX": 16
+}

@@ -1,0 +1,32 @@
+{
+    "name": "2 - Tam kde sa skrýval bazilisk",
+    "briefing": "Sám zisti ako fungujú prepínače v tejto miestnosti. Nemalo by to byť zložité.",
+    "hint": "Najprv sa trocha pohraj s prepínačmi a zisti, ako fungujú. Nezabudni, že môžeš používať funkcie.",
+    "battery_limit": 100,
+    "memory_limit": 32,
+    "start": [5, 5],
+    "startFacing": 0,
+    "map": [
+        "WWWWWWWWWWWWWW",
+        "WWWWWMWWWWWWWW",
+        "WWMJFjFJMwWWWW",
+        "WWJWWFWWJWWWWW",
+        "WWFWWFWWFWWWWW",
+        "WMjFFFFFJjjjEW",
+        "WWFWWFWWFWWWWW",
+        "WWJWWFWWJWWWWW",
+        "WWMJFjFJMwWWWW",
+        "WWWWWMWWWWWWWW",
+        "WWWWWWWWWWWWWW"
+    ],
+    "torch_logic": {
+        "(5,2)": "NOT(2,2) AND NOT(8,2)",
+        "(5,8)": "NOT(2,8) AND NOT(8,8)",
+        "(2,5)": "NOT(2,2) AND NOT(2,8)",
+        "(9,5)": "NOT(5,1)",
+        "(10,5)": "NOT(5,9)",
+        "(11,5)": "NOT(1,5)",
+        "(8,3)": "JUST(8,2)",
+        "(8,7)": "JUST(8,8)"
+    }
+}

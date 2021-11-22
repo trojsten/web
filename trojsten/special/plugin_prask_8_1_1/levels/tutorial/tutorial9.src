@@ -1,0 +1,27 @@
+{
+    "name": "9 - Slimák",
+    "briefing": "Treba prejsť celú zatočenú chodbu.",
+    "hint": "Vždy, keď pred sebou uvidím stenu, zabočím doprava.",
+    "battery_limit": 300,
+    "memory_limit": 4,
+    "start": [6, 6],
+    "startFacing": 3,
+    "map": [
+        "WWWWWWWWWWWWWWW",
+        "WWFFFFFFFFFFFWW",
+        "WWFWWWWWWWWWFWW",
+        "WWFWFFFFFFFWFWW",
+        "WWFWFWWWWWFWFWW",
+        "WWFWFWFFFWFWFWW",
+        "WWFWFWFWFWFWFWW",
+        "WWFWFWWWFWFWFWW",
+        "WWFWFFFFFWFWFWW",
+        "WWFWWWWWWWFWFWW",
+        "WWFFFFFFFFFWFWW",
+        "WWWWWWWWWWWWFWW",
+        "WEFFFFFFFFFFFWW",
+        "WWWWWWWWWWWWWWW"
+    ],
+    "torch_logic": {
+    }
+}

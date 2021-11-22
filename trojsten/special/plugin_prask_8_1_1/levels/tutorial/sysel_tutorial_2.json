@@ -1,0 +1,24 @@
+{
+    "name": "Tutoriál 2: Prekážka",
+    "briefing": "Tú bude treba obísť!",
+    "battery_limit": 10,
+    "memory_limit": 10,
+    "map": [
+        ["W", "W", "W", "W", "W", "W", "W"],
+        ["W", "F", "F", "F", "F", "F", "W"],
+        ["W", "F", "F", "W", "F", "E", "W"],
+        ["W", "F", "F", "F", "F", "F", "W"],
+        ["W", "W", "W", "W", "W", "W", "W"]
+    ],
+    "torch_logic": {},
+    "startX": 1,
+    "startY": 2,
+    "startFacing": 0,
+    "logic_map": [
+        [false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false]
+    ]
+}
