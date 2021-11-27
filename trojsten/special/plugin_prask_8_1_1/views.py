@@ -5,7 +5,6 @@ import subprocess
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
-from django.urls import reverse
 
 from .mark_level_solved import mark_level_solved
 from .models import UserLevel
@@ -92,7 +91,7 @@ def level(request, sid, lid):
         result = run_interpreter(
             user, sid, lid, json.loads(request.body)["programRaw"], json.loads(level_data)
         )
-        if result == True:
+        if result == 1:
             mark_level_solved(task_id, request.user, sid, lid, ppl)
 
         return HttpResponse(
@@ -151,5 +150,5 @@ def run_interpreter(user, sid, lid, programRaw, level_data):
             return 1
         else:
             return 0
-    except:
+    except Exception:
         return 0
