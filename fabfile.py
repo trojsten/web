@@ -26,7 +26,7 @@ env.roledefs = {
         "use_sudo": False,
         "server_configuration": "/home/trojstenweb/uwsgi/*.yaml",
         "local": False,
-        "install_poetry": False,
+        "install_poetry": True,
         "dev_packages": False,
     },
     "beta": {
