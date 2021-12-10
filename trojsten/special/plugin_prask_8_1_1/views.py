@@ -140,7 +140,7 @@ def is_serie_rated(serie):
 def run_interpreter(user, sid, lid, programRaw, level_data):
     try:
         completion = subprocess.run(
-            ["node", "--experimental-modules", os.path.join(FILE_DIR, "checker.mjs")],
+            ["node", os.path.join(FILE_DIR, "checker.js")],
             input=json.dumps({"programRaw": programRaw, "level": level_data}),
             text=True,
             timeout=1,

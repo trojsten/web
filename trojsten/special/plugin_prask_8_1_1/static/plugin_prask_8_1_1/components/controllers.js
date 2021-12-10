@@ -1,8 +1,5 @@
 'use strict';
 
-import { ZergInterpreter } from "./interpreter.mjs"
-import { Program } from "./parser.mjs"
-
 angular.module('zerg.controllers', [])
     .controller('SeriesCtrl', ['$rootScope', '$scope', 'Levels',
         function ($rootScope, $scope, Levels) {
