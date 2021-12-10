@@ -1,4 +1,4 @@
-export var ZergInterpreter = function(program, level, walkToCallback, rotateRightCallback, rotateLeftCallback, redrawCallback, highlightLineCallback, updateBatteryCallback) {
+var ZergInterpreter = function(program, level, walkToCallback, rotateRightCallback, rotateLeftCallback, redrawCallback, highlightLineCallback, updateBatteryCallback) {
 	this.program = program;
 	this.level = level;
 	this.walkToCallback = walkToCallback;
@@ -295,3 +295,5 @@ ZergInterpreter.prototype = {
 	}
 
 }
+
+module.exports = ZergInterpreter

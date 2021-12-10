@@ -1,6 +1,6 @@
-import { ZergInterpreter } from "./static/plugin_prask_8_1_1/components/interpreter.mjs";
-import { Program } from "./static/plugin_prask_8_1_1/components/parser.mjs";
-import { readFileSync } from 'fs';
+const ZergInterpreter = require('./static/plugin_prask_8_1_1/components/interpreter.js');
+const Program = require('./static/plugin_prask_8_1_1/components/parser.js');
+const readFileSync = require('fs').readFileSync;
 
 function nop() {}
 

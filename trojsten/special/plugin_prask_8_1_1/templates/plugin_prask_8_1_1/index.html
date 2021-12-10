@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{% static 'plugin_prask_8_1_1/css/app.css' %}">
 
     <script>
+      var module = {};  // A hack to make CommonJS (CJS) modules "work" in the browser.
       var STATIC_URL_PREFIX = '{{ STATIC_URL }}plugin_prask_8_1_1/';
       var DYNAMIC_URL_PREFIX = '{% url "plugin_zergbot:root" %}';
     </script>
@@ -44,10 +45,10 @@
     <!--js-release-minimize-->
     <!-- Using ES6 modules. It has 94% global support at the time of writing (2021-11-22) according to caniuse.com. -->
     <script src="{% static 'plugin_prask_8_1_1/app.js' %}"></script>
-    <script type="module" src="{% static 'plugin_prask_8_1_1/components/controllers.js' %}"></script>
+    <script src="{% static 'plugin_prask_8_1_1/components/controllers.js' %}"></script>
     <script src="{% static 'plugin_prask_8_1_1/components/services.js' %}"></script>
-    <script type="module" src="{% static 'plugin_prask_8_1_1/components/parser.mjs' %}"></script>
-    <script type="module" src="{% static 'plugin_prask_8_1_1/components/interpreter.mjs' %}"></script>
+    <script src="{% static 'plugin_prask_8_1_1/components/parser.js' %}"></script>
+    <script src="{% static 'plugin_prask_8_1_1/components/interpreter.js' %}"></script>
     <script src="{% static 'plugin_prask_8_1_1/components/phaser-game/Boot.js' %}"></script>
     <script src="{% static 'plugin_prask_8_1_1/components/phaser-game/Preload.js' %}"></script>
     <script src="{% static 'plugin_prask_8_1_1/components/phaser-game/Game.js' %}"></script>

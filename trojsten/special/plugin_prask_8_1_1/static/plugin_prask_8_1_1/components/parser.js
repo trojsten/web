@@ -1,4 +1,4 @@
-export var Program = function(program) {
+var Program = function(program) {
 
     this.subroutines = {};
     this.errors = [];
@@ -275,3 +275,5 @@ Program.prototype = {
     LOGIC_PAR_LEFT:         26,
     LOGIC_PAR_RIGHT:        27
 };
+
+module.exports = Program
