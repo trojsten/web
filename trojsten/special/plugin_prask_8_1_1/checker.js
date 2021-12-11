@@ -4,15 +4,15 @@ const readFileSync = require('fs').readFileSync;
 
 function nop() {}
 
-const data = JSON.parse(readFileSync(0, 'utf-8'));
+const data = JSON.parse(readFileSync('/dev/stdin', 'utf-8'));
 const zergint = new ZergInterpreter(new Program(data.programRaw), data.level, nop, nop, nop, nop, nop, nop)
 
-let status = zergint.SIM_OK
+var status = zergint.SIM_OK
 do {
     status = zergint.programStep()
 } while (status == zergint.SIM_OK)
 
-let exitcode = 0
+var exitcode = 0
 if (status == zergint.SIM_LEVEL_PASSED) {
     exitcode = 0
 } else {
