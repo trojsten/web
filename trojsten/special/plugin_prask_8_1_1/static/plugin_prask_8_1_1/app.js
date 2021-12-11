@@ -8,7 +8,14 @@ angular.module('zerg', [
     'zerg.controllers',
     'zerg.services'
 ])
-    .config(['$routeProvider', function ($routeProvider) {
+    
+    .config(['$routeProvider', '$sceDelegateProvider', function ($routeProvider, $sceDelegateProvider) {
+
+        $sceDelegateProvider.resourceUrlWhitelist([
+            // Allow same origin resource loads.
+            'self',
+            'https://static.ksp.sk/**'
+        ]);
 
         $routeProvider.when('/series', {
             templateUrl: STATIC_URL_PREFIX + 'partials/series.html',
