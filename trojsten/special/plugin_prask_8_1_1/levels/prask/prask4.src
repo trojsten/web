@@ -1,0 +1,25 @@
+{
+    "name": "4 - Šachovnica",
+    "briefing": "Nie nadarmo sa tento level volá šachovnica. Čo si myslíš, kedy sa vypne jet torch. Ešte poradím, že prepínač, na ktorom začína robot má zostať taký aký je.",
+    "hint": "Pokús sa rozdeliť si level na časti, ktoré vieš spracovávať rovnakým programom. Potom tieto časti už len vhodne pospájaj.",
+    "battery_limit": 400,
+    "memory_limit": 25,
+    "start": [8, 1],
+    "startFacing": 2,
+    "map": [
+        "WWWWWWWWWWWW",
+        "WMMMMMMMMWWW",
+        "WMMMMMMMMWWW",
+        "WMMMMMMMMWWW",
+        "WMMMMMMMMWWW",
+        "WMMMMMMMMWWW",
+        "WMMMMMMMMWWW",
+        "WMMMMMMMMWWW",
+        "WMMMMMMMMjEW",
+        "WWWWWWWWWWWW"
+    ],
+    "torch_logic": {
+        "(9,8)": "NOT(1,1) OR JUST(2,1) OR NOT(3,1) OR JUST(4,1) OR NOT(5,1) OR JUST(6,1) OR NOT(7,1) OR JUST(8,1) OR NOT(1,3) OR JUST(2,3) OR NOT(3,3) OR JUST(4,3) OR NOT(5,3) OR JUST(6,3) OR NOT(7,3) OR JUST(8,3) OR NOT(1,5) OR JUST(2,5) OR NOT(3,5) OR JUST(4,5) OR NOT(5,5) OR JUST(6,5) OR NOT(7,5) OR JUST(8,5) OR NOT(1,7) OR JUST(2,7) OR NOT(3,7) OR JUST(4,7) OR NOT(5,7) OR JUST(6,7) OR NOT(7,7) OR JUST(8,7) OR NOT(2,2) OR JUST(1,2) OR NOT(4,2) OR JUST(3,2) OR NOT(6,2) OR JUST(5,2) OR NOT(8,2) OR JUST(7,2) OR NOT(2,4) OR JUST(1,4) OR NOT(4,4) OR JUST(3,4) OR NOT(6,4) OR JUST(5,4) OR NOT(8,4) OR JUST(7,4) OR NOT(2,6) OR JUST(1,6) OR NOT(4,6) OR JUST(3,6) OR NOT(6,6) OR JUST(5,6) OR NOT(8,6) OR JUST(7,6) OR NOT(2,8) OR JUST(1,8) OR NOT(4,8) OR JUST(3,8) OR NOT(6,8) OR JUST(5,8) OR NOT(8,8) OR JUST(7,8)"
+
+    }
+}

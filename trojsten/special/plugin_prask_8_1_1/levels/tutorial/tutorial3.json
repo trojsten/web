@@ -1,0 +1,25 @@
+{
+    "name": "3 - Jet Torch",
+    "briefing": "Vypni jet torch a prejdi!",
+    "hint": "Keď bude robot stáť na modrom tlačidle, mal by ho prepnúť na zelené. (Na prepínanie existuje príkaz.)",
+    "battery_limit": 4,
+    "memory_limit": 4,
+    "map": [
+        ["W", "W", "W", "W" , "W", "W"],
+        ["W", "F", "M", "J" , "E", "W"],
+        ["W", "W", "W", "W" , "W", "W"]
+    ],
+    "torch_logic": {
+        "3": {
+                "1": [{"x": 2, "y": 1, "not": true}]
+        }
+    },
+    "startX": 1,
+    "startY": 1,
+    "startFacing": 0,
+    "logic_map": [
+        [false, false, false, false, false, false],
+        [false, false, false, true, false, false],
+        [false, false, false, false, false, false]
+    ]
+}

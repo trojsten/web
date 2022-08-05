@@ -1,0 +1,171 @@
+{
+  "map": [
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "J",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "E",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ]
+  ],
+  "torch_logic": {
+    "7": {
+      "2": [
+        {
+          "y": 1,
+          "x": 1,
+          "not": false
+        },
+        "|",
+        {
+          "y": 1,
+          "x": 2,
+          "not": true
+        },
+        "|",
+        {
+          "y": 1,
+          "x": 3,
+          "not": true
+        },
+        "|",
+        {
+          "y": 1,
+          "x": 4,
+          "not": false
+        },
+        "|",
+        {
+          "y": 1,
+          "x": 5,
+          "not": true
+        },
+        "|",
+        {
+          "y": 1,
+          "x": 6,
+          "not": true
+        },
+        "|",
+        {
+          "y": 1,
+          "x": 7,
+          "not": false
+        }
+      ]
+    }
+  },
+  "logic_map": [
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  ],
+  "memory_limit": 50,
+  "briefing": "Jet torch sa vypne iba ak bud\u00fa rozsvieten\u00e9 tie spr\u00e1vne prep\u00edna\u010de.",
+  "hint": "Sk\u00fas nap\u00edsa\u0165 program, ktor\u00fd postupne vytvor\u00ed v\u0161etky kombin\u00e1cie. Potom sa u\u017e len sta\u010d\u00ed pozera\u0165, kedy sa Jet Torch vypne.",
+  "startFacing": 0,
+  "startX": 1,
+  "name": "5 - Tajn\u00e1 kombin\u00e1cia",
+  "battery_limit": 1500,
+  "startY": 1
+}

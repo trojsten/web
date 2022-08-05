@@ -1,0 +1,20 @@
+{
+    "name": "Tutoriál 1: Prvé kroky",
+    "briefing": "Nauč robota jeho prvé kroky ...",
+    "battery_limit": 5,
+    "memory_limit": 5,
+    "map": [
+        ["W", "W", "W", "W", "W", "W"],
+        ["W", "F", "F", "F", "E", "W"],
+        ["W", "W", "W", "W", "W", "W"]
+    ],
+    "torch_logic": {},
+    "startX": 1,
+    "startY": 1,
+    "startFacing": 0,
+    "logic_map": [
+        [false, false, false, false, false, false],
+        [false, false, false, false, false, false],
+        [false, false, false, false, false, false]
+    ]
+}

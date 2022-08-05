@@ -1,0 +1,30 @@
+{
+    "name": "5 - Hore a Dole",
+    "briefing": "Dole treba ísť po schodoch, hore sa dá ísť priamo.",
+    "hint": "Naučte robota prejsť jeden schod, 3-krát to použite a potom to už pôjde aj priamo.",
+    "battery_limit": 50,
+    "memory_limit": 15,
+    "map":
+        [
+        [ "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" ],
+        [ "W" , "F" , "F" , "W" , "W" , "W" , "F" , "E" , "W" ],
+        [ "W" , "W" , "F" , "F" , "W" , "W" , "F" , "W" , "W" ],
+        [ "W" , "W" , "W" , "F" , "F" , "W" , "F" , "W" , "W" ],
+        [ "W" , "W" , "W" , "W" , "F" , "F" , "F" , "W" , "W" ],
+        [ "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" ]
+        ],
+    "torch_logic":
+        {},
+    "startX": 1,
+    "startY": 1,
+    "startFacing": 0,
+    "logic_map":
+        [
+        [ false , false , false , false , false , false , false , false , false ],
+        [ false , false , false , false , false , false , false , false , false ],
+        [ false , false , false , false , false , false , false , false , false ],
+        [ false , false , false , false , false , false , false , false , false ],
+        [ false , false , false , false , false , false , false , false , false ],
+        [ false , false , false , false , false , false , false , false , false ]
+        ]
+}

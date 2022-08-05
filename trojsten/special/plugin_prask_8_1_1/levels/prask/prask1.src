@@ -1,0 +1,25 @@
+{
+    "name": "1 - Komnata",
+    "briefing": "Práve jeden prepínač vypína jet torch pri dverách. Ostatné musia zostať vypnuté.",
+    "hint": "Správny prepínač je stále na tom istom mieste. Možno ti pomôže, keď si spravíš viac programov.",
+    "battery_limit": 50,
+    "memory_limit": 20,
+    "start": [2, 5],
+    "startFacing": 0,
+    "map": [
+        "WWWWWW",
+        "WMFWWW",
+        "WMFWWW",
+        "WMFWWW",
+        "WMFWWW",
+        "WMFjEW",
+        "WMFWWW",
+        "WMFWWW",
+        "WMFWWW",
+        "WMFWWW",
+        "WWWWWW"
+    ],
+    "torch_logic": {
+        "(3,5)": "NOT(1,7) OR JUST(1,1) OR JUST(1,2) OR JUST(1,3) OR JUST(1,4) OR JUST(1,5) OR JUST(1,6) OR JUST(1,8) OR JUST(1,9)"
+    }
+}

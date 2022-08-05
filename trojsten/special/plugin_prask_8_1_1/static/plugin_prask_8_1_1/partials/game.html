@@ -1,0 +1,48 @@
+<div class="ingame_wrapper">
+	<div class="level_header">
+		<div class="series_name">
+			Séria: {{ seriesName }}
+		</div>
+		<div class="level_name">
+			{{ level.name }}
+		</div>
+		<div class="need_hint">
+			<a href="" ng-click="showHintDialog()" ng-show="!level.solved || level.rated">Zobraziť hint k levelu</a>
+			<a href="" ng-click="showSolution()" ng-show="(!level.rated && level.solved) && !solutionBeingDownloaded">Zobraziť vzorové riešenie</a>
+			<a href="" ng-show="(!level.rated && level.solved) && solutionBeingDownloaded">Získavam riešenie...</a>
+		</div>
+	</div>
+	<div class="level_body">
+		<div class="level_view">
+			<div class="bot_status">
+				<div class="battery_icon" ng-show="loaded"></div>
+				<div class="battery_status" ng-show="loaded"> {{ remaining_battery }} / {{ level.battery_limit }} </div>
+				<div class="memory_icon" ng-show="loaded"></div>
+				<div class="memory_status" ng-show="loaded"> {{ memory_usage }} / {{ level.memory_limit }}</div>
+				<div ng-show="!loaded">Loading...</div>
+			</div>
+			<div class="level_area">
+				<div id="level" style="position: absolute;"></div>
+				<div id="level_overlay" style="position: absolute;"></div>
+			</div>
+		</div>
+		<div class="program_view">
+			<div class="program_controls">
+				<div class="button" ng-class="running ? 'stop' : 'run'" ng-click="runClick()"></div>
+				<div class="button warp" ng-class="running ? (warping ? (warping_fast ? 'active_turbo' : 'active') : '') : 'disabled'" ng-click="timewarp()"></div>
+				<div class="button reset" ng-class="running ? 'disabled' : ''" ng-click="resetGame()"></div>
+				<div class="button clear" ng-class="running ? 'disabled' : ''" ng-click="clearEditor()"></div>
+				<div class="button exit" ng-click="exitGame()"></div>
+			</div>
+			<div class="program_editor">
+				<div style="position: relative; width: 100%; height: 100%; font-size: 21px;" ui-ace="{
+					userWrapMode: false,
+					showGutter: true,
+					theme: 'zergbot',
+					onChange: aceChanged,
+					onLoad: aceLoaded
+				}"></div>
+			</div>
+		</div>
+	</div>
+</div>

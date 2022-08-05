@@ -1,0 +1,22 @@
+{
+    "name": "2 - Učko",
+    "briefing": "Každý prepínač vypína jet torch priamo za ním.",
+    "hint": "V tutoriáloch sa nachádzajú podobne vyzerajúce levely. Možno stačí ich riešenie trochu upraviť.",
+    "battery_limit": 40,
+    "memory_limit": 8,
+    "start": [1, 1],
+    "startFacing": 0,
+    "map": [
+        "WWWWWW",
+        "WFMjFW",
+        "WWWWMW",
+        "WWWWjW",
+        "WEjMFW",
+        "WWWWWW"
+    ],
+    "torch_logic": {
+        "(3,1)": "NOT(2,1)",
+        "(4,3)": "NOT(4,2)",
+        "(2,4)": "NOT(3,4)"
+    }
+}

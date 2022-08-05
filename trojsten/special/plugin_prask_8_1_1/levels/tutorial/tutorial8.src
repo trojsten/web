@@ -1,0 +1,21 @@
+{
+    "name": "8 - Zákruta",
+    "briefing": "Tentoraz treba aj zahnúť za roh.",
+    "hint": "Po každom kroku skontroluj, či pred sebou nemáš stenu.",
+    "battery_limit": 40,
+    "memory_limit": 4,
+    "start": [1, 6],
+    "startFacing": 0,
+    "map": [
+        "WWWWWWWWW",
+        "WWWWWWWEW",
+        "WWWWWWWFW",
+        "WWWWWWWFW",
+        "WWWWWWWFW",
+        "WWWWWWWFW",
+        "WFFFFFFFW",
+        "WWWWWWWWW"
+    ],
+    "torch_logic": {
+    }
+}

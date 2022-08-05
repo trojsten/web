@@ -1,0 +1,683 @@
+{
+  "torch_logic": {
+    "9": {
+      "8": [
+        {
+          "y": 1,
+          "not": true,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 1,
+          "not": false,
+          "x": 2
+        },
+        "|",
+        {
+          "y": 1,
+          "not": true,
+          "x": 3
+        },
+        "|",
+        {
+          "y": 1,
+          "not": false,
+          "x": 4
+        },
+        "|",
+        {
+          "y": 1,
+          "not": true,
+          "x": 5
+        },
+        "|",
+        {
+          "y": 1,
+          "not": false,
+          "x": 6
+        },
+        "|",
+        {
+          "y": 1,
+          "not": true,
+          "x": 7
+        },
+        "|",
+        {
+          "y": 1,
+          "not": false,
+          "x": 8
+        },
+        "|",
+        {
+          "y": 3,
+          "not": true,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 3,
+          "not": false,
+          "x": 2
+        },
+        "|",
+        {
+          "y": 3,
+          "not": true,
+          "x": 3
+        },
+        "|",
+        {
+          "y": 3,
+          "not": false,
+          "x": 4
+        },
+        "|",
+        {
+          "y": 3,
+          "not": true,
+          "x": 5
+        },
+        "|",
+        {
+          "y": 3,
+          "not": false,
+          "x": 6
+        },
+        "|",
+        {
+          "y": 3,
+          "not": true,
+          "x": 7
+        },
+        "|",
+        {
+          "y": 3,
+          "not": false,
+          "x": 8
+        },
+        "|",
+        {
+          "y": 5,
+          "not": true,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 5,
+          "not": false,
+          "x": 2
+        },
+        "|",
+        {
+          "y": 5,
+          "not": true,
+          "x": 3
+        },
+        "|",
+        {
+          "y": 5,
+          "not": false,
+          "x": 4
+        },
+        "|",
+        {
+          "y": 5,
+          "not": true,
+          "x": 5
+        },
+        "|",
+        {
+          "y": 5,
+          "not": false,
+          "x": 6
+        },
+        "|",
+        {
+          "y": 5,
+          "not": true,
+          "x": 7
+        },
+        "|",
+        {
+          "y": 5,
+          "not": false,
+          "x": 8
+        },
+        "|",
+        {
+          "y": 7,
+          "not": true,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 7,
+          "not": false,
+          "x": 2
+        },
+        "|",
+        {
+          "y": 7,
+          "not": true,
+          "x": 3
+        },
+        "|",
+        {
+          "y": 7,
+          "not": false,
+          "x": 4
+        },
+        "|",
+        {
+          "y": 7,
+          "not": true,
+          "x": 5
+        },
+        "|",
+        {
+          "y": 7,
+          "not": false,
+          "x": 6
+        },
+        "|",
+        {
+          "y": 7,
+          "not": true,
+          "x": 7
+        },
+        "|",
+        {
+          "y": 7,
+          "not": false,
+          "x": 8
+        },
+        "|",
+        {
+          "y": 2,
+          "not": true,
+          "x": 2
+        },
+        "|",
+        {
+          "y": 2,
+          "not": false,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 2,
+          "not": true,
+          "x": 4
+        },
+        "|",
+        {
+          "y": 2,
+          "not": false,
+          "x": 3
+        },
+        "|",
+        {
+          "y": 2,
+          "not": true,
+          "x": 6
+        },
+        "|",
+        {
+          "y": 2,
+          "not": false,
+          "x": 5
+        },
+        "|",
+        {
+          "y": 2,
+          "not": true,
+          "x": 8
+        },
+        "|",
+        {
+          "y": 2,
+          "not": false,
+          "x": 7
+        },
+        "|",
+        {
+          "y": 4,
+          "not": true,
+          "x": 2
+        },
+        "|",
+        {
+          "y": 4,
+          "not": false,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 4,
+          "not": true,
+          "x": 4
+        },
+        "|",
+        {
+          "y": 4,
+          "not": false,
+          "x": 3
+        },
+        "|",
+        {
+          "y": 4,
+          "not": true,
+          "x": 6
+        },
+        "|",
+        {
+          "y": 4,
+          "not": false,
+          "x": 5
+        },
+        "|",
+        {
+          "y": 4,
+          "not": true,
+          "x": 8
+        },
+        "|",
+        {
+          "y": 4,
+          "not": false,
+          "x": 7
+        },
+        "|",
+        {
+          "y": 6,
+          "not": true,
+          "x": 2
+        },
+        "|",
+        {
+          "y": 6,
+          "not": false,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 6,
+          "not": true,
+          "x": 4
+        },
+        "|",
+        {
+          "y": 6,
+          "not": false,
+          "x": 3
+        },
+        "|",
+        {
+          "y": 6,
+          "not": true,
+          "x": 6
+        },
+        "|",
+        {
+          "y": 6,
+          "not": false,
+          "x": 5
+        },
+        "|",
+        {
+          "y": 6,
+          "not": true,
+          "x": 8
+        },
+        "|",
+        {
+          "y": 6,
+          "not": false,
+          "x": 7
+        },
+        "|",
+        {
+          "y": 8,
+          "not": true,
+          "x": 2
+        },
+        "|",
+        {
+          "y": 8,
+          "not": false,
+          "x": 1
+        },
+        "|",
+        {
+          "y": 8,
+          "not": true,
+          "x": 4
+        },
+        "|",
+        {
+          "y": 8,
+          "not": false,
+          "x": 3
+        },
+        "|",
+        {
+          "y": 8,
+          "not": true,
+          "x": 6
+        },
+        "|",
+        {
+          "y": 8,
+          "not": false,
+          "x": 5
+        },
+        "|",
+        {
+          "y": 8,
+          "not": true,
+          "x": 8
+        },
+        "|",
+        {
+          "y": 8,
+          "not": false,
+          "x": 7
+        }
+      ]
+    }
+  },
+  "battery_limit": 400,
+  "startFacing": 2,
+  "map": [
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "J",
+      "E",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ]
+  ],
+  "memory_limit": 25,
+  "hint": "Pok\u00fas sa rozdeli\u0165 si level na \u010dasti, ktor\u00e9 vie\u0161 spracov\u00e1va\u0165 rovnak\u00fdm programom. Potom tieto \u010dasti u\u017e len vhodne posp\u00e1jaj.",
+  "briefing": "Nie nadarmo sa tento level vol\u00e1 \u0161achovnica. \u010co si mysl\u00ed\u0161, kedy sa vypne jet torch. E\u0161te porad\u00edm, \u017ee prep\u00edna\u010d, na ktorom za\u010d\u00edna robot m\u00e1 zosta\u0165 tak\u00fd ak\u00fd je.",
+  "startX": 8,
+  "logic_map": [
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  ],
+  "name": "4 - \u0160achovnica",
+  "startY": 1
+}

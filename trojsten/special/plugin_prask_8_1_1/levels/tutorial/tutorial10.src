@@ -1,0 +1,28 @@
+{
+    "name": "10 - Slimák s bradavicami",
+    "briefing": "Opäť sa treba dostať ku dverám.",
+    "hint": "Vždy, keď napravo nie je stena, zabočím doprava.",
+    "battery_limit": 200,
+    "memory_limit": 4,
+    "start": [7, 7],
+    "startFacing": 3,
+    "map": [
+        "WWWWWWWWWWWWWWW",
+        "WWEWWWWWWWWWWWW",
+        "WWFWWFWWWWWWWWW",
+        "WWFWWFFFFFFFFFW",
+        "WWFWWFWWWWWWFWW",
+        "WWFWWFWFWWWWFWW",
+        "WWFWWFWFFFFWFWW",
+        "WWFWWFWFWFWWFWW",
+        "WWFWWFWWWFWWFWW",
+        "WWFWFFFFFFWWFWW",
+        "WWFWWWWWWFWWFWW",
+        "WWFWWWWWWWWWFWW",
+        "WFFFFFFFFFFFFWW",
+        "WWWWWWWWWWWWFWW",
+        "WWWWWWWWWWWWWWW"
+    ],
+    "torch_logic": {
+    }
+}

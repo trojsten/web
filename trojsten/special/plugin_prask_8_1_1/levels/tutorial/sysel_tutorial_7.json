@@ -1,0 +1,38 @@
+{
+    "name": "Tutoriál 7: Do tretice všetko schod-né",
+    "briefing": "Čo ak by sa sám podprogram pre schod postaral o to, aby robot začal robiť ďalší schod?",
+    "battery_limit": 100,
+    "memory_limit": 6,
+    "map": [
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "F", "F", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "F", "F", "W", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "F", "F", "W", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "F", "F", "W", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "F", "F", "W", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "F", "F", "W", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "F", "F", "W", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "F", "F", "W", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "F", "F", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "E", "W"],
+        ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"]
+    ],
+    "torch_logic": {},
+    "startX": 1,
+    "startY": 1,
+    "startFacing": 0,
+    "logic_map": [
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, false, false, false, false, false, false, false, false, false, false]
+    ]
+}

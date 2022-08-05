@@ -1,0 +1,71 @@
+{
+    "series": [
+        {
+            "name": "Tutoriál",
+            "description": "Tu sa naučíš robota programovať.",
+            "image": "",
+            "task_id": 0,
+            "points_per_level": 0,
+            "levels": [
+                "tutorial/tutorial1.json",
+                "tutorial/tutorial2.json",
+                "tutorial/tutorial3.json",
+                "tutorial/tutorial4.json",
+                "tutorial/tutorial5.json",
+                "tutorial/tutorial6.json",
+                "tutorial/tutorial7.json",
+                "tutorial/tutorial8.json",
+                "tutorial/tutorial9.json",
+                "tutorial/tutorial10.json",
+                "tutorial/tutorial11.json",
+                "tutorial/tutorial12.json"
+            ],
+            "solutions": [
+                "tutorial/tutorial1.vzorak",
+                "tutorial/tutorial2.vzorak",
+                "tutorial/tutorial3.vzorak",
+                "tutorial/tutorial4.vzorak",
+                "tutorial/tutorial5.vzorak",
+                "tutorial/tutorial6.vzorak",
+                "tutorial/tutorial7.vzorak",
+                "tutorial/tutorial8.vzorak",
+                "tutorial/tutorial9.vzorak",
+                "tutorial/tutorial10.vzorak",
+                "tutorial/tutorial11.vzorak",
+                "tutorial/tutorial12.vzorak"
+            ]
+        },
+        {
+            "name": "Pieskovisko",
+            "description": "Tu si môžeš nezáväzne robota vyskúšať!",
+            "image": "",
+            "task_id": 0,
+            "points_per_level": 0,
+            "levels": [
+                "sandbox/0.json",
+                "sandbox/1.json",
+                "sandbox/2.json"
+            ]
+        },
+        {
+            "name": "Prask 1",
+            "description": "",
+            "task_id": 2186,
+            "points_per_level": 3,
+            "levels": [
+                "prask/prask1.json",
+                "prask/prask2.json",
+                "prask/prask3.json",
+                "prask/prask4.json",
+                "prask/prask5.json"
+            ],
+            "solutions": [
+                "prask/prask1.vzorak",
+                "prask/prask2.vzorak",
+                "prask/prask3.vzorak",
+                "prask/prask4.vzorak",
+                "prask/prask5.vzorak"
+            ]
+        }
+    ]
+}

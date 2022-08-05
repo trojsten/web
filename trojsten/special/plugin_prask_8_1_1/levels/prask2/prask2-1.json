@@ -1,0 +1,157 @@
+{
+  "name": "1 - Tam a sp\u00e4\u0165",
+  "memory_limit": 10,
+  "briefing": "Postupne povyp\u00ednaj prep\u00edna\u010de a dosta\u0148 sa do cie\u013ea.",
+  "torch_logic": {
+    "6": {
+      "1": [
+        {
+          "x": 8,
+          "not": false,
+          "y": 1
+        }
+      ]
+    },
+    "4": {
+      "1": [
+        {
+          "x": 10,
+          "not": false,
+          "y": 1
+        }
+      ]
+    },
+    "2": {
+      "1": [
+        {
+          "x": 12,
+          "not": false,
+          "y": 1
+        }
+      ]
+    },
+    "11": {
+      "1": [
+        {
+          "x": 3,
+          "not": false,
+          "y": 1
+        }
+      ]
+    },
+    "9": {
+      "1": [
+        {
+          "x": 5,
+          "not": false,
+          "y": 1
+        }
+      ]
+    }
+  },
+  "map": [
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "E",
+      "J",
+      "M",
+      "J",
+      "M",
+      "J",
+      "F",
+      "M",
+      "J",
+      "M",
+      "J",
+      "M",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ]
+  ],
+  "logic_map": [
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  ],
+  "startFacing": 0,
+  "startY": 1,
+  "battery_limit": 200,
+  "hint": "Pom\u00f4\u017ee ti rie\u0161enie \u00faloh Schody a Hrebe\u0148 z predo\u0161lej s\u00e9rie.",
+  "startX": 7
+}
