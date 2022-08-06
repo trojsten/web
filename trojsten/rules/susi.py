@@ -45,7 +45,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                 puzzlehunt_participations = 0
             trojsten_camps = self.trojsten_camps.get(user.pk, 0)
             self.coefficients[user] = (
-                5 * successful_semesters + 3 * puzzlehunt_participations + trojsten_camps
+                3 * successful_semesters + 3 * puzzlehunt_participations + trojsten_camps
             )
 
         return self.coefficients[user]

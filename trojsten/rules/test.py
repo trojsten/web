@@ -963,12 +963,12 @@ class SusiCoefficientTest(TestCase):
         self.tag = SUSIRules.RESULTS_TAGS[SUSI_BLYSKAVICA]
 
     def test_susi_camps_only(self):
-        # Coefficient = 5: successful semesters = 1, other camps = 0
+        # Coefficient = 3: successful semesters = 1, other camps = 0
         EventParticipant.objects.create(
             event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
         )
         generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 5)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
 
     def test_other_camps_only(self):
         # Coefficient = 1: successful semesters = 0, other camps = 1
@@ -982,7 +982,7 @@ class SusiCoefficientTest(TestCase):
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
 
     def test_all_camps(self):
-        # Coefficient = 5: successful semesters = 1, other camps = 1
+        # Coefficient = 4: successful semesters = 1, other camps = 1
         EventParticipant.objects.create(
             event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
         )
@@ -993,7 +993,7 @@ class SusiCoefficientTest(TestCase):
             going=True,
         )
         generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 6)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 4)
 
     def test_ignore_not_going_reserve(self):
         # Coefficient = 0: successful semesters = 0, other camps = 0
@@ -1004,12 +1004,12 @@ class SusiCoefficientTest(TestCase):
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
 
     def test_count_not_going_participant(self):
-        # Coefficient = 5: successful semesters = 1, other camps = 0
+        # Coefficient = 3: successful semesters = 1, other camps = 0
         EventParticipant.objects.create(
             event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=False
         )
         generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 5)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
 
     def test_ignore_not_going_participant_other_camp(self):
         # Coefficient = 0: successful semesters = 0, other camps = 0
@@ -1044,7 +1044,7 @@ class SusiCoefficientTest(TestCase):
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
 
     def test_many_camps(self):
-        # Coefficient = 13: successful semesters = 2, other camps = 3
+        # Coefficient = 9: successful semesters = 2, other camps = 3
         for i in range(2):
             EventParticipant.objects.create(
                 event=self.camps[i],
@@ -1060,9 +1060,10 @@ class SusiCoefficientTest(TestCase):
                 going=True,
             )
         generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 13)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 9)
 
     def test_puzzle_hunt_participations(self):
+        # Coefficient = 3: successful semesters = 0, other camps = 0, puzzlehunt participations = 1
         participations = UserProperty.objects.get(user=self.test_user, key=self.puzzlehunt_key)
         participations.value = "1"
         participations.save()
@@ -1070,6 +1071,8 @@ class SusiCoefficientTest(TestCase):
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
 
     def test_coefficient_all(self):
+        # Coefficient = 14: successful semesters bla= 1, other camps = 2,
+        # puzzlehunt participations = 3
         participations = UserProperty.objects.get(user=self.test_user, key=self.puzzlehunt_key)
         participations.value = "3"
         participations.save()
@@ -1084,7 +1087,7 @@ class SusiCoefficientTest(TestCase):
                 going=True,
             )
         generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 16)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 14)
 
 
 class SUSIRulesTest(TestCase):
