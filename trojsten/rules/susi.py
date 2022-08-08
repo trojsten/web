@@ -126,16 +126,6 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
     def run(self, res_request):
         self.prepare_coefficients(res_request.round)
-        res_request.has_submit_in_blyskavica = set()
-        for submit in (
-            Submit.objects.filter(
-                task__round__semester=res_request.round.semester,
-                task__categories__name=constants.SUSI_BLYSKAVICA,
-            )
-            .exclude(task__categories__name=constants.SUSI_AGAT)
-            .select_related("user")
-        ):
-            res_request.has_submit_in_blyskavica.add(submit.user)
         return super(SUSIResultsGenerator, self).run(res_request)
 
     def get_minimal_year_of_graduation(self, res_request, user):
@@ -153,10 +143,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         if self.tag.key == constants.SUSI_BLYSKAVICA:
             active = active and (
-                (
-                    coefficient > constants.SUSI_AGAT_MAX_COEFFICIENT
-                    or user in request.has_submit_in_blyskavica
-                )
+                (coefficient > constants.SUSI_AGAT_MAX_COEFFICIENT)
                 and not (self.get_graduation_status(user, request))
             )
 
@@ -164,6 +151,19 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             active = active
 
         return active
+
+    def deactivate_row_cells(self, request, row, cols):
+        if self.tag.key == constants.SUSI_AGAT:
+            # Prepare list of pairs consisting of cell and its points.
+            tasks = [
+                (cell, self.get_cell_total(request, cell))
+                for key, cell in row.cells_by_key.items()
+                if row.cells_by_key[key].active
+            ]
+
+            # Count only the best 5 tasks
+            for cell, _ in sorted(tasks, key=lambda x: x[1])[:-5]:
+                cell.active = False
 
     def calculate_row_round_total(self, res_request, row, cols):
         row.round_total = sum(
