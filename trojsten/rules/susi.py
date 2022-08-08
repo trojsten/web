@@ -28,6 +28,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         super(SUSIResultsGenerator, self).__init__(tag)
         self.susi_camps = None
         self.trojsten_camps = None
+        self.number_of_solved_tasks = None
         self.puzzlehunt_participations_key = None
         self.coefficients = {}
 
@@ -36,16 +37,23 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             if not self.susi_camps:
                 self.prepare_coefficients(round)
 
-            successful_semesters = self.susi_camps.get(user.pk, 0)
+            no_of_susi_camps = self.susi_camps.get(user.pk, 0)
+            extra_points_for_solved_tasks = (
+                self.number_of_solved_tasks.get(user.pk, 0)
+                >= constants.SUSI_NUMBER_OF_SOLVED_TASKS_FOR_POINTS
+            )
             try:
-                puzzlehunt_participations = int(
+                no_of_puzzlehunt_participations = int(
                     user.get_properties()[self.puzzlehunt_participations_key]
                 )
             except KeyError:
-                puzzlehunt_participations = 0
-            trojsten_camps = self.trojsten_camps.get(user.pk, 0)
+                no_of_puzzlehunt_participations = 0
+            no_of_trojsten_camps = self.trojsten_camps.get(user.pk, 0)
             self.coefficients[user] = (
-                3 * successful_semesters + 3 * puzzlehunt_participations + trojsten_camps
+                constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP * no_of_susi_camps
+                + constants.SUSI_EXP_POINTS_FOR_PUZZLEHUNT * no_of_puzzlehunt_participations
+                + constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS * extra_points_for_solved_tasks
+                + constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP * no_of_trojsten_camps
             )
 
         return self.coefficients[user]
@@ -96,6 +104,20 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             .values("user")
             .annotate(camps=Count("event__semester", distinct=True))
             .values_list("user", "camps")
+        )
+
+        self.number_of_solved_tasks = dict(
+            Submit.objects.filter(
+                Q(task__round__semester__competition=round.semester.competition, points__gt=0),
+                Q(task__round__semester__year__lt=round.semester.year)
+                | Q(
+                    task__round__semester__year=round.semester.year,
+                    task__round__semester__number__lt=round.semester.number,
+                ),
+            )
+            .values("user")
+            .annotate(solved_tasks=Count("task", distinct=True))
+            .values_list("user", "solved_tasks")
         )
 
         self.puzzlehunt_participations_key = UserPropertyKey.objects.get(
