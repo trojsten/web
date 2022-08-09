@@ -13,6 +13,7 @@ from trojsten.submit.constants import (
     SUBMIT_STATUS_IN_QUEUE,
     SUBMIT_STATUS_REVIEWED,
     SUBMIT_TYPE_DESCRIPTION,
+    SUBMIT_TYPE_TEXT,
 )
 from trojsten.submit.models import Submit
 
@@ -87,42 +88,20 @@ class TestTop30(TestCase):
         task2 = Task.objects.create(number=1, name="Test task", round=round, has_description=True)
         return task1, task2
 
+    def _create_submit(
+        self, task, user, type=SUBMIT_TYPE_DESCRIPTION, points=0, status=SUBMIT_STATUS_REVIEWED
+    ):
+        Submit.objects.create(
+            task=task, user=user, submit_type=type, points=points, testing_status=status
+        )
+
     def test_most_submits_reviewed(self):
-        Submit.objects.create(
-            task=self.task1,
-            user=self.users[0],
-            submit_type=SUBMIT_TYPE_DESCRIPTION,
-            points=0,
-            testing_status=SUBMIT_STATUS_REVIEWED,
-        )
-        Submit.objects.create(
-            task=self.task1,
-            user=self.users[1],
-            submit_type=SUBMIT_TYPE_DESCRIPTION,
-            points=0,
-            testing_status=SUBMIT_STATUS_REVIEWED,
-        )
-        Submit.objects.create(
-            task=self.task1,
-            user=self.users[1],
-            submit_type=SUBMIT_TYPE_DESCRIPTION,
-            points=0,
-            testing_status=SUBMIT_STATUS_IN_QUEUE,
-        )
-        Submit.objects.create(
-            task=self.task2,
-            user=self.users[0],
-            submit_type=SUBMIT_TYPE_DESCRIPTION,
-            points=0,
-            testing_status=SUBMIT_STATUS_REVIEWED,
-        )
-        Submit.objects.create(
-            task=self.other_task1,
-            user=self.users[0],
-            submit_type=SUBMIT_TYPE_DESCRIPTION,
-            points=0,
-            testing_status=SUBMIT_STATUS_REVIEWED,
-        )
+        self._create_submit(self.task1, self.users[0])
+        self._create_submit(self.task1, self.users[1])
+        self._create_submit(self.task1, self.users[1], status=SUBMIT_STATUS_IN_QUEUE)
+        self._create_submit(self.task2, self.users[0])
+        self._create_submit(self.other_task1, self.users[0])
+        self._create_submit(self.task2, self.users[1], type=SUBMIT_TYPE_TEXT)
         TaskPeople.objects.create(task=self.task1, user=self.users[2], role=TASK_ROLE_REVIEWER)
         TaskPeople.objects.create(task=self.task2, user=self.users[2], role=TASK_ROLE_REVIEWER)
         TaskPeople.objects.create(task=self.task2, user=self.users[3], role=TASK_ROLE_REVIEWER)
@@ -143,6 +122,31 @@ class TestTop30(TestCase):
         leaderboards = [leaderboard for name, leaderboard in response.context["leaderboards"]]
         self.assertIn(
             [(2.5, self.users[2].get_full_name()), (1.5, self.users[3].get_full_name())],
+            leaderboards,
+        )
+
+    def test_most_submissions(self):
+        self._create_submit(self.task1, self.users[0], points=1)
+        self._create_submit(self.task2, self.users[0], points=1)
+        self._create_submit(self.task1, self.users[1], points=1)
+        self._create_submit(self.task1, self.users[1], points=1)
+        self._create_submit(self.task1, self.users[1], points=1, type=SUBMIT_TYPE_TEXT)
+        self._create_submit(self.task2, self.users[1], points=0)
+        self._create_submit(self.other_task1, self.users[0], points=4)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        leaderboards = [leaderboard for name, leaderboard in response.context["leaderboards"]]
+        self.assertIn(
+            [(2, self.users[0].get_full_name()), (1, self.users[1].get_full_name())],
+            leaderboards,
+        )
+
+        response = self.client.get(self.url, {"all_sites": True})
+        self.assertEqual(response.status_code, 200)
+        leaderboards = [leaderboard for name, leaderboard in response.context["leaderboards"]]
+        self.assertIn(
+            [(3, self.users[0].get_full_name()), (1, self.users[1].get_full_name())],
             leaderboards,
         )
 
