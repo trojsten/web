@@ -892,7 +892,7 @@ class TaskNotificationTest(TestCase):
 
 class TaskMethodTest(TestCase):
     def setUp(self):
-        self.competition = Competition.objects.create(name="TestCompetition")
+        self.competition = Competition.objects.create(name="SusiTestCompetition", pk=9)
         self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         self.semester = Semester.objects.create(
             number=1, name="Test semester", competition=self.competition, year=1
@@ -913,8 +913,22 @@ class TaskMethodTest(TestCase):
             second_end_time=end_time1 + week,
             susi_big_hint_time=end_time1 + big_hint_delay,
         )
+        Task.objects.create(
+            pk=1,
+            number=1,
+            name="Test task 1",
+            round=round,
+            description_points_visible=True,
+            description_points=6,
+            susi_small_hint="SMALL_HINT",
+            susi_big_hint="BIG_HINT",
+        )
+        url = reverse("task_statement", kwargs={"task_id": 1})
+
         self.assertFalse(round.susi_small_hint_public)
         self.assertFalse(round.susi_big_hint_public)
+        response = self.client.get(url)
+        self.assertContains(response, "Bude zverejnená")
 
         end_time2 = timezone.now() + timezone.timedelta(minutes=-1)
         round.end_time = end_time2
@@ -923,6 +937,9 @@ class TaskMethodTest(TestCase):
         round.save()
         self.assertTrue(round.susi_small_hint_public)
         self.assertFalse(round.susi_big_hint_public)
+        response = self.client.get(url)
+        self.assertContains(response, "SMALL_HINT")
+        self.assertContains(response, "Bude zverejnená")
 
         end_time3 = timezone.now() - big_hint_delay + timezone.timedelta(minutes=1)
         round.end_time = end_time3
@@ -931,6 +948,9 @@ class TaskMethodTest(TestCase):
         round.save()
         self.assertTrue(round.susi_small_hint_public)
         self.assertFalse(round.susi_big_hint_public)
+        response = self.client.get(url)
+        self.assertContains(response, "SMALL_HINT")
+        self.assertContains(response, "Bude zverejnená")
 
         end_time4 = timezone.now() - big_hint_delay + timezone.timedelta(minutes=-1)
         round.end_time = end_time4
@@ -939,3 +959,6 @@ class TaskMethodTest(TestCase):
         round.save()
         self.assertTrue(round.susi_small_hint_public)
         self.assertTrue(round.susi_big_hint_public)
+        response = self.client.get(url)
+        self.assertContains(response, "SMALL_HINT")
+        self.assertContains(response, "BIG_HINT")

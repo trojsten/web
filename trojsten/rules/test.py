@@ -27,6 +27,7 @@ from trojsten.rules.kms import (
 from trojsten.rules.ksp import KSP_ALL, KSP_L1, KSP_L2, KSP_L3, KSP_L4
 from trojsten.rules.models import KSPLevel
 from trojsten.rules.susi import SUSIResultsGenerator, SUSIRules
+from trojsten.submit.constants import SUBMIT_RESPONSE_OK
 from trojsten.submit.models import Submit
 
 SOURCE = submit_constants.SUBMIT_TYPE_SOURCE
@@ -1428,6 +1429,55 @@ class SUSIRulesTest(TestCase):
         self.assertEqual(response.status_code, 200)
         scoreboard = get_scoreboard(response.context["scoreboards"], susi_constants.SUSI_AGAT)
         self.assertEqual(scoreboard.round.number, 3)
+
+    def test_grading_with_hints(self):
+        user = self._create_user_with_coefficient(1)
+        task = self.tasks[0]
+        task.description_points = 6
+        task.text_submit_solution = ["solution"]
+
+        points = susi_constants.SUSI_POINTS_ALLOCATION
+        points = [points[0], points[0] - points[1], points[0] - points[2], points[3]]
+        for small_hint, big_hint, points_idx in [
+            ["", "", [0, 0, 0, 3]],
+            ["SMALL_HINT", "", [0, 1, 1, 3]],
+            ["", "BIG_HINT", [0, 0, 2, 3]],
+            ["SMALL_HINT", "BIG_HINT", [0, 1, 2, 3]],
+        ]:
+            task.susi_small_hint = small_hint
+            task.susi_big_hint = big_hint
+            task.save()
+
+            task.round.end_time = timezone.now() + timezone.timedelta(days=1)
+            task.round.susi_big_hint_time = timezone.now() + timezone.timedelta(days=2)
+            task.round.second_end_time = timezone.now() + timezone.timedelta(days=3)
+            grading = self.competition.rules.grade_text_submit(task, user, "solution")
+            self.assertEqual(grading.response, SUBMIT_RESPONSE_OK)
+            self.assertEqual(grading.points, points[points_idx[0]])
+
+            task.round.end_time = timezone.now() + timezone.timedelta(days=-3)
+            task.round.susi_big_hint_time = timezone.now() + timezone.timedelta(days=2)
+            task.round.second_end_time = timezone.now() + timezone.timedelta(days=3)
+            task.round.save()
+            grading = self.competition.rules.grade_text_submit(task, user, "solution")
+            self.assertEqual(grading.response, SUBMIT_RESPONSE_OK)
+            self.assertEqual(grading.points, points[points_idx[1]])
+
+            task.round.end_time = timezone.now() + timezone.timedelta(days=-3)
+            task.round.susi_big_hint_time = timezone.now() + timezone.timedelta(days=-2)
+            task.round.second_end_time = timezone.now() + timezone.timedelta(days=3)
+            task.round.save()
+            grading = self.competition.rules.grade_text_submit(task, user, "solution")
+            self.assertEqual(grading.response, SUBMIT_RESPONSE_OK)
+            self.assertEqual(grading.points, points[points_idx[2]])
+
+            task.round.end_time = timezone.now() + timezone.timedelta(days=-3)
+            task.round.susi_big_hint_time = timezone.now() + timezone.timedelta(days=-2)
+            task.round.second_end_time = timezone.now() + timezone.timedelta(days=-1)
+            task.round.save()
+            grading = self.competition.rules.grade_text_submit(task, user, "solution")
+            self.assertEqual(grading.response, SUBMIT_RESPONSE_OK)
+            self.assertEqual(grading.points, points[points_idx[3]])
 
 
 class TextSubmitTest(TestCase):

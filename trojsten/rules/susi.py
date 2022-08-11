@@ -218,13 +218,12 @@ class SUSIRules(CompetitionRules):
                 and len(task.susi_small_hint) > 0
             ):
                 points -= constants.SUSI_POINTS_ALLOCATION[1]
-            elif (
-                task.round.susi_big_hint_time < now
-                and task.round.second_phase_running
-                and len(task.susi_big_hint) > 0
-            ):
-                points -= constants.SUSI_POINTS_ALLOCATION[2]
-            elif now > task.round.end_time and not task.round.second_phase_running:
+            elif task.round.susi_big_hint_time < now and task.round.second_phase_running:
+                if len(task.susi_big_hint) > 0:
+                    points -= constants.SUSI_POINTS_ALLOCATION[2]
+                elif len(task.susi_small_hint) > 0:
+                    points -= constants.SUSI_POINTS_ALLOCATION[1]
+            elif task.round.end_time < now and not task.round.second_phase_running:
                 points = constants.SUSI_POINTS_ALLOCATION[3]
         else:
             response = SUBMIT_RESPONSE_WA
