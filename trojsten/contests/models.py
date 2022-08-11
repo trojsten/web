@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -19,11 +18,6 @@ from unidecode import unidecode
 from trojsten.people.models import User, UserPropertyKey
 from trojsten.results.models import FrozenResults
 from trojsten.rules import get_rules_for_competition
-from trojsten.rules.susi_constants import (
-    SUSI_BIG_HINT_DAYS,
-    SUSI_COMPETITION_ID,
-    SUSI_OUTDOOR_ROUND_NUMBER,
-)
 from trojsten.submit import constants as submit_constants
 from trojsten.utils import utils
 
@@ -181,6 +175,10 @@ class Round(models.Model):
     second_end_time = models.DateTimeField(
         verbose_name="druhý koniec", blank=True, null=True, default=None
     )
+    susi_big_hint_time = models.DateTimeField(
+        verbose_name="zverejnenie veľkého hintu", blank=True, null=True, default=None
+    )
+    susi_is_outdoor = models.BooleanField(verbose_name="Objavné kolo", default=False)
     visible = models.BooleanField(verbose_name="viditeľnosť", default=False)
     solutions_visible = models.BooleanField(verbose_name="viditeľnosť vzorákov", default=False)
     results_final = models.BooleanField(verbose_name="výsledky sú finálne", default=False)
@@ -209,23 +207,12 @@ class Round(models.Model):
         )
 
     @property
-    def susi_is_outdoor(self):
-        return (
-            self.number == SUSI_OUTDOOR_ROUND_NUMBER
-            and self.semester.competition.id == SUSI_COMPETITION_ID
-        )
-
-    @property
-    def susi_big_hint_date(self):
-        return self.end_time + timedelta(days=SUSI_BIG_HINT_DAYS)
-
-    @property
     def susi_small_hint_public(self):
         return timezone.now() > self.end_time
 
     @property
     def susi_big_hint_public(self):
-        return timezone.now() > self.susi_big_hint_date
+        return timezone.now() > self.susi_big_hint_time
 
     def get_base_path(self):
         round_dir = str(self.number)

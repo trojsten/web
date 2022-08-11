@@ -124,10 +124,6 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             key_name=constants.PUZZLEHUNT_PARTICIPATIONS_KEY_NAME
         )
 
-    def run(self, res_request):
-        self.prepare_coefficients(res_request.round)
-        return super(SUSIResultsGenerator, self).run(res_request)
-
     def get_minimal_year_of_graduation(self, res_request, user):
         return -1
 
@@ -164,13 +160,6 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             # Count only the best 5 tasks
             for cell, _ in sorted(tasks, key=lambda x: x[1])[:-5]:
                 cell.active = False
-
-    def calculate_row_round_total(self, res_request, row, cols):
-        row.round_total = sum(
-            self.get_cell_total(res_request, cell)
-            for key, cell in row.cells_by_key.items()
-            if cell.active
-        )
 
     def add_special_row_cells(self, res_request, row, cols):
         super(SUSIResultsGenerator, self).add_special_row_cells(res_request, row, cols)
@@ -214,14 +203,6 @@ class SUSIRules(CompetitionRules):
         )
         return finished_rounds.order_by("-end_time", "-number")[:1]
 
-    def get_previous_round(self, round):
-        previous_number = min(round.number - 1, 2)
-        qs = round.semester.round_set.filter(number=previous_number)
-        if qs:
-            return qs.get()
-        else:
-            return None
-
     def grade_text_submit(self, task, user, submitted_text):
         submitted_text = unidecode(submitted_text.replace(" ", "").lower())
         now = timezone.now()
@@ -233,12 +214,12 @@ class SUSIRules(CompetitionRules):
             response = SUBMIT_RESPONSE_OK
             points = constants.SUSI_POINTS_ALLOCATION[0]
             if (
-                task.round.end_time < now <= task.round.susi_big_hint_date
+                task.round.end_time < now <= task.round.susi_big_hint_time
                 and len(task.susi_small_hint) > 0
             ):
                 points -= constants.SUSI_POINTS_ALLOCATION[1]
             elif (
-                task.round.susi_big_hint_date < now
+                task.round.susi_big_hint_time < now
                 and task.round.second_phase_running
                 and len(task.susi_big_hint) > 0
             ):

@@ -7,7 +7,6 @@ PUZZLEHUNT_PARTICIPATIONS_KEY_NAME = "Suši účasti na šifrovačkách"
 
 
 SUSI_COMPETITION_ID = 9  # The ID (pk) of Susi competition in the database.
-SUSI_OUTDOOR_ROUND_NUMBER = 100  # The number used to distinguish outdoor rounds.
 
 SUSI_AGAT_MAX_COEFFICIENT = 8  # Maximum coefficient for participants in Agat.
 
@@ -28,9 +27,6 @@ SUSI_POINTS_ALLOCATION = (
     4,  # How many points will be deducted if big hint is public
     0,  # How many points will be assigned for wrong submit and after deadline submit
 )
-
-
-SUSI_BIG_HINT_DAYS = 4  # How many days after the end of the round will the big hint be revealed
 
 # The number of wrong submits needed to decrease the points received for the task by one.
 # The effect stacks, e.g for 11 wrong submits the points for correct submit would be decreased by 2.

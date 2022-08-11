@@ -10,7 +10,7 @@ from sendfile import sendfile
 from wiki.decorators import get_article
 
 from trojsten.contests.models import Competition, Round, Task
-from trojsten.rules.susi_constants import SUSI_COMPETITION_ID, SUSI_OUTDOOR_ROUND_NUMBER
+from trojsten.rules.susi_constants import SUSI_COMPETITION_ID
 from trojsten.utils.utils import is_true
 
 from . import constants
@@ -55,8 +55,7 @@ def task_list(request, round_id):
     template_data = {
         "round": round,
         "competitions": competitions,
-        "is_susi_outdoor": round.semester.competition.id == SUSI_COMPETITION_ID
-        and round.number == SUSI_OUTDOOR_ROUND_NUMBER,
+        "susi_is_outdoor": round.susi_is_outdoor,
     }
     return render(request, "trojsten/contests/list_tasks.html", template_data)
 

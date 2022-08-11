@@ -1191,6 +1191,7 @@ class SUSIRulesTest(TestCase):
             start_time=self.start,
             end_time=self.end,
             second_end_time=self.end + timezone.timedelta(7),
+            susi_big_hint_time=self.end + timezone.timedelta(4),
         )
         self.round2 = Round.objects.create(
             number=2,
@@ -1200,15 +1201,18 @@ class SUSIRulesTest(TestCase):
             start_time=self.start,
             end_time=self.end + timezone.timedelta(7),
             second_end_time=self.end + timezone.timedelta(14),
+            susi_big_hint_time=self.end + timezone.timedelta(7 + 4),
         )
         self.round_outdoor = Round.objects.create(
-            number=susi_constants.SUSI_OUTDOOR_ROUND_NUMBER,
+            number=3,
             semester=self.semester,
             visible=True,
             solutions_visible=False,
             start_time=self.start,
             end_time=self.end + timezone.timedelta(7),
             second_end_time=self.end + timezone.timedelta(14),
+            susi_big_hint_time=self.end + timezone.timedelta(7 + 4),
+            susi_is_outdoor=True,
         )
 
         self.group = Group.objects.create(name="skupina")
@@ -1415,7 +1419,7 @@ class SUSIRulesTest(TestCase):
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
         scoreboard = get_scoreboard(response.context["scoreboards"], susi_constants.SUSI_AGAT)
-        self.assertEqual(scoreboard.round.number, susi_constants.SUSI_OUTDOOR_ROUND_NUMBER)
+        self.assertEqual(scoreboard.round.number, 3)
 
         self.round_outdoor.end_time = self.time + timezone.timedelta(-7)
         self.round_outdoor.second_end_time = self.time + timezone.timedelta(-1)
@@ -1423,7 +1427,7 @@ class SUSIRulesTest(TestCase):
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
         scoreboard = get_scoreboard(response.context["scoreboards"], susi_constants.SUSI_AGAT)
-        self.assertEqual(scoreboard.round.number, susi_constants.SUSI_OUTDOOR_ROUND_NUMBER)
+        self.assertEqual(scoreboard.round.number, 3)
 
 
 class TextSubmitTest(TestCase):
@@ -1509,6 +1513,9 @@ class TextSubmitTest(TestCase):
             text_submit_solution=["a"],
         )
         rules = SUSIRules()
+        self.round.susi_big_hint_time = self.round.end_time + datetime.timedelta(days=4)
+        self.round.second_end_time = self.round.end_time + datetime.timedelta(days=7)
+        self.round.save()
         for real_solution, real_eq_class in solutions.items():
             task.text_submit_solution = [real_solution]
             task.save()
