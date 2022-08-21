@@ -5,10 +5,12 @@ import datetime
 from django.db.models import Count, Q
 from django.utils import timezone
 
+from trojsten.contests.models import Semester
 from trojsten.events.models import EventParticipant
 from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
 from trojsten.results.constants import COEFFICIENT_COLUMN_KEY
 from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
+from trojsten.results.manager import get_results, get_results_tags_for_rounds
 from trojsten.results.representation import ResultsCell, ResultsCol, ResultsTag
 from trojsten.submit.models import Submit
 
@@ -18,6 +20,7 @@ from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 KMS_ALFA = "alfa"
 KMS_BETA = "beta"
 
+KMS_POINTS_FOR_SUCCESSFUL_SEMESTER = 4
 
 KMS_ALFA_MAX_COEFFICIENT = 3
 KMS_ELIGIBLE_FOR_TASK_BOUND = [0, 2, 3, 5, 100, 100, 100, 100, 100, 100, 100]
@@ -32,17 +35,17 @@ KMS_YEARS_OF_CAMPS_HISTORY = 10
 class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
     def __init__(self, tag):
         super(KMSResultsGenerator, self).__init__(tag)
-        self.camps = None
+        self.successful_semesters = None
         self.mo_finals = None
         self.coefficients = {}
 
     def get_user_coefficient(self, user, round):
         if user not in self.coefficients:
-            if not self.camps or not self.mo_finals:
+            if not self.successful_semesters or not self.mo_finals:
                 self.prepare_coefficients(round)
 
             year = user.school_year_at(round.end_time)
-            successful_semesters = self.camps.get(user.pk, 0)
+            successful_semesters = self.successful_semesters.get(user.pk, 0)
             mo_finals = self.mo_finals.get(user.pk, 0)
             self.coefficients[user] = year + successful_semesters + mo_finals
 
@@ -72,21 +75,49 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             .annotate(mo_finals=Count("event"))
             .values_list("user", "mo_finals")
         )
-        # We ignore camps that happened before KMS_YEARS_OF_CAMPS_HISTORY years, so we don't
-        # produce too big dictionaries of users.
-        self.camps = dict(
-            EventParticipant.objects.filter(
-                Q(
-                    event__type__name=KMS_CAMP_TYPE,
-                    event__end_time__lt=round.end_time,
-                    event__end_time__year__gte=round.end_time.year - KMS_YEARS_OF_CAMPS_HISTORY,
-                ),
-                Q(going=True) | Q(type=EventParticipant.PARTICIPANT),
-            )
-            .values("user")
-            .annotate(camps=Count("event__semester", distinct=True))
-            .values_list("user", "camps")
+        self.successful_semesters = dict()
+
+        # Get a QuerySet of old semesters. We ignore semesters that happened before
+        # KMS_YEARS_OF_CAMPS_HISTORY years, so we don't produce too big dictionaries of users.
+        old_semesters = Semester.objects.filter(
+            Q(
+                competition=round.semester.competition,
+                year__gte=round.semester.year - KMS_YEARS_OF_CAMPS_HISTORY,
+            ),
+            Q(year__lt=round.semester.year)
+            | Q(
+                year=round.semester.year,
+                number__lt=round.semester.number,
+            ),
         )
+
+        # Get last round results (for each category) and events for each old semester
+        last_results_and_events = list()
+        for semester in old_semesters:
+            last_round = semester.round_set.order_by("-number")[0]
+            last_round_results = [
+                get_results(result_tag.key, last_round, False)
+                for result_tag in list(get_results_tags_for_rounds([last_round]))[0]
+            ]
+            events = semester.event_set.filter(type__name=KMS_CAMP_TYPE)
+            last_results_and_events.append([last_round_results, events])
+
+        # Process events and results of each category by semester
+        for semester_results, events in last_results_and_events:
+            successful = set()
+            for event in events:
+                successful = successful.union(
+                    list(event.participants.values_list("user_id", flat=True))
+                )
+            for scoreboard in semester_results:
+                for row in scoreboard.serialized_results.get("rows"):
+                    user_id = row.get("user").get("id")
+                    points = int(row.get("cell_list")[-1].get("points"))
+                    if points >= KMS_POINTS_FOR_SUCCESSFUL_SEMESTER:
+                        successful.add(user_id)
+
+            for user_id in successful:
+                self.successful_semesters[user_id] = self.successful_semesters.get(user_id, 0) + 1
 
     def get_cell_points_for_row_total(self, res_request, cell, key, coefficient):
         return (
