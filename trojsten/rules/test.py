@@ -1010,16 +1010,13 @@ class SusiCoefficientTest(TestCase):
         generator = SUSIResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
 
-    def test_count_not_going_participant(self):
-        # Coefficient = 3: successful semesters = 1, other camps = 0
+    def test_ignore_not_going_participant(self):
+        # Coefficient = 0: successful semesters = 0, other camps = 0
         EventParticipant.objects.create(
             event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=False
         )
         generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(
-            generator.get_user_coefficient(self.test_user, self.round),
-            susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP,
-        )
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
 
     def test_ignore_not_going_participant_other_camp(self):
         # Coefficient = 0: successful semesters = 0, other camps = 0
@@ -1062,13 +1059,19 @@ class SusiCoefficientTest(TestCase):
                 type=EventParticipant.PARTICIPANT,
                 going=True,
             )
-        for i in range(3):
+        for i in range(2):
             EventParticipant.objects.create(
                 event=self.other_camps[i],
                 user=self.test_user,
                 type=EventParticipant.PARTICIPANT,
                 going=True,
             )
+        EventParticipant.objects.create(
+            event=self.other_camps[2],
+            user=self.test_user,
+            type=EventParticipant.RESERVE,
+            going=True,
+        )
         generator = SUSIResultsGenerator(self.tag)
         self.assertEqual(
             generator.get_user_coefficient(self.test_user, self.round),

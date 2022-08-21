@@ -75,17 +75,15 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         self.trojsten_camps = dict(
             EventParticipant.objects.filter(
-                Q(
-                    event__end_time__lt=round.semester.start_time,
-                    event__end_time__year__gte=round.end_time.year
-                    - constants.SUSI_YEARS_OF_CAMPS_HISTORY,
-                ),
-                Q(going=True),
+                event__end_time__lt=round.semester.start_time,
+                event__end_time__year__gte=round.end_time.year
+                - constants.SUSI_YEARS_OF_CAMPS_HISTORY,
+                going=True,
             )
             .exclude(Q(event__type__name=constants.SUSI_CAMP_TYPE))
             .exclude(Q(event__type__name=KMS_MO_FINALS_TYPE))
             .values("user")
-            .annotate(camps=Count("event__semester", distinct=True))
+            .annotate(camps=Count("event__semester"))
             .values_list("user", "camps")
         )
 
@@ -93,14 +91,13 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         # produce too big dictionaries of users.
         self.susi_camps = dict(
             EventParticipant.objects.filter(
-                Q(
-                    event__type__name=constants.SUSI_CAMP_TYPE,
-                    event__end_time__lt=round.semester.start_time,
-                    event__end_time__year__gte=round.end_time.year
-                    - constants.SUSI_YEARS_OF_CAMPS_HISTORY,
-                ),
-                Q(going=True) | Q(type=EventParticipant.PARTICIPANT),
+                event__type__name=constants.SUSI_CAMP_TYPE,
+                event__end_time__lt=round.semester.start_time,
+                event__end_time__year__gte=round.end_time.year
+                - constants.SUSI_YEARS_OF_CAMPS_HISTORY,
+                going=True,
             )
+            .exclude(type=EventParticipant.ORGANIZER)
             .values("user")
             .annotate(camps=Count("event__semester", distinct=True))
             .values_list("user", "camps")

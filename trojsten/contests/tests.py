@@ -18,6 +18,7 @@ from trojsten.contests import constants
 from trojsten.contests.models import Competition, Round, Semester, Task
 from trojsten.notifications.models import Notification
 from trojsten.people.models import User
+from trojsten.rules.susi_constants import SUSI_COMPETITION_ID
 from trojsten.submit.models import Submit
 from trojsten.utils.test_utils import TestNonFileSystemStorage, get_noexisting_id
 
@@ -892,7 +893,9 @@ class TaskNotificationTest(TestCase):
 
 class TaskMethodTest(TestCase):
     def setUp(self):
-        self.competition = Competition.objects.create(name="SusiTestCompetition", pk=9)
+        self.competition = Competition.objects.create(
+            name="SusiTestCompetition", pk=SUSI_COMPETITION_ID
+        )
         self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         self.semester = Semester.objects.create(
             number=1, name="Test semester", competition=self.competition, year=1
