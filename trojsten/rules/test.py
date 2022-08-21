@@ -159,12 +159,13 @@ class KMSCoefficientTest(TestCase):
 
     def test_camps_only(self):
         # Coefficient = 3: year = 1, successful semesters = 2, mo = 0
-        EventParticipant.objects.create(
-            event=self.camps[5], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
-        )
-        EventParticipant.objects.create(
-            event=self.camps[4], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
-        )
+        for i in range(3, 6):
+            EventParticipant.objects.create(
+                event=self.camps[i],
+                user=self.test_user,
+                type=EventParticipant.PARTICIPANT,
+                going=True,
+            )
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
 
@@ -172,6 +173,9 @@ class KMSCoefficientTest(TestCase):
         # Coefficient = 7: year = 4, successful semesters = 1, mo = 2
         self.test_user.graduation -= 3
         self.test_user.save()
+        EventParticipant.objects.create(
+            event=self.camps[4], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
+        )
         EventParticipant.objects.create(
             event=self.camps[5], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
         )
@@ -226,13 +230,13 @@ class KMSCoefficientTest(TestCase):
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
 
-    def test_count_not_going_participant(self):
-        # Coefficient = 2: year = 1, successful semesters = 1, mo = 0
+    def test_ignore_not_going_participant(self):
+        # Coefficient = 2: year = 1, successful semesters = 0, mo = 0
         EventParticipant.objects.create(
             event=self.camps[4], user=self.test_user, type=EventParticipant.PARTICIPANT, going=False
         )
         generator = KMSResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 2)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
 
     def test_many_camps(self):
         # Coefficient = 6: year = 1, successful semesters = 5, mo = 0

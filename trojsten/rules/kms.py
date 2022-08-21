@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+from collections import namedtuple
+from logging import getLogger
 
 from django.db.models import Count, Q
 from django.utils import timezone
@@ -12,6 +14,7 @@ from trojsten.results.constants import COEFFICIENT_COLUMN_KEY
 from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
 from trojsten.results.manager import get_results, get_results_tags_for_rounds
 from trojsten.results.representation import ResultsCell, ResultsCol, ResultsTag
+from trojsten.rules.ksp_levels import get_total_score_column_index
 from trojsten.submit.models import Submit
 
 from .default import CompetitionRules
@@ -92,29 +95,48 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         )
 
         # Get last round results (for each category) and events for each old semester
-        last_results_and_events = list()
+        ResultsAndEventsObject = namedtuple("ResultsAndEventsObject", ["results", "events"])
+        results_and_event_objects = list()
         for semester in old_semesters:
-            last_round = semester.round_set.order_by("-number")[0]
-            last_round_results = [
-                get_results(result_tag.key, last_round, False)
-                for result_tag in list(get_results_tags_for_rounds([last_round]))[0]
-            ]
+            last_round = semester.round_set.order_by("number").last()
+            if last_round is None:
+                last_round_results = []
+            else:
+                last_round_results = [
+                    get_results(result_tag.key, last_round, False)
+                    for result_tag in list(get_results_tags_for_rounds([last_round]))[0]
+                ]
             events = semester.event_set.filter(type__name=KMS_CAMP_TYPE)
-            last_results_and_events.append([last_round_results, events])
+            results_and_event_objects.append(
+                ResultsAndEventsObject(results=last_round_results, events=events)
+            )
 
         # Process events and results of each category by semester
-        for semester_results, events in last_results_and_events:
+        for results_and_event_object in results_and_event_objects:
             successful = set()
-            for event in events:
+            for event in results_and_event_object.events:
                 successful = successful.union(
                     list(event.participants.values_list("user_id", flat=True))
                 )
-            for scoreboard in semester_results:
+            for scoreboard in results_and_event_object.results:
+                # Get the column with total score for the scoreboard
+                total_score_column_index = get_total_score_column_index(scoreboard)
+                if total_score_column_index is None:
+                    getLogger("management_commands").warning(
+                        'Results table {} for round {} does not contain "sum" column.'.format(
+                            scoreboard.tag, scoreboard.round
+                        )
+                    )
+                    continue
+
+                # Check points of each user, mark his semester as successful if they are above
+                # KMS_POINTS_FOR_SUCCESSFUL_SEMESTER.
                 for row in scoreboard.serialized_results.get("rows"):
                     user_id = row.get("user").get("id")
-                    points = int(row.get("cell_list")[-1].get("points"))
-                    if points >= KMS_POINTS_FOR_SUCCESSFUL_SEMESTER:
-                        successful.add(user_id)
+                    if user_id not in successful:
+                        points = float(row.get("cell_list")[total_score_column_index].get("points"))
+                        if points >= KMS_POINTS_FOR_SUCCESSFUL_SEMESTER:
+                            successful.add(user_id)
 
             for user_id in successful:
                 self.successful_semesters[user_id] = self.successful_semesters.get(user_id, 0) + 1
