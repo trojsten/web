@@ -23,7 +23,7 @@ from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 KMS_ALFA = "alfa"
 KMS_BETA = "beta"
 
-KMS_POINTS_FOR_SUCCESSFUL_SEMESTER = 4
+KMS_POINTS_FOR_SUCCESSFUL_SEMESTER = 90
 
 KMS_ALFA_MAX_COEFFICIENT = 3
 KMS_ELIGIBLE_FOR_TASK_BOUND = [0, 2, 3, 5, 100, 100, 100, 100, 100, 100, 100]
