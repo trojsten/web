@@ -28,7 +28,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         super(SUSIResultsGenerator, self).__init__(tag)
         self.susi_camps = None
         self.trojsten_camps = None
-        self.number_of_solved_tasks = None
+        self.successful_semesters = None
         self.puzzlehunt_participations_key = None
         self.coefficients = {}
 
@@ -38,10 +38,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                 self.prepare_coefficients(round)
 
             no_of_susi_camps = self.susi_camps.get(user.pk, 0)
-            extra_points_for_solved_tasks = (
-                self.number_of_solved_tasks.get(user.pk, 0)
-                >= constants.SUSI_NUMBER_OF_SOLVED_TASKS_FOR_POINTS
-            )
+            no_of_successful_semesters = self.successful_semesters.get(user.pk, 0)
             try:
                 no_of_puzzlehunt_participations = int(
                     user.get_properties()[self.puzzlehunt_participations_key]
@@ -52,7 +49,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             self.coefficients[user] = (
                 constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP * no_of_susi_camps
                 + constants.SUSI_EXP_POINTS_FOR_PUZZLEHUNT * no_of_puzzlehunt_participations
-                + constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS * extra_points_for_solved_tasks
+                + constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS * no_of_successful_semesters
                 + constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP * no_of_trojsten_camps
             )
 
@@ -103,7 +100,8 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             .values_list("user", "camps")
         )
 
-        self.number_of_solved_tasks = dict(
+        self.successful_semesters = dict()
+        no_of_solved_tasks_per_semester = list(
             Submit.objects.filter(
                 Q(task__round__semester__competition=round.semester.competition, points__gt=0),
                 Q(task__round__semester__year__lt=round.semester.year)
@@ -112,10 +110,14 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                     task__round__semester__number__lt=round.semester.number,
                 ),
             )
-            .values("user")
+            .values("user", "task__round__semester")
             .annotate(solved_tasks=Count("task", distinct=True))
             .values_list("user", "solved_tasks")
         )
+
+        for user_id, points in no_of_solved_tasks_per_semester:
+            if points >= constants.SUSI_NUMBER_OF_SOLVED_TASKS_FOR_POINTS:
+                self.successful_semesters[user_id] = self.successful_semesters.get(user_id, 0) + 1
 
         self.puzzlehunt_participations_key = UserPropertyKey.objects.get(
             key_name=constants.PUZZLEHUNT_PARTICIPATIONS_KEY_NAME

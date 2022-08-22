@@ -933,6 +933,7 @@ class SusiCoefficientTest(TestCase):
         self.current_semester = self.semesters[-1]
         self.start = self.time + timezone.timedelta(2)
         self.end = self.time + timezone.timedelta(4)
+        self.second_end = self.time + timezone.timedelta(7)
         self.round = Round.objects.create(
             number=1,
             semester=self.current_semester,
@@ -940,7 +941,7 @@ class SusiCoefficientTest(TestCase):
             solutions_visible=False,
             start_time=self.start,
             end_time=self.end,
-            second_end_time=self.end + timezone.timedelta(7),
+            second_end_time=self.second_end,
         )
 
         graduation_year = self.round.end_time.year + int(
@@ -958,6 +959,40 @@ class SusiCoefficientTest(TestCase):
         )
         UserProperty.objects.create(user=self.test_user, key=self.puzzlehunt_key, value="0")
         self.tag = SUSIRules.RESULTS_TAGS[susi_constants.SUSI_BLYSKAVICA]
+
+        category_agat = Category.objects.create(
+            name=susi_constants.SUSI_AGAT, competition=self.competition
+        )
+        category_blyskavica = Category.objects.create(
+            name=susi_constants.SUSI_BLYSKAVICA, competition=self.competition
+        )
+        category_cifersky_cech = Category.objects.create(
+            name=susi_constants.SUSI_CIFERSKY_CECH, competition=self.competition
+        )
+
+        for semester in self.semesters[:2]:
+            for i in range(1, 3):
+                round_ = Round.objects.create(
+                    number=i,
+                    semester=semester,
+                    visible=True,
+                    solutions_visible=True,
+                    start_time=self.start,
+                    end_time=self.end,
+                    second_end_time=self.second_end,
+                )
+                for j in range(1, 9):
+                    categories = [category_agat, category_cifersky_cech]
+                    if j >= 4:
+                        categories += [category_blyskavica]
+                    task = Task.objects.create(
+                        number=j,
+                        name="Test task {}".format(j),
+                        round=round_,
+                        description_points_visible=True,
+                    )
+                    task.categories.set(categories)
+                    task.save()
 
     def test_susi_camps_only(self):
         # Coefficient = 3: successful semesters = 1, other camps = 0
@@ -998,8 +1033,8 @@ class SusiCoefficientTest(TestCase):
         generator = SUSIResultsGenerator(self.tag)
         self.assertEqual(
             generator.get_user_coefficient(self.test_user, self.round),
-            susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP
-            + susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP,
+            1 * susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP
+            + 1 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP,
         )
 
     def test_ignore_not_going_reserve(self):
@@ -1080,63 +1115,45 @@ class SusiCoefficientTest(TestCase):
         )
 
     def test_number_of_solved_tasks(self):
-        category_agat = Category.objects.create(
-            name=susi_constants.SUSI_AGAT, competition=self.competition
-        )
-        category_blyskavica = Category.objects.create(
-            name=susi_constants.SUSI_BLYSKAVICA, competition=self.competition
-        )
-        category_cifersky_cech = Category.objects.create(
-            name=susi_constants.SUSI_CIFERSKY_CECH, competition=self.competition
-        )
+        points = [1, 2, 0, 4, 0, 0, 0, 9]
 
-        rounds = []
-        tasks = []
-        for i in range(1, -1, -1):
-            round_ = Round.objects.create(
-                number=1,
-                semester=self.semesters[-2 - i],
-                visible=True,
-                solutions_visible=True,
-                start_time=self.start + timezone.timedelta(-20 - 20 * i),
-                end_time=self.end + timezone.timedelta(-10 - 20 * i),
-                second_end_time=self.end + timezone.timedelta(-5 - 20 * i),
-            )
-            rounds.append(round_)
-            round_tasks = []
-            for j in range(1, 9):
-                categories = [category_agat, category_cifersky_cech]
-                if j >= 4:
-                    categories += [category_blyskavica]
-                task = Task.objects.create(
-                    number=j,
-                    name="Test task {}".format(j),
-                    round=round_,
-                    description_points_visible=True,
-                )
-                task.categories.set(categories)
-                task.save()
-                round_tasks.append(task)
-            tasks.append(round_tasks)
-
-        points = [1, 2, 0, 4, 0, 6, 0, 9]
-
-        for i in range(2):
-            for j in range(8):
+        # Add submits in semester with 8 solved tasks
+        # Coefficient changes, as this semester is successful
+        for round_ in self.semesters[0].round_set.all():
+            for task, point in zip(round_.task_set.all(), points):
                 submit = Submit.objects.create(
-                    task=tasks[-1 - i][j],
+                    task=task,
                     user=self.test_user,
                     submit_type=submit_constants.SUBMIT_TYPE_TEXT,
-                    points=points[j],
+                    points=point,
                     testing_status="reviewed",
                 )
-                submit.time = rounds[-1 - i].end_time + timezone.timedelta(-1)
+                submit.time = round_.end_time + timezone.timedelta(-1)
                 submit.save()
-            generator = SUSIResultsGenerator(self.tag)
-            self.assertEqual(
-                generator.get_user_coefficient(self.test_user, self.round),
-                i * susi_constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS,
-            )
+        generator = SUSIResultsGenerator(self.tag)
+        self.assertEqual(
+            generator.get_user_coefficient(self.test_user, self.round),
+            1 * susi_constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS,
+        )
+
+        # Add submits in semester 2 with 6 solved tasks
+        # Coefficient doesn't change, as this semester is not successful
+        for round_ in self.semesters[1].round_set.all():
+            for task, point in zip(round_.task_set.all(), points[:-1]):
+                submit = Submit.objects.create(
+                    task=task,
+                    user=self.test_user,
+                    submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+                    points=point,
+                    testing_status="reviewed",
+                )
+                submit.time = round_.end_time + timezone.timedelta(-1)
+                submit.save()
+        generator = SUSIResultsGenerator(self.tag)
+        self.assertEqual(
+            generator.get_user_coefficient(self.test_user, self.round),
+            1 * susi_constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS,
+        )
 
     def test_puzzle_hunt_participations(self):
         # Coefficient = 3: successful semesters = 0, other camps = 0, puzzlehunt participations = 1
@@ -1146,11 +1163,11 @@ class SusiCoefficientTest(TestCase):
         generator = SUSIResultsGenerator(self.tag)
         self.assertEqual(
             generator.get_user_coefficient(self.test_user, self.round),
-            susi_constants.SUSI_EXP_POINTS_FOR_PUZZLEHUNT,
+            1 * susi_constants.SUSI_EXP_POINTS_FOR_PUZZLEHUNT,
         )
 
     def test_coefficient_all(self):
-        # Coefficient = 14: successful semesters = 1, other camps = 2,
+        # Coefficient = 15: successful semesters = 2, other camps = 2,
         # puzzlehunt participations = 3
         participations = UserProperty.objects.get(user=self.test_user, key=self.puzzlehunt_key)
         participations.value = "3"
@@ -1165,10 +1182,23 @@ class SusiCoefficientTest(TestCase):
                 type=EventParticipant.PARTICIPANT,
                 going=True,
             )
+        points = range(1, 9)
+        round_ = self.semesters[0].round_set.first()
+        for task, point in zip(round_.task_set.all(), points):
+            submit = Submit.objects.create(
+                task=task,
+                user=self.test_user,
+                submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+                points=point,
+                testing_status="reviewed",
+            )
+            submit.time = round_.end_time + timezone.timedelta(-1)
+            submit.save()
         generator = SUSIResultsGenerator(self.tag)
         self.assertEqual(
             generator.get_user_coefficient(self.test_user, self.round),
             1 * susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP
+            + 1 * susi_constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS
             + 2 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP
             + 3 * susi_constants.SUSI_EXP_POINTS_FOR_PUZZLEHUNT,
         )
