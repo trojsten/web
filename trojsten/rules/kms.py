@@ -12,9 +12,9 @@ from trojsten.events.models import EventParticipant
 from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
 from trojsten.results.constants import COEFFICIENT_COLUMN_KEY
 from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
+from trojsten.results.helpers import get_total_score_column_index
 from trojsten.results.manager import get_results, get_results_tags_for_rounds
 from trojsten.results.representation import ResultsCell, ResultsCol, ResultsTag
-from trojsten.rules.ksp_levels import get_total_score_column_index
 from trojsten.submit.models import Submit
 
 from .default import CompetitionRules
