@@ -55,7 +55,7 @@ def task_list(request, round_id):
     template_data = {
         "round": round,
         "competitions": competitions,
-        "susi_is_outdoor": round.susi_is_outdoor,
+        "susi_is_discovery": round.susi_is_discovery,
     }
     return render(request, "trojsten/contests/list_tasks.html", template_data)
 

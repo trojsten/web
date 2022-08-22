@@ -178,7 +178,7 @@ class Round(models.Model):
     susi_big_hint_time = models.DateTimeField(
         verbose_name="zverejnenie veľkého hintu", blank=True, null=True, default=None
     )
-    susi_is_outdoor = models.BooleanField(verbose_name="Objavné kolo", default=False)
+    susi_is_discovery = models.BooleanField(verbose_name="Objavné kolo", default=False)
     visible = models.BooleanField(verbose_name="viditeľnosť", default=False)
     solutions_visible = models.BooleanField(verbose_name="viditeľnosť vzorákov", default=False)
     results_final = models.BooleanField(verbose_name="výsledky sú finálne", default=False)
@@ -187,7 +187,7 @@ class Round(models.Model):
 
     @property
     def number_str(self):
-        if self.susi_is_outdoor:
+        if self.susi_is_discovery:
             return "Objavné"
         else:
             return "%i." % self.number

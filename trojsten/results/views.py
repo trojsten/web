@@ -25,7 +25,7 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
         "single_round": scoreboards[0].scoreboard.is_single_round,
         "selected_tag": tag_key,
         "show_staff": is_true(request.GET.get("show_staff", False)),
-        "susi_is_outdoor": round.susi_is_outdoor,
+        "susi_is_discovery": round.susi_is_discovery,
     }
     return render(request, "trojsten/results/view_results.html", context)
 

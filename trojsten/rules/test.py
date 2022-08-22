@@ -1207,7 +1207,7 @@ class SUSIRulesTest(TestCase):
             second_end_time=self.end + timezone.timedelta(14),
             susi_big_hint_time=self.end + timezone.timedelta(7 + 4),
         )
-        self.round_outdoor = Round.objects.create(
+        self.round_discovery = Round.objects.create(
             number=3,
             semester=self.semester,
             visible=True,
@@ -1216,7 +1216,7 @@ class SUSIRulesTest(TestCase):
             end_time=self.end + timezone.timedelta(7),
             second_end_time=self.end + timezone.timedelta(14),
             susi_big_hint_time=self.end + timezone.timedelta(7 + 4),
-            susi_is_outdoor=True,
+            susi_is_discovery=True,
         )
 
         self.group = Group.objects.create(name="skupina")
@@ -1425,9 +1425,9 @@ class SUSIRulesTest(TestCase):
         scoreboard = get_scoreboard(response.context["scoreboards"], susi_constants.SUSI_AGAT)
         self.assertEqual(scoreboard.round.number, 3)
 
-        self.round_outdoor.end_time = self.time + timezone.timedelta(-7)
-        self.round_outdoor.second_end_time = self.time + timezone.timedelta(-1)
-        self.round_outdoor.save()
+        self.round_discovery.end_time = self.time + timezone.timedelta(-7)
+        self.round_discovery.second_end_time = self.time + timezone.timedelta(-1)
+        self.round_discovery.save()
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
         scoreboard = get_scoreboard(response.context["scoreboards"], susi_constants.SUSI_AGAT)

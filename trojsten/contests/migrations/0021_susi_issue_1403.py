@@ -7,9 +7,9 @@ from django.db import migrations, models
 
 from trojsten.rules.susi_constants import SUSI_COMPETITION_ID
 
-# Susi constants at the time of creating this migration. Not importing the constants from
+# Susi's constants at the time of creating this migration. Not importing the constants from
 # trojsten.rules.susi_constants as they will get deleted soon.
-SUSI_OUTDOOR_ROUND_NUMBER = 100
+SUSI_DISCOVERY_ROUND_NUMBER = 100
 SUSI_BIG_HINT_DAYS = 4
 
 
@@ -21,11 +21,11 @@ def set_big_hint_time_for_old_rounds(apps, schema_editor):
             round_.save()
 
 
-def set_outdoor_status_for_old_rounds(apps, schema_editor):
+def set_discovery_status_for_old_rounds(apps, schema_editor):
     Round = apps.get_model("contests", "Round")
     for round_ in Round.objects.filter(semester__competition=SUSI_COMPETITION_ID):
-        if round_.number == SUSI_OUTDOOR_ROUND_NUMBER:
-            round_.susi_is_outdoor = True
+        if round_.number == SUSI_DISCOVERY_ROUND_NUMBER:
+            round_.susi_is_discovery = True
             round_.save()
 
 
@@ -50,8 +50,8 @@ class Migration(migrations.Migration):
         migrations.RunPython(code=set_big_hint_time_for_old_rounds, reverse_code=do_nothing),
         migrations.AddField(
             model_name="round",
-            name="susi_is_outdoor",
+            name="susi_is_discovery",
             field=models.BooleanField(default=False, verbose_name="Objavné kolo"),
         ),
-        migrations.RunPython(code=set_outdoor_status_for_old_rounds, reverse_code=do_nothing),
+        migrations.RunPython(code=set_discovery_status_for_old_rounds, reverse_code=do_nothing),
     ]
