@@ -1167,7 +1167,7 @@ class SusiCoefficientTest(TestCase):
         )
 
     def test_coefficient_all(self):
-        # Coefficient = 15: successful semesters = 2, other camps = 2,
+        # Coefficient = 16: successful semesters = 6, other camps = 2,
         # puzzlehunt participations = 3
         participations = UserProperty.objects.get(user=self.test_user, key=self.puzzlehunt_key)
         participations.value = "3"
@@ -1182,23 +1182,24 @@ class SusiCoefficientTest(TestCase):
                 type=EventParticipant.PARTICIPANT,
                 going=True,
             )
-        points = range(1, 9)
-        round_ = self.semesters[0].round_set.first()
-        for task, point in zip(round_.task_set.all(), points):
-            submit = Submit.objects.create(
-                task=task,
-                user=self.test_user,
-                submit_type=submit_constants.SUBMIT_TYPE_TEXT,
-                points=point,
-                testing_status="reviewed",
-            )
-            submit.time = round_.end_time + timezone.timedelta(-1)
-            submit.save()
+        points = [9 for _ in range(1, 9)]
+        for semester in self.semesters[:2]:
+            round_ = semester.round_set.first()
+            for task, point in zip(round_.task_set.all(), points):
+                submit = Submit.objects.create(
+                    task=task,
+                    user=self.test_user,
+                    submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+                    points=point,
+                    testing_status="reviewed",
+                )
+                submit.time = round_.end_time + timezone.timedelta(-1)
+                submit.save()
         generator = SUSIResultsGenerator(self.tag)
         self.assertEqual(
             generator.get_user_coefficient(self.test_user, self.round),
             1 * susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP
-            + 1 * susi_constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS
+            + 2 * susi_constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS
             + 2 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP
             + 3 * susi_constants.SUSI_EXP_POINTS_FOR_PUZZLEHUNT,
         )

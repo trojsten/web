@@ -115,8 +115,8 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             .values_list("user", "solved_tasks")
         )
 
-        for user_id, points in no_of_solved_tasks_per_semester:
-            if points >= constants.SUSI_NUMBER_OF_SOLVED_TASKS_FOR_POINTS:
+        for user_id, no_of_solved_tasks in no_of_solved_tasks_per_semester:
+            if no_of_solved_tasks >= constants.SUSI_NUMBER_OF_SOLVED_TASKS_FOR_POINTS:
                 self.successful_semesters[user_id] = self.successful_semesters.get(user_id, 0) + 1
 
         self.puzzlehunt_participations_key = UserPropertyKey.objects.get(
