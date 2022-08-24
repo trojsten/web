@@ -1167,8 +1167,8 @@ class SusiCoefficientTest(TestCase):
         )
 
     def test_coefficient_all(self):
-        # Coefficient = 16: successful semesters = 6, other camps = 2,
-        # puzzlehunt participations = 3
+        # Coefficient = 16: successful semesters = 2, Susi camps = 1,
+        # other camps = 2, puzzlehunt participations = 3
         participations = UserProperty.objects.get(user=self.test_user, key=self.puzzlehunt_key)
         participations.value = "3"
         participations.save()
