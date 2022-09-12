@@ -2,7 +2,6 @@ from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGene
 from trojsten.results.representation import ResultsTag
 
 from .default import CompetitionRules
-from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 
 FKS_A = "A"
 FKS_B = "B"
@@ -58,8 +57,12 @@ class FKSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                     key for key in (6, 7) if row.cells_by_key[key].manual_points is not None
                 ]
 
+    @staticmethod
+    def get_actual_result_rounds(competition):
+        return None
 
-class FKSRules(FinishedRounds, CompetitionRules):
+
+class FKSRules(CompetitionRules):
 
     RESULTS_TAGS = {FKS_B: ResultsTag(key=FKS_B, name="B"), FKS_A: ResultsTag(key=FKS_A, name="A")}
 

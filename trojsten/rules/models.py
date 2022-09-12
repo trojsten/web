@@ -131,11 +131,15 @@ class FKSLevel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     new_level = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
     source_semester = models.ForeignKey(
-        Semester, blank=True, null=True, related_name="caused_level_ups", on_delete=models.CASCADE
+        Semester,
+        blank=True,
+        null=True,
+        related_name="FKS_caused_level_ups",
+        on_delete=models.CASCADE,
     )
     source_camp = models.ForeignKey(Event, blank=True, null=True, on_delete=models.CASCADE)
     last_semester_before_level_up = models.ForeignKey(
-        Semester, related_name="next_semester_level_ups", on_delete=models.CASCADE
+        Semester, related_name="FKS_next_semester_level_ups", on_delete=models.CASCADE
     )
 
     objects = FKSLevelManager()
