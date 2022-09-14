@@ -28,6 +28,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         super(SUSIResultsGenerator, self).__init__(tag)
         self.susi_camps = None
         self.trojsten_camps = None
+        self.successful_semesters = None
         self.puzzlehunt_participations_key = None
         self.coefficients = {}
 
@@ -36,16 +37,20 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             if not self.susi_camps:
                 self.prepare_coefficients(round)
 
-            successful_semesters = self.susi_camps.get(user.pk, 0)
+            no_of_susi_camps = self.susi_camps.get(user.pk, 0)
+            no_of_successful_semesters = self.successful_semesters.get(user.pk, 0)
             try:
-                puzzlehunt_participations = int(
+                no_of_puzzlehunt_participations = int(
                     user.get_properties()[self.puzzlehunt_participations_key]
                 )
             except KeyError:
-                puzzlehunt_participations = 0
-            trojsten_camps = self.trojsten_camps.get(user.pk, 0)
+                no_of_puzzlehunt_participations = 0
+            no_of_trojsten_camps = self.trojsten_camps.get(user.pk, 0)
             self.coefficients[user] = (
-                5 * successful_semesters + 3 * puzzlehunt_participations + trojsten_camps
+                constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP * no_of_susi_camps
+                + constants.SUSI_EXP_POINTS_FOR_PUZZLEHUNT * no_of_puzzlehunt_participations
+                + constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS * no_of_successful_semesters
+                + constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP * no_of_trojsten_camps
             )
 
         return self.coefficients[user]
@@ -67,17 +72,15 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         self.trojsten_camps = dict(
             EventParticipant.objects.filter(
-                Q(
-                    event__end_time__lt=round.semester.start_time,
-                    event__end_time__year__gte=round.end_time.year
-                    - constants.SUSI_YEARS_OF_CAMPS_HISTORY,
-                ),
-                Q(going=True),
+                event__end_time__lt=round.semester.start_time,
+                event__end_time__year__gte=round.end_time.year
+                - constants.SUSI_YEARS_OF_CAMPS_HISTORY,
+                going=True,
             )
             .exclude(Q(event__type__name=constants.SUSI_CAMP_TYPE))
             .exclude(Q(event__type__name=KMS_MO_FINALS_TYPE))
             .values("user")
-            .annotate(camps=Count("event__semester", distinct=True))
+            .annotate(camps=Count("event__semester"))
             .values_list("user", "camps")
         )
 
@@ -85,36 +88,40 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         # produce too big dictionaries of users.
         self.susi_camps = dict(
             EventParticipant.objects.filter(
-                Q(
-                    event__type__name=constants.SUSI_CAMP_TYPE,
-                    event__end_time__lt=round.semester.start_time,
-                    event__end_time__year__gte=round.end_time.year
-                    - constants.SUSI_YEARS_OF_CAMPS_HISTORY,
-                ),
-                Q(going=True) | Q(type=EventParticipant.PARTICIPANT),
+                event__type__name=constants.SUSI_CAMP_TYPE,
+                event__end_time__lt=round.semester.start_time,
+                event__end_time__year__gte=round.end_time.year
+                - constants.SUSI_YEARS_OF_CAMPS_HISTORY,
+                going=True,
             )
+            .exclude(type=EventParticipant.ORGANIZER)
             .values("user")
             .annotate(camps=Count("event__semester", distinct=True))
             .values_list("user", "camps")
         )
 
+        self.successful_semesters = dict()
+        no_of_solved_tasks_per_semester = list(
+            Submit.objects.filter(
+                Q(task__round__semester__competition=round.semester.competition, points__gt=0),
+                Q(task__round__semester__year__lt=round.semester.year)
+                | Q(
+                    task__round__semester__year=round.semester.year,
+                    task__round__semester__number__lt=round.semester.number,
+                ),
+            )
+            .values("user", "task__round__semester")
+            .annotate(solved_tasks=Count("task", distinct=True))
+            .values_list("user", "solved_tasks")
+        )
+
+        for user_id, no_of_solved_tasks in no_of_solved_tasks_per_semester:
+            if no_of_solved_tasks >= constants.SUSI_NUMBER_OF_SOLVED_TASKS_FOR_POINTS:
+                self.successful_semesters[user_id] = self.successful_semesters.get(user_id, 0) + 1
+
         self.puzzlehunt_participations_key = UserPropertyKey.objects.get(
             key_name=constants.PUZZLEHUNT_PARTICIPATIONS_KEY_NAME
         )
-
-    def run(self, res_request):
-        self.prepare_coefficients(res_request.round)
-        res_request.has_submit_in_blyskavica = set()
-        for submit in (
-            Submit.objects.filter(
-                task__round__semester=res_request.round.semester,
-                task__categories__name=constants.SUSI_BLYSKAVICA,
-            )
-            .exclude(task__categories__name=constants.SUSI_AGAT)
-            .select_related("user")
-        ):
-            res_request.has_submit_in_blyskavica.add(submit.user)
-        return super(SUSIResultsGenerator, self).run(res_request)
 
     def get_minimal_year_of_graduation(self, res_request, user):
         return -1
@@ -131,10 +138,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         if self.tag.key == constants.SUSI_BLYSKAVICA:
             active = active and (
-                (
-                    coefficient > constants.SUSI_AGAT_MAX_COEFFICIENT
-                    or user in request.has_submit_in_blyskavica
-                )
+                (coefficient > constants.SUSI_AGAT_MAX_COEFFICIENT)
                 and not (self.get_graduation_status(user, request))
             )
 
@@ -143,12 +147,18 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         return active
 
-    def calculate_row_round_total(self, res_request, row, cols):
-        row.round_total = sum(
-            self.get_cell_total(res_request, cell)
-            for key, cell in row.cells_by_key.items()
-            if cell.active
-        )
+    def deactivate_row_cells(self, request, row, cols):
+        if self.tag.key == constants.SUSI_AGAT:
+            # Prepare list of pairs consisting of cell and its points.
+            tasks = [
+                (cell, self.get_cell_total(request, cell))
+                for key, cell in row.cells_by_key.items()
+                if row.cells_by_key[key].active
+            ]
+
+            # Count only the best 5 tasks
+            for cell, _ in sorted(tasks, key=lambda x: x[1])[:-5]:
+                cell.active = False
 
     def add_special_row_cells(self, res_request, row, cols):
         super(SUSIResultsGenerator, self).add_special_row_cells(res_request, row, cols)
@@ -192,14 +202,6 @@ class SUSIRules(CompetitionRules):
         )
         return finished_rounds.order_by("-end_time", "-number")[:1]
 
-    def get_previous_round(self, round):
-        previous_number = min(round.number - 1, 2)
-        qs = round.semester.round_set.filter(number=previous_number)
-        if qs:
-            return qs.get()
-        else:
-            return None
-
     def grade_text_submit(self, task, user, submitted_text):
         submitted_text = unidecode(submitted_text.replace(" ", "").lower())
         now = timezone.now()
@@ -211,17 +213,16 @@ class SUSIRules(CompetitionRules):
             response = SUBMIT_RESPONSE_OK
             points = constants.SUSI_POINTS_ALLOCATION[0]
             if (
-                task.round.end_time < now <= task.round.susi_big_hint_date
+                task.round.end_time < now <= task.round.susi_big_hint_time
                 and len(task.susi_small_hint) > 0
             ):
                 points -= constants.SUSI_POINTS_ALLOCATION[1]
-            elif (
-                task.round.susi_big_hint_date < now
-                and task.round.second_phase_running
-                and len(task.susi_big_hint) > 0
-            ):
-                points -= constants.SUSI_POINTS_ALLOCATION[2]
-            elif now > task.round.end_time and not task.round.second_phase_running:
+            elif task.round.susi_big_hint_time < now and task.round.second_phase_running:
+                if len(task.susi_big_hint) > 0:
+                    points -= constants.SUSI_POINTS_ALLOCATION[2]
+                elif len(task.susi_small_hint) > 0:
+                    points -= constants.SUSI_POINTS_ALLOCATION[1]
+            elif task.round.end_time < now and not task.round.second_phase_running:
                 points = constants.SUSI_POINTS_ALLOCATION[3]
         else:
             response = SUBMIT_RESPONSE_WA
