@@ -3,12 +3,11 @@
 from collections import defaultdict, namedtuple
 
 from trojsten.contests.models import Round, Task
+from trojsten.results.manager import get_results, get_results_tags_for_rounds
+from trojsten.results.models import FrozenResults
 from trojsten.submit import constants as submit_constants
 from trojsten.submit.models import Submit
 from trojsten.utils.utils import is_true
-
-from .manager import get_results, get_results_tags_for_rounds
-from .models import FrozenResults
 
 
 class TaskPoints(object):
@@ -280,3 +279,14 @@ def get_scoreboards_for_rounds(rounds, request):
         for round, result_tags in zip(rounds, get_results_tags_for_rounds(rounds))
         for result_tag in result_tags
     ]
+
+
+def get_total_score_column_index(results_table):
+    """
+    Returns an index to results_table.serialized_results['cols'] where a total sum of all points
+    is stored. Returns None if no 'sum' column is found.
+    """
+    cols = results_table.serialized_results["cols"]
+    for i, col in enumerate(cols):
+        if col["key"] == "sum":
+            return i

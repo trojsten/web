@@ -10,6 +10,7 @@ from django.db.models import Q
 from trojsten.contests.models import Competition, Round
 from trojsten.events.models import Event, EventParticipant
 from trojsten.people.models import User
+from trojsten.results.helpers import get_total_score_column_index
 from trojsten.results.manager import get_results
 from trojsten.rules.models import KSPLevel
 
@@ -75,17 +76,6 @@ def prepare_events(latest_event_start_date):
                 events[i] = events[i]._replace(last_semester_before_level_up=events[i - 1].semester)
 
     return events
-
-
-def get_total_score_column_index(results_table):
-    """
-    Returns an index to results_table.serialized_results['cols'] where a total sum of all points
-    is stored. Returns None if no 'sum' column is found.
-    """
-    cols = results_table.serialized_results["cols"]
-    for i, col in enumerate(cols):
-        if col["key"] == "sum":
-            return i
 
 
 def level_updates_from_semester_results(semester, level_up_score_thresholds=None):
