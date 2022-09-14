@@ -2,7 +2,6 @@
 from django.shortcuts import get_object_or_404, render
 
 from trojsten.contests.models import Competition, Round
-from trojsten.rules.susi_constants import SUSI_COMPETITION_ID, SUSI_OUTDOOR_ROUND_NUMBER
 from trojsten.utils.utils import is_true
 
 from .constants import DEFAULT_TAG_KEY
@@ -26,8 +25,7 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
         "single_round": scoreboards[0].scoreboard.is_single_round,
         "selected_tag": tag_key,
         "show_staff": is_true(request.GET.get("show_staff", False)),
-        "is_susi_outdoor": round.semester.competition.id == SUSI_COMPETITION_ID
-        and round.number == SUSI_OUTDOOR_ROUND_NUMBER,
+        "susi_is_discovery": round.susi_is_discovery,
     }
     return render(request, "trojsten/results/view_results.html", context)
 
