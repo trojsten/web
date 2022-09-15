@@ -9,16 +9,14 @@ __author__ = "Siegrift"
 
 
 class Level1(object):
-
     TARGET = "35473936"
 
     @classmethod
     def run(cls, x, try_count):
-        return str(x ** 2)
+        return str(x**2)
 
 
 class Level2(object):
-
     TABLE = [
         "-",
         "H",
@@ -137,13 +135,12 @@ class Level2(object):
 
 
 class Level3(object):
-
     TARGET = "7907"
     PRIMES = []
 
     @classmethod
     def generate_primes(cls):
-        LIMIT = 10 ** 6
+        LIMIT = 10**6
         erat = [True] * LIMIT
         for i in range(2, LIMIT):
             if not erat[i]:
@@ -162,7 +159,6 @@ class Level3(object):
 
 
 class Level4(object):
-
     TARGET = "Oto"
     DATA = []
     FILE = os.path.join(os.path.dirname(__file__), "mena.txt")
@@ -180,7 +176,6 @@ class Level4(object):
 
 
 class Level5(object):
-
     TARGET = "5268"
 
     @classmethod
@@ -189,19 +184,17 @@ class Level5(object):
 
 
 class Level6(object):
-
     TARGET = "3684591"
 
     @classmethod
     def run(cls, x, try_count):
         ans = ""
-        for (i, c) in enumerate(str(x)):
+        for i, c in enumerate(str(x)):
             ans += str((((int(c) - i) % 10) + 10) % 10)
         return ans
 
 
 class Level7(object):
-
     TARGET = "24032"
     PRIMES = [
         2,
@@ -251,7 +244,6 @@ class Level7(object):
 
 
 class Level8(object):
-
     TARGET = "214365"
 
     @classmethod
@@ -271,12 +263,11 @@ class Level8(object):
 
 
 class Level9(object):
-
     TARGET = "31L17D"
 
     @classmethod
     def run(cls, x, try_count):
-        n = int(x ** 0.5) // 2
+        n = int(x**0.5) // 2
         x -= 4 * n * n
         if x < 2 * n + 1:
             pos = (-n, n - x)
@@ -293,7 +284,6 @@ class Level9(object):
 
 
 class Level10(object):
-
     TARGET = "8"
 
     @classmethod

@@ -20,7 +20,6 @@ def reverse_update_event_attendance(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("events", "0006_auto_20170917_1657")]
 
     operations = [

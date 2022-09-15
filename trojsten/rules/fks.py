@@ -148,7 +148,6 @@ class FKSResultsGenerator(ResultsGenerator):
 
 
 class FKSRules(CompetitionRules):
-
     RESULTS_TAGS = OrderedDict(
         [
             (FKS_ALL, ResultsTag(key=FKS_ALL, name="")),

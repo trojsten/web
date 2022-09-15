@@ -63,7 +63,6 @@ class FKSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
 
 class FKSRules(CompetitionRules):
-
     RESULTS_TAGS = {FKS_B: ResultsTag(key=FKS_B, name="B"), FKS_A: ResultsTag(key=FKS_A, name="A")}
 
     RESULTS_GENERATOR_CLASS = FKSResultsGenerator

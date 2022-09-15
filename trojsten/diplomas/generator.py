@@ -54,7 +54,6 @@ class DiplomaGenerator:
         return tmp
 
     def render_pdfs(self, svgs, join=False, name_prefix=""):
-
         if not isinstance(svgs, list):
             svgs = [svgs]
 

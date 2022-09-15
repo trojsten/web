@@ -26,7 +26,6 @@ def reverse_fill_task_people(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("contests", "0006_auto_20160925_1324"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),

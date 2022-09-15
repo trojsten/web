@@ -53,7 +53,7 @@ def run(request, level=1):
     except (KeyError, ValueError):
         return HttpResponseBadRequest()
 
-    if _input < 0 or _input >= 10 ** 10:
+    if _input < 0 or _input >= 10**10:
         return HttpResponseBadRequest()
 
     _output = LEVELS[level].run(_input)

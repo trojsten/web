@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("old_submit", "0001_initial"), ("contests", "0003_category_task")]
 
     operations = [

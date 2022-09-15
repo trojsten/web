@@ -148,7 +148,6 @@ class KSPResultsGenerator(ResultsGenerator):
 
 
 class KSPRules(CompetitionRules):
-
     RESULTS_TAGS = OrderedDict(
         [
             (KSP_ALL, ResultsTag(key=KSP_ALL, name="")),

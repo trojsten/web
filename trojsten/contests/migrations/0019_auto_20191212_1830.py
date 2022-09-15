@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("contests", "0018_task_description_points_visible")]
 
     operations = [

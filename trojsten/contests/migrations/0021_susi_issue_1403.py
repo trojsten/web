@@ -34,7 +34,6 @@ def do_nothing(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("contests", "0020_auto_20200923_0906"),
     ]

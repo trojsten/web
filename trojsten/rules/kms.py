@@ -211,7 +211,6 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
 
 class KMSRules(FinishedRounds, CompetitionRules):
-
     RESULTS_TAGS = {
         KMS_ALFA: ResultsTag(key=KMS_ALFA, name="Alfa"),
         KMS_BETA: ResultsTag(key=KMS_BETA, name="Beta"),

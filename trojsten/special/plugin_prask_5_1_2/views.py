@@ -50,7 +50,7 @@ def main(request, level=1):
 
 @login_required()
 def run(request, level=1):
-    MAX_INPUT = 10 ** 10 - 1
+    MAX_INPUT = 10**10 - 1
 
     level = max(min(int(level), MAX_LEVELS), 1)
     user = request.user

@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("people", "0012_user_ignored_competitions")]
 
     operations = [
@@ -13,7 +12,12 @@ class Migration(migrations.Migration):
             model_name="user",
             name="school",
             field=models.ForeignKey(
-                help_text='Do pol\xed\u010dka nap\xed\u0161te skratku, \u010das\u0165 n\xe1zvu alebo adresy \u0161koly a n\xe1sledne vyberte spr\xe1vnu mo\u017enos\u0165 zo zoznamu. Pokia\u013e va\u0161a \u0161kola nie je v&nbsp;zozname, vyberte "In\xe1 \u0161kola" a&nbsp;po\u0161lite n\xe1m e-mail.',
+                help_text=(
+                    "Do pol\xed\u010dka nap\xed\u0161te skratku, \u010das\u0165 n\xe1zvu alebo"
+                    " adresy \u0161koly a n\xe1sledne vyberte spr\xe1vnu mo\u017enos\u0165 zo"
+                    " zoznamu. Pokia\u013e va\u0161a \u0161kola nie je v&nbsp;zozname, vyberte"
+                    ' "In\xe1 \u0161kola" a&nbsp;po\u0161lite n\xe1m e-mail.'
+                ),
                 null=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 to="schools.School",

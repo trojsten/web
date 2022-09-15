@@ -9,5 +9,4 @@ class PraskResultsGenerator(PrimarySchoolGeneratorMixin, ResultsGenerator):
 
 
 class PraskRules(CompetitionRules):
-
     RESULTS_GENERATOR_CLASS = PraskResultsGenerator

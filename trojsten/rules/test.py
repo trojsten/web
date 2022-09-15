@@ -94,7 +94,7 @@ class KMSCoefficientTest(TestCase):
         self.semesters = []
         self.camps = []
         self.mo_finals = []
-        for (year, semester_number) in [(1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2)]:
+        for year, semester_number in [(1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2)]:
             self.semesters.append(
                 Semester.objects.create(
                     year=year, number=semester_number, name="Test semester", competition=competition
@@ -1009,7 +1009,7 @@ class SusiCoefficientTest(TestCase):
         self.semesters = []
         self.camps = []
         self.other_camps = []
-        for (year, semester_number) in [(1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2)]:
+        for year, semester_number in [(1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2)]:
             self.semesters.append(
                 Semester.objects.create(
                     year=year,

@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("contests", "0009_merge_20180121_1616")]
 
     operations = [

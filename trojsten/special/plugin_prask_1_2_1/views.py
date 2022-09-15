@@ -20,13 +20,11 @@ urlky = []
 
 @login_required
 def root(request):
-
     return render(request, "plugin_prask_1_2_1/root.html", {"streets": _streets()})
 
 
 @login_required()
 def main(request, category, number=0):
-
     number = int(number)
     if 0 > number or number > 1000:
         return HttpResponseNotFound("Dom s takýmto číslom neexistuje.")
@@ -92,7 +90,6 @@ def main(request, category, number=0):
 
 @login_required()
 def reset(request, category):
-
     algorithm = ALL[category]
 
     with transaction.atomic():

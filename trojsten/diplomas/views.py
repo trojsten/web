@@ -74,7 +74,6 @@ def diploma_preview(request, diploma_id):
 
 @login_required
 def view_diplomas(request):
-
     user_groups = request.user.groups.all()
 
     diploma_templates = DiplomaTemplate.objects.get_queryset().order_by("name")
@@ -88,7 +87,6 @@ def view_diplomas(request):
     if request.method == "POST":
         form = DiplomaParametersForm(diploma_templates, data=request.POST, files=request.FILES)
         if form.is_valid():
-
             template_pk = form.cleaned_data["template"]
             participants_data = form.cleaned_data["participants_data"]
             join = form.cleaned_data["join_pdf"]

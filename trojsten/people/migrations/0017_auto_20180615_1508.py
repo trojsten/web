@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("people", "0016_merge_20180121_1616")]
 
     operations = [
@@ -23,7 +22,11 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 blank=True,
                 default=None,
-                help_text='Type an abbreviation, part of the name or school address and select the correct option from the list. If your school is not in the list, pick "Other school" and send us an e-mail',
+                help_text=(
+                    "Type an abbreviation, part of the name or school address and select the"
+                    ' correct option from the list. If your school is not in the list, pick "Other'
+                    ' school" and send us an e-mail'
+                ),
                 null=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 to="schools.School",

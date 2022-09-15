@@ -307,7 +307,6 @@ class ResultsGenerator(object):
         next_rank = 1
         last_key = None
         for row in results.rows:
-
             if not row.active:
                 row.rank = None
                 continue

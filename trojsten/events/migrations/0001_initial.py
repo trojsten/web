@@ -3,7 +3,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = []
 
     operations = [
@@ -29,7 +28,10 @@ class Migration(migrations.Migration):
                     "text",
                     models.TextField(
                         default="",
-                        help_text='Obsah bude prehnan\xfd <a href="http://en.wikipedia.org/wiki/Markdown">Markdownom</a>.',
+                        help_text=(
+                            "Obsah bude prehnan\xfd <a"
+                            ' href="http://en.wikipedia.org/wiki/Markdown">Markdownom</a>.'
+                        ),
                         blank=True,
                     ),
                 ),
@@ -120,7 +122,10 @@ class Migration(migrations.Migration):
                 (
                     "text",
                     models.TextField(
-                        help_text='Obsah bude prehnan\xfd <a href="http://en.wikipedia.org/wiki/Markdown">Markdownom</a>.'
+                        help_text=(
+                            "Obsah bude prehnan\xfd <a"
+                            ' href="http://en.wikipedia.org/wiki/Markdown">Markdownom</a>.'
+                        )
                     ),
                 ),
             ],
