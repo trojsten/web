@@ -89,7 +89,9 @@ def run(request, level=1):
                 "refresh": solved_right_now,
                 "try_count": userlevel.try_count,
                 "next_url": reverse(
-                    "plugin_zwarte:run", args=(level,), current_app=request.resolver_match.namespace
+                    "plugin_zwarte:run",
+                    args=(level,),
+                    current_app=request.resolver_match.namespace,
                 ),
             }
         ),

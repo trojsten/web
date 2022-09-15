@@ -17,7 +17,10 @@ AUTHENTICATION_BACKENDS = tuple(
             )
         ),
     ).split(";")
-) + ("oauth2_provider.backends.OAuth2Backend", "django.contrib.auth.backends.ModelBackend")
+) + (
+    "oauth2_provider.backends.OAuth2Backend",
+    "django.contrib.auth.backends.ModelBackend",
+)
 
 SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.social_details",

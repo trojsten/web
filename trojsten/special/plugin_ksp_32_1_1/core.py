@@ -157,7 +157,11 @@ class Level10:
     @staticmethod
     def run(x):
         x = int(x)
-        return "%s a %s z %s" % (Level10.BOYS[x % 13], Level10.GIRLS[x % 11], Level10.TOWNS[x % 7])
+        return "%s a %s z %s" % (
+            Level10.BOYS[x % 13],
+            Level10.GIRLS[x % 11],
+            Level10.TOWNS[x % 7],
+        )
 
 
 LEVELS = {

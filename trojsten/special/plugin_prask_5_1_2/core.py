@@ -93,7 +93,8 @@ class Level6(object):
         x = str(x)
         first_digit, weight = int(x[0]), int(x[1:])
         return "{} {:.2f}".format(
-            cls.PLANETS[first_digit - 1][0], cls.PLANETS[first_digit - 1][1] * weight
+            cls.PLANETS[first_digit - 1][0],
+            cls.PLANETS[first_digit - 1][1] * weight,
         )
 
 
