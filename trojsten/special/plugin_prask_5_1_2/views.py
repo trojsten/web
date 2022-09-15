@@ -50,7 +50,7 @@ def main(request, level=1):
 
 @login_required()
 def run(request, level=1):
-    MAX_INPUT = 10 ** 10 - 1
+    MAX_INPUT = 10**10 - 1
 
     level = max(min(int(level), MAX_LEVELS), 1)
     user = request.user
@@ -89,7 +89,9 @@ def run(request, level=1):
                 "refresh": solved_right_now,
                 "try_count": userlevel.try_count,
                 "next_url": reverse(
-                    "plugin_zwarte:run", args=(level,), current_app=request.resolver_match.namespace
+                    "plugin_zwarte:run",
+                    args=(level,),
+                    current_app=request.resolver_match.namespace,
                 ),
             }
         ),

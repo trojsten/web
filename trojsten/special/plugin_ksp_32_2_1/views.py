@@ -53,7 +53,7 @@ def run(request, level=1):
     except (KeyError, ValueError):
         return HttpResponseBadRequest()
 
-    if _input < 0 or _input >= 10 ** 10:
+    if _input < 0 or _input >= 10**10:
         return HttpResponseBadRequest()
 
     _output = LEVELS[level].run(_input)
@@ -80,7 +80,9 @@ def run(request, level=1):
                 "refresh": solved_right_now,
                 "try_count": userlevel.try_count,
                 "next_url": reverse(
-                    "plugin_zwarte:run", args=(level,), current_app=request.resolver_match.namespace
+                    "plugin_zwarte:run",
+                    args=(level,),
+                    current_app=request.resolver_match.namespace,
                 ),
             }
         ),

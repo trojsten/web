@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -50,7 +49,9 @@ class Migration(migrations.Migration):
                     "tester_response",
                     models.CharField(
                         blank=True,
-                        help_text="O\u010dak\xe1van\xe9 odpovede s\xfa OK, EXC, WA, SEC, TLE, IGN, CERR",
+                        help_text=(
+                            "O\u010dak\xe1van\xe9 odpovede s\xfa OK, EXC, WA, SEC, TLE, IGN, CERR"
+                        ),
                         max_length=10,
                         verbose_name="odpove\u010f testova\u010da",
                     ),

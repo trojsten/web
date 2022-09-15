@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("auth", "0006_require_contenttypes_0002")]
 
     operations = [
@@ -25,7 +24,10 @@ class Migration(migrations.Migration):
                     "is_superuser",
                     models.BooleanField(
                         default=False,
-                        help_text="Designates that this user has all permissions without explicitly assigning them.",
+                        help_text=(
+                            "Designates that this user has all permissions without explicitly"
+                            " assigning them."
+                        ),
                         verbose_name="superuser status",
                     ),
                 ),
@@ -37,11 +39,14 @@ class Migration(migrations.Migration):
                         validators=[
                             django.core.validators.RegexValidator(
                                 "^[\\w.@+-]+$",
-                                "Enter a valid username. This value may contain only letters, numbers and @/./+/-/_ characters.",
+                                "Enter a valid username. This value may contain only letters,"
+                                " numbers and @/./+/-/_ characters.",
                                 "invalid",
                             )
                         ],
-                        help_text="Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                        help_text=(
+                            "Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only."
+                        ),
                         unique=True,
                         verbose_name="username",
                     ),
@@ -70,7 +75,10 @@ class Migration(migrations.Migration):
                     "is_active",
                     models.BooleanField(
                         default=True,
-                        help_text="Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
+                        help_text=(
+                            "Designates whether this user should be treated as active. Unselect"
+                            " this instead of deleting accounts."
+                        ),
                         verbose_name="active",
                     ),
                 ),
@@ -108,7 +116,10 @@ class Migration(migrations.Migration):
                         related_name="user_set",
                         to="auth.Group",
                         blank=True,
-                        help_text="The groups this user belongs to. A user will get all permissions granted to each of their groups.",
+                        help_text=(
+                            "The groups this user belongs to. A user will get all permissions"
+                            " granted to each of their groups."
+                        ),
                         verbose_name="groups",
                     ),
                 ),
@@ -251,8 +262,12 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.CASCADE,
                 default=1,
                 to="people.School",
-                help_text="Do pol\xed\u010dka nap\xed\u0161te skratku, \u010das\u0165 n\xe1zvu "
-                'alebo adresy \u0161koly a n\xe1sledne vyberte spr\xe1vnu mo\u017enos\u0165 zo zoznamu. Pokia\u013e va\u0161a \u0161kola nie je v&nbsp;zozname, vyberte "Gymn\xe1zium in\xe9" a&nbsp;po\u0161lite n\xe1m e-mail.',
+                help_text=(
+                    "Do pol\xed\u010dka nap\xed\u0161te skratku, \u010das\u0165 n\xe1zvu alebo"
+                    " adresy \u0161koly a n\xe1sledne vyberte spr\xe1vnu mo\u017enos\u0165 zo"
+                    " zoznamu. Pokia\u013e va\u0161a \u0161kola nie je v&nbsp;zozname, vyberte"
+                    ' "Gymn\xe1zium in\xe9" a&nbsp;po\u0161lite n\xe1m e-mail.'
+                ),
                 null=True,
                 verbose_name="\u0161kola",
             ),

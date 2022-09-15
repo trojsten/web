@@ -12,7 +12,6 @@ __author__ = "Siegrift"
 
 
 class Level1(object):
-
     TARGET = "G"
 
     @classmethod
@@ -21,7 +20,6 @@ class Level1(object):
 
 
 class Level2(object):
-
     GEPARD_MOVEMENT_SPEED = 110
     TARGET = "531.54 Geparda"
 
@@ -31,7 +29,6 @@ class Level2(object):
 
 
 class Level3(object):
-
     DIGITS_FIRST_LETTERS = "NJDTŠPŠSOD"
     TARGET = "JNJNDŠ"
 
@@ -41,7 +38,6 @@ class Level3(object):
 
 
 class Level4(object):
-
     TARGET = "20"
 
     @classmethod
@@ -49,12 +45,11 @@ class Level4(object):
         divs = 0
         for i in range(1, 1 + int(sqrt(x))):
             if x % i == 0:
-                divs += 1 if x == i ** 2 else 2
+                divs += 1 if x == i**2 else 2
         return str(divs)
 
 
 class Level5(object):
-
     TARGET = "Rozpaprčená"
     DATA = []
     FILE = os.path.join(os.path.dirname(__file__), "tapakovci.txt")
@@ -75,7 +70,6 @@ class Level5(object):
 
 
 class Level6(object):
-
     TARGET = "Merkúr 8913.28"
     PLANETS = [
         ("Merkúr", 0.38),
@@ -99,12 +93,12 @@ class Level6(object):
         x = str(x)
         first_digit, weight = int(x[0]), int(x[1:])
         return "{} {:.2f}".format(
-            cls.PLANETS[first_digit - 1][0], cls.PLANETS[first_digit - 1][1] * weight
+            cls.PLANETS[first_digit - 1][0],
+            cls.PLANETS[first_digit - 1][1] * weight,
         )
 
 
 class Level7(object):
-
     TARGET = "2018-12-28T05:10:15"
 
     @classmethod
@@ -113,7 +107,6 @@ class Level7(object):
 
 
 class Level8(object):
-
     TARGET = "Lothar Collatz 111"
 
     @classmethod
@@ -132,9 +125,8 @@ class Level8(object):
 
 
 class Level9(object):
-
     TARGET = "432"
-    MAX = 10 ** 10
+    MAX = 10**10
     PRIMES = []
 
     @classmethod
@@ -170,7 +162,6 @@ class Level9(object):
 
 
 class Level10(object):
-
     TARGET = "TABULKA"
 
     @classmethod

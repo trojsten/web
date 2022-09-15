@@ -10,10 +10,8 @@ LEVELS = [
     Level(
         "woof",
         "button.html",
-        (
-            "Prefix ukazoval, že cez Developer Tools (F12) môžeme meniť stránku. Skús tak spraviť "
-            "tlačidlo stlačitelné. Anglicky slovo 'disabled' znamená 'zakázaný' :P"
-        ),
+        "Prefix ukazoval, že cez Developer Tools (F12) môžeme meniť stránku. Skús tak spraviť "
+        "tlačidlo stlačitelné. Anglicky slovo 'disabled' znamená 'zakázaný' :P",
     ),
     Level(
         "slamastika",
@@ -28,10 +26,8 @@ LEVELS = [
     Level(
         "hihihihi",
         "input.html",
-        (
-            "Ale veď naraz môžem objednať iba 10 rezňov! Hmm, nedá sa tento limit zväčšiť "
-            "kdesi v kóde?"
-        ),
+        "Ale veď naraz môžem objednať iba 10 rezňov! Hmm, nedá sa tento limit zväčšiť "
+        "kdesi v kóde?",
     ),
     Level("abrakadabra", "abeceda.html", "Koľko písmen má ABECEDA?"),
     Level("7", "finish.html", "Hmm, žiadny hint tu nie je, vyhral/a si :P"),

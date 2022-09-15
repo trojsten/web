@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("old_submit", "0004_submit_protocol")]
 
     operations = [

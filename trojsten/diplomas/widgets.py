@@ -39,5 +39,5 @@ class Editor(forms.Textarea):
         return (
             "%s<script>"
             'var editor = CodeMirror.fromTextArea(document.getElementById("%s"), %s);'
-            "</script>"
-        ) % (field, attrs["id"], json.dumps(self.config))
+            "</script>" % (field, attrs["id"], json.dumps(self.config))
+        )

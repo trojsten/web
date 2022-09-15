@@ -4,7 +4,6 @@ import random
 
 
 class A(object):
-
     NAME = "Agátová"
 
     MORE = 1
@@ -45,7 +44,6 @@ class A(object):
 
 
 class B(object):
-
     NAME = "Biela"
 
     @staticmethod
@@ -54,7 +52,6 @@ class B(object):
 
     @staticmethod
     def response(number, state, previous):
-
         if number == 1 or number == 1000:
             return 0, state, False
 
@@ -122,7 +119,6 @@ class B(object):
 
 
 class C(object):
-
     NAME = "Cesnaková"
 
     @staticmethod

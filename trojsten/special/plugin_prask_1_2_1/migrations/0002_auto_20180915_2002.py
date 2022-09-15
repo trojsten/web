@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("plugin_prask_1_2_1", "0001_initial")]
 
     operations = [

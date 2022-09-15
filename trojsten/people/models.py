@@ -73,12 +73,14 @@ class User(AbstractUser):
         blank=True,
         null=True,
         verbose_name="škola",
-        help_text="Do políčka napíšte skratku, "
-        "časť názvu alebo adresy školy a následne "
-        "vyberte správnu možnosť zo zoznamu. "
-        "Pokiaľ vaša škola nie je "
-        'v&nbsp;zozname, vyberte "Iná škola" '
-        "a&nbsp;pošlite nám e-mail.",
+        help_text=(
+            "Do políčka napíšte skratku, "
+            "časť názvu alebo adresy školy a následne "
+            "vyberte správnu možnosť zo zoznamu. "
+            "Pokiaľ vaša škola nie je "
+            'v&nbsp;zozname, vyberte "Iná škola" '
+            "a&nbsp;pošlite nám e-mail."
+        ),
         default=None,
         on_delete=models.CASCADE,
     )

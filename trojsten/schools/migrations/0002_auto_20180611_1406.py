@@ -45,7 +45,6 @@ def revert_replace_default_school_with_null(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("schools", "0001_initial")]
 
     operations = [

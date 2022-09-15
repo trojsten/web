@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     replaces = [
         ("events", "0001_initial"),
         ("events", "0002_auto_20160118_1906"),
@@ -45,7 +44,10 @@ class Migration(migrations.Migration):
                     models.TextField(
                         blank=True,
                         default="",
-                        help_text='Obsah bude prehnan\xfd <a href="http://en.wikipedia.org/wiki/Markdown">Markdownom</a>.',
+                        help_text=(
+                            "Obsah bude prehnan\xfd <a"
+                            ' href="http://en.wikipedia.org/wiki/Markdown">Markdownom</a>.'
+                        ),
                     ),
                 ),
             ],

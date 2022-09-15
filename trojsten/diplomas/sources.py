@@ -170,14 +170,12 @@ class Naboj(AbstractSource):
 
 
 class NabojMath(Naboj):
-
     name = "naboj_math"
 
     HOMEPAGE_URL = "https://math.naboj.org"
 
 
 class NabojPhysics(Naboj):
-
     name = "naboj_physics"
 
     HOMEPAGE_URL = "https://physics.naboj.org"

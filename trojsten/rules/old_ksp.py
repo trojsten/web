@@ -76,7 +76,6 @@ class KSPResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
 
 class KSPRules(CompetitionRules):
-
     RESULTS_TAGS = {KSP_Z: ResultsTag(key=KSP_Z, name="Z"), KSP_O: ResultsTag(key=KSP_O, name="O")}
 
     RESULTS_GENERATOR_CLASS = KSPResultsGenerator
