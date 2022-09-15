@@ -2,7 +2,6 @@
 import logging
 
 from django.core.management.base import BaseCommand
-from django.utils import timezone
 from django.utils.six import text_type
 
 from trojsten.contests.models import Round, Semester

@@ -73,8 +73,8 @@ class FKSResultsGenerator(ResultsGenerator):
     def source_or_zip_submit_points(self, previous_points, submit):
         """
         For all submits in submit queryset, the function `add_submit_to_row` is called.
-        Source and ZIP points in FKS can be computed from two submits,
-        which demands this processing:
+        Source and ZIP points in FKS can be computed
+        from two submits, which demands this processing:
         - user receives all points for the last submit before `round.end_time`
         - for the last submit in the second phase of the round user can additionally receive
           max(0, (points in second phase - previous points) / 2) points
