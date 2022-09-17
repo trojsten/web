@@ -77,10 +77,11 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                 - constants.SUSI_YEARS_OF_CAMPS_HISTORY,
                 going=True,
             )
-            .exclude(Q(event__type__name=constants.SUSI_CAMP_TYPE))
-            .exclude(Q(event__type__name=KMS_MO_FINALS_TYPE))
+            .exclude(event__type__name=constants.SUSI_CAMP_TYPE)
+            .exclude(event__type__name=KMS_MO_FINALS_TYPE)
+            .exclude(type=EventParticipant.ORGANIZER)
             .values("user")
-            .annotate(camps=Count("event__semester"))
+            .annotate(camps=Count("event"))
             .values_list("user", "camps")
         )
 
