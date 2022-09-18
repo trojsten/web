@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("old_submit", "0001_squashed_0005_auto_20170303_1939")]
 
     operations = [

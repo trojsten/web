@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("people", "0011_userpropertykey_hidden"),
         ("contests", "0001_squashed_0008_auto_20170228_2341"),

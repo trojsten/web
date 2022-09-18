@@ -11,7 +11,6 @@ __author__ = "Sysel"
 
 
 class Level1(object):
-
     TARGET = "47"
 
     @classmethod
@@ -20,7 +19,6 @@ class Level1(object):
 
 
 class Level2(object):
-
     TARGET = "11628"
 
     @classmethod
@@ -29,7 +27,6 @@ class Level2(object):
 
 
 class Level3(object):
-
     TARGET = "529200"
 
     @classmethod
@@ -41,12 +38,11 @@ class Level3(object):
 
 
 class Level4(object):
-
     TARGET = str((37, 73))
 
     @classmethod
     def run(cls, x):
-        n = int(x ** 0.5) // 2
+        n = int(x**0.5) // 2
         x -= 4 * n * n
         if x < 2 * n + 1:
             res = (-n, n - x)
@@ -60,7 +56,6 @@ class Level4(object):
 
 
 class Level5(object):
-
     TARGET = "drúže"
     DATA = []
     FILE = os.path.join(os.path.dirname(__file__), "dom.txt")
@@ -81,7 +76,6 @@ class Level5(object):
 
 
 class Level6(object):
-
     SECRET = 7182818
     TARGET = "1.000000000000000"
 
@@ -92,7 +86,6 @@ class Level6(object):
 
 
 class Level7(object):
-
     COUNTS = [6, 2, 5, 5, 4, 5, 6, 3, 7, 6]
     TARGET = "42"
 
@@ -102,7 +95,6 @@ class Level7(object):
 
 
 class Level8(object):
-
     TARGET = str(13 * 7 * 2 * 2 * 2)
 
     @classmethod
@@ -127,7 +119,6 @@ class Level8(object):
 
 
 class Level9(object):
-
     TARGET = str(1234 * 1024 + 256)
 
     @classmethod
@@ -136,7 +127,6 @@ class Level9(object):
 
 
 class Level10(object):
-
     TARGET = "7 SPRÁVNE, 0 NA ZLEJ POZÍCII"
     SECRET = "2637033"
 

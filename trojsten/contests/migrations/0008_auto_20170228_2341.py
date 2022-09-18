@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("contests", "0007_auto_20161031_2313_squashed_0009_remove_task_reviewer")]
 
     operations = [

@@ -44,5 +44,4 @@ class UFOResultsGenerator(PrimarySchoolGeneratorMixin, BonusColumnGeneratorMixin
 
 
 class UFORules(FinishedRounds, CompetitionRules):
-
     RESULTS_GENERATOR_CLASS = UFOResultsGenerator

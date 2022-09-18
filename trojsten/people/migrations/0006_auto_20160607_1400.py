@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("people", "0005_auto_20160607_1400"), ("schools", "0001_initial")]
 
     operations = [
@@ -14,7 +13,12 @@ class Migration(migrations.Migration):
             name="school",
             field=models.ForeignKey(
                 default=1,
-                help_text='Do pol\xed\u010dka nap\xed\u0161te skratku, \u010das\u0165 n\xe1zvu alebo adresy \u0161koly a n\xe1sledne vyberte spr\xe1vnu mo\u017enos\u0165 zo zoznamu. Pokia\u013e va\u0161a \u0161kola nie je v&nbsp;zozname, vyberte "Gymn\xe1zium in\xe9" a&nbsp;po\u0161lite n\xe1m e-mail.',
+                help_text=(
+                    "Do pol\xed\u010dka nap\xed\u0161te skratku, \u010das\u0165 n\xe1zvu alebo"
+                    " adresy \u0161koly a n\xe1sledne vyberte spr\xe1vnu mo\u017enos\u0165 zo"
+                    " zoznamu. Pokia\u013e va\u0161a \u0161kola nie je v&nbsp;zozname, vyberte"
+                    ' "Gymn\xe1zium in\xe9" a&nbsp;po\u0161lite n\xe1m e-mail.'
+                ),
                 null=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 to="schools.School",

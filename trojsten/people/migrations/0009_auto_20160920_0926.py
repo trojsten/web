@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("people", "0008_userpropertykey_regex")]
 
     operations = [
@@ -31,7 +30,8 @@ class Migration(migrations.Migration):
                 validators=[
                     django.core.validators.RegexValidator(
                         "^[\\w.@+-]+$",
-                        "Enter a valid username. This value may contain only letters, numbers and @/./+/-/_ characters.",
+                        "Enter a valid username. This value may contain only letters, numbers and"
+                        " @/./+/-/_ characters.",
                     )
                 ],
                 verbose_name="username",

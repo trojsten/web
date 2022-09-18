@@ -8,7 +8,6 @@ import trojsten.utils.utils
 
 
 class Migration(migrations.Migration):
-
     replaces = [
         ("contests", "0001_squashed_0003_auto_20160301_1436"),
         ("contests", "0002_auto_20160502_1646"),

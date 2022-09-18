@@ -7,7 +7,6 @@ import trojsten.menu.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("sites", "0001_initial")]
 
     operations = [
@@ -49,7 +48,10 @@ class Migration(migrations.Migration):
                 (
                     "url",
                     models.CharField(
-                        help_text='Povolen\xe9 tvary s\xfa "http(s)://domain.com/path", "/absolute/path" a "@urlname".',
+                        help_text=(
+                            'Povolen\xe9 tvary s\xfa "http(s)://domain.com/path", "/absolute/path"'
+                            ' a "@urlname".'
+                        ),
                         max_length=196,
                         verbose_name="adresa",
                         validators=[trojsten.menu.models.validate_url],
@@ -59,7 +61,10 @@ class Migration(migrations.Migration):
                 (
                     "active_url_pattern",
                     models.CharField(
-                        help_text="Medzerou oddelen\xe9 urlnames a regul\xe1rne v\xfdrazy,ktor\xe9 pri zhode s cestou zv\xfdraznia aktu\xe1lnu polo\u017eku.",
+                        help_text=(
+                            "Medzerou oddelen\xe9 urlnames a regul\xe1rne v\xfdrazy,ktor\xe9 pri"
+                            " zhode s cestou zv\xfdraznia aktu\xe1lnu polo\u017eku."
+                        ),
                         max_length=196,
                         verbose_name="regul\xe1rne v\xfdrazy pre zv\xfdraznenie",
                         blank=True,

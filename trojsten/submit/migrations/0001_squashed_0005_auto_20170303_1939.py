@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     replaces = [
         ("old_submit", "0001_initial"),
         ("old_submit", "0002_auto_20160608_1143"),
@@ -59,7 +58,10 @@ class Migration(migrations.Migration):
                     "tester_response",
                     models.CharField(
                         blank=True,
-                        help_text="O\u010dak\xe1van\xe9 odpovede s\xfa CERR, TLE, WA, MLE, OK, IGN, SEC, EXC",
+                        help_text=(
+                            "O\u010dak\xe1van\xe9 odpovede s\xfa CERR, TLE, WA, MLE, OK, IGN,"
+                            " SEC, EXC"
+                        ),
                         max_length=10,
                         verbose_name="odpove\u010f testova\u010da",
                     ),

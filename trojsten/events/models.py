@@ -57,9 +57,9 @@ class Event(models.Model):
     start_time = models.DateTimeField(verbose_name="čas začiatku")
     end_time = models.DateTimeField(verbose_name="čas konca")
     text = models.TextField(
-        help_text="Obsah bude prehnaný <a "
-        'href="http://en.wikipedia.org/wiki/Markdown">'
-        "Markdownom</a>.",
+        help_text=(
+            'Obsah bude prehnaný <a href="http://en.wikipedia.org/wiki/Markdown">Markdownom</a>.'
+        ),
         default="",
         blank=True,
     )

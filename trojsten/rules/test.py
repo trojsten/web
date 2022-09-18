@@ -94,7 +94,7 @@ class KMSCoefficientTest(TestCase):
         self.semesters = []
         self.camps = []
         self.mo_finals = []
-        for (year, semester_number) in [(1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2)]:
+        for year, semester_number in [(1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2)]:
             self.semesters.append(
                 Semester.objects.create(
                     year=year, number=semester_number, name="Test semester", competition=competition
@@ -1003,13 +1003,24 @@ class SusiCoefficientTest(TestCase):
         self.type_camp_kms = EventType.objects.create(
             name=KMS_CAMP_TYPE, organizers_group=group, is_camp=True
         )
+        self.type_camp_LTT = EventType.objects.create(
+            name="LTT", organizers_group=group, is_camp=False
+        )
 
         self.competition = Competition.objects.create(name="TestCompetition")
         self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         self.semesters = []
         self.camps = []
         self.other_camps = []
-        for (year, semester_number) in [(1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2)]:
+        self.ltt = Event.objects.create(
+            name="LTT",
+            type=self.type_camp_LTT,
+            semester=None,
+            place=self.place,
+            start_time=self.time,
+            end_time=self.time,
+        )
+        for year, semester_number in [(1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2)]:
             self.semesters.append(
                 Semester.objects.create(
                     year=year,
@@ -1127,8 +1138,22 @@ class SusiCoefficientTest(TestCase):
             susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP,
         )
 
+    def test_camp_with_no_semester(self):
+        # Coefficient = 1: successful semesters = 0, other camps = 1
+        EventParticipant.objects.create(
+            event=self.ltt,
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=True,
+        )
+        generator = SUSIResultsGenerator(self.tag)
+        self.assertEqual(
+            generator.get_user_coefficient(self.test_user, self.round),
+            1 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP,
+        )
+
     def test_all_camps(self):
-        # Coefficient = 4: successful semesters = 1, other camps = 1
+        # Coefficient = 5: successful semesters = 1, other camps = 2
         EventParticipant.objects.create(
             event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
         )
@@ -1138,11 +1163,17 @@ class SusiCoefficientTest(TestCase):
             type=EventParticipant.PARTICIPANT,
             going=True,
         )
+        EventParticipant.objects.create(
+            event=self.ltt,
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=True,
+        )
         generator = SUSIResultsGenerator(self.tag)
         self.assertEqual(
             generator.get_user_coefficient(self.test_user, self.round),
             1 * susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP
-            + 1 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP,
+            + 2 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP,
         )
 
     def test_ignore_not_going_reserve(self):
@@ -1194,7 +1225,7 @@ class SusiCoefficientTest(TestCase):
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
 
     def test_many_camps(self):
-        # Coefficient = 9: successful semesters = 2, other camps = 3
+        # Coefficient = 10: successful semesters = 2, other camps = 4
         for i in range(2):
             EventParticipant.objects.create(
                 event=self.camps[i],
@@ -1215,11 +1246,17 @@ class SusiCoefficientTest(TestCase):
             type=EventParticipant.RESERVE,
             going=True,
         )
+        EventParticipant.objects.create(
+            event=self.ltt,
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=True,
+        )
         generator = SUSIResultsGenerator(self.tag)
         self.assertEqual(
             generator.get_user_coefficient(self.test_user, self.round),
             2 * susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP
-            + 3 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP,
+            + 4 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP,
         )
 
     def test_number_of_solved_tasks(self):
@@ -1275,8 +1312,8 @@ class SusiCoefficientTest(TestCase):
         )
 
     def test_coefficient_all(self):
-        # Coefficient = 16: successful semesters = 2, Susi camps = 1,
-        # other camps = 2, puzzlehunt participations = 3
+        # Coefficient = 21: successful semesters = 2, Susi camps = 1,
+        # other camps = 3, puzzlehunt participations = 3
         participations = UserProperty.objects.get(user=self.test_user, key=self.puzzlehunt_key)
         participations.value = "3"
         participations.save()
@@ -1290,6 +1327,12 @@ class SusiCoefficientTest(TestCase):
                 type=EventParticipant.PARTICIPANT,
                 going=True,
             )
+        EventParticipant.objects.create(
+            event=self.ltt,
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=True,
+        )
         points = [9 for _ in range(1, 9)]
         for semester in self.semesters[:2]:
             round_ = semester.round_set.first()
@@ -1308,7 +1351,7 @@ class SusiCoefficientTest(TestCase):
             generator.get_user_coefficient(self.test_user, self.round),
             1 * susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP
             + 2 * susi_constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS
-            + 2 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP
+            + 3 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP
             + 3 * susi_constants.SUSI_EXP_POINTS_FOR_PUZZLEHUNT,
         )
 

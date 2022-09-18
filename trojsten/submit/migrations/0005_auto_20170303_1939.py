@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("old_submit", "0004_auto_20170108_1728")]
 
     operations = [
@@ -13,7 +12,9 @@ class Migration(migrations.Migration):
             name="tester_response",
             field=models.CharField(
                 blank=True,
-                help_text="O\u010dak\xe1van\xe9 odpovede s\xfa CERR, TLE, WA, MLE, OK, IGN, SEC, EXC",
+                help_text=(
+                    "O\u010dak\xe1van\xe9 odpovede s\xfa CERR, TLE, WA, MLE, OK, IGN, SEC, EXC"
+                ),
                 max_length=10,
                 verbose_name="odpove\u010f testova\u010da",
             ),

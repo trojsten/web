@@ -13,7 +13,6 @@ from trojsten.submit import constants as submit_constants
 
 
 class CompetitionRules(object):
-
     RESULTS_TAGS = {DEFAULT_TAG_KEY: ResultsTag(key=DEFAULT_TAG_KEY, name="")}
 
     RESULTS_GENERATOR_CLASS = ResultsGenerator

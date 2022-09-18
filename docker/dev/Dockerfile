@@ -1,6 +1,7 @@
 FROM python:3.8-alpine3.11
 
-ENV PYTHONUNBUFFERED=0
+ENV PYTHONUNBUFFERED=0 \
+    GET_POETRY_IGNORE_DEPRECATION=1
 
 RUN apk add --no-cache curl
 
