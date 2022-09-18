@@ -64,6 +64,22 @@ def get_camp_people(org, all_sites=False):
     ]
 
 
+def get_task_submissions(all_sites=False):
+    query = Submit.objects.filter(
+        points__gt=0,
+    )
+    if not all_sites:
+        competitions = Competition.objects.current_site_only()
+        query = query.filter(task__round__semester__competition__in=competitions)
+    submit_counts = (
+        query.values("user").annotate(count=Count("task", distinct=True)).order_by("-count")[:TOP_N]
+    )
+    return [
+        (value["count"], User.objects.get(id=value["user"]).get_full_name())
+        for value in submit_counts
+    ]
+
+
 def view_leaderboard(request):
     all_sites = request.GET.get("all_sites", False)
     return render(
@@ -73,7 +89,8 @@ def view_leaderboard(request):
             "leaderboards": [
                 (_("Most submissions reviewed"), get_reviewers(all_sites)),
                 (_("Most camps organized"), get_camp_people(True, all_sites)),
-                (_("Most camps attended"), get_camp_people(False)),
+                (_("Most camps attended"), get_camp_people(False, all_sites)),
+                (_("Most tasks submitted for > 0 points"), get_task_submissions(all_sites)),
             ],
             "all_sites": all_sites,
         },

@@ -1008,6 +1008,9 @@ msgstr "Najviac zorganizovaných sústredení"
 msgid "Most camps attended"
 msgstr "Najviac účastí na sústredeniach"
 
+msgid "Most tasks submitted for > 0 points"
+msgstr "Najviac odovzdaných úloh za > 0 bodov"
+
 msgid "This site only"
 msgstr "Len tento seminár"
 
