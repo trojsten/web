@@ -133,7 +133,7 @@ class FKSResultsGenerator(ResultsGenerator):
         for excess in sorted(
             (cell for cell in row.cells_by_key.values() if cell.active),
             key=lambda cell: -self.get_cell_total(res_request, cell),
-        )[5:]:
+        )[4:]:
             excess.active = False
 
     def add_special_row_cells(self, request, row, cols):
