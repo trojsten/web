@@ -1,8 +1,9 @@
-FROM python:3.8-alpine3.12
+FROM python:3.8-alpine3.13
 
 ENV PYTHONUNBUFFERED=0
 
 RUN apk add --no-cache \
+        bash \
         libressl-dev \
         musl-dev \
         libffi-dev \
