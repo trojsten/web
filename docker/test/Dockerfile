@@ -4,6 +4,7 @@ ENV PYTHONUNBUFFERED=0
 
 RUN apk add --no-cache \
         bash \
+        curl \
         libressl-dev \
         musl-dev \
         libffi-dev \
