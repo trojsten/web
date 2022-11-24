@@ -1,11 +1,23 @@
-FROM python:3.7-alpine3.12
+FROM python:3.8-alpine3.13
 
 ENV PYTHONUNBUFFERED=0
 
-RUN apk add --no-cache curl bash git
+RUN apk add --no-cache \
+        bash \
+        curl \
+        libressl-dev \
+        musl-dev \
+        libffi-dev \
+        gcc
 
-RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python /dev/stdin -p \
-    && ln -s /root/.poetry/bin/poetry /usr/local/bin/poetry
+RUN pip install --upgrade pip
+RUN pip install poetry
+
+RUN apk del \
+        libressl-dev \
+        musl-dev \
+        libffi-dev \
+        gcc
 
 COPY ./docker/common /tmp/build
 
