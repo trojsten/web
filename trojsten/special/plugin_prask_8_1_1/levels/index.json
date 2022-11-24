@@ -51,7 +51,7 @@
             "name": "Prask 1",
             "description": "",
             "task_id": 2186,
-            "points_per_level": 3,
+            "points_per_level": 20,
             "levels": [
                 "prask/prask1.json",
                 "prask/prask2.json",
