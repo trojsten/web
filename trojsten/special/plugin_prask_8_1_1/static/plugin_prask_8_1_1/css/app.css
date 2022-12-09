@@ -377,6 +377,18 @@ body {
   background-image: url('../assets/graphics/buttons/btn_stop_disabled.png');
 }
 
+.level_body .program_view .program_controls .button.tutorial {
+    background-image: url('../assets/graphics/buttons/btn_tutorial.png');
+  }
+  
+.level_body .program_view .program_controls .button.tutorial:hover {
+    background-image: url('../assets/graphics/buttons/btn_tutorial_selected.png');
+  }
+  
+.level_body .program_view .program_controls .button.tutorial.disabled {
+    background-image: url('../assets/graphics/buttons/btn_tutorial_disabled.png');
+  }
+
 .level_body .program_view .program_controls .button.warp {
   background-image: url('../assets/graphics/buttons/btn_warp.png');
 }
