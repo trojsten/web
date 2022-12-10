@@ -28,7 +28,8 @@ angular.module('zerg.controllers', [])
     .controller('GameCtrl', ['$scope', '$routeParams', '$location', '$timeout',
                              'Levels', 'Solutions', 'Submits', 'ngDialog',
         function ($scope, $routeParams, $location, $timeout, Levels, Solutions, Submits, ngDialog) {
-
+            $scope.staticUrlPrefix = STATIC_URL_PREFIX;
+            
             var getCookie = function (name) {
                 var cookieValue = null;
                 if (document.cookie && document.cookie != '') {
