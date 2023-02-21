@@ -476,6 +476,27 @@ class TaskAndSolutionStatementsTests(TestCase):
         response = self.client.get(url)
         self.assertContains(response, _(self.point_deduction_message))
 
+    def test_missing_description_after_round_end(self):
+        self.client.force_login(self.nonstaff_user)
+        self.task.text_submit_solution = ["Password"]
+        self.task.has_description = True
+        self.task.save()
+        self.round.end_time = timezone.now() + timezone.timedelta(-8)
+        self.round.save()
+        Submit.objects.create(
+            task=self.task,
+            user=self.nonstaff_user,
+            submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            points=4,
+        )
+        url = reverse("task_statement", kwargs={"task_id": self.task.id})
+        response = self.client.get(url)
+        self.assertNotContains(response, _(self.point_deduction_message))
+        url = reverse("task_list", kwargs={"round_id": self.round.id})
+        response = self.client.get(url)
+        self.assertNotContains(response, _(self.point_deduction_message))
+
     def test_text_and_description_submitted(self):
         self.client.force_login(self.nonstaff_user)
         self.task.text_submit_solution = ["Password"]

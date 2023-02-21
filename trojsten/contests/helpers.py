@@ -51,6 +51,7 @@ def check_description_at_text_submit(user, tasks):
         if (
             task.has_text_submit
             and task.has_description
+            and task.round.can_submit
             and user_submits.filter(task=task, submit_type=SUBMIT_TYPE_TEXT, points__gt=0)
             and not user_submits.filter(task=task, submit_type=SUBMIT_TYPE_DESCRIPTION)
         ):
