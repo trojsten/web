@@ -1,5 +1,12 @@
 {% load utils %}
+{% load i18n %}
 <!-- Nav tabs -->
+
+{% if warning_no_description %}
+    <div class="alert alert-danger">
+        {% trans "You have submitted a text answer but have not submitted a description. This may lead to point deduction." %}
+    </div>
+{% endif %}
 
 {% if categories.count > 1 %}
 <ul class="nav nav-tabs" role="tablist">

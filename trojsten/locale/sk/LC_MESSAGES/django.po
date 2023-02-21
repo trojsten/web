@@ -1016,3 +1016,6 @@ msgstr "Len tento seminár"
 
 msgid "Include all sites"
 msgstr "Zahrnúť všetky semináre"
+
+msgid "You have submitted a text answer but have not submitted a description. This may lead to point deduction."
+msgstr "Máš odovzdanú textovú odpoveď, ale žiaden popis. Toto môže viesť k strate bodov."

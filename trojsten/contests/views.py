@@ -14,6 +14,7 @@ from trojsten.rules.susi_constants import SUSI_COMPETITION_ID
 from trojsten.utils.utils import is_true
 
 from . import constants
+from .helpers import check_description_at_text_submit
 
 
 @get_article(can_read=True)
@@ -34,6 +35,9 @@ def _statement_view(request, task_id, solution=False):
     if solution and task.solution_file_exists:
         with settings.TASK_STATEMENTS_STORAGE.open(task.get_path(solution=True)) as f:
             template_data["solution_text"] = f.read().decode()
+    template_data[
+        "warning_no_description"
+    ] = request.user.is_authenticated and check_description_at_text_submit(request.user, [task])
     return render(
         request,
         "trojsten/contests/view_{}_statement.html".format("solution" if solution else "task"),

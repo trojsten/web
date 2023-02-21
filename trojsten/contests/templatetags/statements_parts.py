@@ -8,7 +8,7 @@ from trojsten.rules.susi_constants import SUSI_COMPETITION_ID
 from trojsten.submit.models import Submit
 from trojsten.utils import utils
 
-from ..helpers import get_points_from_submits, slice_tag_list
+from ..helpers import check_description_at_text_submit, get_points_from_submits, slice_tag_list
 
 register = template.Library()
 
@@ -34,6 +34,8 @@ def show_task_list(context, round):
         "tasks": tasks,
         "categories": categories,
         "solutions_visible": round.solutions_are_visible_for_user(context["user"]),
+        "warning_no_description": context["user"].is_authenticated
+        and check_description_at_text_submit(context["user"], tasks),
     }
     if context["user"].is_authenticated:
         submits = Submit.objects.latest_for_user(tasks, context["user"])
