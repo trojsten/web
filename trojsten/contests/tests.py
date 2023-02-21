@@ -340,7 +340,7 @@ class TaskAndSolutionStatementsTests(TestCase):
         self.task_url = reverse("task_statement", kwargs={"task_id": self.task.id})
         self.solution_url = reverse("solution_statement", kwargs={"task_id": self.task.id})
         self.point_deduction_message = (
-            "You have submitted a text answer but"
+            "You have submitted a text answer but "
             "have not submitted a description. This may lead to point deduction."
         )
 
