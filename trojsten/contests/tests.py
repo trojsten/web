@@ -339,7 +339,10 @@ class TaskAndSolutionStatementsTests(TestCase):
         self.nonstaff_user = User.objects.create(username="nonstaff")
         self.task_url = reverse("task_statement", kwargs={"task_id": self.task.id})
         self.solution_url = reverse("solution_statement", kwargs={"task_id": self.task.id})
-        self.point_deduction_message = "You have submitted a text answer but have not submitted a description. This may lead to point deduction."
+        self.point_deduction_message = (
+            "You have submitted a text answer but"
+            "have not submitted a description. This may lead to point deduction."
+        )
 
     def test_invalid_task(self):
         url = reverse("task_statement", kwargs={"task_id": get_noexisting_id(Task)})
