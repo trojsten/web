@@ -91,7 +91,7 @@ def get_total_score_column_index(results_table):
 def level_updates_from_semester_results(semester, level_up_score_thresholds=None):
     """
     Returns a list of LevelUpRecords for users whose level should be updated.
-    First 5 competitors from each level get a levelling boost (results_table_level + 1) for the
+    First 3 competitors from each level get a levelling boost (results_table_level + 1) for the
     next semester.
 
     Optionally define custom level-up thresholds for different result table levels by setting
@@ -123,7 +123,7 @@ def level_updates_from_semester_results(semester, level_up_score_thresholds=None
             if not row["active"]:
                 continue
             total_points = float(row["cell_list"][total_score_column_index]["points"])
-            if int(row["rank"]) > 5 or total_points < level_up_score_thresholds[table_level]:
+            if int(row["rank"]) > 3 or total_points < level_up_score_thresholds[table_level]:
                 break
             try:
                 level_up = FKSLevel(
