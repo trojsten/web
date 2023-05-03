@@ -26,6 +26,22 @@ def is_authenticated(request):
     return {"authenticated": request.user.is_authenticated}
 
 
+@json_response
+def userinfo(request):
+    if not request.user.is_authenticated:
+        return {"error": "Not logged in."}
+
+    u = request.user
+    return {
+        "sub": str(u.id),
+        "name": u.get_full_name(),
+        "given_name": u.first_name,
+        "family_name": u.last_name,
+        "preferred_username": u.username,
+        "email": u.email,
+    }
+
+
 def _autologin_urls():
     return (site.url for site in settings.SITES.values() if site.autologin)
 
