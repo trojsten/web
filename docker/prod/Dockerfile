@@ -6,8 +6,8 @@ RUN apk add --no-cache --virtual common-deps curl
 
 FROM base AS builder
 
-RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python \
-    && ln -s /root/.poetry/bin/poetry /usr/local/bin/poetry
+RUN curl -sSL https://install.python-poetry.org | python - \
+    && ln -s /root/.local/bin/poetry /usr/local/bin/poetry
 
 COPY ./pyproject.toml /tmp/build/
 COPY ./poetry.lock /tmp/build/

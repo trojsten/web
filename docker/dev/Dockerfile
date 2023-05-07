@@ -5,14 +5,14 @@ ENV PYTHONUNBUFFERED=0 \
 
 RUN apk add --no-cache curl
 
-RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python \
-    && ln -s /root/.poetry/bin/poetry /usr/local/bin/poetry
-
 COPY ./docker/common/ /tmp/build/
 
 RUN set -x \
     && sh /tmp/build/install_build_deps.sh \
     && sh /tmp/build/install_runtime_deps.sh
+    
+RUN curl -sSL https://install.python-poetry.org | python - \
+    && ln -s /root/.local/bin/poetry /usr/local/bin/poetry
 
 COPY ./fonts/* /usr/share/fonts/
 
