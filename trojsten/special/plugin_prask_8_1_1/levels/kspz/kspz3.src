@@ -1,0 +1,32 @@
+{
+    "name": "3 - Zeleno modrá cesta 2",
+    "briefing": "Jet torche sa nedajú zapnúť ani vypnúť. Prepínače však nie sú umiestnené náhodne.",
+    "hint": "Úloha sa veľmi podobá na 5 level zo série Prask 1.4. Čo sa zmenilo? A ako túto zmenu spoznám?",
+    "battery_limit": 350,
+    "memory_limit": 20,
+    "start": [1, 8],
+    "startFacing": 0,
+    "map": [
+        "WWWWWWWWWWWWWWWWWWWWWWWWWW",
+        "WWWWWWWWWWWWjjjjjjjjjWWWWW",
+        "WWWWWWWWWWWWjmFmFmFFjWWWWW",
+        "WWjjjjjWWWWWjFjjjjjFjWWWWW",
+        "WWjmFFjWWWWWjMjWWWjFjWWWWW",
+        "WWjFjFjjjjjWjFjWWWjFjjjjjW",
+        "WWjMjmFmFFjWjMjWWWjFjmFFjW",
+        "WjjFjjjjjFjjjFjWWWjFjFjFjW",
+        "WmFMjWWWjFjmFMjWWWjmFMjFjW",
+        "WjjjjWWWjFjFjjjWWWjjjjjFjW",
+        "WWWWWWWWjmFMjWWWWWWWWWjFjW",
+        "WWWWWWWWjjjjjWWWWWWWWWjFjW",
+        "WWWWWWWWWWWWWWWWWWWWWWjFjW",
+        "WWWWWWWWWWWWWWWWWWWWWWjFjW",
+        "WWWWWWWWWWWWWWWWWWWWWWjFjW",
+        "WWWWWWWWWWWWWWWWWWWWWWjFjW",
+        "WWWWWWWWWWWWWWWWWWWWWWjmEW",
+        "WWWWWWWWWWWWWWWWWWWWWWjjjW",
+        "WWWWWWWWWWWWWWWWWWWWWWWWWW"
+    ],
+    "torch_logic": {
+    }  
+}

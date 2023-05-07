@@ -1,0 +1,23 @@
+{
+    "name": "1 - Riedke bludisko",
+    "briefing": "Zerg bot má dosť obmedzenú pamäť. Pokúste sa nájsť čo najšikovnejšiu cestu k cieľu.",
+    "hint": "Steny vnútri poľa vôbec nie sú náhodné, ale sú umiestnené s precíznou presnosťou.",
+    "battery_limit": 150,
+    "memory_limit": 6,
+    "start": [1, 1],
+    "startFacing": 0,
+    "map": [
+        "WWWWWWWWWW",
+        "WFFFFFWFFW",
+        "WFWFFFFFFW",
+        "WFFFFFFFFW",
+        "WFFWFFFFFW",
+        "WWFFFFFWFW",
+        "WFFFFWFFFW",
+        "WFFFFFFFFW",
+        "WFWFFEFFWW",
+        "WWWWWWWWWW"
+    ],
+    "torch_logic": {
+    }  
+}

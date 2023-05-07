@@ -1,0 +1,26 @@
+funkcia1
+dolava
+krok
+krok
+
+aha funkcia0:
+prepni
+dolava
+funkcia1
+doprava
+funkcia1
+doprava
+funkcia1
+dolava
+
+aha funkcia1:
+funkcia2 ak nie stena vpredu
+
+aha funkcia2:
+krok
+funkcia0 ak nie svieti
+doprava
+doprava
+krok
+doprava
+doprava

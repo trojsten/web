@@ -1,0 +1,137 @@
+{
+    "name": "5 - Ďalšie jet torchové peklo",
+    "briefing": "Prepínače ovládajú jet torche v rovnakom stĺpci.",
+    "hint": "Potrebuješ si zapamätať, ako sú prepínače na začiatku. Využi skúsenosti z Jet Torchového pekla z predošlej série.",
+    "battery_limit": 700,
+    "memory_limit": 40,
+    "map": 
+        [
+        [ "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W", "W" ],
+        [ "W" , "M" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "F", "W" ],
+        [ "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "F", "W" ],
+        [ "W" , "F" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "M" , "F", "W" ],
+        [ "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "F", "W" ],
+        [ "E" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "F", "W" ],
+        [ "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W", "W" ]
+        ],
+    "torch_logic":
+        {
+          "1":
+          {
+            "5": [{"x": 1, "y": 1, "not": false}]
+          },
+          "2":
+          {
+            "1": [{"x": 2, "y": 3, "not": false}],
+            "5": [{"x": 2, "y": 3, "not": true}]
+          },
+          "3":
+          {
+            "1": [{"x": 3, "y": 3, "not": false}],
+            "5": [{"x": 3, "y": 3, "not": false}]
+          },
+          "4":
+          {
+            "1": [{"x": 4, "y": 3, "not": false}],
+            "5": [{"x": 4, "y": 3, "not": true}]
+          },
+          "5":
+          {
+            "1": [{"x": 5, "y": 3, "not": false}],
+            "5": [{"x": 5, "y": 3, "not": true}]
+          },
+          "6":
+          {
+            "1": [{"x": 6, "y": 3, "not": false}],
+            "5": [{"x": 6, "y": 3, "not": true}]
+          },
+          "7":
+          {
+            "1": [{"x": 7, "y": 3, "not": false}],
+            "5": [{"x": 7, "y": 3, "not": true}]
+          },
+          "8":
+          {
+            "1": [{"x": 8, "y": 3, "not": false}],
+            "5": [{"x": 8, "y": 3, "not": false}]
+          },
+          "9":
+          {
+            "1": [{"x": 9, "y": 3, "not": false}],
+            "5": [{"x": 9, "y": 3, "not": false}]
+          },
+          "10":
+          {
+            "1": [{"x": 10, "y": 3, "not": false}],
+            "5": [{"x": 10, "y": 3, "not": true}]
+          },
+          "11":
+          {
+            "1": [{"x": 11, "y": 3, "not": false}],
+            "5": [{"x": 11, "y": 3, "not": true}]
+          },
+          "12":
+          {
+            "1": [{"x": 12, "y": 3, "not": false}],
+            "5": [{"x": 12, "y": 3, "not": false}]
+          },
+          "13":
+          {
+            "1": [{"x": 13, "y": 3, "not": false}],
+            "5": [{"x": 13, "y": 3, "not": true}]
+          },
+          "14":
+          {
+            "1": [{"x": 14, "y": 3, "not": false}],
+            "5": [{"x": 14, "y": 3, "not": false}]
+          },
+          "15":
+          {
+            "1": [{"x": 15, "y": 3, "not": false}],
+            "5": [{"x": 15, "y": 3, "not": true}]
+          },
+          "16":
+          {
+            "1": [{"x": 16, "y": 3, "not": false}],
+            "5": [{"x": 16, "y": 3, "not": true}]
+          },
+          "17":
+          {
+            "1": [{"x": 17, "y": 3, "not": false}],
+            "5": [{"x": 17, "y": 3, "not": false}]
+          },
+          "18":
+          {
+            "1": [{"x": 18, "y": 3, "not": false}],
+            "5": [{"x": 18, "y": 3, "not": false}]
+          },
+          "19":
+          {
+            "1": [{"x": 19, "y": 3, "not": false}],
+            "5": [{"x": 19, "y": 3, "not": false}]
+          },
+          "20":
+          {
+            "1": [{"x": 20, "y": 3, "not": false}],
+            "5": [{"x": 20, "y": 3, "not": true}]
+          },
+          "21":
+          {
+            "1": [{"x": 21, "y": 3, "not": false}],
+            "5": [{"x": 21, "y": 3, "not": false}]
+          }
+        },
+    "startX": 1,
+    "startY": 3,
+    "startFacing": 0,
+    "logic_map": 
+        [
+        [ false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false, false ],
+        [ false , true , true , false , true , true , true , true , false , false , true , true , false , true , false , true , true , false , false , false , true , false , false, false ],
+        [ false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false, false ],
+        [ false , false , true , false , true , true , true , true , false , false , true , true , false , true , false , true , true , false , false , false , true , false , false, false ],
+        [ false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false, false ],
+        [ false , true , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false, false ],
+        [ false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false , false, false ]
+        ]
+}

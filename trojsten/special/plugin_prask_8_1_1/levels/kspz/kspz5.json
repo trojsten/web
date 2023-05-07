@@ -1,0 +1,45 @@
+{
+    "name": "5 - Jet torchové peklo",
+    "briefing": "Možno sa to nezdá, ale robot vie istým spôsobom počítať. Zisti ako a úloha bude ľahká.",
+    "hint": "Všimni si, že dve za sebou idúce ramená majú rovnaký počet políčok. Naviac si poriadne vyskúšaj a pozisťuj ako funguje rekurzívne volanie funkcie a hlavne čo sa stane, ak funkcia skončí.",
+    "battery_limit": 150,
+    "memory_limit": 12,
+    "map": 
+        [
+        [ "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" ],
+        [ "W" , "F" , "F" , "F" , "F" , "F" , "F" , "F" , "F" , "F" , "F" , "F" , "F" , "J" ],
+        [ "J" , "F" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "F" , "J" ],
+        [ "J" , "F" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "F" , "J" ],
+        [ "J" , "F" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "F" , "J" ],
+        [ "J" , "F" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "F" , "J" ],
+        [ "J" , "F" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "F" , "J" ],
+        [ "J" , "F" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "F" , "J" ],
+        [ "J" , "F" , "J" , "J" , "J" , "F" , "F" , "F" , "F" , "F" , "F" , "F" , "F" , "W" ],
+        [ "J" , "F" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" ],
+        [ "J" , "F" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" ],
+        [ "J" , "F" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" ],
+        [ "J" , "F" , "E" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" ],
+        [ "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" , "J" ]
+        ],
+    "torch_logic": {},
+    "startX": 5,
+    "startY": 8,
+    "startFacing": 0,
+    "logic_map": 
+        [
+        [ true , true , true , true , true , true , true , true , true , true , true , true , true , true ],
+        [ false , false , false , false , false , false , false , false , false , false , false , false , false , true ],
+        [ true , false , true , true , true , true , true , true , true , true , true , true , false , true ],
+        [ true , false , true , true , true , true , true , true , true , true , true , true , false , true ],
+        [ true , false , true , true , true , true , true , true , true , true , true , true , false , true ],
+        [ true , false , true , true , true , true , true , true , true , true , true , true , false , true ],
+        [ true , false , true , true , true , true , true , true , true , true , true , true , false , true ],
+        [ true , false , true , true , true , true , true , true , true , true , true , true , false , true ],
+        [ true , false , true , true , true , false , false , false , false , false , false , false , false , false ],
+        [ true , false , true , true , true , true , true , true , true , true , true , true , true , true ],
+        [ true , false , true , true , true , true , true , true , true , true , true , true , true , true ],
+        [ true , false , true , true , true , true , true , true , true , true , true , true , true , true ],
+        [ true , false , false , true , true , true , true , true , true , true , true , true , true , true ],
+        [ true , true , true , true , true , true , true , true , true , true , true , true , true , true ]
+        ]
+}

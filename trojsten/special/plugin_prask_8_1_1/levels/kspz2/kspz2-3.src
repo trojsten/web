@@ -1,0 +1,19 @@
+{
+    "name": "3 - XOR",
+    "briefing": "Prvé dva riadky sú už rozsvietené. Tvojou úlohou je rozsvietiť posledný, tretí riadok. Pritom má platiť, že políčko v treťom riadku nesvieti vtedy, ak obe políčka nad ním svietia, alebo sú obe zhasnuté.",
+    "hint": "Môžeš napísať dve skoro rovnaké funkcie, ktoré budeš volať v rôznych prípadoch.",
+    "battery_limit": 800,
+    "memory_limit": 30,
+    "start": [1, 3],
+    "startFacing": 0,
+    "map": [
+        "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+        "WMMmmMmmmmMMmmMmMMmMMmMmmMMMMmMWWW",
+        "WMmmmmMmMMMmMMmmMMmmMMmmMmMMmmMWWW",
+        "WMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMjEW",
+        "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+    ],
+    "torch_logic": {
+        "(31,3)": "JUST(1,3) OR NOT(2,3) OR JUST(3,3) OR JUST(4,3) OR NOT(5,3) OR NOT(6,3) OR JUST(7,3) OR NOT(8,3) OR NOT(9,3) OR JUST(10,3) OR NOT(11,3) OR NOT(12,3) OR NOT(13,3) OR NOT(14,3) OR JUST(15,3) OR JUST(16,3) OR JUST(17,3) OR JUST(18,3) OR NOT(19,3) OR JUST(20,3) OR NOT(21,3) OR NOT(22,3) OR JUST(23,3) OR NOT(24,3) OR NOT(25,3) OR JUST(26,3) OR JUST(27,3) OR NOT(28,3) OR JUST(29,3) OR JUST(30,3)"
+    }  
+}

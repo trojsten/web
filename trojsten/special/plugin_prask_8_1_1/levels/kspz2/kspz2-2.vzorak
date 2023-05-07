@@ -1,0 +1,36 @@
+funkcia1
+
+aha funkcia0:
+krok
+funkcia8 ak je stena vpredu
+funkcia0 ak nie je stena vpredu
+
+
+aha funkcia1:
+funkcia0
+doprava
+krok
+doprava
+funkcia0
+dolava
+krok
+dolava
+funkcia1
+
+aha funkcia8:
+doprava
+krok
+dolava
+krok
+krok
+dolava
+krok
+funkcia9 ak je stena vlavo
+doprava
+
+aha funkcia9:
+prepni
+krok
+dolava
+krok
+funkcia9 ak nesvieti

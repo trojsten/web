@@ -1,0 +1,317 @@
+{
+  "startFacing": 0,
+  "map": [
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "F",
+      "W",
+      "F",
+      "W",
+      "J",
+      "W",
+      "F",
+      "W",
+      "F",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "J",
+      "W",
+      "F",
+      "W",
+      "M",
+      "W",
+      "F",
+      "W",
+      "J",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "M",
+      "W",
+      "J",
+      "W",
+      "F",
+      "W",
+      "F",
+      "W",
+      "M",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "F",
+      "W",
+      "M",
+      "W",
+      "F",
+      "W",
+      "J",
+      "W",
+      "F",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "F",
+      "W",
+      "F",
+      "W",
+      "F",
+      "W",
+      "M",
+      "W",
+      "F",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "F",
+      "F",
+      "J",
+      "F",
+      "J",
+      "F",
+      "J",
+      "F",
+      "J",
+      "F",
+      "J",
+      "E",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ]
+  ],
+  "battery_limit": 200,
+  "torch_logic": {
+    "3": {
+      "6": [
+        {
+          "not": false,
+          "y": 3,
+          "x": 2
+        }
+      ]
+    },
+    "7": {
+      "6": [
+        {
+          "not": false,
+          "y": 2,
+          "x": 6
+        }
+      ]
+    },
+    "11": {
+      "6": [
+        {
+          "not": false,
+          "y": 3,
+          "x": 10
+        }
+      ]
+    },
+    "5": {
+      "6": [
+        {
+          "not": false,
+          "y": 4,
+          "x": 4
+        }
+      ]
+    },
+    "9": {
+      "6": [
+        {
+          "not": false,
+          "y": 5,
+          "x": 8
+        }
+      ]
+    }
+  },
+  "startY": 6,
+  "briefing": "Tla\u010d\u00edtko v zube hrebe\u0148a vyp\u00edna jet torch pred \u010fal\u0161\u00edm zubom. Jet torche za prep\u00edna\u010dmi sa v\u0161ak vypn\u00fa\u0165 nedaj\u00fa, preto si dajte pozor, aby ste sa nepop\u00e1lili.",
+  "memory_limit": 15,
+  "name": "2 - Hrebe\u0148",
+  "logic_map": [
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  ],
+  "startX": 1,
+  "hint": "V\u0161imni si, \u017ee v\u0161etky tla\u010didl\u00e1 svietia. Nepom\u00f4\u017ee to?"
+}
