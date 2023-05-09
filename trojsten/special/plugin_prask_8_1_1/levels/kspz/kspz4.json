@@ -1,0 +1,72 @@
+{
+    "name": "4 - Bludisko",
+    "briefing": "Na vypnutie jet torchu je potrebné zapnúť všetky prepínače.",
+    "hint": "Viete ako sa dá jednoducho chodiť po bludisku? Naviac ak toto bludisko nemá žiadny cyklus?",
+    "battery_limit": 600,
+    "memory_limit": 8,
+    "map": 
+        [
+        [ "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" ],
+        [ "W" , "W" , "E" , "W" , "M" , "M" , "W" , "M" , "M" , "W" ],
+        [ "W" , "W" , "J" , "W" , "W" , "M" , "W" , "M" , "W" , "W" ],
+        [ "W" , "W" , "F" , "M" , "M" , "M" , "M" , "M" , "M" , "W" ],
+        [ "W" , "M" , "W" , "M" , "W" , "W" , "M" , "W" , "M" , "W" ],
+        [ "W" , "M" , "W" , "M" , "W" , "M" , "W" , "M" , "M" , "W" ],
+        [ "W" , "M" , "M" , "M" , "W" , "M" , "M" , "M" , "W" , "W" ],
+        [ "W" , "W" , "M" , "W" , "W" , "M" , "W" , "W" , "W" , "W" ],
+        [ "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" , "W" ]
+        ],
+    "torch_logic":
+        {
+          "2":
+          {
+            "2":
+            [
+              {"x": 4, "y": 1, "not": true}, "|" ,
+              {"x": 5, "y": 1, "not": true}, "|" ,
+              {"x": 7, "y": 1, "not": true}, "|" ,
+              {"x": 8, "y": 1, "not": true}, "|" ,
+              {"x": 5, "y": 3, "not": true}, "|" ,
+              {"x": 7, "y": 3, "not": true}, "|" ,
+              {"x": 3, "y": 3, "not": true}, "|" ,
+              {"x": 4, "y": 3, "not": true}, "|" ,
+              {"x": 5, "y": 3, "not": true}, "|" ,
+              {"x": 6, "y": 3, "not": true}, "|" ,
+              {"x": 7, "y": 3, "not": true}, "|" ,
+              {"x": 8, "y": 3, "not": true}, "|" ,
+              {"x": 1, "y": 4, "not": true}, "|" ,
+              {"x": 3, "y": 4, "not": true}, "|" ,
+              {"x": 6, "y": 4, "not": true}, "|" ,
+              {"x": 8, "y": 4, "not": true}, "|" ,
+              {"x": 1, "y": 5, "not": true}, "|" ,
+              {"x": 3, "y": 5, "not": true}, "|" ,
+              {"x": 5, "y": 5, "not": true}, "|" ,
+              {"x": 7, "y": 5, "not": true}, "|" ,
+              {"x": 8, "y": 5, "not": true}, "|" ,
+              {"x": 1, "y": 6, "not": true}, "|" ,
+              {"x": 2, "y": 6, "not": true}, "|" ,
+              {"x": 3, "y": 6, "not": true}, "|" ,
+              {"x": 5, "y": 6, "not": true}, "|" ,
+              {"x": 6, "y": 6, "not": true}, "|" ,
+              {"x": 7, "y": 6, "not": true}, "|" ,
+              {"x": 2, "y": 7, "not": true}, "|" ,
+              {"x": 5, "y": 7, "not": true}
+            ]
+          }
+        },     
+    "startX": 2,
+    "startY": 3,
+    "startFacing": 0,
+    "logic_map": 
+        [
+        [ false , false , false , false , false , false , false , false , false, false ],
+        [ false , false , false , false , false , false , false , false , false, false ],
+        [ false , false , true , false , false , false , false , false , false, false ],
+        [ false , false , false , false , false , false , false , false , false, false ],
+        [ false , false , false , false , false , false , false , false , false, false ],
+        [ false , false , false , false , false , false , false , false , false, false ],
+        [ false , false , false , false , false , false , false , false , false, false ],
+        [ false , false , false , false , false , false , false , false , false, false ],
+        [ false , false , false , false , false , false , false , false , false, false ]
+        ]
+}

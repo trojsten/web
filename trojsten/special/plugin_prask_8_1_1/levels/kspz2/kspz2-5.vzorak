@@ -1,0 +1,36 @@
+funkcia0
+funkcia5
+
+aha funkcia0:
+krok
+funkcia1 ak svieti a nie stena vpredu
+funkcia0 ak nie svieti a nie stena vpredu
+funkcia2 ak stena vpredu
+krok
+
+aha funkcia1:
+prepni
+funkcia0
+prepni
+
+aha funkcia2:
+funkcia3
+doprava
+
+aha funkcia3:
+dolava ak stena vpredu
+krok
+funkcia3 ak nie svieti
+funkcia4 ak svieti
+doprava ak stena vpredu
+krok
+
+aha funkcia4:
+dolava
+dolava
+prepni
+
+aha funkcia5:
+doprava ak stena vpredu
+krok
+funkcia5

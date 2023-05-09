@@ -1,0 +1,26 @@
+{
+    "name": "2 - Hrebeň",
+    "briefing": "Tlačítko v zube hrebeňa vypína jet torch pred ďalším zubom. Jet torche za prepínačmi sa však vypnúť nedajú, preto si dajte pozor, aby ste sa nepopálili.",
+    "hint": "Všimni si, že všetky tlačidlá svietia. Nepomôže to?",
+    "battery_limit": 200,
+    "memory_limit": 15,
+    "start": [1, 6],
+    "startFacing": 0,
+    "map": [
+        "WWWWWWWWWWWWWW",
+        "WWFWFWjWFWFWWW",
+        "WWjWFWmWFWjWWW",
+        "WWmWjWFWFWmWWW",
+        "WWFWmWFWjWFWWW",
+        "WWFWFWFWmWFWWW",
+        "WFFjFjFjFjFjEW",
+        "WWWWWWWWWWWWWW"
+    ],
+    "torch_logic": {
+        "(3,6)" : "JUST(2,3)",
+        "(5,6)" : "JUST(4,4)",
+        "(7,6)" : "JUST(6,2)",
+        "(9,6)" : "JUST(8,5)",
+        "(11,6)" : "JUST(10,3)"
+    }  
+}

@@ -1,0 +1,29 @@
+{
+    "name": "1 - Svietiaca cesta",
+    "briefing": "Nasleduj zasvietené prepínače a dostaneš sa do cieľa.",
+    "hint": "Znač si, kadiaľ si už išiel a vždy ľahko nájdeš správny smer.",
+    "battery_limit": 600,
+    "memory_limit": 20,
+    "start": [2, 10],
+    "startFacing": 0,
+    "map": [
+        "WWWWWWWWWWWWWWWWWW",
+        "WjjjjFFFFFFFFFFjjW",
+        "WjjjFmmmmmmmmmmFjW",
+        "WjjjFmFFFFFFFFmFjW",
+        "WjjjFmFjjjjjjFmFjW",
+        "WjjjFmFFFFjjjFmFjW",
+        "WjjjFmmmmmFjjFmFjW",
+        "WjjjjFFFFmmFjFmFjW",
+        "WjjjjjjjjFmFjFmFjW",
+        "WjFFFFjjjFmFjFmEjW",
+        "WFmmmmFjjFmFjjFFjW",
+        "WjFFFmFFjFmFjjjjjW",
+        "WjjjFmmmFFmFjjjjjW",
+        "WjjjjFFmmmmFjjjjjW",
+        "WjjjjjjFFFFjjjjjjW",
+        "WWWWWWWWWWWWWWWWWW"
+    ],
+    "torch_logic": {
+    }  
+}

@@ -86,6 +86,26 @@
                 "prask2/prask2-4.vzorak",
                 "prask2/prask2-5.vzorak"
             ]
+        },
+        {
+            "name": "Prask 3",
+            "description": "",
+            "task_id": 2487,
+            "points_per_level": 20,
+            "levels": [
+                "kspz/kspz1.json",
+                "kspz/kspz2.json",
+                "kspz/kspz3.json",
+                "kspz/kspz4.json",
+                "kspz/kspz5.json"
+            ],
+            "solutions": [
+                "kspz/kspz1.vzorak",
+                "kspz/kspz2.vzorak",
+                "kspz/kspz3.vzorak",
+                "kspz/kspz4.vzorak",
+                "kspz/kspz5.vzorak"
+            ]
         }
     ]
 }

@@ -1,0 +1,23 @@
+{
+    "name": "4 - Bludisko s bicyklom",
+    "briefing": "Zapni všetky prepínače, ale daj si pozor aby si sa nezamotal, lebo v bludisku sú dokonca dva cykly.",
+    "hint": "Napíš funkciu, ktorá rozsvieti súvislú oblasť nerozsvietených prepínačov pred robotom. Môžeš použiť rekurziu - vysvetľovanie významu slova pomocou toho istého slova.",
+    "battery_limit": 1000,
+    "memory_limit": 24,
+    "start": [2, 3],
+    "startFacing": 0,
+    "map": [
+        "WWWWWWWWWW",
+        "WWEWMMMMMW",
+        "WWjWWMWMWW",
+        "WWFMMMMMMW",
+        "WMWMWWMWMW",
+        "WMWMMMWMMW",
+        "WMMMWMMMWW",
+        "WWMWWMWWWW",
+        "WWWWWWWWWW"
+    ],
+    "torch_logic": {
+        "(2,2)": "NOT(4,1) OR NOT(5,1) OR NOT(6,1) OR NOT(7,1) OR NOT(8,1) OR NOT(5,2) OR NOT(7,2) OR NOT(3,3) OR NOT(4,3) OR NOT(5,3) OR NOT(6,3) OR NOT(7,3) OR NOT(8,3) OR NOT(1,4) OR NOT(3,4) OR NOT(6,4) OR NOT(8,4) OR NOT(1,5) OR NOT(3,5) OR NOT(4,5) OR NOT(5,5) OR NOT(7,5) OR NOT(8,5) OR NOT(1,6) OR NOT(2,6) OR NOT(3,6) OR NOT(5,6) OR NOT(6,6) OR NOT(7,6) OR NOT(2,7) OR NOT(5,7)"
+    }  
+}

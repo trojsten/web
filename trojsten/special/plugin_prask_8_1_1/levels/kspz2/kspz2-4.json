@@ -1,0 +1,421 @@
+{
+  "map": [
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "E",
+      "W",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "J",
+      "W",
+      "W",
+      "M",
+      "W",
+      "M",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "F",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "M",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "W",
+      "M",
+      "W",
+      "W",
+      "M",
+      "W",
+      "M",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "W",
+      "M",
+      "M",
+      "M",
+      "W",
+      "M",
+      "M",
+      "W"
+    ],
+    [
+      "W",
+      "M",
+      "M",
+      "M",
+      "W",
+      "M",
+      "M",
+      "M",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "M",
+      "W",
+      "W",
+      "M",
+      "W",
+      "W",
+      "W",
+      "W"
+    ],
+    [
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W",
+      "W"
+    ]
+  ],
+  "startY": 3,
+  "logic_map": [
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  ],
+  "battery_limit": 1000,
+  "torch_logic": {
+    "2": {
+      "2": [
+        {
+          "x": 4,
+          "not": true,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 5,
+          "not": true,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 6,
+          "not": true,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 7,
+          "not": true,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 8,
+          "not": true,
+          "y": 1
+        },
+        "|",
+        {
+          "x": 5,
+          "not": true,
+          "y": 2
+        },
+        "|",
+        {
+          "x": 7,
+          "not": true,
+          "y": 2
+        },
+        "|",
+        {
+          "x": 3,
+          "not": true,
+          "y": 3
+        },
+        "|",
+        {
+          "x": 4,
+          "not": true,
+          "y": 3
+        },
+        "|",
+        {
+          "x": 5,
+          "not": true,
+          "y": 3
+        },
+        "|",
+        {
+          "x": 6,
+          "not": true,
+          "y": 3
+        },
+        "|",
+        {
+          "x": 7,
+          "not": true,
+          "y": 3
+        },
+        "|",
+        {
+          "x": 8,
+          "not": true,
+          "y": 3
+        },
+        "|",
+        {
+          "x": 1,
+          "not": true,
+          "y": 4
+        },
+        "|",
+        {
+          "x": 3,
+          "not": true,
+          "y": 4
+        },
+        "|",
+        {
+          "x": 6,
+          "not": true,
+          "y": 4
+        },
+        "|",
+        {
+          "x": 8,
+          "not": true,
+          "y": 4
+        },
+        "|",
+        {
+          "x": 1,
+          "not": true,
+          "y": 5
+        },
+        "|",
+        {
+          "x": 3,
+          "not": true,
+          "y": 5
+        },
+        "|",
+        {
+          "x": 4,
+          "not": true,
+          "y": 5
+        },
+        "|",
+        {
+          "x": 5,
+          "not": true,
+          "y": 5
+        },
+        "|",
+        {
+          "x": 7,
+          "not": true,
+          "y": 5
+        },
+        "|",
+        {
+          "x": 8,
+          "not": true,
+          "y": 5
+        },
+        "|",
+        {
+          "x": 1,
+          "not": true,
+          "y": 6
+        },
+        "|",
+        {
+          "x": 2,
+          "not": true,
+          "y": 6
+        },
+        "|",
+        {
+          "x": 3,
+          "not": true,
+          "y": 6
+        },
+        "|",
+        {
+          "x": 5,
+          "not": true,
+          "y": 6
+        },
+        "|",
+        {
+          "x": 6,
+          "not": true,
+          "y": 6
+        },
+        "|",
+        {
+          "x": 7,
+          "not": true,
+          "y": 6
+        },
+        "|",
+        {
+          "x": 2,
+          "not": true,
+          "y": 7
+        },
+        "|",
+        {
+          "x": 5,
+          "not": true,
+          "y": 7
+        }
+      ]
+    }
+  },
+  "name": "4 - Bludisko s bicyklom",
+  "startX": 2,
+  "briefing": "Zapni v\u0161etky prep\u00edna\u010de, ale daj si pozor aby si sa nezamotal, lebo v bludisku s\u00fa dokonca dva cykly.",
+  "hint": "Nap\u00ed\u0161 funkciu, ktor\u00e1 rozsvieti s\u00favisl\u00fa oblas\u0165 nerozsvieten\u00fdch prep\u00edna\u010dov pred robotom. M\u00f4\u017ee\u0161 pou\u017ei\u0165 rekurziu - vysvet\u013eovanie v\u00fdznamu slova pomocou toho ist\u00e9ho slova.",
+  "memory_limit": 24,
+  "startFacing": 0
+}
