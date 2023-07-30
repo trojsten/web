@@ -106,6 +106,26 @@
                 "kspz/kspz4.vzorak",
                 "kspz/kspz5.vzorak"
             ]
+        },
+        {
+            "name": "Prask 4",
+            "description": "",
+            "task_id": 2524,
+            "points_per_level": 20,
+            "levels": [
+                "kspz2/kspz2-1.json",
+                "kspz2/kspz2-2.json",
+                "kspz2/kspz2-3.json",
+                "kspz2/kspz2-4.json",
+                "kspz2/kspz2-5.json"
+            ],
+            "solutions": [
+                "kspz2/kspz2-1.vzorak",
+                "kspz2/kspz2-2.vzorak",
+                "kspz2/kspz2-3.vzorak",
+                "kspz2/kspz2-4.vzorak",
+                "kspz2/kspz2-5.vzorak"
+            ]
         }
     ]
 }
