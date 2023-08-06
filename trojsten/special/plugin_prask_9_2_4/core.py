@@ -71,7 +71,7 @@ LEVELS = [
         "id": 10,
         "description": "",
         "type": "answer",
-        "answer": "for _ in range(int(input())):\n\tprint(\"hello\")",
+        "answer": "for _ in range(int(input())):\n    print(\"hello\")",
         "forbidden_words": ""
     }
 ]
