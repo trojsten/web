@@ -15,7 +15,7 @@
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
   <link href="{% static "plugin_ksp_32_1_1/cover.css" %}" rel="stylesheet">
   <link href='{% static "plugin_ksp_32_1_1/zwarte.css" %}' rel="stylesheet">
-  <link href="{% static "plugin_prask_9_2_4/custom.css" %}" rel="stylesheet">
+  <link href="{% static "plugin_prask_8_2_4/custom.css" %}" rel="stylesheet">
 
   <style id="holderjs-style" type="text/css"></style>
 
@@ -106,7 +106,7 @@
   ================================================== -->
   <!-- Placed at the end of the document so the pages load faster -->
   <script src='{% static "js/jquery-1.11.1.min.js" %}'></script>
-  <script src='{% static "plugin_prask_9_2_4/send.js" %}'></script>
+  <script src='{% static "plugin_prask_8_2_4/send.js" %}'></script>
   <script type="text/javascript">
     window.submit_url="{% url "plugin_chatgpt:run" level.id %}";
     window.forbidden_words = '{{ level.forbidden_words }}';
@@ -114,8 +114,5 @@
   <script type="text/javascript">
   </script>
   <script src='{% static "js/bootstrap.min.js" %}'></script>
-  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-  <script src='{% static "plugin_ksp_32_1_1/ie10-viewport-bug-workaround.js" %}'></script>
-
 </body>
 </html>

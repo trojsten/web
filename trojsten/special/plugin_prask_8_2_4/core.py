@@ -1,8 +1,9 @@
 from .models import UserLevel
 import requests
-import urllib
+import json
+import os
 
-CHATGPT_API_KEY = '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'
+CHATGPT_API_KEY = os.getenv("PLUGIN_PRASK_8_2_4_CHATGPT_API_KEY")
 
 LEVELS = [
     {
@@ -69,9 +70,9 @@ LEVELS = [
     },
     {
         "id": 10,
-        "description": "",
+        "description": "V tomto leveli vieš použiť hocijaké slová",
         "type": "answer",
-        "answer": "for _ in range(int(input())):\n    print(\"hello\")",
+        "answer": "for _ in range(5):\n    print(\"hello\")",
         "forbidden_words": ""
     }
 ]
@@ -79,31 +80,35 @@ LEVELS = [
 def generateResponse(prompt, level):
     messages = []
     
-    if LEVELS[level]['type'] == 'password':
-        messages.append({
-            'role': 'system',
-            'message': LEVELS[level]['system']
-        })
+    # if LEVELS[level]['type'] == 'password':
+    #     messages.append({
+    #         'role': 'system',
+    #         'message': LEVELS[level]['system']
+    #     })
     
     messages.append({
         'role': 'user',
         'content': prompt
     })
-
+    
     response = requests.post('https://api.openai.com/v1/chat/completions', json={
         'model': 'gpt-3.5-turbo',
         'max_tokens': 25,
-        'messages': messages
+        'messages': messages,
+        'temperature': 0.1
     }, headers= {
         'Content-type': 'application/json',
         'Authorization': 'Bearer ' + CHATGPT_API_KEY
-    }).json()['choices'][0]['message']['content']
+    }).json()
     # if LEVELS[level]["type"] == 'answer':
     # url = urllib.parse.quote_plus(prompt)
     # response = requests.get('https://ggpt-api.43z.one/v4?username=&level=1&user={url}'.format(url = url)).text
 
     # return response[(response.find('<pre>') + 5):response.find('</pre>')]
-    return response
+    try:
+        return response['choices'][0]['message']['content']
+    except KeyError:
+        return json.dumps(response)
 
 def correct(answer, userLevel: UserLevel):
     if LEVELS[userLevel.level - 1]['answer'] == answer:

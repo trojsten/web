@@ -1,6 +1,4 @@
 import json
-import time
-import sys
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseBadRequest
@@ -25,7 +23,7 @@ def main(request, level=1):
 
     return render(
         request,
-        "plugin_prask_9_2_4/level.html",
+        "plugin_prask_8_2_4/level.html",
         {
             "level": LEVELS[level - 1],
             "levels": levels,
@@ -36,7 +34,6 @@ def main(request, level=1):
 @login_required()
 def run(request, level):
     level = max(min(int(level), 10), 1)
-    print('run')
     try:
         data = json.loads(request.read().decode("utf-8"))
         userLevel = UserLevel.objects.get(level=level, user=request.user)
@@ -54,5 +51,5 @@ def run(request, level):
     return HttpResponse(json.dumps({
         'text': text,
         'refresh': refresh,
-        'userLevel': LEVELS[userLevel.level]
+        'userLevel': LEVELS[userLevel.level - 1]
     }))

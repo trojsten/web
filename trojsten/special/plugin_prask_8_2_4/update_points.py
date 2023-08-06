@@ -4,14 +4,14 @@ from trojsten.submit.models import Submit
 
 from .models import UserLevel
 
-ZWARTE_DOOS_TASK_ID = 1555
+CHATGPT_TASK_ID = 1555
 
 
 def get_task():
     try:
         return get_task._cache
     except AttributeError:
-        get_task._cache = Task.objects.get(pk=ZWARTE_DOOS_TASK_ID)
+        get_task._cache = Task.objects.get(pk=CHATGPT_TASK_ID)
         return get_task._cache
 
 

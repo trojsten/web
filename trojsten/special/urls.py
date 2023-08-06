@@ -38,7 +38,7 @@ urlpatterns = [
         include("trojsten.special.plugin_prask_8_1_1.urls", namespace="plugin_prask_8_1_1"),
     ),
     url(
-        r"^prask/9/2/4/",
-        include("trojsten.special.plugin_prask_9_2_4.urls", namespace="plugin_prask_9_2_4"),
+        r"^prask/8/2/4/",
+        include("trojsten.special.plugin_prask_8_2_4.urls", namespace="plugin_prask_8_2_4"),
     ),
 ]

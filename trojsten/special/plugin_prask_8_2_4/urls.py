@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from trojsten.special.plugin_prask_9_2_4 import views
+from trojsten.special.plugin_prask_8_2_4 import views
 
 app_name = "plugin_chatgpt"
 

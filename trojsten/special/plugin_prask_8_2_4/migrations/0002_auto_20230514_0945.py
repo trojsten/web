@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('plugin_prask_9_2_4', '0001_initial'),
+        ('plugin_prask_8_2_4', '0001_initial'),
     ]
 
     operations = [
