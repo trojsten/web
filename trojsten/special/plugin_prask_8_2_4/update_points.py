@@ -4,7 +4,7 @@ from trojsten.submit.models import Submit
 
 from .models import UserLevel
 
-CHATGPT_TASK_ID = 1555
+CHATGPT_TASK_ID = 2527
 
 
 def get_task():
