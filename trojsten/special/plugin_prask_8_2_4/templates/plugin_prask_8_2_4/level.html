@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+{% load static %}
+
+<!--suppress XmlDuplicatedId -->
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>ChatGPT</title>
+
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{% static "plugin_ksp_32_1_1/cover.css" %}" rel="stylesheet">
+  <link href='{% static "plugin_ksp_32_1_1/zwarte.css" %}' rel="stylesheet">
+  <link href="{% static "plugin_prask_8_2_4/custom.css" %}" rel="stylesheet">
+
+  <style id="holderjs-style" type="text/css"></style>
+
+</head>
+<body>
+  <div class="site-wrapper">
+    <div class="site-wrapper-inner">
+      <div class="cover-container">
+        <div class="masthead clearfix">
+          <div class="inner">
+            <h3 class="masthead-brand">ChatGPT</h3>
+            <ul class="nav masthead-nav">
+              {% for lvl, solved in levels %}
+                <li class='{% if lvl == level.id %}active{% endif %}'>
+                  <a href='{% url "plugin_chatgpt:main" lvl %}'>
+                    {% if solved %}
+                      {{ lvl }}&#10003;
+                    {% else %}
+                      &nbsp;{{ lvl }}&nbsp;
+                    {% endif %}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+        <div class="inner cover">
+          <h1 class="cover-heading">Level {{ level.id }}</h1>
+          {% if solved %}
+              <p class="lead">
+                  Gratulujeme!<br/>
+                  Tento level si už vyriešil
+              </p>
+          {% else %}
+              <div class="lead d-flex">
+                {% if level.type == "answer" %}
+                <p>
+                  Dosiahni text:
+                </p>
+                <textarea class="answer-area" disabled>{{ level.answer }}</textarea>
+                {% elif level.type == "password" %}
+                <p>
+                  V tomto leveli mám zadané nejaké heslo. Tvojou úlohou je ho zistiť.
+                  {{ level.description }}
+                </p>
+                {% endif %}
+                <p>{{ level.description }}</p>
+              </div>
+          {% endif %}
+
+          <form class="form" role="form" id="valueForm">
+            {% csrf_token %}
+            <div class="form-group">
+              <label class="sr-only" for="value">Zadaj prompt</label>
+              <textarea
+                id="value"
+                placeholder="Pošli Správu"
+                class="answer-area"
+                style="color: whitesmoke;"
+              ></textarea>
+            </div>
+            <div id="result"></div>
+            <button type="submit" class="btn btn-block btn-primary" style="background-color: darkolivegreen;" id="submit">Pošli</button>
+          </form>
+
+
+          <div class="results">
+            <table id='resultsTable'>
+            </table>
+          </div>
+
+        </div>
+
+        <div class="mastfoot">
+          <div class="inner">
+            <p>&copy; PRASK 2023</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+<!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src='{% static "js/jquery-1.11.1.min.js" %}'></script>
+  <script src='{% static "plugin_prask_8_2_4/send.js" %}'></script>
+  <script type="text/javascript">
+    window.submit_url="{% url "plugin_chatgpt:run" level.id %}";
+    window.forbidden_words = '{{ level.forbidden_words }}';
+  </script>
+  <script type="text/javascript">
+  </script>
+  <script src='{% static "js/bootstrap.min.js" %}'></script>
+</body>
+</html>
