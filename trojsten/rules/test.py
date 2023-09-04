@@ -1618,7 +1618,7 @@ class SUSIRulesTest(TestCase):
     def test_grading_with_hints(self):
         user = self._create_user_with_coefficient(1)
         task = self.tasks[0]
-        task.description_points = 6
+        task.description_points = 9
         task.text_submit_solution = ["solution"]
 
         points = susi_constants.SUSI_POINTS_ALLOCATION
@@ -1727,7 +1727,7 @@ class TextSubmitTest(TestCase):
                     self.assertEqual(grading.points, 0)
 
     def test_grade_text_in_susi_ignores_diacritic(self):
-        points = 6
+        points = susi_constants.SUSI_POINTS_ALLOCATION[0]
         solutions = {
             "mačka": 1,
             "Macka": 1,

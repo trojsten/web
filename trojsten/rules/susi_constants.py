@@ -22,7 +22,7 @@ SUSI_NUMBER_OF_SOLVED_TASKS_FOR_POINTS = 8
 # If big hint is public, points won't be deducted for small hint regardless of
 # whether it is public or not.
 SUSI_POINTS_ALLOCATION = (
-    6,  # How many points will be assigned for correct submit
+    9,  # How many points will be assigned for correct submit
     2,  # How many points will be deducted if small hint is public
     4,  # How many points will be deducted if big hint is public
     0,  # How many points will be assigned for wrong submit and after deadline submit
