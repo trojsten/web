@@ -59,7 +59,8 @@ LEVELS = [
         "id": 8,
         "description": "",
         "type": "answer",
-        "answer": "*\n**\n***\n****\n*****"
+        "answer": "*\n**\n***\n****\n*****",
+        "forbidden_words": ""        
     },
     {
         "id": 9,
@@ -79,7 +80,7 @@ LEVELS = [
 
 def generateResponse(prompt, level):
     messages = []
-    
+
     # if LEVELS[level]['type'] == 'password':
     #     messages.append({
     #         'role': 'system',
@@ -91,7 +92,10 @@ def generateResponse(prompt, level):
         'content': prompt
     })
 
-    for word in LEVELS[level]['forbidden_words'].split(','):
+    forbidden_words = LEVELS[level-1]['forbidden_words'].split(',')
+    for word in forbidden_words:
+        if word == '':
+            continue
         if word in prompt or word.upper() in prompt:
             return ''
 
