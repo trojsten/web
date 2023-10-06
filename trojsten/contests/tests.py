@@ -339,6 +339,10 @@ class TaskAndSolutionStatementsTests(TestCase):
         self.nonstaff_user = User.objects.create(username="nonstaff")
         self.task_url = reverse("task_statement", kwargs={"task_id": self.task.id})
         self.solution_url = reverse("solution_statement", kwargs={"task_id": self.task.id})
+        self.point_deduction_message = (
+            "You have submitted a text answer but "
+            "have not submitted a description. This may lead to point deduction."
+        )
 
     def test_invalid_task(self):
         url = reverse("task_statement", kwargs={"task_id": get_noexisting_id(Task)})
@@ -415,6 +419,109 @@ class TaskAndSolutionStatementsTests(TestCase):
         response = self.client.get(url)
         self.assertContains(response, "Test task 2")
         self.assertContains(response, "test <b>html</b> task statement")
+
+    def test_statement_only_text_submit(self):
+        self.client.force_login(self.nonstaff_user)
+        self.task.text_submit_solution = ["Password"]
+        self.task.save()
+        Submit.objects.create(
+            task=self.task,
+            user=self.nonstaff_user,
+            submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            points=5,
+        )
+        url = reverse("task_statement", kwargs={"task_id": self.task.id})
+        response = self.client.get(url)
+        self.assertNotContains(response, _(self.point_deduction_message))
+        url = reverse("task_list", kwargs={"round_id": self.round.id})
+        response = self.client.get(url)
+        self.assertNotContains(response, _(self.point_deduction_message))
+
+    def test_text_submit_zero_points(self):
+        self.client.force_login(self.nonstaff_user)
+        self.task.text_submit_solution = ["Password"]
+        self.task.has_description = True
+        self.task.save()
+        Submit.objects.create(
+            task=self.task,
+            user=self.nonstaff_user,
+            submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            points=0,
+        )
+        url = reverse("task_statement", kwargs={"task_id": self.task.id})
+        response = self.client.get(url)
+        self.assertNotContains(response, _(self.point_deduction_message))
+        url = reverse("task_list", kwargs={"round_id": self.round.id})
+        response = self.client.get(url)
+        self.assertNotContains(response, _(self.point_deduction_message))
+
+    def test_missing_description(self):
+        self.client.force_login(self.nonstaff_user)
+        self.task.text_submit_solution = ["Password"]
+        self.task.has_description = True
+        self.task.save()
+        Submit.objects.create(
+            task=self.task,
+            user=self.nonstaff_user,
+            submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            points=4,
+        )
+        url = reverse("task_statement", kwargs={"task_id": self.task.id})
+        response = self.client.get(url)
+        self.assertContains(response, _(self.point_deduction_message))
+        url = reverse("task_list", kwargs={"round_id": self.round.id})
+        response = self.client.get(url)
+        self.assertContains(response, _(self.point_deduction_message))
+
+    def test_missing_description_after_round_end(self):
+        self.client.force_login(self.nonstaff_user)
+        self.task.text_submit_solution = ["Password"]
+        self.task.has_description = True
+        self.task.save()
+        self.round.end_time = timezone.now() + timezone.timedelta(-8)
+        self.round.save()
+        Submit.objects.create(
+            task=self.task,
+            user=self.nonstaff_user,
+            submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            points=4,
+        )
+        url = reverse("task_statement", kwargs={"task_id": self.task.id})
+        response = self.client.get(url)
+        self.assertNotContains(response, _(self.point_deduction_message))
+        url = reverse("task_list", kwargs={"round_id": self.round.id})
+        response = self.client.get(url)
+        self.assertNotContains(response, _(self.point_deduction_message))
+
+    def test_text_and_description_submitted(self):
+        self.client.force_login(self.nonstaff_user)
+        self.task.text_submit_solution = ["Password"]
+        self.task.has_description = True
+        self.task.save()
+        Submit.objects.create(
+            task=self.task,
+            user=self.nonstaff_user,
+            submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+            testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
+            points=4,
+        )
+        Submit.objects.create(
+            task=self.task,
+            user=self.nonstaff_user,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            testing_status=submit_constants.SUBMIT_STATUS_IN_QUEUE,
+            points=0,
+        )
+        url = reverse("task_statement", kwargs={"task_id": self.task.id})
+        response = self.client.get(url)
+        self.assertNotContains(response, _(self.point_deduction_message))
+        url = reverse("task_list", kwargs={"round_id": self.round.id})
+        response = self.client.get(url)
+        self.assertNotContains(response, _(self.point_deduction_message))
 
 
 @override_settings(

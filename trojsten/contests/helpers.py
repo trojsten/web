@@ -3,6 +3,8 @@ from collections import OrderedDict, defaultdict
 from trojsten.contests.models import Round
 from trojsten.results.helpers import UserResult
 from trojsten.results.manager import get_results_tags_for_rounds
+from trojsten.submit.constants import SUBMIT_TYPE_DESCRIPTION, SUBMIT_TYPE_TEXT
+from trojsten.submit.models import Submit
 
 from .constants import DEFAULT_NUMBER_OF_TAGS, MAX_NUMBER_OF_TAGS
 
@@ -41,3 +43,17 @@ def get_points_from_submits(tasks, submits):
             submit.task, submit.submit_type, submit.user_points, submit.testing_status
         )
     return res
+
+
+def check_description_at_text_submit(user, tasks):
+    user_submits = Submit.objects.latest_for_user(tasks, user)
+    for task in tasks:
+        if (
+            task.has_text_submit
+            and task.has_description
+            and task.round.can_submit
+            and user_submits.filter(task=task, submit_type=SUBMIT_TYPE_TEXT, points__gt=0)
+            and not user_submits.filter(task=task, submit_type=SUBMIT_TYPE_DESCRIPTION)
+        ):
+            return True
+    return False
