@@ -21,6 +21,7 @@ class SourceSubmitForm(forms.Form):
         (".hs", "Haskell (.hs)"),
         (".cs", "C# (.cs)"),
         (".java", "Java (.java)"),
+        (".rs", "Rust (.rs)"),
     )
     submit_file = forms.FileField(
         max_length=settings.UPLOADED_FILENAME_MAXLENGTH, allow_empty_file=True
