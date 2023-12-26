@@ -480,14 +480,10 @@ class KMSRulesTest(TestCase):
         graduation_year = (
             self.round.end_time.year + 3 + int(self.round.end_time.month > SCHOOL_YEAR_END_MONTH)
         )
-        if coefficient < 4:
-            graduation_year -= coefficient - 1
-        else:
-            graduation_year -= 3
-            type_mo = EventType.objects.create(
-                name=KMS_MO_FINALS_TYPE, is_camp=False, organizers_group=self.group
-            )
-            place = EventPlace.objects.create(name="Horna dolna")
+        type_mo = EventType.objects.create(
+            name=KMS_MO_FINALS_TYPE, is_camp=False, organizers_group=self.group
+        )
+        place = EventPlace.objects.create(name="Horna dolna")
         user = User.objects.create(
             username=username,
             password="password",
@@ -495,12 +491,12 @@ class KMSRulesTest(TestCase):
             last_name="Mrkvicka",
             graduation=graduation_year,
         )
-        for i in range(coefficient - 4):
+        for i in range(coefficient):
             ckmo = Event.objects.create(
                 name="CKMO",
                 type=type_mo,
                 place=place,
-                start_time=self.time,
+                start_time=self.time + timezone.timedelta(-(i + 1) * 366 - 1),
                 end_time=self.time + timezone.timedelta(-(i + 1) * 366),
             )
             EventParticipant.objects.create(
@@ -509,7 +505,7 @@ class KMSRulesTest(TestCase):
         return user
 
     def test_create_user_with_coefficient(self):
-        for i in range(-4, 12):
+        for i in range(0, 12):
             user = self._create_user_with_coefficient(i, "testuser%d" % i)
             generator = KMSResultsGenerator(KMSRules.RESULTS_TAGS[KMS_BETA])
             self.assertEqual(generator.get_user_coefficient(user, self.round), i)
