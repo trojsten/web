@@ -21,6 +21,7 @@ from trojsten.rules.kms import (
     KMS_BETA,
     KMS_CAMP_TYPE,
     KMS_MO_FINALS_TYPE,
+    KMS_MO_REGIONALS_TYPE,
     KMSResultsGenerator,
     KMSRules,
 )
@@ -88,12 +89,16 @@ class KMSCoefficientTest(TestCase):
         self.type_mo = EventType.objects.create(
             name=KMS_MO_FINALS_TYPE, organizers_group=group, is_camp=False
         )
+        self.type_kkmo = EventType.objects.create(
+            name=KMS_MO_REGIONALS_TYPE, organizers_group=group, is_camp=False
+        )
 
         competition = Competition.objects.create(name="KMSTestCompetition", pk=7)
         competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         self.semesters = []
         self.camps = []
         self.mo_finals = []
+        self.mo_regionals = []
         for year, semester_number in [(1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2)]:
             self.semesters.append(
                 Semester.objects.create(
@@ -117,7 +122,18 @@ class KMSCoefficientTest(TestCase):
                         type=self.type_mo,
                         place=self.place,
                         start_time=self.time + timezone.timedelta((year - 3) * 366),
-                        end_time=self.time + timezone.timedelta((year - 3) * 366),
+                        # CKMO ends after start of the (summer) round
+                        end_time=self.time + timezone.timedelta((year - 3) * 366 + 3),
+                    )
+                )
+            if semester_number == 1:
+                self.mo_regionals.append(
+                    Event.objects.create(
+                        name="KKMO",
+                        type=self.type_kkmo,
+                        place=self.place,
+                        start_time=self.time + timezone.timedelta((year - 3) * 366 - 180),
+                        end_time=self.time + timezone.timedelta((year - 3) * 366 - 180),
                     )
                 )
         self.current_semester = self.semesters[-1]
@@ -192,14 +208,14 @@ class KMSCoefficientTest(TestCase):
                 submit.save()
 
     def test_year_only(self):
-        # Coefficient = 3: year = 3, successful semesters = 0, mo = 0
+        # Coefficient = 0: year = 3, successful semesters = 0, mo = 0, regionals=0
         self.test_user.graduation -= 2
         self.test_user.save()
         generator = KMSResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
 
     def test_camps_only(self):
-        # Coefficient = 3: year = 1, successful semesters = 2, mo = 0
+        # Coefficient = 2: year = 1, successful semesters = 2, mo = 0, regionals=0
         EventParticipant.objects.create(
             event=self.camps[3],
             user=self.test_user,
@@ -221,24 +237,24 @@ class KMSCoefficientTest(TestCase):
             going=True,
         )
         generator = KMSResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 2)
 
     def test_points_only(self):
-        # Coefficient = 1, year = 1, successful semesters = 0, mo = 0
+        # Coefficient = 0, year = 1, successful semesters = 0, mo = 0, regionals = 0
         points = [0, 0, 0, 0, 0, 9, 9, 9, 9, 9]
         # # Create submits for first round's tasks
         self._create_submits(self.test_user, points, self.previous_tasks[:10])
         generator = KMSResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
 
-        # Coefficient = 2, year = 1, successful semesters = 1, mo = 0
+        # Coefficient = 1, year = 1, successful semesters = 1, mo = 0, regionals = 0
         # Create submits for second round's tasks
         self._create_submits(self.test_user, points, self.previous_tasks[10:])
         generator = KMSResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 2)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
 
     def test_camps_mo(self):
-        # Coefficient = 7: year = 4, successful semesters = 1, mo = 2
+        # Coefficient = 3: year = 4, successful semesters = 1, mo = 2, regionals=0
         self.test_user.graduation -= 3
         self.test_user.save()
         EventParticipant.objects.create(
@@ -260,10 +276,10 @@ class KMSCoefficientTest(TestCase):
             going=True,
         )
         generator = KMSResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 7)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
 
     def test_invited_to_both_camps(self):
-        # Coefficient = 2: year = 1, successful semesters = 1, mo = 0
+        # Coefficient = 1: year = 1, successful semesters = 1, mo = 0, regionals=0
         beta_camp = Event.objects.create(
             name="KMS camp beta",
             type=self.type_camp,
@@ -279,35 +295,35 @@ class KMSCoefficientTest(TestCase):
             event=beta_camp, user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
         )
         generator = KMSResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 2)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
 
     def test_ignore_mo_in_same_semester(self):
-        # Coefficient = 3: year = 1, successful semesters = 0, mo = 2
+        # Coefficient = 2: year = 1, successful semesters = 0, mo = 2, regionals=0
         for mo_finals in self.mo_finals:
             EventParticipant.objects.create(
                 event=mo_finals, user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
             )
         generator = KMSResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 2)
 
     def test_ignore_not_going_reserve(self):
-        # Coefficient = 1: year = 1, successful semesters = 0, mo = 0
+        # Coefficient = 0: year = 1, successful semesters = 0, mo = 0, regionals=0
         EventParticipant.objects.create(
             event=self.camps[4], user=self.test_user, type=EventParticipant.RESERVE, going=False
         )
         generator = KMSResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
 
     def test_ignore_not_going_participant(self):
-        # Coefficient = 2: year = 1, successful semesters = 0, mo = 0
+        # Coefficient = 0: year = 1, successful semesters = 0, mo = 0, regionals=0
         EventParticipant.objects.create(
             event=self.camps[4], user=self.test_user, type=EventParticipant.PARTICIPANT, going=False
         )
         generator = KMSResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
 
     def test_many_camps(self):
-        # Coefficient = 6: year = 1, successful semesters = 5, mo = 0
+        # Coefficient = 5: year = 1, successful semesters = 5, mo = 0, regionals=0
         for i in range(5):
             EventParticipant.objects.create(
                 event=self.camps[i],
@@ -316,10 +332,56 @@ class KMSCoefficientTest(TestCase):
                 going=True,
             )
         generator = KMSResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 6)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 5)
+
+    def test_mo_regionals(self):
+        # Coefficient = 1: year = 1, successful semesters = 0, mo = 0, regionals=2
+        EventParticipant.objects.create(
+            event=self.mo_regionals[1],
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=True,
+        )
+        EventParticipant.objects.create(
+            event=self.mo_regionals[0],
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=True,
+        )
+        generator = KMSResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
+
+    def test_mo_finals_and_regionals(self):
+        # Coefficient = 3: year = 1, successful semesters = 0, mo = 2, regionals=2
+        EventParticipant.objects.create(
+            event=self.mo_regionals[1],
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=True,
+        )
+        EventParticipant.objects.create(
+            event=self.mo_regionals[0],
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=True,
+        )
+        EventParticipant.objects.create(
+            event=self.mo_finals[1],
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=True,
+        )
+        EventParticipant.objects.create(
+            event=self.mo_finals[0],
+            user=self.test_user,
+            type=EventParticipant.PARTICIPANT,
+            going=True,
+        )
+        generator = KMSResultsGenerator(self.tag)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
 
     def test_all(self):
-        # Coefficient = 10: year = 3, successful semesters = 5, mo = 2
+        # Coefficient = 8: year = 3, successful semesters = 5, mo = 2, regionals = 2
         points = [0, 0, 0, 0, 0, 9, 9, 9, 9, 9]
         # Create submits for both previous round's tasks
         self._create_submits(self.test_user, points * 2, self.previous_tasks)
@@ -345,8 +407,14 @@ class KMSCoefficientTest(TestCase):
                 type=EventParticipant.PARTICIPANT,
                 going=True,
             )
+            EventParticipant.objects.create(
+                event=self.mo_regionals[i],
+                user=self.test_user,
+                type=EventParticipant.PARTICIPANT,
+                going=True,
+            )
         generator = KMSResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 10)
+        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 8)
 
 
 class KMSRulesTest(TestCase):
