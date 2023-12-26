@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import datetime
 from collections import namedtuple
+from decimal import Decimal
 from logging import getLogger
 
 from django.db.models import Count, Q
-from django.utils import timezone
 
 from trojsten.contests.models import Semester
 from trojsten.events.models import EventParticipant
-from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
 from trojsten.results.constants import COEFFICIENT_COLUMN_KEY
 from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
 from trojsten.results.helpers import get_total_score_column_index
@@ -25,12 +23,13 @@ KMS_BETA = "beta"
 
 KMS_POINTS_FOR_SUCCESSFUL_SEMESTER = 90
 
-KMS_ALFA_MAX_COEFFICIENT = 3
-KMS_ELIGIBLE_FOR_TASK_BOUND = [0, 2, 3, 5, 100, 100, 100, 100, 100, 100, 100]
-KMS_FULL_POINTS_BOUND = [0, 1, 2, 3, 5, 8, 100, 100, 100, 100, 100]
-
+KMS_ALFA_MAX_COEFFICIENT = 2
+KMS_FULL_POINTS_COEFFICIENT_BOUND = [0, 0, 0, 1, 2, 6, 100, 100, 100, 100, 100]
+KMS_BETA_POINTS_BOUND = [Decimal(i) / 3 for i in [0, 0, 0, 1, 2, 3, 3, 3, 3, 3, 3]]
+KMS_ELIGIBLE_FOR_TASK_BOUND = [0, 1, 2, 6, 100, 100, 100, 100, 100, 100, 100]
 KMS_CAMP_TYPE = "KMS sústredenie"
 KMS_MO_FINALS_TYPE = "CKMO"
+KMS_MO_REGIONALS_TYPE = "KKMO"
 
 KMS_YEARS_OF_CAMPS_HISTORY = 10
 
@@ -40,24 +39,25 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         super(KMSResultsGenerator, self).__init__(tag)
         self.successful_semesters = None
         self.mo_finals = None
+        self.mo_regionals = None
         self.coefficients = {}
 
     def get_user_coefficient(self, user, round):
         if user not in self.coefficients:
-            if not self.successful_semesters or not self.mo_finals:
+            if not self.successful_semesters or not self.mo_finals or not self.mo_regionals:
                 self.prepare_coefficients(round)
 
-            year = user.school_year_at(round.end_time)
             successful_semesters = self.successful_semesters.get(user.pk, 0)
             mo_finals = self.mo_finals.get(user.pk, 0)
-            self.coefficients[user] = year + successful_semesters + mo_finals
+            mo_regionals = self.mo_regionals.get(user.pk, 0)
+            self.coefficients[user] = min(1, mo_regionals) + successful_semesters + mo_finals
 
         return self.coefficients[user]
 
     def prepare_coefficients(self, round):
         """
         Fetch from the db number of successful semester and number of participation
-        in MO final for each user and store them in dictionaries. The prepared
+        in MO finals and regionals for each user and store them in dictionaries. The prepared
         data in dictionaries are used to compute the coefficient of a given user.
         We consider only events happened before given round, so the coefficients are computed
         correct in older results.
@@ -65,18 +65,23 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         # We count only MO finals in previous school years, the user coefficient remains the same
         # during a semester. We assume that the MO finals are held in the last semester
         # of a year.
-        school_year = round.end_time.year - int(round.end_time.month < SCHOOL_YEAR_END_MONTH)
-        prev_school_year_end = timezone.make_aware(
-            datetime.datetime(school_year, SCHOOL_YEAR_END_MONTH, 28)
-        )
+        semester_start = round.semester.start_time
 
         self.mo_finals = dict(
             EventParticipant.objects.filter(
-                event__type__name=KMS_MO_FINALS_TYPE, event__end_time__lt=prev_school_year_end
+                event__type__name=KMS_MO_FINALS_TYPE, event__end_time__lt=semester_start
             )
             .values("user")
             .annotate(mo_finals=Count("event"))
             .values_list("user", "mo_finals")
+        )
+        self.mo_regionals = dict(
+            EventParticipant.objects.filter(
+                event__type__name=KMS_MO_REGIONALS_TYPE, event__end_time__lt=semester_start
+            )
+            .values("user")
+            .annotate(mo_regionals=Count("event"))
+            .values_list("user", "mo_regionals")
         )
         self.successful_semesters = dict()
 
@@ -142,17 +147,23 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                 self.successful_semesters[user_id] = self.successful_semesters.get(user_id, 0) + 1
 
     def get_cell_points_for_row_total(self, res_request, cell, key, coefficient):
-        return (
-            (1 + self.get_cell_total(res_request, cell)) // 2
-            if KMS_FULL_POINTS_BOUND[key] < coefficient or (self.tag.key == KMS_BETA and key == 3)
-            else self.get_cell_total(res_request, cell)
-        )
+        points = self.get_cell_total(res_request, cell)
+        multiplier = 0
+        if coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key]:
+            multiplier = 1
+        elif key >= 2 and coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key - 1]:
+            multiplier = 2 / 3
+        elif key >= 3 and coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key - 2]:
+            multiplier = 1 / 3
+        if self.tag.key == KMS_BETA:
+            multiplier = min(multiplier, KMS_BETA_POINTS_BOUND[key])
+        return round(multiplier * points, 0)
 
     def run(self, res_request):
         self.prepare_coefficients(res_request.round)
         res_request.has_submit_in_beta = set()
         for submit in Submit.objects.filter(
-            task__round__semester=res_request.round.semester, task__number__in=[8, 9, 10]
+            task__round__semester=res_request.round.semester, task__number__in=[9, 10]
         ).select_related("user"):
             res_request.has_submit_in_beta.add(submit.user)
         return super(KMSResultsGenerator, self).run(res_request)
@@ -162,11 +173,17 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         coefficient = self.get_user_coefficient(user, request.round)
 
         if self.tag.key == KMS_ALFA:
-            active = active and (coefficient <= KMS_ALFA_MAX_COEFFICIENT)
+            active = (
+                active
+                and coefficient <= KMS_ALFA_MAX_COEFFICIENT
+                and self.mo_finals.get(user.pk, 0) == 0
+            )
 
         if self.tag.key == KMS_BETA:
             active = active and (
-                coefficient > KMS_ALFA_MAX_COEFFICIENT or user in request.has_submit_in_beta
+                coefficient > KMS_ALFA_MAX_COEFFICIENT
+                or user in request.has_submit_in_beta
+                or self.mo_finals.get(user.pk, 0) > 0
             )
 
         return active
@@ -179,7 +196,7 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             if KMS_ELIGIBLE_FOR_TASK_BOUND[key] < coefficient:
                 row.cells_by_key[key].active = False
 
-        # Prepare list of piars consisting of cell and its points.
+        # Prepare list of pairs consisting of cell and its points.
         tasks = [
             (cell, self.get_cell_points_for_row_total(request, cell, key, coefficient))
             for key, cell in row.cells_by_key.items()
