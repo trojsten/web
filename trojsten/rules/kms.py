@@ -150,9 +150,9 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         multiplier = 0
         if coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key]:
             multiplier = 3
-        elif key >= 2 and coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key + 1]:
+        elif key <= 9 and coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key + 1]:
             multiplier = 2
-        elif key >= 3 and coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key + 2]:
+        elif key <= 8 and coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key + 2]:
             multiplier = 1
         if self.tag.key == KMS_BETA:
             multiplier = min(multiplier, KMS_BETA_MULTIPLIER_BOUND[key])
