@@ -25,7 +25,7 @@ KMS_POINTS_FOR_SUCCESSFUL_SEMESTER = 90
 
 KMS_ALFA_MAX_COEFFICIENT = 2
 KMS_FULL_POINTS_COEFFICIENT_BOUND = [0, 0, 0, 1, 2, 6, 100, 100, 100, 100, 100]
-KMS_BETA_POINTS_BOUND = [Decimal(i) / 3 for i in [0, 0, 0, 1, 2, 3, 3, 3, 3, 3, 3]]
+KMS_BETA_MULTIPLIER_BOUND = [0, 0, 0, 1, 2, 3, 3, 3, 3, 3, 3]
 KMS_ELIGIBLE_FOR_TASK_BOUND = [0, 1, 2, 6, 100, 100, 100, 100, 100, 100, 100]
 KMS_CAMP_TYPE = "KMS sústredenie"
 KMS_MO_FINALS_TYPE = "CKMO"
@@ -146,18 +146,22 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             for user_id in successful:
                 self.successful_semesters[user_id] = self.successful_semesters.get(user_id, 0) + 1
 
-    def get_cell_points_for_row_total(self, res_request, cell, key, coefficient):
-        points = self.get_cell_total(res_request, cell)
+    def get_multiplier(self, key, coefficient):
         multiplier = 0
         if coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key]:
+            multiplier = 3
+        elif key >= 2 and coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key + 1]:
+            multiplier = 2
+        elif key >= 3 and coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key + 2]:
             multiplier = 1
-        elif key >= 2 and coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key - 1]:
-            multiplier = 2 / 3
-        elif key >= 3 and coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key - 2]:
-            multiplier = 1 / 3
         if self.tag.key == KMS_BETA:
-            multiplier = min(multiplier, KMS_BETA_POINTS_BOUND[key])
-        return round(multiplier * points, 0)
+            multiplier = min(multiplier, KMS_BETA_MULTIPLIER_BOUND[key])
+        return multiplier
+
+    def get_cell_points_for_row_total(self, res_request, cell, key, coefficient):
+        points = self.get_cell_total(res_request, cell)
+        multiplier = self.get_multiplier(key, coefficient)
+        return round(Decimal(multiplier) * points / 3, 0)
 
     def run(self, res_request):
         self.prepare_coefficients(res_request.round)
@@ -192,15 +196,16 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         coefficient = self.get_user_coefficient(row.user, request.round)
 
         # Count only tasks your coefficient is eligible for
-        for key in row.cells_by_key:
-            if KMS_ELIGIBLE_FOR_TASK_BOUND[key] < coefficient:
-                row.cells_by_key[key].active = False
+        for key, cell in row.cells_by_key.items():
+            counted_points = self.get_cell_points_for_row_total(request, cell, key, coefficient)
+            if counted_points == 0:
+                cell.active = False
 
         # Prepare list of pairs consisting of cell and its points.
         tasks = [
             (cell, self.get_cell_points_for_row_total(request, cell, key, coefficient))
             for key, cell in row.cells_by_key.items()
-            if row.cells_by_key[key].active
+            if cell.active
         ]
 
         # Count only the best 5 tasks
