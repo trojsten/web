@@ -183,6 +183,46 @@ class EventParticipantsTest(TestCase):
         response = self.client.get(self.part_list_url)
         self.assertContains(response, user.get_full_name())
 
+    def test_upload_participant_list(self):
+        User.objects.create(
+            username="jozko",
+            first_name="Jozko",
+            last_name="Mrkvicka",
+            password="pass",
+            graduation=self.grad_year,
+        )
+        User.objects.create(
+            username="jozko2",
+            first_name="Jozko",
+            last_name="Mrk",
+            password="pass",
+            graduation=self.grad_year,
+        )
+        data = """1.\tJanko Hrasko\tNejaka skola\t0 0 0
+        2.\tJozko Mrk \tPatince \t20.456"""
+        url = reverse(
+            "admin:%s_%s_change"
+            % (
+                Event._meta.app_label,
+                Event._meta.model_name,
+            ),
+            args=[self.event.id],
+        )
+        response = self.client.post(url, data={"participants_list": data})
+        self.assertEqual(
+            [participant.user.get_full_name() for participant in self.event.participants], []
+        )
+
+        staff_user = User.objects.create_superuser("admin", "mail@e.com", "password")
+        self.client.force_login(staff_user)
+
+        response = self.client.post(url, data={"participants_list": data})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            [participant.user.get_full_name() for participant in self.event.participants],
+            ["Jozko Mrk"],
+        )
+
     def test_participant_not_going(self):
         user = User.objects.create(
             username="jozko",
