@@ -88,7 +88,7 @@ def get_latest_submits_for_task(task):
     )
 
     text_submits = task.submit_set.filter(
-        submit_type=submit_constants.SUBMIT_TYPE_TEXT, time__lte=max_time
+        submit_type=submit_constants.SUBMIT_TYPE_TEXT, time__lte=max_time, points__gt=0
     ).select_related("user")
 
     review_submits = task.submit_set.filter(
@@ -98,10 +98,7 @@ def get_latest_submits_for_task(task):
 
     submits_by_user = {}
     for submit in text_submits:
-        if submit.points > 0:
-            submits_by_user.setdefault(submit.user, {}).setdefault("text_solution", []).append(
-                submit
-            )
+        submits_by_user.setdefault(submit.user, {}).setdefault("text_solution", []).append(submit)
 
     for submit in description_submits:
         if submit.user not in submits_by_user:
