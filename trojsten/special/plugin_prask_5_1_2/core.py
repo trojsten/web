@@ -45,7 +45,7 @@ class Level4(object):
         divs = 0
         for i in range(1, 1 + int(sqrt(x))):
             if x % i == 0:
-                divs += 1 if x == i**2 else 2
+                divs += 1 if x == i ** 2 else 2
         return str(divs)
 
 
@@ -126,7 +126,7 @@ class Level8(object):
 
 class Level9(object):
     TARGET = "432"
-    MAX = 10**10
+    MAX = 10 ** 10
     PRIMES = []
 
     @classmethod
