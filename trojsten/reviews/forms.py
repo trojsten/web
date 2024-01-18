@@ -8,6 +8,7 @@ from time import time
 
 from django import forms
 from django.conf import settings
+from django.contrib import messages
 from django.forms.formsets import BaseFormSet, formset_factory
 from django.forms.widgets import HiddenInput
 from django.utils.translation import ugettext_lazy as _
@@ -243,10 +244,14 @@ class BasePointForm(forms.Form):
 class BasePointFormSet(forms.BaseFormSet):
     def save(self, task):
         users = get_latest_submits_for_task(task)
+        error_users = []
         for form_data in self.cleaned_data:
             user = form_data["user"]
             if user in users:
                 value = users[user]
+                if "description" not in value:
+                    error_users.append(user)
+                    continue
                 if form_data["points"] is not None:
                     if "review" in value:
                         edit_review(
@@ -273,3 +278,4 @@ class BasePointFormSet(forms.BaseFormSet):
                         submit.points = 0
                         submit.testing_status = SUBMIT_STATUS_IN_QUEUE
                         submit.save()
+        return error_users

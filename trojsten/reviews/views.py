@@ -71,7 +71,16 @@ def review_task(request, task_pk):
                 request.POST, form_kwargs={"max_points": task.description_points}
             )
             if form_set.is_valid():
-                form_set.save(task)
+                error_users = form_set.save(task)
+                for u in error_users:
+                    messages.add_message(
+                        request,
+                        messages.ERROR,
+                        _(
+                            "Could not update points or comments because no description was submitted: "
+                        )
+                        + u.get_full_name(),
+                    )
                 messages.add_message(
                     request, messages.SUCCESS, _("Points and comments were successfully updated.")
                 )
