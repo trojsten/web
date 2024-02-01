@@ -66,8 +66,8 @@ class Level6:
     def run(x):
         x = int(x)
         length = 0
-        while Level6.SIZE**length <= x:
-            x -= Level6.SIZE**length
+        while Level6.SIZE ** length <= x:
+            x -= Level6.SIZE ** length
             length += 1
         result = ""
         while length:

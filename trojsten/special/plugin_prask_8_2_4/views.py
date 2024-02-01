@@ -3,7 +3,8 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
-from .core import LEVELS, generateResponse, correct
+
+from .core import LEVELS, correct, generateResponse
 from .models import UserLevel
 from .update_points import update_points
 
@@ -13,8 +14,8 @@ def main(request, level=1):
     level = max(min(int(level), 10), 1)
     user = request.user
     userlevel, _ = UserLevel.objects.get_or_create(level=level, user=user)
-    
-    levels = [[i, False] for i in range(1, len(LEVELS)+1)]
+
+    levels = [[i, False] for i in range(1, len(LEVELS) + 1)]
     for x in UserLevel.objects.filter(user=user):
         try:
             levels[x.level - 1][1] = x.solved
@@ -31,6 +32,7 @@ def main(request, level=1):
         },
     )
 
+
 @login_required()
 def run(request, level):
     level = max(min(int(level), 10), 1)
@@ -40,16 +42,14 @@ def run(request, level):
     except (KeyError, ValueError):
         return HttpResponseBadRequest()
 
-    text = generateResponse(data['input'], level)
+    text = generateResponse(data["input"], level)
     refresh = False
 
-    if LEVELS[level-1]['type'] == 'answer':
+    if LEVELS[level - 1]["type"] == "answer":
         if correct(text, userLevel):
             update_points(request.user)
             refresh = True
 
-    return HttpResponse(json.dumps({
-        'text': text,
-        'refresh': refresh,
-        'userLevel': LEVELS[userLevel.level - 1]
-    }))
+    return HttpResponse(
+        json.dumps({"text": text, "refresh": refresh, "userLevel": LEVELS[userLevel.level - 1]})
+    )

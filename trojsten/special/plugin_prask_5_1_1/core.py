@@ -13,7 +13,7 @@ class Level1(object):
 
     @classmethod
     def run(cls, x, try_count):
-        return str(x**2)
+        return str(x ** 2)
 
 
 class Level2(object):
@@ -140,7 +140,7 @@ class Level3(object):
 
     @classmethod
     def generate_primes(cls):
-        LIMIT = 10**6
+        LIMIT = 10 ** 6
         erat = [True] * LIMIT
         for i in range(2, LIMIT):
             if not erat[i]:
@@ -267,7 +267,7 @@ class Level9(object):
 
     @classmethod
     def run(cls, x, try_count):
-        n = int(x**0.5) // 2
+        n = int(x ** 0.5) // 2
         x -= 4 * n * n
         if x < 2 * n + 1:
             pos = (-n, n - x)

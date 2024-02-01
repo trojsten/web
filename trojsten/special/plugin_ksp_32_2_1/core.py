@@ -42,7 +42,7 @@ class Level4(object):
 
     @classmethod
     def run(cls, x):
-        n = int(x**0.5) // 2
+        n = int(x ** 0.5) // 2
         x -= 4 * n * n
         if x < 2 * n + 1:
             res = (-n, n - x)
