@@ -1021,4 +1021,4 @@ msgid "Include all sites"
 msgstr "Zahrnúť všetky semináre"
 
 msgid "Could not update points or comments because no description was submitted: "
-msgid "Nebolo možné aktualizovať body alebo komentár, pretože žiadny popis nebol odovzdaný: "
+msgstr "Nebolo možné aktualizovať body alebo komentár, pretože žiadny popis nebol odovzdaný: "
