@@ -384,8 +384,8 @@ class ResultsTest(TestCase):
 
 class SerializationTest(TestCase):
     def test_serialize_cell(self):
-        d = {"points": 15, "manual_points": 10, "auto_points": 5, "active": True}
-        cell = ResultsCell(15, 10, 5, True)
+        d = {"points": 15, "manual_points": 10, "auto_points": 5, "active": True, "full_points": 12}
+        cell = ResultsCell(15, 10, 5, True, 12)
 
         self.assertDictEqual(cell.serialize(), d)
 

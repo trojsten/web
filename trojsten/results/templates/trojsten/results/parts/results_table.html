@@ -100,6 +100,8 @@
                 {% endif %}
                 {% if cell.manual_points != None and cell.auto_points != None %}
                   title="popis: {{ cell.manual_points }} testovanie: {{ cell.auto_points }}"
+                {% elif cell.full_points %}
+                  title="hodnotenie: {{ cell.full_points }}"
                 {% endif %}
             >
                 {{ cell.points }}

@@ -8,11 +8,14 @@ ResultsTag = namedtuple("ResultsTag", ["key", "name"])
 
 
 class ResultsCell(Serializable):
-    def __init__(self, points=None, manual_points=None, auto_points=None, active=True):
+    def __init__(
+        self, points=None, manual_points=None, auto_points=None, active=True, full_points=None
+    ):
         self.points = points
         self.manual_points = manual_points
         self.auto_points = auto_points
         self.active = active
+        self.full_points = full_points
 
 
 class ResultsCol(Serializable):
