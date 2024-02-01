@@ -262,6 +262,7 @@ class ReviewTest(TestCase):
         response = self.client.get(url)
         self.assertNotContains(response, comment)
         self.assertContains(response, multi_line_comment)
+        self.assertNotContains(response, "Textové riešenie")
 
     def test_hidden_points_alert(self):
         self.client.force_login(self.staff)
@@ -288,6 +289,128 @@ class ReviewTest(TestCase):
 
         response = self.client.get(url)
         self.assertContains(response, self.user.get_full_name())
+
+    def test_text_submit_reviews(self):
+        year = timezone.now().year + 2
+        users = [
+            User.objects.create_user(
+                username=name,
+                password="password",
+                first_name=name,
+                last_name="Mrkvicka",
+                graduation=year,
+            )
+            for name in ["Peter", "Pavol", "Michal", "Martin", "Matej"]
+        ]
+
+        task = Task.objects.create(
+            number=3, name="Test task 3", round=self.task.round, text_submit_solution=["aa"]
+        )
+
+        Submit.objects.create(
+            task=task,
+            user=users[0],
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            points=0,
+            time=self.submit.time,
+        )
+        Submit.objects.create(
+            task=task,
+            user=users[1],
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            points=0,
+            time=self.submit.time,
+        )
+        Submit.objects.create(
+            task=task,
+            user=users[1],
+            submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+            points=5,
+            time=self.submit.time,
+        )
+        Submit.objects.create(
+            task=task,
+            user=users[2],
+            submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+            points=5,
+            time=self.submit.time,
+        )
+        Submit.objects.create(
+            task=task,
+            user=users[3],
+            submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+            points=0,
+            time=self.submit.time,
+        )
+
+        self.client.force_login(self.staff)
+        url = reverse(self.url_name, kwargs={"task_pk": task.id})
+        response = self.client.get(url)
+
+        self.assertContains(response, "Textové riešenie")
+        self.assertContains(response, "Peter")  # only description
+        self.assertContains(response, "Pavol")  # both text and description
+        self.assertContains(response, "Michal")  # only text
+        self.assertNotContains(response, "Martin")  # zero points
+        self.assertNotContains(response, "Matej")  # no submit
+
+    def test_double_text_submit(self):
+        task = Task.objects.create(
+            number=3, name="Test task 3", round=self.task.round, text_submit_solution=["aa"]
+        )
+        assert task.has_text_submit
+        Submit.objects.create(
+            task=task,
+            user=self.user,
+            submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+            points=5,
+            time=self.submit.time,
+            text="FIRSTSOLUTION",
+        )
+        Submit.objects.create(
+            task=task,
+            user=self.user,
+            submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+            points=5,
+            time=self.submit.time,
+            text="SECONDSOLUTION",
+        )
+        self.client.force_login(self.staff)
+        url = reverse(self.url_name, kwargs={"task_pk": task.id})
+        response = self.client.get(url)
+
+        self.assertContains(response, "FIRSTSOLUTION")
+        self.assertContains(response, "SECONDSOLUTION")
+
+    def test_description_after_end_of_round(self):
+        self.client.force_login(self.staff)
+        url = reverse(self.url_name, kwargs={"task_pk": self.task.id})
+        end_time = self.task.round.end_time
+        self.task.round.second_end_time = end_time + timezone.timedelta(2)
+        self.task.round.save()
+
+        for i in range(2):
+            if i == 1:
+                self.task.text_submit_solution = ["aa"]
+                self.task.save()
+
+            self.submit.time = end_time - timezone.timedelta(1)
+            self.submit.save()
+            response = self.client.get(url)
+            self.assertContains(response, self.user.get_full_name())
+
+            self.submit.time = end_time + timezone.timedelta(1)
+            self.submit.save()
+            response = self.client.get(url)
+            if i == 0:
+                self.assertNotContains(response, self.user.get_full_name())
+            else:
+                self.assertContains(response, self.user.get_full_name())
+
+            self.submit.time = end_time + timezone.timedelta(3)
+            self.submit.save()
+            response = self.client.get(url)
+            self.assertNotContains(response, self.user.get_full_name())
 
 
 @override_settings(SUBMIT_PATH=tempfile.mkdtemp(dir=path.join(path.dirname(__file__), "test_data")))

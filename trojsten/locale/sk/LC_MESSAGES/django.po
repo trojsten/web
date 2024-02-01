@@ -960,6 +960,9 @@ msgstr "Predchádzajúca"
 msgid "Next"
 msgstr "Nasledujúca"
 
+msgid "none"
+msgstr "žiadne"
+
 msgid "locked"
 msgstr ""
 
@@ -1016,3 +1019,6 @@ msgstr "Len tento seminár"
 
 msgid "Include all sites"
 msgstr "Zahrnúť všetky semináre"
+
+msgid "Could not update points or comments because no description was submitted: "
+msgid "Nebolo možné aktualizovať body alebo komentár, pretože žiadny popis nebol odovzdaný: "

@@ -69,21 +69,27 @@ def edit_review(filecontent, filename, submit, user, points, comment=""):
 
 
 def get_latest_submits_for_task(task):
+    max_time = task.round.end_time
+    if task.has_text_submit and task.round.second_end_time:
+        max_time = task.round.second_end_time
+
     description_submits = (
         task.submit_set.filter(
-            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION, time__lte=task.round.end_time
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION, time__lte=max_time
         )
         .exclude(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
         .select_related("user")
     )
 
     source_submits = (
-        task.submit_set.filter(
-            submit_type=submit_constants.SUBMIT_TYPE_SOURCE, time__lte=task.round.end_time
-        )
+        task.submit_set.filter(submit_type=submit_constants.SUBMIT_TYPE_SOURCE, time__lte=max_time)
         .exclude(testing_status=submit_constants.SUBMIT_STATUS_REVIEWED)
         .select_related("user")
     )
+
+    text_submits = task.submit_set.filter(
+        submit_type=submit_constants.SUBMIT_TYPE_TEXT, time__lte=max_time, points__gt=0
+    ).select_related("user")
 
     review_submits = task.submit_set.filter(
         submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
@@ -91,10 +97,16 @@ def get_latest_submits_for_task(task):
     ).select_related("user")
 
     submits_by_user = {}
+    for submit in text_submits:
+        submits_by_user.setdefault(submit.user, {}).setdefault("text_solution", []).append(submit)
+
     for submit in description_submits:
         if submit.user not in submits_by_user:
             submits_by_user[submit.user] = {"description": submit}
-        elif submits_by_user[submit.user]["description"].time < submit.time:
+        elif (
+            "description" not in submits_by_user[submit.user]
+            or submits_by_user[submit.user]["description"].time < submit.time
+        ):
             submits_by_user[submit.user]["description"] = submit
 
     for submit in source_submits:

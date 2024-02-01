@@ -36,6 +36,11 @@
             <th>
                 Riešiteľ
             </th>
+            {% if task.has_text_submit %}
+            <th>
+                Textové riešenie
+            </th>
+            {% endif %}
             <th>
                 Odovzdané riešenie
             </th>
@@ -57,9 +62,20 @@
         <a href="{% url 'admin:old_submit_submit_changelist' %}?q={{ user.username }}">{{ user.get_full_name }}</a>
         <input type="hidden" name="{{ data.form.user.html_name }}" value="{{ data.form.user.value }}"/>
     </td>
+    {% if task.has_text_submit %}
+    <td>
+        {% for text_submit in data.text_solution %}
+        <a href="{% url 'admin:old_submit_submit_change' text_submit.pk %}">
+            {{ text_submit.points }} ({{ text_submit.text }})
+        </a><br>
+        {% endfor %}
+    </td>
+    {% endif %}
     <td>
     {% if data.description %}
         <a href="{% url 'admin:submit_download' data.description.pk %}">{% trans 'Download' %}</a>
+    {% else %}
+        ({% trans 'none' %})
     {% endif %}
     </td>
 
