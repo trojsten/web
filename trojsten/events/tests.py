@@ -213,7 +213,9 @@ class EventParticipantsTest(TestCase):
             [participant.user.get_full_name() for participant in self.event.participants], []
         )
 
-        staff_user = User.objects.create_superuser("admin", "mail@e.com", "password")
+        staff_user = User.objects.create(username="admin", first_name="Admin", last_name="Aadmin", password="password")
+        self.group.user_set.add(staff_user)
+        staff_user.groups.add(self.group)
         self.client.force_login(staff_user)
 
         response = self.client.post(url, data={"participants_list": data})
