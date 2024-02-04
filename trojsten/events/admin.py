@@ -76,8 +76,6 @@ class EventAdmin(admin.ModelAdmin):
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
         if request.method == "POST" and "participants_list" in request.POST:
-            if not request.user.is_superuser:
-                raise PermissionDenied
             raw_data = request.POST.get("participants_list")
             possible_names = [
                 element.lower().strip()
