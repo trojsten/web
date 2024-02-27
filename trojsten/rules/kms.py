@@ -221,6 +221,16 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             if cell.active
         )
 
+    def format_row_cells(self, res_request, row, cols):
+        coefficient = self.get_user_coefficient(row.user, res_request.round)
+        for key, cell in row.cells_by_key.items():
+            points = self.get_cell_total(res_request, cell)
+            cell.full_points = points
+            cell.manual_points = self.get_cell_points_for_row_total(
+                res_request, cell, key, coefficient
+            )
+            super(KMSResultsGenerator, self).format_row_cell(res_request, cell)
+
     def add_special_row_cells(self, res_request, row, cols):
         super(KMSResultsGenerator, self).add_special_row_cells(res_request, row, cols)
         coefficient = self.get_user_coefficient(row.user, res_request.round)
