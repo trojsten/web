@@ -1,0 +1,113 @@
+[
+  {
+    "name": "Ukážka 1",
+    "points": 0,
+    "numInputs": 1,
+    "zadanie": "demo1.html",
+    "id": 0,
+    "workspace": {
+      "blocks": {
+        "blocks": [
+          {
+            "type": "start",
+            "movable": false,
+            "deletable": false,
+            "x": 10,
+            "y": 10,
+            "inputs": {
+              "x": {
+                "block": {
+                  "type": "selector",
+                  "fields": {
+                    "index": 1
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "Ukážka 4",
+    "points": 0,
+    "numInputs": 2,
+    "zadanie": "demo4.html",
+    "id": 1,
+    "workspace": {
+      "blocks": {
+        "blocks": [
+          {
+            "type": "start",
+            "x": 10,
+            "y": 10,
+            "deletable": false,
+            "movable": false,
+            "inputs": {
+              "x": {
+                "block": {
+                  "type": "repeater",
+                  "inputs": {
+                    "init": {
+                      "block": {
+                        "type": "selector",
+                        "fields": {
+                          "index": 1
+                        }
+                      }
+                    },
+                    "step": {
+                      "block": {
+                        "type": "compositor",
+                        "extraState": {
+                          "itemCount": 2
+                        },
+                        "inputs": {
+                          "final": {
+                            "block": {
+                              "type": "incrementor"
+                            }
+                          },
+                          "f1": {
+                            "block": {
+                              "type": "selector",
+                              "fields": {
+                                "index": 3
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "1. Level",
+    "points": 100,
+    "numInputs": 2,
+    "zadanie": "test.html",
+    "id": 2
+  },
+  {
+    "name": "2. Level",
+    "points": 100,
+    "numInputs": 2,
+    "zadanie": "test.html",
+    "id": 3
+  },
+  {
+    "name": "3. Level",
+    "points": 100,
+    "numInputs": 2,
+    "zadanie": "test.html",
+    "id": 4
+  }
+]
