@@ -1,20 +1,24 @@
 # Literal names of the categories, camps and properties
 SUSI_AGAT = "Agát"
 SUSI_BLYSKAVICA = "Blýskavica"
-SUSI_CIFERSKY_CECH = "Cíferský-cech"
+SUSI_CVALAJUCI = "Cválajúci"
+SUSI_DIALNICA = "Diaľnica"
+SUSI_HIGH_SCHOOL_CATEGORIES = [SUSI_AGAT, SUSI_BLYSKAVICA, SUSI_CVALAJUCI, SUSI_DIALNICA]
+SUSI_OPEN = "Zviacnásobiť"
 SUSI_CAMP_TYPE = "Suši sústredenie"
 PUZZLEHUNT_PARTICIPATIONS_KEY_NAME = "Suši účasti na šifrovačkách"
 
 
 SUSI_COMPETITION_ID = 9  # The ID (pk) of Susi competition in the database.
 
-SUSI_AGAT_MAX_COEFFICIENT = 8  # Maximum coefficient for participants in Agat.
+SUSI_COEFFICIENT_LIMITS = [6, 12, 18, 10 ** 18]  # Maximum coefficient for participants in Agat.
 
 # The no of experience points per each event
-SUSI_EXP_POINTS_FOR_PUZZLEHUNT = 3
-SUSI_EXP_POINTS_FOR_SUSI_CAMP = 3
-SUSI_EXP_POINTS_FOR_SOLVED_TASKS = 3
-SUSI_EXP_POINTS_FOR_OTHER_CAMP = 1
+SUSI_EXP_POINTS_FOR_SUSI_CAMP = 4
+SUSI_EXP_POINTS_FOR_GOOD_RANK = 3
+
+# How many top people in a category results table get extra experience points
+SUSI_TOP_RANK_FOR_EXP = 3
 
 # The number of tasks participant has to solve to get extra experience points
 SUSI_NUMBER_OF_SOLVED_TASKS_FOR_POINTS = 8

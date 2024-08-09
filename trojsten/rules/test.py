@@ -15,6 +15,8 @@ from trojsten.contests.models import Category, Competition, Round, Semester, Tas
 from trojsten.events.models import Event, EventParticipant, EventPlace, EventType
 from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
 from trojsten.people.models import User, UserProperty, UserPropertyKey
+from trojsten.results.manager import get_results
+from trojsten.results.models import Results
 from trojsten.rules.kms import (
     COEFFICIENT_COLUMN_KEY,
     KMS_ALFA,
@@ -65,6 +67,14 @@ def get_row_for_user(scoreboard, user):
             if row["user"]["id"] == user.id:
                 return DictObject(row)
     return None
+
+
+def get_row_total(scoreboard_row, col_to_index_map):
+    return float(scoreboard_row.cell_list[col_to_index_map["sum"]].points)
+
+
+def get_coefficient(scoreboard_row, col_to_index_map):
+    return float(scoreboard_row.cell_list[col_to_index_map[COEFFICIENT_COLUMN_KEY]].points)
 
 
 def get_col_to_index_map(scoreboard):
@@ -1039,41 +1049,54 @@ class SusiCoefficientTest(TestCase):
         self.type_camp_kms = EventType.objects.create(
             name=KMS_CAMP_TYPE, organizers_group=group, is_camp=True
         )
-        self.type_camp_LTT = EventType.objects.create(
-            name="LTT", organizers_group=group, is_camp=False
-        )
-
-        self.competition = Competition.objects.create(name="TestCompetition")
-        self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
-        self.semesters = []
-        self.camps = []
-        self.other_camps = []
-        self.ltt = Event.objects.create(
-            name="LTT",
-            type=self.type_camp_LTT,
+        self.other_camp = Event.objects.create(
+            name="KMS camp",
+            type=self.type_camp_kms,
             semester=None,
             place=self.place,
             start_time=self.time,
             end_time=self.time,
         )
-        for year, semester_number in [(1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2)]:
+
+        # pk = 9 sets rules to SUSIRules
+        self.competition = Competition.objects.create(name="TestCompetition", pk=9)
+        self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.semesters = []
+        self.rounds = []
+        self.tasks = []
+        self.camps = []
+        self.users = []
+        for year, semester_number in [(1, 1), (1, 2), (3, 1), (3, 2)]:
             self.semesters.append(
                 Semester.objects.create(
                     year=year,
                     number=semester_number,
-                    name="Test semester",
+                    name=f"Test semester {year}-{semester_number}",
                     competition=self.competition,
                 )
             )
-            self.other_camps.append(
-                Event.objects.create(
-                    name="KMS camp",
-                    type=self.type_camp_kms,
+            self.rounds.append(
+                Round.objects.create(
+                    number=1,
                     semester=self.semesters[-1],
-                    place=self.place,
-                    start_time=self.time,
-                    end_time=self.time,
+                    visible=True,
+                    solutions_visible=False,
+                    start_time=self.time
+                    + datetime.timedelta((year - 3) * 366 + semester_number * 183 - 400),
+                    end_time=self.time
+                    + datetime.timedelta((year - 3) * 366 + semester_number * 183 - 300),
                 )
+            )
+            self.tasks.append(
+                [
+                    Task.objects.create(
+                        number=i,
+                        name="Test task {}".format(i),
+                        round=self.rounds[-1],
+                        description_points_visible=True,
+                    )
+                    for i in range(1, 8)
+                ]
             )
             self.camps.append(
                 Event.objects.create(
@@ -1081,51 +1104,38 @@ class SusiCoefficientTest(TestCase):
                     type=self.type_camp,
                     semester=self.semesters[-1],
                     place=self.place,
-                    start_time=self.time,
-                    end_time=self.time,
+                    start_time=self.time + datetime.timedelta(-300),
+                    end_time=self.time + datetime.timedelta(-300),
                 )
             )
+        self.round = self.rounds[-1]
         self.current_semester = self.semesters[-1]
         self.start = self.time + timezone.timedelta(2)
         self.end = self.time + timezone.timedelta(4)
         self.second_end = self.time + timezone.timedelta(7)
-        self.round = Round.objects.create(
-            number=1,
-            semester=self.current_semester,
-            visible=True,
-            solutions_visible=False,
-            start_time=self.start,
-            end_time=self.end,
-            second_end_time=self.second_end,
-        )
 
         graduation_year = self.round.end_time.year + int(
             self.round.end_time.month > SCHOOL_YEAR_END_MONTH
         )
-        self.puzzlehunt_key = UserPropertyKey.objects.create(
-            key_name=susi_constants.PUZZLEHUNT_PARTICIPATIONS_KEY_NAME, regex=r"^-?(\d{1,2})$"
-        )
-        self.test_user = User.objects.create(
-            username="test_user",
+        for i in range(4):
+            self.users.append(
+                User.objects.create(
+                    username=f"test_user{i}",
+                    password="password",
+                    first_name=f"Jozko{i}",
+                    last_name=f"Mrkvicka{i}",
+                    graduation=graduation_year + 3,
+                )
+            )
+        self.old_user = User.objects.create(
+            username="misof",
             password="password",
-            first_name="Jozko",
-            last_name="Mrkvicka",
-            graduation=graduation_year + 3,
-        )
-        UserProperty.objects.create(user=self.test_user, key=self.puzzlehunt_key, value="0")
-        self.tag = SUSIRules.RESULTS_TAGS[susi_constants.SUSI_BLYSKAVICA]
-
-        category_agat = Category.objects.create(
-            name=susi_constants.SUSI_AGAT, competition=self.competition
-        )
-        category_blyskavica = Category.objects.create(
-            name=susi_constants.SUSI_BLYSKAVICA, competition=self.competition
-        )
-        category_cifersky_cech = Category.objects.create(
-            name=susi_constants.SUSI_CIFERSKY_CECH, competition=self.competition
+            first_name="Michal",
+            last_name="Forisek",
+            graduation=graduation_year - 30,
         )
 
-        for semester in self.semesters[:2]:
+        """for semester in self.semesters[:2]:
             for i in range(1, 3):
                 round_ = Round.objects.create(
                     number=i,
@@ -1147,249 +1157,150 @@ class SusiCoefficientTest(TestCase):
                         description_points_visible=True,
                     )
                     task.categories.set(categories)
-                    task.save()
+                    task.save()"""
 
     def test_susi_camps_only(self):
-        # Coefficient = 3: successful semesters = 1, other camps = 0
+        # Coefficient = 8: successful semesters = 0, camps = 2
         EventParticipant.objects.create(
-            event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
+            event=self.camps[0], user=self.users[0], type=EventParticipant.PARTICIPANT, going=True
         )
-        generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(
-            generator.get_user_coefficient(self.test_user, self.round),
-            susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP,
+        EventParticipant.objects.create(
+            event=self.camps[1], user=self.users[0], type=EventParticipant.RESERVE, going=True
         )
+        for tag in susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES:
+            generator = SUSIResultsGenerator(tag)
+            self.assertEqual(
+                generator.get_user_coefficient(self.users[0], self.round),
+                2 * susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP,
+            )
 
     def test_other_camps_only(self):
-        # Coefficient = 1: successful semesters = 0, other camps = 1
         EventParticipant.objects.create(
-            event=self.other_camps[0],
-            user=self.test_user,
-            type=EventParticipant.PARTICIPANT,
-            going=True,
+            event=self.other_camp, user=self.users[0], type=EventParticipant.PARTICIPANT, going=True
         )
-        generator = SUSIResultsGenerator(self.tag)
+        for tag in susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES:
+            generator = SUSIResultsGenerator(tag)
+            self.assertEqual(generator.get_user_coefficient(self.users[0], self.round), 0)
+
+    def test_ignore_not_going(self):
+        EventParticipant.objects.create(
+            event=self.camps[0], user=self.users[0], type=EventParticipant.PARTICIPANT, going=False
+        )
+        for tag in susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES:
+            generator = SUSIResultsGenerator(tag)
+            self.assertEqual(generator.get_user_coefficient(self.users[0], self.round), 0)
+
+    def create_submit(self, semester, task, who, points):
+        Submit.objects.create(
+            task=self.tasks[semester - 1][task - 1],
+            user=self.old_user if who == -1 else self.users[who],
+            submit_type=submit_constants.SUBMIT_TYPE_TEXT,
+            points=points,
+            testing_status="reviewed",
+        )
+
+    def create_old_submits(self):
+        """
+        Semester 1:
+        Misof  0 0 0 0 10
+        Jozko0 0 0 0 0 9
+        Jozko1 0 0 0 9 0
+        Jozko2 0 0 0 0 9
+        Jozko3 0 0 0 9 0
+
+        Semester 2:
+        Misof  0 0 0 0 10
+        Jozko2 0 0 0 5 5
+        Jozko1 0 0 0 0 8
+        Jozko3 0 0 0 0 7
+        Jozko0 0 0 0 0 6
+        """
+        self.create_submit(1, 5, -1, 10)
+        self.create_submit(1, 5, 0, 9)
+        self.create_submit(1, 4, 1, 9)
+        self.create_submit(1, 5, 2, 9)
+        self.create_submit(1, 4, 3, 9)
+
+        self.create_submit(2, 5, -1, 10)
+        self.create_submit(2, 4, 2, 5)
+        self.create_submit(2, 5, 2, 5)
+        self.create_submit(2, 5, 1, 8)
+        self.create_submit(2, 5, 3, 7)
+        self.create_submit(2, 5, 0, 6)
+
+    def create_current_submits(self):
+        for uid in range(-1, 4):
+            self.create_submit(4, 5, uid, 9)
+
+    def test_create_only_results_for_previous_nonfinal_rounds(self):
+        self.create_old_submits()
+        self.create_current_submits()
+        for category in [susi_constants.SUSI_AGAT, susi_constants.SUSI_BLYSKAVICA]:
+            get_results(category, self.rounds[0], single_round=False)
         self.assertEqual(
-            generator.get_user_coefficient(self.test_user, self.round),
-            susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP,
+            set(table.tag for table in Results.objects.filter(round=self.rounds[0]).all()),
+            {susi_constants.SUSI_AGAT, susi_constants.SUSI_BLYSKAVICA},
         )
-
-    def test_camp_with_no_semester(self):
-        # Coefficient = 1: successful semesters = 0, other camps = 1
-        EventParticipant.objects.create(
-            event=self.ltt,
-            user=self.test_user,
-            type=EventParticipant.PARTICIPANT,
-            going=True,
-        )
-        generator = SUSIResultsGenerator(self.tag)
+        self.rounds[0].results_final = True
+        self.rounds[0].save()
+        get_results(susi_constants.SUSI_AGAT, self.round, single_round=True)
         self.assertEqual(
-            generator.get_user_coefficient(self.test_user, self.round),
-            1 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP,
+            set(table.tag for table in Results.objects.filter(round=self.rounds[0]).all()),
+            {susi_constants.SUSI_AGAT, susi_constants.SUSI_BLYSKAVICA},
         )
-
-    def test_all_camps(self):
-        # Coefficient = 5: successful semesters = 1, other camps = 2
-        EventParticipant.objects.create(
-            event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
-        )
-        EventParticipant.objects.create(
-            event=self.other_camps[0],
-            user=self.test_user,
-            type=EventParticipant.PARTICIPANT,
-            going=True,
-        )
-        EventParticipant.objects.create(
-            event=self.ltt,
-            user=self.test_user,
-            type=EventParticipant.PARTICIPANT,
-            going=True,
-        )
-        generator = SUSIResultsGenerator(self.tag)
         self.assertEqual(
-            generator.get_user_coefficient(self.test_user, self.round),
-            1 * susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP
-            + 2 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP,
+            set(table.tag for table in Results.objects.filter(round=self.rounds[1]).all()),
+            set(susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES),
         )
 
-    def test_ignore_not_going_reserve(self):
-        # Coefficient = 0: successful semesters = 0, other camps = 0
-        EventParticipant.objects.create(
-            event=self.camps[0], user=self.test_user, type=EventParticipant.RESERVE, going=False
-        )
-        generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
+    def test_top3(self):
+        self.create_old_submits()
+        user_points_all = [[9, 9, 9, 9], [6, 8, 10, 7]]
+        # Counts only number of top3 placements
+        user_coefficients_all = [[0, 0, 0, 0], [4] * 4]
+        for round_, user_points, user_coefficients, active_category in zip(
+            self.rounds[:2],
+            user_points_all,
+            user_coefficients_all,
+            # After the first round, everyone wins all categories and hence gets 4 * 3 experience points getting to category C
+            [susi_constants.SUSI_AGAT, susi_constants.SUSI_CVALAJUCI],
+        ):
+            user_coefficients = [
+                susi_constants.SUSI_EXP_POINTS_FOR_GOOD_RANK * v for v in user_coefficients
+            ]
+            for category in susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES:
+                scoreboard = get_results(category, round_, single_round=False)
+                col_to_index_map = get_col_to_index_map(scoreboard)
+                for user, points, coefficient in zip(self.users, user_points, user_coefficients):
+                    row = get_row_for_user(scoreboard, user)
+                    self.assertEqual(row.active, category == active_category)
+                    self.assertEqual(get_row_total(row, col_to_index_map), points)
+                    self.assertEqual(get_coefficient(row, col_to_index_map), coefficient)
+                row = get_row_for_user(scoreboard, self.old_user)
+                self.assertEqual(row.active, False)
 
-    def test_ignore_not_going_participant(self):
-        # Coefficient = 0: successful semesters = 0, other camps = 0
-        EventParticipant.objects.create(
-            event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=False
-        )
-        generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
+            scoreboard = get_results(susi_constants.SUSI_OPEN, round_, single_round=False)
+            col_to_index_map = get_col_to_index_map(scoreboard)
+            for user, points, coefficient in zip(self.users, user_points, user_coefficients):
+                row = get_row_for_user(scoreboard, user)
+                self.assertEqual(row.active, True)
+                self.assertEqual(get_row_total(row, col_to_index_map), points)
+                self.assertEqual(get_coefficient(row, col_to_index_map), coefficient)
+            row = get_row_for_user(scoreboard, self.old_user)
+            self.assertEqual(row.active, True)
+            self.assertEqual(get_row_total(row, col_to_index_map), 10)
 
-    def test_ignore_not_going_participant_other_camp(self):
-        # Coefficient = 0: successful semesters = 0, other camps = 0
-        EventParticipant.objects.create(
-            event=self.other_camps[0],
-            user=self.test_user,
-            type=EventParticipant.PARTICIPANT,
-            going=False,
-        )
-        generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
-
-    def test_ignore_ckmo_participant(self):
-        group = Group.objects.create(name="skupinamo")
-        type_mo = EventType.objects.create(
-            name=KMS_MO_FINALS_TYPE, organizers_group=group, is_camp=False
-        )
-        ckmo = Event.objects.create(
-            name="CKMO",
-            type=type_mo,
-            place=self.place,
-            start_time=self.time,
-            end_time=self.time,
-        )
-        EventParticipant.objects.create(
-            event=ckmo,
-            user=self.test_user,
-            type=EventParticipant.PARTICIPANT,
-            going=True,
-        )
-        generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
-
-    def test_many_camps(self):
-        # Coefficient = 10: successful semesters = 2, other camps = 4
-        for i in range(2):
-            EventParticipant.objects.create(
-                event=self.camps[i],
-                user=self.test_user,
-                type=EventParticipant.PARTICIPANT,
-                going=True,
-            )
-        for i in range(2):
-            EventParticipant.objects.create(
-                event=self.other_camps[i],
-                user=self.test_user,
-                type=EventParticipant.PARTICIPANT,
-                going=True,
-            )
-        EventParticipant.objects.create(
-            event=self.other_camps[2],
-            user=self.test_user,
-            type=EventParticipant.RESERVE,
-            going=True,
-        )
-        EventParticipant.objects.create(
-            event=self.ltt,
-            user=self.test_user,
-            type=EventParticipant.PARTICIPANT,
-            going=True,
-        )
-        generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(
-            generator.get_user_coefficient(self.test_user, self.round),
-            2 * susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP
-            + 4 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP,
-        )
-
-    def test_number_of_solved_tasks(self):
-        points = [1, 2, 0, 4, 0, 0, 0, 9]
-
-        # Add submits in semester with 8 solved tasks
-        # Coefficient changes, as this semester is successful
-        for round_ in self.semesters[0].round_set.all():
-            for task, point in zip(round_.task_set.all(), points):
-                submit = Submit.objects.create(
-                    task=task,
-                    user=self.test_user,
-                    submit_type=submit_constants.SUBMIT_TYPE_TEXT,
-                    points=point,
-                    testing_status="reviewed",
-                )
-                submit.time = round_.end_time + timezone.timedelta(-1)
-                submit.save()
-        generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(
-            generator.get_user_coefficient(self.test_user, self.round),
-            1 * susi_constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS,
-        )
-
-        # Add submits in semester 2 with 6 solved tasks
-        # Coefficient doesn't change, as this semester is not successful
-        for round_ in self.semesters[1].round_set.all():
-            for task, point in zip(round_.task_set.all(), points[:-1]):
-                submit = Submit.objects.create(
-                    task=task,
-                    user=self.test_user,
-                    submit_type=submit_constants.SUBMIT_TYPE_TEXT,
-                    points=point,
-                    testing_status="reviewed",
-                )
-                submit.time = round_.end_time + timezone.timedelta(-1)
-                submit.save()
-        generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(
-            generator.get_user_coefficient(self.test_user, self.round),
-            1 * susi_constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS,
-        )
-
-    def test_puzzle_hunt_participations(self):
-        # Coefficient = 3: successful semesters = 0, other camps = 0, puzzlehunt participations = 1
-        participations = UserProperty.objects.get(user=self.test_user, key=self.puzzlehunt_key)
-        participations.value = "1"
-        participations.save()
-        generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(
-            generator.get_user_coefficient(self.test_user, self.round),
-            1 * susi_constants.SUSI_EXP_POINTS_FOR_PUZZLEHUNT,
-        )
-
-    def test_coefficient_all(self):
-        # Coefficient = 21: successful semesters = 2, Susi camps = 1,
-        # other camps = 3, puzzlehunt participations = 3
-        participations = UserProperty.objects.get(user=self.test_user, key=self.puzzlehunt_key)
-        participations.value = "3"
-        participations.save()
-        EventParticipant.objects.create(
-            event=self.camps[0], user=self.test_user, type=EventParticipant.PARTICIPANT, going=True
-        )
-        for i in range(2):
-            EventParticipant.objects.create(
-                event=self.other_camps[i],
-                user=self.test_user,
-                type=EventParticipant.PARTICIPANT,
-                going=True,
-            )
-        EventParticipant.objects.create(
-            event=self.ltt,
-            user=self.test_user,
-            type=EventParticipant.PARTICIPANT,
-            going=True,
-        )
-        points = [9 for _ in range(1, 9)]
-        for semester in self.semesters[:2]:
-            round_ = semester.round_set.first()
-            for task, point in zip(round_.task_set.all(), points):
-                submit = Submit.objects.create(
-                    task=task,
-                    user=self.test_user,
-                    submit_type=submit_constants.SUBMIT_TYPE_TEXT,
-                    points=point,
-                    testing_status="reviewed",
-                )
-                submit.time = round_.end_time + timezone.timedelta(-1)
-                submit.save()
-        generator = SUSIResultsGenerator(self.tag)
-        self.assertEqual(
-            generator.get_user_coefficient(self.test_user, self.round),
-            1 * susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP
-            + 2 * susi_constants.SUSI_EXP_POINTS_FOR_SOLVED_TASKS
-            + 3 * susi_constants.SUSI_EXP_POINTS_FOR_OTHER_CAMP
-            + 3 * susi_constants.SUSI_EXP_POINTS_FOR_PUZZLEHUNT,
-        )
+        self.create_current_submits()
+        # Jozko0 won hypothetically Dialnica in round 2, Jozko1-3 won Cvalajuci and Dialnica in round 2
+        user_coefficients = [v * susi_constants.SUSI_EXP_POINTS_FOR_GOOD_RANK for v in [5, 6, 6, 6]]
+        for category in susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES:
+            scoreboard = get_results(category, self.round, single_round=False)
+            col_to_index_map = get_col_to_index_map(scoreboard)
+            for user, points, coefficient in zip(self.users, user_points_all, user_coefficients):
+                row = get_row_for_user(scoreboard, user)
+                self.assertEqual(get_coefficient(row, col_to_index_map), coefficient)
+            row = get_row_for_user(scoreboard, self.old_user)
+            self.assertEqual(row.active, False)
 
 
 class SUSIRulesTest(TestCase):
