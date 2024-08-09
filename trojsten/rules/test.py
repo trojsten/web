@@ -14,7 +14,7 @@ import trojsten.submit.constants as submit_constants
 from trojsten.contests.models import Category, Competition, Round, Semester, Task
 from trojsten.events.models import Event, EventParticipant, EventPlace, EventType
 from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
-from trojsten.people.models import User, UserProperty, UserPropertyKey
+from trojsten.people.models import User
 from trojsten.results.manager import get_results
 from trojsten.results.models import Results
 from trojsten.rules.kms import (
@@ -1143,18 +1143,18 @@ class SusiCoefficientTest(TestCase):
         EventParticipant.objects.create(
             event=self.camps[1], user=self.users[0], type=EventParticipant.RESERVE, going=True
         )
-        for tag in susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES:
+        for tag in susi_constants.HIGH_SCHOOL_CATEGORIES:
             generator = SUSIResultsGenerator(tag)
             self.assertEqual(
                 generator.get_user_coefficient(self.users[0], self.round),
-                2 * susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP,
+                2 * susi_constants.EXP_POINTS_FOR_SUSI_CAMP,
             )
 
     def test_other_camps_only(self):
         EventParticipant.objects.create(
             event=self.other_camp, user=self.users[0], type=EventParticipant.PARTICIPANT, going=True
         )
-        for tag in susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES:
+        for tag in susi_constants.HIGH_SCHOOL_CATEGORIES:
             generator = SUSIResultsGenerator(tag)
             self.assertEqual(generator.get_user_coefficient(self.users[0], self.round), 0)
 
@@ -1162,7 +1162,7 @@ class SusiCoefficientTest(TestCase):
         EventParticipant.objects.create(
             event=self.camps[0], user=self.users[0], type=EventParticipant.PARTICIPANT, going=False
         )
-        for tag in susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES:
+        for tag in susi_constants.HIGH_SCHOOL_CATEGORIES:
             generator = SUSIResultsGenerator(tag)
             self.assertEqual(generator.get_user_coefficient(self.users[0], self.round), 0)
 
@@ -1227,7 +1227,7 @@ class SusiCoefficientTest(TestCase):
         )
         self.assertEqual(
             set(table.tag for table in Results.objects.filter(round=self.rounds[1]).all()),
-            set(susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES),
+            set(susi_constants.HIGH_SCHOOL_CATEGORIES),
         )
 
     def test_top3(self):
@@ -1243,9 +1243,9 @@ class SusiCoefficientTest(TestCase):
             [susi_constants.SUSI_AGAT, susi_constants.SUSI_CVALAJUCI],
         ):
             user_coefficients = [
-                susi_constants.SUSI_EXP_POINTS_FOR_GOOD_RANK * v for v in user_coefficients
+                susi_constants.EXP_POINTS_FOR_GOOD_RANK * v for v in user_coefficients
             ]
-            for category in susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES:
+            for category in susi_constants.HIGH_SCHOOL_CATEGORIES:
                 scoreboard = get_results(category, round_, single_round=False)
                 col_to_index_map = get_col_to_index_map(scoreboard)
                 for user, points, coefficient in zip(self.users, user_points, user_coefficients):
@@ -1269,8 +1269,8 @@ class SusiCoefficientTest(TestCase):
 
         self.create_current_submits()
         # Jozko0 won hypothetically Dialnica in round 2, Jozko1-3 won Cvalajuci and Dialnica in round 2
-        user_coefficients = [v * susi_constants.SUSI_EXP_POINTS_FOR_GOOD_RANK for v in [4, 6, 6, 6]]
-        for category in susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES:
+        user_coefficients = [v * susi_constants.EXP_POINTS_FOR_GOOD_RANK for v in [4, 6, 6, 6]]
+        for category in susi_constants.HIGH_SCHOOL_CATEGORIES:
             scoreboard = get_results(category, self.round, single_round=False)
             col_to_index_map = get_col_to_index_map(scoreboard)
             for user, points, coefficient in zip(self.users, user_points_all, user_coefficients):
@@ -1364,7 +1364,7 @@ class SUSIRulesTest(TestCase):
             graduation=self.round1.end_time.year + 3,
         )
         place = EventPlace.objects.create(name="Horna dolna")
-        for i in range(coefficient // susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP):
+        for i in range(coefficient // susi_constants.EXP_POINTS_FOR_SUSI_CAMP):
             semester = Semester.objects.create(
                 number=i + 1, name="Test semester", competition=self.competition, year=i + 1
             )
@@ -1382,7 +1382,7 @@ class SUSIRulesTest(TestCase):
         return user
 
     def test_create_user_with_coefficient(self):
-        for i in range(0, 24, susi_constants.SUSI_EXP_POINTS_FOR_SUSI_CAMP):
+        for i in range(0, 24, susi_constants.EXP_POINTS_FOR_SUSI_CAMP):
             user = self._create_user_with_coefficient(i, "testuser%d" % i)
             generator = SUSIResultsGenerator(SUSIRules.RESULTS_TAGS[susi_constants.SUSI_BLYSKAVICA])
             self.assertEqual(generator.get_user_coefficient(user, self.round1), i)
@@ -1394,7 +1394,7 @@ class SUSIRulesTest(TestCase):
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
         totals = [19, 15, 14, 10]
-        for category, total in zip(susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES, totals):
+        for category, total in zip(susi_constants.HIGH_SCHOOL_CATEGORIES, totals):
             scoreboard = get_scoreboard(response.context["scoreboards"], category)
             row = get_row_for_user(scoreboard, user)
             col_to_index_map = get_col_to_index_map(scoreboard)
@@ -1416,7 +1416,7 @@ class SUSIRulesTest(TestCase):
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
 
-        for category in susi_constants.SUSI_HIGH_SCHOOL_CATEGORIES:
+        for category in susi_constants.HIGH_SCHOOL_CATEGORIES:
             scoreboard = get_scoreboard(response.context["scoreboards"], category)
             row = get_row_for_user(scoreboard, user)
             self.assertFalse(row.active)
@@ -1463,7 +1463,7 @@ class SUSIRulesTest(TestCase):
         task.description_points = 9
         task.text_submit_solution = ["solution"]
 
-        points = susi_constants.SUSI_POINTS_ALLOCATION
+        points = susi_constants.POINTS_ALLOCATION
         points = [points[0], points[0] - points[1], points[0] - points[2], points[3]]
         for small_hint, big_hint, points_idx in [
             ["", "", [0, 0, 0, 3]],
@@ -1531,9 +1531,6 @@ class TextSubmitTest(TestCase):
         graduation_year = self.round.end_time.year + int(
             self.round.end_time.month > SCHOOL_YEAR_END_MONTH
         )
-        self.puzzlehunt_key = UserPropertyKey.objects.create(
-            key_name=susi_constants.PUZZLEHUNT_PARTICIPATIONS_KEY_NAME, regex=r"^-?(\d{1,2})$"
-        )
         self.test_user = User.objects.create(
             username="test_user",
             password="password",
@@ -1541,7 +1538,6 @@ class TextSubmitTest(TestCase):
             last_name="Mrkvicka",
             graduation=graduation_year + 3,
         )
-        UserProperty.objects.create(user=self.test_user, key=self.puzzlehunt_key, value="0")
         self.solutions = ["s", "so", "sol", "solutions"]
 
     def test_grade_text_submit(self):
@@ -1569,7 +1565,7 @@ class TextSubmitTest(TestCase):
                     self.assertEqual(grading.points, 0)
 
     def test_grade_text_in_susi_ignores_diacritic(self):
-        points = susi_constants.SUSI_POINTS_ALLOCATION[0]
+        points = susi_constants.POINTS_ALLOCATION[0]
         solutions = {
             "mačka": 1,
             "Macka": 1,
