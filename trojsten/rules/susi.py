@@ -129,29 +129,23 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                 # Keep track of users which have already been seen as active
                 # for them we are currently processing result tables of
                 # higher or equal category than they are in
-                active_rows = [row for row in table.serialized_results["rows"] if row["active"]]
-                point_limit = max(
-                    1,
-                    float(
-                        active_rows[constants.SUSI_TOP_RANK_FOR_EXP - 1]["cell_list"][
-                            total_score_column_index
-                        ]["points"]
-                    )
-                    if len(active_rows) >= constants.SUSI_TOP_RANK_FOR_EXP
-                    else 1,
-                )
+                winner_count = 0
+                last_points = -1
                 for row in table.serialized_results["rows"]:
                     user_id = row["user"]["id"]
                     if row["active"]:
                         seen_users.add(user_id)
-                    if (
-                        user_id in seen_users
-                        and float(row["cell_list"][total_score_column_index]["points"])
-                        >= point_limit
-                    ):
-                        self.successful_semesters[user_id] = (
-                            self.successful_semesters.get(user_id, 0) + 1
-                        )
+                    if user_id in seen_users:
+                        winner_count += 1
+                        cur_points = float(row["cell_list"][total_score_column_index]["points"])
+                        if (
+                            winner_count <= constants.SUSI_TOP_RANK_FOR_EXP
+                            or last_points == cur_points
+                        ):
+                            self.successful_semesters[user_id] = (
+                                self.successful_semesters.get(user_id, 0) + 1
+                            )
+                        last_points = cur_points
 
     def get_minimal_year_of_graduation(self, res_request, user):
         return -1
