@@ -1230,42 +1230,71 @@ class SusiCoefficientTest(TestCase):
             set(susi_constants.HIGH_SCHOOL_CATEGORIES),
         )
 
-    def test_top3(self):
-        self.create_old_submits()
-        user_points_all = [[9, 9, 9, 9], [6, 8, 10, 7]]
-        # Counts only number of top3 placements
-        user_coefficients_all = [[0, 0, 0, 0], [4] * 4]
-        for round_, user_points, user_coefficients, active_category in zip(
-            self.rounds[:2],
-            user_points_all,
-            user_coefficients_all,
-            # After the first round, everyone wins all categories and hence gets 4 * 3 experience points getting to category C
-            [susi_constants.SUSI_AGAT, susi_constants.SUSI_CVALAJUCI],
-        ):
-            user_coefficients = [
-                susi_constants.EXP_POINTS_FOR_GOOD_RANK * v for v in user_coefficients
-            ]
-            for category in susi_constants.HIGH_SCHOOL_CATEGORIES:
-                scoreboard = get_results(category, round_, single_round=False)
-                col_to_index_map = get_col_to_index_map(scoreboard)
-                for user, points, coefficient in zip(self.users, user_points, user_coefficients):
-                    row = get_row_for_user(scoreboard, user)
-                    self.assertEqual(row.active, category == active_category)
-                    self.assertEqual(get_row_total(row, col_to_index_map), points)
-                    self.assertEqual(get_coefficient(row, col_to_index_map), coefficient)
-                row = get_row_for_user(scoreboard, self.old_user)
-                self.assertEqual(row.active, False)
-
-            scoreboard = get_results(susi_constants.SUSI_OPEN, round_, single_round=False)
+    def check_coefficients_and_points(
+        self, round_, user_points, user_wins, active_category, open_user_points=10
+    ):
+        user_coefficients = [susi_constants.EXP_POINTS_FOR_GOOD_RANK * v for v in user_wins]
+        for category in susi_constants.HIGH_SCHOOL_CATEGORIES:
+            scoreboard = get_results(category, round_, single_round=False)
             col_to_index_map = get_col_to_index_map(scoreboard)
             for user, points, coefficient in zip(self.users, user_points, user_coefficients):
                 row = get_row_for_user(scoreboard, user)
-                self.assertEqual(row.active, True)
+                self.assertEqual(row.active, category == active_category)
                 self.assertEqual(get_row_total(row, col_to_index_map), points)
                 self.assertEqual(get_coefficient(row, col_to_index_map), coefficient)
             row = get_row_for_user(scoreboard, self.old_user)
+            self.assertEqual(row.active, False)
+
+        scoreboard = get_results(susi_constants.SUSI_OPEN, round_, single_round=False)
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        for user, points, coefficient in zip(self.users, user_points, user_coefficients):
+            row = get_row_for_user(scoreboard, user)
             self.assertEqual(row.active, True)
-            self.assertEqual(get_row_total(row, col_to_index_map), 10)
+            self.assertEqual(get_row_total(row, col_to_index_map), points)
+            self.assertEqual(get_coefficient(row, col_to_index_map), coefficient)
+        row = get_row_for_user(scoreboard, self.old_user)
+        self.assertEqual(row.active, True)
+        self.assertEqual(get_row_total(row, col_to_index_map), open_user_points)
+
+    def test_round_in_same_semester(self):
+        self.rounds[1].number = 2
+        self.rounds[1].semester = self.semesters[0]
+        self.rounds[1].save()
+        self.create_old_submits()
+        user_wins_all = [[0, 0, 0, 0], [0, 0, 0, 0]]
+        user_points_all = [[9, 9, 9, 9], [15, 17, 19, 16]]
+        for round_, user_points, user_wins, open_pts in zip(
+            self.rounds[:2], user_points_all, user_wins_all, [10, 20]
+        ):
+            self.check_coefficients_and_points(
+                round_, user_points, user_wins, susi_constants.SUSI_AGAT, open_pts
+            )
+
+        self.create_current_submits()
+        # Jozko1-3 hypothetically won Cvalajuci and Dialnica in the past semester (rounds 1 and 2)
+        user_coefficients = [v * susi_constants.EXP_POINTS_FOR_GOOD_RANK for v in [0, 4, 4, 4]]
+        for category in susi_constants.HIGH_SCHOOL_CATEGORIES:
+            scoreboard = get_results(category, self.round, single_round=False)
+            col_to_index_map = get_col_to_index_map(scoreboard)
+            for user, points, coefficient in zip(self.users, user_points_all, user_coefficients):
+                row = get_row_for_user(scoreboard, user)
+                self.assertEqual(get_coefficient(row, col_to_index_map), coefficient)
+            row = get_row_for_user(scoreboard, self.old_user)
+            self.assertEqual(row.active, False)
+
+    def test_top3(self):
+        self.create_old_submits()
+        # Counts only number of top3 placements
+        user_wins_all = [[0, 0, 0, 0], [4, 4, 4, 4]]
+        user_points_all = [[9, 9, 9, 9], [6, 8, 10, 7]]
+        for round_, user_points, user_wins, active_category in zip(
+            self.rounds[:2],
+            user_points_all,
+            user_wins_all,
+            # After the first round, everyone wins all categories and hence gets 4 * 3 experience points getting to category C
+            [susi_constants.SUSI_AGAT, susi_constants.SUSI_CVALAJUCI],
+        ):
+            self.check_coefficients_and_points(round_, user_points, user_wins, active_category)
 
         self.create_current_submits()
         # Jozko0 won hypothetically Dialnica in round 2, Jozko1-3 won Cvalajuci and Dialnica in round 2

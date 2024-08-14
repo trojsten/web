@@ -108,6 +108,8 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 
         for semester in semesters:
             round = Round.objects.filter(semester=semester).order_by("number").last()
+            if round is None:
+                continue  # semester with no rounds
             result_tables = [
                 get_results_if_exist(category, round)
                 for category in constants.HIGH_SCHOOL_CATEGORIES
