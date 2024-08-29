@@ -4,10 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
+from trojsten.special.plugin_ksp_41.interpreter import run_program
 
 # from .interpreter import
 from .models import UserLevel
-from .levels import levels
+from .levels import levels, test_program
 # from .interpreter import unpack_blockly
 from .update_points import update_points
 
@@ -35,9 +36,13 @@ def save(request):
     data = json.loads(request.body)
     userLevel = UserLevel.objects.get_or_create(user=request.user, level=data["level"])[0]
     userLevel.data = json.dumps(data["data"])
+    level = levels[data["level"] - 2]
+    status = test_program(data["data"], level)
+    if status == 'OK':
+        userLevel.solved = True
+        update_points(request.user)
     userLevel.save()
-
-    return JsonResponse({'status': 'ok'})
+    return JsonResponse({'status': status})
 
 @login_required()
 def run(request):

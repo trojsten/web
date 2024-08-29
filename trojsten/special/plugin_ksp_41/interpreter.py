@@ -1,144 +1,352 @@
-# import json
-# from typing import Callable, Literal
+import json
+from argparse import Action
+from functools import lru_cache
+from math import floor, sqrt
 
-# STEPS = 0
-# MAX_STEPS = 1_000_000
-# DEBUG = True
+STEPS = 0
+MAX_STEPS = 10_000_000
+DEBUG = False
 
+CALL_STACK = set()
 
-# def step(what, ret, *args):
-#     global STEPS
-#     STEPS += 1
+FUNCTIONS = dict()
 
-#     if STEPS > MAX_STEPS:
-#         raise Exception(f"Maximum number of steps reached ({MAX_STEPS})")
-
-#     if DEBUG:
-#         print(f"{what}({args}) -> {ret}")
+ALLOWED = set()
 
 
-# def zero():
-#     def new() -> Literal[0]:
-#         step("zero", 0)
-#         return 0
-
-#     return new
+def cache(user_function):
+    'Simple lightweight unbounded cache.  Sometimes called "memoize".'
+    return lru_cache(maxsize=None)(user_function)
 
 
-# def incrementor():
-#     def new(x: int):
-#         step("incrementor", x + 1, x)
-#         return x + 1
+class BooleanOptionalAction(Action):
+    def __init__(self, option_strings, dest, default=None, required=False, help=None):
+        _option_strings = []
+        for option_string in option_strings:
+            _option_strings.append(option_string)
 
-#     return new
+            if option_string.startswith("--"):
+                option_string = "--no-" + option_string[2:]
+                _option_strings.append(option_string)
 
+        type = None
+        choices = None
+        metavar = None
 
-# def selector(which: int) -> Callable:
-#     which -= 1
+        super().__init__(
+            option_strings=_option_strings,
+            dest=dest,
+            nargs=0,
+            default=default,
+            type=type,
+            choices=choices,
+            required=required,
+            help=help,
+            metavar=metavar,
+        )
 
-#     def new(*args: int):
-#         if which >= len(args):
-#             raise Exception(
-#                 f"You tried to select input #{which}, but you have given only {len(args)} inputs"
-#             )
-#         step("selector", args[which], *args)
-#         return args[which]
+    def __call__(self, parser, namespace, values, option_string=None):
+        if option_string in self.option_strings:
+            setattr(namespace, self.dest, not option_string.startswith("--no-"))
 
-#     return new
-
-
-# def compositor(g: Callable, *f: Callable) -> Callable:
-#     def new(*args):
-#         ret = g(*[x(*args) for x in f])
-#         step("compositor", ret, *args)
-#         return ret
-
-#     return new
-
-
-# def repeater(f: Callable, g: Callable):
-#     def new(*args: int):
-#         x = args[-1]
-
-#         y = args[:-1]
-
-#         tmp = f(*y)
-#         for i in range(x):
-#             tmp = g(i, *y, tmp)
-
-#         step("repeater", tmp, *[x, *y])
-#         return tmp
-
-#     return new
+    def format_usage(self):
+        return " | ".join(self.option_strings)
 
 
-# # def unpack(data: dict):
-# #     match data["type"]:
-# #         case "zero":
-# #             return zero()
-# #         case "incrementor":
-# #             return incrementor()
-# #         case "selector":
-# #             return selector(*data["args"])
-# #         case "repeater":
-# #             return repeater(unpack(data["args"][0]), unpack(data["args"][1]))
-# #         case "compositor":
-# #             return compositor(
-# #                 unpack(data["args"][0]), *[unpack(x) for x in data["args"][1:]]
-# #             )
-# #         case _:
-# #             raise Exception(f"Unknown type: {data['type']}")
+def step(func):
+    what = func.__name__
+
+    def wrapper(*args: int):
+        global STEPS
+        STEPS += 1
+
+        if STEPS > MAX_STEPS:
+            raise RuntimeError(f"Maximum number of steps reached ({MAX_STEPS})")
+
+        ret = func(*args)
+
+        if DEBUG:
+            print(f"{what}({args}) -> {ret}")
+
+        return ret
+
+    return wrapper
 
 
-# def unpack_blockly(block: dict):
-#     match block["type"]:
-#         case "start":
-#             return unpack_blockly(block["inputs"]["x"]["block"])
-#         case "zero":
-#             return zero()
-#         case "incrementor":
-#             return incrementor()
-#         case "selector":
-#             return selector(block["fields"]["index"])
-#         case "repeater":
-#             return repeater(
-#                 unpack_blockly(block["inputs"]["init"]["block"]),
-#                 unpack_blockly(block["inputs"]["step"]["block"]),
-#             )
-#         case "compositor":
-#             childs = []
-#             for i in range(1, block["extraState"]["itemCount"]):
-#                 childs.append(unpack_blockly(block["inputs"]["f" + str(i)]["block"]))
-#             return compositor(
-#                 unpack_blockly(block["inputs"]["final"]["block"]), *childs
-#             )
-#         case _:
-#             raise Exception(f"Unknown type: {block['type']}")
+@step
+def start(func):
+    global STEPS, CALL_STACK
+    STEPS = 0
+    CALL_STACK.clear()
+
+    def _start_inner(*args):
+        if next((x for x in args if x < 0), False):
+            raise Exception("Input must not include negative numbers")
+
+        return func(*args)
+
+    return _start_inner
 
 
-# # print(
-# #     unpack(
-# #         json.loads(
-# #             '{"type":"repeater","args":[{"type":"selector","args":[1]},{"type":"compositor","args":[{"type":"incrementor"},{"type":"selector","args":[3]}]}]}'
-# #         )
-# #     )(3, 5)
-# # )
+def _zero_inner():
+    return 0
 
-# if __name__ == "__main__":
-#     print(
-#         unpack_blockly(
-#             json.loads(
-#                 '{"type":"start","id":"Ia~J%RIOSJInZp`--Z}_","x":10,"y":10,"deletable":false,"movable":false,"inputs":{"x":{"block":{"type":"repeater","id":"LuaU]bpmAEc0JPPrb,|K","inputs":{"init":{"block":{"type":"selector","id":"_2_i@F+VdzQ,6{UiH7s6","fields":{"index":1}}},"step":{"block":{"type":"compositor","id":"QVr9ESD50nuX8I4{;WLU","extraState":{"itemCount":2},"inputs":{"final":{"block":{"type":"incrementor","id":"rvO#lH.|pTekJwd`^vR5"}},"f1":{"block":{"type":"selector","id":"o0f?:r{quzNhkR)?b=`R","fields":{"index":3}}}}}}}}}}}'
-#             )
-#         )(3, 5)
-#     )
 
-#     print(selector(1)(5))
-#     print()
-#     print(compositor(incrementor(), zero())())
-#     print()
-#     print(compositor(incrementor(), compositor(incrementor(), incrementor()))(10))
-#     print()
-#     print(repeater(selector(1), compositor(incrementor(), selector(3)))(3, 5))
-#     print()
-#     print(repeater(zero(), selector(2))(1))
+@step
+def zero():
+    return _zero_inner
+
+
+def _incrementor_inner(x):
+    return x + 1
+
+
+@step
+def incrementor():
+    return _incrementor_inner
+
+
+@step
+def selector(which):
+    def _selector_inner(*args):
+        if which > len(args):
+            raise Exception(
+                f"You tried to select input #{which}, but you have given only {len(args)} inputs"
+            )
+        return args[which - 1]
+
+    return _selector_inner
+
+
+@step
+def compositor(g, *f):
+    @cache
+    def _compositor_inner(*args):
+        return g(*[x(*args) for x in f])
+
+    return _compositor_inner
+
+
+@step
+def repeater(f, g):
+    @cache
+    def _repeater_inner(x, *y):
+        tmp = f(*y)
+        for i in range(x):
+            tmp = g(i, *y, tmp)
+
+        return tmp
+
+    return _repeater_inner
+
+
+@step
+def constant(c):
+    if "constant" not in ALLOWED:
+        raise Exception("Operácia 'constant' nie je povolená!")
+
+    def _constant_inner():
+        return c
+
+    return _constant_inner
+
+
+@step
+def math(operation):
+    if operation not in ALLOWED:
+        raise Exception(f"Operácia '{operation}' nie je povolená!")
+
+    def _math_inner(*x):
+        if operation in ("√", "!", "sign", "--"):
+            if len(x) != 1:
+                raise Exception(
+                    f"{operation} vyžaduje práve 1 vstup, ale dostala {len(x)}"
+                )
+
+            a = x[0]
+            if operation == "√":
+                return floor(sqrt(a))
+            elif operation == "!":
+                return 1 if a == 0 else 0
+            elif operation == "sign":
+                return min(a, 1)
+            elif operation == "--":
+                return max(a - 1, 0)
+
+        if len(x) != 2:
+            raise Exception(
+                f"{operation} vyžaduje práve 2 vstupy, ale dostala {len(x)}"
+            )
+
+        a, b = x[0], x[1]
+
+        if operation == "+":
+            return a + b
+        elif operation == "-":
+            return max(a - b, 0)
+        elif operation == "*":
+            return a * b
+        elif operation == "/":
+            return a // b
+        elif operation == "%":
+            return a % b
+        elif operation == "^":
+            return a**b
+        elif operation == ">":
+            return 1 if a > b else 0
+        elif operation == "≥":
+            return 1 if a >= b else 0
+        elif operation == "<":
+            return 1 if a < b else 0
+        elif operation == "≤":
+            return 1 if a <= b else 0
+        elif operation == "min":
+            return min(a, b)
+        elif operation == "max":
+            return max(a, b)
+        else:
+            raise Exception(f"Neznáma operácia {operation}")
+
+    return _math_inner
+
+
+@step
+def custom_definition(name, args, f):
+    def _custom_definition_inner(*y):
+        if len(y) != args:
+            raise Exception(
+                f"Funkcia {name} vyžaduje {args} vstupov, ale dostala {len(y)}"
+            )
+
+        return f(*y)
+
+    return _custom_definition_inner
+
+
+@step
+def custom_usage(fun):
+    @cache
+    def _custom_usage_inner(*args):
+        if fun in CALL_STACK:
+            raise Exception(f"Custom block {fun} calls itself!")
+
+        function = FUNCTIONS.get(fun)
+
+        if not function:
+            raise Exception(f"Custom block {fun} not defined!")
+
+        CALL_STACK.add(fun)
+        ret = function(*args)
+        CALL_STACK.remove(fun)
+
+        return ret
+
+    return _custom_usage_inner
+
+
+def parser_helper(block):
+    if block["type"] == "start":
+        return parser_helper(block["inputs"]["x"]["block"])
+    elif block["type"] == "zero":
+        return zero()
+    elif block["type"] == "incrementor":
+        return incrementor()
+    elif block["type"] == "selector":
+        return selector(block["fields"]["index"])
+    elif block["type"] == "repeater":
+        return repeater(
+            parser_helper(block["inputs"]["init"]["block"]),
+            parser_helper(block["inputs"]["step"]["block"]),
+        )
+    elif block["type"] == "compositor":
+        childs = []
+        for i in range(1, block["extraState"]["itemCount"]):
+            childs.append(parser_helper(block["inputs"]["f" + str(i)]["block"]))
+        return compositor(parser_helper(block["inputs"]["final"]["block"]), *childs)
+    elif block["type"] == "constant":
+        return constant(block["fields"]["value"])
+    elif block["type"] == "math":
+        return math(block["fields"]["operation"])
+    elif block["type"] == "custom_usage":
+        return custom_usage(block["extraState"]["parentId"])
+    else:
+        raise Exception(f"Unknown block type: {block['type']}")
+
+
+def parser(blocks):
+    startBlock = None
+    for block in blocks:
+        if block["type"] == "start":
+            startBlock = block
+        elif block["type"] == "custom_definition":
+            FUNCTIONS[block["id"]] = custom_definition(
+                block["fields"]["name"],
+                block["fields"]["num_arguments"],
+                parser_helper(block["inputs"]["start"]["block"]),
+            )
+
+    if not startBlock:
+        raise Exception("Start block not found!")
+
+    return start(parser_helper(startBlock["inputs"]["x"]["block"]))
+
+
+def run_program(program, allowed, max_steps, input):
+    global ALLOWED, STEPS
+    block = parser(program["blocks"]["blocks"])
+    STEPS = max_steps
+    ALLOWED = allowed
+    return block(*input)
+
+
+if __name__ == "__main__":
+    import argparse
+
+    cmdparser = argparse.ArgumentParser(
+        description="""
+Interpreter pre interaktívku z blokov, aka Stavebnica funkcií z OI 2017
+
+Ako to funguje:
+
+Vstup zoberie z prvého riadoku stdin ako čísla oddelené medzerami.
+Výstup ako číslo na stdout.
+
+Ak program spadne, tak spadne aj interpreter a vypíše hlášku.""",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Authors: Andrej Lackovič (Aiq0) & Stanislav Bezák (Stanko)",
+    )
+
+    cmdparser.add_argument("path", type=str, help="cesta k JSON súboru s programom")
+    cmdparser.add_argument("-p", "--profile", action=BooleanOptionalAction)
+    cmdparser.add_argument(
+        "-a", "--allow", action="append", help="rozšírenia, ktoré sú povolené"
+    )
+    cmdparser.add_argument("-s", "--max-steps", type=int, help="maximálny počet krokov")
+
+    args = cmdparser.parse_args()
+
+    if args.max_steps:
+        MAX_STEPS = args.max_steps
+
+    ALLOWED = set(args.allow if args.allow is not None else [])
+
+    with open(args.path) as f:
+        inp = [int(x) for x in input().split()]
+
+        if args.profile:
+            import cProfile
+            import io
+            import pstats
+
+            pr = cProfile.Profile()
+            pr.enable()
+
+        block = parser(json.loads(f.read())["blocks"]["blocks"])
+
+        print(block(*inp))
+
+        if args.profile:
+            pr.disable()
+            s = io.StringIO()
+            pstats.Stats(pr, stream=s).sort_stats("cumulative").print_stats()
+            print(s.getvalue())
