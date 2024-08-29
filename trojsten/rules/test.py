@@ -636,6 +636,21 @@ class KMSRulesTest(TestCase):
         row_alfa = get_row_for_user(scoreboard, user)
         self.assertEqual(row_alfa.cell_list[col_to_index_map["sum"]].points, "35")
 
+    def test_show_decreased_points(self):
+        points = [0, 7, 3]
+        user = self._create_user_with_coefficient(1, use_kms_camp=True)
+        self._create_submits(user, points)
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+        scoreboard = get_scoreboard(response.context["scoreboards"], KMS_ALFA)
+        col_to_index_map = get_col_to_index_map(scoreboard)
+        row_alfa = get_row_for_user(scoreboard, user)
+        self.assertEqual(row_alfa.cell_list[col_to_index_map["sum"]].points, "8")
+        self.assertEqual(row_alfa.cell_list[col_to_index_map[2]].points, "5")
+        self.assertEqual(row_alfa.cell_list[col_to_index_map[3]].points, "3")
+        self.assertContains(response, "hodnotenie: 7")
+        self.assertNotContains(response, "hodnotenie: 5")
+
 
 class KSPRulesOneUserTest(TestCase):
     def setUp(self):
