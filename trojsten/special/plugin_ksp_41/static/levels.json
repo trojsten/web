@@ -1,113 +1,290 @@
 [
   {
-    "name": "Ukážka 1",
-    "points": 0,
-    "numInputs": 1,
-    "zadanie": "demo1.html",
-    "id": 0,
-    "workspace": {
-      "blocks": {
-        "blocks": [
-          {
-            "type": "start",
-            "movable": false,
-            "deletable": false,
-            "x": 10,
-            "y": 10,
-            "inputs": {
-              "x": {
-                "block": {
-                  "type": "selector",
-                  "fields": {
-                    "index": 1
-                  }
-                }
-              }
-            }
-          }
-        ]
-      }
-    }
-  },
-  {
-    "name": "Ukážka 4",
-    "points": 0,
+    "name": "a. nula",
+    "points": [
+      1,
+      1
+    ],
     "numInputs": 2,
-    "zadanie": "demo4.html",
-    "id": 1,
-    "workspace": {
-      "blocks": {
-        "blocks": [
-          {
-            "type": "start",
-            "x": 10,
-            "y": 10,
-            "deletable": false,
-            "movable": false,
-            "inputs": {
-              "x": {
-                "block": {
-                  "type": "repeater",
-                  "inputs": {
-                    "init": {
-                      "block": {
-                        "type": "selector",
-                        "fields": {
-                          "index": 1
-                        }
-                      }
-                    },
-                    "step": {
-                      "block": {
-                        "type": "compositor",
-                        "extraState": {
-                          "itemCount": 2
-                        },
-                        "inputs": {
-                          "final": {
-                            "block": {
-                              "type": "incrementor"
-                            }
-                          },
-                          "f1": {
-                            "block": {
-                              "type": "selector",
-                              "fields": {
-                                "index": 3
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ]
-      }
-    }
-  },
-  {
-    "name": "1. Level",
-    "points": 100,
-    "numInputs": 2,
-    "zadanie": "test.html",
+    "inputs": [
+      [
+        0,
+        100
+      ],
+      [
+        0,
+        100
+      ]
+    ],
+    "timelimit": 150,
+    "zadanie": "z1a.html",
     "id": 2
   },
   {
-    "name": "2. Level",
-    "points": 100,
-    "numInputs": 2,
-    "zadanie": "test.html",
+    "name": "b. +3",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 1,
+    "inputs": [
+      [
+        0,
+        -1
+      ]
+    ],
+    "timelimit": 150,
+    "zadanie": "z1b.html",
     "id": 3
   },
   {
-    "name": "3. Level",
-    "points": 100,
+    "name": "c. násobenie",
+    "points": [
+      1,
+      1
+    ],
     "numInputs": 2,
-    "zadanie": "test.html",
+    "inputs": [
+      [
+        0,
+        35
+      ],
+      [
+        0,
+        35
+      ]
+    ],
+    "timelimit": 50000,
+    "zadanie": "z1c.html",
     "id": 4
+  },
+  {
+    "name": "d. decrement",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 1,
+    "inputs": [
+      [
+        1,
+        1000
+      ]
+    ],
+    "timelimit": 50000,
+    "zadanie": "z1d.html",
+    "id": 5
+  },
+  {
+    "name": "e. odčítanie",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 2,
+    "inputs": [
+      [
+        0,
+        1000
+      ],
+      [
+        0,
+        1000
+      ]
+    ],
+    "timelimit": 50000,
+    "allowed": [
+      "--"
+    ],
+    "zadanie": "z1e.html",
+    "id": 6
+  },
+  {
+    "name": "f. umocňovanie",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 2,
+    "inputs": [
+      [
+        0,
+        100
+      ],
+      [
+        0,
+        100
+      ]
+    ],
+    "timelimit": 50000,
+    "allowed": [
+      "+",
+      "--",
+      "-",
+      "*"
+    ],
+    "zadanie": "z1f.html",
+    "id": 7
+  },
+  {
+    "name": "g. sign",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 1,
+    "inputs": [
+      [
+        0,
+        1000
+      ]
+    ],
+    "allowed": [
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign"
+    ],
+    "timelimit": 50000,
+    "zadanie": "z1g.html",
+    "id": 8
+  },
+  {
+    "name": "h. ≥",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 2,
+    "inputs": [
+      [
+        0,
+        100
+      ],
+      [
+        0,
+        100
+      ]
+    ],
+    "timelimit": 50000,
+    "allowed": [
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign"
+    ],
+    "zadanie": "z1h.html",
+    "id": 9
+  },
+  {
+    "name": "i. if",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 3,
+    "inputs": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1000
+      ],
+      [
+        0,
+        1000
+      ]
+    ],
+    "timelimit": 50000,
+    "allowed": [
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign",
+      "≥"
+    ],
+    "zadanie": "z1i.html",
+    "id": 10
+  },
+  {
+    "name": "j. min",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 2,
+    "inputs": [
+      [
+        0,
+        1000
+      ],
+      [
+        0,
+        1000
+      ]
+    ],
+    "timelimit": 50000,
+    "allowed": [
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign",
+      "≥"
+    ],
+    "zadanie": "z1j.html",
+    "id": 11
+  },
+  {
+    "name": "k. bonus",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 4,
+    "inputs": [
+      [
+        0,
+        9
+      ],
+      [
+        0,
+        9
+      ],
+      [
+        0,
+        9
+      ],
+      [
+        0,
+        9
+      ]
+    ],
+    "timelimit": 50000,
+    "allowed": [
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign",
+      "≥",
+      ">",
+      "<",
+      "≤",
+      "min",
+      "max"
+    ],
+    "zadanie": "z1k.html",
+    "id": 12
   }
 ]
