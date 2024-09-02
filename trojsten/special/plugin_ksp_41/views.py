@@ -43,7 +43,7 @@ def save(request):
         userLevel.solved = True
         userLevel.save()
         update_points(request.user, is_prask)
-    userLevel.save()        
+    userLevel.save()
     return JsonResponse({'status': status})
 
 @login_required()
