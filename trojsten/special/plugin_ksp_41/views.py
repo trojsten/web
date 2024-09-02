@@ -39,10 +39,11 @@ def save(request):
     userLevel.data = json.dumps(data["data"])
     level = levels[data["level"] - 2]
     status = test_program(data["data"], level)
-    userLevel.save()
     if status == 'OK':
         userLevel.solved = True
+        userLevel.save()
         update_points(request.user, is_prask)
+    userLevel.save()        
     return JsonResponse({'status': status})
 
 @login_required()
