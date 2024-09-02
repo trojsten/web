@@ -34,13 +34,14 @@ def state(request):
 @csrf_exempt
 def save(request):
     data = json.loads(request.body)
+    is_prask = 'prask' in request.get_host()
     userLevel = UserLevel.objects.get_or_create(user=request.user, level=data["level"])[0]
     userLevel.data = json.dumps(data["data"])
     level = levels[data["level"] - 2]
     status = test_program(data["data"], level)
     if status == 'OK':
         userLevel.solved = True
-        update_points(request.user)
+        update_points(request.user, is_prask)
     userLevel.save()
     return JsonResponse({'status': status})
 

@@ -4,21 +4,22 @@ from trojsten.submit.models import Submit
 
 from .models import UserLevel
 
-FUNKCIE_TASK_ID = 2527
+KSP_FUNKCIE_TASK_ID = 2739
+PRASK_FUNKCIE_TASK_ID = 2744
+
+def get_task(prask=False):
+    if prask:
+        return Task.objects.get(pk=PRASK_FUNKCIE_TASK_ID)
+    else:
+        return Task.objects.get(pk=KSP_FUNKCIE_TASK_ID)
 
 
-def get_task():
-    try:
-        return get_task._cache
-    except AttributeError:
-        get_task._cache = Task.objects.get(pk=FUNKCIE_TASK_ID)
-        return get_task._cache
-
-
-def update_points(user):
-    points = UserLevel.objects.filter(user=user, solved=True).count() * 10
+def update_points(user, prask=False):
+    points = UserLevel.objects.filter(user=user, solved=True).count() * 2
+    if prask:
+        points = points * 5
     submit = Submit(
-        task=get_task(),
+        task=get_task(prask),
         user=user,
         points=points,
         submit_type=SUBMIT_TYPE_EXTERNAL,
