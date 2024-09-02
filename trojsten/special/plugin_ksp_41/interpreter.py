@@ -292,10 +292,10 @@ def parser(blocks):
 
 
 def run_program(program, allowed, max_steps, input):
-    global ALLOWED, STEPS
-    block = parser(program["blocks"]["blocks"])
-    STEPS = max_steps
+    global ALLOWED, MAX_STEPS
+    MAX_STEPS = max_steps
     ALLOWED = allowed
+    block = parser(program["blocks"]["blocks"])
     return block(*input)
 
 
