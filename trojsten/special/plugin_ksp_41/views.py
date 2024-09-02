@@ -1,26 +1,30 @@
+import copy
 import json
 
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse, HttpResponseBadRequest
-from django.shortcuts import render, redirect
+from django.http import HttpResponseBadRequest, JsonResponse
+from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
-from trojsten.special.plugin_ksp_41.interpreter import run_program
+
+from .levels import levels, test_program
 
 # from .interpreter import
 from .models import UserLevel
-from .levels import levels, test_program
+
 # from .interpreter import unpack_blockly
 from .update_points import update_points
 
 
 @login_required()
 def main(request):
-    return redirect('/specialne/ksp/41/1/index.html')
+    return redirect("/specialne/ksp/41/1/index.html")
+
 
 @login_required()
 def state(request):
     data = UserLevel.objects.filter(user=request.user)
-    for level in levels:
+    levels2 = copy.deepcopy(levels)
+    for level in levels2:
         level["solved"] = False
         for d in data:
             if d.level == level["id"]:
@@ -28,23 +32,27 @@ def state(request):
                 level["workspace"] = json.loads(d.data)
                 break
 
-    return JsonResponse(levels, safe=False)
+    return JsonResponse(levels2, safe=False)
+
 
 @login_required()
 @csrf_exempt
 def save(request):
     data = json.loads(request.body)
-    is_prask = 'prask' in request.get_host()
-    userLevel = UserLevel.objects.get_or_create(user=request.user, level=data["level"])[0]
+    is_prask = "prask" in request.get_host()
+    userLevel = UserLevel.objects.get_or_create(user=request.user, level=data["level"])[
+        0
+    ]
     userLevel.data = json.dumps(data["data"])
     level = levels[data["level"] - 2]
     status = test_program(data["data"], level)
-    if status == 'OK':
+    if status == "OK":
         userLevel.solved = True
         userLevel.save()
         update_points(request.user, is_prask)
     userLevel.save()
-    return JsonResponse({'status': status})
+    return JsonResponse({"status": status})
+
 
 @login_required()
 def run(request):
@@ -54,6 +62,5 @@ def run(request):
     data = json.loads(request.body)
     level = data["level"]
     # unpack_blockly(data["block"])
-
 
     return JsonResponse({})
