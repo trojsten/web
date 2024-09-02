@@ -304,7 +304,7 @@ if __name__ == "__main__":
 
     cmdparser = argparse.ArgumentParser(
         description="""
-Interpreter pre interaktívku z blokov, aka Stavebnica funkcií z OI 2017
+Interpreter pre interaktívku z blokov
 
 Ako to funguje:
 
