@@ -5,8 +5,11 @@ SUSI_CVALAJUCI = "Cválajúci"
 SUSI_DIALNICA = "Diaľnica"
 HIGH_SCHOOL_CATEGORIES = [SUSI_AGAT, SUSI_BLYSKAVICA, SUSI_CVALAJUCI, SUSI_DIALNICA]
 SUSI_OPEN = "Zásielkovňa"
+SUSI_OLD_CIFERSKY_CECH = "Cíferský-cech"
 SUSI_CAMP_TYPE = "Suši sústredenie"
 
+# The year of the competition since which there are 4 high school categories instead of only 2
+YEAR_SINCE_FOUR_CATEGORIES = 5
 
 SUSI_COMPETITION_ID = 9  # The ID (pk) of Susi competition in the database.
 

@@ -22,7 +22,7 @@ class CompetitionRules(object):
             testing_status=submit_constants.SUBMIT_STATUS_REVIEWED
         )
 
-    def get_results_tags(self):
+    def get_results_tags(self, year=None):
         return (self.RESULTS_TAGS[tag_key] for tag_key in self.RESULTS_TAGS)
 
     def get_results_generator(self, tag_key):
