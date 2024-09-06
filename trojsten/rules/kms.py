@@ -8,7 +8,7 @@ from django.db.models import Count, Q
 
 from trojsten.contests.models import Semester
 from trojsten.events.models import EventParticipant
-from trojsten.results.constants import COEFFICIENT_COLUMN_KEY
+from trojsten.results.constants import COEFFICIENT_COLUMN_KEY, UNKNOWN_POINTS_SYMBOL
 from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
 from trojsten.results.helpers import get_total_score_column_index
 from trojsten.results.manager import get_results, get_results_tags_for_rounds
@@ -224,11 +224,11 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
     def format_row_cells(self, res_request, row, cols):
         coefficient = self.get_user_coefficient(row.user, res_request.round)
         for key, cell in row.cells_by_key.items():
-            points = self.get_cell_total(res_request, cell)
-            cell.full_points = points
-            cell.manual_points = self.get_cell_points_for_row_total(
-                res_request, cell, key, coefficient
-            )
+            cell.full_points = cell.manual_points
+            if cell.manual_points not in [None, UNKNOWN_POINTS_SYMBOL]:
+                cell.manual_points = self.get_cell_points_for_row_total(
+                    res_request, cell, key, coefficient
+                )
             super(KMSResultsGenerator, self).format_row_cell(res_request, cell)
 
     def add_special_row_cells(self, res_request, row, cols):

@@ -650,6 +650,16 @@ class KMSRulesTest(TestCase):
         points = [0, 7, 3]
         user = self._create_user_with_coefficient(1, use_kms_camp=True)
         self._create_submits(user, points)
+        submit = Submit.objects.create(
+            task=self.tasks[3],
+            user=user,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            points=0,
+            testing_status=submit_constants.SUBMIT_STATUS_IN_QUEUE,
+        )
+        submit.time = self.end + timezone.timedelta(-1)
+        submit.save()
+
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
         scoreboard = get_scoreboard(response.context["scoreboards"], KMS_ALFA)
@@ -658,6 +668,12 @@ class KMSRulesTest(TestCase):
         self.assertEqual(row_alfa.cell_list[col_to_index_map["sum"]].points, "8")
         self.assertEqual(row_alfa.cell_list[col_to_index_map[2]].points, "5")
         self.assertEqual(row_alfa.cell_list[col_to_index_map[3]].points, "3")
+        self.assertEqual(row_alfa.cell_list[col_to_index_map[4]].points, "?")
+        self.assertEqual(row_alfa.cell_list[col_to_index_map[5]].points, "")
+
+        submit.time = self.end + timezone.timedelta(-1)
+        submit.save()
+
         self.assertContains(response, "hodnotenie: 7")
         self.assertNotContains(response, "hodnotenie: 5")
 
