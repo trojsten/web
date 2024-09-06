@@ -210,9 +210,9 @@ class KMSCoefficientTest(TestCase):
                 submit = Submit.objects.create(
                     task=task,
                     user=user,
-                    submit_type=1,
+                    submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
                     points=point,
-                    testing_status="reviewed",
+                    testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
                 )
                 submit.time = self.end + timezone.timedelta(-1)
                 submit.save()
@@ -486,9 +486,9 @@ class KMSRulesTest(TestCase):
                 submit = Submit.objects.create(
                     task=self.tasks[i],
                     user=user,
-                    submit_type=1,
+                    submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
                     points=points[i],
-                    testing_status="reviewed",
+                    testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
                 )
                 submit.time = self.end + timezone.timedelta(-1)
                 submit.save()
