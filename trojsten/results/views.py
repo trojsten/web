@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 
 from trojsten.contests.models import Competition, Round
+from trojsten.rules import susi_constants
+from trojsten.rules.susi import SUSIResultsGenerator
 from trojsten.utils.utils import is_true
 
 from .constants import DEFAULT_TAG_KEY
@@ -28,6 +31,17 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
         "susi_is_discovery": round.susi_is_discovery,
     }
     return render(request, "trojsten/results/view_results.html", context)
+
+
+@login_required
+def explain_susi_xp(request, round_id):
+    generator = SUSIResultsGenerator(susi_constants.SUSI_AGAT)
+    generator.prepare_coefficients(get_object_or_404(Round, pk=round_id))
+    return render(
+        request,
+        "trojsten/results/explain_susi_xp.html",
+        {"semesters": generator.which_semesters.get(request.user.id, [])},
+    )
 
 
 def view_latest_results(request):

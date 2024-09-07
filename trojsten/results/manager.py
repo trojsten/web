@@ -48,7 +48,7 @@ def get_results_tags_for_rounds(rounds):
     """
     # FIXME(generic_results_stage_2): frozen results
     # @FUTURE firstly try to get tags from frozen results and then calculate the rest
-    return (r.semester.competition.rules.get_results_tags() for r in rounds)
+    return (r.semester.competition.rules.get_results_tags(r.semester.year) for r in rounds)
 
 
 def _generate_raw_results(tag_key, round, single_round):

@@ -8,7 +8,7 @@ from django.utils import timezone
 from unidecode import unidecode
 
 import trojsten.rules.susi_constants as constants
-from trojsten.contests.models import Round, Semester, Task
+from trojsten.contests.models import Round, Semester
 from trojsten.events.models import EventParticipant
 from trojsten.results.constants import (
     COEFFICIENT_COLUMN_KEY,
@@ -39,17 +39,13 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         super(SUSIResultsGenerator, self).__init__(tag)
         self.susi_camps = None
         self.successful_semesters = None
+        self.which_semesters = None
         self.coefficients = {}
 
     def get_results_level(self):
+        if self.tag.key not in constants.HIGH_SCHOOL_CATEGORIES:
+            return 0
         return constants.HIGH_SCHOOL_CATEGORIES.index(self.tag.key) + 1
-
-    def get_task_queryset(self, res_request):
-        """In Xth category results table, there are results for tasks X-8."""
-        tasks = Task.objects.filter(round=res_request.round).order_by("number")
-        if self.tag.key != constants.SUSI_OPEN:
-            tasks = tasks.filter(number__gte=self.get_results_level())
-        return tasks
 
     def get_user_coefficient(self, user, round):
         if user not in self.coefficients:
@@ -105,19 +101,20 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             ),
         ).all()
         self.successful_semesters = {}
+        self.which_semesters = {}
 
         for semester in semesters:
             round = Round.objects.filter(semester=semester).order_by("number").last()
             if round is None:
                 continue  # semester with no rounds
             result_tables = [
-                get_results_if_exist(category, round)
+                (get_results_if_exist(category, round), category)
                 for category in constants.HIGH_SCHOOL_CATEGORIES
             ]
-            result_tables = [table for table in result_tables if table is not None]
+            result_tables = [table for table in result_tables if table[0] is not None]
 
             seen_users = set()
-            for table in result_tables:
+            for table, category in result_tables:
                 total_score_column_index = get_total_score_column_index(table)
                 if total_score_column_index is None:
                     getLogger("management_commands").warning(
@@ -143,7 +140,10 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                             self.successful_semesters[user_id] = (
                                 self.successful_semesters.get(user_id, 0) + 1
                             )
-                        last_points = cur_points
+                            self.which_semesters.setdefault(user_id, []).append(
+                                (semester, category)
+                            )
+                            last_points = cur_points
 
     def get_minimal_year_of_graduation(self, res_request, user):
         return -1
@@ -199,6 +199,9 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
 class SUSIRules(CompetitionRules):
     RESULTS_TAGS = {
         constants.SUSI_OPEN: ResultsTag(key=constants.SUSI_OPEN, name=constants.SUSI_OPEN),
+        constants.SUSI_OLD_CIFERSKY_CECH: ResultsTag(
+            key=constants.SUSI_OLD_CIFERSKY_CECH, name=constants.SUSI_OLD_CIFERSKY_CECH
+        ),
         constants.SUSI_AGAT: ResultsTag(key=constants.SUSI_AGAT, name=constants.SUSI_AGAT),
         constants.SUSI_BLYSKAVICA: ResultsTag(
             key=constants.SUSI_BLYSKAVICA, name=constants.SUSI_BLYSKAVICA
@@ -212,6 +215,23 @@ class SUSIRules(CompetitionRules):
     }
 
     RESULTS_GENERATOR_CLASS = SUSIResultsGenerator
+
+    def get_results_tags(self, year=None):
+        if year is not None and year < constants.YEAR_SINCE_FOUR_CATEGORIES:
+            tags = [
+                constants.SUSI_OLD_CIFERSKY_CECH,
+                constants.SUSI_AGAT,
+                constants.SUSI_BLYSKAVICA,
+            ]
+        else:
+            tags = [
+                constants.SUSI_OPEN,
+                constants.SUSI_AGAT,
+                constants.SUSI_BLYSKAVICA,
+                constants.SUSI_CVALAJUCI,
+                constants.SUSI_DIALNICA,
+            ]
+        return (self.RESULTS_TAGS[tag_key] for tag_key in tags)
 
     def get_actual_result_rounds(self, competition):
         active_rounds = Round.objects.filter(

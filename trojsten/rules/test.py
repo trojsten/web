@@ -210,9 +210,9 @@ class KMSCoefficientTest(TestCase):
                 submit = Submit.objects.create(
                     task=task,
                     user=user,
-                    submit_type=1,
+                    submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
                     points=point,
-                    testing_status="reviewed",
+                    testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
                 )
                 submit.time = self.end + timezone.timedelta(-1)
                 submit.save()
@@ -486,9 +486,9 @@ class KMSRulesTest(TestCase):
                 submit = Submit.objects.create(
                     task=self.tasks[i],
                     user=user,
-                    submit_type=1,
+                    submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
                     points=points[i],
-                    testing_status="reviewed",
+                    testing_status=submit_constants.SUBMIT_STATUS_REVIEWED,
                 )
                 submit.time = self.end + timezone.timedelta(-1)
                 submit.save()
@@ -650,6 +650,16 @@ class KMSRulesTest(TestCase):
         points = [0, 7, 3]
         user = self._create_user_with_coefficient(1, use_kms_camp=True)
         self._create_submits(user, points)
+        submit = Submit.objects.create(
+            task=self.tasks[3],
+            user=user,
+            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
+            points=0,
+            testing_status=submit_constants.SUBMIT_STATUS_IN_QUEUE,
+        )
+        submit.time = self.end + timezone.timedelta(-1)
+        submit.save()
+
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
         scoreboard = get_scoreboard(response.context["scoreboards"], KMS_ALFA)
@@ -658,6 +668,12 @@ class KMSRulesTest(TestCase):
         self.assertEqual(row_alfa.cell_list[col_to_index_map["sum"]].points, "8")
         self.assertEqual(row_alfa.cell_list[col_to_index_map[2]].points, "5")
         self.assertEqual(row_alfa.cell_list[col_to_index_map[3]].points, "3")
+        self.assertEqual(row_alfa.cell_list[col_to_index_map[4]].points, "?")
+        self.assertEqual(row_alfa.cell_list[col_to_index_map[5]].points, "")
+
+        submit.time = self.end + timezone.timedelta(-1)
+        submit.save()
+
         self.assertContains(response, "hodnotenie: 7")
         self.assertNotContains(response, "hodnotenie: 5")
 
@@ -1051,6 +1067,20 @@ class KSPRulesOneUserTest(TestCase):
         self.assertEqual(cells[2].points, "14")
 
 
+def create_susi_categories(susi_competition):
+    categories_per_task = [[] for i in range(8)]
+    for cat in [susi_constants.SUSI_OLD_CIFERSKY_CECH, susi_constants.SUSI_OPEN]:
+        cat_obj = Category.objects.create(name=cat, competition=susi_competition)
+        for lst in categories_per_task:
+            lst.append(cat_obj)
+    for i, cat in enumerate(susi_constants.HIGH_SCHOOL_CATEGORIES):
+        cat_obj = Category.objects.create(name=cat, competition=susi_competition)
+        for j, lst in enumerate(categories_per_task):
+            if i <= j:
+                lst.append(cat_obj)
+    return categories_per_task
+
+
 class SusiCoefficientTest(TestCase):
     def setUp(self):
         time = datetime.datetime(2007, 4, 7, 12, 47)
@@ -1076,12 +1106,13 @@ class SusiCoefficientTest(TestCase):
         # pk = 9 sets rules to SUSIRules
         self.competition = Competition.objects.create(name="TestCompetition", pk=9)
         self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
+        self.categories = create_susi_categories(self.competition)
         self.semesters = []
         self.rounds = []
         self.tasks = []
         self.camps = []
         self.users = []
-        for year, semester_number in [(1, 1), (1, 2), (3, 1), (3, 2)]:
+        for year, semester_number in [(11, 1), (11, 2), (13, 1), (13, 2)]:
             self.semesters.append(
                 Semester.objects.create(
                     year=year,
@@ -1097,9 +1128,9 @@ class SusiCoefficientTest(TestCase):
                     visible=True,
                     solutions_visible=False,
                     start_time=self.time
-                    + datetime.timedelta((year - 3) * 366 + semester_number * 183 - 400),
+                    + datetime.timedelta((year - 13) * 366 + semester_number * 183 - 400),
                     end_time=self.time
-                    + datetime.timedelta((year - 3) * 366 + semester_number * 183 - 300),
+                    + datetime.timedelta((year - 13) * 366 + semester_number * 183 - 300),
                 )
             )
             self.tasks.append(
@@ -1110,9 +1141,12 @@ class SusiCoefficientTest(TestCase):
                         round=self.rounds[-1],
                         description_points_visible=True,
                     )
-                    for i in range(1, 8)
+                    for i in range(1, 9)
                 ]
             )
+            for i, task in enumerate(self.tasks[-1]):
+                task.categories.set(self.categories[i])
+                task.save()
             self.camps.append(
                 Event.objects.create(
                     name="Susi camp",
@@ -1132,7 +1166,7 @@ class SusiCoefficientTest(TestCase):
         graduation_year = self.round.end_time.year + int(
             self.round.end_time.month > SCHOOL_YEAR_END_MONTH
         )
-        for i in range(4):
+        for i in range(6):
             self.users.append(
                 User.objects.create(
                     username=f"test_user{i}",
@@ -1198,6 +1232,8 @@ class SusiCoefficientTest(TestCase):
         Jozko1 0 0 0 9 0
         Jozko2 0 0 0 0 9
         Jozko3 0 0 0 9 0
+        Jozko4 0 0 0 4 1
+        Jozko5 0 0 0 4 1
 
         Semester 2:
         Misof  0 0 0 0 10
@@ -1205,12 +1241,17 @@ class SusiCoefficientTest(TestCase):
         Jozko1 0 0 0 0 8
         Jozko3 0 0 0 0 7
         Jozko0 0 0 0 0 6
+        Jozko4 0 0 0 2 2
+        Jozko5 0 0 0 2 2
         """
         self.create_submit(1, 5, -1, 10)
         self.create_submit(1, 5, 0, 9)
         self.create_submit(1, 4, 1, 9)
         self.create_submit(1, 5, 2, 9)
         self.create_submit(1, 4, 3, 9)
+        for uid in [4, 5]:
+            self.create_submit(1, 4, uid, 4)
+            self.create_submit(1, 5, uid, 1)
 
         self.create_submit(2, 5, -1, 10)
         self.create_submit(2, 4, 2, 5)
@@ -1218,10 +1259,13 @@ class SusiCoefficientTest(TestCase):
         self.create_submit(2, 5, 1, 8)
         self.create_submit(2, 5, 3, 7)
         self.create_submit(2, 5, 0, 6)
+        for uid in [4, 5]:
+            self.create_submit(2, 4, uid, 2)
+            self.create_submit(2, 5, uid, 2)
 
     def create_current_submits(self):
         # Each user including old_user (-1)
-        for uid in range(-1, 4):
+        for uid in range(-1, 6):
             self.create_submit(4, 5, uid, 9)
 
     def test_create_only_results_for_previous_nonfinal_rounds(self):
@@ -1246,17 +1290,22 @@ class SusiCoefficientTest(TestCase):
         )
 
     def check_coefficients_and_points(
-        self, round_, user_points, user_wins, active_category, open_user_points=10
+        self, round_, user_points, user_wins, active_categories, open_user_points=10
     ):
         user_coefficients = [susi_constants.EXP_POINTS_FOR_GOOD_RANK * v for v in user_wins]
         for category in susi_constants.HIGH_SCHOOL_CATEGORIES:
             scoreboard = get_results(category, round_, single_round=False)
             col_to_index_map = get_col_to_index_map(scoreboard)
-            for user, points, coefficient in zip(self.users, user_points, user_coefficients):
+            count = 0
+            for user, points, coefficient, active_category in zip(
+                self.users, user_points, user_coefficients, active_categories
+            ):
                 row = get_row_for_user(scoreboard, user)
                 self.assertEqual(row.active, category == active_category)
                 self.assertEqual(get_row_total(row, col_to_index_map), points)
                 self.assertEqual(get_coefficient(row, col_to_index_map), coefficient)
+                count += 1
+            self.assertEqual(count, len(self.users))
             row = get_row_for_user(scoreboard, self.old_user)
             self.assertEqual(row.active, False)
 
@@ -1276,18 +1325,18 @@ class SusiCoefficientTest(TestCase):
         self.rounds[1].semester = self.semesters[0]
         self.rounds[1].save()
         self.create_old_submits()
-        user_wins_all = [[0, 0, 0, 0], [0, 0, 0, 0]]
-        user_points_all = [[9, 9, 9, 9], [15, 17, 19, 16]]
+        user_wins_all = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]]
+        user_points_all = [[9, 9, 9, 9, 5, 5], [15, 17, 19, 16, 9, 9]]
         for round_, user_points, user_wins, open_pts in zip(
             self.rounds[:2], user_points_all, user_wins_all, [10, 20]
         ):
             self.check_coefficients_and_points(
-                round_, user_points, user_wins, susi_constants.SUSI_AGAT, open_pts
+                round_, user_points, user_wins, [susi_constants.SUSI_AGAT] * 6, open_pts
             )
 
         self.create_current_submits()
         # Jozko1-3 hypothetically won Cvalajuci and Dialnica in the past semester (rounds 1 and 2)
-        user_coefficients = [v * susi_constants.EXP_POINTS_FOR_GOOD_RANK for v in [0, 4, 4, 4]]
+        user_coefficients = [v * susi_constants.EXP_POINTS_FOR_GOOD_RANK for v in [0, 4, 4, 4, 0]]
         for category in susi_constants.HIGH_SCHOOL_CATEGORIES:
             scoreboard = get_results(category, self.round, single_round=False)
             col_to_index_map = get_col_to_index_map(scoreboard)
@@ -1300,20 +1349,23 @@ class SusiCoefficientTest(TestCase):
     def test_top3(self):
         self.create_old_submits()
         # Counts only number of top3 placements
-        user_wins_all = [[0, 0, 0, 0], [4, 4, 4, 4]]
-        user_points_all = [[9, 9, 9, 9], [6, 8, 10, 7]]
-        for round_, user_points, user_wins, active_category in zip(
+        user_wins_all = [[0, 0, 0, 0, 0, 0], [4, 4, 4, 4, 0, 0]]
+        user_points_all = [[9, 9, 9, 9, 5, 5], [6, 8, 10, 7, 4, 4]]
+        for round_, user_points, user_wins, active_categories in zip(
             self.rounds[:2],
             user_points_all,
             user_wins_all,
-            # After the first round, everyone wins all categories and hence gets 4 * 3 experience points getting to category C
-            [susi_constants.SUSI_AGAT, susi_constants.SUSI_CVALAJUCI],
+            # After the first round, everyone except Jozko4 wins all categories and hence gets 4 * 3 experience points getting to category C
+            [
+                [susi_constants.SUSI_AGAT] * 6,
+                [susi_constants.SUSI_CVALAJUCI] * 4 + [susi_constants.SUSI_AGAT] * 2,
+            ],
         ):
-            self.check_coefficients_and_points(round_, user_points, user_wins, active_category)
+            self.check_coefficients_and_points(round_, user_points, user_wins, active_categories)
 
         self.create_current_submits()
         # Jozko0 won hypothetically Dialnica in round 2, Jozko1-3 won Cvalajuci and Dialnica in round 2
-        user_coefficients = [v * susi_constants.EXP_POINTS_FOR_GOOD_RANK for v in [4, 6, 6, 6]]
+        user_coefficients = [v * susi_constants.EXP_POINTS_FOR_GOOD_RANK for v in [4, 6, 6, 6, 0, 0]]
         for category in susi_constants.HIGH_SCHOOL_CATEGORIES:
             scoreboard = get_results(category, self.round, single_round=False)
             col_to_index_map = get_col_to_index_map(scoreboard)
@@ -1332,6 +1384,7 @@ class SUSIRulesTest(TestCase):
         self.competition = Competition.objects.create(name="TestCompetition", pk=9)
         self.competition.sites.add(Site.objects.get(pk=settings.SITE_ID))
         self.competition.save()
+        self.categories = create_susi_categories(self.competition)
         self.semester = Semester.objects.create(
             number=1, name="Test semester", competition=self.competition, year=47
         )
@@ -1382,6 +1435,8 @@ class SUSIRulesTest(TestCase):
                 round=self.round1,
                 description_points_visible=True,
             )
+            task.categories.set(self.categories[i - 1])
+            task.save()
             self.tasks.append(task)
 
         self.url = reverse("view_latest_results")
@@ -1424,6 +1479,27 @@ class SUSIRulesTest(TestCase):
                 event=camp, user=user, type=EventParticipant.PARTICIPANT, going=True
             )
         return user
+
+    def test_category_assignment(self):
+        self.assertEqual(
+            {cat.name for cat in self.tasks[1].categories.all()},
+            {
+                susi_constants.SUSI_OPEN,
+                susi_constants.SUSI_OLD_CIFERSKY_CECH,
+                susi_constants.SUSI_BLYSKAVICA,
+                susi_constants.SUSI_AGAT,
+            },
+        )
+        self.assertEqual(
+            {cat.name for cat in self.tasks[2].categories.all()},
+            {
+                susi_constants.SUSI_OPEN,
+                susi_constants.SUSI_OLD_CIFERSKY_CECH,
+                susi_constants.SUSI_CVALAJUCI,
+                susi_constants.SUSI_BLYSKAVICA,
+                susi_constants.SUSI_AGAT,
+            },
+        )
 
     def test_create_user_with_coefficient(self):
         for i in range(0, 24, susi_constants.EXP_POINTS_FOR_SUSI_CAMP):
@@ -1470,6 +1546,43 @@ class SUSIRulesTest(TestCase):
         col_to_index_map = get_col_to_index_map(scoreboard)
         self.assertEqual(get_row_total(row, col_to_index_map), sum(points))
         self.assertTrue(row.active)
+
+    def test_old_categories(self):
+        rounds = []
+        for year in [4, 5]:
+            semester = Semester.objects.create(
+                number=1, name="Test semester", competition=self.competition, year=year
+            )
+            rounds.append(
+                Round.objects.create(
+                    number=1,
+                    semester=semester,
+                    visible=True,
+                    solutions_visible=False,
+                    start_time=self.start,
+                    end_time=self.end,
+                    second_end_time=self.end + timezone.timedelta(7),
+                    susi_big_hint_time=self.end + timezone.timedelta(4),
+                )
+            )
+
+        response = self.client.get(reverse("view_results", kwargs={"round_id": rounds[0].id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            {
+                susi_constants.SUSI_OLD_CIFERSKY_CECH,
+                susi_constants.SUSI_AGAT,
+                susi_constants.SUSI_BLYSKAVICA,
+            },
+            {scb.scoreboard.tag for scb in response.context["scoreboards"]},
+        )
+
+        response = self.client.get(reverse("view_results", kwargs={"round_id": rounds[1].id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            {susi_constants.SUSI_OPEN, *susi_constants.HIGH_SCHOOL_CATEGORIES},
+            {scb.scoreboard.tag for scb in response.context["scoreboards"]},
+        )
 
     def test_results_ordering(self):
         response = self.client.get("%s?single_round=True" % self.url)
