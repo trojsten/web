@@ -1304,6 +1304,7 @@ class SusiCoefficientTest(TestCase):
                 self.assertEqual(row.active, category == active_category)
                 self.assertEqual(get_row_total(row, col_to_index_map), points)
                 self.assertEqual(get_coefficient(row, col_to_index_map), coefficient)
+                count += 1
             self.assertEqual(count, len(self.users))
             row = get_row_for_user(scoreboard, self.old_user)
             self.assertEqual(row.active, False)

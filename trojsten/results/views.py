@@ -36,7 +36,7 @@ def view_results(request, round_id, tag_key=DEFAULT_TAG_KEY):
 @login_required
 def explain_susi_xp(request, round_id):
     generator = SUSIResultsGenerator(susi_constants.SUSI_AGAT)
-    generator.prepare_coefficients(Round.objects.get(id=round_id))
+    generator.prepare_coefficients(get_object_or_404(Round, pk=round_id))
     return render(
         request,
         "trojsten/results/explain_susi_xp.html",
