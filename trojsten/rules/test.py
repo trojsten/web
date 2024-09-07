@@ -1166,7 +1166,7 @@ class SusiCoefficientTest(TestCase):
         graduation_year = self.round.end_time.year + int(
             self.round.end_time.month > SCHOOL_YEAR_END_MONTH
         )
-        for i in range(5):
+        for i in range(6):
             self.users.append(
                 User.objects.create(
                     username=f"test_user{i}",
@@ -1233,6 +1233,7 @@ class SusiCoefficientTest(TestCase):
         Jozko2 0 0 0 0 9
         Jozko3 0 0 0 9 0
         Jozko4 0 0 0 4 1
+        Jozko5 0 0 0 4 1
 
         Semester 2:
         Misof  0 0 0 0 10
@@ -1241,14 +1242,16 @@ class SusiCoefficientTest(TestCase):
         Jozko3 0 0 0 0 7
         Jozko0 0 0 0 0 6
         Jozko4 0 0 0 2 2
+        Jozko5 0 0 0 2 2
         """
         self.create_submit(1, 5, -1, 10)
         self.create_submit(1, 5, 0, 9)
         self.create_submit(1, 4, 1, 9)
         self.create_submit(1, 5, 2, 9)
         self.create_submit(1, 4, 3, 9)
-        self.create_submit(1, 4, 4, 4)
-        self.create_submit(1, 5, 4, 1)
+        for uid in [4, 5]:
+            self.create_submit(1, 4, uid, 4)
+            self.create_submit(1, 5, uid, 1)
 
         self.create_submit(2, 5, -1, 10)
         self.create_submit(2, 4, 2, 5)
@@ -1256,12 +1259,13 @@ class SusiCoefficientTest(TestCase):
         self.create_submit(2, 5, 1, 8)
         self.create_submit(2, 5, 3, 7)
         self.create_submit(2, 5, 0, 6)
-        self.create_submit(2, 4, 4, 2)
-        self.create_submit(2, 5, 4, 2)
+        for uid in [4, 5]:
+            self.create_submit(2, 4, uid, 2)
+            self.create_submit(2, 5, uid, 2)
 
     def create_current_submits(self):
         # Each user including old_user (-1)
-        for uid in range(-1, 5):
+        for uid in range(-1, 6):
             self.create_submit(4, 5, uid, 9)
 
     def test_create_only_results_for_previous_nonfinal_rounds(self):
@@ -1320,13 +1324,13 @@ class SusiCoefficientTest(TestCase):
         self.rounds[1].semester = self.semesters[0]
         self.rounds[1].save()
         self.create_old_submits()
-        user_wins_all = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
-        user_points_all = [[9, 9, 9, 9, 5], [15, 17, 19, 16, 9]]
+        user_wins_all = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]]
+        user_points_all = [[9, 9, 9, 9, 5, 5], [15, 17, 19, 16, 9, 9]]
         for round_, user_points, user_wins, open_pts in zip(
             self.rounds[:2], user_points_all, user_wins_all, [10, 20]
         ):
             self.check_coefficients_and_points(
-                round_, user_points, user_wins, [susi_constants.SUSI_AGAT] * 5, open_pts
+                round_, user_points, user_wins, [susi_constants.SUSI_AGAT] * 6, open_pts
             )
 
         self.create_current_submits()
@@ -1344,23 +1348,23 @@ class SusiCoefficientTest(TestCase):
     def test_top3(self):
         self.create_old_submits()
         # Counts only number of top3 placements
-        user_wins_all = [[0, 0, 0, 0, 0], [4, 4, 4, 4, 0]]
-        user_points_all = [[9, 9, 9, 9, 5], [6, 8, 10, 7, 4]]
+        user_wins_all = [[0, 0, 0, 0, 0, 0], [4, 4, 4, 4, 0, 0]]
+        user_points_all = [[9, 9, 9, 9, 5, 5], [6, 8, 10, 7, 4, 4]]
         for round_, user_points, user_wins, active_categories in zip(
             self.rounds[:2],
             user_points_all,
             user_wins_all,
             # After the first round, everyone except Jozko4 wins all categories and hence gets 4 * 3 experience points getting to category C
             [
-                [susi_constants.SUSI_AGAT] * 5,
-                [susi_constants.SUSI_CVALAJUCI] * 4 + [susi_constants.SUSI_AGAT],
+                [susi_constants.SUSI_AGAT] * 6,
+                [susi_constants.SUSI_CVALAJUCI] * 4 + [susi_constants.SUSI_AGAT] * 2,
             ],
         ):
             self.check_coefficients_and_points(round_, user_points, user_wins, active_categories)
 
         self.create_current_submits()
         # Jozko0 won hypothetically Dialnica in round 2, Jozko1-3 won Cvalajuci and Dialnica in round 2
-        user_coefficients = [v * susi_constants.EXP_POINTS_FOR_GOOD_RANK for v in [4, 6, 6, 6, 0]]
+        user_coefficients = [v * susi_constants.EXP_POINTS_FOR_GOOD_RANK for v in [4, 6, 6, 6, 0, 0]]
         for category in susi_constants.HIGH_SCHOOL_CATEGORIES:
             scoreboard = get_results(category, self.round, single_round=False)
             col_to_index_map = get_col_to_index_map(scoreboard)

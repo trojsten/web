@@ -143,7 +143,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                             self.which_semesters.setdefault(user_id, []).append(
                                 (semester, category)
                             )
-                        last_points = cur_points
+                            last_points = cur_points
 
     def get_minimal_year_of_graduation(self, res_request, user):
         return -1
