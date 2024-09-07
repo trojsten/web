@@ -1,0 +1,17 @@
+{% extends "trojsten/layout/main.html" %}
+
+{% block title %}Moje body skúsenosti v Suši{% endblock %}
+
+{% block page_header %}
+<h1>Moje body skúsenosti v Suši</h1>
+{% endblock %}
+
+{% block page_content %}
+<h3>Úspešné časti</h3>
+<ul>
+{% for semester, category in semesters %}
+<li>Časť {{ semester }}, kategória {{ category }} </li>
+{% endfor %}
+</ul>
+
+{% endblock %}

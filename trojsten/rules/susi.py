@@ -39,6 +39,7 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
         super(SUSIResultsGenerator, self).__init__(tag)
         self.susi_camps = None
         self.successful_semesters = None
+        self.which_semesters = None
         self.coefficients = {}
 
     def get_results_level(self):
@@ -100,19 +101,20 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             ),
         ).all()
         self.successful_semesters = {}
+        self.which_semesters = {}
 
         for semester in semesters:
             round = Round.objects.filter(semester=semester).order_by("number").last()
             if round is None:
                 continue  # semester with no rounds
             result_tables = [
-                get_results_if_exist(category, round)
+                (get_results_if_exist(category, round), category)
                 for category in constants.HIGH_SCHOOL_CATEGORIES
             ]
-            result_tables = [table for table in result_tables if table is not None]
+            result_tables = [table for table in result_tables if table[0] is not None]
 
             seen_users = set()
-            for table in result_tables:
+            for table, category in result_tables:
                 total_score_column_index = get_total_score_column_index(table)
                 if total_score_column_index is None:
                     getLogger("management_commands").warning(
@@ -137,6 +139,9 @@ class SUSIResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
                         if winner_count <= constants.TOP_RANK_FOR_EXP or last_points == cur_points:
                             self.successful_semesters[user_id] = (
                                 self.successful_semesters.get(user_id, 0) + 1
+                            )
+                            self.which_semesters.setdefault(user_id, []).append(
+                                (semester, category)
                             )
                         last_points = cur_points
 
