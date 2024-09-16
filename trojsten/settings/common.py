@@ -358,7 +358,7 @@ AUTHENTICATION_PROVIDERS_BRIEF = int(env("TROJSTENWEB_AUTHENTICATION_PROVIDERS_B
 # @TODO: nadefinovat vhodne scopy
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
-    "SCOPES": {"read": "Read scope", "write": "Write scope", "groups": "Access to your groups"}
+    "SCOPES": {"read": "Read scope", "write": "Write scope", "groups": "Access to your groups", "openid": "", "email": "", "profile": ""}
 }
 
 # Common markdown settings
