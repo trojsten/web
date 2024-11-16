@@ -1,0 +1,321 @@
+[
+  {
+    "name": "a. delenie",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 2,
+    "inputs": [
+      [
+        0,
+        10000
+      ],
+      [
+        1,
+        10000
+      ]
+    ],
+    "timelimit": 500000,
+    "allowed": [
+      "constant",
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign",
+      "≥",
+      "≤",
+      "<",
+      ">",
+      "min",
+      "max"
+    ],
+    "zadanie": "z2a.html",
+    "id": 20
+  },
+  {
+    "name": "b. modulo",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 2,
+    "inputs": [
+      [
+        0,
+        10000
+      ],
+      [
+        1,
+        10000
+      ]
+    ],
+    "timelimit": 500000,
+    "allowed": [
+      "constant",
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign",
+      "≥",
+      "≤",
+      "<",
+      ">",
+      "min",
+      "max",
+      "/"
+    ],
+    "zadanie": "z2b.html",
+    "id": 21
+  },
+  {
+    "name": "c. √",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 1,
+    "inputs": [
+      [
+        0,
+        10000
+      ]
+    ],
+    "timelimit": 500000,
+    "allowed": [
+      "constant",
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign",
+      "≥",
+      "≤",
+      "<",
+      ">",
+      "min",
+      "max",
+      "/",
+      "%"
+    ],
+    "zadanie": "z2c.html",
+    "id": 22
+  },
+  {
+    "name": "d. k-ta √",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 2,
+    "inputs": [
+      [
+        1,
+        10000
+      ],
+      [
+        1,
+        10000
+      ]
+    ],
+    "timelimit": 500000,
+    "allowed": [
+      "constant",
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign",
+      "≥",
+      "≤",
+      "<",
+      ">",
+      "min",
+      "max",
+      "/",
+      "%"
+    ],
+    "zadanie": "z2d.html",
+    "id": 23
+  },
+  {
+    "name": "e. prvočíselnosť",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 1,
+    "inputs": [
+      [
+        0,
+        10000
+      ]
+    ],
+    "timelimit": 500000,
+    "allowed": [
+      "constant",
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign",
+      "≥",
+      "≤",
+      "<",
+      ">",
+      "min",
+      "max",
+      "/",
+      "%"
+    ],
+    "zadanie": "z2e.html",
+    "id": 24
+  },
+  {
+    "name": "f. počet deliteľov",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 1,
+    "inputs": [
+      [
+        1,
+        10000
+      ]
+    ],
+    "timelimit": 500000,
+    "allowed": [
+      "constant",
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign",
+      "≥",
+      "≤",
+      "<",
+      ">",
+      "min",
+      "max",
+      "/",
+      "%"
+    ],
+    "zadanie": "z2f.html",
+    "id": 25
+  },
+  {
+    "name": "g. gcd",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 2,
+    "inputs": [
+      [
+        1,
+        1000
+      ],
+      [
+        1,
+        1000
+      ]
+    ],
+    "allowed": [
+      "constant",
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign",
+      "≥",
+      "≤",
+      "<",
+      ">",
+      "min",
+      "max",
+      "/",
+      "%"
+    ],
+    "timelimit": 500000,
+    "zadanie": "z2g.html",
+    "id": 26
+  },
+  {
+    "name": "h. logaritmus",
+    "points": [
+      1,
+      1
+    ],
+    "numInputs": 1,
+    "inputs": [
+      [
+        1,
+        10000
+      ]
+    ],
+    "timelimit": 500000,
+    "allowed": [
+      "constant",
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign",
+      "≥",
+      "≤",
+      "<",
+      ">",
+      "min",
+      "max",
+      "/",
+      "%"
+    ],
+    "zadanie": "z2h.html",
+    "id": 27
+  },
+  {
+    "name": "i. fibonacci",
+    "points": [
+      2,
+      2
+    ],
+    "numInputs": 1,
+    "inputs": [
+      [
+        1,
+        1000
+      ]
+    ],
+    "timelimit": 500000,
+    "allowed": [
+      "constant",
+      "--",
+      "+",
+      "-",
+      "*",
+      "^",
+      "sign",
+      "≥",
+      "≤",
+      "<",
+      ">",
+      "min",
+      "max",
+      "/",
+      "%"
+    ],
+    "zadanie": "z2i.html",
+    "id": 28
+  }
+]

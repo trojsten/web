@@ -24,6 +24,37 @@ def main(request):
 def state(request):
     data = UserLevel.objects.filter(user=request.user)
     levels2 = copy.deepcopy(levels)
+    for d in data:
+        if d.level == 28:
+            levels2.append(
+                {
+                    "name": "j. najkratšia cesta",
+                    "points": [1, 1],
+                    "numInputs": 2,
+                    "inputs": [[1, 10], [0, -1]],
+                    "timelimit": 500000,
+                    "allowed": [
+                        "constant",
+                        "--",
+                        "+",
+                        "-",
+                        "*",
+                        "^",
+                        "sign",
+                        "≥",
+                        "≤",
+                        "<",
+                        ">",
+                        "min",
+                        "max",
+                        "/",
+                        "%",
+                    ],
+                    "zadanie": "z2j.html",
+                    "id": 29,
+                }
+            )
+
     for level in levels2:
         level["solved"] = False
         for d in data:

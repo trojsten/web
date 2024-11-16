@@ -1,0 +1,198 @@
+<h2>Zadanie</h2>
+<p>
+	Toto je bonusová úloha. Vašou úlohou je nájsť najkratšiu cestu v grafe.
+</p>
+<p>
+	Ako prvý vstup dostanete n - počet vrcholov grafu. Ako druhý vstup dostenete vhodne zapísanú maticu susedností.
+	Pre každú dvojicu vrcholov je v nej zapísaná ich vzdialenosť. Pre každú dvojicu vrcholov je to nezáporné celé číslo,
+	menšie ako počet vrcholov grafu.
+	Je garantované, že na diagonále sú zapísané 0, a pre každé i, j platí, že na pozícii i,j je rovnaká hodnota
+	ako na pozícií j,i (hrany sú obojsmerné).
+	Maticu susedností si teda môžeme predstaviť ako číslo v sústave so základom n. To je náš druhý vstup.
+
+	Ako výstup vráťte dĺžku najkratšej cesty medzi 1. a n-tým vrcholom.
+</p>
+<h2>Príklad</h2>
+<div class="example">
+	<div>
+		<div>Vstup</div>
+		<code>
+			4 524669396
+		</code>
+	</div>
+	<div>
+		<div>Výstup</div>
+		<code>
+			2
+		</code>
+	</div>
+</div>
+<span>
+	524669396<sub>10</sub>=0133101131013110<sub>4</sub>, teda matica susedností vyzerá takto:
+	<table>
+		<tr>
+			<td>0</td>
+			<td>1</td>
+			<td>3</td>
+			<td>3</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>0</td>
+			<td>1</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>1</td>
+			<td>0</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>1</td>
+			<td>1</td>
+			<td>0</td>
+		</tr>
+	</table>
+	Najkratšia ceste vedie z 1. vrcholu do 2. a z neho do 4. vrcholu. Má dĺžku 1+1=2.
+</span>
+<div class="example">
+	<div>
+		<div>Vstup</div>
+		<code>
+			10 959459949903999951253035199999930344999495303999959143099999994990993959999909941999999099299993990
+		</code>
+	</div>
+	<div>
+		<div>Výstup</div>
+		<code>
+			7
+		</code>
+	</div>
+</div>
+<span>
+	<table>
+		<tr>
+			<td>0</td>
+			<td>9</td>
+			<td>4</td>
+			<td>5</td>
+			<td>9</td>
+			<td>9</td>
+			<td>5</td>
+			<td>3</td>
+			<td>9</td>
+			<td>9</td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>0</td>
+			<td>9</td>
+			<td>9</td>
+			<td>1</td>
+			<td>9</td>
+			<td>9</td>
+			<td>9</td>
+			<td>9</td>
+			<td>9</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>9</td>
+			<td>0</td>
+			<td>5</td>
+			<td>9</td>
+			<td>9</td>
+			<td>9</td>
+			<td>9</td>
+			<td>9</td>
+			<td>9</td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>9</td>
+			<td>5</td>
+			<td>0</td>
+			<td>9</td>
+			<td>9</td>
+			<td>5</td>
+			<td>9</td>
+			<td>9</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>1</td>
+			<td>9</td>
+			<td>9</td>
+			<td>0</td>
+			<td>1</td>
+			<td>5</td>
+			<td>3</td>
+			<td>1</td>
+			<td>4</td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>9</td>
+			<td>9</td>
+			<td>9</td>
+			<td>1</td>
+			<td>0</td>
+			<td>9</td>
+			<td>5</td>
+			<td>9</td>
+			<td>5</td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>9</td>
+			<td>9</td>
+			<td>5</td>
+			<td>5</td>
+			<td>9</td>
+			<td>0</td>
+			<td>9</td>
+			<td>2</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>9</td>
+			<td>9</td>
+			<td>9</td>
+			<td>3</td>
+			<td>5</td>
+			<td>9</td>
+			<td>0</td>
+			<td>2</td>
+			<td>9</td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>9</td>
+			<td>9</td>
+			<td>9</td>
+			<td>1</td>
+			<td>9</td>
+			<td>2</td>
+			<td>2</td>
+			<td>0</td>
+			<td>9</td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>9</td>
+			<td>9</td>
+			<td>1</td>
+			<td>4</td>
+			<td>5</td>
+			<td>2</td>
+			<td>9</td>
+			<td>9</td>
+			<td>0</td>
+		</tr>
+	</table>
+	Najkratšia cesta vedie z 1. vrcholu do 9., potom do 2. a nakoniec do 10. Dĺžka je 4+1+2=7.
+</span>
