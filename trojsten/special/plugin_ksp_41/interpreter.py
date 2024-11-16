@@ -145,7 +145,7 @@ def constant(c):
     if "constant" not in ALLOWED:
         raise Exception("Operácia 'constant' nie je povolená!")
 
-    def _constant_inner():
+    def _constant_inner(*x):
         return c
 
     return _constant_inner

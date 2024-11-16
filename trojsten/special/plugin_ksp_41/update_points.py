@@ -16,7 +16,7 @@ def get_task(prask=False):
 
 
 def update_points(user, prask=False):
-    points = UserLevel.objects.filter(user=user, solved=True, level_gte=20).count()
+    points = UserLevel.objects.filter(user=user, solved=True, level__gte=20).count()
     points += UserLevel.objects.filter(user=user, solved=True, level=28).count()
     if prask:
         points = points * 5

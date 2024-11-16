@@ -1,5 +1,6 @@
 import json
 import os
+import traceback
 
 from .interpreter import run_program
 
@@ -32,12 +33,12 @@ def test_program(program, level):
                 program, allowed, level["timelimit"], map(int, vstupy[i].split())
             )
             if output != int(ocakavane_vystupy[i]):
+                print("ksp_plugin_41: WA", output, "!=", ocakavane_vystupy[i])
                 return "WA"
 
         except Exception:
+            print("ksp_plugin_41:", traceback.format_exc())
             return "TLE"
-        except Exception as e:
-            return "EXC"
 
     return "OK"
 

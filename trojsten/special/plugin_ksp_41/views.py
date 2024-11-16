@@ -14,6 +14,33 @@ from .models import UserLevel
 # from .interpreter import unpack_blockly
 from .update_points import update_points
 
+bonus = {
+    "name": "j. najkratšia cesta",
+    "points": [1, 1],
+    "numInputs": 2,
+    "inputs": [[1, 10], [0, -1]],
+    "timelimit": 50000000,
+    "allowed": [
+        "constant",
+        "--",
+        "+",
+        "-",
+        "*",
+        "^",
+        "sign",
+        "≥",
+        "≤",
+        "<",
+        ">",
+        "min",
+        "max",
+        "/",
+        "%",
+    ],
+    "zadanie": "z2j.html",
+    "id": 29,
+}
+
 
 @login_required()
 def main(request):
@@ -25,35 +52,8 @@ def state(request):
     data = UserLevel.objects.filter(user=request.user)
     levels2 = copy.deepcopy(levels)
     for d in data:
-        if d.level == 28:
-            levels2.append(
-                {
-                    "name": "j. najkratšia cesta",
-                    "points": [1, 1],
-                    "numInputs": 2,
-                    "inputs": [[1, 10], [0, -1]],
-                    "timelimit": 500000,
-                    "allowed": [
-                        "constant",
-                        "--",
-                        "+",
-                        "-",
-                        "*",
-                        "^",
-                        "sign",
-                        "≥",
-                        "≤",
-                        "<",
-                        ">",
-                        "min",
-                        "max",
-                        "/",
-                        "%",
-                    ],
-                    "zadanie": "z2j.html",
-                    "id": 29,
-                }
-            )
+        if d.level == 28 and d.solved:
+            levels2.append(bonus)
 
     for level in levels2:
         level["solved"] = False
@@ -66,6 +66,10 @@ def state(request):
     return JsonResponse(levels2, safe=False)
 
 
+all_levels = levels.copy()
+all_levels.append(bonus)
+
+
 @login_required()
 @csrf_exempt
 def save(request):
@@ -75,7 +79,7 @@ def save(request):
         0
     ]
     userLevel.data = json.dumps(data["data"])
-    level = levels[data["level"] - 2]
+    level = all_levels[data["level"] - 20]
     status = test_program(data["data"], level)
     if status == "OK":
         userLevel.solved = True
