@@ -793,6 +793,8 @@ Ak si myslíš, že tvoj program je naozaj správny a chyba je v úlohe, kontakt
 
 Prepáč, ale tvoj program pracoval príliš dlho, skús ho opraviť a skús ho odovzdať znova.
 
+Skús používať vstavané funkcie (+, *, ^, ...) namiesto vlastných funkcií tam, kde je to možné.
+
 Ak si myslíš, že tvoj program je naozaj správny a chyba je v úlohe, kontaktuj Andreja na adrese: andrej.lackovic@trojsten.sk`);break;case"EXC":alert(`EXC
 
 Prepáč, ale tvoj program spadol, skús ho opraviť a skús ho odovzdať znova.

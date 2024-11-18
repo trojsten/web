@@ -73,12 +73,12 @@ def step(func):
     return wrapper
 
 
-@step
 def start(func):
     global STEPS, CALL_STACK
     STEPS = 0
     CALL_STACK.clear()
 
+    @step
     def _start_inner(*args):
         if next((x for x in args if x < 0), False):
             raise Exception("Input must not include negative numbers")
@@ -88,26 +88,26 @@ def start(func):
     return _start_inner
 
 
+@step
 def _zero_inner():
     return 0
 
 
-@step
 def zero():
     return _zero_inner
 
 
+@step
 def _incrementor_inner(x):
     return x + 1
 
 
-@step
 def incrementor():
     return _incrementor_inner
 
 
-@step
 def selector(which):
+    @step
     def _selector_inner(*args):
         if which > len(args):
             raise Exception(
@@ -118,18 +118,18 @@ def selector(which):
     return _selector_inner
 
 
-@step
 def compositor(g, *f):
     @cache
+    @step
     def _compositor_inner(*args):
         return g(*[x(*args) for x in f])
 
     return _compositor_inner
 
 
-@step
 def repeater(f, g):
     @cache
+    @step
     def _repeater_inner(x, *y):
         tmp = f(*y)
         for i in range(x):
@@ -140,22 +140,22 @@ def repeater(f, g):
     return _repeater_inner
 
 
-@step
 def constant(c):
     if "constant" not in ALLOWED:
         raise Exception("Operácia 'constant' nie je povolená!")
 
+    @step
     def _constant_inner(*x):
         return c
 
     return _constant_inner
 
 
-@step
 def math(operation):
     if operation not in ALLOWED:
         raise Exception(f"Operácia '{operation}' nie je povolená!")
 
+    @step
     def _math_inner(*x):
         if operation in ("√", "!", "sign", "--"):
             if len(x) != 1:
@@ -210,8 +210,8 @@ def math(operation):
     return _math_inner
 
 
-@step
 def custom_definition(name, args, f):
+    @step
     def _custom_definition_inner(*y):
         if len(y) != args:
             raise Exception(
@@ -223,9 +223,9 @@ def custom_definition(name, args, f):
     return _custom_definition_inner
 
 
-@step
 def custom_usage(fun):
     @cache
+    @step
     def _custom_usage_inner(*args):
         if fun in CALL_STACK:
             raise Exception(f"Custom block {fun} calls itself!")
