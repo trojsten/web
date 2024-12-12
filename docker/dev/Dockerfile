@@ -3,15 +3,25 @@ FROM python:3.8-alpine3.11
 ENV PYTHONUNBUFFERED=0 \
     GET_POETRY_IGNORE_DEPRECATION=1
 
-RUN apk add --no-cache curl
+RUN apk add --no-cache \
+        bash \
+        curl \
+        libressl-dev \
+        musl-dev \
+        libffi-dev \
+        gcc
 
 COPY ./docker/common/ /tmp/build/
 
 RUN set -x \
     && sh /tmp/build/install_build_deps.sh \
     && sh /tmp/build/install_runtime_deps.sh
-    
-RUN curl -sSL https://install.python-poetry.org | python - \
+
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup-init.sh
+RUN chmod +x rustup-init.sh
+
+RUN ./rustup-init.sh -y
+RUN . "/root/.cargo/env"; curl -sSL https://install.python-poetry.org | python - \
     && ln -s /root/.local/bin/poetry /usr/local/bin/poetry
 
 COPY ./fonts/* /usr/share/fonts/
