@@ -144,14 +144,14 @@ def level_updates_from_camp_attendance(
 ):
     """
     Returns a list of LevelUpRecords for users whose level should be updated.
-    All participants who were invited for their success in FKS (reached at least 36 points)
+    All participants who were invited for their success in FKS (reached at least 42 points)
     will receive a levelling boost (associated_semester_competitor_level + 1) for the next semester.
 
     Optionally define custom level-up thresholds for different user levels by setting
     `level_up_score_thresholds`.
     """
     if level_up_score_thresholds is None:
-        level_up_score_thresholds = defaultdict(lambda: 36)
+        level_up_score_thresholds = defaultdict(lambda: 42)
 
     invited_users_pks = EventParticipant.objects.filter(
         Q(type=EventParticipant.PARTICIPANT) | Q(type=EventParticipant.RESERVE),
