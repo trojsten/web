@@ -98,7 +98,7 @@ def level_updates_from_semester_results(semester, level_up_score_thresholds=None
     `level_up_score_thresholds`.
     """
     if level_up_score_thresholds is None:
-        level_up_score_thresholds = defaultdict(lambda: 54)
+        level_up_score_thresholds = defaultdict(lambda: 60)
 
     round = Round.objects.filter(semester=semester).order_by("number").last()
     # TODO: Get frozen results table if available.
