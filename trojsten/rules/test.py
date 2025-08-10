@@ -15,13 +15,16 @@ from trojsten.contests.models import Category, Competition, Round, Semester, Tas
 from trojsten.events.models import Event, EventParticipant, EventPlace, EventType
 from trojsten.people.constants import SCHOOL_YEAR_END_MONTH
 from trojsten.people.models import User
+from trojsten.results.constants import COEFFICIENT_COLUMN_KEY, LEVEL_COLUMN_KEY
 from trojsten.results.manager import get_results
 from trojsten.results.models import Results
 from trojsten.rules.kms import (
-    COEFFICIENT_COLUMN_KEY,
-    KMS_ALFA,
-    KMS_BETA,
     KMS_CAMP_TYPE,
+    KMS_L1,
+    KMS_L2,
+    KMS_L3,
+    KMS_L4,
+    KMS_L5,
     KMS_MO_FINALS_TYPE,
     KMS_MO_REGIONALS_TYPE,
     KMSResultsGenerator,
@@ -180,10 +183,7 @@ class KMSCoefficientTest(TestCase):
             last_name="Mrkvicka",
             graduation=graduation_year + 3,
         )
-        self.tag = KMSRules.RESULTS_TAGS[KMS_BETA]
-
-        category_alfa = Category.objects.create(name=KMS_ALFA, competition=competition)
-        category_beta = Category.objects.create(name=KMS_BETA, competition=competition)
+        self.tag = KMSRules.RESULTS_TAGS[KMS_L5]
 
         self.previous_tasks = []
         for round_ in self.previous_rounds:
@@ -196,13 +196,6 @@ class KMSCoefficientTest(TestCase):
                         description_points_visible=True,
                     )
                 )
-                cat = []
-                if i <= 7:
-                    cat += [category_alfa]
-                if i >= 3:
-                    cat += [category_beta]
-                self.previous_tasks[-1].categories.set(cat)
-                self.previous_tasks[-1].save()
 
     def _create_submits(self, user, points, tasks):
         for point, task in zip(points, tasks):
@@ -223,6 +216,7 @@ class KMSCoefficientTest(TestCase):
         self.test_user.save()
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
+        self.assertEqual(generator.get_user_level(self.test_user, self.round), 1)
 
     def test_camps_only(self):
         # Coefficient = 2: year = 1, successful semesters = 2, mo = 0, regionals=0
@@ -248,6 +242,7 @@ class KMSCoefficientTest(TestCase):
         )
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 2)
+        self.assertEqual(generator.get_user_level(self.test_user, self.round), 3)
 
     def test_points_only(self):
         # Coefficient = 0, year = 1, successful semesters = 0, mo = 0, regionals = 0
@@ -256,12 +251,14 @@ class KMSCoefficientTest(TestCase):
         self._create_submits(self.test_user, points, self.previous_tasks[:10])
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
+        self.assertEqual(generator.get_user_level(self.test_user, self.round), 1)
 
         # Coefficient = 1, year = 1, successful semesters = 1, mo = 0, regionals = 0
         # Create submits for second round's tasks
         self._create_submits(self.test_user, points, self.previous_tasks[10:])
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
+        self.assertEqual(generator.get_user_level(self.test_user, self.round), 2)
 
     def test_camps_mo(self):
         # Coefficient = 3: year = 4, successful semesters = 1, mo = 2, regionals=0
@@ -287,6 +284,7 @@ class KMSCoefficientTest(TestCase):
         )
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
+        self.assertEqual(generator.get_user_level(self.test_user, self.round), 4)
 
     def test_invited_to_both_camps(self):
         # Coefficient = 1: year = 1, successful semesters = 1, mo = 0, regionals=0
@@ -306,6 +304,7 @@ class KMSCoefficientTest(TestCase):
         )
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
+        self.assertEqual(generator.get_user_level(self.test_user, self.round), 2)
 
     def test_ignore_mo_in_same_semester(self):
         # Coefficient = 2: year = 1, successful semesters = 0, mo = 2, regionals=0
@@ -315,6 +314,7 @@ class KMSCoefficientTest(TestCase):
             )
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 2)
+        self.assertEqual(generator.get_user_level(self.test_user, self.round), 3)
 
     def test_ignore_not_going_reserve(self):
         # Coefficient = 0: year = 1, successful semesters = 0, mo = 0, regionals=0
@@ -323,6 +323,7 @@ class KMSCoefficientTest(TestCase):
         )
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
+        self.assertEqual(generator.get_user_level(self.test_user, self.round), 1)
 
     def test_ignore_not_going_participant(self):
         # Coefficient = 0: year = 1, successful semesters = 0, mo = 0, regionals=0
@@ -331,6 +332,7 @@ class KMSCoefficientTest(TestCase):
         )
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 0)
+        self.assertEqual(generator.get_user_level(self.test_user, self.round), 1)
 
     def test_many_camps(self):
         # Coefficient = 5: year = 1, successful semesters = 5, mo = 0, regionals=0
@@ -343,6 +345,7 @@ class KMSCoefficientTest(TestCase):
             )
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 5)
+        self.assertEqual(generator.get_user_level(self.test_user, self.round), 5)
 
     def test_mo_regionals(self):
         # Coefficient = 1: year = 1, successful semesters = 0, mo = 0, regionals=2
@@ -360,6 +363,7 @@ class KMSCoefficientTest(TestCase):
         )
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 1)
+        self.assertEqual(generator.get_user_level(self.test_user, self.round), 2)
 
     def test_mo_finals_and_regionals(self):
         # Coefficient = 3: year = 1, successful semesters = 0, mo = 2, regionals=2
@@ -389,6 +393,7 @@ class KMSCoefficientTest(TestCase):
         )
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 3)
+        self.assertEqual(generator.get_user_level(self.test_user, self.round), 4)
 
     def test_all(self):
         # Coefficient = 8: year = 3, successful semesters = 5, mo = 2, regionals = 2
@@ -425,6 +430,7 @@ class KMSCoefficientTest(TestCase):
             )
         generator = KMSResultsGenerator(self.tag)
         self.assertEqual(generator.get_user_coefficient(self.test_user, self.round), 8)
+        self.assertEqual(generator.get_user_level(self.test_user, self.round), 5)
 
 
 class KMSRulesTest(TestCase):
@@ -457,9 +463,6 @@ class KMSRulesTest(TestCase):
         )
         self.place = EventPlace.objects.create(name="Horna dolna")
 
-        category_alfa = Category.objects.create(name=KMS_ALFA, competition=self.competition)
-        category_beta = Category.objects.create(name=KMS_BETA, competition=self.competition)
-
         self.tasks = []
         for i in range(1, 11):
             self.tasks.append(
@@ -470,15 +473,9 @@ class KMSRulesTest(TestCase):
                     description_points_visible=True,
                 )
             )
-            cat = []
-            if i <= 8:
-                cat += [category_alfa]
-            if i >= 3:
-                cat += [category_beta]
-            self.tasks[-1].categories.set(cat)
-            self.tasks[-1].save()
 
         self.url = reverse("view_latest_results")
+        self.task_ranges = [(1, 8), (2, 8), (3, 8), (4, 10), (5, 10)]
 
     def _create_submits(self, user, points):
         for i in range(len(points)):
@@ -535,147 +532,69 @@ class KMSRulesTest(TestCase):
         return user
 
     def test_create_user_with_coefficient(self):
-        for alfa in [False, True]:
-            for i in range(0, 12 if not alfa else 9):
-                user = self._create_user_with_coefficient(i, "testuser%d" % (i + 100 * alfa), alfa)
-                generator = KMSResultsGenerator(KMSRules.RESULTS_TAGS[KMS_BETA])
-                self.assertEqual(generator.get_user_coefficient(user, self.round), i)
-
-    def _test_points_per_task(self, table, category):
-        for coefficient, max_points in table:
-            user = self._create_user_with_coefficient(
-                coefficient, "testuser%d" % coefficient, use_kms_camp=category == KMS_ALFA
-            )
-            for task, received_points in enumerate(max_points, start=1):
-                Submit.objects.all().delete()
-                points = [0] * 10
-                points[task - 1] = 9
-                self._create_submits(user, points)
-                response = self.client.get("%s?single_round=True" % self.url)
-                self.assertEqual(response.status_code, 200)
-                scoreboard = get_scoreboard(response.context["scoreboards"], category)
-                col_to_index_map = get_col_to_index_map(scoreboard)
-                row = get_row_for_user(scoreboard, user)
-                self.assertEqual(
-                    row.cell_list[col_to_index_map["sum"]].points,
-                    str(received_points),
-                    msg=f"For coefficient {coefficient}, task {task} in category {category}",
-                )
-
-    def test_alfa(self):
-        table = [
-            (0, [9, 9, 9, 9, 9, 9, 9, 9, 0, 0]),
-            (1, [3, 6, 9, 9, 9, 9, 9, 9, 0, 0]),
-            (2, [0, 3, 6, 9, 9, 9, 9, 9, 0, 0]),
-        ]
-        self._test_points_per_task(table, KMS_ALFA)
-
-    def test_beta(self):
-        table = [
-            (1, [0, 0, 3, 6, 9, 9, 9, 9, 9, 9]),
-            (2, [0, 0, 3, 6, 9, 9, 9, 9, 9, 9]),
-            (3, [0, 0, 3, 6, 9, 9, 9, 9, 9, 9]),
-            (4, [0, 0, 3, 6, 9, 9, 9, 9, 9, 9]),
-            (6, [0, 0, 3, 6, 9, 9, 9, 9, 9, 9]),
-            (7, [0, 0, 0, 3, 6, 9, 9, 9, 9, 9]),
-        ]
-        self._test_points_per_task(table, KMS_BETA)
+        for i in range(0, 9):
+            user = self._create_user_with_coefficient(i, "testuser%d" % i)
+            generator = KMSResultsGenerator(KMSRules.RESULTS_TAGS[KMS_L1])
+            self.assertEqual(generator.get_user_coefficient(user, self.round), i)
 
     def test_only_best_five(self):
-        points = [9, 7, 0, 8, 4, 5, 4]
-        active = [True] * 7
-        active[2] = False
+        points = [9, 7, 0, 8, 4, 5, 4, 0, 1, 10]
+        total_per_level = [33, 28, 21, 31, 24]
         user = self._create_user_with_coefficient(0, use_kms_camp=True)
         self._create_submits(user, points)
 
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        scoreboard = get_scoreboard(response.context["scoreboards"], KMS_ALFA)
-        col_to_index_map = get_col_to_index_map(scoreboard)
-        row = get_row_for_user(scoreboard, user)
-        self.assertEqual(row.cell_list[col_to_index_map[COEFFICIENT_COLUMN_KEY]].points, "0")
-        self.assertEqual(row.cell_list[col_to_index_map["sum"]].points, "33")
-        for i in range(1, 8):
-            self.assertEqual(row.cell_list[col_to_index_map[i]].points, str(points[i - 1]))
-            if i not in [5, 7]:
-                self.assertEqual(row.cell_list[col_to_index_map[i]].active, active[i - 1])
-        self.assertTrue(
-            row.cell_list[col_to_index_map[5]].active ^ row.cell_list[col_to_index_map[7]].active
-        )
 
-    def test_beta_only_user(self):
-        points = [-1, -1, 2, 3, 4, 5, 6, 7, 8]
-        user = self._create_user_with_coefficient(7, use_kms_camp=True)
-        self._create_submits(user, points)
-        response = self.client.get("%s?single_round=True" % self.url)
-        self.assertEqual(response.status_code, 200)
-        scoreboard = get_scoreboard(response.context["scoreboards"], KMS_BETA)
-        col_to_index_map = get_col_to_index_map(scoreboard)
-        row_beta = get_row_for_user(scoreboard, user)
-        scoreboard = get_scoreboard(response.context["scoreboards"], KMS_ALFA)
-        row_alfa = get_row_for_user(scoreboard, user)
-        self.assertTrue(row_beta.active)
-        self.assertFalse(row_alfa.active)
-        self.assertEqual(row_beta.cell_list[col_to_index_map[COEFFICIENT_COLUMN_KEY]].points, "7")
+        iters = 0
+        for tag, total, (task_from, task_to) in zip(
+            KMSRules.RESULTS_TAGS.keys(), total_per_level, self.task_ranges
+        ):
+            iters += 1
+            scoreboard = get_scoreboard(response.context["scoreboards"], tag)
+            col_to_index_map = get_col_to_index_map(scoreboard)
+            row = get_row_for_user(scoreboard, user)
+            self.assertTrue(row.active)
+            self.assertEqual(row.cell_list[col_to_index_map[LEVEL_COLUMN_KEY]].points, "1")
+            self.assertEqual(row.cell_list[col_to_index_map["sum"]].points, str(total))
+            for i in range(1, 11):
+                if task_from <= i <= task_to:
+                    self.assertEqual(row.cell_list[col_to_index_map[i]].points, str(points[i - 1]))
+                else:
+                    self.assertTrue(i not in col_to_index_map)
+        self.assertEqual(iters, 5)
 
-    def test_alfa_only_user(self):
-        points = [1, 2, 3, 4, 5]
-        user = self._create_user_with_coefficient(1, use_kms_camp=True)
+    def test_higher_level_user(self):
+        points = [9, 2, 1, 4, 5, -100, -100, 8, 9, 10]
+        total_per_level = [-1, -1, 18, 36, 32]
+        user = self._create_user_with_coefficient(2, use_kms_camp=True)  # level 3
         self._create_submits(user, points)
-        response = self.client.get("%s?single_round=True" % self.url)
-        self.assertEqual(response.status_code, 200)
-        scoreboard = get_scoreboard(response.context["scoreboards"], KMS_BETA)
-        row_beta = get_row_for_user(scoreboard, user)
-        scoreboard = get_scoreboard(response.context["scoreboards"], KMS_ALFA)
-        row_alfa = get_row_for_user(scoreboard, user)
-        self.assertTrue(row_alfa.active)
-        self.assertFalse(row_beta.active)
-
-    def test_alfa_beta_user(self):
-        points = [9, 2, 1, 4, 5, 6, 7, 8, 9, 10]
-        user = self._create_user_with_coefficient(0, use_kms_camp=True)
-        self._create_submits(user, points)
-        response = self.client.get("%s?single_round=True" % self.url)
-        self.assertEqual(response.status_code, 200)
-        scoreboard = get_scoreboard(response.context["scoreboards"], KMS_BETA)
-        col_to_index_map = get_col_to_index_map(scoreboard)
-        row_beta = get_row_for_user(scoreboard, user)
-        scoreboard = get_scoreboard(response.context["scoreboards"], KMS_ALFA)
-        self.assertEqual(row_beta.cell_list[col_to_index_map["sum"]].points, "40")
-        col_to_index_map = get_col_to_index_map(scoreboard)
-        row_alfa = get_row_for_user(scoreboard, user)
-        self.assertEqual(row_alfa.cell_list[col_to_index_map["sum"]].points, "35")
-
-    def test_show_decreased_points(self):
-        points = [0, 7, 3]
-        user = self._create_user_with_coefficient(1, use_kms_camp=True)
-        self._create_submits(user, points)
-        submit = Submit.objects.create(
-            task=self.tasks[3],
-            user=user,
-            submit_type=submit_constants.SUBMIT_TYPE_DESCRIPTION,
-            points=0,
-            testing_status=submit_constants.SUBMIT_STATUS_IN_QUEUE,
-        )
-        submit.time = self.end + timezone.timedelta(-1)
-        submit.save()
 
         response = self.client.get("%s?single_round=True" % self.url)
         self.assertEqual(response.status_code, 200)
-        scoreboard = get_scoreboard(response.context["scoreboards"], KMS_ALFA)
-        col_to_index_map = get_col_to_index_map(scoreboard)
-        row_alfa = get_row_for_user(scoreboard, user)
-        self.assertEqual(row_alfa.cell_list[col_to_index_map["sum"]].points, "8")
-        self.assertEqual(row_alfa.cell_list[col_to_index_map[2]].points, "5")
-        self.assertEqual(row_alfa.cell_list[col_to_index_map[3]].points, "3")
-        self.assertEqual(row_alfa.cell_list[col_to_index_map[4]].points, "?")
-        self.assertEqual(row_alfa.cell_list[col_to_index_map[5]].points, "")
-
-        submit.time = self.end + timezone.timedelta(-1)
-        submit.save()
-
-        self.assertContains(response, "hodnotenie: 7")
-        self.assertNotContains(response, "hodnotenie: 5")
+        iters = 0
+        for tag, total, (task_from, task_to), level in zip(
+            KMSRules.RESULTS_TAGS.keys(), total_per_level, self.task_ranges, range(1, 6)
+        ):
+            iters += 1
+            scoreboard = get_scoreboard(response.context["scoreboards"], tag)
+            col_to_index_map = get_col_to_index_map(scoreboard)
+            row = get_row_for_user(scoreboard, user)
+            if level >= 3:
+                self.assertTrue(row.active)
+                self.assertEqual(row.cell_list[col_to_index_map[LEVEL_COLUMN_KEY]].points, "3")
+                self.assertEqual(row.cell_list[col_to_index_map["sum"]].points, str(total))
+                for i in range(1, 11):
+                    if task_from <= i <= task_to:
+                        self.assertEqual(
+                            row.cell_list[col_to_index_map[i]].points,
+                            "" if points[i - 1] < 0 else str(points[i - 1]),
+                        )
+                    else:
+                        self.assertTrue(i not in col_to_index_map)
+            else:
+                self.assertFalse(row.active)
+        self.assertEqual(iters, 5)
 
 
 class KSPRulesOneUserTest(TestCase):
@@ -1365,7 +1284,9 @@ class SusiCoefficientTest(TestCase):
 
         self.create_current_submits()
         # Jozko0 won hypothetically Dialnica in round 2, Jozko1-3 won Cvalajuci and Dialnica in round 2
-        user_coefficients = [v * susi_constants.EXP_POINTS_FOR_GOOD_RANK for v in [4, 6, 6, 6, 0, 0]]
+        user_coefficients = [
+            v * susi_constants.EXP_POINTS_FOR_GOOD_RANK for v in [4, 6, 6, 6, 0, 0]
+        ]
         for category in susi_constants.HIGH_SCHOOL_CATEGORIES:
             scoreboard = get_results(category, self.round, single_round=False)
             col_to_index_map = get_col_to_index_map(scoreboard)
