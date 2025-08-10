@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from collections import namedtuple
-from decimal import Decimal
+from collections import OrderedDict, namedtuple
 from logging import getLogger
 
 from django.db.models import Count, Q
 
-from trojsten.contests.models import Semester
+from trojsten.contests.models import Semester, Task
 from trojsten.events.models import EventParticipant
-from trojsten.results.constants import COEFFICIENT_COLUMN_KEY, UNKNOWN_POINTS_SYMBOL
-from trojsten.results.generator import CategoryTagKeyGeneratorMixin, ResultsGenerator
+from trojsten.results.constants import LEVEL_COLUMN_KEY
+from trojsten.results.generator import ResultsGenerator
 from trojsten.results.helpers import get_total_score_column_index
 from trojsten.results.manager import get_results, get_results_tags_for_rounds
 from trojsten.results.representation import ResultsCell, ResultsCol, ResultsTag
@@ -18,29 +17,44 @@ from trojsten.submit.models import Submit
 from .default import CompetitionRules
 from .default import FinishedRoundsResultsRulesMixin as FinishedRounds
 
-KMS_ALFA = "alfa"
-KMS_BETA = "beta"
+KMS_L1 = "KMS_L1"
+KMS_L2 = "KMS_L2"
+KMS_L3 = "KMS_L3"
+KMS_L4 = "KMS_L4"
+KMS_L5 = "KMS_L5"
 
 KMS_POINTS_FOR_SUCCESSFUL_SEMESTER = 90
 
-KMS_ALFA_MAX_COEFFICIENT = 2
-KMS_FULL_POINTS_COEFFICIENT_BOUND = [0, 0, 0, 1, 2, 6, 100, 100, 100, 100, 100]
-KMS_BETA_MULTIPLIER_BOUND = [0, 0, 0, 1, 2, 3, 3, 3, 3, 3, 3]
-KMS_ELIGIBLE_FOR_TASK_BOUND = [0, 1, 2, 6, 100, 100, 100, 100, 100, 100, 100]
 KMS_CAMP_TYPE = "KMS sústredenie"
 KMS_MO_FINALS_TYPE = "CKMO"
 KMS_MO_REGIONALS_TYPE = "KKMO"
 
 KMS_YEARS_OF_CAMPS_HISTORY = 10
 
+KMS_COEFFICIENT_TO_LEVEL = [1, 2, 3, 4, 4, 5]
 
-class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
+
+class KMSResultsGenerator(ResultsGenerator):
     def __init__(self, tag):
         super(KMSResultsGenerator, self).__init__(tag)
         self.successful_semesters = None
         self.mo_finals = None
         self.mo_regionals = None
         self.coefficients = {}
+
+    def get_results_level(self):
+        """Returns the level of current results table."""
+        return int(self.tag.key[-1])
+
+    def get_task_queryset(self, res_request):
+        """Level X starts with task X, first three levels end at task 8"""
+        level = self.get_results_level()
+        tasks = Task.objects.filter(
+            round=res_request.round, number__gte=self.get_results_level()
+        ).order_by("number")
+        if level <= 3:
+            tasks = tasks.filter(number__lte=8)
+        return tasks
 
     def get_user_coefficient(self, user, round):
         if user not in self.coefficients:
@@ -53,6 +67,9 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             self.coefficients[user] = min(1, mo_regionals) + successful_semesters + mo_finals
 
         return self.coefficients[user]
+
+    def get_user_level(self, user, round):
+        return KMS_COEFFICIENT_TO_LEVEL[min(5, self.get_user_coefficient(user, round))]
 
     def prepare_coefficients(self, round):
         """
@@ -146,23 +163,6 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             for user_id in successful:
                 self.successful_semesters[user_id] = self.successful_semesters.get(user_id, 0) + 1
 
-    def get_multiplier(self, key, coefficient):
-        multiplier = 0
-        if coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key]:
-            multiplier = 3
-        elif key <= 9 and coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key + 1]:
-            multiplier = 2
-        elif key <= 8 and coefficient <= KMS_FULL_POINTS_COEFFICIENT_BOUND[key + 2]:
-            multiplier = 1
-        if self.tag.key == KMS_BETA:
-            multiplier = min(multiplier, KMS_BETA_MULTIPLIER_BOUND[key])
-        return multiplier
-
-    def get_cell_points_for_row_total(self, res_request, cell, key, coefficient):
-        points = self.get_cell_total(res_request, cell)
-        multiplier = self.get_multiplier(key, coefficient)
-        return round(Decimal(multiplier) * points / 3, 0)
-
     def run(self, res_request):
         self.prepare_coefficients(res_request.round)
         res_request.has_submit_in_beta = set()
@@ -172,80 +172,47 @@ class KMSResultsGenerator(CategoryTagKeyGeneratorMixin, ResultsGenerator):
             res_request.has_submit_in_beta.add(submit.user)
         return super(KMSResultsGenerator, self).run(res_request)
 
-    def is_user_active(self, request, user):
-        active = super(KMSResultsGenerator, self).is_user_active(request, user)
-        coefficient = self.get_user_coefficient(user, request.round)
+    def is_user_active(self, res_request, user):
+        """Deactivate users with level higher than level of the results table."""
+        active = super(KMSResultsGenerator, self).is_user_active(res_request, user)
+        return active and (self.get_user_level(user, res_request.round) <= self.get_results_level())
 
-        if self.tag.key == KMS_ALFA:
-            active = (
-                active
-                and coefficient <= KMS_ALFA_MAX_COEFFICIENT
-                and self.mo_finals.get(user.pk, 0) == 0
-            )
+    def deactivate_row_cells(self, res_request, row, cols):
+        user_level = self.get_user_level(row.user, res_request.round)
 
-        if self.tag.key == KMS_BETA:
-            active = active and (
-                coefficient > KMS_ALFA_MAX_COEFFICIENT
-                or user in request.has_submit_in_beta
-                or self.mo_finals.get(user.pk, 0) > 0
-            )
-
-        return active
-
-    def deactivate_row_cells(self, request, row, cols):
-        coefficient = self.get_user_coefficient(row.user, request.round)
-
-        # Count only tasks your coefficient is eligible for
-        for key, cell in row.cells_by_key.items():
-            counted_points = self.get_cell_points_for_row_total(request, cell, key, coefficient)
-            if counted_points == 0:
-                cell.active = False
-
-        # Prepare list of pairs consisting of cell and its points.
-        tasks = [
-            (cell, self.get_cell_points_for_row_total(request, cell, key, coefficient))
-            for key, cell in row.cells_by_key.items()
-            if cell.active
-        ]
+        # Don't count tasks below your level
+        for task_number in row.cells_by_key:
+            if task_number < user_level:
+                row.cells_by_key[task_number].active = False
 
         # Count only the best 5 tasks
-        for cell, _ in sorted(tasks, key=lambda x: x[1])[:-5]:
-            cell.active = False
+        for excess in sorted(
+            (cell for cell in row.cells_by_key.values() if cell.active),
+            key=lambda cell: -self.get_cell_total(res_request, cell),
+        )[5:]:
+            excess.active = False
 
-    def calculate_row_round_total(self, res_request, row, cols):
-        coefficient = self.get_user_coefficient(row.user, res_request.round)
-
-        row.round_total = sum(
-            self.get_cell_points_for_row_total(res_request, cell, key, coefficient)
-            for key, cell in row.cells_by_key.items()
-            if cell.active
-        )
-
-    def format_row_cells(self, res_request, row, cols):
-        coefficient = self.get_user_coefficient(row.user, res_request.round)
-        for key, cell in row.cells_by_key.items():
-            cell.full_points = cell.manual_points
-            if cell.manual_points not in [None, UNKNOWN_POINTS_SYMBOL]:
-                cell.manual_points = self.get_cell_points_for_row_total(
-                    res_request, cell, key, coefficient
-                )
-            super(KMSResultsGenerator, self).format_row_cell(res_request, cell)
-
-    def add_special_row_cells(self, res_request, row, cols):
-        super(KMSResultsGenerator, self).add_special_row_cells(res_request, row, cols)
-        coefficient = self.get_user_coefficient(row.user, res_request.round)
-        row.cells_by_key[COEFFICIENT_COLUMN_KEY] = ResultsCell(str(coefficient))
+    def add_special_row_cells(self, request, row, cols):
+        """Add user level column to results table."""
+        super(KMSResultsGenerator, self).add_special_row_cells(request, row, cols)
+        user_level = self.get_user_level(row.user, request.round)
+        row.cells_by_key[LEVEL_COLUMN_KEY] = ResultsCell(str(user_level))
 
     def create_results_cols(self, res_request):
-        yield ResultsCol(key=COEFFICIENT_COLUMN_KEY, name="K.")
+        yield ResultsCol(key=LEVEL_COLUMN_KEY, name="Level")
         for col in super(KMSResultsGenerator, self).create_results_cols(res_request):
             yield col
 
 
 class KMSRules(FinishedRounds, CompetitionRules):
-    RESULTS_TAGS = {
-        KMS_ALFA: ResultsTag(key=KMS_ALFA, name="Alfa"),
-        KMS_BETA: ResultsTag(key=KMS_BETA, name="Beta"),
-    }
+    RESULTS_TAGS = OrderedDict(
+        [
+            (KMS_L1, ResultsTag(key=KMS_L1, name="L1")),
+            (KMS_L2, ResultsTag(key=KMS_L2, name="L2")),
+            (KMS_L3, ResultsTag(key=KMS_L3, name="L3")),
+            (KMS_L4, ResultsTag(key=KMS_L4, name="L4")),
+            (KMS_L5, ResultsTag(key=KMS_L5, name="L5")),
+        ]
+    )
 
     RESULTS_GENERATOR_CLASS = KMSResultsGenerator
