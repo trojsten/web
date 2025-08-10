@@ -17,9 +17,6 @@ KMS_L3 = "KMS_L3"
 KMS_L4 = "KMS_L4"
 KMS_L5 = "KMS_L5"
 
-KMS_MO_FINALS_TYPE = "CKMO"
-KMS_MO_REGIONALS_TYPE = "KKMO"
-
 
 class KMSResultsGenerator(ResultsGenerator):
     def get_results_level(self):
