@@ -9,22 +9,64 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contests', '0024_auto_20250810_0932'),
-        ('events', '0001_squashed_0007_auto_20170917_2343'),
+        ("contests", "0024_auto_20250810_0932"),
+        ("events", "0001_squashed_0007_auto_20170917_2343"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('rules', '0002_fkslevel'),
+        ("rules", "0002_fkslevel"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='KMSLevel',
+            name="KMSLevel",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('new_level', models.IntegerField(validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(5)])),
-                ('last_semester_before_level_up', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='KMS_next_semester_level_ups', to='contests.Semester')),
-                ('source_camp', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='events.Event')),
-                ('source_semester', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='KMS_caused_level_ups', to='contests.Semester')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "new_level",
+                    models.IntegerField(
+                        validators=[
+                            django.core.validators.MinValueValidator(1),
+                            django.core.validators.MaxValueValidator(5),
+                        ]
+                    ),
+                ),
+                (
+                    "last_semester_before_level_up",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="KMS_next_semester_level_ups",
+                        to="contests.Semester",
+                    ),
+                ),
+                (
+                    "source_camp",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="events.Event",
+                    ),
+                ),
+                (
+                    "source_semester",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="KMS_caused_level_ups",
+                        to="contests.Semester",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+                    ),
+                ),
             ],
         ),
     ]
