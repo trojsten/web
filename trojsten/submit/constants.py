@@ -47,16 +47,36 @@ SUBMIT_VERBOSE_RESPONSE = {
 SUBMIT_PAPER_FILEPATH = "<PAPIEROVE>"
 
 EXT_MAPPING = {
+    # C
+    ".c": ".c",
+    # C#
+    ".cs": ".cs",
+    # C++
     ".cpp": ".cc",
     ".cc": ".cc",
-    ".pp": ".pas",
-    ".pas": ".pas",
-    ".dpr": ".pas",
-    ".c": ".c",
+    # Go
+    ".go": ".go",
+    # Haskell
+    ".hs": ".hs",
+    # Java
+    ".java": ".java",
+    # JavaScript
+    ".js": ".js",
+    # PyPy & Python
     ".py": ".py",
     ".py3": ".py",
-    ".hs": ".hs",
-    ".cs": ".cs",
-    ".java": ".java",
+    # Rust
+    ".rs": ".rs",
+    # TypeScript
+    ".ts": ".ts",
+    #
+    # SPECIAL
+    #
     ".zip": ".zip",
+    #
+    # Old, unsupported
+    #
+    # ".pp": ".pas",
+    # ".pas": ".pas",
+    # ".dpr": ".pas",
 }
