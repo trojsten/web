@@ -16,6 +16,10 @@ KMS_L2 = "KMS_L2"
 KMS_L3 = "KMS_L3"
 KMS_L4 = "KMS_L4"
 KMS_L5 = "KMS_L5"
+KMS_OLD_ALFA = "alfa"
+KMS_OLD_BETA = "beta"
+# The year since which levels 1 - 5 replaced categories Alfa and Beta
+YEAR_SINCE_LEVELS = 47
 
 
 class KMSResultsGenerator(ResultsGenerator):
@@ -79,7 +83,16 @@ class KMSRules(FinishedRounds, CompetitionRules):
             (KMS_L3, ResultsTag(key=KMS_L3, name="L3")),
             (KMS_L4, ResultsTag(key=KMS_L4, name="L4")),
             (KMS_L5, ResultsTag(key=KMS_L5, name="L5")),
+            (KMS_OLD_ALFA, ResultsTag(key=KMS_OLD_ALFA, name="Alfa")),
+            (KMS_OLD_BETA, ResultsTag(key=KMS_OLD_BETA, name="Beta")),
         ]
     )
 
     RESULTS_GENERATOR_CLASS = KMSResultsGenerator
+
+    def get_results_tags(self, year=None):
+        if year is not None and year < YEAR_SINCE_LEVELS:
+            tags = [KMS_OLD_ALFA, KMS_OLD_BETA]
+        else:
+            tags = [KMS_L1, KMS_L2, KMS_L3, KMS_L4, KMS_L5]
+        return (self.RESULTS_TAGS[tag_key] for tag_key in tags)
