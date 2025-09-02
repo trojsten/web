@@ -115,7 +115,10 @@ class KMSCoefficientTest(TestCase):
         for year, semester_number in [(1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2)]:
             self.semesters.append(
                 Semester.objects.create(
-                    year=year, number=semester_number, name="Test semester", competition=competition
+                    year=year + 46,
+                    number=semester_number,
+                    name="Test semester",
+                    competition=competition,
                 )
             )
             self.camps.append(
@@ -562,6 +565,31 @@ class KMSRulesTest(TestCase):
                     self.assertEqual(row.cell_list[col_to_index_map[i]].points, str(points[i - 1]))
                 else:
                     self.assertTrue(i not in col_to_index_map)
+        self.assertEqual(iters, 5)
+
+    def test_low_level_user(self):
+        points = [-1] * 10
+        points[2] = 5  # task 3
+        user = self._create_user_with_coefficient(1, use_kms_camp=True)  # level 2
+        self._create_submits(user, points)
+
+        response = self.client.get("%s?single_round=True" % self.url)
+        self.assertEqual(response.status_code, 200)
+
+        iters = 0
+        for tag, level in zip(KMSRules.RESULTS_TAGS.keys(), range(1, 6)):
+            iters += 1
+            scoreboard = get_scoreboard(response.context["scoreboards"], tag)
+            col_to_index_map = get_col_to_index_map(scoreboard)
+            row = get_row_for_user(scoreboard, user)
+            if level == 1:
+                self.assertFalse(row.active)
+            elif 2 <= level <= 3:
+                self.assertEqual(row.cell_list[col_to_index_map[LEVEL_COLUMN_KEY]].points, "2")
+                self.assertTrue(row.active)
+                self.assertEqual(row.cell_list[col_to_index_map["sum"]].points, "5")
+            else:
+                self.assertIsNone(row)
         self.assertEqual(iters, 5)
 
     def test_higher_level_user(self):
