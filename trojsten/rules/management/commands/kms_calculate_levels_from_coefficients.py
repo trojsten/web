@@ -42,7 +42,7 @@ class Command(BaseCommand):
         manager = KMSResultsGenerator(KMSRules.RESULTS_TAGS[KMS_BETA])
         active_users = Submit.objects.filter(
             task__round__semester__competition__name="KMS"
-        ).values_list("user", flat=True)
+        ).values_list("user", flat=True).distinct()
         self.stdout.write("Active users: " + str(active_users))
 
         old_semester = (
