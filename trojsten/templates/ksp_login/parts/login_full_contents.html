@@ -17,6 +17,11 @@
         thisScript.parentNode.insertBefore(styleTag, thisScript.nextSibling);
       </script>
       <h4>Prihlásenie pomocou OpenID</h4>
+      <div class="alert alert-warning">
+        <p>Ak ti nefunguje prihlasovanie cez externé služby, prihlás sa pomocou hesla.</p>
+        <p>Používateľské meno by mala byť časť emailu pred zavináčom.</p>
+        <p>Ak si nepamätáš heslo, alebo ho nemáš nastavené, <a href="{% url "password_reset" %}">zresetuj</a> si ho.</p>
+      </div>
       {% for provider in login_providers %}
         <div class="form-group provider_{% if provider.required_field %}with_input{% else %}simple{% endif %}">
           <a href="#" class="btn btn-default btn-block">
